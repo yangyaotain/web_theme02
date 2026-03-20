@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -132,9 +132,16 @@
             background: var(--surface-elevated); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-2xl); box-shadow: var(--shadow-md); overflow: hidden;
         }
+        .content-panel { display: none; }
+        .content-panel.active { display: block; animation: panelFadeIn 0.4s ease; }
+        @keyframes panelFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .article-hero {
             position: relative; height: 400px;
-            background: url('images/production-line-hero.jpg') center/cover;
+            background: center/cover no-repeat;
         }
         .article-hero::before {
             content: ''; position: absolute; inset: 0;
@@ -332,7 +339,7 @@
         <aside class="sidebar">
             <div class="line-card active" data-index="0">
                 <div class="line-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                    <img src="images/production-line-robot.jpg" alt="">
                 </div>
                 <div class="line-card-content">
                     <h3 class="line-card-title">机器人训练数据生产线</h3>
@@ -342,7 +349,7 @@
 
             <div class="line-card" data-index="1">
                 <div class="line-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                    <img src="images/production-line-llm.jpg" alt="">
                 </div>
                 <div class="line-card-content">
                     <h3 class="line-card-title">大模型训练数据生产线</h3>
@@ -352,7 +359,7 @@
 
             <div class="line-card" data-index="2">
                 <div class="line-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                    <img src="images/production-line-governance.jpg" alt="">
                 </div>
                 <div class="line-card-content">
                     <h3 class="line-card-title">数据治理生产线</h3>
@@ -362,7 +369,7 @@
 
             <div class="line-card" data-index="3">
                 <div class="line-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                    <img src="images/production-line-lowalt.jpg" alt="">
                 </div>
                 <div class="line-card-content">
                     <h3 class="line-card-title">低空经济数据生产线</h3>
@@ -372,7 +379,7 @@
 
             <div class="line-card" data-index="4">
                 <div class="line-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>
+                    <img src="images/production-line-cim.jpg" alt="">
                 </div>
                 <div class="line-card-content">
                     <h3 class="line-card-title">CIM数据服务生产线</h3>
@@ -382,97 +389,294 @@
         </aside>
 
         <!-- Article Content -->
-        <article class="article" id="articleContainer">
-            <!-- Hero Banner -->
-            <div class="article-hero">
-                <div class="article-hero-content">
-                    <span class="article-badge">
-                        <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
-                        智能制造核心基础设施
-                    </span>
-                    <h1 class="article-title">机器人训练数据生产线</h1>
-                    <p class="article-subtitle">支撑人工智能模型训练的核心基础设施，涵盖数据采集、标注、增强、模型训练及验证全流程</p>
+        <div id="articleContainer">
+
+            <!-- ===== Panel 0: 机器人训练数据生产线 ===== -->
+            <article class="article content-panel active" data-panel="0">
+                <div class="article-hero" style="background-image: url('images/production-line-robot.jpg');">
+                    <div class="article-hero-content">
+                        <span class="article-badge">
+                            <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                            智能制造核心基础设施
+                        </span>
+                        <h1 class="article-title">机器人训练数据生产线</h1>
+                        <p class="article-subtitle">支撑人工智能模型训练的核心基础设施，涵盖数据采集、标注、增强、模型训练及验证全流程</p>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Article Body -->
-            <div class="article-body">
-                <p class="article-lead">
-                    机器人训练数据生产线是支撑人工智能模型训练的核心基础设施，其核心流程涵盖数据采集、标注、增强、模型训练及验证等环节，为机器人智能化提供高质量数据基础。
-                </p>
-
-                <!-- Section 1 -->
-                <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">1</span>
-                        <h2 class="section-title">数据采集与标注</h2>
-                    </div>
-                    <div class="content-with-image">
-                        <div class="content-text">
-                            <p>通过传感器（如摄像头、激光雷达）和工业设备（如机器人、数控机床）采集多模态数据，包括视觉、触觉、位置信息等，数据经清洗和标注，为模型提供监督信号。</p>
-                            <p style="margin-top: 12px;">例如在模具智能生产线中，通过SCADA系统实时采集设备状态数据，并与MES/ERP系统联动，确保数据来源的准确性和实时性。</p>
-                        </div>
-                        <div class="content-image">
-                            <img src="images/production-line-hero.jpg" alt="机器人训练数据采集">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Section 2 -->
-                <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">2</span>
-                        <h2 class="section-title">数据增强与模型训练</h2>
-                    </div>
-                    <p class="section-content">
-                        采用放射、缩放等策略扩充并多样化样本，结合卷积神经网络（CNN）、循环神经网络（RNN）等模型进行训练，多模态融合技术整合RGB图像、点云等数据，形成机器人的环境感知能力。通过数据增强有效解决训练样本不足的问题，同时提高模型的鲁棒性和泛化能力。
+                <div class="article-body">
+                    <p class="article-lead">
+                        机器人训练数据生产线是支撑人工智能模型训练的核心基础设施，其核心流程涵盖数据采集、标注、增强、模型训练及验证等环节，为机器人智能化提供高质量数据基础。
                     </p>
-                </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数据采集与标注</h2></div>
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <p>通过传感器（如摄像头、激光雷达）和工业设备（如机器人、数控机床）采集多模态数据，包括视觉、触觉、位置信息等，数据经清洗和标注，为模型提供监督信号。</p>
+                                <p style="margin-top: 12px;">例如在模具智能生产线中，通过SCADA系统实时采集设备状态数据，并与MES/ERP系统联动，确保数据来源的准确性和实时性。</p>
+                            </div>
+                            <div class="content-image"><img src="images/production-line-robot.jpg" alt="机器人训练数据采集"></div>
+                        </div>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">数据增强与模型训练</h2></div>
+                        <p class="section-content">采用放射、缩放等策略扩充并多样化样本，结合卷积神经网络（CNN）、循环神经网络（RNN）等模型进行训练，多模态融合技术整合RGB图像、点云等数据，形成机器人的环境感知能力。通过数据增强有效解决训练样本不足的问题，同时提高模型的鲁棒性和泛化能力。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">仿真测试与迭代优化</h2></div>
+                        <p class="section-content">先在虚拟环境（如Gazebo）中预训练，再迁移至真实场景微调。宝佑软件的钢铁产线方案通过机器人替代人工，在高温、高污染环境中实现少人化生产，验证了数据驱动的可靠性。虚实结合的训练策略大幅缩短了从研发到部署的周期，降低了实际测试的成本与风险。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用案例</h2></div>
+                        <div class="case-grid">
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/></svg></div>
+                                <h4 class="case-card-title">工业领域</h4>
+                                <p class="case-card-desc">模具智能生产线通过工业机器人、AGV等设备实现全流程自动化，生产效率显著提升。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></div>
+                                <h4 class="case-card-title">教育实训</h4>
+                                <p class="case-card-desc">智能制造实验平台融合PLC、机器人等技术，提供柔性化训练环境。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div>
+                                <h4 class="case-card-title">人形机器人</h4>
+                                <p class="case-card-desc">国内最大训练场年产超600万条真机数据，支持多任务协同训练。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </article>
 
-                <!-- Section 3 -->
-                <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">3</span>
-                        <h2 class="section-title">仿真测试与迭代优化</h2>
+            <!-- ===== Panel 1: 大模型训练数据生产线 ===== -->
+            <article class="article content-panel" data-panel="1">
+                <div class="article-hero" style="background-image: url('images/production-line-llm.jpg');">
+                    <div class="article-hero-content">
+                        <span class="article-badge">
+                            <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                            大规模语言模型数据底座
+                        </span>
+                        <h1 class="article-title">大模型训练数据生产线</h1>
+                        <p class="article-subtitle">涵盖大规模数据的采集预处理、消重及知识图谱构建，打造高质量中文语料数据基座</p>
                     </div>
-                    <p class="section-content">
-                        先在虚拟环境（如Gazebo）中预训练，再迁移至真实场景微调。宝佑软件的钢铁产线方案通过机器人替代人工，在高温、高污染环境中实现少人化生产，验证了数据驱动的可靠性。虚实结合的训练策略大幅缩短了从研发到部署的周期，降低了实际测试的成本与风险。
+                </div>
+                <div class="article-body">
+                    <p class="article-lead">
+                        大模型训练数据生产线是面向通用人工智能与行业垂直大模型的核心数据基础设施。龙岗区作为深圳五大AI重点区域之一，正积极构建从高质量语料采集、数据清洗消重、知识图谱构建到模型训练验证的完整数据生产链路，为企业大模型研发提供可靠的数据底座。
                     </p>
-                </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">语料采集与预处理</h2></div>
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <p>面向金融、医疗、政务、制造等龙岗优势产业领域，构建多源异构数据采集体系。支持结构化数据库、半结构化文档、非结构化文本/图像等多种数据形态的自动化采集与归集。</p>
+                                <p style="margin-top: 12px;">龙岗区率先建设高质量中文算料库和行业数据集，通过公共数据开放平台向企业提供脱敏后的政务数据与行业语料。区内通过数据交易平台购买语料数据进行大模型研发的企业，可获得合同额20%的成本扶持，每年最高100万元。</p>
+                            </div>
+                            <div class="content-image"><img src="images/production-line-llm.jpg" alt="大模型训练语料采集"></div>
+                        </div>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">数据清洗消重与质量控制</h2></div>
+                        <p class="section-content">采用分布式数据处理引擎对海量语料进行去重、去噪、格式标准化处理。通过SimHash、MinHash等近似去重算法高效识别冗余数据，确保训练语料的高质量与多样性。建立多维度数据质量评估体系，从完整性、一致性、准确性、时效性四个维度对语料进行量化评分，淘汰低质量数据，保障模型训练效果。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">知识图谱与知识库构建</h2></div>
+                        <p class="section-content">基于实体识别、关系抽取、事件提取等NLP技术，从语料中自动构建领域知识图谱。支持金融风控、医药研发、城市治理等龙岗重点行业的垂直知识体系建设。构建的知识库可直接用于大模型的检索增强生成（RAG），提升模型在专业领域的准确性和可解释性。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用案例</h2></div>
+                        <div class="case-grid">
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                                <h4 class="case-card-title">政务AI应用</h4>
+                                <p class="case-card-desc">龙岗已发布四批政务AI应用，基于本地化训练语料实现"秒批秒办"超90项政务事项。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg></div>
+                                <h4 class="case-card-title">企业用数扶持</h4>
+                                <p class="case-card-desc">区内企业大模型研发语料采购可获20%成本补贴，数据开放共享企业年最高补贴30万元。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM5 15h14v3H5z"/></svg></div>
+                                <h4 class="case-card-title">AI龙虾十条</h4>
+                                <p class="case-card-desc">2026年龙岗拟推"零成本启动"政策，开放低空、交通、医疗等高质量脱敏公共数据。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </article>
 
-                <!-- Section 4: Application Cases -->
-                <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">4</span>
-                        <h2 class="section-title">应用案例</h2>
+            <!-- ===== Panel 2: 数据治理生产线 ===== -->
+            <article class="article content-panel" data-panel="2">
+                <div class="article-hero" style="background-image: url('images/production-line-governance.jpg');">
+                    <div class="article-hero-content">
+                        <span class="article-badge">
+                            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                            数据质量管理标杆
+                        </span>
+                        <h1 class="article-title">数据治理生产线</h1>
+                        <p class="article-subtitle">统一规范数据采集治理环节的数据处理规范，完善管理标准与信息化平台</p>
                     </div>
-                    <div class="case-grid">
-                        <div class="case-card">
-                            <div class="case-card-icon">
-                                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/></svg>
+                </div>
+                <div class="article-body">
+                    <p class="article-lead">
+                        数据治理生产线以"一数一源一标准"为核心理念，构建覆盖数据全生命周期的标准化治理体系。龙岗区政务数据管理能力已入选全国首批DCMM贯标试点，是粤港澳大湾区唯一获此资格的单位，汇聚政务业务数据超292亿条，治理形成35类专题509个数据图层。
+                    </p>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数据采集标准化</h2></div>
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <p>建立统一的数据采集规范与接口标准，覆盖政务、产业、民生等多个领域。通过"大采集"行动方案，实现跨部门、跨系统数据的自动化归集与标准化入库。</p>
+                                <p style="margin-top: 12px;">龙岗区印发《数据资源大采集大治理大流通大应用工作方案》，推动全区各部门数据资源统一编目登记，编制公共数据资源"一本账"，确保数据来源清晰、权属明确。</p>
                             </div>
-                            <h4 class="case-card-title">工业领域</h4>
-                            <p class="case-card-desc">模具智能生产线通过工业机器人、AGV等设备实现全流程自动化，生产效率显著提升。</p>
+                            <div class="content-image"><img src="images/production-line-governance.jpg" alt="数据治理标准化"></div>
                         </div>
-                        <div class="case-card">
-                            <div class="case-card-icon">
-                                <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">数据清洗与质量管理</h2></div>
+                        <p class="section-content">建立多维度数据质量评估与管控机制，从完整性、一致性、准确性、时效性四个维度对数据资产进行全面评估。通过自动化数据清洗流水线，实现缺失值补全、异常值检测、格式统一等标准化处理。龙岗区已建成政务数据质量监控平台，实时监测数据更新频率与质量变化，确保数据资产始终处于高可用状态。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">数据流通与共享</h2></div>
+                        <p class="section-content">构建"政府指导+市场化运营"的数据要素流通体系。龙岗区已建立数据要素服务工作站，与深圳数据交易所联合运营，推进区域可信数据空间试点。政务服务数据调用量已超12.62亿次，实现超90项事项"秒批秒办"、200项"无感申报"、770项"免证办"，显著提升了政务服务效率与群众获得感。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用案例</h2></div>
+                        <div class="case-grid">
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                                <h4 class="case-card-title">DCMM贯标试点</h4>
+                                <p class="case-card-desc">全国首批政务数据管理能力成熟度贯标试点单位，大湾区唯一获此资格。</p>
                             </div>
-                            <h4 class="case-card-title">教育实训</h4>
-                            <p class="case-card-desc">智能制造实验平台融合PLC、机器人等技术，提供柔性化训练环境。</p>
-                        </div>
-                        <div class="case-card">
-                            <div class="case-card-icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></div>
+                                <h4 class="case-card-title">数据要素工作站</h4>
+                                <p class="case-card-desc">联合深圳数据交易所运营，构建"标准规范+4T底座+数据空间"创新生态。</p>
                             </div>
-                            <h4 class="case-card-title">人形机器人</h4>
-                            <p class="case-card-desc">国内最大训练场年产超600万条真机数据，支持多任务协同训练。</p>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                                <h4 class="case-card-title">公共数据授权运营</h4>
+                                <p class="case-card-desc">建设1+N公共数据授权运营体系，推动"数据要素×"行动赋能经济社会发展。</p>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
+            </article>
 
-            </div>
-        </article>
+            <!-- ===== Panel 3: 低空经济数据生产线 ===== -->
+            <article class="article content-panel" data-panel="3">
+                <div class="article-hero" style="background-image: url('images/production-line-lowalt.jpg');">
+                    <div class="article-hero-content">
+                        <span class="article-badge">
+                            <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                            低空经济数据底座
+                        </span>
+                        <h1 class="article-title">低空经济数据生产线</h1>
+                        <p class="article-subtitle">涵盖低空数据基础建设、飞行数据处理、空域管理等多维度数据采集与分析体系</p>
+                    </div>
+                </div>
+                <div class="article-body">
+                    <p class="article-lead">
+                        低空经济数据生产线是服务无人机、eVTOL等低空飞行器运营管理的核心数据基础设施。龙岗区作为深圳低空经济产业发展重点区域，已出台24条促进低空经济发展的政策措施，建成低空智能融合测试基地，并与高德合作打造地空一体数字地图示范基地，构建完整的低空数据生态体系。
+                    </p>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">低空数据采集与融合</h2></div>
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <p>依托雷达、ADS-B、光电传感器等多源感知设备，构建覆盖全域的低空数据采集网络。实时获取飞行器位置、速度、航向、高度等关键参数，融合气象、地形、障碍物等环境数据，形成低空态势感知全景视图。</p>
+                                <p style="margin-top: 12px;">龙岗已建成国内领先的低空智能融合测试基地，部署了OpenSILAS——全国首个开放的智能融合低空系统，实现多源异构数据的实时融合处理与可视化呈现。</p>
+                            </div>
+                            <div class="content-image"><img src="images/production-line-lowalt.jpg" alt="低空数据采集"></div>
+                        </div>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">三维空域建模与航路规划</h2></div>
+                        <p class="section-content">基于高精度三维地图与倾斜摄影模型，构建城市低空三维空域数字孪生。通过空域网格化管理技术，将城市低空划分为可管控的飞行单元，支持航路自动规划、冲突检测与动态避障。龙岗区与高德软件联合打造的"空中高德"项目，已实现低空三维地图、数字路网等核心技术的落地应用，为无人机物流、空中交通等场景提供精准的空域数据服务。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">运营监管数据服务</h2></div>
+                        <p class="section-content">构建低空飞行器运营全周期数据管理体系，覆盖飞行器注册、适航审定、飞行计划审批、实时监控、应急处置等全流程。通过数据分析平台为监管部门提供飞行密度热力图、风险评估报告、运营效能分析等决策支持服务。龙岗正积极推进国家民用无人机产品质量监督检验中心和国家低空适航审定中心建设，为低空经济发展提供权威的检测认证与数据标准支撑。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用案例</h2></div>
+                        <div class="case-grid">
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg></div>
+                                <h4 class="case-card-title">OpenSILAS系统</h4>
+                                <p class="case-card-desc">全国首个开放的智能融合低空系统，龙岗低空经济分院率先落地应用。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg></div>
+                                <h4 class="case-card-title">空中高德</h4>
+                                <p class="case-card-desc">与高德合作打造地空一体数字地图示范基地，实现低空三维地图核心技术突破。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+                                <h4 class="case-card-title">载人航线运营</h4>
+                                <p class="case-card-desc">开设低空载人航线服务，年度总奖励额度达1500万元，推动城市空中交通发展。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- ===== Panel 4: CIM数据服务生产线 ===== -->
+            <article class="article content-panel" data-panel="4">
+                <div class="article-hero" style="background-image: url('images/production-line-cim.jpg');">
+                    <div class="article-hero-content">
+                        <span class="article-badge">
+                            <svg viewBox="0 0 24 24"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>
+                            城市数字孪生底座
+                        </span>
+                        <h1 class="article-title">CIM数据服务生产线</h1>
+                        <p class="article-subtitle">按照标准化工序与流程，融合BIM、GIS、IoT等多源数据，构建城市信息模型数据服务体系</p>
+                    </div>
+                </div>
+                <div class="article-body">
+                    <p class="article-lead">
+                        CIM数据服务生产线以城市信息模型（CIM）为核心，融合BIM建筑信息模型、GIS地理信息系统、IoT物联网等多源数据，构建城市级数字孪生底座。龙岗区CIM平台已初步建成，导入BIM模型460个，融合电子地图、影像地图、倾斜摄影模型、高空全景等全区基础时空二三维数据服务，为城市精细化治理提供坚实的数据支撑。
+                    </p>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">多源数据采集与融合</h2></div>
+                        <div class="content-with-image">
+                            <div class="content-text">
+                                <p>构建"天空地"一体化数据采集体系，综合运用卫星遥感、无人机倾斜摄影、车载激光扫描、地面测量等多种手段，获取城市全要素空间数据。通过坐标系统一、数据格式标准化、时空基准对齐等技术，实现多源异构数据的高效融合。</p>
+                                <p style="margin-top: 12px;">龙岗区已完成全区范围的高精度倾斜摄影三维模型建设，结合BIM模型实现从宏观城市到微观建筑构件的多尺度数据覆盖，为城市规划、建设、管理提供精准的空间底座数据。</p>
+                            </div>
+                            <div class="content-image"><img src="images/production-line-cim.jpg" alt="CIM数据融合"></div>
+                        </div>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">CIM平台数据加工</h2></div>
+                        <p class="section-content">建立标准化的CIM数据加工流水线，涵盖模型轻量化、纹理优化、属性挂接、空间索引构建等关键环节。通过自动化工具将BIM设计模型转化为适配CIM平台的轻量化模型，保留关键空间属性与业务信息。龙岗区CIM平台已完成与"市规划国土一张图"的对接，形成全区统一的空间信息服务底座，为7个区级重大项目提供规划辅助决策支持。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">智慧应用数据服务</h2></div>
+                        <p class="section-content">基于CIM平台数据底座，为城市治理各领域提供标准化数据服务接口。支持土地批后监管、城市更新、交通仿真、应急管理等多种智慧应用场景。龙岗区"CIM+土地批后监管"应用通过"五个一"体系实现对全区454宗用地项目的精准化监管，获评深圳市"先锋杯"数字孪生创新应用大赛优秀奖，并入选广东省政务服务创新案例。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用案例</h2></div>
+                        <div class="case-grid">
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div>
+                                <h4 class="case-card-title">CIM+土地监管</h4>
+                                <p class="case-card-desc">通过"五个一"体系精准监管全区454宗用地项目，获省级创新案例认证。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg></div>
+                                <h4 class="case-card-title">规划国土一张图</h4>
+                                <p class="case-card-desc">与市级平台对接，形成全区统一空间信息底座，支撑重大项目规划决策。</p>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-card-icon"><svg viewBox="0 0 24 24"><path d="M1 11v10h6v-5h2v5h6V11L8 6l-7 5zm12 8h-2v-5H5v5H3v-7l5-3.5 5 3.5v7z"/><path d="M10 3v1.97l2 1.43V5h9v14h-4v2h6V3z"/></svg></div>
+                                <h4 class="case-card-title">虚拟社区平台</h4>
+                                <p class="case-card-desc">汇聚各类公共服务资源，构建社区级数字孪生，提升基层治理精细化水平。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+        </div>
     </main>
 
     <site-footer></site-footer>
@@ -480,10 +684,18 @@
     <script>
     (function () {
         var cards = document.querySelectorAll('.line-card');
+        var panels = document.querySelectorAll('.content-panel');
         cards.forEach(function (card) {
             card.addEventListener('click', function () {
+                var idx = card.getAttribute('data-index');
                 cards.forEach(function (c) { c.classList.remove('active'); });
                 card.classList.add('active');
+                panels.forEach(function (p) { p.classList.remove('active'); });
+                var target = document.querySelector('.content-panel[data-panel="' + idx + '"]');
+                if (target) {
+                    target.classList.add('active');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
     })();
