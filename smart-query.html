@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能问数 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', 'Inter', sans-serif;
+            background: #f5f7fa; height: 100vh; overflow: hidden;
+            display: flex;
+        }
+
+        /* ══════════ LEFT SIDEBAR ══════════ */
+        .sidebar {
+            width: 260px; background: #fff; border-right: 1px solid #e8ebf0;
+            display: flex; flex-direction: column; flex-shrink: 0;
+        }
+        .sidebar-header {
+            padding: 20px 20px 16px; display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .sidebar-logo {
+            height: 52px; flex-shrink: 0;
+        }
+        .sidebar-logo img { height: 100%; width: auto; }
+        .sidebar-title { font-size: 20px; font-weight: 600; color: #1a1a2e; }
+
+        .btn-new-chat {
+            margin: 16px 20px; padding: 10px 0; font-size: 14px; font-weight: 600;
+            color: var(--forest-green); background: #fff;
+            border: 1.5px solid var(--forest-green); border-radius: 8px;
+            cursor: pointer; transition: all 0.15s;
+            font-family: inherit;
+        }
+        .btn-new-chat:hover { background: var(--forest-green); color: #fff; }
+
+        .history-label {
+            padding: 12px 20px 8px; font-size: 12px; font-weight: 500;
+            color: #999; letter-spacing: 0.5px;
+        }
+        .history-search {
+            margin: 0 20px 8px; padding: 7px 12px; font-size: 12px;
+            border: 1px solid #e8ebf0; border-radius: 6px; outline: none;
+            color: #333; font-family: inherit; width: calc(100% - 40px);
+        }
+        .history-search:focus { border-color: var(--forest-green); }
+        .history-search::placeholder { color: #c0c4cc; }
+
+        .history-list { flex: 1; overflow-y: auto; padding: 4px 12px; }
+        .history-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 10px 8px; margin-bottom: 2px; border-radius: 8px;
+            cursor: pointer; transition: background 0.12s;
+            font-size: 13px; color: #606266; line-height: 1.5;
+        }
+        .history-item:hover { background: #f5f7fa; }
+        .history-item.active { background: #f0fdf4; color: var(--forest-green); }
+        .history-item-icon {
+            width: 6px; height: 6px; background: var(--forest-green); border-radius: 50%;
+            flex-shrink: 0; margin-top: 6px;
+        }
+        .history-item-text {
+            flex: 1; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* ══════════ MAIN CHAT AREA ══════════ */
+        .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+        /* ── Welcome View ── */
+        .welcome-view {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 40px;
+        }
+        .welcome-view.hidden { display: none; }
+        .welcome-logo {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+        }
+        .welcome-logo img { height: 64px; }
+        .welcome-logo-text { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+        .welcome-title {
+            font-size: 28px; font-weight: 700; color: var(--forest-green);
+            margin-bottom: 10px;
+        }
+        .welcome-desc {
+            font-size: 14px; color: #909399; margin-bottom: 48px;
+        }
+        .welcome-hints-label { font-size: 13px; color: #999; margin-bottom: 14px; }
+        .welcome-hint {
+            width: 600px; max-width: 100%; padding: 14px 20px;
+            background: #fff; border: 1px solid #e8ebf0; border-radius: 10px;
+            font-size: 13px; color: #374151; line-height: 1.6;
+            cursor: pointer; transition: all 0.15s; margin-bottom: 10px;
+        }
+        .welcome-hint:hover {
+            border-color: var(--forest-green); background: #f0fdf4; color: var(--forest-green);
+        }
+
+        /* ── Chat View ── */
+        .chat-view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+        .chat-view.hidden { display: none; }
+
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 32px 48px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 5px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+        .chat-messages-inner {
+            max-width: 800px; margin: 0 auto;
+        }
+
+        /* ── Message Bubble ── */
+        .msg { margin-bottom: 28px; display: flex; flex-direction: column; }
+        .msg-user { align-items: flex-end; }
+        .msg-ai { align-items: flex-start; }
+
+        .msg-bubble-user {
+            max-width: 85%; padding: 12px 20px; font-size: 14px; line-height: 1.6;
+            background: var(--forest-green); color: #fff; border-radius: 16px 16px 4px 16px;
+        }
+        .msg-bubble-ai {
+            max-width: 100%; width: 100%; background: #fff; border: 1px solid #e8ebf0;
+            border-radius: 16px 16px 16px 4px; padding: 24px 28px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .msg-avatar {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 6px;
+        }
+        .msg-avatar-user { background: var(--forest-green); }
+        .msg-avatar-user svg { width: 18px; height: 18px; fill: #fff; }
+        .msg-avatar-ai { background: #f0fdf4; border: 1px solid #d1fae5; }
+        .msg-avatar-ai svg { width: 18px; height: 18px; fill: var(--forest-green); }
+
+        /* ── AI response content ── */
+        .ai-text { font-size: 14px; color: #374151; line-height: 1.8; }
+        .ai-text p { margin-bottom: 10px; }
+        .ai-text strong { font-weight: 600; color: #111827; }
+
+        /* ── Chart area ── */
+        .ai-chart {
+            margin: 16px 0 8px; padding: 20px; background: #fafbfc;
+            border: 1px solid #f0f2f5; border-radius: 10px;
+        }
+        .chart-title { font-size: 13px; color: #606266; margin-bottom: 12px; }
+        .chart-legend { display: flex; gap: 16px; margin-bottom: 16px; font-size: 12px; color: #666; }
+        .chart-legend-item { display: flex; align-items: center; gap: 5px; }
+        .chart-legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+        .bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; padding: 0 10px; }
+        .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .bar-stack { display: flex; gap: 3px; align-items: flex-end; height: 180px; }
+        .bar {
+            width: 18px; border-radius: 3px 3px 0 0;
+            transition: height 0.6s ease;
+        }
+        .bar-green { background: #67c23a; }
+        .bar-blue { background: #5b8ff9; }
+        .bar-label { font-size: 10px; color: #909399; white-space: nowrap; text-align: center; }
+
+        /* Y-axis */
+        .chart-with-axis { display: flex; gap: 8px; }
+        .chart-y-axis {
+            display: flex; flex-direction: column-reverse; justify-content: space-between;
+            height: 180px; padding-bottom: 0; min-width: 36px; text-align: right;
+        }
+        .chart-y-axis span { font-size: 10px; color: #b0b3b8; }
+
+        /* ── Table ── */
+        .ai-table-wrap {
+            margin: 16px 0 8px; overflow-x: auto;
+        }
+        .ai-table {
+            width: 100%; border-collapse: collapse; font-size: 13px;
+        }
+        .ai-table th {
+            background: #f5f7fa; padding: 10px 14px; font-weight: 600;
+            color: #374151; text-align: center; border: 1px solid #ebeef5;
+        }
+        .ai-table td {
+            padding: 9px 14px; text-align: center; border: 1px solid #ebeef5;
+            color: #606266;
+        }
+        .ai-table tbody tr:hover { background: #fafbfc; }
+
+        /* ── Actions bar ── */
+        .msg-actions {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 12px; padding-left: 4px;
+        }
+        .msg-action-btn {
+            width: 28px; height: 28px; border: none; background: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; transition: background 0.12s; color: #b0b3b8;
+        }
+        .msg-action-btn:hover { background: #f0f2f5; color: #606266; }
+        .msg-action-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .msg-time { font-size: 12px; color: #c0c4cc; margin-left: auto; }
+
+        /* ══════════ INPUT AREA ══════════ */
+        .chat-input-area {
+            padding: 16px 48px 28px; background: #f5f7fa;
+            border-top: 1px solid #e8ebf0;
+        }
+        .chat-input-wrap {
+            display: flex; align-items: center; gap: 12px;
+            background: #fff; border: 1.5px solid #e0e3e8;
+            border-radius: 24px; padding: 6px 6px 6px 24px;
+            transition: border-color 0.15s;
+            max-width: 800px; margin: 0 auto;
+        }
+        .chat-input-wrap:focus-within { border-color: var(--forest-green); }
+        .chat-input {
+            flex: 1; border: none; outline: none; font-size: 14px;
+            color: #333; font-family: inherit; background: transparent;
+            padding: 8px 0;
+        }
+        .chat-input::placeholder { color: #c0c4cc; }
+        .btn-send {
+            width: 40px; height: 40px; border: none; border-radius: 50%;
+            background: var(--forest-green); color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: background 0.15s;
+        }
+        .btn-send:hover { background: #1a8a55; }
+        .btn-send svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* ══════════ TEXT CONTENT STYLES ══════════ */
+        .ai-text h4 {
+            font-size: 14px; font-weight: 600; color: #1a1a2e;
+            margin: 16px 0 8px;
+        }
+        .ai-text ol, .ai-text ul {
+            padding-left: 20px; margin-bottom: 10px;
+        }
+        .ai-text li { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- ══════════ LEFT SIDEBAR ══════════ -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="images/logo.png" alt="logo">
+            </div>
+            <span class="sidebar-title">智能问数</span>
+        </div>
+
+        <button class="btn-new-chat">开启新对话</button>
+
+        <div class="history-label">历史会话记录</div>
+        <input class="history-search" type="text" placeholder="搜索历史会话">
+
+        <div class="history-list">
+            <div class="history-item active">
+                <span class="history-item-icon"></span>
+                <span class="history-item-text">当前录入的数据产品和数据需求，总数分别为多少，并按应用场景划分，用柱状图展示？</span>
+            </div>
+            <div class="history-item">
+                <span class="history-item-icon"></span>
+                <span class="history-item-text">请统计下，2025年每个月新增用户数、数据产品购买数、数据产品发布数、数据需求发布</span>
+            </div>
+            <div class="history-item">
+                <span class="history-item-icon"></span>
+                <span class="history-item-text">请问忘记密码，如何找回账号？</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════ MAIN CHAT AREA ══════════ -->
+    <main class="chat-main">
+
+        <!-- ── Welcome View (New Conversation) ── -->
+        <div class="welcome-view hidden" id="welcomeView">
+            <div class="welcome-logo">
+                <img src="images/logo.png" alt="logo">
+                <span class="welcome-logo-text">龙岗数据聚合服务平台</span>
+            </div>
+            <div class="welcome-title">智能小助手</div>
+            <div class="welcome-desc">作为你的智能伙伴，我能为你开启崭新点、探索数据海洋。</div>
+            <div class="welcome-hints-label">可以问我：</div>
+            <div class="welcome-hint" onclick="startChat(this.textContent)">当前录入的数据产品和数据需求，总数分别为多少，并按应用场景划分，用柱状图展示？</div>
+            <div class="welcome-hint" onclick="startChat(this.textContent)">请统计下，2025年每个月新增用户数、数据产品购买数、数据产品发布数、数据需求发布数，用表格统计。</div>
+            <div class="welcome-hint" onclick="startChat(this.textContent)">请问忘记密码，如何找回账号？</div>
+        </div>
+
+        <!-- ── Chat View ── -->
+        <div class="chat-view" id="chatView">
+        <div class="chat-messages" id="chatMessages">
+        <div class="chat-messages-inner">
+
+            <!-- ══════════ CONVERSATION 1: BAR CHART ══════════ -->
+            <div class="msg msg-user">
+                <div class="msg-avatar msg-avatar-user">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="msg-bubble-user">当前录入的数据产品和数据需求，总数分别为多少，并按应用场景划分，用柱状图展示？</div>
+            </div>
+
+            <div class="msg msg-ai">
+                <div class="msg-avatar msg-avatar-ai">
+                    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                </div>
+                <div class="msg-bubble-ai">
+                    <div class="ai-text">
+                        <p>截止当前，龙岗数据聚合服务中心，总共发布数据产品2000个，数据需求2000个。数据需求高涨，数据市场前景可观。</p>
+                        <p>智慧城市(30.00%)、征信评估(28.22%)、航行安全(22.35%)、防灾减灾(19.8%)等场景的数据产品需求比较多，占前列。</p>
+                        <p>按应用场景划分，数据产品和数据需求的分布情况如下：</p>
+                    </div>
+                    <div class="ai-chart">
+                        <div class="chart-legend">
+                            <div class="chart-legend-item"><span class="chart-legend-dot" style="background:#67c23a"></span>数据产品</div>
+                            <div class="chart-legend-item"><span class="chart-legend-dot" style="background:#5b8ff9"></span>数据需求</div>
+                        </div>
+                        <div class="chart-with-axis">
+                            <div class="chart-y-axis">
+                                <span>0</span><span>500</span><span>1000</span><span>1500</span><span>2000</span><span>2500</span>
+                            </div>
+                            <div class="bar-chart" id="barChart">
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:156px"></div>
+                                        <div class="bar bar-blue" style="height:130px"></div>
+                                    </div>
+                                    <span class="bar-label">智慧城市</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:140px"></div>
+                                        <div class="bar bar-blue" style="height:110px"></div>
+                                    </div>
+                                    <span class="bar-label">征信评估</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:120px"></div>
+                                        <div class="bar bar-blue" style="height:98px"></div>
+                                    </div>
+                                    <span class="bar-label">航行安全</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:105px"></div>
+                                        <div class="bar bar-blue" style="height:82px"></div>
+                                    </div>
+                                    <span class="bar-label">防灾减灾</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:88px"></div>
+                                        <div class="bar bar-blue" style="height:68px"></div>
+                                    </div>
+                                    <span class="bar-label">数据分析</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:72px"></div>
+                                        <div class="bar bar-blue" style="height:56px"></div>
+                                    </div>
+                                    <span class="bar-label">配航计算</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:60px"></div>
+                                        <div class="bar bar-blue" style="height:42px"></div>
+                                    </div>
+                                    <span class="bar-label">安全防行</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:48px"></div>
+                                        <div class="bar bar-blue" style="height:32px"></div>
+                                    </div>
+                                    <span class="bar-label">企业经营</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:36px"></div>
+                                        <div class="bar bar-blue" style="height:24px"></div>
+                                    </div>
+                                    <span class="bar-label">城市回馈</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:28px"></div>
+                                        <div class="bar bar-blue" style="height:18px"></div>
+                                    </div>
+                                    <span class="bar-label">智慧交通</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-stack">
+                                        <div class="bar bar-green" style="height:20px"></div>
+                                        <div class="bar bar-blue" style="height:12px"></div>
+                                    </div>
+                                    <span class="bar-label">管理协同</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="msg-actions">
+                        <button class="msg-action-btn" title="复制"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+                        <button class="msg-action-btn" title="重新生成"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+                        <button class="msg-action-btn" title="赞"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg></button>
+                        <button class="msg-action-btn" title="踩"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+                        <span class="msg-time">2025-12-15 14:36:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════ CONVERSATION 2: TABLE ══════════ -->
+            <div class="msg msg-user">
+                <div class="msg-avatar msg-avatar-user">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="msg-bubble-user">请统计下，2025年每个月新增用户数、数据产品购买数、数据产品发布数、数据需求发布，用表格统计</div>
+            </div>
+
+            <div class="msg msg-ai">
+                <div class="msg-avatar msg-avatar-ai">
+                    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                </div>
+                <div class="msg-bubble-ai">
+                    <div class="ai-text">
+                        <p>2025年每个月新增用户数、数据产品购买数、数据产品发布数、需求发布数统计如下：</p>
+                    </div>
+                    <div class="ai-table-wrap">
+                        <table class="ai-table">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>新增用户数</th>
+                                    <th>数据产品购买</th>
+                                    <th>数据产品发布</th>
+                                    <th>数据需求发布</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2025年1月</td><td>124,987</td><td>123,056</td><td>123,056</td><td>224,965</td></tr>
+                                <tr><td>2025年2月</td><td>653,298</td><td>665,852</td><td>665,832</td><td>668,789</td></tr>
+                                <tr><td>2025年3月</td><td>426,365</td><td>124,687</td><td>124,987</td><td>113,642</td></tr>
+                                <tr><td>2025年4月</td><td>224,995</td><td>653,298</td><td>653,298</td><td>391,428</td></tr>
+                                <tr><td>2025年5月</td><td>668,789</td><td>426,365</td><td>426,365</td><td>286,419</td></tr>
+                                <tr><td>2025年6月</td><td>113,642</td><td>224,995</td><td>224,995</td><td>113,642</td></tr>
+                                <tr><td>2025年7月</td><td>391,428</td><td>668,789</td><td>668,789</td><td>391,428</td></tr>
+                                <tr><td>2025年8月</td><td>668,789</td><td>113,642</td><td>113,642</td><td>668,789</td></tr>
+                                <tr><td>2025年9月</td><td>113,642</td><td>391,428</td><td>391,428</td><td>113,642</td></tr>
+                                <tr><td>2025年10月</td><td>391,428</td><td>286,419</td><td>286,419</td><td>286,419</td></tr>
+                                <tr><td>2025年11月</td><td>286,419</td><td>113,642</td><td>113,642</td><td>668,789</td></tr>
+                                <tr><td>2025年12月</td><td>113,642</td><td>391,428</td><td>391,428</td><td>113,642</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="msg-actions">
+                        <button class="msg-action-btn" title="复制"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+                        <button class="msg-action-btn" title="重新生成"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+                        <button class="msg-action-btn" title="赞"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg></button>
+                        <button class="msg-action-btn" title="踩"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+                        <span class="msg-time">2025-12-15 14:36:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════ CONVERSATION 3: TEXT ══════════ -->
+            <div class="msg msg-user">
+                <div class="msg-avatar msg-avatar-user">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="msg-bubble-user">请问忘记密码，如何找回账号？</div>
+            </div>
+
+            <div class="msg msg-ai">
+                <div class="msg-avatar msg-avatar-ai">
+                    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                </div>
+                <div class="msg-bubble-ai">
+                    <div class="ai-text">
+                        <p>尊敬的企业单位、个人做好账号管理工作，务必了解密码修改号的找登方式、账号信息获取以及找回账号的方法。</p>
+
+                        <h4>一、账号登录方式</h4>
+                        <p>平台有两种登录方式，一是通过账号密码进行登录，用户需要在注册完成后进入<strong>统一用户中心 — 用户中心</strong>进行账号密码的修改。（也可以在<strong>统一用户中心 — 账号安全</strong>进行密码修改）</p>
+                        <p>一种是通过手机号及验证码进行登录。如您尚未验证手机号码的用户，可以尝试使用手机号验证码进行登录。</p>
+
+                        <h4>二、数字信息查看</h4>
+                        <ol>
+                            <li>进入系统，点击右上角登录 — 进入<strong>统一用户中心</strong>。</li>
+                            <li>在性目中选择其中三个信息，分别是<strong>登录账号、手机号以及密码</strong>。我们分别列出了账号登录的两种方式 —— <strong>手机号验证码登录</strong>和<strong>账号密码登录</strong>。</li>
+                        </ol>
+
+                        <h4>三、账号找回</h4>
+                        <p>当用户忘记密码需要找回时，需要充分排查清楚情形。</p>
+                        <p><strong>情况1：</strong>进入官网登陆页面，在左下角"忘记密码"进行密码找回；如果您在找回页面输入手机号无法获取验证码，可能说明该手机号并未在平台注册。</p>
+                        <p><strong>情况2：</strong>如果您是企业客户，您确认公司已经在深圳数据交易所开户，但手机号/邮箱号密码仍无法登录，可以通过<strong>机构账号找回</strong>的方式进行申请找回：点击"忘记密码"，在右上角找到"<strong>机构账号找回</strong>"按钮。</p>
+                        <p>按照申请表单内容进行完整填写以及材料上传（注：请确保提交的材料完整、准确、符合要求，否则平台不予处理您的找回申请）。平台收到申请后会对资料进行核对验证，并与您联系。</p>
+                    </div>
+                    <div class="msg-actions">
+                        <button class="msg-action-btn" title="复制"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+                        <button class="msg-action-btn" title="重新生成"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+                        <button class="msg-action-btn" title="赞"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg></button>
+                        <button class="msg-action-btn" title="踩"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+                        <span class="msg-time">2025-2-18 14:36:00</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <!-- ══════════ INPUT AREA ══════════ -->
+        <div class="chat-input-area">
+            <div class="chat-input-wrap">
+                <input class="chat-input" type="text" placeholder="可以问我任何问题……">
+                <button class="btn-send" title="发送">
+                    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    function showWelcome() {
+        document.getElementById('welcomeView').classList.remove('hidden');
+        document.getElementById('chatView').classList.add('hidden');
+        document.querySelectorAll('.history-item').forEach(function(h) { h.classList.remove('active'); });
+    }
+    function showChat() {
+        document.getElementById('welcomeView').classList.add('hidden');
+        document.getElementById('chatView').classList.remove('hidden');
+    }
+    function startChat(text) {
+        showChat();
+        var msgs = document.getElementById('chatMessages');
+        msgs.scrollTop = 0;
+    }
+    document.querySelector('.btn-new-chat').addEventListener('click', showWelcome);
+    document.querySelectorAll('.history-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.history-item').forEach(function(h) { h.classList.remove('active'); });
+            item.classList.add('active');
+            showChat();
+        });
+    });
+    </script>
+</body>
+</html>

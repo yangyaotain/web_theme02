@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>审核详情 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,8 +26,8 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
         }
         .section-title {
-            font-size: 14px; font-weight: 700; color: #409eff; padding: 16px 20px 12px;
-            border-left: 3px solid #409eff; margin: 0; background: #fff;
+            font-size: 14px; font-weight: 700; color: var(--forest-green); padding: 16px 20px 12px;
+            border-left: 3px solid var(--forest-green); margin: 0; background: #fff;
         }
         .section-body { padding: 0 20px 20px; }
         .member-summary-name { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 10px; }
@@ -123,15 +126,15 @@
         }
         .flow-step-body .person svg { width: 14px; height: 14px; fill: #909399; }
         .flow-step-body .person-name { color: #303133; font-weight: 500; }
-        .flow-step-body .person-extra { color: #409eff; font-size: 11px; }
+        .flow-step-body .person-extra { color: var(--forest-green); font-size: 11px; }
         .flow-step-body .time-row { color: #909399; line-height: 1.8; }
 
         .flow-open-btn {
             width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
             border: 1px solid #dcdfe6; border-radius: 4px; background: #fff;
-            cursor: pointer; color: #409eff; transition: all 0.15s; flex-shrink: 0;
+            cursor: pointer; color: var(--forest-green); transition: all 0.15s; flex-shrink: 0;
         }
-        .flow-open-btn:hover { border-color: #409eff; background: #ecf5ff; }
+        .flow-open-btn:hover { border-color: var(--forest-green); background: var(--forest-green-50); }
         .flow-open-btn svg { width: 16px; height: 16px; fill: currentColor; }
 
         /* ══════════════════════════════════════════ Flowchart Modal ══════════════════════════════════════════ */
@@ -156,19 +159,19 @@
         }
         .flow-modal-title .icon {
             width: 32px; height: 32px; border-radius: 8px;
-            background: #ecf5ff; display: flex; align-items: center; justify-content: center;
+            background: var(--forest-green-50); display: flex; align-items: center; justify-content: center;
         }
-        .flow-modal-title .icon svg { width: 18px; height: 18px; fill: #409eff; }
+        .flow-modal-title .icon svg { width: 18px; height: 18px; fill: var(--forest-green); }
         .flow-modal-title .ver {
-            font-size: 12px; font-weight: 500; color: #409eff;
-            background: #ecf5ff; padding: 2px 8px; border-radius: 3px; margin-left: 4px;
+            font-size: 12px; font-weight: 500; color: var(--forest-green);
+            background: var(--forest-green-50); padding: 2px 8px; border-radius: 3px; margin-left: 4px;
         }
         .flow-modal-legend {
             display: flex; align-items: center; gap: 16px; font-size: 12px; color: #606266;
         }
         .flow-modal-legend .leg-item { display: flex; align-items: center; gap: 5px; }
         .leg-box { width: 12px; height: 12px; border-radius: 2px; border: 1px solid; }
-        .leg-box.processing { background: #409eff; border-color: #409eff; }
+        .leg-box.processing { background: var(--forest-green); border-color: var(--forest-green); }
         .leg-box.done { background: #67c23a; border-color: #67c23a; }
         .leg-box.pending { background: #fff; border-color: #dcdfe6; }
         .flow-modal-close {
@@ -225,7 +228,7 @@
             border: none; background: none; cursor: pointer; color: #606266;
             border-radius: 3px; transition: all 0.15s; font-size: 14px;
         }
-        .zoom-btn:hover { background: #f5f7fa; color: #409eff; }
+        .zoom-btn:hover { background: #f5f7fa; color: var(--forest-green); }
         .zoom-select {
             font-size: 12px; color: #606266; border: none; background: none;
             font-family: inherit; cursor: pointer; padding: 0 2px; outline: none;

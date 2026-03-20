@@ -157,7 +157,7 @@ a { text-decoration: none; color: inherit; }
 .data-table tbody tr:hover td { background: #fafafa; }
 
 /* ══════════════ Common Links ══════════════ */
-.link-blue { color: #409eff; cursor: pointer; }
+.link-blue { color: var(--forest-green); cursor: pointer; }
 .link-blue:hover { text-decoration: underline; }
 .link-green { color: var(--forest-green); cursor: pointer; font-size: 13px; }
 .link-green:hover { text-decoration: underline; }
@@ -194,7 +194,7 @@ a { text-decoration: none; color: inherit; }
 .filter-date:focus { border-color: var(--forest-green); }
 .filter-icon {
     width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-    color: #409eff; cursor: pointer; flex-shrink: 0;
+    color: var(--forest-green); cursor: pointer; flex-shrink: 0;
 }
 .filter-icon svg { width: 16px; height: 16px; fill: currentColor; }
 .filter-reset {
@@ -243,7 +243,7 @@ a { text-decoration: none; color: inherit; }
 .tab-panel.active { display: block; }
 
 /* ══════════════ Status Tags ══════════════ */
-.status-pending { color: #409eff; }
+.status-pending { color: var(--forest-green); }
 .status-approved { color: var(--forest-green); }
 .status-rejected { color: #f56c6c; }
 

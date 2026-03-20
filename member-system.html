@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>会员体系 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,9 +19,9 @@
             margin-bottom: 16px;
         }
         .section-title {
-            font-size: 14px; font-weight: 700; color: #409eff;
+            font-size: 14px; font-weight: 700; color: var(--forest-green);
             display: flex; align-items: center; gap: 6px;
-            border-left: 3px solid #409eff; padding-left: 10px;
+            border-left: 3px solid var(--forest-green); padding-left: 10px;
         }
         .section-title .expand-icon {
             width: 14px; height: 14px; fill: #909399; cursor: pointer; margin-left: 4px;
@@ -62,7 +65,7 @@
         }
         .level-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
         .level-dot.guest { background: #c0c4cc; }
-        .level-dot.normal { background: #409eff; }
+        .level-dot.normal { background: var(--forest-green); }
         .level-dot.silver { background: #909399; }
         .level-dot.gold { background: #e6a23c; }
         .level-dot.diamond { background: #f56c6c; }

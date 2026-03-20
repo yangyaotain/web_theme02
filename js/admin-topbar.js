@@ -19,9 +19,11 @@
         { label: '工作台', href: '#' },
         { label: '运营中心', href: 'operation-center.html' },
         { label: '可视化大屏', href: '#' },
-        { label: '智能问数', href: '#' },
+        { label: '智能问数', href: 'smart-query.html', target: '_blank' },
         { label: '智能报告', href: '#' },
-        { label: '公共数据运营平台', href: '#' }
+        { label: '公共数据运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
+        { label: '可信数据空间', href: 'https://lgdata.lggov.cn/index', target: '_blank' },
+        { label: '数据开发平台', href: 'data-dev-system.html', target: '_blank' }
     ];
 
     var tagsHTML = USER.tags.map(function (t) {
@@ -29,7 +31,7 @@
     }).join('');
 
     var menuHTML = MENU.map(function (m) {
-        return '<a href="' + m.href + '" class="user-menu-item">' + m.label + '</a>';
+        return '<a href="' + m.href + '" class="user-menu-item"' + (m.target ? ' target="' + m.target + '"' : '') + '>' + m.label + '</a>';
     }).join('');
 
     var html = ''

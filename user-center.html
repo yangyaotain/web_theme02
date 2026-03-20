@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户中心 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +60,7 @@
             padding: 1px 8px; font-size: 11px; font-weight: 500;
             border-radius: 2px; border: 1px solid;
         }
-        .info-tag.blue { color: #409eff; border-color: #b3d8ff; background: #ecf5ff; }
+        .info-tag.blue { color: var(--forest-green); border-color: var(--forest-green-200); background: var(--forest-green-50); }
         .info-tag.gray { color: #909399; border-color: #d3d4d6; background: #f4f4f5; }
         .info-tag.orange { color: #e6a23c; border-color: #f5dab1; background: #fdf6ec; }
         .info-tag.red { color: #f56c6c; border-color: #fbc4c4; background: #fef0f0; }
@@ -113,7 +116,7 @@
             width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
         }
         .level-dot.guest { background: #c0c4cc; }
-        .level-dot.normal { background: #409eff; }
+        .level-dot.normal { background: var(--forest-green); }
         .level-dot.silver { background: #909399; }
         .level-dot.gold { background: #e6a23c; }
         .level-dot.diamond { background: #f56c6c; }
@@ -163,7 +166,7 @@
             display: flex; justify-content: flex-end;
         }
 
-        .status-pending { color: #409eff; }
+        .status-pending { color: var(--forest-green); }
         .status-pass { color: var(--forest-green); }
         .status-reject { color: #f56c6c; }
 

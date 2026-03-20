@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据开发平台系统 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,24 +15,15 @@
     <link rel="stylesheet" href="css/components.css">
     <style>
         body {
+            margin: 0;
             background: #0f1117;
             overflow: hidden;
         }
-
-        /* 导航栏默认收起 */
-        nav-bar, nav-bar:not(:defined) { display: none; }
-
-        /* 系统截图容器 */
         .sys-view {
             position: fixed;
             inset: 0;
-            display: flex;
-            flex-direction: column;
-            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .sys-view.nav-open { top: 72px; }
-
-        .sys-content { flex: 1; overflow: hidden; position: relative; }
+        .sys-content { width: 100%; height: 100%; }
         .sys-content img {
             width: 100%; height: 100%;
             object-fit: cover;
@@ -38,219 +32,13 @@
             user-select: none;
             -webkit-user-drag: none;
         }
-
-        /* ── 导航切换按钮 ─────────────────────────── */
-        #nav-toggle-btn {
-            position: fixed;
-            right: 20px;
-            top: 16px;
-            z-index: 110;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 14px;
-            background: rgba(10, 18, 14, 0.88);
-            border: 1px solid rgba(32, 165, 101, 0.4);
-            border-radius: var(--radius-md);
-            color: rgba(255, 255, 255, 0.82);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: grab;
-            backdrop-filter: blur(10px);
-            font-family: inherit;
-            user-select: none;
-            touch-action: none;
-            white-space: nowrap;
-            /* 过渡仅用于 nav 收起/展开时的 top 变化；拖动时会动态关闭 */
-            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        background var(--transition-fast),
-                        border-color var(--transition-fast),
-                        color var(--transition-fast),
-                        box-shadow var(--transition-fast);
-        }
-        #nav-toggle-btn:hover {
-            background: rgba(20, 32, 22, 0.95);
-            border-color: rgba(32, 165, 101, 0.75);
-            color: #fff;
-        }
-        /* 拖动中状态 */
-        #nav-toggle-btn.is-dragging {
-            cursor: grabbing !important;
-            transition: none !important;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(32,165,101,0.5);
-            background: rgba(14, 24, 18, 0.96);
-        }
-        #nav-toggle-btn svg {
-            fill: currentColor;
-            flex-shrink: 0;
-            pointer-events: none; /* 防止 svg 子元素干扰事件 */
-        }
-        /* 导航展开时，class 控制 top（未拖动时有效） */
-        #nav-toggle-btn.nav-open { top: 84px; }
     </style>
-    <script src="js/nav-bar.js"></script>
 </head>
 <body>
-    <nav-bar active="data-store"></nav-bar>
-
-    <!-- 系统截图 -->
-    <div class="sys-view" id="sys-view">
+    <div class="sys-view">
         <div class="sys-content">
             <img src="./images/othersystem.png" alt="数据开发平台系统界面" draggable="false">
         </div>
     </div>
-
-    <!-- 导航切换按钮（可拖动） -->
-    <button id="nav-toggle-btn">
-        <svg id="toggle-icon" width="14" height="14" viewBox="0 0 24 24">
-            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-        </svg>
-        <span id="toggle-text">展开导航栏</span>
-    </button>
-
-    <script>
-        var navOpen = false;
-
-        /* ── 导航收起/展开 ───────────────────────────── */
-        function toggleNav() {
-            navOpen = !navOpen;
-
-            var navBar  = document.querySelector('nav-bar');
-            var sysView = document.getElementById('sys-view');
-            var btn     = document.getElementById('nav-toggle-btn');
-            var icon    = document.getElementById('toggle-icon');
-            var text    = document.getElementById('toggle-text');
-
-            if (navOpen) {
-                navBar.style.display = 'block';
-                sysView.classList.add('nav-open');
-                // 只在未手动拖动时才用 class 控制 top
-                if (!btn._manualPos) btn.classList.add('nav-open');
-                text.textContent = '收起导航栏';
-                icon.innerHTML = '<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>';
-            } else {
-                navBar.style.display = 'none';
-                sysView.classList.remove('nav-open');
-                if (!btn._manualPos) btn.classList.remove('nav-open');
-                text.textContent = '展开导航栏';
-                icon.innerHTML = '<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>';
-            }
-        }
-
-        /* ── 拖动逻辑 ────────────────────────────────── */
-        (function () {
-            var btn = document.getElementById('nav-toggle-btn');
-
-            var dragging  = false;   // 当前是否正在拖动
-            var hasMoved  = false;   // 本次 mousedown 是否发生了位移（区分点击vs拖动）
-            var startX, startY;      // 按下时鼠标坐标
-            var initLeft, initTop;   // 按下时按钮左上角坐标
-
-            /* 把按钮切换为 left/top 定位（从 right/top 迁移） */
-            function switchToAbsPos() {
-                var rect = btn.getBoundingClientRect();
-                btn.style.right  = 'auto';
-                btn.style.left   = rect.left + 'px';
-                btn.style.top    = rect.top  + 'px';
-                btn.classList.remove('nav-open'); // 不再让 class 控制 top
-            }
-
-            /* 边界约束：确保按钮不超出视口 */
-            function clamp(val, min, max) {
-                return Math.max(min, Math.min(val, max));
-            }
-
-            /* ---- Mouse ---- */
-            btn.addEventListener('mousedown', function (e) {
-                // 只响应主键
-                if (e.button !== 0) return;
-
-                dragging = true;
-                hasMoved = false;
-                startX   = e.clientX;
-                startY   = e.clientY;
-
-                // 切换到 left/top 并记录初始坐标
-                if (!btn._manualPos) switchToAbsPos();
-                initLeft = parseFloat(btn.style.left);
-                initTop  = parseFloat(btn.style.top);
-
-                btn.classList.add('is-dragging');
-                e.preventDefault(); // 阻止文字选中
-            });
-
-            document.addEventListener('mousemove', function (e) {
-                if (!dragging) return;
-
-                var dx = e.clientX - startX;
-                var dy = e.clientY - startY;
-
-                // 超过 4px 才算真实拖动
-                if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
-
-                var newLeft = clamp(initLeft + dx, 8, window.innerWidth  - btn.offsetWidth  - 8);
-                var newTop  = clamp(initTop  + dy, 8, window.innerHeight - btn.offsetHeight - 8);
-
-                btn.style.left = newLeft + 'px';
-                btn.style.top  = newTop  + 'px';
-            });
-
-            document.addEventListener('mouseup', function (e) {
-                if (!dragging) return;
-                dragging = false;
-                btn.classList.remove('is-dragging');
-
-                if (hasMoved) {
-                    // 标记为手动定位，后续 toggleNav 不再修改 top
-                    btn._manualPos = true;
-                } else {
-                    // 没有真实移动：视为点击，触发 toggleNav
-                    toggleNav();
-                }
-            });
-
-            /* ---- Touch ---- */
-            btn.addEventListener('touchstart', function (e) {
-                var t    = e.touches[0];
-                dragging = true;
-                hasMoved = false;
-                startX   = t.clientX;
-                startY   = t.clientY;
-
-                if (!btn._manualPos) switchToAbsPos();
-                initLeft = parseFloat(btn.style.left);
-                initTop  = parseFloat(btn.style.top);
-
-                btn.classList.add('is-dragging');
-            }, { passive: true });
-
-            document.addEventListener('touchmove', function (e) {
-                if (!dragging) return;
-                var t  = e.touches[0];
-                var dx = t.clientX - startX;
-                var dy = t.clientY - startY;
-
-                if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
-
-                var newLeft = clamp(initLeft + dx, 8, window.innerWidth  - btn.offsetWidth  - 8);
-                var newTop  = clamp(initTop  + dy, 8, window.innerHeight - btn.offsetHeight - 8);
-
-                btn.style.left = newLeft + 'px';
-                btn.style.top  = newTop  + 'px';
-            }, { passive: true });
-
-            document.addEventListener('touchend', function () {
-                if (!dragging) return;
-                dragging = false;
-                btn.classList.remove('is-dragging');
-
-                if (hasMoved) {
-                    btn._manualPos = true;
-                } else {
-                    toggleNav();
-                }
-            });
-        })();
-    </script>
 </body>
 </html>

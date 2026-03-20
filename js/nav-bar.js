@@ -100,11 +100,11 @@ class NavBar extends HTMLElement {
             { label: '工作台',           href: '#' },
             { label: '运营中心',         href: 'operation-center.html' },
             { label: '可视化大屏',       href: '#' },
-            { label: '智能问数',         href: '#' },
+            { label: '智能问数',         href: 'smart-query.html', target: '_blank' },
             { label: '智能报告',         href: '#' },
-            { label: '公共数据运营平台', href: '#' },
-            { label: '可信数据空间',     href: '#' },
-            { label: '数据开发平台',     href: 'data-dev-platform.html' },
+            { label: '公共数据运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
+            { label: '可信数据空间',     href: 'https://lgdata.lggov.cn/index', target: '_blank' },
+            { label: '数据开发平台',     href: 'data-dev-system.html', target: '_blank' },
         ];
 
         const chevronSVG = `<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
@@ -133,7 +133,7 @@ class NavBar extends HTMLElement {
         }).join('');
 
         const userMenuHTML = USER_MENU.map(m =>
-            `<a href="${m.href}" class="user-menu-item">${m.label}</a>`
+            `<a href="${m.href}" class="user-menu-item"${m.target ? ' target="' + m.target + '"' : ''}>${m.label}</a>`
         ).join('');
 
         /* ── 右侧区域：登录前 vs 登录后 ── */
