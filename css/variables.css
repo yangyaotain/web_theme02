@@ -1,0 +1,93 @@
+/* ============================================================
+   CSS Variables — 龙岗数据聚合服务平台 设计系统
+   统一的设计令牌，所有页面共享
+   ============================================================ */
+
+:root {
+    /* ── Brand Colors ────────────────────────────── */
+    --forest-green: #20A565;
+    --forest-green-50: #f0fdf6;
+    --forest-green-100: #dcfce9;
+    --forest-green-200: #bbf7d4;
+    --forest-green-500: #20A565;
+    --forest-green-600: #16a34a;
+    --forest-green-700: #15803d;
+
+    --accent-orange: #F7AF1D;
+    --accent-orange-50: #fffbeb;
+    --accent-orange-100: #fef3c7;
+
+    --info-blue: #409EFF;
+
+    /* ── Classification Colors — 色彩即信息 ──────── */
+    --cls-database: #20A565;
+    --cls-database-bg: #f0fdf6;
+    --cls-api: #4F6EF7;
+    --cls-api-bg: #EEF2FF;
+    --cls-doc: #E5940A;
+    --cls-doc-bg: #fffbeb;
+    --cls-service: #8B5CF6;
+    --cls-service-bg: #F5F3FF;
+
+    /* ── Typography Colors ───────────────────────── */
+    --text-primary: #1F2B28;
+    --text-secondary: #5C6863;
+    --text-tertiary: #919B96;
+    --text-placeholder: #919B96;
+    --text-disabled: #BFC7C4;
+
+    /* ── Backgrounds & Surfaces ──────────────────── */
+    --bg-main: #F4F7F6;
+    --bg-card: #FFFFFF;
+    --bg-dark-nav: #1A2B25;
+    --bg-hover: #F2F9F1;
+
+    --surface-primary: #ffffff;
+    --surface-secondary: #F4F7F6;
+    --surface-elevated: #ffffff;
+
+    /* ── Semantic Colors ─────────────────────────── */
+    --color-success: #20A565;
+    --color-warning: #F7AF1D;
+    --color-error: #F56C6C;
+
+    /* ── Borders & Dividers ──────────────────────── */
+    --border-default: #D1D9D6;
+    --border-divider: #EBEEED;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-emphasis: rgba(0, 0, 0, 0.12);
+
+    /* ── Legacy Neutral Palette ──────────────────── */
+    --gray-50: #fafafa;
+    --gray-100: #f4f4f5;
+    --gray-200: #e4e4e7;
+    --gray-300: #d4d4d8;
+    --gray-400: #a1a1aa;
+    --gray-500: #71717a;
+    --gray-600: #52525b;
+    --gray-700: #3f3f46;
+    --gray-800: #27272a;
+    --gray-900: #18181b;
+
+    /* ── Shadows ─────────────────────────────────── */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-glow: 0 0 0 1px rgba(32, 165, 101, 0.1), 0 4px 16px rgba(32, 165, 101, 0.12);
+    --shadow-green-glow: 0 0 0 1px rgba(32, 165, 101, 0.1), 0 4px 16px rgba(32, 165, 101, 0.12);
+
+    /* ── Radius ──────────────────────────────────── */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-2xl: 28px;
+
+    /* ── Transitions ─────────────────────────────── */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}

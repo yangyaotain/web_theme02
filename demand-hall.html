@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>需求大厅 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* ==================== Page Header ==================== */
+        .page-header { background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%); }
+
+        /* ==================== Search Section ==================== */
+        .search-section { padding: 0; margin-top: -20px; position: relative; z-index: 10; }
+        .search-container { max-width: 1920px; margin: 0 auto; padding: 0 32px; }
+        .search-card {
+            background: var(--surface-elevated); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px;
+        }
+        .search-inner { display: flex; align-items: center; gap: 12px; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input {
+            width: 100%; padding: 14px 20px 14px 48px;
+            border: 1px solid var(--border-default); border-radius: var(--radius-lg);
+            font-size: 14px; color: var(--text-primary); outline: none; transition: all var(--transition-fast);
+        }
+        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
+        .search-input::placeholder { color: var(--text-tertiary); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: var(--text-tertiary); }
+        .search-btn {
+            padding: 14px 32px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            color: white; border: none; border-radius: var(--radius-lg);
+            font-size: 14px; font-weight: 500; cursor: pointer;
+            box-shadow: var(--shadow-sm); transition: all var(--transition-fast);
+        }
+        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .search-btn-publish {
+            padding: 14px 28px; background: var(--surface-primary); color: var(--forest-green);
+            border: 1.5px solid var(--forest-green); border-radius: var(--radius-lg); font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all var(--transition-fast); white-space: nowrap;
+        }
+        .search-btn-publish:hover { background: var(--forest-green); color: white; transform: translateY(-1px); }
+        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
+        .search-tag {
+            padding: 4px 12px; background: transparent; border: 1px solid var(--border-default);
+            border-radius: 100px; font-size: 12px; color: var(--text-secondary);
+            cursor: pointer; transition: all var(--transition-fast);
+        }
+        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
+
+        /* ==================== Main Content ==================== */
+        .main-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+        }
+
+        /* ==================== Sidebar Filters ==================== */
+        .sidebar {
+            width: auto;
+            position: sticky;
+            top: 96px;
+            height: fit-content;
+        }
+
+        .filter-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-section { margin-bottom: 24px; }
+        .filter-section:last-child { margin-bottom: 0; }
+
+        .filter-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-clear {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+        }
+
+        .filter-clear:hover { color: var(--forest-green); }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-option:hover { background: var(--gray-100); }
+        .filter-option.active { background: var(--forest-green-50); }
+
+        .filter-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .filter-option.active .filter-checkbox {
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .filter-checkbox svg {
+            width: 10px;
+            height: 10px;
+            fill: white;
+            opacity: 0;
+        }
+
+        .filter-option.active .filter-checkbox svg { opacity: 1; }
+
+        .filter-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .filter-option.active .filter-label {
+            color: var(--forest-green-700);
+            font-weight: 500;
+        }
+
+        .filter-count {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            background: var(--gray-100);
+            padding: 2px 8px;
+            border-radius: 100px;
+        }
+
+        .filter-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 20px 0;
+        }
+
+        /* ==================== Content Area ==================== */
+        .content-area { min-width: 0; }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .results-count { font-size: 13px; color: var(--text-secondary); }
+        .results-count strong { color: var(--text-primary); font-weight: 600; }
+
+        .sort-dropdown { display: flex; align-items: center; gap: 8px; }
+        .sort-label { font-size: 12px; color: var(--text-tertiary); }
+        .sort-select {
+            padding: 6px 12px; font-size: 13px; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm); cursor: pointer; outline: none;
+        }
+
+        /* ==================== Data Cards Grid ==================== */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .data-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .data-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+
+        .data-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .data-card-image {
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(32,165,101,0.15)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .data-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .data-card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; z-index: 2; }
+        .data-card-badge { padding: 4px 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: var(--radius-md); font-size: 10px; font-weight: 500; color: white; }
+        .data-card-badge.price { background: rgba(229,57,53,0.85); }
+
+        .data-card-content { padding: 20px; }
+        .data-card-title {
+            font-size: 15px; font-weight: 600; color: var(--text-primary);
+            line-height: 1.4; margin-bottom: 8px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px; }
+        .data-card-desc {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 16px; border-top: 1px solid var(--border-subtle);
+        }
+        .data-card-meta { font-size: 11px; color: var(--text-tertiary); }
+        .data-card-meta .price { color: #E53935; font-weight: 700; }
+        .data-card-type { font-size: 11px; font-weight: 500; color: var(--forest-green); background: var(--forest-green-50); padding: 4px 10px; border-radius: var(--radius-md); }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 1200px) {
+            .data-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .filter-card { display: flex; flex-wrap: wrap; gap: 24px; }
+            .filter-section { margin-bottom: 0; flex: 1; min-width: 200px; }
+            .filter-divider { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .data-grid { grid-template-columns: 1fr; }
+            .search-inner { flex-direction: column; }
+            .search-input-wrapper { width: 100%; }
+            .search-btn { width: 100%; }
+            .main-content { padding: 24px 16px; }
+        }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="demand"></nav-bar>
+
+    <header class="page-header">
+        <div class="page-header-container">
+            <h1 class="page-title">需求大厅</h1>
+            <p class="page-subtitle">发布数据需求，精准匹配优质数据资源与服务</p>
+        </div>
+    </header>
+
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-card">
+                <div class="search-inner">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" placeholder="请输入关键字">
+                    </div>
+                    <button class="search-btn">搜索</button>
+                    <button class="search-btn-publish">发布需求</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tags-label">热门：</span>
+                    <span class="search-tag">交通运输</span>
+                    <span class="search-tag">文化旅游</span>
+                    <span class="search-tag">气象服务</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <aside class="sidebar">
+            <div class="filter-card">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        需求类型
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option active">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">全部</span>
+                            <span class="filter-count">128</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">数据需求</span>
+                            <span class="filter-count">56</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">服务需求</span>
+                            <span class="filter-count">42</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">应用需求</span>
+                            <span class="filter-count">30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">需求状态</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">进行中</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">已截止</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">需求优先级</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">紧急</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">较高</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">普通</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-area">
+            <div class="content-header">
+                <div class="results-count">共 <strong>128</strong> 条需求</div>
+                <div class="sort-dropdown">
+                    <span class="sort-label">排序：</span>
+                    <select class="sort-select">
+                        <option>发布时间</option>
+                        <option>浏览量</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-grid">
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-dashboard.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业领导驾驶舱服务需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">采集企业在资质、财务、业绩等方面的数据，对数据进行综合分析、划定指标归属，企业诊断决策支撑辅助，涉及企业总览</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：社会分析</span>
+                            <span class="data-card-type">社会未编</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-education.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">教育资源评估数据需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">采集企业在教育资源方面的用人需求、人力资源管理数据，上海数字化生态建设方向方智能集成、服务管理及数据管理</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据公建</span>
+                            <span class="data-card-type">数据公建</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-finance.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">金融风险评估数据服务需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">数字生态建设方向为方智能集成、数据集成，金融全流程数据管理成熟度评估体系建设，辅助决策支撑</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据安全</span>
+                            <span class="data-card-type">智慧文旅</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-maturity.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">数据管理能力成熟度评估需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">数据管理能力成熟度评估方向为一项对企业数据能力发展下的全企业路径，编制评价企业在企业数据融通、数据质量等方面的成熟度</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据公建</span>
+                            <span class="data-card-type">数据居住评估</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-transit.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">公共出行数据分析需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">通过公共出行数据的整合分析，分析各类公共出行的时序数据，进行智能出行数据分析，城市规划及交通管理辅助决策</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：包括城市</span>
+                            <span class="data-card-type">包括城市</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-asset.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">数据资产一站式服务需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">数据资产一站式服务平台为企业提供综合性的数据资产管理服务方案，涵盖数据资产管理、数据质量管理等核心功能</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据公建</span>
+                            <span class="data-card-type">数据公建</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-scenario.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据工具</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">数据要素场景设计需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">数据要素场景设计综合平台为产权类资产经营数据等综合性的数据资产管理服务方案及数据分析平台与方案</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据安全</span>
+                            <span class="data-card-type">数字化运营</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-security.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据安全评估</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">为企业提供专业、全面的数据安全风险评估及合规检测，帮助评估企业在企业数据存储、数据管理等方面的安全性</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：数据公建</span>
+                            <span class="data-card-type">企业安全</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/demand-dashboard.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">智慧城市数据融合分析需求</h3>
+                        <p class="data-card-company">中国电子云</p>
+                        <p class="data-card-desc">基于城市多源数据融合分析，构建城市运行态势感知体系，为城市精细化治理和智慧决策提供数据支撑</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">数据归属：包括城市</span>
+                            <span class="data-card-type">智慧城市</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <nav class="pagination">
+                <button class="pagination-btn" disabled>上一页</button>
+                <div class="pagination-numbers">
+                    <button class="pagination-number active">1</button>
+                    <button class="pagination-number">2</button>
+                    <button class="pagination-number">3</button>
+                    <button class="pagination-number">4</button>
+                    <button class="pagination-number">5</button>
+                    <span class="pagination-ellipsis">...</span>
+                    <button class="pagination-number">89</button>
+                </div>
+                <button class="pagination-btn">下一页</button>
+            </nav>
+        </div>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script>
+    document.querySelectorAll('.filter-option').forEach(function (option) {
+        option.addEventListener('click', function () {
+            this.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.data-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            window.location.href = 'demand-detail.html';
+        });
+    });
+
+    </script>
+</body>
+</html>

@@ -7,263 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
     <style>
-        :root {
-            /* Brand Colors */
-            --forest-green: #20A565;
-            --forest-green-50: #ECFDF3;
-            --forest-green-100: #D1FADF;
-            --forest-green-200: #A6F4C5;
-            --forest-green-500: #20A565;
-            --forest-green-600: #16a34a;
-            --forest-green-700: #15803d;
-
-            --accent-orange: #F7AF1D;
-            --accent-orange-50: #FFFCF0;
-            --accent-orange-100: #FEF3C7;
-
-            --info-blue: #409EFF;
-
-            /* Classification Colors */
-            --cls-database: #20A565;
-            --cls-database-bg: #ECFDF3;
-            --cls-api: #4F6EF7;
-            --cls-api-bg: #EEF2FF;
-            --cls-doc: #E5940A;
-            --cls-doc-bg: #FFFCF0;
-            --cls-service: #8B5CF6;
-            --cls-service-bg: #F5F3FF;
-
-            /* Typography Colors */
-            --text-primary: #111827;
-            --text-secondary: #4B5563;
-            --text-tertiary: #9CA3AF;
-            --text-placeholder: #9CA3AF;
-            --text-disabled: #D1D5DB;
-
-            /* Backgrounds */
-            --bg-main: #FFFFFF;
-            --bg-section: #FAFBFC;
-            --bg-card: #FFFFFF;
-
-            --surface-primary: #FFFFFF;
-            --surface-secondary: #FAFBFC;
-            --surface-elevated: #FFFFFF;
-
-            /* Semantic Colors */
-            --color-success: #20A565;
-            --color-warning: #F7AF1D;
-            --color-error: #EF4444;
-
-            /* Borders */
-            --border-default: #E5E7EB;
-            --border-divider: #F3F4F6;
-            --border-subtle: #E5E7EB;
-            --border-emphasis: #D1D5DB;
-
-            /* Shadows */
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.04);
-            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.04);
-            --shadow-glow: 0 4px 16px rgba(32, 165, 101, 0.2);
-
-            /* Radius — 硬朗风格 */
-            --radius-sm: 2px;
-            --radius-md: 3px;
-            --radius-lg: 4px;
-            --radius-xl: 4px;
-
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .btn-primary {
-            color: white;
-            background: var(--forest-green);
-        }
-
-        .btn-primary:hover {
-            background: var(--forest-green-600);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        /* ==================== Page Header ==================== */
-        .page-header {
-            padding: 100px 0 40px;
-            background: #FAFBFC;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* 装饰：右侧圆环 */
-        .page-header::before {
-            content: '';
-            position: absolute;
-            width: 420px;
-            height: 420px;
-            border: 1.5px solid #E0E2E5;
-            border-radius: 50%;
-            top: -120px;
-            right: -80px;
-            pointer-events: none;
-        }
-
-        /* 装饰：右侧小圆环 */
-        .page-header::after {
-            content: '';
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border: 1.5px dashed #E0E2E5;
-            border-radius: 50%;
-            top: 60px;
-            right: 160px;
-            pointer-events: none;
-        }
-
-        /* 装饰层容器 */
-        .page-header-decor {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        /* 装饰：左侧点阵 */
-        .page-header-dots {
-            position: absolute;
-            top: 24px;
-            left: 40px;
-            width: 120px;
-            height: 100px;
-            background-image: radial-gradient(circle, #D4D6D9 1px, transparent 1px);
-            background-size: 16px 16px;
-            opacity: 0.7;
-        }
-
-        /* 装饰：左下对角线 */
-        .page-header-lines {
-            position: absolute;
-            bottom: 10px;
-            left: 200px;
-            width: 160px;
-            height: 60px;
-            opacity: 0.5;
-        }
-
-        /* 装饰：右侧十字 */
-        .page-header-cross {
-            position: absolute;
-            top: 40px;
-            right: 380px;
-            width: 20px;
-            height: 20px;
-            opacity: 0.45;
-        }
-
-        /* 装饰：中间菱形 */
-        .page-header-diamond {
-            position: absolute;
-            bottom: 20px;
-            right: 28%;
-            width: 14px;
-            height: 14px;
-            border: 1.5px solid #D4D6D9;
-            transform: rotate(45deg);
-            opacity: 0.6;
-        }
-
-        /* 语义装饰：数据库图标 */
-        .decor-database {
-            position: absolute;
-            right: 12%;
-            top: 30px;
-            opacity: 0.18;
-        }
-
-        /* 语义装饰：柱状图 */
-        .decor-barchart {
-            position: absolute;
-            left: 8%;
-            bottom: 8px;
-            opacity: 0.15;
-        }
-
-        /* 语义装饰：文件/表格 */
-        .decor-file {
-            position: absolute;
-            right: 32%;
-            top: 18px;
-            opacity: 0.13;
-        }
-
-        /* 语义装饰：节点连线 */
-        .decor-nodes {
-            position: absolute;
-            left: 18%;
-            top: 14px;
-            opacity: 0.16;
-        }
-
-        .page-header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 32px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-        }
-
-        .page-subtitle {
-            font-size: 15px;
-            color: var(--text-secondary);
-        }
-
         /* ==================== Search Section ==================== */
         .search-section {
             padding: 0;
@@ -273,7 +20,7 @@
         }
 
         .search-container {
-            max-width: 1400px;
+            max-width: 1920px;
             margin: 0 auto;
             padding: 0 32px;
         }
@@ -299,8 +46,7 @@
 
         .search-input {
             width: 100%;
-            padding: 14px 20px;
-            padding-left: 48px;
+            padding: 14px 20px 14px 48px;
             border: 1px solid var(--border-default);
             border-radius: var(--radius-lg);
             font-size: 14px;
@@ -314,9 +60,7 @@
             box-shadow: 0 0 0 3px var(--forest-green-100);
         }
 
-        .search-input::placeholder {
-            color: var(--text-tertiary);
-        }
+        .search-input::placeholder { color: var(--text-tertiary); }
 
         .search-icon {
             position: absolute;
@@ -362,7 +106,7 @@
             padding: 4px 12px;
             background: transparent;
             border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
+            border-radius: 100px;
             font-size: 12px;
             color: var(--text-secondary);
             cursor: pointer;
@@ -377,100 +121,125 @@
 
         /* ==================== Main Content ==================== */
         .main-content {
-            max-width: 1400px;
+            max-width: 1920px;
             margin: 0 auto;
             padding: 32px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
         }
 
-        /* ==================== Filter Bar (平铺筛选) ==================== */
-        .filter-bar {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px 32px 0;
+        /* ==================== Sidebar Filters ==================== */
+        .sidebar {
+            width: auto;
+            position: sticky;
+            top: 96px;
+            height: fit-content;
         }
 
-        .filter-bar-inner {
-            background: var(--surface-primary);
+        .filter-card {
+            background: var(--surface-elevated);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 20px 24px;
-            box-shadow: var(--shadow-xs);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
         }
 
-        .filter-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 0;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-divider);
-        }
+        .filter-section { margin-bottom: 24px; }
+        .filter-section:last-child { margin-bottom: 0; }
 
-        .filter-row:first-child {
-            padding-top: 0;
-        }
-
-        .filter-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .filter-row-label {
+        .filter-title {
             font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
-            min-width: 72px;
-            padding-top: 6px;
-            flex-shrink: 0;
-        }
-
-        .filter-row-options {
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            flex: 1;
+            justify-content: space-between;
         }
 
-        .filter-tag {
-            display: inline-flex;
+        .filter-clear {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+        }
+
+        .filter-clear:hover { color: var(--forest-green); }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-option {
+            display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 6px 14px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            background: transparent;
-            border: 1px solid transparent;
+            gap: 10px;
+            padding: 8px 12px;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all var(--transition-fast);
-            white-space: nowrap;
-            user-select: none;
         }
 
-        .filter-tag:hover {
-            color: var(--forest-green);
-            background: var(--forest-green-50);
+        .filter-option:hover { background: var(--gray-100); }
+        .filter-option.active { background: var(--forest-green-50); }
+
+        .filter-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
         }
 
-        .filter-tag.active {
-            color: var(--forest-green-700);
-            background: var(--forest-green-50);
+        .filter-option.active .filter-checkbox {
+            background: var(--forest-green);
             border-color: var(--forest-green);
+        }
+
+        .filter-checkbox svg {
+            width: 10px;
+            height: 10px;
+            fill: white;
+            opacity: 0;
+        }
+
+        .filter-option.active .filter-checkbox svg { opacity: 1; }
+
+        .filter-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .filter-option.active .filter-label {
+            color: var(--forest-green-700);
             font-weight: 500;
         }
 
-        .filter-tag-count {
+        .filter-count {
+            margin-left: auto;
             font-size: 11px;
             color: var(--text-tertiary);
-            margin-left: 2px;
+            background: var(--gray-100);
+            padding: 2px 8px;
+            border-radius: 100px;
         }
 
-        .filter-tag.active .filter-tag-count {
-            color: var(--forest-green);
+        .filter-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 20px 0;
         }
 
         /* ==================== Content Area ==================== */
-        /* Tabs */
+        .content-area { min-width: 0; }
+
         .content-tabs {
             display: flex;
             align-items: center;
@@ -494,7 +263,7 @@
 
         .tab:hover {
             color: var(--text-primary);
-            background: #F3F4F6;
+            background: var(--gray-100);
         }
 
         .tab.active {
@@ -545,7 +314,7 @@
         /* ==================== Data Cards Grid ==================== */
         .data-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
@@ -560,10 +329,19 @@
             position: relative;
         }
 
+        .data-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+
         .data-card:hover {
             border-color: var(--forest-green-200);
             box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
-            transform: scale(1.01);
+            transform: translateY(-4px);
         }
 
         .data-card-image {
@@ -618,19 +396,15 @@
             padding: 4px 10px;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
-            border-radius: var(--radius-md);
+            border-radius: 100px;
             font-size: 10px;
             font-weight: 500;
             color: white;
         }
 
-        .data-card-badge.api {
-            background: rgba(64, 158, 255, 0.8);
-        }
+        .data-card-badge.api { background: rgba(64, 158, 255, 0.8); }
 
-        .data-card-content {
-            padding: 20px;
-        }
+        .data-card-content { padding: 20px; }
 
         .data-card-title {
             font-size: 15px;
@@ -680,95 +454,39 @@
             color: var(--forest-green);
             background: var(--forest-green-50);
             padding: 4px 10px;
-            border-radius: var(--radius-md);
+            border-radius: 100px;
         }
-
-        /* ==================== Pagination ==================== */
-        .pagination {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 40px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .pagination-btn {
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: var(--surface-primary);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .pagination-btn:hover:not(:disabled) {
-            color: var(--text-primary);
-            border-color: var(--border-emphasis);
-        }
-
-        .pagination-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .pagination-numbers {
-            display: flex;
-            gap: 4px;
-        }
-
-        .pagination-number {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .pagination-number:hover {
-            background: #F3F4F6;
-        }
-
-        .pagination-number.active {
-            color: white;
-            background: var(--forest-green);
-            border-color: var(--forest-green);
-        }
-
-        .pagination-ellipsis {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: var(--text-tertiary);
-        }
-
-        /* ==================== Footer ==================== */
 
         /* ==================== Responsive ==================== */
-        @media (max-width: 1400px) {
+        @media (max-width: 1200px) {
             .data-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 1024px) {
-            .data-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .filter-card {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+
+            .filter-section {
+                margin-bottom: 0;
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .filter-divider {
+                display: none;
             }
         }
 
@@ -789,33 +507,13 @@
                 width: 100%;
             }
 
-            .filter-bar {
-                padding: 16px 16px 0;
-            }
-
-            .filter-bar-inner {
-                padding: 16px;
-            }
-
-            .filter-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .filter-row-label {
-                padding-top: 0;
-            }
-
-            .filter-tag {
-                font-size: 12px;
-                padding: 5px 10px;
-            }
-
             .main-content {
                 padding: 24px 16px;
             }
         }
     </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -823,63 +521,6 @@
 
     <!-- Page Header -->
     <header class="page-header">
-        <div class="page-header-decor">
-            <!-- 点阵 -->
-            <div class="page-header-dots"></div>
-            <!-- 对角线 -->
-            <div class="page-header-lines">
-                <svg width="160" height="60" viewBox="0 0 160 60" fill="none"><line x1="0" y1="60" x2="100" y2="0" stroke="#D4D6D9" stroke-width="1.2"/><line x1="40" y1="60" x2="140" y2="0" stroke="#D4D6D9" stroke-width="1.2"/><line x1="80" y1="60" x2="160" y2="10" stroke="#D4D6D9" stroke-width="1.2"/></svg>
-            </div>
-            <!-- 十字 -->
-            <div class="page-header-cross">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="0" x2="10" y2="20" stroke="#D0D2D5" stroke-width="1.5"/><line x1="0" y1="10" x2="20" y2="10" stroke="#D0D2D5" stroke-width="1.5"/></svg>
-            </div>
-            <!-- 菱形 -->
-            <div class="page-header-diamond"></div>
-            <!-- 数据库图标 -->
-            <div class="decor-database">
-                <svg width="64" height="72" viewBox="0 0 64 72" fill="none">
-                    <ellipse cx="32" cy="12" rx="28" ry="10" stroke="#B0B3B8" stroke-width="1.5"/>
-                    <path d="M4 12v20c0 5.5 12.5 10 28 10s28-4.5 28-10V12" stroke="#B0B3B8" stroke-width="1.5"/>
-                    <path d="M4 32v20c0 5.5 12.5 10 28 10s28-4.5 28-10V32" stroke="#B0B3B8" stroke-width="1.5"/>
-                    <ellipse cx="32" cy="32" rx="28" ry="10" stroke="#B0B3B8" stroke-width="1" stroke-dasharray="4 3"/>
-                </svg>
-            </div>
-            <!-- 柱状图 -->
-            <div class="decor-barchart">
-                <svg width="80" height="56" viewBox="0 0 80 56" fill="none">
-                    <rect x="2" y="28" width="12" height="26" rx="1" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <rect x="20" y="16" width="12" height="38" rx="1" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <rect x="38" y="6" width="12" height="48" rx="1" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <rect x="56" y="20" width="12" height="34" rx="1" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <line x1="0" y1="55" x2="80" y2="55" stroke="#B0B3B8" stroke-width="1.2"/>
-                </svg>
-            </div>
-            <!-- 文件/表格 -->
-            <div class="decor-file">
-                <svg width="44" height="54" viewBox="0 0 44 54" fill="none">
-                    <path d="M4 2h24l12 12v38H4V2z" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <path d="M28 2v12h12" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <line x1="12" y1="24" x2="32" y2="24" stroke="#B0B3B8" stroke-width="1"/>
-                    <line x1="12" y1="31" x2="28" y2="31" stroke="#B0B3B8" stroke-width="1"/>
-                    <line x1="12" y1="38" x2="30" y2="38" stroke="#B0B3B8" stroke-width="1"/>
-                </svg>
-            </div>
-            <!-- 节点连线 -->
-            <div class="decor-nodes">
-                <svg width="90" height="70" viewBox="0 0 90 70" fill="none">
-                    <line x1="20" y1="15" x2="55" y2="35" stroke="#C0C3C8" stroke-width="1.2"/>
-                    <line x1="55" y1="35" x2="75" y2="18" stroke="#C0C3C8" stroke-width="1.2"/>
-                    <line x1="55" y1="35" x2="40" y2="58" stroke="#C0C3C8" stroke-width="1.2"/>
-                    <line x1="40" y1="58" x2="12" y2="48" stroke="#C0C3C8" stroke-width="1.2"/>
-                    <circle cx="20" cy="15" r="4.5" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <circle cx="55" cy="35" r="5.5" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <circle cx="75" cy="18" r="4" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <circle cx="40" cy="58" r="4.5" stroke="#B0B3B8" stroke-width="1.3"/>
-                    <circle cx="12" cy="48" r="3.5" stroke="#B0B3B8" stroke-width="1.3"/>
-                </svg>
-            </div>
-        </div>
         <div class="page-header-container">
             <h1 class="page-title">数据资源</h1>
             <p class="page-subtitle">发现和获取高质量的数据资源，助力业务创新</p>
@@ -909,69 +550,141 @@
         </div>
     </section>
 
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <div class="filter-bar-inner">
-            <!-- 行业分类 -->
-            <div class="filter-row">
-                <span class="filter-row-label">行业分类</span>
-                <div class="filter-row-options" data-group="industry">
-                    <span class="filter-tag active" onclick="selectFilterTag(this)">全部 <span class="filter-tag-count">128</span></span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">交通运输 <span class="filter-tag-count">24</span></span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">金融服务 <span class="filter-tag-count">18</span></span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">文化旅游 <span class="filter-tag-count">15</span></span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">气象服务 <span class="filter-tag-count">12</span></span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">医疗健康 <span class="filter-tag-count">10</span></span>
-                </div>
-            </div>
-            <!-- 交付方式 -->
-            <div class="filter-row">
-                <span class="filter-row-label">交付方式</span>
-                <div class="filter-row-options" data-group="delivery">
-                    <span class="filter-tag active" onclick="selectFilterTag(this)">全部</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">API 传输</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">文件传输</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">数据库传输</span>
-                </div>
-            </div>
-            <!-- 数据来源 -->
-            <div class="filter-row">
-                <span class="filter-row-label">数据来源</span>
-                <div class="filter-row-options" data-group="source">
-                    <span class="filter-tag active" onclick="selectFilterTag(this)">全部</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">原始数据</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">加工数据</span>
-                    <span class="filter-tag" onclick="selectFilterTag(this)">交易数据</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <main class="main-content">
-        <div class="content-tabs">
-            <button class="tab active">公共数据</button>
-            <button class="tab">行业数据</button>
-            <button class="tab">企业数据</button>
-        </div>
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <div class="filter-card">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        行业分类
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option active">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">全部</span>
+                            <span class="filter-count">128</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">交通运输</span>
+                            <span class="filter-count">24</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">金融服务</span>
+                            <span class="filter-count">18</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">文化旅游</span>
+                            <span class="filter-count">15</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">气象服务</span>
+                            <span class="filter-count">12</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">医疗健康</span>
+                            <span class="filter-count">10</span>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="content-header">
-            <div class="results-count">
-                共 <strong>128</strong> 条数据资源
-            </div>
-            <div class="sort-dropdown">
-                <span class="sort-label">排序：</span>
-                <select class="sort-select">
-                    <option>上架时间</option>
-                    <option>申请量</option>
-                    <option>浏览量</option>
-                </select>
-            </div>
-        </div>
+                <div class="filter-divider"></div>
 
-        <div class="data-grid">
-            <!-- Card 1 -->
-            <article class="data-card" onclick="window.location.href='data-detail.html'">
+                <div class="filter-section">
+                    <div class="filter-title">交付方式</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">API 传输</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">文件传输</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">数据库传输</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">数据来源</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">原始数据</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">加工数据</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">交易数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="content-tabs">
+                <button class="tab active">公共数据</button>
+                <button class="tab">行业数据</button>
+                <button class="tab">企业数据</button>
+            </div>
+
+            <div class="content-header">
+                <div class="results-count">
+                    共 <strong>128</strong> 条数据资源
+                </div>
+                <div class="sort-dropdown">
+                    <span class="sort-label">排序：</span>
+                    <select class="sort-select">
+                        <option>上架时间</option>
+                        <option>申请量</option>
+                        <option>浏览量</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-grid">
+                <!-- Card 1 -->
+                <article class="data-card">
                     <div class="data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
                         <div class="data-card-badges">
                             <span class="data-card-badge">原始数据</span>
@@ -1114,7 +827,7 @@
                     <div class="data-card-content">
                         <h3 class="data-card-title">城际高速小时车流量迁移统计</h3>
                         <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-desc">按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计</p>
+                        <p class="data-card-desc">按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
                             <span class="data-card-type">行业数据</span>
@@ -1124,73 +837,18 @@
 
                 <!-- Card 9 -->
                 <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/credit-data.jpg') center/cover;">
+                    <div class="data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
                         <div class="data-card-badges">
                             <span class="data-card-badge">加工数据</span>
+                            <span class="data-card-badge api">API</span>
                         </div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">企业信用评估数据</h3>
+                        <h3 class="data-card-title">企业工商登记信息查询服务</h3>
                         <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">基于多维度数据的企业信用评估模型，提供企业信用等级评定服务</p>
+                        <p class="data-card-desc">整合全国企业工商登记信息，提供企业基本信息、股东信息、变更记录等多维度数据查询服务</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
-                            <span class="data-card-type">行业数据</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 10 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/traffic-sensing.jpg') center/cover;">
-                        <div class="data-card-badges">
-                            <span class="data-card-badge">加工数据</span>
-                            <span class="data-card-badge api">API</span>
-                        </div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">城市交通态势感知数据</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">融合多源交通感知数据，实时分析城市道路拥堵指数与通行效率</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-10-28</span>
-                            <span class="data-card-type">公共数据</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 11 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/smart-park.jpg') center/cover;">
-                        <div class="data-card-badges">
-                            <span class="data-card-badge">原始数据</span>
-                        </div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">智慧园区能耗监测平台</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">对产业园区内各类能源消耗进行实时采集与智能分析，助力园区绿色低碳运营</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-10-15</span>
-                            <span class="data-card-type">企业数据</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 12 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/economic-monitor.jpg') center/cover;">
-                        <div class="data-card-badges">
-                            <span class="data-card-badge">原始数据</span>
-                            <span class="data-card-badge api">API</span>
-                        </div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">区域经济运行监测数据</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">整合工商、税务、用电等多维数据，构建区域经济运行态势指标体系</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-10-08</span>
                             <span class="data-card-type">公共数据</span>
                         </div>
                     </div>
@@ -1211,19 +869,24 @@
                 </div>
                 <button class="pagination-btn">下一页</button>
             </nav>
+        </div>
     </main>
 
     <!-- Footer -->
     <site-footer></site-footer>
+
     <script>
-        // 平铺筛选交互：同组内单选切换
-        function selectFilterTag(el) {
-            const row = el.closest('.filter-row-options');
-            row.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
-            el.classList.add('active');
-        }
+        document.querySelectorAll('.data-card').forEach(function (card) {
+            card.addEventListener('click', function () {
+                window.location.href = 'data-detail.html';
+            });
+        });
+
+        document.querySelectorAll('.filter-option').forEach(function (option) {
+            option.addEventListener('click', function () {
+                this.classList.toggle('active');
+            });
+        });
     </script>
-    <script src="nav-bar.js"></script>
-    <script src="site-footer.js"></script>
 </body>
 </html>

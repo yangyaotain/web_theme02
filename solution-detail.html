@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融行业数据应用解决方案 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+
+        .product-header { background: var(--bg-card); padding: 24px 32px 28px; border-bottom: 1px solid var(--border-subtle); }
+        .product-header-container { max-width: 1920px; margin: 0 auto; display: flex; gap: 32px; }
+        .product-gallery { width: 160px; flex-shrink: 0; }
+        .gallery-main { width: 160px; height: 120px; border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 10px; }
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 6px; }
+        .gallery-thumb { width: 36px; height: 28px; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: all 150ms ease; overflow: hidden; }
+        .gallery-thumb.active { border-color: var(--forest-green); }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+        .product-title { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.4; flex: 1; }
+        .product-stats { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px; }
+        .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
+        .product-stat b { color: var(--text-primary); font-weight: 600; }
+
+        .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+        .product-meta-row { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary); margin-bottom: 10px; }
+        .product-meta-row .val { color: var(--text-primary); }
+
+        .product-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .product-price .amount { font-size: 22px; font-weight: 700; color: #E53935; }
+
+        .action-row { display: flex; gap: 12px; margin-top: 6px; }
+        .btn-service {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-service:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+
+        .content-area { max-width: 1920px; margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
+        .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
+
+        .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-divider); }
+        .section-heading:not(:first-child) { margin-top: 32px; }
+
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
+        .info-table .label-cell { width: 130px; color: var(--text-tertiary); white-space: nowrap; padding-right: 8px; }
+        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
+        .info-table .desc-cell { color: var(--text-primary); line-height: 1.7; }
+
+        .rich-text { font-size: 13px; color: var(--text-primary); line-height: 2; }
+        .rich-text p { margin-bottom: 8px; text-indent: 2em; }
+
+        .attachment-row { display: flex; gap: 32px; margin-top: 8px; }
+        .attachment-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #2563EB; text-decoration: underline; cursor: pointer; }
+        .attachment-link:hover { color: #1D4ED8; }
+
+        .consult-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 200; align-items: center; justify-content: center; }
+        .consult-overlay.active { display: flex; }
+        @keyframes consultSlideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .consult-card { position: relative; width: 560px; max-height: 90vh; overflow-y: auto; background: var(--bg-card); border-radius: 12px; box-shadow: var(--shadow-xl); padding: 36px 40px 32px; animation: consultSlideUp 0.3s ease; }
+        .consult-card::-webkit-scrollbar { width: 4px; }
+        .consult-card::-webkit-scrollbar-thumb { background: var(--border-emphasis); border-radius: 2px; }
+        .consult-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast); }
+        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close svg { width: 20px; height: 20px; }
+        .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .consult-label { width: 100px; min-width: 100px; text-align: right; font-size: 14px; color: var(--text-secondary); padding-top: 9px; padding-right: 12px; }
+        .consult-val { flex: 1; }
+        .consult-static { font-size: 15px; font-weight: 600; color: var(--text-primary); padding-top: 8px; }
+        .consult-input { width: 100%; height: 40px; padding: 0 12px; font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); outline: none; transition: border-color 150ms ease; }
+        .consult-input:focus { border-color: var(--forest-green); }
+        .consult-input::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-ta-wrap { position: relative; }
+        .consult-textarea { width: 100%; min-height: 120px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); outline: none; resize: vertical; transition: border-color 150ms ease; }
+        .consult-textarea:focus { border-color: var(--forest-green); }
+        .consult-textarea::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-count { position: absolute; bottom: 8px; right: 12px; font-size: 12px; color: var(--text-tertiary); }
+        .consult-actions { display: flex; gap: 12px; padding-top: 12px; padding-left: 100px; }
+        .consult-btn-ok { padding: 10px 32px; font-size: 14px; font-weight: 600; color: #fff; background: var(--forest-green); border: none; border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease; }
+        .consult-btn-ok:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .consult-btn-cancel { padding: 10px 32px; font-size: 14px; font-weight: 500; color: var(--text-secondary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease; }
+        .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
+
+        @media (max-width: 1024px) {
+            .content-area { flex-direction: column; }
+            .product-header-container { flex-direction: column; }
+            .product-gallery { width: 100%; max-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="solutions"></nav-bar>
+
+    <div class="detail-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="industry-solutions.html">行业解决方案</a>
+            <span class="sep">/</span>
+            <span class="current">金融行业数据应用解决方案</span>
+        </nav>
+
+        <section class="product-header">
+            <div class="product-header-container">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="images/solution-detail-hero.jpg" alt="金融行业数据应用解决方案">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb active"><img src="images/solution-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/solution-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/solution-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/solution-detail-hero.jpg" alt=""></div>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-title-row">
+                        <h1 class="product-title">金融行业数据应用解决方案</h1>
+                        <div class="product-stats">
+                            <span class="product-stat">浏览量：<b>1,056</b></span>
+                        </div>
+                    </div>
+                    <p class="product-desc">本方案面向银行、证券、保险、基金等金融机构，提供从数据采集、治理、建模到智能分析的一站式数据应用解决方案，帮助金融企业构建数据驱动的决策体系，实现风控升级、精准营销与业务创新。</p>
+                    <div class="product-meta-row">
+                        <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
+                    </div>
+                    <div class="product-price">
+                        参考价：<span class="amount">3000元/天</span>
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-service" onclick="document.getElementById('consultOverlay').classList.add('active')">服务咨询</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-area">
+            <div class="content-main">
+                <h3 class="section-heading">基本信息</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label-cell">方案名称：</td>
+                        <td class="value-cell">金融行业数据应用解决方案</td>
+                        <td class="label-cell">方案类型：</td>
+                        <td class="value-cell">行业解决方案</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">所属行业：</td>
+                        <td class="value-cell">金融业</td>
+                        <td class="label-cell">适用对象：</td>
+                        <td class="value-cell">银行、证券、保险、基金等金融机构</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">关联业务类型：</td>
+                        <td class="value-cell">智能风控,精准营销,反欺诈检测,数据治理</td>
+                        <td class="label-cell">交付方式：</td>
+                        <td class="value-cell">线上+线下交付</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">方案简介：</td>
+                        <td class="desc-cell" colspan="3">本方案面向银行、证券、保险、基金等金融机构，提供从数据采集、治理、建模到智能分析的一站式数据应用解决方案，帮助金融企业构建数据驱动的决策体系，实现风控升级、精准营销与业务创新。</td>
+                    </tr>
+                </table>
+
+                <h3 class="section-heading">方案介绍</h3>
+                <div class="rich-text">
+                    <p>随着金融行业数字化转型不断深入，银行、证券、保险等机构积累了海量的交易数据、客户行为数据与市场行情数据。然而，数据分散在各业务系统中形成孤岛，难以发挥协同价值。本方案旨在帮助金融机构打通数据壁垒，构建统一的数据治理与智能分析平台，释放数据资产的核心价值。</p>
+                    <p>方案覆盖金融数据应用的全链路环节：从多源异构数据的采集接入，到数据质量管控与主数据统一管理，再到企业级数据仓库与实时计算引擎的建设，最终通过AI驱动的智能分析决策引擎，为信贷审批、风险管控、精准营销、合规监测等核心业务场景提供数据支撑。</p>
+                    <p>面对日益严格的金融监管环境，方案充分考虑《商业银行数据治理指引》《证券期货业数据分类分级指引》等行业标准与法规要求，确保数据应用体系在高效运转的同时完全满足合规审查需要。</p>
+                    <p>方案核心能力涵盖四大模块：一是构建覆盖全业务线的统一数据底座，打通信贷、交易、风控、营销等系统数据壁垒；二是基于机器学习引擎提供智能风控模型、客户360画像、反欺诈实时检测等核心应用；三是建立完整的数据安全与隐私保护体系，保障数据全生命周期的合规性；四是提供可视化的数据资产运营驾驶舱，让管理层实时掌握数据资产全貌与业务洞察。</p>
+                </div>
+
+                <h3 class="section-heading">方案流程</h3>
+                <div class="rich-text">
+                    <p>本方案的实施遵循科学严谨的项目管理方法论，按照"调研→设计→建设→运营"四个阶段推进，确保金融数据应用平台按期保质交付：</p>
+                    <p><b>第一阶段：业务调研与需求分析</b></p>
+                    <p>深入金融机构各业务条线，全面梳理信贷、风控、营销、合规、运营等部门的数据现状与业务痛点。调研IT基础设施与现有数据系统架构，评估数据治理成熟度，形成《业务需求分析报告》与《数据资产全景图》，为后续方案设计奠定基础。</p>
+                    <p><b>第二阶段：架构设计与方案规划</b></p>
+                    <p>基于调研成果，设计金融数据应用平台的整体技术架构，包括数据采集层、数据治理层、数据存储层、数据分析层、数据应用层的五层架构蓝图。针对智能风控、客户画像、反欺诈检测、合规监测等核心场景制定详细的数据模型与算法方案，输出完整的《技术架构设计方案》与《实施路线图》。</p>
+                    <p><b>第三阶段：平台建设与系统集成</b></p>
+                    <p>按照设计方案进行平台搭建与系统开发，完成数据采集通道对接、ETL流程部署、数据仓库建设、分析模型训练与调优、可视化驾驶舱搭建等核心工作。同步进行与金融机构现有核心系统（核心银行系统、信贷管理系统、CRM系统等）的集成对接，确保数据的无缝流转。</p>
+                    <p><b>第四阶段：上线运营与持续优化</b></p>
+                    <p>完成系统联调测试与用户验收测试后正式上线。提供全面的运维保障与技术支持，包括模型效果监控、数据质量巡检、系统性能调优等。定期输出《数据应用效果评估报告》，根据业务反馈持续迭代优化模型与策略，确保方案长期发挥价值。</p>
+                    <p>各阶段交付成果：</p>
+                    <p>第一批次：业务需求分析报告、数据资产全景图、数据治理成熟度评估报告</p>
+                    <p>第二批次：技术架构设计方案、数据模型设计文档、实施路线图</p>
+                    <p>第三批次：平台部署文档、系统集成方案、用户操作手册、验收报告</p>
+                </div>
+
+                <h3 class="section-heading">方案优势</h3>
+                <div class="rich-text">
+                    <p><b>1. 深耕金融行业，精准理解业务场景</b></p>
+                    <p>团队核心成员均具备十年以上金融科技从业经验，深度理解银行信贷、证券交易、保险精算、基金投研等业务逻辑。方案设计不是技术堆砌，而是从金融业务场景出发，确保每一个数据模型、每一条分析策略都能精准匹配业务需求，真正实现"数据驱动业务增长"。</p>
+                    <p><b>2. 合规优先，满足严格监管要求</b></p>
+                    <p>方案全程遵循银保监会、证监会等监管机构的最新政策法规，内置数据分类分级、敏感数据脱敏、访问权限管控、审计日志追溯等合规能力。帮助金融机构在享受数据价值的同时，确保数据治理体系经得起监管检查与外部审计。</p>
+                    <p><b>3. 成熟技术平台，快速落地见效</b></p>
+                    <p>基于自研的金融数据中台产品，方案提供开箱即用的智能风控引擎、客户画像平台、实时反欺诈系统等标准化组件，大幅缩短项目建设周期。同时支持灵活的定制化扩展，可快速适配不同规模金融机构的差异化需求，典型项目从启动到上线仅需3-6个月。</p>
+                    <p><b>4. 全生命周期陪伴，持续创造价值</b></p>
+                    <p>方案不仅交付一套系统平台，更提供从规划设计、建设实施到运营优化的全生命周期陪伴式服务。项目上线后持续跟踪模型效果与业务反馈，定期迭代优化算法策略。随着业务发展与监管演进，持续为金融机构提供技术升级与能力扩展方案，确保数据应用体系始终保持领先。</p>
+                </div>
+
+                <h3 class="section-heading">附件</h3>
+                <div class="attachment-row">
+                    <span class="attachment-link">
+                        <span>资质证明：</span>
+                        <a href="#">企业咨询资质.pdf</a>
+                    </span>
+                    <span class="attachment-link">
+                        <span>企业审核：</span>
+                        <a href="#">企业审核流程.pdf</a>
+                    </span>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">智能推荐</div>
+                    <div class="sidebar-list" id="recList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <!-- 服务咨询弹窗 -->
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static">金融行业数据应用解决方案</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        var overlay = document.getElementById('consultOverlay');
+        var txt = document.getElementById('txtConsult');
+        var cnt = document.getElementById('consultCount');
+
+        function closeModal() { overlay.classList.remove('active'); }
+
+        document.getElementById('consultClose').addEventListener('click', closeModal);
+        document.getElementById('consultCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
+
+        document.getElementById('consultForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的咨询已提交，我们会尽快回复您',
+                duration: 1600
+            });
+        });
+    })();
+    </script>
+    <script src="js/recommend.js"></script>
+</body>
+</html>

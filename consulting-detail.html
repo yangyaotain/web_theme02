@@ -1,0 +1,379 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据资产入表规划咨询服务 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+
+        /* ── Header ── */
+        .product-header { background: var(--bg-card); padding: 24px 32px 28px; border-bottom: 1px solid var(--border-subtle); }
+        .product-header-container { max-width: 1920px; margin: 0 auto; display: flex; gap: 32px; }
+        .product-gallery { width: 160px; flex-shrink: 0; }
+        .gallery-main {
+            width: 160px; height: 120px; border-radius: 8px; overflow: hidden;
+            position: relative; margin-bottom: 10px;
+        }
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 6px; }
+        .gallery-thumb {
+            width: 36px; height: 28px; border-radius: 4px; cursor: pointer;
+            border: 2px solid transparent; transition: all 150ms ease; overflow: hidden;
+        }
+        .gallery-thumb.active { border-color: var(--forest-green); }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+        .product-title { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.4; flex: 1; }
+        .product-stats { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px; }
+        .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
+        .product-stat b { color: var(--text-primary); font-weight: 600; }
+
+        .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+        .product-meta-row { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary); margin-bottom: 10px; }
+        .product-meta-row .val { color: var(--text-primary); }
+
+        .product-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .product-price .amount { font-size: 22px; font-weight: 700; color: #E53935; }
+
+        .action-row { display: flex; gap: 12px; margin-top: 6px; }
+        .btn-service {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-service:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+
+        /* ── Content Area ── */
+        .content-area { max-width: 1920px; margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
+        .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
+
+        .section-heading {
+            font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;
+            padding-bottom: 10px; border-bottom: 1px solid var(--border-divider);
+        }
+        .section-heading:not(:first-child) { margin-top: 32px; }
+
+        /* ── 基本信息表格 ── */
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
+        .info-table .label-cell { width: 130px; color: var(--text-tertiary); white-space: nowrap; padding-right: 8px; }
+        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
+        .info-table .desc-cell { color: var(--text-primary); line-height: 1.7; }
+
+        /* ── 富文本段落 ── */
+        .rich-text { font-size: 13px; color: var(--text-primary); line-height: 2; }
+        .rich-text p { margin-bottom: 8px; text-indent: 2em; }
+
+        /* ── 附件 ── */
+        .attachment-row { display: flex; gap: 32px; margin-top: 8px; }
+        .attachment-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; color: #2563EB; text-decoration: underline; cursor: pointer;
+        }
+        .attachment-link:hover { color: #1D4ED8; }
+        .attachment-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* ── 咨询弹窗 ── */
+        .consult-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 200;
+            align-items: center; justify-content: center;
+        }
+        .consult-overlay.active { display: flex; }
+        @keyframes consultSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .consult-card {
+            position: relative; width: 560px; max-height: 90vh; overflow-y: auto;
+            background: var(--bg-card); border-radius: 12px;
+            box-shadow: var(--shadow-xl); padding: 36px 40px 32px;
+            animation: consultSlideUp 0.3s ease;
+        }
+        .consult-card::-webkit-scrollbar { width: 4px; }
+        .consult-card::-webkit-scrollbar-thumb { background: var(--border-emphasis); border-radius: 2px; }
+        .consult-close {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border: none; background: transparent; cursor: pointer;
+            color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast);
+        }
+        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close svg { width: 20px; height: 20px; }
+        .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .consult-label { width: 100px; min-width: 100px; text-align: right; font-size: 14px; color: var(--text-secondary); padding-top: 9px; padding-right: 12px; }
+        .consult-val { flex: 1; }
+        .consult-static { font-size: 15px; font-weight: 600; color: var(--text-primary); padding-top: 8px; }
+        .consult-input {
+            width: 100%; height: 40px; padding: 0 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; transition: border-color 150ms ease;
+        }
+        .consult-input:focus { border-color: var(--forest-green); }
+        .consult-input::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-ta-wrap { position: relative; }
+        .consult-textarea {
+            width: 100%; min-height: 120px; padding: 10px 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; resize: vertical; transition: border-color 150ms ease;
+        }
+        .consult-textarea:focus { border-color: var(--forest-green); }
+        .consult-textarea::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-count { position: absolute; bottom: 8px; right: 12px; font-size: 12px; color: var(--text-tertiary); }
+        .consult-actions { display: flex; gap: 12px; padding-top: 12px; padding-left: 100px; }
+        .consult-btn-ok {
+            padding: 10px 32px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: var(--radius-md);
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-ok:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .consult-btn-cancel {
+            padding: 10px 32px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
+
+        @media (max-width: 1024px) {
+            .content-area { flex-direction: column; }
+            .product-header-container { flex-direction: column; }
+            .product-gallery { width: 100%; max-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="consulting"></nav-bar>
+
+    <div class="detail-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="data-consulting.html">数据咨询服务</a>
+            <span class="sep">/</span>
+            <span class="current">数据资产入表规划咨询服务</span>
+        </nav>
+
+        <!-- Header -->
+        <section class="product-header">
+            <div class="product-header-container">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="images/consulting-detail-hero.jpg" alt="数据资产入表规划咨询服务">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb active"><img src="images/consulting-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/consulting-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/consulting-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/consulting-detail-hero.jpg" alt=""></div>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-title-row">
+                        <h1 class="product-title">数据资产入表规划咨询服务</h1>
+                        <div class="product-stats">
+                            <span class="product-stat">浏览量：<b>1,056</b></span>
+                        </div>
+                    </div>
+                    <p class="product-desc">本服务为企业提供数据资产入表的全流程规划咨询，包括合规评估、价值认定与会计处理，助力企业将数据资源转化为合规资产，提升财务报表价值与核心竞争力。</p>
+                    <div class="product-meta-row">
+                        <span>服务类型：<span class="val">数据资产入表</span></span>
+                        <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
+                    </div>
+                    <div class="product-price">
+                        参考价：<span class="amount">3000元/天</span>
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-service" onclick="document.getElementById('consultOverlay').classList.add('active')">服务咨询</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content -->
+        <div class="content-area">
+            <div class="content-main">
+                <!-- 基本信息 -->
+                <h3 class="section-heading">基本信息</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label-cell">服务名称：</td>
+                        <td class="value-cell">数据资产入表规划咨询服务</td>
+                        <td class="label-cell">服务类型：</td>
+                        <td class="value-cell">数据资产入表</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">所属行业：</td>
+                        <td class="value-cell">信息传输、软件和信息技术服务业</td>
+                        <td class="label-cell">服务对象：</td>
+                        <td class="value-cell">所有机构</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">关联业务类型：</td>
+                        <td class="value-cell">数据产品,数据资源需求,应用场景,数据产品</td>
+                        <td class="label-cell">服务交付方式：</td>
+                        <td class="value-cell">线上交付</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">服务介绍：</td>
+                        <td class="desc-cell" colspan="3">本服务为企业提供数据资产入表的全流程规划咨询，包括合规评估、价值认定与会计处理，助力企业将数据资源转化为合规资产，提升财务报表价值与核心竞争力。</td>
+                    </tr>
+                </table>
+
+                <!-- 服务介绍 -->
+                <h3 class="section-heading">服务介绍</h3>
+                <div class="rich-text">
+                    <p>数据资产入表是企业将数据资源确认为资产负债表中"资产"端的过程，涉及数据资源的盘点、确认及后续的入表规划与实施。这不仅是企业数据资产化的重要一步，更是企业数字化转型的关键环节。</p>
+                    <p>数据资产入表规划咨询服务，致力于为企业打通数据资产入表全链路通道。为企业提供可量化的价值评估、合规确认及入表规划策略，帮助企业梳理数据资产类型、建立数据资产台账，构建完善的数据资产管理体系。</p>
+                    <p>面对复杂的会计准则与行业监管要求，我们凭借深厚的专业积累，依托对《企业数据资源相关会计处理暂行规定》等标准的深度解析与丰富的实践经验，帮助企业精准确定数据资产入表的路径和方法。"如何让数据入表"以及"可以多少价值入表"三大核心问题。</p>
+                    <p>服务内容全面覆盖：首先，我们对企业数据资源进行系统梳理和分类，确保数据质量和完整性，同时提供合理的价值估算。其次，我们协助企业制定数据资产入表的具体路径与方案，确保符合会计准则和监管要求。此外，我们还提供企业数据资产管理制度建设支持，包含数据确权、管理与运营策略，帮助企业构建长期的数据资产运维体系。</p>
+                </div>
+
+                <!-- 服务流程 -->
+                <h3 class="section-heading">服务流程</h3>
+                <div class="rich-text">
+                    <p>我们的服务遵循严谨、高效的服务流程，确保数据资产入表工作有序推进。流程大致包含以下四个阶段：</p>
+                    <p><b>第一阶段：诊断与调研</b></p>
+                    <p>深入了解企业的数据资源全貌、评估现有数据治理状况，识别数据资产化的关键资源。采集基础信息并构建评估框架，为下一步的入表规划方案制定提供基础数据支撑。同步了解企业的业务场景和战略需求，确保入表规划与业务目标的紧密结合。</p>
+                    <p><b>第二阶段：评估与策略制定</b></p>
+                    <p>基于第一阶段的调研结果，对数据资源进行价值评估，包含数据质量、稀缺性、时效性、与数据资源相关会计准则的匹配度分析。随后，量身定制入表路径方案并制作数据资产入表规划方案书，明确入表方式（成本法、收益法等），为数据资源的入表提供详细的策略指导。</p>
+                    <p><b>第三阶段：实施与辅导</b></p>
+                    <p>根据策略方案，协助企业完成数据资产入表的各项实际操作，包括审计对接、核算计量、账务处理、税务筹划、数据资产披露等核心环节。同时，辅导团队深入企业现场，提供全程驻场服务和实操辅导，帮助企业核心财务与数据管理团队掌握数据资产会计处理的关键技能。</p>
+                    <p><b>第四阶段：验收与优化</b></p>
+                    <p>项目成果验收阶段，对企业数据资产入表结果进行全面复核与优化。验证数据资产的入表准确性和合规性，确保账务处理符合会计准则要求，并就后续的数据资产管理、运营和增值策略提出改进建议。</p>
+                    <p>完成验收后，交付与成果文档：</p>
+                    <p>第一批次：数据资产入表规划方案报告、数据资产盘点清单与评估报告</p>
+                    <p>第二批次：数据资产入表实施方案、会计处理指引文件</p>
+                    <p>第三批次：会计师审核报告、合规确认书</p>
+                    <p>服务质量规范计划书，确保数据资产入表后的持续监控与合规审计支持。</p>
+                </div>
+
+                <!-- 服务优势 -->
+                <h3 class="section-heading">服务优势</h3>
+                <div class="rich-text">
+                    <p><b>1. 专业化团队与权威背书</b></p>
+                    <p>在数据资产入表这一新兴且复杂的领域，我们汇集了来自会计、审计、数据管理、法律等多领域的顶尖专家，拥有深厚的理论功底和丰富的实操经验。团队成员不仅精通最新的数据资产会计准则，还具备丰富的跨行业数据资产入表实践经验，为客户提供最专业、最前沿的服务。</p>
+                    <p><b>2. 全流程定制化服务</b></p>
+                    <p>我们深入了解每一个客户的独特需求和业务场景。服务过程中，从诊断到实施到验收，提供高度定制化的、针对性的解决方案。使客户的数据资产入表方案完全契合其实际经营状况与战略规划需求，避免了一刀切的通用方案所带来的不适配问题。</p>
+                    <p><b>3. 丰富的实战经验与工具优势</b></p>
+                    <p>我们的团队已经为多个大型企业和机构成功完成数据资产入表项目，具备数据资源盘点评估、合同计量与会计处理、审计对接的丰富实战经验。提供独有的一系列评估工具和模型，使数据资产评估过程更加标准化、可量化，大幅提升服务效率与准确性。</p>
+                    <p><b>4. 端到端全链条服务与长期伙伴</b></p>
+                    <p>我们提供从诊断调研、策略制定、实施辅导到验收优化的全流程端到端服务，确保企业数据资产入表项目从启动到落地，每一个环节都有专业的指导和支持。项目交付后，我们持续为客户提供后续的数据资产管理优化方案，真正成为企业在数据资产领域的长期合作伙伴。</p>
+                </div>
+
+                <!-- 附件 -->
+                <h3 class="section-heading">附件</h3>
+                <div class="attachment-row">
+                    <span class="attachment-link">
+                        <span>资质证明：</span>
+                        <a href="#">企业咨询资质.pdf</a>
+                    </span>
+                    <span class="attachment-link">
+                        <span>企业审核：</span>
+                        <a href="#">企业审核流程.pdf</a>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">智能推荐</div>
+                    <div class="sidebar-list" id="recList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <!-- 服务咨询弹窗 -->
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static">数据资产入表规划咨询服务</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        /* ── 咨询弹窗 ── */
+        var overlay = document.getElementById('consultOverlay');
+        var txt = document.getElementById('txtConsult');
+        var cnt = document.getElementById('consultCount');
+
+        function closeModal() { overlay.classList.remove('active'); }
+
+        document.getElementById('consultClose').addEventListener('click', closeModal);
+        document.getElementById('consultCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
+
+        document.getElementById('consultForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的咨询已提交，我们会尽快回复您',
+                duration: 1600
+            });
+        });
+    })();
+    </script>
+    <script src="js/recommend.js"></script>
+</body>
+</html>

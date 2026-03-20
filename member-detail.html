@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员详情 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <style>
+        .page-wrap { padding: 84px 24px 40px; max-width: 1400px; margin: 0 auto; }
+        .info-card {
+            background: #fff; border-radius: 4px; margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
+        }
+        .section-title {
+            font-size: 14px; font-weight: 700; color: #409eff; padding: 16px 20px 12px;
+            border-left: 3px solid #409eff; margin: 0; background: #fff;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .section-title .expand-icon {
+            width: 14px; height: 14px; fill: #909399; cursor: pointer; margin-left: 4px;
+        }
+        .section-body { padding: 0 20px 20px; }
+
+        .member-summary-name { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 10px; }
+        .member-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .summary-fields { display: flex; flex-direction: column; gap: 6px; }
+        .summary-field { font-size: 13px; color: #606266; display: flex; gap: 4px; }
+        .summary-field .lbl { color: #909399; white-space: nowrap; }
+        .summary-field .val { color: #303133; }
+        .cert-image-area { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+        .cert-image-label { font-size: 13px; color: #909399; }
+        .cert-image-box {
+            width: 120px; height: 80px; border-radius: 4px; overflow: hidden;
+            background: #f5f7fa; border: 1px solid #ebeef5;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cert-image-placeholder {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #e8edf3 0%, #d6dce5 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; color: #909399;
+        }
+        .detail-subtitle {
+            font-size: 14px; font-weight: 700; color: #303133;
+            margin: 16px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #ebeef5;
+        }
+        .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .field-left { display: flex; flex-direction: column; gap: 10px; }
+        .field-right { display: flex; flex-direction: column; gap: 12px; }
+        .field-row { font-size: 13px; color: #606266; display: flex; }
+        .field-row .lbl { color: #909399; white-space: nowrap; min-width: 170px; flex-shrink: 0; }
+        .field-row .val { color: #303133; word-break: break-all; }
+        .id-images { display: flex; flex-direction: column; gap: 10px; }
+        .id-image-label { font-size: 13px; color: #909399; }
+        .id-image-box {
+            width: 140px; height: 90px; border-radius: 4px; overflow: hidden;
+            background: #f5f7fa; border: 1px solid #ebeef5;
+        }
+        .id-image-placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 500;
+        }
+        .id-front { background: linear-gradient(135deg, #e8d4b8 0%, #d4b896 100%); color: #8b6914; }
+        .id-back { background: linear-gradient(135deg, #b8d4e8 0%, #96b8d4 100%); color: #14508b; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="#" class="topbar-nav-item">运维中心</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="page-wrap">
+        <a class="back-link" href="member-manage.html">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            会员详情
+        </a>
+
+        <!-- 会员信息 -->
+        <div class="info-card">
+            <h3 class="section-title">
+                会员信息
+                <svg class="expand-icon" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </h3>
+            <div class="section-body">
+                <div class="member-summary-name">中国电子云</div>
+                <div class="member-summary-grid">
+                    <div class="summary-fields">
+                        <div class="summary-field"><span class="lbl">申请会员：</span><span class="val">金卡会员</span></div>
+                        <div class="summary-field"><span class="lbl">有效期：</span><span class="val">3年</span></div>
+                        <div class="summary-field"><span class="lbl">备注说明：</span><span class="val">xxxxxx</span></div>
+                    </div>
+                    <div class="cert-image-area">
+                        <span class="cert-image-label">缴费凭证：</span>
+                        <div class="cert-image-box">
+                            <div class="cert-image-placeholder">缴费凭证图片</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 认证信息详情 -->
+        <div class="info-card">
+            <h3 class="section-title">
+                认证信息详情
+                <svg class="expand-icon" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </h3>
+            <div class="section-body">
+                <div class="detail-subtitle">法人或其他组织基本信息</div>
+                <div class="field-grid">
+                    <div class="field-left">
+                        <div class="field-row"><span class="lbl">法人或其他组织类型：</span><span class="val">企事业单位法人</span></div>
+                        <div class="field-row"><span class="lbl">法人或其他组织名称：</span><span class="val">中节能铁汉生态环境股份有限公司</span></div>
+                        <div class="field-row"><span class="lbl">统一社会信用代码：</span><span class="val">91440300731109149K</span></div>
+                        <div class="field-row"><span class="lbl">营业期限或有效期：</span><span class="val">长期有效</span></div>
+                        <div class="field-row"><span class="lbl">所属行业类型：</span><span class="val">--</span></div>
+                        <div class="field-row"><span class="lbl">注册金额：</span><span class="val">--</span></div>
+                        <div class="field-row"><span class="lbl">注册日期：</span><span class="val">--</span></div>
+                        <div class="field-row"><span class="lbl">注册地：</span><span class="val">广东省深圳市龙岗区</span></div>
+                        <div class="field-row"><span class="lbl">注册详细地址：</span><span class="val">黄阁坑社区黄阁北路449号龙岗天安数码创新园三号厂房B1401</span></div>
+                        <div class="field-row"><span class="lbl">核准机构：</span><span class="val">--</span></div>
+                        <div class="field-row"><span class="lbl">经营范围或业务范围：</span><span class="val">--</span></div>
+                        <div class="field-row"><span class="lbl">机构简介：</span><span class="val">--</span></div>
+                    </div>
+                    <div class="field-right">
+                        <div>
+                            <div class="id-image-label">法人或其他组织的证件图片：</div>
+                            <div class="id-image-box" style="width:160px;height:110px;">
+                                <div class="cert-image-placeholder" style="background:linear-gradient(135deg,#fce8e8,#f5d0d0);color:#c05050;">营业执照</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="id-image-label">法人或其他组织的LOGO：</div>
+                            <span style="font-size:13px;color:#909399;">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-subtitle">申请人信息</div>
+                <div class="field-grid">
+                    <div class="field-left">
+                        <div class="field-row"><span class="lbl">申请人类型：</span><span class="val">法定代表人</span></div>
+                        <div class="field-row"><span class="lbl">法定代表人或负责人证件类型：</span><span class="val">居民身份证</span></div>
+                        <div class="field-row"><span class="lbl">法定代表人或负责人姓名：</span><span class="val">zhangsan</span></div>
+                        <div class="field-row"><span class="lbl">法定代表人或负责人证件号码：</span><span class="val">445281198702202117</span></div>
+                        <div class="field-row"><span class="lbl">法定代表人或负责人手机号：</span><span class="val">13982060008</span></div>
+                        <div class="field-row"><span class="lbl">法定代表人或负责人邮箱：</span><span class="val">--</span></div>
+                    </div>
+                    <div class="field-right">
+                        <div class="id-images">
+                            <div class="id-image-label">法定代表人或负责人证件图片：</div>
+                            <div class="id-image-box">
+                                <div class="id-image-placeholder id-front">身份证正面</div>
+                            </div>
+                            <div class="id-image-box">
+                                <div class="id-image-placeholder id-back">身份证背面</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

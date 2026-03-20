@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业领导驾驶舱服务需求 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+
+        .product-header { background: var(--bg-card); padding: 24px 32px 28px; border-bottom: 1px solid var(--border-subtle); }
+        .product-header-container { max-width: 1920px; margin: 0 auto; display: flex; gap: 32px; }
+        .product-gallery { width: 160px; flex-shrink: 0; }
+        .gallery-main { width: 160px; height: 120px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 6px; }
+        .gallery-thumb { width: 36px; height: 28px; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: all 150ms ease; overflow: hidden; }
+        .gallery-thumb.active { border-color: var(--forest-green); }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+        .product-title { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
+        .status-badge {
+            display: inline-flex; align-items: center; padding: 3px 12px;
+            font-size: 12px; font-weight: 500; border-radius: 20px;
+            background: #DCFCE7; color: #16A34A;
+        }
+        .demand-tags { display: flex; gap: 8px; margin-bottom: 10px; }
+        .demand-tag {
+            padding: 2px 10px; font-size: 12px; color: var(--text-tertiary);
+            background: var(--bg-section); border-radius: var(--radius-md);
+        }
+
+        .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+
+        .demand-meta-row {
+            display: flex; gap: 32px; font-size: 13px; color: var(--text-tertiary);
+            padding: 12px 0; border-top: 1px solid var(--border-divider); margin-top: 8px;
+        }
+        .demand-meta-item { display: flex; flex-direction: column; gap: 4px; }
+        .demand-meta-label { font-size: 12px; color: var(--text-tertiary); }
+        .demand-meta-value { font-size: 14px; font-weight: 600; color: #E53935; }
+        .demand-meta-value.normal { color: var(--text-primary); font-weight: 400; }
+
+        .action-row { display: flex; gap: 12px; margin-top: 14px; }
+        .btn-respond {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-respond:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+
+        .content-area { max-width: 1920px; margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
+        .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
+
+        .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-divider); }
+        .section-heading:not(:first-child) { margin-top: 32px; }
+
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
+        .info-table .label-cell { width: 130px; color: var(--text-tertiary); white-space: nowrap; padding-right: 8px; }
+        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
+        .info-table .desc-cell { color: var(--text-primary); line-height: 1.7; }
+
+        /* ── 响应需求弹窗 ── */
+        .consult-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 200; align-items: center; justify-content: center; }
+        .consult-overlay.active { display: flex; }
+        @keyframes consultSlideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .consult-card { position: relative; width: 600px; max-height: 90vh; overflow-y: auto; background: var(--bg-card); border-radius: 12px; box-shadow: var(--shadow-xl); padding: 36px 40px 32px; animation: consultSlideUp 0.3s ease; }
+        .consult-card::-webkit-scrollbar { width: 4px; }
+        .consult-card::-webkit-scrollbar-thumb { background: var(--border-emphasis); border-radius: 2px; }
+        .consult-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast); }
+        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close svg { width: 20px; height: 20px; }
+        .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .consult-label { width: 110px; min-width: 110px; text-align: right; font-size: 14px; color: var(--text-secondary); padding-top: 9px; padding-right: 12px; white-space: nowrap; }
+        .consult-val { flex: 1; }
+        .consult-static { font-size: 15px; font-weight: 600; color: var(--text-primary); padding-top: 8px; }
+        .consult-input { width: 100%; height: 40px; padding: 0 12px; font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); outline: none; transition: border-color 150ms ease; }
+        .consult-input:focus { border-color: var(--forest-green); }
+        .consult-input::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-ta-wrap { position: relative; }
+        .consult-textarea { width: 100%; min-height: 120px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); outline: none; resize: vertical; transition: border-color 150ms ease; }
+        .consult-textarea:focus { border-color: var(--forest-green); }
+        .consult-textarea::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-count { position: absolute; bottom: 8px; right: 12px; font-size: 12px; color: var(--text-tertiary); }
+        .price-wrap { display: flex; align-items: center; gap: 8px; }
+        .price-wrap .consult-input { width: 240px; }
+        .price-unit { font-size: 14px; color: var(--text-secondary); }
+        .file-upload-wrap { display: flex; flex-direction: column; gap: 6px; }
+        .file-upload-hint { font-size: 12px; color: var(--forest-green); }
+        .consult-actions { display: flex; gap: 12px; padding-top: 12px; padding-left: 110px; }
+        .consult-btn-ok { padding: 10px 32px; font-size: 14px; font-weight: 600; color: #fff; background: var(--forest-green); border: none; border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease; }
+        .consult-btn-ok:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .consult-btn-cancel { padding: 10px 32px; font-size: 14px; font-weight: 500; color: var(--text-secondary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease; }
+        .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
+
+        @media (max-width: 1024px) {
+            .content-area { flex-direction: column; }
+            .product-header-container { flex-direction: column; }
+            .product-gallery { width: 100%; max-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="demand"></nav-bar>
+
+    <div class="detail-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="demand-hall.html">需求大厅</a>
+            <span class="sep">/</span>
+            <span class="current">企业领导驾驶舱服务需求</span>
+        </nav>
+
+        <section class="product-header">
+            <div class="product-header-container">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="images/demand-detail-hero.jpg" alt="企业领导驾驶舱服务需求">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb active"><img src="images/demand-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/demand-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/demand-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/demand-detail-hero.jpg" alt=""></div>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-title-row">
+                        <h1 class="product-title">企业领导驾驶舱服务需求</h1>
+                        <span class="status-badge">进展中</span>
+                    </div>
+                    <div class="demand-tags">
+                        <span class="demand-tag">所有团队</span>
+                        <span class="demand-tag">大数据通道</span>
+                    </div>
+                    <p class="product-desc">需求描述：汇聚企业各业务系统中的数据链，对数据进行统计分析、智能算计算，构建企业运营决策驾驶舱。企业领导驾驶舱服务需求涵盖了核心功能、个性化定制、跨平台访问与安全以及技术与服务支持等多个方面，这些需求共同构成了企业在管理驾驶舱服务的完整性需求，为企业提供层析了全面、实用、便携、高效数据管理服务。</p>
+
+                    <div class="demand-meta-row">
+                        <div class="demand-meta-item">
+                            <span class="demand-meta-label">需求预算</span>
+                            <span class="demand-meta-value">面议</span>
+                        </div>
+                        <div class="demand-meta-item">
+                            <span class="demand-meta-label">截止时间</span>
+                            <span class="demand-meta-value normal">2025-11-4</span>
+                        </div>
+                        <div class="demand-meta-item">
+                            <span class="demand-meta-label">发布时间</span>
+                            <span class="demand-meta-value normal">2025-11-4</span>
+                        </div>
+                    </div>
+
+                    <div class="action-row">
+                        <button class="btn-respond" onclick="document.getElementById('respondOverlay').classList.add('active')">响应需求</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-area">
+            <div class="content-main">
+                <h3 class="section-heading">基本信息</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label-cell">需求标题：</td>
+                        <td class="value-cell">数据资产入表规划咨询服务</td>
+                        <td class="label-cell">需求类型：</td>
+                        <td class="value-cell">应用需求</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">需求场景：</td>
+                        <td class="value-cell">文化休游</td>
+                        <td class="label-cell">需求优先级：</td>
+                        <td class="value-cell">普通</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">需求预算：</td>
+                        <td class="value-cell">面议</td>
+                        <td class="label-cell">需求截止时间：</td>
+                        <td class="value-cell">2025-11-4</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">补充材料：</td>
+                        <td class="value-cell">—</td>
+                        <td class="label-cell">需求关键词：</td>
+                        <td class="value-cell">—</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">服务描介：</td>
+                        <td class="desc-cell" colspan="3">本服务为企业提供数据资产入表的全流程规划咨询，包括合规评估、价值认定与会计处理，助力企业将数据资源转化为合规资产，提升财务报表价值与核心竞争力。</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">数据描述信息：</td>
+                        <td class="value-cell">—</td>
+                        <td class="label-cell">是否涉及个人信息：</td>
+                        <td class="value-cell">是</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">数据交付方式：</td>
+                        <td class="value-cell">—</td>
+                        <td class="label-cell">数据时间范围：</td>
+                        <td class="value-cell">—</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">更新周期需求：</td>
+                        <td class="value-cell">—</td>
+                        <td class="label-cell">数据信息名称：</td>
+                        <td class="value-cell">—</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">其他：</td>
+                        <td class="value-cell" colspan="3">—</td>
+                    </tr>
+                </table>
+
+                <h3 class="section-heading">需求方信息</h3>
+                <table class="info-table">
+                    <tr>
+                        <td class="label-cell">需求方名称：</td>
+                        <td class="value-cell">智慧数据科技有限公司</td>
+                        <td class="label-cell">需求方联系人：</td>
+                        <td class="value-cell">张三</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">需求方电话：</td>
+                        <td class="value-cell">158****6325</td>
+                        <td class="label-cell">需求方邮箱：</td>
+                        <td class="value-cell">zhansan@163.com</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">需求方地址：</td>
+                        <td class="value-cell" colspan="3">深圳市龙岗区创投大厦</td>
+                    </tr>
+                </table>
+            </div>
+
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">智能推荐</div>
+                    <div class="sidebar-list" id="recList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <!-- 响应需求弹窗 -->
+    <div class="consult-overlay" id="respondOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="respondClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="respondForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">相应需求名称：</div>
+                    <div class="consult-val consult-static">企业领导驾驶舱服务需求</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">响应事由：</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtReason" maxlength="500" placeholder="请输入响应的说明"></textarea>
+                            <span class="consult-count"><span id="reasonCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">报价：</div>
+                    <div class="consult-val">
+                        <div class="price-wrap">
+                            <input type="number" class="consult-input" placeholder="请输入金额" min="0">
+                            <span class="price-unit">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">能力介绍材料：</div>
+                    <div class="consult-val">
+                        <div class="file-upload-wrap">
+                            <input type="file" class="consult-input" accept=".pdf,.doc,.docx,.ppt,.pptx" style="padding-top:8px">
+                            <span class="file-upload-hint">上传单个文件，支持PDF/doc/docx/ppt等格式，不超过50M</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="respondCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        var overlay = document.getElementById('respondOverlay');
+        var txt = document.getElementById('txtReason');
+        var cnt = document.getElementById('reasonCount');
+
+        function closeModal() { overlay.classList.remove('active'); }
+
+        document.getElementById('respondClose').addEventListener('click', closeModal);
+        document.getElementById('respondCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
+
+        document.getElementById('respondForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的响应已提交，我们会尽快处理',
+                duration: 1600
+            });
+        });
+    })();
+    </script>
+    <script src="js/recommend.js"></script>
+</body>
+</html>

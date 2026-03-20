@@ -1,12 +1,6 @@
-/**
+﻿/**
  * <site-footer> Web Component
  * 龙岗数据聚合服务平台 — 统一底部组件
- *
- * 用法：
- *   <site-footer></site-footer>
- *
- * 外部可通过 CSS 自定义 host 上边距：
- *   site-footer { margin-top: 0; }
  */
 class SiteFooter extends HTMLElement {
     constructor() {
@@ -23,20 +17,19 @@ class SiteFooter extends HTMLElement {
 }
 
 .footer {
-    background: #0B1A14;
+    background: #18181b;
     padding: 48px 32px;
-    border-top: 1px solid rgba(32, 165, 101, 0.15);
 }
 
 .footer-container {
-    max-width: 1400px;
+    max-width: 1920px;
     margin: 0 auto;
     text-align: center;
 }
 
 .footer-text {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.35);
+    color: #a1a1aa;
     line-height: 2;
 }
 </style>

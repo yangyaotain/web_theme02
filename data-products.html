@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据产品 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* ── Search Section ── */
+        .search-section {
+            padding: 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+        }
+        .search-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        .search-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 24px;
+        }
+        .search-inner { display: flex; align-items: center; gap: 12px; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input {
+            width: 100%; padding: 14px 20px 14px 48px;
+            border: 1px solid var(--border-default); border-radius: var(--radius-lg);
+            font-size: 14px; color: var(--text-primary); outline: none;
+            transition: all var(--transition-fast);
+        }
+        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
+        .search-input::placeholder { color: var(--text-tertiary); }
+        .search-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; fill: var(--text-tertiary);
+        }
+        .search-btn {
+            padding: 14px 32px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            color: white; border: none; border-radius: var(--radius-lg);
+            font-size: 14px; font-weight: 500; cursor: pointer;
+            box-shadow: var(--shadow-sm); transition: all var(--transition-fast);
+        }
+        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
+        .search-tag {
+            padding: 4px 12px; background: transparent; border: 1px solid var(--border-default);
+            border-radius: 100px; font-size: 12px; color: var(--text-secondary);
+            cursor: pointer; transition: all var(--transition-fast);
+        }
+        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
+
+        /* ── Main Content (Sidebar + Content Grid) ── */
+        .main-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar { width: auto; position: sticky; top: 96px; height: fit-content; }
+        .filter-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .filter-section { margin-bottom: 24px; }
+        .filter-section:last-child { margin-bottom: 0; }
+        .filter-title {
+            font-size: 13px; font-weight: 600; color: var(--text-primary);
+            margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .filter-clear { font-size: 11px; font-weight: 500; color: var(--text-tertiary); cursor: pointer; }
+        .filter-clear:hover { color: var(--forest-green); }
+        .filter-options { display: flex; flex-direction: column; gap: 8px; }
+        .filter-option {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 12px; border-radius: var(--radius-md);
+            cursor: pointer; transition: all var(--transition-fast);
+        }
+        .filter-option:hover { background: var(--gray-100); }
+        .filter-option.active { background: var(--forest-green-50); }
+        .filter-checkbox {
+            width: 16px; height: 16px; border: 1.5px solid var(--gray-300);
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            transition: all var(--transition-fast); flex-shrink: 0;
+        }
+        .filter-option.active .filter-checkbox { background: var(--forest-green); border-color: var(--forest-green); }
+        .filter-checkbox svg { width: 10px; height: 10px; fill: white; opacity: 0; }
+        .filter-option.active .filter-checkbox svg { opacity: 1; }
+        .filter-label { font-size: 13px; color: var(--text-secondary); }
+        .filter-option.active .filter-label { color: var(--forest-green-700); font-weight: 500; }
+        .filter-count {
+            margin-left: auto; font-size: 11px; color: var(--text-tertiary);
+            background: var(--gray-100); padding: 2px 8px; border-radius: 100px;
+        }
+        .filter-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
+
+        /* ── Content Area ── */
+        .content-area { min-width: 0; }
+        .content-tabs {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+            padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);
+        }
+        .tab {
+            padding: 8px 16px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); background: transparent;
+            border: 1px solid transparent; border-radius: var(--radius-md);
+            cursor: pointer; transition: all var(--transition-fast);
+        }
+        .tab:hover { color: var(--text-primary); background: var(--gray-100); }
+        .tab.active { color: var(--forest-green); background: var(--forest-green-50); border-color: var(--forest-green-200); }
+
+        .content-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+        }
+        .results-count { font-size: 13px; color: var(--text-secondary); }
+        .results-count strong { color: var(--text-primary); font-weight: 600; }
+        .sort-dropdown { display: flex; align-items: center; gap: 8px; }
+        .sort-label { font-size: 12px; color: var(--text-tertiary); }
+        .sort-select {
+            padding: 6px 12px; font-size: 13px; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm); cursor: pointer; outline: none;
+        }
+
+        /* ── Data Cards Grid ── */
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .data-card {
+            background: var(--surface-elevated); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl); overflow: hidden;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm); position: relative;
+        }
+        .data-card::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: var(--radius-xl);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+        .data-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
+            transform: translateY(-4px);
+        }
+        .data-card-image {
+            height: 140px; position: relative; overflow: hidden;
+        }
+        .data-card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+        .data-card-badge {
+            padding: 4px 10px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
+            border-radius: var(--radius-md); font-size: 10px; font-weight: 500; color: white;
+        }
+        .data-card-badge.api { background: rgba(64,158,255,0.8); }
+
+        .data-card-content { padding: 20px; }
+        .data-card-title {
+            font-size: 15px; font-weight: 600; color: var(--text-primary);
+            line-height: 1.4; margin-bottom: 8px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-type-row { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
+        .data-card-type-row .val { color: var(--info-blue); font-weight: 500; }
+        .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 10px; }
+        .data-card-desc {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .data-card-price .price { color: #E53935; font-size: 16px; font-weight: 700; }
+        .data-card-price .price.negotiate { font-size: 14px; font-weight: 600; }
+
+        .data-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 16px; border-top: 1px solid var(--border-subtle);
+            font-size: 11px; color: var(--text-tertiary);
+        }
+        .data-card-meta { font-size: 11px; color: var(--text-tertiary); }
+        .data-card-footer .scene-tags { display: flex; gap: 4px; }
+        .scene-tag {
+            padding: 3px 8px; font-size: 11px; font-weight: 500;
+            color: var(--forest-green); background: var(--forest-green-50);
+            border-radius: var(--radius-md);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1200px) {
+            .data-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .filter-card { display: flex; flex-wrap: wrap; gap: 24px; }
+            .filter-section { margin-bottom: 0; flex: 1; min-width: 200px; }
+            .filter-divider { display: none; }
+        }
+        @media (max-width: 768px) {
+            .data-grid { grid-template-columns: 1fr; }
+            .search-inner { flex-direction: column; }
+            .search-input-wrapper { width: 100%; }
+            .search-btn { width: 100%; }
+            .main-content { padding: 24px 16px; }
+        }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="data-store"></nav-bar>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-container">
+            <h1 class="page-title">数据产品</h1>
+            <p class="page-subtitle">汇聚数据智能产品，赋能企业数字化创新</p>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-card">
+                <div class="search-inner">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" placeholder="搜索数据产品、API、解决方案...">
+                    </div>
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tags-label">热门：</span>
+                    <span class="search-tag">交通运输</span>
+                    <span class="search-tag">文化旅游</span>
+                    <span class="search-tag">气象服务</span>
+                    <span class="search-tag">金融数据</span>
+                    <span class="search-tag">企业工商</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="filter-card">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        行业分类
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option active">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">全部</span>
+                            <span class="filter-count">128</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">交通运输</span>
+                            <span class="filter-count">24</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">金融服务</span>
+                            <span class="filter-count">18</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">文化旅游</span>
+                            <span class="filter-count">15</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">制造业</span>
+                            <span class="filter-count">12</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">房地产</span>
+                            <span class="filter-count">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        更新频率
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">次/天</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">次/周</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">次/月</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">次/季度</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">次/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        交付方式
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">API 传输</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">文件传输</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">数据库传输</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Content Area -->
+        <div class="content-area">
+            <div class="content-tabs">
+                <button class="tab">数据集</button>
+                <button class="tab active">数据产品</button>
+                <button class="tab">数据报告</button>
+                <button class="tab">RWA</button>
+                <button class="tab">数据模型</button>
+            </div>
+
+            <div class="content-header">
+                <div class="results-count">共 <strong>128</strong> 条数据产品</div>
+                <div class="sort-dropdown">
+                    <span class="sort-label">排序：</span>
+                    <select class="sort-select">
+                        <option>上架时间</option>
+                        <option>购买量</option>
+                        <option>浏览量</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-grid">
+                <!-- Card 1: 慧企政策智能推荐 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">慧企政策智能推荐</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">经营预测</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2: 用户用水指标分析数据 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">用户用水指标分析数据</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">企业用户的用水数据进行加工分析，得出针对各类用户的水用相关指标数据</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">智慧城市</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3: 旅游安全气象服务 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/tourism-weather.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">旅游安全气象服务</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">通过大数据技术对气象数据进行治理、分类，赋能深汕特别合作区旅游业的安全监管</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">智慧文旅</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4: 收费站出口小时流量 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/toll-traffic.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">收费站出口小时流量</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">通过日前查询云南交投路网下辖收费站出口小时流量统计，包括出口ETC/CPC车流量</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">智慧交通</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 5: 智联云通平台 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">智联云通平台</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">一站式物联网行业应用的解决方案实现，多元化智能设备的无缝接入与集中管理</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">数据安全</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 6: 公司夜灯光数据 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">公司夜灯光数据</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">利用卫星遥感技术探测计算某制造业公司的夜灯光变量，用于衡量和预测其生产经营情况</p>
+                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">区域产业升级</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 7: 实时数据链平台 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/data-chain.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">实时数据链平台</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">将企业核心数据实时集中到中央化数据平台中的方式并通过API/SDK反向提供数据</p>
+                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">数字化运营</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 8: 城际高速小时车流量迁移统计 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/highway-migration.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">城际高速小时车流量迁移统计</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计</p>
+                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">交通规划</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 9 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业工商信息智能匹配</h3>
+                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">整合全国企业工商登记信息，提供企业基本信息、股东信息、变更记录等多维度智能匹配与查询</p>
+                        <p class="data-card-price">参考价格：<span class="price">0.05元/次</span></p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
+                            <div class="scene-tags"><span class="scene-tag">企业征信</span></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Pagination -->
+            <nav class="pagination">
+                <button class="pagination-btn" disabled>上一页</button>
+                <div class="pagination-numbers">
+                    <button class="pagination-number active">1</button>
+                    <button class="pagination-number">2</button>
+                    <button class="pagination-number">3</button>
+                    <button class="pagination-number">4</button>
+                    <button class="pagination-number">5</button>
+                    <span class="pagination-ellipsis">...</span>
+                    <button class="pagination-number">89</button>
+                </div>
+                <button class="pagination-btn">下一页</button>
+            </nav>
+        </div>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script>
+    document.querySelectorAll('.filter-option').forEach(function (option) {
+        option.addEventListener('click', function () {
+            this.classList.toggle('active');
+        });
+    });
+    document.querySelectorAll('.tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+        });
+    });
+    document.querySelectorAll('.data-card').forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function () {
+            window.location.href = 'product-detail.html';
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>政策资讯 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* ── Page Header ── */
+        .page-header::before {
+            content: ''; position: absolute; width: 420px; height: 420px;
+            border: 1.5px solid #E0E2E5; border-radius: 50%;
+            top: -120px; right: -80px; pointer-events: none;
+        }
+        .page-header::after {
+            content: ''; position: absolute; width: 180px; height: 180px;
+            border: 1.5px dashed #E0E2E5; border-radius: 50%;
+            top: 60px; right: 160px; pointer-events: none;
+        }
+        .page-header-dots {
+            position: absolute; top: 24px; left: 40px;
+            width: 120px; height: 100px;
+            background-image: radial-gradient(circle, #D4D6D9 1px, transparent 1px);
+            background-size: 16px 16px; opacity: 0.7;
+        }
+        .page-header-cross {
+            position: absolute; top: 40px; right: 380px;
+            width: 20px; height: 20px; opacity: 0.45;
+        }
+        .page-header-diamond {
+            position: absolute; bottom: 20px; right: 28%;
+            width: 14px; height: 14px;
+            border: 1.5px solid #D4D6D9; transform: rotate(45deg); opacity: 0.6;
+        }
+        .decor-doc {
+            position: absolute; right: 12%; top: 30px; opacity: 0.18;
+        }
+        .decor-megaphone {
+            position: absolute; left: 8%; bottom: 8px; opacity: 0.15;
+        }
+
+        /* ── Search ── */
+        .search-section { padding: 0; margin-top: -20px; position: relative; z-index: 10; }
+        .search-container { max-width: 1920px; margin: 0 auto; padding: 0 32px; }
+        .search-card {
+            background: var(--surface-elevated); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px;
+        }
+        .search-inner { display: flex; align-items: center; gap: 12px; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input {
+            width: 100%; padding: 14px 20px 14px 48px;
+            border: 1px solid var(--border-default); border-radius: var(--radius-lg);
+            font-size: 14px; color: var(--text-primary); outline: none;
+            transition: all var(--transition-fast); font-family: inherit;
+        }
+        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
+        .search-input::placeholder { color: var(--text-tertiary); }
+        .search-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; fill: var(--text-tertiary);
+        }
+        .search-btn {
+            padding: 14px 32px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            color: white; border: none; border-radius: var(--radius-lg);
+            font-size: 14px; font-weight: 500; cursor: pointer;
+            box-shadow: var(--shadow-sm); transition: all var(--transition-fast); font-family: inherit;
+        }
+        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
+        .search-tag {
+            padding: 4px 12px; background: transparent;
+            border: 1px solid var(--border-default); border-radius: 100px;
+            font-size: 12px; color: var(--text-secondary); cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
+
+        /* ── Main Content ── */
+        .main-content { max-width: 1920px; margin: 0 auto; padding: 32px; }
+
+        /* ── Category Tabs ── */
+        .category-tabs {
+            display: flex; gap: 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 24px;
+        }
+        .category-tab {
+            padding: 12px 28px; font-size: 14px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer; border: none; background: none;
+            border-bottom: 2px solid transparent; transition: all var(--transition-fast);
+            font-family: inherit; position: relative; bottom: -1px;
+        }
+        .category-tab:hover { color: var(--forest-green); }
+        .category-tab.active {
+            color: var(--forest-green); font-weight: 600;
+            border-bottom-color: var(--forest-green);
+        }
+
+        /* ── Article List ── */
+        .article-list { display: flex; flex-direction: column; gap: 0; }
+        .article-item {
+            display: flex; gap: 24px; padding: 24px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer; transition: background 0.15s ease;
+        }
+        .article-item:first-child { padding-top: 0; }
+        .article-item:hover { background: var(--forest-green-50); margin: 0 -16px; padding-left: 16px; padding-right: 16px; border-radius: var(--radius-lg); }
+        .article-thumb {
+            width: 200px; height: 130px; flex-shrink: 0; border-radius: var(--radius-lg);
+            overflow: hidden; background: #f0f2f5;
+        }
+        .article-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .article-body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+        .article-title {
+            font-size: 16px; font-weight: 600; color: var(--forest-green);
+            margin-bottom: 10px; line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .article-item:hover .article-title { text-decoration: underline; }
+        .article-desc {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+            margin-bottom: 12px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .article-time { font-size: 12px; color: var(--text-tertiary); }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; margin-top: 40px; flex-wrap: wrap;
+        }
+        .pagination-info { font-size: 13px; color: var(--text-tertiary); margin-right: 16px; }
+        .pagination-info select {
+            padding: 2px 4px; border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary);
+        }
+        .page-btn {
+            min-width: 36px; height: 36px; display: inline-flex;
+            align-items: center; justify-content: center;
+            border: 1px solid var(--border-default); border-radius: var(--radius-md);
+            background: var(--surface-primary); font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast);
+            font-family: inherit; padding: 0 10px;
+        }
+        .page-btn:hover { border-color: var(--forest-green); color: var(--forest-green); }
+        .page-btn.active {
+            background: var(--forest-green); color: white; border-color: var(--forest-green);
+        }
+        .page-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .page-ellipsis { font-size: 13px; color: var(--text-tertiary); padding: 0 4px; }
+
+        @media (max-width: 768px) {
+            .article-item { flex-direction: column; }
+            .article-thumb { width: 100%; height: 180px; }
+        }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="policy"></nav-bar>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-decor">
+            <div class="page-header-dots"></div>
+            <div class="page-header-cross">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="0" x2="10" y2="20" stroke="#D0D2D5" stroke-width="1.5"/><line x1="0" y1="10" x2="20" y2="10" stroke="#D0D2D5" stroke-width="1.5"/></svg>
+            </div>
+            <div class="page-header-diamond"></div>
+            <div class="decor-doc">
+                <svg width="60" height="70" viewBox="0 0 60 70" fill="none">
+                    <rect x="8" y="4" width="40" height="52" rx="4" stroke="#B0B3B8" stroke-width="1.5"/>
+                    <line x1="18" y1="18" x2="42" y2="18" stroke="#B0B3B8" stroke-width="1.3"/>
+                    <line x1="18" y1="26" x2="42" y2="26" stroke="#B0B3B8" stroke-width="1.3"/>
+                    <line x1="18" y1="34" x2="36" y2="34" stroke="#B0B3B8" stroke-width="1.3"/>
+                    <path d="M36 4v14h14" stroke="#B0B3B8" stroke-width="1.3" fill="none"/>
+                </svg>
+            </div>
+            <div class="decor-megaphone">
+                <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+                    <path d="M38 10L16 20H8v12h8l22 10V10z" stroke="#B0B3B8" stroke-width="1.4" fill="none"/>
+                    <path d="M42 18c2 2 2 6 0 8" stroke="#B0B3B8" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                    <path d="M45 14c4 4 4 12 0 16" stroke="#B0B3B8" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+        <div class="page-header-container">
+            <h1 class="page-title">政策资讯</h1>
+            <p class="page-subtitle">聚焦数据要素政策动态、行业新闻与重要公告，助力把握数据经济发展机遇</p>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-card">
+                <div class="search-inner">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" placeholder="请输入关键字">
+                    </div>
+                    <button class="search-btn">搜 索</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tags-label">热门搜索：</span>
+                    <span class="search-tag">交通运输</span>
+                    <span class="search-tag">文化旅游</span>
+                    <span class="search-tag">气象服务</span>
+                    <span class="search-tag">数据要素</span>
+                    <span class="search-tag">数据安全</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active">全部</button>
+            <button class="category-tab">政策</button>
+            <button class="category-tab">新闻</button>
+            <button class="category-tab">公告</button>
+        </div>
+
+        <!-- Article List -->
+        <div class="article-list">
+            <div class="article-item" onclick="location.href='policy-detail-4t.html'">
+                <div class="article-thumb">
+                    <img src="images/4t-digital-space-hero.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">4T龙岗数字生活空间：破解"数字鸿沟"，实现数字平权</h3>
+                    <p class="article-desc">不管你是老人还是小孩，无论家住哪里、收入多少，都能"用得上、用得起、会使用"数字服务——让每个人都能享受数字时代的便利。深圳龙岗区正式发布"4T数字生活空间"项目，打造面向全区480万居民的"数字保障房"。</p>
+                    <span class="article-time">发布时间：2025-09-15 10:00:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail-ai.html'">
+                <div class="article-thumb">
+                    <img src="images/hero-ai-longgang.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">"AI龙岗"智算底座：打造万P算力新基建</h3>
+                    <p class="article-desc">龙岗区点亮首个区属国企主导的2000P算力集群，总投资约22亿元，成为全国首个基于华为昇腾服务器部署DeepSeek-R1全尺寸大模型的行政单位，力争带动人工智能产业达到1000亿元规模。</p>
+                    <span class="article-time">发布时间：2025-08-20 09:00:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail-data-space.html'">
+                <div class="article-thumb">
+                    <img src="images/hero-trusted-data.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">龙岗可信数据空间：构建数据要素流通新生态</h3>
+                    <p class="article-desc">龙岗区数据要素服务工作站正式揭牌，以"政府指导+市场化运营"模式推动企业数据资产入表、撮合数据交易、培育数商生态，汇聚业务数据292亿条，构建数据要素流通完整生态闭环。</p>
+                    <span class="article-time">发布时间：2025-07-12 14:30:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail-public-data.html'">
+                <div class="article-thumb">
+                    <img src="images/hero-public-data.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">龙岗公共数据授权运营：释放数据要素新价值</h3>
+                    <p class="article-desc">龙岗区加快推进公共数据授权运营改革，建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，数据服务调用量超12.62亿次，入选全国首批政务数据管理能力成熟度贯标试点单位。</p>
+                    <span class="article-time">发布时间：2025-06-18 10:00:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-01.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">龙岗区政务和数据局举行首期"All in AI"头脑风暴会</h3>
+                    <p class="article-desc">10月11日，龙岗区政务和数据局组织召开"All in AI"头脑风暴会，邀请区相关政府部门及人工智能领域应用开发企业代表，围绕"如何让AI智能体更好用"展开深入交流，会议聚焦政务场景中AI智能体的工程实践现状、面临挑战与解决路径，共同探讨推进AI落地政务的有效方法。</p>
+                    <span class="article-time">发布时间：2025-11-4 11:12:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-03.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">数据合规评估</h3>
+                    <p class="article-desc">各省、自治区、直辖市及计划单列市、新疆生产建设兵团发展改革委、数据管理部门、工业和信息化主管部门、通信管理局：</p>
+                    <span class="article-time">发布时间：2025-11-4 11:12:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-04.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">国家发展改革委 国家数据局 工业和信息化部关于印发《国家数据基础设施建设指引》的通知</h3>
+                    <p class="article-desc">为贯彻落实党的二十届三中全会关于建设和运营国家数据基础设施、促进数据共享的部署要求，国家发展改革委、国家数据局、工业和信息化部组织制定了《国家数据基础设施建设指引》。现印发给你们，请结合实际，因地制宜抓好落实。</p>
+                    <span class="article-time">发布时间：2025-11-4 11:12:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-05.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">深圳市数据要素市场化配置改革行动方案发布</h3>
+                    <p class="article-desc">深圳市人民政府办公厅印发《深圳市数据要素市场化配置改革行动方案》，围绕数据产权、流通交易、收益分配、安全治理等方面推出系列举措，加快培育数据要素市场。</p>
+                    <span class="article-time">发布时间：2025-10-28 09:30:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-06.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">广东省公共数据管理办法正式施行</h3>
+                    <p class="article-desc">《广东省公共数据管理办法》自2025年1月1日起施行，办法明确了公共数据的采集、汇聚、共享、开放和利用等全生命周期管理要求，推动公共数据有序开放和高效利用。</p>
+                    <span class="article-time">发布时间：2025-10-15 14:20:00</span>
+                </div>
+            </div>
+
+            <div class="article-item" onclick="location.href='policy-detail.html'">
+                <div class="article-thumb">
+                    <img src="images/news-08.jpg" alt="">
+                </div>
+                <div class="article-body">
+                    <h3 class="article-title">数据资产入表实务指南：企业如何把握数据价值新机遇</h3>
+                    <p class="article-desc">随着《企业数据资源相关会计处理暂行规定》正式实施，数据资产"入表"成为企业关注焦点。本文从实务角度解读数据资产确认、计量与披露的关键要点。</p>
+                    <span class="article-time">发布时间：2025-09-10 16:45:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <span class="pagination-info">第1-10条记录，共128条记录，每页显示 <select><option>10</option><option>20</option><option>50</option></select> 记录</span>
+            <button class="page-btn disabled">上一页</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <span class="page-ellipsis">...</span>
+            <button class="page-btn">89</button>
+            <button class="page-btn">下一页</button>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <script>
+    (function () {
+        var tabs = document.querySelectorAll('.category-tab');
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

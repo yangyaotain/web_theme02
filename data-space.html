@@ -7,122 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
     <style>
-        :root {
-            /* Brand Colors */
-            --forest-green: #20A565;
-            --forest-green-50: #ECFDF3;
-            --forest-green-100: #D1FADF;
-            --forest-green-200: #A6F4C5;
-            --forest-green-500: #20A565;
-            --forest-green-600: #16a34a;
-            --forest-green-700: #15803d;
-
-            --accent-orange: #F7AF1D;
-            --accent-orange-50: #FFFCF0;
-            --accent-orange-100: #FEF3C7;
-
-            --info-blue: #409EFF;
-
-            /* Classification Colors */
-            --cls-database: #20A565;
-            --cls-database-bg: #ECFDF3;
-            --cls-api: #4F6EF7;
-            --cls-api-bg: #EEF2FF;
-            --cls-doc: #E5940A;
-            --cls-doc-bg: #FFFCF0;
-            --cls-service: #8B5CF6;
-            --cls-service-bg: #F5F3FF;
-
-            /* Typography Colors */
-            --text-primary: #111827;
-            --text-secondary: #4B5563;
-            --text-tertiary: #9CA3AF;
-            --text-placeholder: #9CA3AF;
-            --text-disabled: #D1D5DB;
-
-            /* Backgrounds */
-            --bg-main: #FFFFFF;
-            --bg-section: #FAFBFC;
-            --bg-card: #FFFFFF;
-
-            --surface-primary: #FFFFFF;
-            --surface-secondary: #FAFBFC;
-            --surface-elevated: #FFFFFF;
-
-            /* Semantic Colors */
-            --color-success: #20A565;
-            --color-warning: #F7AF1D;
-            --color-error: #EF4444;
-
-            /* Borders */
-            --border-default: #E5E7EB;
-            --border-divider: #F3F4F6;
-            --border-subtle: #E5E7EB;
-            --border-emphasis: #D1D5DB;
-
-            /* Shadows */
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.04);
-            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.04);
-            --shadow-glow: 0 4px 16px rgba(32, 165, 101, 0.2);
-
-            /* Radius — 硬朗风格 */
-            --radius-sm: 2px;
-            --radius-md: 3px;
-            --radius-lg: 4px;
-            --radius-xl: 4px;
-            --radius-2xl: 4px;
-
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        a { text-decoration: none; color: inherit; }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .btn-primary {
-            color: white;
-            background: var(--forest-green);
-        }
-        .btn-primary:hover { background: var(--forest-green-600); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
-
-        .btn-lg { padding: 14px 28px; font-size: 15px; border-radius: var(--radius-lg); }
-
-        /* Page Header */
+        /* Page Header — 覆盖公共样式 */
         .page-header {
             padding: 100px 0 48px;
-            background: #FAFBFC;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
 
         /* 装饰：左侧大圆环 */
@@ -149,14 +41,6 @@
             bottom: -100px;
             right: -60px;
             pointer-events: none;
-        }
-
-        /* 装饰层容器 */
-        .page-header-decor {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
         }
 
         /* 装饰：右侧点阵 */
@@ -271,29 +155,21 @@
 
         .page-header-container {
             max-width: 800px;
-            margin: 0 auto;
-            padding: 0 32px;
-            position: relative;
-            z-index: 1;
         }
 
         .page-title {
             font-size: 36px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.02em;
             margin-bottom: 12px;
         }
 
         .page-subtitle {
             font-size: 16px;
-            color: var(--text-secondary);
             line-height: 1.6;
         }
 
         /* Main Layout */
         .main-content {
-            max-width: 1400px;
+            max-width: 1920px;
             margin: 0 auto;
             padding: 32px;
             display: grid;
@@ -398,7 +274,8 @@
         .article-hero {
             position: relative;
             height: 400px;
-            background: url('images/space-hero.jpg') center/cover;
+            background-size: cover;
+            background-position: center;
         }
 
         .article-hero::before {
@@ -550,11 +427,12 @@
         }
 
         .feature-card {
-            background: #FAFBFC;
-            border-radius: var(--radius-lg);
+            background: var(--surface-secondary);
+            border-radius: var(--radius-xl);
             padding: 24px;
             display: flex;
             gap: 16px;
+            box-shadow: var(--shadow-sm);
         }
 
         .feature-icon {
@@ -628,9 +506,6 @@
             border-radius: var(--radius-lg);
             background-size: cover;
             background-position: center;
-        }
-
-        .gallery-side-img:first-child {
             background-image: url('images/space-gallery1.jpg');
         }
 
@@ -680,7 +555,13 @@
             box-shadow: 0 10px 40px rgba(255,255,255,0.2);
         }
 
-        /* Footer */
+        /* Content panels toggle */
+        .article-panel {
+            display: none;
+        }
+        .article-panel.active {
+            display: block;
+        }
 
         /* Responsive */
         @media (max-width: 1200px) {
@@ -705,6 +586,8 @@
             .cta-section { flex-direction: column; text-align: center; }
         }
     </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -821,10 +704,10 @@
             </div>
         </aside>
 
-        <!-- Article Content -->
+        <!-- ========== Panel 1: 低空经济可信数据空间 ========== -->
+        <div class="article-panel active" data-panel="0">
         <article class="article">
-            <!-- Hero Banner -->
-            <div class="article-hero">
+            <div class="article-hero" style="background-image: url('images/space-hero.jpg');">
                 <div class="article-hero-content">
                     <span class="article-badge">
                         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
@@ -834,137 +717,216 @@
                     <p class="article-subtitle">以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系</p>
                 </div>
             </div>
-
-            <!-- Article Body -->
             <div class="article-body">
-                <!-- Lead -->
-                <p class="article-lead">
-                    深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。
-                </p>
-
-                <!-- Stats Banner -->
+                <p class="article-lead">深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。</p>
                 <div class="stats-banner">
-                    <div class="stat-card">
-                        <div class="stat-number">388<span class="stat-unit">km²</span></div>
-                        <div class="stat-label">低空空域覆盖面积</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">34<span class="stat-unit">条</span></div>
-                        <div class="stat-label">直升机航线</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">99<span class="stat-unit">%</span></div>
-                        <div class="stat-label">场景还原度</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">15<span class="stat-unit">x</span></div>
-                        <div class="stat-label">任务效率提升</div>
-                    </div>
+                    <div class="stat-card"><div class="stat-number">388<span class="stat-unit">km²</span></div><div class="stat-label">低空空域覆盖面积</div></div>
+                    <div class="stat-card"><div class="stat-number">34<span class="stat-unit">条</span></div><div class="stat-label">直升机航线</div></div>
+                    <div class="stat-card"><div class="stat-number">99<span class="stat-unit">%</span></div><div class="stat-label">场景还原度</div></div>
+                    <div class="stat-card"><div class="stat-number">15<span class="stat-unit">x</span></div><div class="stat-label">任务效率提升</div></div>
                 </div>
-
-                <!-- Section 1 -->
                 <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">1</span>
-                        <h2 class="section-title">数字底座：三维立体时空基底</h2>
-                    </div>
-                    <p class="section-content">
-                        "空中高德"时空数字底座融合地面与低空（600米以下）实时数据，通过三维隐式空间建模与AI深度学习技术，实现全域数据天级更新，真实场景还原度达99%。该底座集成5G-A、ADS-B、RID等通导监设施数据，以及气象、飞行感知等动态信息，汇聚超过30类、100项多源异构数据，形成可孪生管理、智能路径规划的"智慧大脑"。
-                    </p>
+                    <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数字底座：三维立体时空基底</h2></div>
+                    <p class="section-content">"空中高德"时空数字底座融合地面与低空（600米以下）实时数据，通过三维隐式空间建模与AI深度学习技术，实现全域数据天级更新，真实场景还原度达99%。该底座集成5G-A、ADS-B、RID等通导监设施数据，以及气象、飞行感知等动态信息，汇聚超过30类、100项多源异构数据，形成可孪生管理、智能路径规划的"智慧大脑"。</p>
                 </section>
-
-                <!-- Section 2 -->
                 <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">2</span>
-                        <h2 class="section-title">空域管理：动态可调航路体系</h2>
-                    </div>
-                    <p class="section-content">
-                        在龙岗区388平方公里低空空域内，构建了灵活可调的公共航路体系，支持物流无人机、巡检无人机等在高密度环境下融合飞行。通过"低空空域一张图"动态管理，实现飞行器"随需而动"，突破传统静态空域划分模式，大幅提升空域资源利用率。
-                    </p>
-
-                    <!-- Image Gallery -->
+                    <div class="section-header"><span class="section-number">2</span><h2 class="section-title">空域管理：动态可调航路体系</h2></div>
+                    <p class="section-content">在龙岗区388平方公里低空空域内，构建了灵活可调的公共航路体系，支持物流无人机、巡检无人机等在高密度环境下融合飞行。通过"低空空域一张图"动态管理，实现飞行器"随需而动"，突破传统静态空域划分模式，大幅提升空域资源利用率。</p>
                     <div class="image-gallery">
                         <div class="gallery-main"></div>
-                        <div class="gallery-side">
-                            <div class="gallery-side-img"></div>
-                            <div class="gallery-side-img"></div>
-                        </div>
+                        <div class="gallery-side"><div class="gallery-side-img"></div><div class="gallery-side-img"></div></div>
                     </div>
                 </section>
-
-                <!-- Section 3 -->
                 <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">3</span>
-                        <h2 class="section-title">安全屏障：全域智能监控网络</h2>
-                    </div>
-                    <p class="section-content">
-                        针对城市密集区60%的监控盲区问题，该体系通过多源数据融合与智能计算，增强对"低空、慢速、小型"目标的识别能力。政务低空飞行服务平台可自动识别飞行禁区，实现无人机政务飞行零事故运行。
-                    </p>
+                    <div class="section-header"><span class="section-number">3</span><h2 class="section-title">安全屏障：全域智能监控网络</h2></div>
+                    <p class="section-content">针对城市密集区60%的监控盲区问题，该体系通过多源数据融合与智能计算，增强对"低空、慢速、小型"目标的识别能力。政务低空飞行服务平台可自动识别飞行禁区，实现无人机政务飞行零事故运行。</p>
                 </section>
-
-                <!-- Section 4 -->
                 <section class="article-section">
-                    <div class="section-header">
-                        <span class="section-number">4</span>
-                        <h2 class="section-title">应用场景：多元商业化落地</h2>
-                    </div>
+                    <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用场景：多元商业化落地</h2></div>
                     <div class="feature-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
-                            </div>
-                            <div>
-                                <div class="feature-title">城市治理</div>
-                                <div class="feature-desc">政务无人机巡查、测绘、应急等任务效率提升15倍</div>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24"><path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7z"/></svg>
-                            </div>
-                            <div>
-                                <div class="feature-title">物流与医疗</div>
-                                <div class="feature-desc">开通34条直升机航线，支持紧急送药、商圈服务</div>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                            </div>
-                            <div>
-                                <div class="feature-title">观光旅游</div>
-                                <div class="feature-desc">低空观光、航拍体验等新型业态蓬勃发展</div>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
-                            </div>
-                            <div>
-                                <div class="feature-title">产业融合</div>
-                                <div class="feature-desc">龙岗低空智能融合测试基地推动产业创新</div>
-                            </div>
-                        </div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div><div><div class="feature-title">城市治理</div><div class="feature-desc">政务无人机巡查、测绘、应急等任务效率提升15倍</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7z"/></svg></div><div><div class="feature-title">物流与医疗</div><div class="feature-desc">开通34条直升机航线，支持紧急送药、商圈服务</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div><div><div class="feature-title">观光旅游</div><div class="feature-desc">低空观光、航拍体验等新型业态蓬勃发展</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg></div><div><div class="feature-title">产业融合</div><div class="feature-desc">龙岗低空智能融合测试基地推动产业创新</div></div></div>
                     </div>
                 </section>
-
-                <!-- CTA Section -->
                 <div class="cta-section">
-                    <div class="cta-content">
-                        <h3>加入低空经济可信数据空间</h3>
-                        <p>与我们一起探索低空经济的无限可能</p>
-                    </div>
+                    <div class="cta-content"><h3>加入低空经济可信数据空间</h3><p>与我们一起探索低空经济的无限可能</p></div>
                     <button class="cta-button">立即申请加入</button>
                 </div>
             </div>
         </article>
+        </div>
+
+        <!-- ========== Panel 2: 具身智能可信数据空间 ========== -->
+        <div class="article-panel" data-panel="1">
+        <article class="article">
+            <div class="article-hero" style="background-image: url('images/space-hero-robot.jpg');">
+                <div class="article-hero-content">
+                    <span class="article-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        全国首个人工智能与机器人数据聚合服务中心
+                    </span>
+                    <h1 class="article-title">具身智能可信数据空间</h1>
+                    <p class="article-subtitle">聚焦机器人训练数据生产、标注加工与智能模型训练，构建具身智能全链条数据服务体系</p>
+                </div>
+            </div>
+            <div class="article-body">
+                <p class="article-lead">龙岗区以"All in AI"战略为引领，率先建设全国首个人工智能与机器人数据聚合服务中心，聚焦具身智能行业数据标准统一、采集效率提升、共享机制建立，为机器人产业发展提供高质量数据底座。</p>
+                <div class="stats-banner">
+                    <div class="stat-card"><div class="stat-number">1500<span class="stat-unit">+</span></div><div class="stat-label">高质量数据集</div></div>
+                    <div class="stat-card"><div class="stat-number">40<span class="stat-unit">+</span></div><div class="stat-label">语料数据供应商</div></div>
+                    <div class="stat-card"><div class="stat-number">6<span class="stat-unit">大</span></div><div class="stat-label">功能模块</div></div>
+                    <div class="stat-card"><div class="stat-number">200<span class="stat-unit">万</span></div><div class="stat-label">单企最高扶持额</div></div>
+                </div>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数据聚合服务中心：六大核心模块</h2></div>
+                    <p class="section-content">人工智能与机器人数据聚合服务中心由龙岗区政务服务和数据管理局联合深圳数据交易所、深圳市人工智能与机器人研究院共建，设立六大功能模块：具身智能数据生产中心、标注加工中心、质量评估中心、知识库中心、语料推荐中心和训推中心。已汇聚40多家人工智能语料数据供应商和20多家服务商，提供超1500个高质量数据集。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">2</span><h2 class="section-title">数据生产与训练：从采集到模型</h2></div>
+                    <p class="section-content">数据空间覆盖机器人训练数据的全生命周期——从多模态感知数据采集、自动化标注加工、质量评估到模型训练推理。通过标准化的数据管道和质量评估体系，确保训练数据的准确性和一致性，大幅降低具身智能企业的数据获取成本和模型开发周期。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">3</span><h2 class="section-title">产业扶持：真金白银助力创新</h2></div>
+                    <p class="section-content">龙岗区2025年推出具身智能机器人应用扶持项目，对工程化样机阶段按研发投入的5%提供支持，首次销售按制备成本总额的50%提供支持，单个企业每年合计最高支持200万元。通过政策引导与资金扶持，加速具身智能从实验室走向应用场景。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">4</span><h2 class="section-title">应用场景：多领域深度融合</h2></div>
+                    <div class="feature-grid">
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div><div class="feature-title">工业制造</div><div class="feature-desc">智能机器人用于精密装配、质检、仓储分拣</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17.12 10c.94-1.15 1.54-2.61 1.54-4.22C18.66 2.67 16 0 12.9 0 9.8 0 7.14 2.67 7.14 5.78c0 1.61.6 3.07 1.54 4.22C5.51 11.34 3 14.52 3 18.3V24h18v-5.7c0-3.78-2.51-6.96-5.88-8.3z"/></svg></div><div><div class="feature-title">服务机器人</div><div class="feature-desc">酒店、餐饮、零售等场景的智能服务应用</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg></div><div><div class="feature-title">医疗康复</div><div class="feature-desc">康复机器人辅助训练与远程医疗协助</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></div><div><div class="feature-title">教育科研</div><div class="feature-desc">机器人教学实训与科研数据共享</div></div></div>
+                    </div>
+                </section>
+                <div class="cta-section">
+                    <div class="cta-content"><h3>加入具身智能可信数据空间</h3><p>携手共建机器人数据生态，赋能智能产业升级</p></div>
+                    <button class="cta-button">立即申请加入</button>
+                </div>
+            </div>
+        </article>
+        </div>
+
+        <!-- ========== Panel 3: 医药健康可信数据空间 ========== -->
+        <div class="article-panel" data-panel="2">
+        <article class="article">
+            <div class="article-hero" style="background-image: url('images/space-hero-health.jpg');">
+                <div class="article-hero-content">
+                    <span class="article-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        全市首个"AI＋生命健康产业园"
+                    </span>
+                    <h1 class="article-title">医药健康可信数据空间</h1>
+                    <p class="article-subtitle">以医疗大数据和AI诊断为核心，构建覆盖临床研究、健康管理、医药创新转化的数字化体系</p>
+                </div>
+            </div>
+            <div class="article-body">
+                <p class="article-lead">龙岗区以"健康龙岗"行动为牵引，打造全市首个"AI＋生命健康产业园"，推动医疗大数据在诊疗辅助、公共卫生、药物研发等领域的深度应用，构建安全合规的医药健康数据流通环境。</p>
+                <div class="stats-banner">
+                    <div class="stat-card"><div class="stat-number">50<span class="stat-unit">万+</span></div><div class="stat-label">AI智能导诊访问量</div></div>
+                    <div class="stat-card"><div class="stat-number">95<span class="stat-unit">%+</span></div><div class="stat-label">AI导诊准确率</div></div>
+                    <div class="stat-card"><div class="stat-number">171<span class="stat-unit">家</span></div><div class="stat-label">社康机构覆盖</div></div>
+                    <div class="stat-card"><div class="stat-number">99.38<span class="stat-unit">%</span></div><div class="stat-label">检验结果互认率</div></div>
+                </div>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">1</span><h2 class="section-title">AI赋能医疗：智慧诊疗新范式</h2></div>
+                    <p class="section-content">龙岗区上线数智健康管家"AI龙岗家医"，在12家区属公立医院及171家社康机构全面应用。区域华佗GPT智能导诊和预问诊系统已获得近50万人次访问量，准确率达95%以上。龙岗区公立医院信息共享平台项目更是荣获广东省数据要素比赛二等奖，标志着医疗数据协同共享能力达到省内领先水平。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">2</span><h2 class="section-title">医学创新转化：打通"最后一公里"</h2></div>
+                    <p class="section-content">成立全市首个区卫生健康创新与转化中心，重点聚焦生物医药、人工智能、基因技术等前沿领域。已开展转化项目46个，专利转化金额达625余万元。2025年获批国家级自然科学基金项目18项、省级9项、市级9项，科研创新实力持续增强。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">3</span><h2 class="section-title">健康产业集聚：龙头企业引领</h2></div>
+                    <p class="section-content">全市首个"AI＋生命健康产业园"成功吸引威高集团、联影医疗等生物医药产业龙头企业落户，医友天下入选工信部2025人工智能典型应用场景。通过产业集聚效应，打造从基础研究到临床应用、从数据采集到药物研发的完整创新链条。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">4</span><h2 class="section-title">数据应用场景：全域健康服务</h2></div>
+                    <div class="feature-grid">
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg></div><div><div class="feature-title">AI辅助诊断</div><div class="feature-desc">社区医院常见病AI辅助诊断准确率超92%</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div><div><div class="feature-title">医学影像共享</div><div class="feature-desc">区域医学影像、病理、检验资源共享中心</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M16 6V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6h-6zm-6-2h4v2h-4V4zm8 15H6v-2h12v2z"/></svg></div><div><div class="feature-title">药物研发加速</div><div class="feature-desc">临床数据驱动的精准医学与新药研发</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div><div><div class="feature-title">健康数据安全</div><div class="feature-desc">隐私计算保障医疗数据安全合规流通</div></div></div>
+                    </div>
+                </section>
+                <div class="cta-section">
+                    <div class="cta-content"><h3>加入医药健康可信数据空间</h3><p>用数据驱动医疗创新，守护全民健康</p></div>
+                    <button class="cta-button">立即申请加入</button>
+                </div>
+            </div>
+        </article>
+        </div>
+
+        <!-- ========== Panel 4: 文化艺术可信数据空间 ========== -->
+        <div class="article-panel" data-panel="3">
+        <article class="article">
+            <div class="article-hero" style="background-image: url('images/space-hero-culture.jpg');">
+                <div class="article-hero-content">
+                    <span class="article-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        龙岗数字创意产业走廊
+                    </span>
+                    <h1 class="article-title">文化艺术可信数据空间</h1>
+                    <p class="article-subtitle">依托全长46公里数字创意产业走廊，构建文化数据资产化、AI文创赋能与数字内容创新的数据服务体系</p>
+                </div>
+            </div>
+            <div class="article-body">
+                <p class="article-lead">龙岗数字创意产业走廊西起坂田星河云海、东至坪地低碳云城，全长46公里、面积32平方公里，汇聚超万家文化企业、超23万名规上文化企业人才，2024年走廊营收突破2291亿元。文化艺术可信数据空间为这一庞大产业集群提供安全可信的数据流通与价值释放平台。</p>
+                <div class="stats-banner">
+                    <div class="stat-card"><div class="stat-number">2291<span class="stat-unit">亿</span></div><div class="stat-label">走廊年度营收</div></div>
+                    <div class="stat-card"><div class="stat-number">10000<span class="stat-unit">+</span></div><div class="stat-label">文化企业数量</div></div>
+                    <div class="stat-card"><div class="stat-number">35<span class="stat-unit">个</span></div><div class="stat-label">文化产业园区</div></div>
+                    <div class="stat-card"><div class="stat-number">46<span class="stat-unit">km</span></div><div class="stat-label">走廊全长</div></div>
+                </div>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">1</span><h2 class="section-title">文化数据资产化：开创先河</h2></div>
+                    <p class="section-content">龙岗区在文化数据资产化领域走在全国前列。深圳市子曰文化有限公司打造的"中国式文化创作大模型"成为深圳市首个文化类数据资产入表案例，标志着文化创意数据从无形资源向可量化资产的历史性跨越。数据空间通过专业评估、合规辅导、交易撮合等全链条服务，帮助更多文化企业实现数据价值变现。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">2</span><h2 class="section-title">AI文创赋能：智能创作新引擎</h2></div>
+                    <p class="section-content">2025年龙岗区修订的文化产业扶持细则重点支持AI文创业，涵盖孵化创业、AI影视创作、技术应用提升、创意服务、场景赋能等多个方向。星河云海数字创意产业基地等园区成为AI文创企业的孵化摇篮，推动影视动漫、微短剧、数字艺术等业态与人工智能深度融合。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">3</span><h2 class="section-title">产业生态：走廊聚合效应</h2></div>
+                    <p class="section-content">龙岗数字创意产业走廊拥有6所大学、357家规上文化企业、35个文化产业园区，形成了从人才培养到产业孵化、从内容创作到市场推广的完整生态链。走廊营收占龙岗全区文化产业营收的79.1%，已成为粤港澳大湾区最具影响力的数字文化创意产业高地。</p>
+                </section>
+                <section class="article-section">
+                    <div class="section-header"><span class="section-number">4</span><h2 class="section-title">数据应用场景：文化数字化全覆盖</h2></div>
+                    <div class="feature-grid">
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div><div><div class="feature-title">数字内容创作</div><div class="feature-desc">AI辅助影视、动漫、微短剧等原创内容生产</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div><div><div class="feature-title">数字艺术交易</div><div class="feature-desc">文化数据资产确权、评估与合规交易</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div><div><div class="feature-title">版权保护</div><div class="feature-desc">区块链技术实现文化IP全链路确权与溯源</div></div></div>
+                        <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></div><div><div class="feature-title">文化教育</div><div class="feature-desc">6所大学产学研联动，培养数字文化人才</div></div></div>
+                    </div>
+                </section>
+                <div class="cta-section">
+                    <div class="cta-content"><h3>加入文化艺术可信数据空间</h3><p>以数据激活文化创意，共建数字文化新高地</p></div>
+                    <button class="cta-button">立即申请加入</button>
+                </div>
+            </div>
+        </article>
+        </div>
     </main>
 
     <!-- Footer -->
     <site-footer></site-footer>
-    <script src="nav-bar.js"></script>
-    <script src="site-footer.js"></script>
+
+    <script>
+    (function() {
+        var cards = document.querySelectorAll('.space-card');
+        var panels = document.querySelectorAll('.article-panel');
+
+        cards.forEach(function(card, idx) {
+            card.addEventListener('click', function() {
+                cards.forEach(function(c) { c.classList.remove('active'); });
+                panels.forEach(function(p) { p.classList.remove('active'); });
+                card.classList.add('active');
+                panels[idx].classList.add('active');
+                panels[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

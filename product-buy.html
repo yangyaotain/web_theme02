@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购买产品 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        .apply-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
+        .apply-meta { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-divider); }
+
+        /* 订单信息表 */
+        .order-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+        .order-table th {
+            padding: 12px 16px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary);
+            background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+            border: 1px solid var(--border-default); text-align: center;
+        }
+        .order-table td {
+            padding: 12px 16px; font-size: 13px; color: var(--text-primary);
+            border: 1px solid var(--border-default); text-align: center;
+        }
+
+        /* theme01 overrides */
+        .btn-submit {
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+        }
+        .btn-submit:hover {
+            background: linear-gradient(180deg, var(--forest-green-600) 0%, var(--forest-green-700) 100%);
+            box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+        .btn-cancel {
+            border-radius: var(--radius-xl);
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="data-store"></nav-bar>
+
+    <div class="g-page-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="data-products.html">数据产品</a>
+            <span class="sep">/</span>
+            <a href="product-detail.html">慧企政策智能推荐</a>
+            <span class="sep">/</span>
+            <span class="current">购买产品</span>
+        </nav>
+
+        <div class="g-container g-container--pb">
+            <div class="g-card">
+                <h1 class="apply-title">慧企政策智能推荐</h1>
+                <div class="apply-meta g-meta">
+                    <span>产品类型：<span class="val">数据应用</span></span>
+                    <span>产品提供方：<span class="val">广东****有限公司</span></span>
+                </div>
+
+                <form id="buyForm" autocomplete="off">
+                    <!-- ── 订单信息 ── -->
+                    <h3 class="form-section-title">订单信息</h3>
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>产品名称</th>
+                                <th>订单类型</th>
+                                <th>交付方式</th>
+                                <th>付费方式</th>
+                                <th>计量方式</th>
+                                <th>价格</th>
+                                <th>会员价格</th>
+                                <th>数量</th>
+                                <th>合计</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>金融数据产品1</td>
+                                <td>常规订单</td>
+                                <td>文件传输</td>
+                                <td>预付费</td>
+                                <td>一口价</td>
+                                <td>1000元</td>
+                                <td>800元</td>
+                                <td>1</td>
+                                <td>800元</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ── 填写购买信息 ── -->
+                    <h3 class="form-section-title">填写购买信息</h3>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>意向价格：</label>
+                        <div class="form-value">
+                            <div class="number-wrap">
+                                <input type="text" class="form-input" placeholder="请输入意向价格" style="width: 240px;">
+                                <span class="number-unit">元</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>应用行业：</label>
+                        <div class="form-value">
+                            <select class="form-select" id="selIndustry">
+                                <option value="">请选择</option>
+                                <option>征信评估</option>
+                                <option>智慧城市</option>
+                                <option>数据分析</option>
+                                <option>隐私计算</option>
+                                <option>航运路线规划</option>
+                                <option>航行安全</option>
+                                <option>企业经营预测</option>
+                                <option>绿色金融</option>
+                                <option>防灾减灾</option>
+                                <option>城市管理与规划</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>应用场景：</label>
+                        <div class="form-value">
+                            <select class="form-select" id="selScene">
+                                <option value="">请选择</option>
+                                <option>农林牧渔业</option>
+                                <option>采矿业</option>
+                                <option>制造业</option>
+                                <option>电力热力燃气及水产和供应业</option>
+                                <option>建筑业</option>
+                                <option>批发和零售业</option>
+                                <option>住宿和餐饮业</option>
+                                <option>金融业</option>
+                                <option>房地产业</option>
+                                <option>xxxxx</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>使用目的及方式：</label>
+                        <div class="form-value">
+                            <div class="form-textarea-wrap">
+                                <textarea class="form-textarea" id="txtPurpose" maxlength="500" placeholder="描述即将使用数据的具体应用场景、应用方式等，以及对外提供的形式"></textarea>
+                                <span class="char-count"><span id="purposeCount">0</span>/500</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>连接器交付：</label>
+                        <div class="form-value">
+                            <div class="radio-group">
+                                <label class="radio-item"><input type="radio" name="connector" value="yes"> 是</label>
+                                <label class="radio-item"><input type="radio" name="connector" value="no"> 否</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>需方连接器标识：<span class="tip-icon" title="选择已注册的连接器标识">?</span></label>
+                        <div class="form-value">
+                            <select class="form-select" id="selConnector">
+                                <option value="">请选择</option>
+                                <option>xxxxx</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ── 访问策略 ── -->
+                    <h3 class="form-section-title">访问策略</h3>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>使用有效期：</label>
+                        <div class="form-value">
+                            <div class="date-range">
+                                <input type="date" class="form-date" placeholder="开始日期">
+                                <span class="date-sep">-</span>
+                                <input type="date" class="form-date" placeholder="结束日期">
+                                <span class="date-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── 使用策略 ── -->
+                    <h3 class="form-section-title">使用策略</h3>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>使用限制：</label>
+                        <div class="form-value">
+                            <div class="checkbox-group">
+                                <label class="checkbox-item"><input type="checkbox" name="usage" value="process" checked> 加工</label>
+                                <label class="checkbox-item"><input type="checkbox" name="usage" value="sell" checked> 售卖</label>
+                                <label class="checkbox-item"><input type="checkbox" name="usage" value="retain" checked> 留存</label>
+                                <label class="checkbox-item"><input type="checkbox" name="usage" value="public" checked> 公开</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>使用环境安全级别限制：</label>
+                        <div class="form-value">
+                            <div class="checkbox-group">
+                                <label class="checkbox-item"><input type="checkbox" name="security" value="basic" checked> 基础</label>
+                                <label class="checkbox-item"><input type="checkbox" name="security" value="trusted"> 可信</label>
+                                <label class="checkbox-item"><input type="checkbox" name="security" value="trusted-plus"> 可信+</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>存储限制：</label>
+                        <div class="form-value">
+                            <div class="radio-group">
+                                <label class="radio-item"><input type="radio" name="storage" value="plain"> 明文存储</label>
+                                <label class="radio-item"><input type="radio" name="storage" value="encrypted"> 密文存储</label>
+                                <label class="radio-item"><input type="radio" name="storage" value="desensitized" checked> 脱敏后存储</label>
+                                <label class="radio-item"><input type="radio" name="storage" value="anonymous"> 匿名后存储</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Buttons ── -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">提交</button>
+                        <button type="button" class="btn-cancel" onclick="history.back()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <script src="js/form-utils.js"></script>
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        FormUtils.charCount('txtPurpose', 'purposeCount');
+
+        document.getElementById('buyForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的购买订单已提交，即将返回详情页…',
+                duration: 1600,
+                onClose: function () { history.back(); }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

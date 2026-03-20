@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <style>
+
+        /* ══════════════════════════════════════════
+           Content Cards
+           ══════════════════════════════════════════ */
+        .card {
+            background: #fff; border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 16px;
+        }
+        .card-hd {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 20px; border-bottom: 1px solid #ebeef5;
+        }
+        .card-hd-title {
+            font-size: 14px; font-weight: 600; color: var(--forest-green);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .card-hd-title svg { width: 14px; height: 14px; fill: var(--forest-green); }
+        .card-hd-right { display: flex; align-items: center; gap: 12px; }
+        .card-bd { padding: 16px 20px; }
+
+        .btn-outline {
+            padding: 6px 16px; font-size: 12px; font-weight: 500;
+            color: var(--forest-green); background: #fff;
+            border: 1px solid var(--forest-green); border-radius: 3px;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .btn-outline:hover { background: #f0f9f4; }
+        .btn-primary {
+            padding: 8px 20px; font-size: 13px; font-weight: 500;
+            color: #fff; background: var(--forest-green);
+            border: none; border-radius: 3px;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .btn-primary:hover { background: var(--forest-green-600); }
+
+        /* ── Member Detail ── */
+        .info-row {
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            padding: 10px 0; border-bottom: 1px solid #f2f6fc;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .company-name { font-size: 14px; font-weight: 600; color: #303133; }
+        .tag-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .info-tag {
+            padding: 1px 8px; font-size: 11px; font-weight: 500;
+            border-radius: 2px; border: 1px solid;
+        }
+        .info-tag.blue { color: #409eff; border-color: #b3d8ff; background: #ecf5ff; }
+        .info-tag.gray { color: #909399; border-color: #d3d4d6; background: #f4f4f5; }
+        .info-tag.orange { color: #e6a23c; border-color: #f5dab1; background: #fdf6ec; }
+        .info-tag.red { color: #f56c6c; border-color: #fbc4c4; background: #fef0f0; }
+        .expire-text { font-size: 12px; color: #909399; }
+
+        .field { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; min-width: 200px; margin-right: 16px; }
+        .field-l { color: #909399; white-space: nowrap; }
+        .field-v { color: #303133; }
+
+        /* ══════════════════════════════════════════
+           Table
+           ══════════════════════════════════════════ */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table thead th {
+            background: #fafafa; padding: 10px 14px; font-weight: 600;
+            color: #606266; text-align: left; border-bottom: 1px solid #ebeef5;
+        }
+        .data-table tbody td {
+            padding: 12px 14px; color: #606266; line-height: 1.7;
+            border-bottom: 1px solid #ebeef5; vertical-align: top;
+        }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover td { background: #fafafa; }
+        .num-list { padding-left: 0; list-style: none; margin: 0; }
+        .num-list li { margin-bottom: 2px; }
+
+        /* ── 会员权益表格美化 ── */
+        .member-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+        .member-table thead th {
+            background: linear-gradient(135deg, var(--forest-green), #2a8a5a);
+            color: #fff; padding: 13px 16px; font-weight: 600; font-size: 13px;
+            text-align: left; vertical-align: middle; white-space: nowrap;
+            border: none;
+        }
+        .member-table thead th:first-child { border-radius: 6px 0 0 0; }
+        .member-table thead th:last-child { border-radius: 0 6px 0 0; }
+        .member-table tbody td {
+            padding: 14px 16px; color: #303133; line-height: 1.8;
+            text-align: left; vertical-align: middle;
+            border-bottom: 1px solid #ebeef5; transition: background 0.15s;
+        }
+        .member-table tbody tr:nth-child(even) td { background: #f9fbfa; }
+        .member-table tbody tr:hover td { background: #eef7f1; }
+        .member-table tbody tr:last-child td { border-bottom: none; }
+        .member-table tbody tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+        .member-table tbody tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+
+        .member-level {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-weight: 600; font-size: 13px; white-space: nowrap;
+        }
+        .level-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .level-dot.guest { background: #c0c4cc; }
+        .level-dot.normal { background: #409eff; }
+        .level-dot.silver { background: #909399; }
+        .level-dot.gold { background: #e6a23c; }
+        .level-dot.diamond { background: #f56c6c; }
+
+        .member-table .col-position,
+        .member-table .col-audience { white-space: nowrap; }
+
+        .member-table .num-list { padding-left: 0; list-style: none; margin: 0; }
+        .member-table .num-list li { margin-bottom: 1px; color: #606266; }
+
+        .expand-btn {
+            font-size: 12px; color: #909399; cursor: pointer;
+            display: flex; align-items: center; gap: 2px;
+        }
+        .expand-btn:hover { color: var(--forest-green); }
+        .expand-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* ══════════════════════════════════════════
+           Modal
+           ══════════════════════════════════════════ */
+        .modal-mask {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.45);
+            align-items: center; justify-content: center;
+        }
+        .modal-mask.show { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 4px; width: 860px; max-width: 92vw;
+            max-height: 80vh; display: flex; flex-direction: column;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+        }
+        .modal-hd {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 20px; border-bottom: 1px solid #ebeef5;
+        }
+        .modal-title { font-size: 15px; font-weight: 600; color: #303133; }
+        .modal-close {
+            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+            border: none; background: none; cursor: pointer; color: #909399;
+            border-radius: 3px; transition: all 0.15s;
+        }
+        .modal-close:hover { background: #f2f6fc; color: #303133; }
+        .modal-close svg { width: 16px; height: 16px; fill: currentColor; }
+        .modal-bd { padding: 0; overflow-y: auto; flex: 1; }
+        .modal-ft {
+            padding: 12px 20px; border-top: 1px solid #ebeef5;
+            display: flex; justify-content: flex-end;
+        }
+
+        .status-pending { color: #409eff; }
+        .status-pass { color: var(--forest-green); }
+        .status-reject { color: #f56c6c; }
+
+        /* ══════════════════════════════════════════
+           Apply Modal (会员申请变更)
+           ══════════════════════════════════════════ */
+        .apply-modal .modal-box { width: 780px; }
+        .apply-modal .modal-bd { padding: 24px 28px; }
+        .apply-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+        .form-group { margin-bottom: 18px; display: flex; align-items: flex-start; gap: 0; }
+        .form-label {
+            width: 80px; flex-shrink: 0; text-align: right; padding-right: 12px;
+            font-size: 13px; color: #606266; line-height: 34px; white-space: nowrap;
+        }
+        .form-value { flex: 1; min-width: 0; }
+        .form-static { font-size: 14px; font-weight: 600; color: #303133; line-height: 34px; }
+
+        .form-select {
+            width: 100%; height: 34px; padding: 0 30px 0 10px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23909399' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E") right 10px center no-repeat;
+            border: 1px solid #dcdfe6; border-radius: 3px;
+            appearance: none; -webkit-appearance: none;
+            cursor: pointer; transition: border-color 0.15s; outline: none;
+        }
+        .form-select:focus { border-color: var(--forest-green); }
+        .form-select:hover { border-color: #c0c4cc; }
+
+        .form-file {
+            font-size: 13px; color: #606266; line-height: 34px;
+        }
+        .form-file input[type="file"] { font-size: 12px; font-family: inherit; }
+
+        .form-textarea {
+            width: 100%; height: 80px; padding: 8px 10px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            border: 1px solid #dcdfe6; border-radius: 3px;
+            resize: vertical; outline: none; transition: border-color 0.15s;
+        }
+        .form-textarea::placeholder { color: #c0c4cc; }
+        .form-textarea:focus { border-color: var(--forest-green); }
+
+        .apply-info-panel {
+            background: #f0f9f4; border-radius: 4px; padding: 20px; min-height: 240px;
+        }
+        .apply-info-label { font-size: 13px; color: #606266; margin-bottom: 12px; }
+        .apply-info-title { font-size: 15px; font-weight: 700; color: #303133; margin-bottom: 16px; }
+        .apply-info-row {
+            display: flex; gap: 6px; font-size: 13px; margin-bottom: 8px; line-height: 1.6;
+        }
+        .apply-info-row-label { color: #909399; white-space: nowrap; flex-shrink: 0; }
+        .apply-info-row-value { color: #303133; }
+        .apply-info-divider { border: none; border-top: 1px dashed #c8e6c9; margin: 12px 0; }
+        .apply-info-subtitle { font-size: 13px; font-weight: 600; color: #606266; margin-bottom: 8px; }
+        .apply-info-list { padding-left: 0; list-style: none; margin: 0; }
+        .apply-info-list li {
+            font-size: 13px; color: #303133; line-height: 2;
+            position: relative;
+        }
+
+        .apply-ft {
+            padding: 20px 0 0; display: flex; gap: 12px;
+        }
+        .apply-ft .btn-primary { padding: 9px 32px; font-size: 14px; }
+        .apply-ft .btn-outline { padding: 9px 24px; font-size: 14px; color: #606266; border-color: #dcdfe6; }
+        .apply-ft .btn-outline:hover { border-color: #c0c4cc; background: #f5f7fa; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Left Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">用户中心</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>工作台</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg>
+                    <span>我的连接器</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    <span>待办中心</span>
+                </a>
+
+                <!-- 账号中心 (二级菜单) -->
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span>账号中心</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub">
+                    <a class="sidebar-item disabled"><span>用户身份管理</span></a>
+                    <a class="sidebar-item disabled"><span>业务开通</span></a>
+                    <a class="sidebar-item disabled"><span>账号信息</span></a>
+                    <a class="sidebar-item disabled"><span>账号安全</span></a>
+                    <a class="sidebar-item active"><span>会员中心</span></a>
+                </div>
+
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    <span>我的消息</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 1.99 2H20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <span>我的订阅</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                    <span>我的需求</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    <span>公示异议</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+            <!-- 会员信息 -->
+            <div class="card">
+                <div class="card-hd">
+                    <span class="card-hd-title">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        会员信息
+                    </span>
+                    <div class="card-hd-right">
+                        <span class="expand-btn">
+                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                        </span>
+                        <button class="btn-outline" onclick="document.getElementById('applyRecordModal').classList.add('show')">申请记录</button>
+                    </div>
+                </div>
+                <div class="card-bd">
+                    <div class="info-row">
+                        <span class="company-name">中国电子云</span>
+                        <div class="tag-group">
+                            <span class="info-tag blue">普通用户</span>
+                            <span class="info-tag gray">银卡会员</span>
+                            <span class="info-tag orange">金卡会员</span>
+                            <span class="info-tag red">钻金会员</span>
+                        </div>
+                        <span class="expire-text">会员到期时间：2031.3.8 14:50:00</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="field"><span class="field-l">主体类型：</span><span class="field-v">法人或其他组织</span></span>
+                        <span class="field"><span class="field-l">统一社会信用代码：</span><span class="field-v">965*************CH0F</span></span>
+                        <span class="field"><span class="field-l">业务开通：</span><span class="field-v">数据需求方、数据提供方</span></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="field"><span class="field-l">账号：</span><span class="field-v">dianzyun001</span></span>
+                        <span class="field"><span class="field-l">手机号：</span><span class="field-v">158****3213</span></span>
+                        <span class="field"><span class="field-l">邮箱：</span><span class="field-v">dianz****@cestc.cn</span></span>
+                    </div>
+                    <div style="margin-top: 14px; text-align: right;">
+                        <button class="btn-primary" onclick="document.getElementById('applyChangeModal').classList.add('show')">会员申请/会员变更</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会员权益 -->
+            <div class="card">
+                <div class="card-hd">
+                    <span class="card-hd-title">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        会员权益
+                    </span>
+                    <span class="expand-btn">
+                        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </span>
+                </div>
+                <div class="card-bd" style="padding:0; overflow: hidden; border-radius: 0 0 3px 3px;">
+                    <table class="member-table">
+                        <thead>
+                            <tr>
+                                <th style="width:100px">会员级别</th>
+                                <th style="width:120px">核心定位</th>
+                                <th style="width:260px">适配用户群体</th>
+                                <th>核心业务权限</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="member-level"><span class="level-dot guest"></span>游客</span></td>
+                                <td class="col-position">基础体验层</td>
+                                <td class="col-audience">首次访问用户、数据需求初步调研者</td>
+                                <td>
+                                    <ol class="num-list">
+                                        <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="member-level"><span class="level-dot normal"></span>普通用户</span></td>
+                                <td class="col-position">基础服务层</td>
+                                <td class="col-audience">个人数据分析师、企业初级数据需求者</td>
+                                <td>
+                                    <ol class="num-list">
+                                        <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                        <li>2、可以进行相关资源申请退图权和数据产品交易；</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="member-level"><span class="level-dot silver"></span>银卡会员</span></td>
+                                <td class="col-position">进阶服务层</td>
+                                <td class="col-audience">企业数据专员、中小型机构数据负责人</td>
+                                <td>
+                                    <ol class="num-list">
+                                        <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                        <li>2、可以进行相关资源申请退图权和数据产品交易；</li>
+                                        <li>3、享受数据产品等相关交叉8折优惠；</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="member-level"><span class="level-dot gold"></span>金卡会员</span></td>
+                                <td class="col-position">企业服务层</td>
+                                <td class="col-audience">中大型企业数据部门、科研机构</td>
+                                <td>
+                                    <ol class="num-list">
+                                        <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                        <li>2、可以进行相关资源申请退图权和数据产品交易；</li>
+                                        <li>3、享受数据产品等相关交叉6折优惠；</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="member-level"><span class="level-dot diamond"></span>钻金会员</span></td>
+                                <td class="col-position">生态合作层</td>
+                                <td class="col-audience">龙头企业、政府部门、核心生态伙伴</td>
+                                <td>
+                                    <ol class="num-list">
+                                        <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                        <li>2、可以进行相关资源申请退图权和数据产品交易；</li>
+                                        <li>3、享受数据产品等相关交叉5折优惠；</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 申请记录弹窗 -->
+    <div class="modal-mask" id="applyRecordModal">
+        <div class="modal-box">
+            <div class="modal-hd">
+                <span class="modal-title">申请记录</span>
+                <button class="modal-close" onclick="this.closest('.modal-mask').classList.remove('show')">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="modal-bd">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>申请时间</th>
+                            <th>申请主体</th>
+                            <th>申请人</th>
+                            <th>申请会员类型</th>
+                            <th>状态</th>
+                            <th>审核意见</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2019年5月9日 10:00:00</td>
+                            <td>中国电子云</td>
+                            <td>张三</td>
+                            <td>银卡会员</td>
+                            <td><span class="status-pending">待审核</span></td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>2019年5月9日 10:00:00</td>
+                            <td>中国电子云</td>
+                            <td>张三</td>
+                            <td>金卡会员</td>
+                            <td><span class="status-pass">审核通过</span></td>
+                            <td>同意</td>
+                        </tr>
+                        <tr>
+                            <td>2019年5月9日 10:00:00</td>
+                            <td>中国电子云</td>
+                            <td>张三</td>
+                            <td>铂金会员</td>
+                            <td><span class="status-reject">审核驳回</span></td>
+                            <td>驳回</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-ft">
+                <button class="btn-outline" onclick="this.closest('.modal-mask').classList.remove('show')">关 闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 会员申请变更弹窗 -->
+    <div class="modal-mask apply-modal" id="applyChangeModal">
+        <div class="modal-box">
+            <div class="modal-hd">
+                <span class="modal-title">会员申请/会员变更</span>
+                <button class="modal-close" onclick="this.closest('.modal-mask').classList.remove('show')">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="modal-bd">
+                <div class="apply-layout">
+                    <!-- 左侧表单 -->
+                    <div class="apply-form">
+                        <div class="form-group">
+                            <label class="form-label">申请者：</label>
+                            <div class="form-value"><span class="form-static">中国电子云</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">会员类型：</label>
+                            <div class="form-value">
+                                <select class="form-select" id="memberTypeSelect">
+                                    <option value="silver">银卡会员</option>
+                                    <option value="gold">金卡会员</option>
+                                    <option value="platinum">钻金会员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">有效期：</label>
+                            <div class="form-value">
+                                <select class="form-select">
+                                    <option>1年（xxx元）</option>
+                                    <option>2年（xxx元）</option>
+                                    <option>3年（xxx元）</option>
+                                    <option>5年（xxx元）</option>
+                                    <option>10年（xxx元）</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">缴费凭证：</label>
+                            <div class="form-value form-file">
+                                <input type="file">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">备注说明：</label>
+                            <div class="form-value">
+                                <textarea class="form-textarea" placeholder="200字以内"></textarea>
+                            </div>
+                        </div>
+                        <div class="apply-ft" style="margin-left: 80px;">
+                            <button class="btn-primary" onclick="this.closest('.modal-mask').classList.remove('show')">申请</button>
+                            <button class="btn-outline" onclick="this.closest('.modal-mask').classList.remove('show')">取消</button>
+                        </div>
+                    </div>
+                    <!-- 右侧信息说明 -->
+                    <div>
+                        <div class="apply-info-label">信息说明：</div>
+                        <div class="apply-info-panel" id="memberInfoPanel">
+                            <div class="apply-info-title" id="memberInfoTitle">银卡会员</div>
+                            <div class="apply-info-row">
+                                <span class="apply-info-row-label">核心定位：</span>
+                                <span class="apply-info-row-value" id="memberInfoPosition">进阶服务层</span>
+                            </div>
+                            <div class="apply-info-row">
+                                <span class="apply-info-row-label">适配群体：</span>
+                                <span class="apply-info-row-value" id="memberInfoAudience">企业数据专员、中小型机构数据负责人</span>
+                            </div>
+                            <hr class="apply-info-divider">
+                            <div class="apply-info-subtitle">核心业务权限：</div>
+                            <ol class="apply-info-list" id="memberInfoList">
+                                <li>1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；</li>
+                                <li>2、可以进行相关资源申请授权和数据产品交易；</li>
+                                <li>3、享受数据产品等相关交易<b>8折</b>优惠；</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('applyRecordModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('show');
+    });
+    document.getElementById('applyChangeModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('show');
+    });
+
+    (function() {
+        var memberData = {
+            silver: {
+                title: '银卡会员',
+                position: '进阶服务层',
+                audience: '企业数据专员、中小型机构数据负责人',
+                items: [
+                    '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
+                    '2、可以进行相关资源申请退图权和数据产品交易；',
+                    '3、享受数据产品等相关交叉<b>8折</b>优惠；'
+                ]
+            },
+            gold: {
+                title: '金卡会员',
+                position: '企业服务层',
+                audience: '中大型企业数据部门、科研机构',
+                items: [
+                    '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
+                    '2、可以进行相关资源申请退图权和数据产品交易；',
+                    '3、享受数据产品等相关交叉<b>6折</b>优惠；'
+                ]
+            },
+            platinum: {
+                title: '钻金会员',
+                position: '生态合作层',
+                audience: '龙头企业、政府部门、核心生态伙伴',
+                items: [
+                    '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
+                    '2、可以进行相关资源申请退图权和数据产品交易；',
+                    '3、享受数据产品等相关交叉<b>5折</b>优惠；'
+                ]
+            }
+        };
+
+        var sel = document.getElementById('memberTypeSelect');
+        var titleEl = document.getElementById('memberInfoTitle');
+        var posEl = document.getElementById('memberInfoPosition');
+        var audEl = document.getElementById('memberInfoAudience');
+        var listEl = document.getElementById('memberInfoList');
+
+        sel.addEventListener('change', function() {
+            var d = memberData[this.value];
+            if (!d) return;
+            titleEl.textContent = d.title;
+            posEl.textContent = d.position;
+            audEl.textContent = d.audience;
+            listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
+        });
+    })();
+    </script>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

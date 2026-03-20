@@ -1,0 +1,492 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据生产线 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* ── Page Header ── */
+        .page-header {
+            padding: 100px 0 48px;
+            text-align: center;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute; width: 380px; height: 380px;
+            border: 1.5px solid #E0E2E5; border-radius: 50%;
+            top: -100px; left: -80px; pointer-events: none;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute; width: 320px; height: 320px;
+            border: 1.5px solid #E0E2E5; border-radius: 50%;
+            bottom: -100px; right: -60px; pointer-events: none;
+        }
+        .page-header-dots-r {
+            position: absolute; top: 28px; right: 60px;
+            width: 100px; height: 80px;
+            background-image: radial-gradient(circle, #D4D6D9 1px, transparent 1px);
+            background-size: 16px 16px; opacity: 0.7;
+        }
+        .page-header-dots-l {
+            position: absolute; bottom: 12px; left: 80px;
+            width: 80px; height: 64px;
+            background-image: radial-gradient(circle, #D4D6D9 1px, transparent 1px);
+            background-size: 16px 16px; opacity: 0.55;
+        }
+        .page-header-circle-dash {
+            position: absolute; width: 140px; height: 140px;
+            border: 1.5px dashed #E0E2E5; border-radius: 50%;
+            top: 50px; left: 180px; opacity: 0.7;
+        }
+        .page-header-cross {
+            position: absolute; top: 36px; left: 46%;
+            width: 18px; height: 18px; opacity: 0.4;
+        }
+        .page-header-cross-r {
+            position: absolute; bottom: 24px; right: 200px;
+            width: 18px; height: 18px; opacity: 0.4;
+        }
+        .page-header-diamond {
+            position: absolute; top: 30px; right: 240px;
+            width: 14px; height: 14px;
+            border: 1.5px solid #D4D6D9; transform: rotate(45deg); opacity: 0.55;
+        }
+        .page-header-diamond-l {
+            position: absolute; bottom: 22px; left: 30%;
+            width: 10px; height: 10px;
+            border: 1.5px solid #D4D6D9; transform: rotate(45deg); opacity: 0.5;
+        }
+        .decor-gear {
+            position: absolute; left: 9%; top: 22px; opacity: 0.16;
+        }
+        .decor-chip {
+            position: absolute; right: 10%; bottom: 10px; opacity: 0.14;
+        }
+        .decor-flow {
+            position: absolute; right: 8%; top: 16px; opacity: 0.16;
+        }
+        .decor-hexagons {
+            position: absolute; left: 22%; bottom: 4px; opacity: 0.14;
+        }
+        .page-header-container { max-width: 800px; }
+        .page-title { font-size: 36px; margin-bottom: 12px; }
+        .page-subtitle { font-size: 16px; line-height: 1.6; }
+
+        /* ── Main Layout ── */
+        .main-content {
+            max-width: 1920px; margin: 0 auto; padding: 32px;
+            display: grid; grid-template-columns: 300px 1fr; gap: 40px;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: sticky; top: 96px; height: fit-content;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .line-card {
+            background: var(--surface-elevated); border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl); padding: 16px; cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex; gap: 14px; box-shadow: var(--shadow-sm);
+            position: relative; overflow: hidden;
+        }
+        .line-card:hover { border-color: var(--forest-green-200); transform: translateX(4px); }
+        .line-card.active {
+            border-color: var(--forest-green);
+            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32,165,101,0.08) 100%);
+            box-shadow: var(--shadow-glow);
+        }
+        .line-card.active::before {
+            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+            width: 4px; background: var(--forest-green); border-radius: 0 2px 2px 0;
+        }
+        .line-card-image {
+            width: 56px; height: 56px; border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+            flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        }
+        .line-card-image img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg);
+        }
+        .line-card-image svg { width: 28px; height: 28px; fill: var(--forest-green); }
+        .line-card-content { flex: 1; min-width: 0; }
+        .line-card-title {
+            font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;
+        }
+        .line-card.active .line-card-title { color: var(--forest-green-700); }
+        .line-card-desc {
+            font-size: 11px; color: var(--text-tertiary); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* ── Article Content ── */
+        .article {
+            background: var(--surface-elevated); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-2xl); box-shadow: var(--shadow-md); overflow: hidden;
+        }
+        .article-hero {
+            position: relative; height: 400px;
+            background: url('images/production-line-hero.jpg') center/cover;
+        }
+        .article-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+        }
+        .article-hero-content {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 48px; color: white;
+        }
+        .article-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; background: rgba(32,165,101,0.9);
+            border-radius: var(--radius-md); font-size: 12px; font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .article-badge svg { width: 14px; height: 14px; fill: currentColor; }
+        .article-title {
+            font-size: 42px; font-weight: 800; line-height: 1.1;
+            letter-spacing: -0.03em; margin-bottom: 12px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        .article-subtitle {
+            font-size: 18px; opacity: 0.9; max-width: 600px; line-height: 1.6;
+        }
+
+        /* ── Article Body ── */
+        .article-body { padding: 48px; }
+        .article-lead {
+            font-size: 20px; line-height: 1.8; color: var(--text-secondary);
+            border-left: 4px solid var(--forest-green);
+            padding-left: 24px; margin-bottom: 48px;
+        }
+
+        /* ── Section ── */
+        .article-section { margin-bottom: 48px; }
+        .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .section-number {
+            width: 48px; height: 48px; background: var(--forest-green);
+            color: white; font-size: 20px; font-weight: 700;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-size: 24px; font-weight: 700; color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        .section-content {
+            font-size: 16px; color: var(--text-secondary); line-height: 1.9;
+            margin-left: 64px;
+        }
+
+        /* ── Case Grid ── */
+        .case-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 20px; margin-left: 64px; margin-top: 20px;
+        }
+        .case-card {
+            background: var(--surface-secondary); border-radius: var(--radius-xl);
+            padding: 24px; border: 1px solid var(--border-subtle);
+            transition: all var(--transition-base); box-shadow: var(--shadow-sm);
+        }
+        .case-card:hover { border-color: var(--forest-green-200); box-shadow: var(--shadow-md); transform: translateY(-4px); }
+        .case-card-icon {
+            width: 48px; height: 48px; background: var(--forest-green-100);
+            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+            margin-bottom: 14px;
+        }
+        .case-card-icon svg { width: 24px; height: 24px; fill: var(--forest-green); }
+        .case-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .case-card-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.6; }
+
+        /* ── Content with Image ── */
+        .content-with-image {
+            display: grid; grid-template-columns: 1fr 400px;
+            gap: 40px; margin-left: 64px; margin-top: 16px;
+        }
+        .content-text { font-size: 16px; color: var(--text-secondary); line-height: 1.9; }
+        .content-image {
+            border-radius: var(--radius-xl); overflow: hidden;
+            box-shadow: var(--shadow-md); height: fit-content;
+        }
+        .content-image img { width: 100%; height: auto; display: block; }
+
+        /* ── CTA Section ── */
+        .cta-section {
+            background: linear-gradient(135deg, #0B1A14 0%, #143026 100%);
+            border-radius: var(--radius-xl); padding: 48px;
+            display: flex; align-items: center; justify-content: space-between; gap: 32px;
+            margin-top: 48px;
+        }
+        .cta-content h3 { font-size: 28px; font-weight: 700; color: white; margin-bottom: 8px; }
+        .cta-content p { font-size: 15px; color: rgba(255,255,255,0.7); }
+        .cta-button {
+            padding: 16px 40px; font-size: 16px; font-weight: 600;
+            color: #111827; background: white; border: none;
+            border-radius: var(--radius-lg); cursor: pointer;
+            transition: all var(--transition-base); white-space: nowrap;
+        }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,255,255,0.2); }
+
+        /* ── Responsive ── */
+        @media (max-width: 1200px) {
+            .case-grid { grid-template-columns: 1fr; }
+            .content-with-image { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+            .line-card { flex: 1; min-width: 250px; }
+        }
+        @media (max-width: 768px) {
+            .article-title { font-size: 28px; }
+            .article-hero { height: 300px; }
+            .article-hero-content { padding: 24px; }
+            .article-body { padding: 24px; }
+            .section-content, .case-grid, .content-with-image { margin-left: 0; }
+            .cta-section { flex-direction: column; text-align: center; }
+        }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="data-store"></nav-bar>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-decor">
+            <div class="page-header-dots-r"></div>
+            <div class="page-header-dots-l"></div>
+            <div class="page-header-circle-dash"></div>
+            <div class="page-header-cross">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="9" y1="0" x2="9" y2="18" stroke="#D0D2D5" stroke-width="1.5"/><line x1="0" y1="9" x2="18" y2="9" stroke="#D0D2D5" stroke-width="1.5"/></svg>
+            </div>
+            <div class="page-header-cross-r">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="9" y1="0" x2="9" y2="18" stroke="#D0D2D5" stroke-width="1.5"/><line x1="0" y1="9" x2="18" y2="9" stroke="#D0D2D5" stroke-width="1.5"/></svg>
+            </div>
+            <div class="page-header-diamond"></div>
+            <div class="page-header-diamond-l"></div>
+            <!-- 齿轮（生产线） -->
+            <div class="decor-gear">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+                    <path d="M28 18a10 10 0 100 20 10 10 0 000-20zm0 16a6 6 0 110-12 6 6 0 010 12z" stroke="#B0B3B8" stroke-width="1.5"/>
+                    <path d="M47 26h-4.1a15.1 15.1 0 00-1.8-4.4l2.9-2.9-2.8-2.8-2.9 2.9A15.1 15.1 0 0034 17.1V13h-4v4.1a15.1 15.1 0 00-4.4 1.8l-2.9-2.9-2.8 2.8 2.9 2.9A15.1 15.1 0 0021.1 26H17v4h4.1a15.1 15.1 0 001.8 4.4l-2.9 2.9 2.8 2.8 2.9-2.9a15.1 15.1 0 004.4 1.8V43h4v-4.1a15.1 15.1 0 004.4-1.8l2.9 2.9 2.8-2.8-2.9-2.9a15.1 15.1 0 001.8-4.4H47v-4z" stroke="#B0B3B8" stroke-width="1.3"/>
+                </svg>
+            </div>
+            <!-- 芯片 -->
+            <div class="decor-chip">
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                    <rect x="10" y="10" width="24" height="24" rx="3" stroke="#B0B3B8" stroke-width="1.4"/>
+                    <rect x="16" y="16" width="12" height="12" rx="2" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="18" y1="10" x2="18" y2="6" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="26" y1="10" x2="26" y2="6" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="18" y1="34" x2="18" y2="38" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="26" y1="34" x2="26" y2="38" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="10" y1="18" x2="6" y2="18" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="10" y1="26" x2="6" y2="26" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="34" y1="18" x2="38" y2="18" stroke="#B0B3B8" stroke-width="1.2"/>
+                    <line x1="34" y1="26" x2="38" y2="26" stroke="#B0B3B8" stroke-width="1.2"/>
+                </svg>
+            </div>
+            <!-- 流程节点 -->
+            <div class="decor-flow">
+                <svg width="100" height="80" viewBox="0 0 100 80" fill="none">
+                    <circle cx="16" cy="40" r="6" stroke="#B0B3B8" stroke-width="1.4"/>
+                    <circle cx="50" cy="20" r="6" stroke="#B0B3B8" stroke-width="1.4"/>
+                    <circle cx="50" cy="60" r="6" stroke="#B0B3B8" stroke-width="1.4"/>
+                    <circle cx="84" cy="40" r="6" stroke="#B0B3B8" stroke-width="1.4"/>
+                    <line x1="22" y1="37" x2="44" y2="23" stroke="#C0C3C8" stroke-width="1.2"/>
+                    <line x1="22" y1="43" x2="44" y2="57" stroke="#C0C3C8" stroke-width="1.2"/>
+                    <line x1="56" y1="23" x2="78" y2="37" stroke="#C0C3C8" stroke-width="1.2"/>
+                    <line x1="56" y1="57" x2="78" y2="43" stroke="#C0C3C8" stroke-width="1.2"/>
+                    <circle cx="16" cy="40" r="2.5" fill="#D0D2D5"/>
+                    <circle cx="84" cy="40" r="2.5" fill="#D0D2D5"/>
+                </svg>
+            </div>
+            <!-- 六边形组 -->
+            <div class="decor-hexagons">
+                <svg width="90" height="60" viewBox="0 0 90 60" fill="none">
+                    <polygon points="25,4 40,12 40,28 25,36 10,28 10,12" stroke="#B0B3B8" stroke-width="1.3"/>
+                    <polygon points="50,20 65,28 65,44 50,52 35,44 35,28" stroke="#B0B3B8" stroke-width="1.3"/>
+                    <polygon points="75,4 90,12 90,28 75,36 60,28 60,12" stroke="#B0B3B8" stroke-width="1.2" stroke-dasharray="4 3"/>
+                </svg>
+            </div>
+        </div>
+        <div class="page-header-container">
+            <h1 class="page-title">数据生产线</h1>
+            <p class="page-subtitle">构建标准化、智能化的数据生产线体系，覆盖机器人训练、大模型、数据治理、低空经济及CIM等核心场景</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="line-card active" data-index="0">
+                <div class="line-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                </div>
+                <div class="line-card-content">
+                    <h3 class="line-card-title">机器人训练数据生产线</h3>
+                    <p class="line-card-desc">支撑人工智能模型训练的核心基础设施，涵盖数据采集、标注、增强、模型训练及验证等环节</p>
+                </div>
+            </div>
+
+            <div class="line-card" data-index="1">
+                <div class="line-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.49 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+                </div>
+                <div class="line-card-content">
+                    <h3 class="line-card-title">大模型训练数据生产线</h3>
+                    <p class="line-card-desc">涵盖大规模数据的采集预处理、消重及知识图和知识库的训练数据</p>
+                </div>
+            </div>
+
+            <div class="line-card" data-index="2">
+                <div class="line-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                </div>
+                <div class="line-card-content">
+                    <h3 class="line-card-title">数据治理生产线</h3>
+                    <p class="line-card-desc">统一规范数据采集治理环节的数据处理规范，完善管理标准与信息化平台</p>
+                </div>
+            </div>
+
+            <div class="line-card" data-index="3">
+                <div class="line-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                </div>
+                <div class="line-card-content">
+                    <h3 class="line-card-title">低空经济数据生产线</h3>
+                    <p class="line-card-desc">涵盖数据基础建设、数据处理等多个相关的数据采集和分析系统</p>
+                </div>
+            </div>
+
+            <div class="line-card" data-index="4">
+                <div class="line-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>
+                </div>
+                <div class="line-card-content">
+                    <h3 class="line-card-title">CIM数据服务生产线</h3>
+                    <p class="line-card-desc">按照标准化的工序与流程，通过数据采集、加工处理等步骤生成标准数据</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Article Content -->
+        <article class="article" id="articleContainer">
+            <!-- Hero Banner -->
+            <div class="article-hero">
+                <div class="article-hero-content">
+                    <span class="article-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                        智能制造核心基础设施
+                    </span>
+                    <h1 class="article-title">机器人训练数据生产线</h1>
+                    <p class="article-subtitle">支撑人工智能模型训练的核心基础设施，涵盖数据采集、标注、增强、模型训练及验证全流程</p>
+                </div>
+            </div>
+
+            <!-- Article Body -->
+            <div class="article-body">
+                <p class="article-lead">
+                    机器人训练数据生产线是支撑人工智能模型训练的核心基础设施，其核心流程涵盖数据采集、标注、增强、模型训练及验证等环节，为机器人智能化提供高质量数据基础。
+                </p>
+
+                <!-- Section 1 -->
+                <section class="article-section">
+                    <div class="section-header">
+                        <span class="section-number">1</span>
+                        <h2 class="section-title">数据采集与标注</h2>
+                    </div>
+                    <div class="content-with-image">
+                        <div class="content-text">
+                            <p>通过传感器（如摄像头、激光雷达）和工业设备（如机器人、数控机床）采集多模态数据，包括视觉、触觉、位置信息等，数据经清洗和标注，为模型提供监督信号。</p>
+                            <p style="margin-top: 12px;">例如在模具智能生产线中，通过SCADA系统实时采集设备状态数据，并与MES/ERP系统联动，确保数据来源的准确性和实时性。</p>
+                        </div>
+                        <div class="content-image">
+                            <img src="images/production-line-hero.jpg" alt="机器人训练数据采集">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section class="article-section">
+                    <div class="section-header">
+                        <span class="section-number">2</span>
+                        <h2 class="section-title">数据增强与模型训练</h2>
+                    </div>
+                    <p class="section-content">
+                        采用放射、缩放等策略扩充并多样化样本，结合卷积神经网络（CNN）、循环神经网络（RNN）等模型进行训练，多模态融合技术整合RGB图像、点云等数据，形成机器人的环境感知能力。通过数据增强有效解决训练样本不足的问题，同时提高模型的鲁棒性和泛化能力。
+                    </p>
+                </section>
+
+                <!-- Section 3 -->
+                <section class="article-section">
+                    <div class="section-header">
+                        <span class="section-number">3</span>
+                        <h2 class="section-title">仿真测试与迭代优化</h2>
+                    </div>
+                    <p class="section-content">
+                        先在虚拟环境（如Gazebo）中预训练，再迁移至真实场景微调。宝佑软件的钢铁产线方案通过机器人替代人工，在高温、高污染环境中实现少人化生产，验证了数据驱动的可靠性。虚实结合的训练策略大幅缩短了从研发到部署的周期，降低了实际测试的成本与风险。
+                    </p>
+                </section>
+
+                <!-- Section 4: Application Cases -->
+                <section class="article-section">
+                    <div class="section-header">
+                        <span class="section-number">4</span>
+                        <h2 class="section-title">应用案例</h2>
+                    </div>
+                    <div class="case-grid">
+                        <div class="case-card">
+                            <div class="case-card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/></svg>
+                            </div>
+                            <h4 class="case-card-title">工业领域</h4>
+                            <p class="case-card-desc">模具智能生产线通过工业机器人、AGV等设备实现全流程自动化，生产效率显著提升。</p>
+                        </div>
+                        <div class="case-card">
+                            <div class="case-card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                            </div>
+                            <h4 class="case-card-title">教育实训</h4>
+                            <p class="case-card-desc">智能制造实验平台融合PLC、机器人等技术，提供柔性化训练环境。</p>
+                        </div>
+                        <div class="case-card">
+                            <div class="case-card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                            </div>
+                            <h4 class="case-card-title">人形机器人</h4>
+                            <p class="case-card-desc">国内最大训练场年产超600万条真机数据，支持多任务协同训练。</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </article>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script>
+    (function () {
+        var cards = document.querySelectorAll('.line-card');
+        cards.forEach(function (card) {
+            card.addEventListener('click', function () {
+                cards.forEach(function (c) { c.classList.remove('active'); });
+                card.classList.add('active');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

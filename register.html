@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        /* ── Modal Overlay ─────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ── Modal Card ────────────────────────────────── */
+        .modal-card {
+            position: relative;
+            width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: 40px 40px 32px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-card::-webkit-scrollbar-thumb {
+            background: var(--border-emphasis);
+            border-radius: 2px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        .modal-close:hover {
+            background: var(--bg-section);
+            color: var(--text-primary);
+        }
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ── Form Title ────────────────────────────────── */
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+        }
+
+        /* ── Form Groups ───────────────────────────────── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+        .form-row .form-input-wrap {
+            flex: 1;
+        }
+
+        .form-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .form-input-wrap:focus-within {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.1);
+        }
+
+        .form-input {
+            flex: 1;
+            height: 100%;
+            padding: 0 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+        }
+        .form-input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        /* ── Captcha Image ─────────────────────────────── */
+        .captcha-img {
+            width: 120px;
+            height: 46px;
+            border-left: 1px solid var(--border-divider);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+            border-radius: 0 7px 7px 0;
+            background: #f0f0f0;
+        }
+        .captcha-img canvas {
+            display: block;
+        }
+
+        /* ── SMS Code Button ───────────────────────────── */
+        .sms-btn {
+            flex-shrink: 0;
+            padding: 0 16px;
+            height: 100%;
+            border: none;
+            border-left: 1px solid var(--border-divider);
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--forest-green);
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color var(--transition-fast);
+        }
+        .sms-btn:hover:not(:disabled) {
+            color: var(--forest-green-700);
+        }
+        .sms-btn:disabled {
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+        }
+
+        /* ── Checkbox Row ──────────────────────────────── */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-custom {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .checkbox-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            margin: 0;
+        }
+        .checkbox-custom .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-emphasis);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            background: var(--bg-card);
+        }
+        .checkbox-custom .checkmark svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all var(--transition-fast);
+            fill: white;
+        }
+        .checkbox-custom input:checked + .checkmark {
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+        .checkbox-custom input:checked + .checkmark svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .checkbox-hint {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        /* ── Password Toggle ───────────────────────────── */
+        .pwd-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 100%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: color var(--transition-fast);
+        }
+        .pwd-toggle:hover {
+            color: var(--text-secondary);
+        }
+        .pwd-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ── Expandable Section ────────────────────────── */
+        .expand-section {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, opacity 0.25s ease;
+            opacity: 0;
+        }
+        .expand-section.open {
+            max-height: 300px;
+            opacity: 1;
+        }
+
+        /* ── Agreement ─────────────────────────────────── */
+        .agreement-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 24px 0 20px;
+        }
+        .agreement-row .checkbox-custom .checkmark {
+            border-radius: 3px;
+        }
+        .agreement-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .agreement-link {
+            color: var(--forest-green);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .agreement-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Submit Button ─────────────────────────────── */
+        .submit-btn {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: var(--radius-lg);
+            background: var(--forest-green);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .submit-btn:hover {
+            background: var(--forest-green-600);
+            box-shadow: var(--shadow-green-glow);
+        }
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ── Bottom Link ───────────────────────────────── */
+        .bottom-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .bottom-link a {
+            color: var(--forest-green);
+            font-weight: 500;
+        }
+        .bottom-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ────────────────────────────────── */
+        @media (max-width: 540px) {
+            .modal-card {
+                width: calc(100% - 32px);
+                padding: 32px 24px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="home"></nav-bar>
+
+    <!-- ===== Registration Modal ===== -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal-card">
+            <button class="modal-close" id="modalClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <h2 class="form-title">用户注册</h2>
+
+            <form id="registerForm" autocomplete="off">
+                <!-- 手机号 -->
+                <div class="form-group">
+                    <div class="form-input-wrap">
+                        <input class="form-input" type="tel" placeholder="请输入手机号" maxlength="11">
+                    </div>
+                </div>
+
+                <!-- 图形验证码 -->
+                <div class="form-group">
+                    <div class="form-input-wrap">
+                        <input class="form-input" type="text" placeholder="请输入图形验证码" maxlength="6">
+                        <div class="captcha-img" id="captchaBox" title="点击刷新">
+                            <canvas id="captchaCanvas" width="120" height="46"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 短信验证码 -->
+                <div class="form-group">
+                    <div class="form-input-wrap">
+                        <input class="form-input" type="text" placeholder="请输入6位短信验证码" maxlength="6">
+                        <button type="button" class="sms-btn" id="smsBtn">获取验证码</button>
+                    </div>
+                </div>
+
+                <!-- 设置用户信息 checkbox -->
+                <label class="checkbox-row" id="toggleUserInfo">
+                    <span class="checkbox-custom">
+                        <input type="checkbox" id="userInfoCheck" checked>
+                        <span class="checkmark">
+                            <svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </span>
+                    <span class="checkbox-label">设置用户信息</span>
+                    <span class="checkbox-hint">（设置后可使用账号密码方式登录平台）</span>
+                </label>
+
+                <!-- 可展开：账号密码区 -->
+                <div class="expand-section open" id="userInfoSection">
+                    <!-- 账号 -->
+                    <div class="form-group">
+                        <div class="form-input-wrap">
+                            <input class="form-input" type="text" placeholder="请输入账号">
+                        </div>
+                    </div>
+                    <!-- 密码 -->
+                    <div class="form-group">
+                        <div class="form-input-wrap">
+                            <input class="form-input" type="password" placeholder="请输入密码" id="pwd1">
+                            <button type="button" class="pwd-toggle" data-target="pwd1">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                                    <circle class="eye-open" cx="12" cy="12" r="3"/>
+                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" style="display:none"/>
+                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- 确认密码 -->
+                    <div class="form-group">
+                        <div class="form-input-wrap">
+                            <input class="form-input" type="password" placeholder="请确认密码" id="pwd2">
+                            <button type="button" class="pwd-toggle" data-target="pwd2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                                    <circle class="eye-open" cx="12" cy="12" r="3"/>
+                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" style="display:none"/>
+                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 协议同意 -->
+                <label class="agreement-row">
+                    <span class="checkbox-custom">
+                        <input type="checkbox" id="agreeCheck">
+                        <span class="checkmark">
+                            <svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </span>
+                    <span class="agreement-text">已阅读并同意 <a class="agreement-link" href="#">《用户协议及隐私政策》</a></span>
+                </label>
+
+                <!-- 注册按钮 -->
+                <button type="submit" class="submit-btn">注册</button>
+
+                <!-- 底部链接 -->
+                <div class="bottom-link">
+                    已有账号，<a href="login.html">马上登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/form-utils.js"></script>
+    <script>
+    (function () {
+        FormUtils.captcha('captchaCanvas', 'captchaBox');
+        FormUtils.smsCountdown('smsBtn', 60);
+        FormUtils.passwordToggle(document);
+        FormUtils.modalClose('registerModal', 'modalClose');
+
+        var userInfoCheck = document.getElementById('userInfoCheck');
+        var userInfoSection = document.getElementById('userInfoSection');
+        userInfoCheck.addEventListener('change', function () {
+            userInfoSection.classList.toggle('open', this.checked);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+        });
+    })();
+    </script>
+</body>
+</html>

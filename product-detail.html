@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慧企政策智能推荐 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+
+        /* ── Product Header ── */
+        .product-header {
+            background: var(--bg-card); padding: 24px 32px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .product-header-container {
+            max-width: 1920px; margin: 0 auto;
+            display: flex; gap: 32px;
+        }
+
+        /* Gallery */
+        .product-gallery { width: 160px; flex-shrink: 0; }
+        .gallery-main {
+            width: 160px; height: 120px;
+            border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 10px;
+        }
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 6px; }
+        .gallery-thumb {
+            width: 36px; height: 28px; border-radius: 4px; cursor: pointer;
+            border: 2px solid transparent; transition: all 150ms ease; overflow: hidden;
+        }
+        .gallery-thumb.active { border-color: var(--forest-green); }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Product Info */
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+        .product-title { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.4; flex: 1; }
+        .product-stats { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px; }
+        .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
+        .product-stat b { color: var(--text-primary); font-weight: 600; }
+        .subscribe-btn {
+            display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+            font-size: 12px; color: var(--text-secondary); background: var(--bg-card);
+            border: 1px solid var(--border-default); border-radius: 14px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .subscribe-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
+        .subscribe-btn svg { width: 14px; height: 14px; }
+
+        .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+        .product-meta-row {
+            display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary); margin-bottom: 10px;
+        }
+        .product-meta-row .val { color: var(--text-primary); }
+
+        .product-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .product-price .amount { font-size: 22px; font-weight: 700; color: #E53935; }
+
+        .delivery-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .delivery-label { font-size: 13px; color: var(--text-tertiary); min-width: 70px; }
+        .delivery-tag {
+            display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+            border: 1px solid var(--forest-green-200); border-radius: 100px;
+            font-size: 13px; color: var(--forest-green);
+        }
+
+        .action-row { display: flex; gap: 12px; margin-bottom: 20px; margin-top: 6px; }
+        .btn-buy {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-buy:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-consult {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green);
+            background: var(--surface-primary); border: 1.5px solid var(--forest-green); border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-consult:hover { background: var(--forest-green); color: #fff; }
+
+        /* ── 咨询弹窗 ── */
+        .consult-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 200;
+            align-items: center; justify-content: center;
+            animation: consultFadeIn 0.25s ease;
+        }
+        .consult-overlay.active { display: flex; }
+        @keyframes consultFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes consultSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .consult-card {
+            position: relative; width: 560px; max-height: 90vh; overflow-y: auto;
+            background: var(--bg-card); border-radius: 12px;
+            box-shadow: var(--shadow-xl); padding: 36px 40px 32px;
+            animation: consultSlideUp 0.3s ease;
+        }
+        .consult-card::-webkit-scrollbar { width: 4px; }
+        .consult-card::-webkit-scrollbar-thumb { background: var(--border-emphasis); border-radius: 2px; }
+        .consult-close {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border: none; background: transparent; cursor: pointer;
+            color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast);
+        }
+        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close svg { width: 20px; height: 20px; }
+        .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .consult-label {
+            width: 100px; min-width: 100px; text-align: right;
+            font-size: 14px; color: var(--text-secondary);
+            padding-top: 9px; padding-right: 12px;
+        }
+        .consult-val { flex: 1; }
+        .consult-static { font-size: 15px; font-weight: 600; color: var(--text-primary); padding-top: 8px; }
+        .consult-input {
+            width: 100%; height: 40px; padding: 0 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; transition: border-color 150ms ease;
+        }
+        .consult-input:focus { border-color: var(--forest-green); }
+        .consult-input::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-ta-wrap { position: relative; }
+        .consult-textarea {
+            width: 100%; min-height: 120px; padding: 10px 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; resize: vertical; transition: border-color 150ms ease;
+        }
+        .consult-textarea:focus { border-color: var(--forest-green); }
+        .consult-textarea::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-count { position: absolute; bottom: 8px; right: 12px; font-size: 12px; color: var(--text-tertiary); }
+        .consult-actions { display: flex; gap: 12px; padding-top: 12px; padding-left: 100px; }
+        .consult-btn-ok {
+            padding: 10px 32px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: var(--radius-md);
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-ok:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .consult-btn-cancel {
+            padding: 10px 32px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
+
+        .trust-row {
+            display: flex; gap: 40px; padding-top: 16px; border-top: 1px solid var(--border-divider);
+        }
+        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-tertiary); }
+        .trust-item svg { width: 16px; height: 16px; fill: var(--text-tertiary); }
+
+        /* ── Content Area ── */
+        .content-area {
+            max-width: 1920px; margin: 0 auto; padding: 24px 32px 48px;
+            display: flex; gap: 24px; align-items: flex-start;
+        }
+        .content-main { flex: 1; min-width: 0; }
+
+        .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+
+        /* Info Table */
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
+        .info-table .label-cell { color: var(--text-tertiary); width: 130px; white-space: nowrap; padding-right: 8px; }
+        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
+        .info-table .desc-cell { color: var(--text-secondary); line-height: 1.6; }
+
+        /* Data Table (定价信息) */
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+        .data-table th {
+            padding: 12px 16px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); background: #F8FAFB;
+            border-bottom: 1px solid var(--border-default); text-align: left;
+        }
+        .data-table td {
+            padding: 12px 16px; font-size: 13px; color: var(--text-primary);
+            border-bottom: 1px solid var(--border-divider);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 60px 20px; color: var(--text-tertiary);
+        }
+        .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
+        .empty-state p { font-size: 14px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .content-area { flex-direction: column; }
+            .product-header-container { flex-direction: column; }
+            .product-gallery { width: 100%; max-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="data-store"></nav-bar>
+
+    <div class="detail-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="data-products.html">数据产品</a>
+            <span class="sep">/</span>
+            <span class="current">慧企政策智能推荐</span>
+        </nav>
+
+        <section class="product-header">
+            <div class="product-header-container">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="images/product-detail-hero.jpg" alt="慧企政策智能推荐">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb active"><img src="images/product-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-title-row">
+                        <h1 class="product-title">慧企政策智能推荐</h1>
+                        <div class="product-stats">
+                            <span class="product-stat">浏览量：<b>1,056</b></span>
+                            <span class="product-stat">购买量：<b>56</b></span>
+                            <button class="subscribe-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                收藏
+                            </button>
+                        </div>
+                    </div>
+                    <p class="product-desc">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，营造一流营商环境、郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下，"郑惠企"政策服务平台在"亲清在线"平台基础上进行改造升级，利用大数据、人工智能等技术，加强政策服务及管控两端……</p>
+                    <div class="product-meta-row">
+                        <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
+                    </div>
+                    <div class="product-price">参考价：<span class="amount">0.1元/次</span></div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">交付方式：</span>
+                        <span class="delivery-tag">在线交付</span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">计量方式：</span>
+                        <span class="delivery-tag">面议</span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">计费方式：</span>
+                        <span class="delivery-tag">预付费</span>
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-buy" onclick="window.location.href='product-buy.html'">立即购买</button>
+                        <button class="btn-consult" onclick="document.getElementById('consultOverlay').classList.add('active')">产品咨询</button>
+                    </div>
+                    <div class="trust-row">
+                        <span class="trust-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            安全交易
+                        </span>
+                        <span class="trust-item">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 4h2v2h-2v-2zm0 4h2v2h-2v-2zm-4-4h2v2H7v-2zm0 4h2v2H7v-2z"/></svg>
+                            合规可溯
+                        </span>
+                        <span class="trust-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            使用可控
+                        </span>
+                        <span class="trust-item">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+                            优质服务
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-area">
+            <div class="content-main">
+                <div class="g-tabs">
+                    <button class="g-tab active" data-tab="intro">产品介绍</button>
+                    <button class="g-tab" data-tab="info">产品信息</button>
+                    <button class="g-tab" data-tab="delivery">交付要求</button>
+                </div>
+
+                <!-- Tab 1: 产品介绍 -->
+                <div class="g-tab-panel active" id="tabIntro">
+                    <h3 class="section-heading">基本信息</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label-cell">产品名称：</td>
+                            <td class="value-cell">慧企政策智能推荐</td>
+                            <td class="label-cell">产品供应：</td>
+                            <td class="value-cell">广东****有限公司</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">产品类型：</td>
+                            <td class="value-cell">数据应用</td>
+                            <td class="label-cell">行业分类：</td>
+                            <td class="value-cell">公共管理、社会保障和社会组织</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">地域分类：</td>
+                            <td class="value-cell">--</td>
+                            <td class="label-cell">景色时间段：</td>
+                            <td class="value-cell">--</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">更新频率：</td>
+                            <td class="value-cell">4次/月</td>
+                            <td class="label-cell">是否涉及个人信息：</td>
+                            <td class="value-cell">否</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">使用限制：</td>
+                            <td class="value-cell">无</td>
+                            <td class="label-cell">授权使用：</td>
+                            <td class="value-cell">否</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">数据主体：</td>
+                            <td class="value-cell">企业数据</td>
+                            <td class="label-cell">数据规模：</td>
+                            <td class="value-cell">--</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">关联数据来源：</td>
+                            <td class="value-cell">--</td>
+                            <td class="label-cell">其他描述：</td>
+                            <td class="value-cell">--</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">产品简介：</td>
+                            <td class="desc-cell" colspan="3">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下……</td>
+                        </tr>
+                    </table>
+
+                    <h3 class="section-heading">定价信息</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>交付方式</th>
+                                <th>计量方式</th>
+                                <th>定价（元）</th>
+                                <th>计量单位</th>
+                                <th>是否支持后付费</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>在线交付</td>
+                                <td>面议</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>否</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tab 2: 产品信息 -->
+                <div class="g-tab-panel" id="tabInfo">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-3-7H9v-2h6v2zm0 4H9v-2h6v2zm-2-8H9V7h4v2z"/></svg>
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 交付要求 -->
+                <div class="g-tab-panel" id="tabDelivery">
+                    <h3 class="section-heading">在线交付</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label-cell">使用限制：</td>
+                            <td class="value-cell">公开、留存、转录、加工</td>
+                            <td class="label-cell">使用环境安全等级/制度：</td>
+                            <td class="value-cell">基座</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">存储期限：</td>
+                            <td class="value-cell">脱敏后存储</td>
+                            <td class="label-cell"></td>
+                            <td class="value-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">传输方式：</td>
+                            <td class="value-cell">API传输</td>
+                            <td class="label-cell"></td>
+                            <td class="value-cell"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">智能推荐</div>
+                    <div class="sidebar-list" id="recList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <script>
+    (function () {
+        var tabs = document.querySelectorAll('.g-tab');
+        var panels = document.querySelectorAll('.g-tab-panel');
+        var panelMap = { intro: 'tabIntro', info: 'tabInfo', delivery: 'tabDelivery' };
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                panels.forEach(function (p) { p.classList.remove('active'); });
+                this.classList.add('active');
+                var id = panelMap[this.getAttribute('data-tab')];
+                if (id) document.getElementById(id).classList.add('active');
+            });
+        });
+    })();
+    </script>
+
+    <!-- ── 产品咨询弹窗 ── -->
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static">慧企政策智能推荐</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/recommend.js"></script>
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        var overlay = document.getElementById('consultOverlay');
+        var txt = document.getElementById('txtConsult');
+        var cnt = document.getElementById('consultCount');
+
+        function closeModal() { overlay.classList.remove('active'); }
+
+        document.getElementById('consultClose').addEventListener('click', closeModal);
+        document.getElementById('consultCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
+
+        document.getElementById('consultForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的咨询已提交，我们会尽快回复您',
+                duration: 1600
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

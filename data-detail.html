@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -7,930 +7,301 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
     <style>
-        :root {
-            /* Brand Colors */
-            --forest-green: #20A565;
-            --forest-green-50: #ECFDF3;
-            --forest-green-100: #D1FADF;
-            --forest-green-200: #A6F4C5;
-            --forest-green-500: #20A565;
-            --forest-green-600: #16a34a;
-            --forest-green-700: #15803d;
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
 
-            --accent-orange: #F7AF1D;
-            --accent-orange-50: #FFFCF0;
-            --accent-orange-100: #FEF3C7;
-
-            --info-blue: #409EFF;
-
-            /* Classification Colors */
-            --cls-database: #20A565;
-            --cls-database-bg: #ECFDF3;
-            --cls-api: #4F6EF7;
-            --cls-api-bg: #EEF2FF;
-            --cls-doc: #E5940A;
-            --cls-doc-bg: #FFFCF0;
-            --cls-service: #8B5CF6;
-            --cls-service-bg: #F5F3FF;
-
-            /* Typography Colors */
-            --text-primary: #111827;
-            --text-secondary: #4B5563;
-            --text-tertiary: #9CA3AF;
-            --text-placeholder: #9CA3AF;
-            --text-disabled: #D1D5DB;
-
-            /* Backgrounds */
-            --bg-main: #FFFFFF;
-            --bg-section: #FAFBFC;
-            --bg-card: #FFFFFF;
-
-            --surface-primary: #FFFFFF;
-            --surface-secondary: #FAFBFC;
-            --surface-elevated: #FFFFFF;
-
-            /* Semantic Colors */
-            --color-success: #20A565;
-            --color-warning: #F7AF1D;
-            --color-error: #EF4444;
-
-            /* Borders */
-            --border-default: #E5E7EB;
-            --border-divider: #F3F4F6;
-            --border-subtle: #E5E7EB;
-            --border-emphasis: #D1D5DB;
-
-            /* Shadows */
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.04);
-            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.04);
-            --shadow-glow: 0 4px 16px rgba(32, 165, 101, 0.2);
-
-            /* Radius — 硬朗风格 */
-            --radius-sm: 2px;
-            --radius-md: 3px;
-            --radius-lg: 4px;
-            --radius-xl: 4px;
-
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .btn-primary {
-            color: white;
-            background: var(--forest-green);
-        }
-
-        .btn-primary:hover {
-            background: var(--forest-green-600);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-lg {
-            padding: 14px 32px;
-            font-size: 15px;
-            border-radius: var(--radius-lg);
-        }
-
-        /* ==================== Breadcrumb ==================== */
-        .breadcrumb-section {
-            padding: 88px 32px 0;
-            background: var(--surface-primary);
-        }
-
-        .breadcrumb {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .breadcrumb-item {
-            color: var(--text-tertiary);
-            transition: color var(--transition-fast);
-        }
-
-        .breadcrumb-item:hover {
-            color: var(--forest-green);
-        }
-
-        .breadcrumb-separator {
-            color: var(--text-tertiary);
-        }
-
-        .breadcrumb-current {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        /* ==================== Product Header ==================== */
+        /* ── Product Header ────────────────────────────── */
         .product-header {
-            background: var(--surface-primary);
-            padding: 32px 32px;
+            background: var(--bg-card); padding: 24px 32px 28px;
             border-bottom: 1px solid var(--border-subtle);
         }
-
         .product-header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0;
-            display: grid;
-            grid-template-columns: 480px 1fr;
-            gap: 48px;
+            max-width: 1920px; margin: 0 auto;
+            display: flex; gap: 32px;
         }
 
         /* Gallery */
-        .product-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
+        .product-gallery { width: 160px; flex-shrink: 0; }
         .gallery-main {
-            width: 100%;
-            aspect-ratio: 4/3;
-            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            position: relative;
+            width: 160px; height: 120px;
+            border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 10px;
         }
-
-        .gallery-main::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(32,165,101,0.15)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.5;
-        }
-
-        .gallery-main-content {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 32px;
-        }
-
-        .gallery-chart {
-            width: 100%;
-            max-width: 320px;
-            margin-bottom: 24px;
-        }
-
-        .gallery-chart-placeholder {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .chart-icon {
-            width: 120px;
-            height: 120px;
-        }
-
-        .chart-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--forest-green);
-            opacity: 0.8;
-        }
-
-        .gallery-title {
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        .gallery-thumbs {
-            display: flex;
-            gap: 12px;
-        }
-
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 6px; }
         .gallery-thumb {
-            width: 80px;
-            height: 60px;
-            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all var(--transition-fast);
-            overflow: hidden;
-            position: relative;
+            width: 36px; height: 28px; border-radius: 4px; cursor: pointer;
+            border: 2px solid transparent; transition: all 150ms ease; overflow: hidden;
         }
-
-        .gallery-thumb::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(32,165,101,0.2)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-        }
-
-        .gallery-thumb.active {
-            border-color: var(--forest-green);
-        }
-
-        .gallery-thumb:hover {
-            border-color: var(--forest-green-200);
-        }
-
-        .thumb-icon {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .thumb-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--forest-green);
-            opacity: 0.6;
-        }
+        .gallery-thumb.active { border-color: var(--forest-green); }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
         /* Product Info */
-        .product-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-badges {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .product-badge {
-            padding: 4px 12px;
-            font-size: 11px;
-            font-weight: 500;
-            border-radius: var(--radius-md);
-        }
-
-        .product-badge.type {
-            background: var(--forest-green-50);
-            color: var(--forest-green-700);
-            border: 1px solid var(--forest-green-200);
-        }
-
-        .product-badge.api {
-            background: rgba(64, 158, 255, 0.1);
-            color: #409EFF;
-            border: 1px solid rgba(64, 158, 255, 0.2);
-        }
-
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
         .product-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.02em;
-            line-height: 1.3;
-            margin-bottom: 16px;
+            font-size: 20px; font-weight: 700; color: var(--text-primary);
+            line-height: 1.4; flex: 1;
         }
+        .product-stats {
+            display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px;
+        }
+        .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
+        .product-stat b { color: var(--text-primary); font-weight: 600; }
+        .subscribe-btn {
+            display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+            font-size: 12px; color: var(--text-secondary); background: var(--bg-card);
+            border: 1px solid var(--border-default); border-radius: 14px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .subscribe-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
+        .subscribe-btn svg { width: 14px; height: 14px; }
 
         .product-desc {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 32px;
+            font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px;
         }
-
-        .product-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 24px;
-            background: #FAFBFC;
-            border-radius: var(--radius-lg);
-            margin-bottom: 32px;
+        .product-meta-row {
+            display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary);
+            margin-bottom: 10px;
         }
+        .product-meta-row span { white-space: nowrap; }
+        .product-meta-row .val { color: var(--text-primary); }
+        .product-meta-row .company { color: var(--forest-green); font-weight: 500; }
 
-        .meta-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .meta-label {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            min-width: 100px;
-        }
-
-        .meta-value {
-            font-size: 13px;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .meta-value.company {
-            color: var(--forest-green);
-        }
-
+        .delivery-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .delivery-label { font-size: 13px; color: var(--text-tertiary); }
         .delivery-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: var(--surface-primary);
-            border: 1px solid var(--forest-green-200);
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            color: var(--forest-green);
+            display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+            border: 1px solid var(--forest-green-200); border-radius: 100px;
+            font-size: 13px; color: var(--forest-green);
         }
 
-        .delivery-tag svg {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
+        .apply-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
         }
+        .apply-btn:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
 
-        .product-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
+        /* ── Main Content Area ─────────────────────────── */
+        .content-area {
+            max-width: 1920px; margin: 0 auto; padding: 24px 32px 48px;
+            display: flex; gap: 24px; align-items: flex-start;
         }
+        .content-main { flex: 1; min-width: 0; }
 
-        .btn-apply {
-            flex: 1;
-            padding: 16px 32px;
-            font-size: 15px;
-            font-weight: 600;
-        }
+        .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
 
-        .btn-secondary {
-            padding: 16px 24px;
-            font-size: 15px;
-            color: var(--text-secondary);
-            background: var(--surface-primary);
-            border: 1px solid var(--border-default);
-            border-radius: var(--radius-lg);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--border-emphasis);
-            background: #FAFBFC;
-        }
-
-        .btn-secondary svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        /* ==================== Product Content ==================== */
-        .product-content-wrapper {
-            padding: 32px 32px;
-        }
-
-        .product-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .content-tabs {
-            display: flex;
-            gap: 4px;
-            padding: 4px;
-            background: #F3F4F6;
-            border-radius: var(--radius-lg);
-            width: fit-content;
-            margin-bottom: 32px;
-        }
-
-        .content-tab {
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: transparent;
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .content-tab:hover {
-            color: var(--text-primary);
-        }
-
-        .content-tab.active {
-            color: var(--text-primary);
-            background: var(--surface-primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .content-card {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 32px;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .content-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--forest-green) 0%, var(--forest-green-200) 50%, var(--accent-orange) 100%);
-        }
-
-        .content-section {
-            margin-bottom: 40px;
-        }
-
-        .content-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 18px;
-            background: var(--forest-green);
-            border-radius: 2px;
-        }
-
-        .section-content {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .section-content p {
-            margin-bottom: 16px;
-        }
-
-        .section-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Info Grid */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 16px;
-            background: #FAFBFC;
-            border-radius: var(--radius-md);
-        }
-
-        .info-item-label {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-
-        .info-item-value {
-            font-size: 14px;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        /* Data Preview Table */
-        .data-preview {
-            overflow-x: auto;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .data-table th {
-            background: #FAFBFC;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-
-        .data-table td {
-            color: var(--text-secondary);
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tr:hover td {
-            background: #FAFBFC;
-        }
-
-        /* Related Products */
-        .related-section {
-            margin-top: 48px;
-        }
-
-        .related-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-        }
-
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .related-card {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            transition: all var(--transition-base);
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .related-card:hover {
-            border-color: var(--forest-green-200);
-            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
-            transform: scale(1.01);
-        }
-
-        .related-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .related-card-company {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-bottom: 12px;
-        }
-
-        .related-card-type {
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--forest-green);
-            background: var(--forest-green-50);
-            padding: 4px 10px;
-            border-radius: var(--radius-md);
-            display: inline-block;
-        }
-
-        /* ==================== Footer ==================== */
-
-        /* ==================== Responsive ==================== */
+        /* ── Responsive ────────────────────────────────── */
         @media (max-width: 1024px) {
-            .product-header-container {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-
-            .gallery-main {
-                max-width: 480px;
-            }
-
-            .related-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .product-title {
-                font-size: 22px;
-            }
-
-            .related-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-thumbs {
-                flex-wrap: wrap;
-            }
-
-            .product-actions {
-                flex-direction: column;
-            }
-
-            .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
+            .content-area { flex-direction: column; }
+            .product-header-container { flex-direction: column; }
+            .product-gallery { width: 100%; max-width: 200px; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav-bar active="data-resources"></nav-bar>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-section">
-        <nav class="breadcrumb">
-            <a href="index.html" class="breadcrumb-item">首页</a>
-            <span class="breadcrumb-separator">/</span>
-            <a href="data-resources.html" class="breadcrumb-item">数据资源</a>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">金融行业A股上市公司股吧数据集</span>
+    <div class="detail-wrapper">
+        <!-- Breadcrumb -->
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="data-resources.html">数据资源</a>
+            <span class="sep">/</span>
+            <span class="current">金融行业A股上市公司股吧数据集</span>
         </nav>
-    </div>
 
-    <!-- Product Header -->
-    <section class="product-header">
-        <div class="product-header-container">
-            <!-- Gallery -->
-            <div class="product-gallery">
-                <div class="gallery-main" style="background: url('images/stock-data.jpg') center/cover;">
-                    <div class="gallery-main-content" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);">
-                        <p class="gallery-title" style="font-size: 18px; font-weight: 600;">金融行业A股上市公司股吧数据集</p>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 8px;">股吧舆情分析 · 投资者情绪 · 市场热点</p>
+        <!-- Product Header -->
+        <section class="product-header">
+            <div class="product-header-container">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="images/data-detail-hero.jpg" alt="金融行业A股上市公司股吧数据集">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb active"><img src="images/data-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
                     </div>
                 </div>
-                <div class="gallery-thumbs">
-                    <div class="gallery-thumb active" style="background: url('images/stock-data.jpg') center/cover;"></div>
-                    <div class="gallery-thumb" style="background: url('images/credit-data.jpg') center/cover;"></div>
-                    <div class="gallery-thumb" style="background: url('images/traffic-sensing.jpg') center/cover;"></div>
+
+                <div class="product-info">
+                    <div class="product-title-row">
+                        <h1 class="product-title">金融行业A股上市公司股吧数据集</h1>
+                        <div class="product-stats">
+                            <span class="product-stat">浏览量：<b>1,056</b></span>
+                            <span class="product-stat">购买量：<b>56</b></span>
+                            <button class="subscribe-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                                订阅
+                            </button>
+                        </div>
+                    </div>
+                    <p class="product-desc">金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</p>
+                    <div class="product-meta-row">
+                        <span>数据资源持有方：<span class="company">智云****公司</span></span>
+                        <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">交付方式：</span>
+                        <span class="delivery-tag">在线交付</span>
+                    </div>
+                    <div>
+                        <a href="data-apply.html" class="apply-btn">立即申请</a>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Product Info -->
-            <div class="product-info">
-                <div class="product-badges">
-                    <span class="product-badge type">行业数据</span>
-                    <span class="product-badge api">API 传输</span>
-                </div>
-                
-                <h1 class="product-title">金融行业A股上市公司股吧数据集</h1>
-                
-                <p class="product-desc">
-                    金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的整合与分析，涵盖投资者情绪、市场热点、舆论趋势等多维度信息，为金融研究和投资决策提供数据支持。
-                </p>
-
-                <div class="product-meta">
-                    <div class="meta-row">
-                        <span class="meta-label">数据资源持有方</span>
-                        <span class="meta-value company">智云****公司</span>
-                    </div>
-                    <div class="meta-row">
-                        <span class="meta-label">上架时间</span>
-                        <span class="meta-value">2025-11-04 15:00:00</span>
-                    </div>
-                    <div class="meta-row">
-                        <span class="meta-label">交付方式</span>
-                        <span class="delivery-tag">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                            在线交付
-                        </span>
-                    </div>
+        <!-- Content Area: Main + Sidebar -->
+        <div class="content-area">
+            <div class="content-main">
+                <!-- Tabs -->
+                <div class="g-tabs">
+                    <button class="g-tab active" data-tab="intro">资源介绍</button>
+                    <button class="g-tab" data-tab="info">资源信息</button>
+                    <button class="g-tab" data-tab="delivery">交付要求</button>
                 </div>
 
-                <div class="product-actions">
-                    <button class="btn btn-primary btn-lg btn-apply">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
-                        立即申请
-                    </button>
-                    <button class="btn btn-secondary">
-                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    </button>
-                    <button class="btn btn-secondary">
-                        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
+                <!-- Tab 1: 资源介绍 -->
+                <div class="g-tab-panel active" id="tabIntro">
+                    <h3 class="section-heading">基本信息</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label-cell">资源名称：</td>
+                            <td class="value-cell">金融行业A股上市公司股吧数据集</td>
+                            <td class="label-cell">资源所属行业分类：</td>
+                            <td class="value-cell">金融业</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">联系人：</td>
+                            <td class="value-cell">张**</td>
+                            <td class="label-cell">资源所有方：</td>
+                            <td class="value-cell">智云****公司</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">联系方式：</td>
+                            <td class="value-cell">158****6321</td>
+                            <td class="label-cell">资源类型：</td>
+                            <td class="value-cell">行业数据</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">资源格式：</td>
+                            <td class="value-cell">html</td>
+                            <td class="label-cell">数据来源：</td>
+                            <td class="value-cell">原始所有</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">资源描述：</td>
+                            <td class="desc-cell" colspan="3">金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell"></td>
+                            <td class="value-cell" colspan="3">是否涉及个人信息：<span style="margin-left:12px">否</span></td>
+                        </tr>
+                    </table>
 
-    <!-- Product Content -->
-    <div class="product-content-wrapper">
-    <main class="product-content">
-        <div class="content-tabs">
-            <button class="content-tab active">资源介绍</button>
-            <button class="content-tab">资源信息</button>
-            <button class="content-tab">交付要求</button>
-        </div>
-
-        <div class="content-card">
-            <div class="content-section">
-                <h2 class="section-title">资源概述</h2>
-                <div class="section-content">
-                    <p>金融行业 A 股上市公司股吧数据集是一份专门针对金融类上市公司在股吧平台上的投资者交流数据进行整合与分析的数据产品。该数据集汇集了各大金融类上市公司股吧中的帖子、评论、点赞、转发等互动数据，通过自然语言处理和情感分析技术，提取出投资者情绪、市场热点、舆论趋势等多维度信息。</p>
-                    <p>数据集支持按时间、公司、话题等多种维度进行查询和分析，可广泛应用于量化投资策略研究、市场情绪监控、舆情预警等场景。</p>
-                </div>
-            </div>
-
-            <div class="content-section">
-                <h2 class="section-title">数据字段</h2>
-                <div class="data-preview">
+                    <h3 class="section-heading">数据项信息</h3>
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>字段名称</th>
-                                <th>字段类型</th>
-                                <th>字段描述</th>
-                                <th>示例值</th>
+                                <th>序号</th>
+                                <th>信息项名称</th>
+                                <th>信息项英文名</th>
+                                <th>数据类型</th>
+                                <th>数据长度</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>stock_code</td>
-                                <td>String</td>
-                                <td>股票代码</td>
-                                <td>600036</td>
-                            </tr>
-                            <tr>
-                                <td>stock_name</td>
-                                <td>String</td>
-                                <td>股票名称</td>
-                                <td>招商银行</td>
-                            </tr>
-                            <tr>
-                                <td>post_content</td>
-                                <td>Text</td>
-                                <td>帖子内容</td>
-                                <td>看好银行股长期投资价值...</td>
-                            </tr>
-                            <tr>
-                                <td>sentiment_score</td>
-                                <td>Float</td>
-                                <td>情感得分 (-1 到 1)</td>
-                                <td>0.75</td>
-                            </tr>
-                            <tr>
-                                <td>post_time</td>
-                                <td>Datetime</td>
-                                <td>发帖时间</td>
-                                <td>2025-11-04 10:30:00</td>
-                            </tr>
-                            <tr>
-                                <td>like_count</td>
-                                <td>Integer</td>
-                                <td>点赞数</td>
-                                <td>128</td>
-                            </tr>
-                            <tr>
-                                <td>comment_count</td>
-                                <td>Integer</td>
-                                <td>评论数</td>
-                                <td>35</td>
-                            </tr>
+                            <tr><td>1</td><td>处罚记录ID</td><td>penalty_id</td><td>字符串型C</td><td>32</td></tr>
+                            <tr><td>2</td><td>企业ID</td><td>enterprise_id</td><td>字符串型C</td><td>32</td></tr>
+                            <tr><td>3</td><td>企业名称</td><td>enterprise_name</td><td>字符串型C</td><td>255</td></tr>
+                            <tr><td>4</td><td>企业统一社会信用代码</td><td>unified_social_credit_code</td><td>字符串型C</td><td>18</td></tr>
+                            <tr><td>5</td><td>工商行政处罚的具体事由</td><td>reason_for_penalty</td><td>字符串型C</td><td>500</td></tr>
+                            <tr><td>6</td><td>工商行政处罚/约/决定</td><td>penalty_decision</td><td>字符串型C</td><td>500</td></tr>
+                            <tr><td>7</td><td>处罚发生内日期</td><td>penalty_date</td><td>字符串型C</td><td>32</td></tr>
+                            <tr><td>8</td><td>有效标志</td><td>is_valid</td><td>字符串型C</td><td>500</td></tr>
+                            <tr><td>9</td><td>数据有效到/截止日期</td><td>data_valid_until</td><td>字符串型C</td><td>32</td></tr>
                         </tbody>
+                    </table>
+                </div>
+
+                <!-- Tab 2: 资源信息 -->
+                <div class="g-tab-panel" id="tabInfo">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-3-7H9v-2h6v2zm0 4H9v-2h6v2zm-2-8H9V7h4v2z"/></svg>
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 交付要求 -->
+                <div class="g-tab-panel" id="tabDelivery">
+                    <h3 class="g-section-heading">在线交付</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td class="label-cell">使用限制：</td>
+                            <td class="value-cell">公开、留存、包装、加工</td>
+                            <td class="label-cell">使用环境安全级别要求：</td>
+                            <td class="value-cell">基础</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell"></td>
+                            <td class="value-cell" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">存储限制：</td>
+                            <td class="value-cell">原始存储</td>
+                            <td class="label-cell"></td>
+                            <td class="value-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">传输方式：</td>
+                            <td class="value-cell">API传输</td>
+                            <td class="label-cell"></td>
+                            <td class="value-cell"></td>
+                        </tr>
                     </table>
                 </div>
             </div>
 
-            <div class="content-section">
-                <h2 class="section-title">资源信息</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-item-label">数据更新频率</span>
-                        <span class="info-item-value">每日更新</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-item-label">数据格式</span>
-                        <span class="info-item-value">JSON / CSV</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-item-label">数据时间范围</span>
-                        <span class="info-item-value">2020-01-01 至今</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-item-label">数据量级</span>
-                        <span class="info-item-value">约 5000 万条记录</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-item-label">覆盖股票数</span>
-                        <span class="info-item-value">120+ 金融类上市公司</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-item-label">API 调用限制</span>
-                        <span class="info-item-value">10000 次/天</span>
-                    </div>
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">智能推荐</div>
+                    <div class="sidebar-list" id="recList"></div>
                 </div>
-            </div>
-
-            <div class="content-section">
-                <h2 class="section-title">应用场景</h2>
-                <div class="section-content">
-                    <p><strong>量化投资研究：</strong>通过分析股吧舆情数据，构建投资者情绪因子，辅助量化策略研发。</p>
-                    <p><strong>市场情绪监控：</strong>实时监控市场热点话题和投资者情绪变化，为投资决策提供参考。</p>
-                    <p><strong>舆情风险预警：</strong>及时发现负面舆情，为上市公司和投资机构提供风险预警服务。</p>
-                    <p><strong>学术研究：</strong>为金融学、行为经济学等领域的学术研究提供数据支持。</p>
-                </div>
-            </div>
+            </aside>
         </div>
-
-        <!-- Related Products -->
-        <section class="related-section">
-            <h2 class="related-title">相关推荐</h2>
-            <div class="related-grid">
-                <article class="related-card">
-                    <h3 class="related-card-title">用户用水指标分析数据</h3>
-                    <p class="related-card-company">广东****有限公司</p>
-                    <span class="related-card-type">行业数据</span>
-                </article>
-                <article class="related-card">
-                    <h3 class="related-card-title">旅游安全气象服务</h3>
-                    <p class="related-card-company">广东****有限公司</p>
-                    <span class="related-card-type">行业数据</span>
-                </article>
-                <article class="related-card">
-                    <h3 class="related-card-title">收费站出口小时流量</h3>
-                    <p class="related-card-company">广东****有限公司</p>
-                    <span class="related-card-type">行业数据</span>
-                </article>
-                <article class="related-card">
-                    <h3 class="related-card-title">智联云通平台</h3>
-                    <p class="related-card-company">广东****有限公司</p>
-                    <span class="related-card-type">行业数据</span>
-                </article>
-            </div>
-        </section>
-    </main>
     </div>
 
-    <!-- Footer -->
     <site-footer></site-footer>
-    <script src="nav-bar.js"></script>
-    <script src="site-footer.js"></script>
+
+    <script>
+    (function () {
+        /* ── Tab 切换 ── */
+        var tabs = document.querySelectorAll('.g-tab');
+        var panels = document.querySelectorAll('.g-tab-panel');
+        var panelMap = { intro: 'tabIntro', info: 'tabInfo', delivery: 'tabDelivery' };
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                panels.forEach(function (p) { p.classList.remove('active'); });
+                this.classList.add('active');
+                var id = panelMap[this.getAttribute('data-tab')];
+                if (id) document.getElementById(id).classList.add('active');
+            });
+        });
+    })();
+    </script>
+    <script src="js/recommend.js"></script>
 </body>
 </html>

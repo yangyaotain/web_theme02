@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据咨询服务 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* ==================== Search Section ==================== */
+        .search-section { padding: 0; margin-top: -20px; position: relative; z-index: 10; }
+        .search-container { max-width: 1920px; margin: 0 auto; padding: 0 32px; }
+        .search-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px; }
+        .search-inner { display: flex; align-items: center; gap: 12px; }
+        .search-input-wrapper { flex: 1; position: relative; }
+        .search-input { width: 100%; padding: 14px 20px 14px 48px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); font-size: 14px; color: var(--text-primary); outline: none; transition: all var(--transition-fast); }
+        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
+        .search-input::placeholder { color: var(--text-tertiary); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: var(--text-tertiary); }
+        .search-btn { padding: 14px 32px; background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%); color: white; border: none; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); transition: all var(--transition-fast); }
+        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
+        .search-tag { padding: 4px 12px; background: transparent; border: 1px solid var(--border-default); border-radius: 100px; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); }
+        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
+
+        /* ==================== Main Content ==================== */
+        .main-content { max-width: 1920px; margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 260px 1fr; gap: 32px; }
+
+        /* ==================== Sidebar Filters ==================== */
+        .sidebar { width: auto; position: sticky; top: 96px; height: fit-content; }
+        .filter-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-sm); }
+        .filter-section { margin-bottom: 24px; }
+        .filter-section:last-child { margin-bottom: 0; }
+        .filter-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .filter-clear { font-size: 11px; font-weight: 500; color: var(--text-tertiary); cursor: pointer; }
+        .filter-clear:hover { color: var(--forest-green); }
+        .filter-options { display: flex; flex-direction: column; gap: 8px; }
+        .filter-option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast); }
+        .filter-option:hover { background: var(--gray-100); }
+        .filter-option.active { background: var(--forest-green-50); }
+        .filter-checkbox { width: 16px; height: 16px; border: 1.5px solid var(--gray-300); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); flex-shrink: 0; }
+        .filter-option.active .filter-checkbox { background: var(--forest-green); border-color: var(--forest-green); }
+        .filter-checkbox svg { width: 10px; height: 10px; fill: white; opacity: 0; }
+        .filter-option.active .filter-checkbox svg { opacity: 1; }
+        .filter-label { font-size: 13px; color: var(--text-secondary); }
+        .filter-option.active .filter-label { color: var(--forest-green-700); font-weight: 500; }
+        .filter-count { margin-left: auto; font-size: 11px; color: var(--text-tertiary); background: var(--gray-100); padding: 2px 8px; border-radius: 100px; }
+        .filter-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
+
+        /* ==================== Content Area ==================== */
+        .content-area { min-width: 0; }
+        .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .results-count { font-size: 13px; color: var(--text-secondary); }
+        .results-count strong { color: var(--text-primary); font-weight: 600; }
+        .sort-dropdown { display: flex; align-items: center; gap: 8px; }
+        .sort-label { font-size: 12px; color: var(--text-tertiary); }
+        .sort-select { padding: 6px 12px; font-size: 13px; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); cursor: pointer; outline: none; }
+
+        /* ==================== Card Grid ==================== */
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .data-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden; transition: all var(--transition-base); box-shadow: var(--shadow-sm); position: relative; }
+        .data-card::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-xl); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8); pointer-events: none; }
+        .data-card:hover { border-color: var(--forest-green-200); box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1); transform: translateY(-4px); }
+        .data-card-image { height: 160px; position: relative; overflow: hidden; }
+        .data-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .data-card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+        .data-card-badge { padding: 4px 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: 100px; font-size: 10px; font-weight: 500; color: white; }
+        .data-card-badge.price { background: rgba(229,57,53,0.85); }
+        .data-card-content { padding: 20px; }
+        .data-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px; }
+        .data-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .data-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
+        .data-card-meta { font-size: 11px; color: var(--text-tertiary); }
+        .data-card-meta .price { color: #E53935; font-weight: 700; }
+        .data-card-type { font-size: 11px; font-weight: 500; color: var(--forest-green); background: var(--forest-green-50); padding: 4px 10px; border-radius: 100px; }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 1200px) { .data-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1024px) { .main-content { grid-template-columns: 1fr; } .sidebar { position: static; } .filter-card { display: flex; flex-wrap: wrap; gap: 24px; } .filter-section { margin-bottom: 0; flex: 1; min-width: 200px; } .filter-divider { display: none; } }
+        @media (max-width: 768px) { .data-grid { grid-template-columns: 1fr; } .search-inner { flex-direction: column; } .search-input-wrapper { width: 100%; } .search-btn { width: 100%; } .main-content { padding: 24px 16px; } }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="consulting"></nav-bar>
+
+    <header class="page-header">
+        <div class="page-header-container">
+            <h1 class="page-title">数据咨询服务</h1>
+            <p class="page-subtitle">专业数据咨询团队，助力企业数据资产化与合规经营</p>
+        </div>
+    </header>
+
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-card">
+                <div class="search-inner">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" placeholder="请输入关键字">
+                    </div>
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tags-label">热门：</span>
+                    <span class="search-tag">企业数据治理与合规咨询服务</span>
+                    <span class="search-tag">企业数据资产入表咨询服务</span>
+                    <span class="search-tag">交通运输</span>
+                    <span class="search-tag">文化旅游</span>
+                    <span class="search-tag">气象服务</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <aside class="sidebar">
+            <div class="filter-card">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        服务类型
+                        <span class="filter-clear">清除</span>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option active">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">全部</span>
+                            <span class="filter-count">128</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">数据治理与合规</span>
+                            <span class="filter-count">24</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">资产入表</span>
+                            <span class="filter-count">18</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">托管运营</span>
+                            <span class="filter-count">15</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">资产融资</span>
+                            <span class="filter-count">12</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">产品孵化</span>
+                            <span class="filter-count">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">行业分类</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">金融业</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">制造业</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">房地产</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">教育</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">医疗健康</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">服务报价</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">5000以下</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">5001-10000</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">10001-20000</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">20000以上</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">面议</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-area">
+            <div class="content-header">
+                <div class="results-count">共 <strong>128</strong> 条咨询服务</div>
+                <div class="sort-dropdown">
+                    <span class="sort-label">排序：</span>
+                    <select class="sort-select">
+                        <option>发布时间</option>
+                        <option>价格</option>
+                        <option>浏览量</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-grid">
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-governance.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据治理与合规</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据治理与合规咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">项目化入为客户开展数据治理建议与合规咨询服务，覆盖数据产权、技术与运营治理，在安全合规层面整合数据产品治理流程</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-accounting.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">资产入表</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据资产入表咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">公司围绕行业数据合规数据资产入表这项建议，覆盖数据产权与运营治理，设计调研明确可行的数据资产入表方案及管理规范</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-hosting.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">托管运营</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据资源托管运营服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">为企业提供一站式数据资源托管服务，覆盖数据产品上市、数据运营治理与运营服务管理，提升数据资产价值</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-financing.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">资产融资</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据资产融资咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">聚焦为方含数据资产(数据产品)相关的企业提供资产融资咨询服务，实现数据要素RDA、链式入RBA等多种融资模式</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-government.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">全过程管理</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">行政事业单位及央国企数据资产全过程管理服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">作为龙岗区公共数据搬砖一级授权运营单位，公司面向行政事业单位及央国企，提供公共数据资源管理及核心收费数据资产全过程管理服务</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-incubation.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">产品孵化</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据产品孵化服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">面向台合数据资源企业，公司依托丰标准化的数据投放管理模型，提供数据产品策划及标准化孵化工程，全流程陪伴式数据产品孵化</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">金融业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-service-a.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">数据质量评估与优化咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">为企业提供数据质量全面评估，覆盖数据完整性、准确性、一致性等维度，输出优化改进方案与实施路线图</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">制造业</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-service-b.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">数据安全合规体系建设咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">依据国家数据安全法规及行业标准，为企业搭建数据安全管理框架，制定分类分级策略与风险防控方案</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">信息科技</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/consult-governance.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据战略</span><span class="data-card-badge price">面议</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">企业数据战略规划咨询服务</h3>
+                        <p class="data-card-company">广东***有限公司</p>
+                        <p class="data-card-desc">围绕企业数字化转型目标，提供数据战略顶层设计、数据中台架构规划及数据驱动业务创新路径咨询</p>
+                        <div class="data-card-footer">
+                            <span class="data-card-meta">2025-11-4</span>
+                            <span class="data-card-type">综合</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <nav class="pagination">
+                <button class="pagination-btn" disabled>上一页</button>
+                <div class="pagination-numbers">
+                    <button class="pagination-number active">1</button>
+                    <button class="pagination-number">2</button>
+                    <button class="pagination-number">3</button>
+                    <button class="pagination-number">4</button>
+                    <button class="pagination-number">5</button>
+                    <span class="pagination-ellipsis">...</span>
+                    <button class="pagination-number">89</button>
+                </div>
+                <button class="pagination-btn">下一页</button>
+            </nav>
+        </div>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script>
+    document.querySelectorAll('.filter-option').forEach(function (option) {
+        option.addEventListener('click', function () {
+            this.classList.toggle('active');
+        });
+    });
+    document.querySelectorAll('.data-card').forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function () {
+            window.location.href = 'consulting-detail.html';
+        });
+    });
+    </script>
+</body>
+</html>

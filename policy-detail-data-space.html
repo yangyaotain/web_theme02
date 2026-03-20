@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>龙岗可信数据空间 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+
+        .breadcrumb-bar { max-width: 1920px; margin: 0 auto; padding: 20px 32px 0; }
+        .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-tertiary); }
+        .breadcrumb a { color: var(--text-secondary); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--forest-green); }
+        .breadcrumb-sep { color: var(--text-tertiary); }
+
+        .main-content { max-width: 1920px; margin: 0 auto; padding: 20px 32px 48px; }
+
+        .article-card {
+            background: var(--surface-elevated); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
+            padding: 48px; overflow: hidden;
+        }
+        .article-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle); }
+        .article-tag {
+            display: inline-block; padding: 4px 12px; font-size: 12px; font-weight: 500;
+            color: var(--forest-green); background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-100); border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .article-title { font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: 16px; }
+        .article-meta { display: flex; align-items: center; gap: 24px; font-size: 13px; color: var(--text-tertiary); }
+        .article-meta-item { display: flex; align-items: center; gap: 6px; }
+        .article-meta-item svg { width: 16px; height: 16px; fill: var(--text-tertiary); }
+
+        .article-body { font-size: 15px; color: var(--text-secondary); line-height: 2; }
+        .article-body p { margin-bottom: 20px; }
+        .article-body h3 {
+            font-size: 18px; font-weight: 600; color: var(--text-primary);
+            margin: 32px 0 16px; padding-left: 14px;
+            border-left: 3px solid var(--forest-green);
+        }
+        .article-body blockquote {
+            margin: 24px 0; padding: 20px 24px;
+            background: var(--forest-green-50); border-left: 4px solid var(--forest-green);
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+            font-size: 14px; color: var(--text-secondary); line-height: 1.8;
+        }
+        .article-body img {
+            max-width: 70%; border-radius: var(--radius-xl); margin: 24px auto;
+            display: block; height: auto;
+        }
+
+        .highlight-box {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            margin: 32px 0;
+        }
+        .highlight-item {
+            background: var(--forest-green-50); border: 1px solid var(--forest-green-100);
+            border-radius: var(--radius-xl); padding: 24px; text-align: center;
+        }
+        .highlight-icon { font-size: 32px; margin-bottom: 12px; }
+        .highlight-label { font-size: 14px; font-weight: 600; color: var(--forest-green-700); margin-bottom: 6px; }
+        .highlight-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        .article-footer {
+            margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border-subtle);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .article-nav-link {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 14px; color: var(--text-secondary); text-decoration: none;
+            transition: color 0.15s;
+        }
+        .article-nav-link:hover { color: var(--forest-green); }
+        .article-nav-link svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .blockquote-title { font-weight: 600; color: var(--text-primary); margin-bottom: 12px; font-size: 15px; }
+        .article-body blockquote ul { margin: 0; padding-left: 20px; }
+
+        @media (max-width: 768px) {
+            .article-card { padding: 24px; }
+            .article-title { font-size: 22px; }
+            .highlight-box { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+</head>
+<body>
+    <nav-bar active="policy"></nav-bar>
+
+    <div class="detail-wrapper">
+        <div class="breadcrumb-bar">
+            <nav class="breadcrumb">
+                <a href="index.html">首页</a>
+                <span class="breadcrumb-sep">/</span>
+                <a href="policy-news.html">政策资讯</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>龙岗可信数据空间：构建数据要素流通新生态</span>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="article-card">
+                <div class="article-header">
+                    <span class="article-tag">新闻</span>
+                    <h1 class="article-title">龙岗可信数据空间：构建数据要素流通新生态</h1>
+                    <div class="article-meta">
+                        <span class="article-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            发布时间：2025-07-12
+                        </span>
+                        <span class="article-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            浏览 2,891 次
+                        </span>
+                        <span class="article-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                            来源：龙岗区政务服务和数据管理局
+                        </span>
+                    </div>
+                </div>
+
+                <div class="article-body">
+                    <img src="images/hero-trusted-data.jpg" alt="龙岗可信数据空间">
+
+                    <h3>数据要素服务工作站，打通数据流通"最后一公里"</h3>
+                    <p>2024年6月，龙岗区数据要素服务工作站正式揭牌，由龙岗区政务服务和数据管理局与深圳数据交易所、深圳北理莫斯科大学、龙岗区智城大数据有限公司联合组建。这是龙岗首个专业数据服务机构，采用"政府指导+市场化运营"模式，承担推动企业数据资产入表、撮合数据交易、链接和培育数商生态等重要职能。</p>
+
+                    <img src="images/trusted-data-infographic.jpg" alt="可信数据空间信息图">
+
+                    <h3>数据资产入表，释放数据价值</h3>
+                    <p>在工作站的推动下，龙岗区率先涌现出一批数据资产入表的标杆案例。其中，深圳市子曰文化有限公司打造的"中国式文化创作大模型"成为深圳市首个文化类数据资产入表案例，开创了文化数据资产化的先河。工作站通过专业评估、合规辅导、交易撮合等全链条服务，帮助企业将数据资源转化为可量化的资产价值。</p>
+
+                    <blockquote>
+                        <div class="blockquote-title">可信数据空间核心能力</div>
+                        <ul>
+                            <li>区域可信数据空间试点，构建安全可控的数据流通环境</li>
+                            <li>支持优质企业建设重点产业数据枢纽</li>
+                            <li>推动政企数据融合应用，打破数据孤岛</li>
+                            <li>汇聚业务数据292亿条，治理形成35类专题509个数据图层</li>
+                        </ul>
+                    </blockquote>
+
+                    <h3>数商生态培育，激活数据交易市场</h3>
+                    <p>龙岗区积极构建数商生态体系，通过召开数商场景供需撮合会，推动数据供给方与需求方精准对接。同时，强化数据企业产业招引，已成功引进广州佳都、图灵等重点企业，建设全国首个人工智能与机器人数据聚合服务中心。龙岗正以可信数据空间为基础，以数据交易为纽带，以数商培育为抓手，构建起数据要素流通的完整生态闭环。</p>
+
+                    <p>龙岗区将继续深化"数据要素×"行动，聚焦城区治理、产业发展、民生服务等重点领域，推动数据要素与实体经济深度融合，为建设数字龙岗贡献力量。</p>
+                </div>
+
+                <div class="article-footer">
+                    <a href="policy-news.html" class="article-nav-link">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        返回列表
+                    </a>
+                    <a href="policy-detail-4t.html" class="article-nav-link">
+                        下一篇：4T龙岗数字生活空间
+                        <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+</body>
+</html>

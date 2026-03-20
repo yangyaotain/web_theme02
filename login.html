@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        /* ── Modal Overlay ─────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.97) }
+            to   { opacity: 1; transform: translateY(0) scale(1) }
+        }
+
+        /* ── Modal Card — 双栏 ─────────────────────────── */
+        .modal-card {
+            display: flex;
+            width: 820px;
+            min-height: 480px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+
+        /* ── Left Decoration Panel ─────────────────────── */
+        .login-left {
+            width: 340px;
+            flex-shrink: 0;
+            background: linear-gradient(160deg, #e8f4fc 0%, #d0e8f9 40%, #bbd9f5 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left-slogan {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-left-slogan h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a5fa8;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+        .login-left-slogan p {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6ba3d6;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .login-left-illustration {
+            position: relative;
+            z-index: 2;
+            width: 240px;
+            height: 180px;
+        }
+
+        .illust-base {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 60px;
+            background: linear-gradient(135deg, #a8c8e8 0%, #c5ddf0 100%);
+            border-radius: 12px 12px 4px 4px;
+            box-shadow: 0 6px 20px rgba(100, 160, 220, 0.25);
+        }
+        .illust-screen {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 110px;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f7fd 100%);
+            border-radius: var(--radius-lg);
+            border: 2px solid #b8d4ec;
+            box-shadow: 0 4px 16px rgba(100, 160, 220, 0.2);
+            overflow: hidden;
+        }
+        .illust-screen::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            right: 16px;
+            height: 6px;
+            background: #3b8dd4;
+            border-radius: 3px;
+        }
+        .illust-screen::after {
+            content: '';
+            position: absolute;
+            top: 26px;
+            left: 16px;
+            width: 80px;
+            height: 4px;
+            background: #a8d4f0;
+            border-radius: 2px;
+            box-shadow:
+                0 10px 0 #c5e2f5,
+                0 20px 0 #a8d4f0,
+                0 30px 0 #c5e2f5,
+                0 40px 0 #a8d4f0;
+        }
+        .illust-float {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4a9fe5 0%, #6db8f0 100%);
+            box-shadow: 0 4px 12px rgba(74, 159, 229, 0.35);
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .illust-float svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        .illust-float-2 {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #7ec8f0 0%, #a8dcf8 100%);
+            box-shadow: 0 4px 10px rgba(126, 200, 240, 0.3);
+            top: 30px;
+            left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .illust-float-2 svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .login-left-bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 1;
+        }
+        .login-left-bg-circle:nth-child(1) {
+            width: 300px; height: 300px;
+            background: #4a9fe5;
+            top: -80px; left: -80px;
+        }
+        .login-left-bg-circle:nth-child(2) {
+            width: 200px; height: 200px;
+            background: #7ec8f0;
+            bottom: -60px; right: -40px;
+        }
+
+        /* ── Right Form Panel ──────────────────────────── */
+        .login-right {
+            flex: 1;
+            background: var(--bg-card);
+            padding: 40px 48px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        .modal-close:hover {
+            background: var(--bg-section);
+            color: var(--text-primary);
+        }
+        .modal-close svg { width: 20px; height: 20px; }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+        }
+
+        /* ── Tab Switcher ──────────────────────────────── */
+        .login-tabs {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .login-tab {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding-bottom: 6px;
+            border-bottom: 2px solid transparent;
+            transition: all var(--transition-fast);
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: inherit;
+        }
+        .login-tab:hover {
+            color: var(--text-secondary);
+        }
+        .login-tab.active {
+            color: var(--forest-green);
+            border-bottom-color: var(--forest-green);
+            font-weight: 600;
+        }
+
+        /* ── Form Panels ───────────────────────────────── */
+        .login-panel {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            animation: panelIn 0.25s ease;
+        }
+        .login-panel.active { display: flex; }
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateX(8px) }
+            to   { opacity: 1; transform: translateX(0) }
+        }
+
+        /* ── Input Fields ──────────────────────────────── */
+        .form-input-wrap {
+            display: flex;
+            align-items: center;
+            height: 52px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .form-input-wrap:focus-within {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.1);
+        }
+
+        .input-icon {
+            width: 48px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--text-tertiary);
+        }
+        .input-icon svg { width: 20px; height: 20px; }
+
+        .form-input {
+            flex: 1;
+            height: 100%;
+            padding: 0 16px 0 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+        }
+        .form-input::placeholder { color: var(--text-placeholder); }
+
+        .pwd-toggle {
+            width: 44px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: color var(--transition-fast);
+        }
+        .pwd-toggle:hover { color: var(--text-secondary); }
+        .pwd-toggle svg { width: 20px; height: 20px; }
+
+        /* ── SMS Row ───────────────────────────────────── */
+        .sms-row {
+            display: flex;
+            gap: 12px;
+        }
+        .sms-row .form-input-wrap { flex: 1; }
+
+        .sms-btn {
+            flex-shrink: 0;
+            height: 52px;
+            padding: 0 20px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+        .sms-btn:hover:not(:disabled) {
+            border-color: var(--forest-green);
+            color: var(--forest-green);
+        }
+        .sms-btn:disabled {
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+        }
+
+        /* ── Submit Button ─────────────────────────────── */
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: var(--radius-lg);
+            background: var(--forest-green);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all var(--transition-fast);
+        }
+        .submit-btn:hover {
+            background: var(--forest-green-600);
+            box-shadow: var(--shadow-green-glow);
+        }
+        .submit-btn:active { transform: scale(0.98); }
+
+        /* ── Bottom Links ──────────────────────────────── */
+        .bottom-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .bottom-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+        .bottom-links a:hover {
+            color: var(--forest-green);
+        }
+        .bottom-links .sep {
+            width: 1px;
+            height: 14px;
+            background: var(--border-default);
+        }
+
+        /* ── Responsive ────────────────────────────────── */
+        @media (max-width: 700px) {
+            .modal-card { width: calc(100% - 32px); }
+            .login-left { display: none; }
+            .login-right { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar active="home"></nav-bar>
+
+    <!-- ===== Login Modal ===== -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-card">
+            <!-- Left Panel -->
+            <div class="login-left">
+                <div class="login-left-bg-circle"></div>
+                <div class="login-left-bg-circle"></div>
+
+                <div class="login-left-slogan">
+                    <h3>整合 赋能 创新</h3>
+                    <p>Integration&ensp;Enable&ensp;Innovate</p>
+                </div>
+
+                <div class="login-left-illustration">
+                    <div class="illust-float">
+                        <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                    </div>
+                    <div class="illust-float-2">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
+                    </div>
+                    <div class="illust-screen"></div>
+                    <div class="illust-base"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="login-right">
+                <button class="modal-close" id="modalClose" title="关闭">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                <h2 class="form-title">用户登录</h2>
+
+                <!-- Tab Switcher -->
+                <div class="login-tabs">
+                    <button class="login-tab active" data-tab="account">账号密码登录</button>
+                    <button class="login-tab" data-tab="phone">手机快捷登录</button>
+                </div>
+
+                <form id="loginForm" autocomplete="off">
+                    <!-- Panel 1: 账号密码登录 -->
+                    <div class="login-panel active" id="panelAccount">
+                        <div class="form-input-wrap">
+                            <span class="input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </span>
+                            <input class="form-input" type="text" placeholder="请输入账号">
+                        </div>
+
+                        <div class="form-input-wrap">
+                            <span class="input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <input class="form-input" type="password" placeholder="请输入密码" id="loginPwd">
+                            <button type="button" class="pwd-toggle" data-target="loginPwd">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                                    <circle class="eye-open" cx="12" cy="12" r="3"/>
+                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" style="display:none"/>
+                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <button type="submit" class="submit-btn">登录</button>
+                    </div>
+
+                    <!-- Panel 2: 手机快捷登录 -->
+                    <div class="login-panel" id="panelPhone">
+                        <div class="form-input-wrap">
+                            <span class="input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                </svg>
+                            </span>
+                            <input class="form-input" type="tel" placeholder="请输入手机号" maxlength="11">
+                        </div>
+
+                        <div class="sms-row">
+                            <div class="form-input-wrap">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </span>
+                                <input class="form-input" type="text" placeholder="请输入6位短信验证码" maxlength="6">
+                            </div>
+                            <button type="button" class="sms-btn" id="smsBtn">获取验证码</button>
+                        </div>
+
+                        <button type="submit" class="submit-btn">登录</button>
+                    </div>
+                </form>
+
+                <!-- Bottom Links -->
+                <div class="bottom-links">
+                    <a href="register.html">立即注册</a>
+                    <span class="sep"></span>
+                    <a href="#">忘记密码</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/form-utils.js"></script>
+    <script>
+    (function () {
+        FormUtils.tabs('.login-tab', '.login-panel', function (tab) {
+            return tab.getAttribute('data-tab') === 'account' ? 'panelAccount' : 'panelPhone';
+        });
+        FormUtils.passwordToggle(document);
+        FormUtils.smsCountdown('smsBtn', 60);
+        FormUtils.modalClose('loginModal', 'modalClose');
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            try { localStorage.setItem('lgk_logged_in', '1'); } catch (err) {}
+            window.location.href = 'index.html';
+        });
+    })();
+    </script>
+</body>
+</html>
