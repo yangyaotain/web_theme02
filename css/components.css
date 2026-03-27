@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    Shared Components — 跨页面复用的 UI 组件
    ============================================================ */
 
@@ -106,7 +106,7 @@
 }
 
 .page-header-container {
-    max-width: 1920px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 32px;
     position: relative;
@@ -129,7 +129,7 @@
 /* ── Breadcrumb (通用导航路径) ────────────────────── */
 
 .g-breadcrumb {
-    max-width: 1920px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 14px 32px;
     display: flex;
@@ -242,7 +242,7 @@
 }
 
 .g-container {
-    max-width: 1920px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 32px;
 }
@@ -726,6 +726,7 @@
    类型：success | info | confirm | danger
    ============================================================ */
 
+/* ====== 全局对话框 — Toast 类型（success / info） ====== */
 .g-dialog-overlay {
     position: fixed;
     inset: 0;
@@ -739,12 +740,10 @@
     visibility: hidden;
     transition: opacity 240ms ease, visibility 240ms ease;
 }
-
 .g-dialog-overlay.show {
     opacity: 1;
     visibility: visible;
 }
-
 .g-dialog-box {
     background: #fff;
     border-radius: 10px;
@@ -756,104 +755,87 @@
     transform: translateY(-18px) scale(0.96);
     transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 .g-dialog-overlay.show .g-dialog-box {
     transform: translateY(0) scale(1);
 }
-
-/* ── Icon ── */
 .g-dialog-icon {
-    width: 52px;
-    height: 52px;
-    margin: 0 auto 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 52px; height: 52px; margin: 0 auto 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
 }
-
 .g-dialog-icon svg {
-    width: 28px;
-    height: 28px;
-    stroke: #fff;
-    fill: none;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    width: 28px; height: 28px; stroke: #fff; fill: none;
+    stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
 }
-
 .g-dialog-icon.icon-success {
     background: linear-gradient(135deg, var(--forest-green) 0%, #2EB872 100%);
     box-shadow: 0 4px 14px rgba(27, 154, 92, 0.35);
 }
-
 .g-dialog-icon.icon-info {
     background: linear-gradient(135deg, var(--info-blue) 0%, #5BB0FF 100%);
     box-shadow: 0 4px 14px rgba(64, 158, 255, 0.35);
 }
-
-.g-dialog-icon.icon-confirm {
-    background: linear-gradient(135deg, var(--forest-green) 0%, #2EB872 100%);
-    box-shadow: 0 4px 14px rgba(27, 154, 92, 0.35);
-}
-
-.g-dialog-icon.icon-danger {
-    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
-}
-
-.g-dialog-icon.icon-warning {
-    background: linear-gradient(135deg, var(--accent-orange) 0%, #FBBF24 100%);
-    box-shadow: 0 4px 14px rgba(247, 175, 29, 0.35);
-}
-
-/* ── Text ── */
 .g-dialog-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    line-height: 1.4;
+    font-size: 17px; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 8px; line-height: 1.4;
 }
-
 .g-dialog-desc {
-    font-size: 13px;
-    color: var(--text-tertiary);
-    line-height: 1.6;
-    margin-bottom: 4px;
+    font-size: 13px; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 4px;
 }
 
-/* ── Buttons ── */
+/* ====== 全局对话框 — 确认类型（confirm / danger / warning） ====== */
+.g-dialog-overlay.g-dialog-confirm { padding-top: 20vh; }
+.g-dialog-overlay.g-dialog-confirm .g-dialog-box {
+    padding: 0; text-align: left; min-width: 400px; max-width: 480px; overflow: hidden;
+}
+.g-dialog-confirm-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid #f0f2f5;
+}
+.g-dialog-confirm-header .g-dialog-title {
+    font-size: 16px; font-weight: 700; margin-bottom: 0;
+}
+.g-dialog-confirm-close {
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    border: none; background: none; cursor: pointer; color: #bbb; border-radius: 4px; transition: .15s;
+}
+.g-dialog-confirm-close:hover { background: #f0f2f5; color: #333; }
+.g-dialog-confirm-close svg {
+    width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;
+}
+.g-dialog-confirm-body {
+    display: flex; align-items: flex-start; gap: 10px; padding: 24px 20px; min-height: 60px;
+}
+.g-dialog-confirm-body .g-dialog-inline-icon {
+    width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px;
+}
+.g-dialog-confirm-body .g-dialog-inline-icon.ic-danger svg,
+.g-dialog-confirm-body .g-dialog-inline-icon.ic-warning svg { width: 22px; height: 22px; stroke: none; }
+.g-dialog-inline-icon.ic-danger svg { fill: #f97316; }
+.g-dialog-inline-icon.ic-warning svg { fill: #f97316; }
+.g-dialog-inline-icon.ic-confirm svg { fill: var(--forest-green); stroke: none; width: 22px; height: 22px; }
+.g-dialog-confirm-body .g-dialog-desc {
+    font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 0;
+    min-width: 0; overflow: hidden; flex: 1;
+}
+.g-dialog-confirm-footer {
+    display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+    padding: 14px 20px; border-top: 1px solid #f0f2f5;
+}
+
+/* 确认类型通用按钮 */
 .g-dialog-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 24px;
 }
-
 .g-dialog-btn {
-    padding: 9px 28px;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 150ms ease;
-    line-height: 1.4;
+    padding: 8px 24px; font-size: 14px; font-weight: 500; border-radius: 6px;
+    border: none; cursor: pointer; font-family: inherit; transition: all 150ms ease; line-height: 1.4;
 }
-
 .g-dialog-btn-primary {
-    color: #fff;
-    background: var(--forest-green);
+    color: #fff; background: var(--forest-green);
 }
-
 .g-dialog-btn-primary:hover {
-    background: var(--forest-green-600);
-    box-shadow: 0 2px 8px rgba(27, 154, 92, 0.3);
+    background: var(--forest-green-600); box-shadow: 0 2px 8px rgba(27, 154, 92, 0.3);
 }
-
 .g-dialog-btn-danger {
     color: #fff;
     background: #EF4444;

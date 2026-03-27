@@ -79,6 +79,9 @@
     --shadow-glow: 0 0 0 1px rgba(32, 165, 101, 0.1), 0 4px 16px rgba(32, 165, 101, 0.12);
     --shadow-green-glow: 0 0 0 1px rgba(32, 165, 101, 0.1), 0 4px 16px rgba(32, 165, 101, 0.12);
 
+    /* ── Layout ─────────────────────────────────── */
+    --content-max-width: 1920px;
+
     /* ── Radius ──────────────────────────────────── */
     --radius-sm: 6px;
     --radius-md: 10px;

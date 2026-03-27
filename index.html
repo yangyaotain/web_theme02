@@ -47,7 +47,7 @@
         }
 
         .hero-container {
-            max-width: 1920px;
+            max-width: var(--content-max-width);
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -286,7 +286,7 @@
         .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
 
         /* ==================== Tabs & Cards Section ==================== */
-        .content-section { max-width: 1920px; margin: 0 auto; padding: 80px 32px; }
+        .content-section { max-width: var(--content-max-width); margin: 0 auto; padding: 80px 32px; }
         .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 48px; }
         .tab {
             padding: 10px 20px; font-size: 14px; font-weight: 500;
@@ -342,7 +342,7 @@
             border-bottom: 1px solid var(--border-subtle);
             padding: 48px 32px;
         }
-        .process-container { max-width: 1920px; margin: 0 auto; }
+        .process-container { max-width: var(--content-max-width); margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 24px; }
         .section-label {
             display: inline-flex; align-items: center; gap: 6px;
@@ -355,7 +355,7 @@
         .process-image img { width: 100%; height: auto; }
 
         /* ==================== News Section ==================== */
-        .news-section { max-width: 1920px; margin: 0 auto; padding: 100px 32px; }
+        .news-section { max-width: var(--content-max-width); margin: 0 auto; padding: 100px 32px; }
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
         .news-card {
             background: var(--surface-elevated); border: 1px solid var(--border-subtle);

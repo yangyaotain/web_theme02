@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发帖 - 数据社区 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <script src="js/smart-service.js" defer></script>
+    <style>
+.post-page-wrap {
+    max-width: var(--content-max-width); margin: 0 auto; padding: 90px 32px 60px;
+}
+/* 数据社区导航 */
+.cm-tabs-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.cm-tabs { display: flex; gap: 0; flex-wrap: wrap; }
+.cm-tab { padding: 8px 18px; font-size: 14px; font-weight: 500; color: #555; background: #fff; border: 1px solid #e5e7eb; cursor: pointer; transition: all .15s; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; }
+.cm-tab:first-child { border-radius: 6px 0 0 6px; }
+.cm-tab:last-child { border-radius: 0 6px 6px 0; }
+.cm-tab + .cm-tab { border-left: none; }
+.cm-tab:hover { color: var(--forest-green); background: #f0fdf4; }
+.cm-tab.active { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+.cm-stats { font-size: 13px; color: #888; }
+.cm-stats span { margin-left: 16px; }
+.cm-stats b { color: #333; font-weight: 600; }
+.post-page {
+    padding-top: 20px;
+}
+.post-card {
+    background: #fff; border-radius: 12px; padding: 32px 36px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04); border: 1px solid #f0f2f5;
+}
+
+/* 表单行 */
+.form-row {
+    display: flex; align-items: flex-start; margin-bottom: 20px; gap: 12px;
+}
+.form-label {
+    width: 80px; flex-shrink: 0; text-align: right;
+    font-size: 14px; color: #333; line-height: 36px; font-weight: 500;
+}
+.form-label .req { color: #ef4444; margin-right: 2px; }
+.form-value { flex: 1; min-width: 0; }
+
+/* 类型单选 */
+.type-radios { display: flex; gap: 24px; line-height: 36px; }
+.type-radio { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; color: #555; }
+.type-radio input[type="radio"] {
+    appearance: none; width: 16px; height: 16px; border: 2px solid #d1d5db;
+    border-radius: 50%; position: relative; cursor: pointer; transition: .15s;
+}
+.type-radio input[type="radio"]:checked {
+    border-color: var(--forest-green); background: var(--forest-green);
+}
+.type-radio input[type="radio"]:checked::after {
+    content: ''; position: absolute; inset: 3px;
+    background: #fff; border-radius: 50%;
+}
+
+/* 下拉选择 */
+.form-select {
+    width: 320px; padding: 7px 12px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 6px; outline: none;
+    background: #fff; color: #333; cursor: pointer; transition: .15s;
+}
+.form-select:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(45,106,79,.1); }
+
+/* 类型表单切换 */
+.type-form { display: none; }
+.type-form.active { display: block; }
+
+/* 板块目录树下拉 */
+.tree-dropdown {
+    position: relative; width: 320px;
+}
+.tree-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 12px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 6px;
+    background: #fff; color: #333; cursor: pointer; transition: .15s;
+    user-select: none;
+}
+.tree-trigger:hover, .tree-trigger.open { border-color: var(--forest-green); }
+.tree-trigger svg { width: 16px; height: 16px; color: #999; transition: transform .2s; }
+.tree-trigger.open svg { transform: rotate(180deg); }
+
+.tree-panel {
+    display: none; position: absolute; top: 100%; left: 0; z-index: 100;
+    width: 320px; max-height: 320px; overflow-y: auto;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.1); margin-top: 4px; padding: 8px 0;
+}
+.tree-panel.open { display: block; }
+.tree-panel::-webkit-scrollbar { width: 4px; }
+.tree-panel::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+.tree-search {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 12px 8px; border-bottom: 1px solid #f0f2f5; margin-bottom: 4px;
+}
+.tree-search input {
+    flex: 1; border: 1px solid #e5e7eb; border-radius: 4px;
+    padding: 4px 8px; font-size: 13px; outline: none;
+}
+.tree-search input:focus { border-color: var(--forest-green); }
+.tree-search svg { width: 16px; height: 16px; color: #999; cursor: pointer; }
+
+.tree-group { padding: 2px 0; }
+.tree-group-label {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px; font-size: 13px; font-weight: 600; color: #333;
+    cursor: pointer; user-select: none;
+}
+.tree-group-label svg { width: 14px; height: 14px; color: #999; transition: .15s; }
+.tree-group-label .folder-icon { color: #f59e0b; }
+.tree-group.collapsed .tree-children { display: none; }
+.tree-group.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+.tree-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px 5px 32px; font-size: 13px; color: #555;
+    cursor: pointer; transition: .1s;
+}
+.tree-item:hover { background: #f0fdf4; color: var(--forest-green); }
+.tree-item.selected { background: #dcfce7; color: var(--forest-green); font-weight: 600; }
+.tree-item .item-icon { width: 14px; height: 14px; color: #f59e0b; flex-shrink: 0; }
+
+/* 输入框 */
+.form-input {
+    width: 100%; max-width: 480px; padding: 7px 12px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 6px; outline: none;
+    transition: .15s;
+}
+.form-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(45,106,79,.1); }
+
+/* 富文本编辑器模拟 */
+.editor-wrap {
+    border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden;
+    transition: .15s;
+}
+.editor-wrap:focus-within { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(45,106,79,.1); }
+.editor-toolbar {
+    display: flex; flex-wrap: wrap; gap: 2px; padding: 8px 10px;
+    background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+}
+.editor-toolbar .tb-btn {
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    background: none; border: none; border-radius: 4px; cursor: pointer;
+    color: #555; transition: .1s;
+}
+.editor-toolbar .tb-btn:hover { background: #e5e7eb; color: #1a1a2e; }
+.editor-toolbar .tb-sep { width: 1px; height: 24px; background: #e5e7eb; margin: 3px 4px; }
+.editor-toolbar select {
+    padding: 2px 6px; font-size: 12px; border: 1px solid #e5e7eb;
+    border-radius: 4px; outline: none; background: #fff; color: #555;
+}
+.editor-body {
+    min-height: 300px; padding: 16px; font-size: 14px;
+    outline: none; line-height: 1.7; color: #333;
+}
+
+/* 投票选项 */
+.vote-options { display: flex; flex-direction: column; gap: 8px; }
+.vote-option-row {
+    display: flex; align-items: center; gap: 8px;
+}
+.vote-option-row input {
+    flex: 1; max-width: 480px; padding: 7px 12px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 6px; outline: none; transition: .15s;
+}
+.vote-option-row input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(45,106,79,.1); }
+.vote-del-btn {
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 1px solid #fecaca; border-radius: 4px;
+    color: #ef4444; cursor: pointer; transition: .15s;
+}
+.vote-del-btn:hover { background: #fef2f2; }
+.vote-add-btn {
+    padding: 5px 14px; font-size: 13px; font-weight: 500;
+    color: var(--forest-green); background: #fff;
+    border: 1px solid var(--forest-green); border-radius: 6px;
+    cursor: pointer; transition: .15s; width: fit-content; margin-top: 4px;
+}
+.vote-add-btn:hover { background: #f0fdf4; }
+
+/* 投票设置 */
+.vote-settings { display: flex; flex-direction: column; gap: 10px; }
+.vote-setting-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #555; }
+.vote-setting-row input[type="number"] {
+    width: 60px; padding: 4px 8px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 4px; text-align: center; outline: none;
+}
+.vote-setting-row input[type="number"]:focus { border-color: var(--forest-green); }
+
+/* 活动报名设置 */
+.signup-settings { display: flex; flex-direction: column; gap: 10px; }
+.signup-check-row { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: #555; }
+.signup-check-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.signup-check-row input[type="checkbox"] {
+    appearance: none; width: 16px; height: 16px;
+    border: 2px solid #d1d5db; border-radius: 3px; cursor: pointer; transition: .15s;
+    position: relative;
+}
+.signup-check-row input[type="checkbox"]:checked {
+    background: var(--forest-green); border-color: var(--forest-green);
+}
+.signup-check-row input[type="checkbox"]:checked::after {
+    content: '✓'; position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700;
+}
+.custom-field-row {
+    display: flex; align-items: center; gap: 8px; margin-top: 4px;
+}
+.custom-field-row input {
+    width: 180px; padding: 5px 10px; font-size: 13px;
+    border: 1px solid #d1d5db; border-radius: 4px; outline: none;
+}
+.add-custom-link {
+    font-size: 13px; color: var(--forest-green); cursor: pointer;
+    margin-top: 4px; display: inline-block;
+}
+.add-custom-link:hover { text-decoration: underline; }
+
+/* 验证码 */
+.captcha-row { display: flex; align-items: center; gap: 12px; }
+.captcha-input {
+    width: 180px; padding: 7px 12px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 6px; outline: none;
+}
+.captcha-input:focus { border-color: var(--forest-green); }
+.captcha-img {
+    height: 36px; border: 1px solid #e5e7eb; border-radius: 4px;
+    cursor: pointer; background: #f9fafb;
+    font-family: 'Courier New', monospace; font-size: 18px; font-weight: 700;
+    padding: 0 12px; display: flex; align-items: center;
+    color: #333; letter-spacing: 4px; user-select: none;
+}
+
+/* 按钮区 */
+.form-actions {
+    display: flex; gap: 12px; margin-top: 28px; padding-top: 20px;
+    border-top: 1px solid #f0f2f5;
+}
+.btn-submit {
+    padding: 9px 32px; font-size: 14px; font-weight: 600;
+    background: var(--forest-green); color: #fff; border: none;
+    border-radius: 6px; cursor: pointer; transition: .15s;
+}
+.btn-submit:hover { background: #256b4a; }
+.btn-cancel {
+    padding: 9px 32px; font-size: 14px; font-weight: 500;
+    background: #fff; color: #555; border: 1px solid #d1d5db;
+    border-radius: 6px; cursor: pointer; transition: .15s;
+}
+.btn-cancel:hover { border-color: #999; color: #333; }
+    </style>
+</head>
+<body>
+    <nav-bar active="community"></nav-bar>
+
+    <div class="post-page-wrap">
+        <!-- 数据社区导航 -->
+        <div class="cm-tabs-bar">
+            <div class="cm-tabs">
+                <a href="community.html" class="cm-tab">板块列表</a>
+                <a href="community.html#hot" class="cm-tab">最新热门</a>
+                <a href="community.html#new" class="cm-tab">最新发布</a>
+                <a href="community.html#reply" class="cm-tab">最新回复</a>
+                <a href="community.html#best" class="cm-tab">最新精华</a>
+                <a href="community.html#first" class="cm-tab">抢沙发</a>
+                <a href="community.html#mine" class="cm-tab">我的帖子</a>
+                <a href="community.html#fav" class="cm-tab">我的收藏</a>
+            </div>
+            <div class="cm-stats">今日 <b>2</b><span>昨日 <b>157</b></span><span>帖子 <b>149,335</b></span></div>
+        </div>
+
+        <div class="post-page">
+        <div class="post-card">
+
+            <!-- 类型选择 -->
+            <div class="form-row">
+                <div class="form-label"><span class="req">*</span>类型</div>
+                <div class="form-value">
+                    <div class="type-radios" id="typeRadios">
+                        <label class="type-radio"><input type="radio" name="postType" value="post" checked> 帖子</label>
+                        <label class="type-radio"><input type="radio" name="postType" value="vote"> 投票</label>
+                        <label class="type-radio"><input type="radio" name="postType" value="activity"> 活动</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 板块归属 -->
+            <div class="form-row">
+                <div class="form-label"><span class="req">*</span>板块归属</div>
+                <div class="form-value">
+                    <div class="tree-dropdown" id="treeDropdown">
+                        <div class="tree-trigger" id="treeTrigger">
+                            <span id="treeSelected">社区交流与讨论/数据提供方专区</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="tree-panel" id="treePanel">
+                            <div class="tree-search">
+                                <input type="text" placeholder="关键字搜索" id="treeSearchInput">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                            <div id="treeContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 标题 -->
+            <div class="form-row">
+                <div class="form-label"><span class="req">*</span>标题</div>
+                <div class="form-value">
+                    <input type="text" class="form-input" placeholder="100个字符以内" maxlength="100">
+                </div>
+            </div>
+
+            <!-- ====== 帖子表单 ====== -->
+            <div class="type-form active" id="form-post">
+                <div class="form-row">
+                    <div class="form-label"><span class="req">*</span>正文内容</div>
+                    <div class="form-value">
+                        <div class="editor-wrap">
+                            <div class="editor-toolbar">
+                                <button class="tb-btn" title="撤销"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+                                <button class="tb-btn" title="重做"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+                                <button class="tb-btn" title="标记"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M5 3h14a2 2 0 012 2v16l-9-4-9 4V5a2 2 0 012-2z"/></svg></button>
+                                <button class="tb-btn" title="清除格式"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <select><option>插入</option></select>
+                                <div class="tb-sep"></div>
+                                <select><option>段落</option></select>
+                                <select><option>系统字体</option></select>
+                                <select><option>14px</option></select>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn" title="加粗"><b style="font-size:14px">B</b></button>
+                                <button class="tb-btn" title="斜体"><i style="font-size:14px">I</i></button>
+                                <button class="tb-btn" title="下划线"><u style="font-size:14px">U</u></button>
+                                <button class="tb-btn" title="删除线"><s style="font-size:14px">S</s></button>
+                                <button class="tb-btn" title="下标"><span style="font-size:11px">X<sub>2</sub></span></button>
+                                <button class="tb-btn" title="上标"><span style="font-size:11px">X<sup>2</sup></span></button>
+                                <button class="tb-btn" title="字体颜色"><span style="font-size:14px;font-weight:700">A</span></button>
+                                <button class="tb-btn" title="画笔"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></button>
+                            </div>
+                            <div class="editor-toolbar" style="border-bottom:none;padding-top:4px">
+                                <button class="tb-btn" title="左对齐"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+                                <button class="tb-btn" title="居中"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="18" y1="14" x2="6" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+                                <button class="tb-btn" title="右对齐"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="7" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+                                <button class="tb-btn" title="两端对齐"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+                                <button class="tb-btn" title="缩进"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="4" x2="3" y2="4"/><line x1="21" y1="8" x2="11" y2="8"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="16" x2="3" y2="16"/><polyline points="3 8 7 10 3 12"/></svg></button>
+                                <button class="tb-btn" title="减少缩进"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="4" x2="3" y2="4"/><line x1="21" y1="8" x2="11" y2="8"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="16" x2="3" y2="16"/><polyline points="7 8 3 10 7 12"/></svg></button>
+                                <button class="tb-btn" title="有序列表"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4M4 10h2M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
+                                <button class="tb-btn" title="无序列表"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn" title="表格"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></button>
+                                <button class="tb-btn" title="图片"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+                                <button class="tb-btn" title="视频"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></button>
+                                <button class="tb-btn" title="链接"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
+                                <button class="tb-btn" title="特殊字符">Ω</button>
+                                <button class="tb-btn" title="时间"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn" title="查找"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+                                <button class="tb-btn" title="字数统计"><span style="font-size:10px;font-weight:700">123<br>abc</span></button>
+                                <button class="tb-btn" title="预览"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                                <button class="tb-btn" title="全屏"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+                            </div>
+                            <div class="editor-body" contenteditable="true"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 投票表单 ====== -->
+            <div class="type-form" id="form-vote">
+                <div class="form-row">
+                    <div class="form-label"><span class="req">*</span>投票选项</div>
+                    <div class="form-value">
+                        <div class="vote-options" id="voteOptions">
+                            <div class="vote-option-row"><input type="text" placeholder="选项1"><button class="vote-del-btn" title="删除"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+                            <div class="vote-option-row"><input type="text" placeholder="选项2"><button class="vote-del-btn" title="删除"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+                            <div class="vote-option-row"><input type="text" placeholder="选项3"><button class="vote-del-btn" title="删除"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+                            <div class="vote-option-row"><input type="text" placeholder="选项4"><button class="vote-del-btn" title="删除"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+                        </div>
+                        <button class="vote-add-btn" id="voteAddBtn">添加选项</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label"><span class="req">*</span>投票设置</div>
+                    <div class="form-value">
+                        <div class="vote-settings">
+                            <div class="vote-setting-row">最多可选 <input type="number" value="1" min="1"> 个</div>
+                            <div class="vote-setting-row">投票有效期 <input type="number" value="3" min="1"> 天</div>
+                            <label class="vote-setting-row" style="cursor:pointer"><input type="checkbox" style="margin-right:4px"> 匿名投票</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 活动表单 ====== -->
+            <div class="type-form" id="form-activity">
+                <div class="form-row">
+                    <div class="form-label"><span class="req">*</span>正文内容</div>
+                    <div class="form-value">
+                        <div class="editor-wrap">
+                            <div class="editor-toolbar">
+                                <button class="tb-btn" title="撤销"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+                                <button class="tb-btn" title="重做"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <select><option>段落</option></select>
+                                <select><option>系统字体</option></select>
+                                <select><option>14px</option></select>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn"><b style="font-size:14px">B</b></button>
+                                <button class="tb-btn"><i style="font-size:14px">I</i></button>
+                                <button class="tb-btn"><u style="font-size:14px">U</u></button>
+                                <button class="tb-btn"><s style="font-size:14px">S</s></button>
+                                <button class="tb-btn"><span style="font-size:11px">X<sub>2</sub></span></button>
+                                <button class="tb-btn"><span style="font-size:11px">X<sup>2</sup></span></button>
+                                <button class="tb-btn"><span style="font-size:14px;font-weight:700">A</span></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></button>
+                            </div>
+                            <div class="editor-toolbar" style="border-bottom:none;padding-top:4px">
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="4" x2="3" y2="4"/><line x1="21" y1="8" x2="11" y2="8"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="16" x2="3" y2="16"/><polyline points="3 8 7 10 3 12"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4M4 10h2M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
+                                <button class="tb-btn">Ω</button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+                                <div class="tb-sep"></div>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+                                <button class="tb-btn"><span style="font-size:10px;font-weight:700">123<br>abc</span></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                                <button class="tb-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+                            </div>
+                            <div class="editor-body" contenteditable="true"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label"><span class="req">*</span>报名设置</div>
+                    <div class="form-value">
+                        <div class="signup-settings">
+                            <label style="display:flex;align-items:center;gap:5px;font-size:14px;color:#555;cursor:pointer"><input type="checkbox" style="width:16px;height:16px"> 公开报名结果</label>
+                            <div style="font-size:13px;color:#888;margin-top:4px">报名表单：最多10个属性</div>
+                            <div class="signup-check-row">
+                                <label><input type="checkbox" checked> 姓名</label>
+                                <label><input type="checkbox"> 性别</label>
+                                <label><input type="checkbox" checked> 手机号码</label>
+                                <label><input type="checkbox"> 身份证号码</label>
+                                <label><input type="checkbox"> 公司名称</label>
+                                <label><input type="checkbox" checked> 备注</label>
+                            </div>
+                            <div class="custom-field-row">
+                                <input type="text" value="地址" placeholder="自定义字段名">
+                            </div>
+                            <span class="add-custom-link">+ 自定义</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 验证码 -->
+            <div class="form-row" style="margin-top:8px">
+                <div class="form-label"><span class="req">*</span>验证码</div>
+                <div class="form-value">
+                    <div class="captcha-row">
+                        <input type="text" class="captcha-input" placeholder="">
+                        <div class="captcha-img" title="点击刷新">pxh8</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 按钮 -->
+            <div class="form-actions">
+                <button class="btn-submit" id="submitBtn">确定</button>
+                <button class="btn-cancel" id="cancelBtn">取消</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+    <script src="js/global-dialog.js"></script>
+    <script>
+    // 板块目录树数据
+    var TREE_DATA = [
+        { group: '社区公共区', items: ['社区新闻', '官方公告'] },
+        { group: '社区交流与讨论', items: ['数据提供方专区', '数据需求方专区', '数据资源专区', '数据服务专区'] },
+        { group: '社区开发者', items: ['数据资源申请专区', '数据产品开发专区', '应用场景专区'] },
+        { group: '其他交流', items: ['开发者杂谈', '教程知道', '个人分享'] }
+    ];
+
+    // 渲染目录树
+    function renderTree(filter) {
+        var html = '';
+        var kw = (filter || '').toLowerCase();
+        TREE_DATA.forEach(function(g) {
+            var items = g.items.filter(function(it) { return !kw || it.toLowerCase().indexOf(kw) >= 0 || g.group.toLowerCase().indexOf(kw) >= 0; });
+            if (!items.length && kw) return;
+            var folderSvg = '<svg class="folder-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+            var toggleSvg = '<svg class="toggle-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+            var itemSvg = '<svg class="item-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>';
+            html += '<div class="tree-group">';
+            html += '<div class="tree-group-label">' + toggleSvg + folderSvg + '<span>' + g.group + '</span></div>';
+            html += '<div class="tree-children">';
+            (kw ? items : g.items).forEach(function(it) {
+                var sel = document.getElementById('treeSelected').textContent;
+                var isSelected = sel.indexOf(it) >= 0;
+                html += '<div class="tree-item' + (isSelected ? ' selected' : '') + '" data-group="' + g.group + '" data-name="' + it + '">' + itemSvg + it + '</div>';
+            });
+            html += '</div></div>';
+        });
+        document.getElementById('treeContent').innerHTML = html;
+        bindTreeEvents();
+    }
+
+    function bindTreeEvents() {
+        document.querySelectorAll('.tree-group-label').forEach(function(label) {
+            label.addEventListener('click', function() {
+                label.parentElement.classList.toggle('collapsed');
+            });
+        });
+        document.querySelectorAll('.tree-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var name = item.dataset.group + '/' + item.dataset.name;
+                document.getElementById('treeSelected').textContent = name;
+                document.querySelectorAll('.tree-item').forEach(function(i) { i.classList.remove('selected'); });
+                item.classList.add('selected');
+                closeTree();
+            });
+        });
+    }
+
+    // 目录树下拉开关
+    var trigger = document.getElementById('treeTrigger');
+    var panel = document.getElementById('treePanel');
+    function openTree() { trigger.classList.add('open'); panel.classList.add('open'); renderTree(); }
+    function closeTree() { trigger.classList.remove('open'); panel.classList.remove('open'); }
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        panel.classList.contains('open') ? closeTree() : openTree();
+    });
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('treeDropdown').contains(e.target)) closeTree();
+    });
+    document.getElementById('treeSearchInput').addEventListener('input', function() {
+        renderTree(this.value);
+    });
+
+    // 类型切换
+    var typeForms = { post: document.getElementById('form-post'), vote: document.getElementById('form-vote'), activity: document.getElementById('form-activity') };
+    document.querySelectorAll('input[name="postType"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            Object.values(typeForms).forEach(function(f) { f.classList.remove('active'); });
+            typeForms[radio.value].classList.add('active');
+        });
+    });
+
+    // 删除投票选项（带确认提示）
+    function bindVoteDelBtn(btn) {
+        btn.addEventListener('click', function() {
+            var row = btn.closest('.vote-option-row');
+            var input = row ? row.querySelector('input') : null;
+            var text = input ? (input.value || input.placeholder) : '该选项';
+            GlobalDialog.danger({
+                title: '确认删除',
+                desc: '<div style="display:flex;align-items:baseline;white-space:nowrap"><span>您确定要删除【</span><span style="display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + text + '</span><span>】吗？</span></div>',
+                confirmText: '确认删除',
+                cancelText: '取 消',
+                onConfirm: function() { row.remove(); }
+            });
+        });
+    }
+
+    // 添加投票选项
+    document.getElementById('voteAddBtn').addEventListener('click', function() {
+        var opts = document.getElementById('voteOptions');
+        var count = opts.children.length + 1;
+        var row = document.createElement('div');
+        row.className = 'vote-option-row';
+        row.innerHTML = '<input type="text" placeholder="选项' + count + '"><button class="vote-del-btn" title="删除"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+        opts.appendChild(row);
+        bindVoteDelBtn(row.querySelector('.vote-del-btn'));
+    });
+    document.querySelectorAll('.vote-del-btn').forEach(function(btn) {
+        bindVoteDelBtn(btn);
+    });
+
+    // 确定 -> 成功提示 -> 跳转
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        GlobalDialog.success({
+            title: '提交成功',
+            desc: '您的内容已成功提交，正在跳转到我的帖子...',
+            duration: 1600,
+            onClose: function() {
+                window.location.href = 'community.html#mine';
+            }
+        });
+    });
+
+    // 取消 -> 返回上一页
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+        history.back();
+    });
+
+    // 验证码刷新
+    document.querySelector('.captcha-img').addEventListener('click', function() {
+        var chars = 'abcdefghjkmnpqrstuvwxyz23456789';
+        var code = '';
+        for (var i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        this.textContent = code;
+    });
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * <site-footer> Web Component
  * 龙岗数据聚合服务平台 — 统一底部组件
  */
@@ -22,7 +22,7 @@ class SiteFooter extends HTMLElement {
 }
 
 .footer-container {
-    max-width: 1920px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     text-align: center;
 }

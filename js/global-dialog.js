@@ -19,6 +19,14 @@ var GlobalDialog = (function () {
         warning: '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
     };
 
+    var SVG_INLINE = {
+        confirm: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>',
+        danger:  '<svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+        warning: '<svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>'
+    };
+
+    var CLOSE_SVG = '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
     var FADE_MS = 240;
 
     function _createOverlay() {
@@ -71,19 +79,32 @@ var GlobalDialog = (function () {
     function _dialog(type, opts) {
         opts = opts || {};
         var overlay = _createOverlay();
-        var confirmText = opts.confirmText || '确认';
-        var cancelText = opts.cancelText || '取消';
+        overlay.classList.add('g-dialog-confirm');
+        var confirmText = opts.confirmText || '确 定';
+        var cancelText = opts.cancelText || '取 消';
         var btnClass = type === 'danger' ? 'g-dialog-btn-danger' : 'g-dialog-btn-primary';
+        var inlineSvg = SVG_INLINE[type] || SVG_INLINE.warning;
 
-        var html = _buildBox(type, opts) +
-            '<div class="g-dialog-actions">' +
+        var html = '<div class="g-dialog-box">' +
+            '<div class="g-dialog-confirm-header">' +
+                '<div class="g-dialog-title">' + (opts.title || '') + '</div>' +
+                '<button class="g-dialog-confirm-close" data-role="cancel">' + CLOSE_SVG + '</button>' +
+            '</div>' +
+            '<div class="g-dialog-confirm-body">' +
+                '<span class="g-dialog-inline-icon ic-' + type + '">' + inlineSvg + '</span>' +
+                '<div class="g-dialog-desc">' + (opts.desc || '') + '</div>' +
+            '</div>' +
+            '<div class="g-dialog-confirm-footer">' +
                 '<button class="g-dialog-btn g-dialog-btn-cancel" data-role="cancel">' + cancelText + '</button>' +
                 '<button class="g-dialog-btn ' + btnClass + '" data-role="confirm">' + confirmText + '</button>' +
-            '</div></div>';
+            '</div>' +
+        '</div>';
         overlay.innerHTML = html;
 
         overlay.addEventListener('click', function (e) {
-            var role = e.target.getAttribute('data-role');
+            var target = e.target.closest('[data-role]');
+            if (!target) return;
+            var role = target.getAttribute('data-role');
             if (role === 'confirm') {
                 _hide(overlay, opts.onConfirm);
             } else if (role === 'cancel') {

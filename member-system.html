@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
     <style>
         /* ══════════════ Section Header ══════════════ */
         .section-header {
@@ -449,7 +451,29 @@
     }
 
     function moveRow(idx, dir) { /* static prototype */ }
-    function deleteRow(idx) { /* static prototype */ }
+
+    var memberNames = ['银卡会员', '金卡会员', '钻金会员'];
+    function deleteRow(idx) {
+        var name = memberNames[idx] || '该等级';
+        GlobalDialog.danger({
+            title: '确认删除',
+            desc: '<div style="display:flex;align-items:baseline;white-space:nowrap"><span>您确定要删除【</span><span style="display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + name + '</span><span>】的记录吗？</span></div><div style="color:#aaa;font-size:12px;margin-top:6px">删除后该会员等级配置将无法恢复</div>',
+            confirmText: '确认删除',
+            cancelText: '取 消',
+            onConfirm: function() {
+                var rows = document.querySelectorAll('.member-table tbody tr');
+                var row = rows[idx + 1];
+                if (row) {
+                    row.style.transition = 'opacity .3s';
+                    row.style.opacity = '0';
+                    setTimeout(function() { row.style.display = 'none'; }, 300);
+                }
+                setTimeout(function() {
+                    GlobalDialog.success({ title: '删除成功', desc: '会员等级"' + name + '"已成功删除' });
+                }, 400);
+            }
+        });
+    }
 
     document.getElementById('editModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();

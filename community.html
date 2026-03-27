@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据社区 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <script src="js/smart-service.js" defer></script>
+    <script src="js/global-dialog.js"></script>
+    <style>
+/* ====== 页面布局 ====== */
+.community-wrap {
+    max-width: var(--content-max-width); margin: 0 auto; padding: 100px 32px 60px;
+}
+
+/* ====== 顶部Tab栏 ====== */
+.cm-tabs-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+}
+.cm-tabs {
+    display: flex; gap: 0; flex-wrap: wrap;
+}
+.cm-tab {
+    padding: 8px 18px; font-size: 14px; font-weight: 500;
+    color: #555; background: #fff; border: 1px solid #e5e7eb;
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.cm-tab:first-child { border-radius: 6px 0 0 6px; }
+.cm-tab:last-child { border-radius: 0 6px 6px 0; }
+.cm-tab + .cm-tab { border-left: none; }
+.cm-tab:hover { color: var(--forest-green); background: #f0fdf4; }
+.cm-tab.active {
+    background: var(--forest-green); color: #fff; border-color: var(--forest-green);
+}
+.cm-tab.active + .cm-tab { border-left-color: var(--forest-green); }
+.cm-stats {
+    font-size: 13px; color: #888;
+}
+.cm-stats span { margin-left: 16px; }
+.cm-stats b { color: #333; font-weight: 600; }
+
+/* ====== 主体两栏 ====== */
+.cm-body {
+    display: flex; gap: 24px; align-items: flex-start;
+}
+.cm-main { flex: 1; min-width: 0; }
+.cm-sidebar { width: 280px; flex-shrink: 0; }
+
+/* ====== Tab面板 ====== */
+.cm-panel { display: none; }
+.cm-panel.active { display: block; }
+
+/* ====== 板块列表 ====== */
+.section-label {
+    font-size: 14px; font-weight: 600; color: #666;
+    margin: 24px 0 12px; padding-left: 4px;
+}
+.section-label:first-child { margin-top: 0; }
+.board-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.board-card {
+    display: flex; align-items: center; gap: 14px;
+    background: #fff; border-radius: 10px; padding: 16px 18px;
+    border: 1px solid #f0f2f5;
+    transition: all .2s; cursor: pointer;
+}
+.board-card:hover {
+    border-color: var(--forest-green); box-shadow: 0 2px 12px rgba(45,106,79,.08);
+}
+.board-icon {
+    width: 50px; height: 50px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 22px;
+}
+.board-icon.news { background: #e0f2fe; color: #0284c7; }
+.board-icon.announce { background: #fef3c7; color: #d97706; }
+.board-icon.provider { background: #dbeafe; color: #2563eb; }
+.board-icon.demand { background: #fce7f3; color: #db2777; }
+.board-icon.resource { background: #e0e7ff; color: #4f46e5; }
+.board-icon.product { background: #d1fae5; color: #059669; }
+.board-icon.service { background: #ede9fe; color: #7c3aed; }
+.board-icon.policy { background: #fff7ed; color: #ea580c; }
+.board-icon.dev { background: #cffafe; color: #0891b2; }
+.board-icon.devprod { background: #f0fdf4; color: #16a34a; }
+.board-icon.scene { background: #fef2f2; color: #dc2626; }
+.board-icon.help { background: #fdf4ff; color: #a855f7; }
+.board-icon.chat { background: #f0f9ff; color: #0ea5e9; }
+.board-icon.guide { background: #ecfdf5; color: #10b981; }
+.board-icon.share { background: #fff1f2; color: #f43f5e; }
+.board-icon.hot { background: #fefce8; color: #ca8a04; }
+.board-info { flex: 1; min-width: 0; }
+.board-name { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 3px; }
+.board-meta { font-size: 12px; color: #999; }
+.board-meta span { margin-right: 12px; }
+.board-desc {
+    font-size: 12px; color: #aaa; margin-top: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ====== 帖子列表（热门/发布/回复/精华/抢沙发） ====== */
+.post-list { display: flex; flex-direction: column; gap: 0; }
+.post-item {
+    display: flex; gap: 14px; padding: 20px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+.post-item:first-child { padding-top: 0; }
+.post-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #e5e7eb; flex-shrink: 0; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.post-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.post-avatar .avatar-text {
+    font-size: 16px; font-weight: 700; color: #fff;
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: var(--forest-green);
+}
+.post-content { flex: 1; min-width: 0; }
+.post-user-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.post-username { font-size: 14px; font-weight: 600; color: var(--forest-green); }
+.post-time { font-size: 12px; color: #bbb; }
+.post-title {
+    font-size: 16px; font-weight: 600; color: #1a1a2e;
+    margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: color .15s;
+}
+.post-title:hover { color: var(--forest-green); }
+.post-title .tag-new {
+    font-size: 11px; font-weight: 600; color: #f97316; background: none; padding: 0;
+}
+.post-excerpt {
+    font-size: 13px; color: #777; line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.post-footer {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+}
+.post-tag {
+    font-size: 12px; padding: 2px 10px; border-radius: 4px;
+    color: var(--forest-green); background: #f0fdf4; border: 1px solid #d1fae5;
+}
+.post-tag.orange { color: #ea580c; background: #fff7ed; border-color: #fed7aa; }
+.post-stat {
+    font-size: 12px; color: #bbb; display: flex; align-items: center; gap: 3px;
+}
+.post-stat svg { width: 14px; height: 14px; }
+.post-actions { margin-left: auto; display: flex; gap: 6px; }
+.post-actions .btn-sm {
+    padding: 4px 14px; font-size: 12px; border-radius: 4px;
+    border: 1px solid #e5e7eb; background: #fff; color: #555;
+    cursor: pointer; transition: .15s;
+}
+.post-actions .btn-sm:hover { border-color: var(--forest-green); color: var(--forest-green); }
+.post-actions .btn-sm.danger:hover { border-color: #ef4444; color: #ef4444; }
+
+/* 帖子状态标签 */
+.status-tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 3px; font-weight: 500;
+}
+.status-tag.pending { color: #d97706; background: #fef3c7; }
+.status-tag.rejected { color: #ef4444; background: #fef2f2; }
+.status-tag.published { color: #059669; background: #d1fae5; }
+.status-tag.deleted { color: #ef4444; background: #fef2f2; }
+.status-tag.draft { color: #888; background: #f3f4f6; }
+
+.post-warning {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #ef4444; margin-top: 6px;
+    background: #fef2f2; padding: 4px 10px; border-radius: 4px;
+}
+.post-warning svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ====== 我的帖子子tab ====== */
+.my-filter-bar {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+    padding-bottom: 14px; border-bottom: 1px solid #f0f2f5; flex-wrap: wrap;
+}
+.my-sub-tabs { display: flex; gap: 0; }
+.my-sub-tab {
+    padding: 5px 16px; font-size: 13px; font-weight: 500;
+    color: #666; background: #f9fafb; border: 1px solid #e5e7eb;
+    cursor: pointer; transition: .15s;
+}
+.my-sub-tab:first-child { border-radius: 5px 0 0 5px; }
+.my-sub-tab:last-child { border-radius: 0 5px 5px 0; }
+.my-sub-tab + .my-sub-tab { border-left: none; }
+.my-sub-tab.active { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+.my-filter-select {
+    padding: 5px 12px; font-size: 13px; border: 1px solid #e5e7eb;
+    border-radius: 5px; color: #555; background: #fff; outline: none;
+}
+.my-filter-search {
+    display: flex; align-items: center; gap: 6px; margin-left: auto;
+}
+.my-filter-search input {
+    padding: 5px 12px; font-size: 13px; border: 1px solid #e5e7eb;
+    border-radius: 5px; outline: none; width: 180px;
+}
+.my-filter-search input:focus { border-color: var(--forest-green); }
+.my-filter-search .btn-query {
+    padding: 5px 16px; font-size: 13px; font-weight: 500;
+    background: var(--forest-green); color: #fff; border: none;
+    border-radius: 5px; cursor: pointer; transition: .15s;
+}
+
+/* ====== 右侧边栏 ====== */
+.sidebar-post-btn {
+    display: block; width: 100%; padding: 14px 0; text-align: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, var(--forest-green), #52b788);
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: .2s; box-shadow: 0 4px 16px rgba(45,106,79,.25);
+    margin-bottom: 20px;
+}
+.sidebar-post-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(45,106,79,.3); }
+
+.sidebar-section {
+    background: #fff; border-radius: 10px; padding: 18px;
+    margin-bottom: 16px; border: 1px solid #f0f2f5;
+}
+.sidebar-section-title {
+    font-size: 15px; font-weight: 700; color: #1a1a2e;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid #f0f2f5;
+}
+.sidebar-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 8px 0; gap: 12px;
+}
+.sidebar-item-text {
+    font-size: 13px; color: #555; flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: pointer; transition: .15s;
+}
+.sidebar-item-text:hover { color: var(--forest-green); }
+.sidebar-item-meta {
+    font-size: 12px; color: #ccc; white-space: nowrap;
+}
+.sidebar-item-author {
+    font-size: 12px; color: #bbb; margin-top: 2px;
+}
+
+/* ====== 响应式 ====== */
+@media (max-width: 900px) {
+    .cm-body { flex-direction: column; }
+    .cm-sidebar { width: 100%; }
+    .board-grid { grid-template-columns: 1fr; }
+}
+    </style>
+</head>
+<body>
+    <nav-bar active="community"></nav-bar>
+
+    <div class="community-wrap">
+        <!-- 顶部Tab栏 -->
+        <div class="cm-tabs-bar">
+            <div class="cm-tabs" id="cmTabs">
+                <div class="cm-tab active" data-tab="boards">板块列表</div>
+                <div class="cm-tab" data-tab="hot">最新热门</div>
+                <div class="cm-tab" data-tab="new">最新发布</div>
+                <div class="cm-tab" data-tab="reply">最新回复</div>
+                <div class="cm-tab" data-tab="best">最新精华</div>
+                <div class="cm-tab" data-tab="first">抢沙发</div>
+                <div class="cm-tab" data-tab="mine">我的帖子</div>
+                <div class="cm-tab" data-tab="fav">我的收藏</div>
+            </div>
+            <div class="cm-stats">
+                今日 <b>2</b><span>昨日 <b>157</b></span><span>帖子 <b>149,335</b></span>
+            </div>
+        </div>
+
+        <div class="cm-body">
+            <!-- 左侧主内容 -->
+            <div class="cm-main">
+
+                <!-- ====== 板块列表 ====== -->
+                <div class="cm-panel active" id="panel-boards">
+                    <div class="section-label">社区公共区</div>
+                    <div class="board-grid">
+                        <div class="board-card">
+                            <div class="board-icon news"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+                            <div class="board-info"><div class="board-name">社区新闻</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div>
+                        </div>
+                        <div class="board-card">
+                            <div class="board-icon announce"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1l5 3V6L5 9H4zm11.5 3A4.5 4.5 0 0013 8.14v7.72c1.48-.73 2.5-2.25 2.5-3.86z"/></svg></div>
+                            <div class="board-info"><div class="board-name">官方公告</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div>
+                        </div>
+                    </div>
+
+                    <div class="section-label">社区交流与讨论</div>
+                    <div class="board-grid">
+                        <div class="board-card"><div class="board-icon provider"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="board-info"><div class="board-name">数据提供方专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon demand"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div><div class="board-info"><div class="board-name">数据需求方专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon resource"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg></div><div class="board-info"><div class="board-name">数据资源专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon product"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h12v12z"/></svg></div><div class="board-info"><div class="board-name">数据产品专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon service"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM5 15h14v3H5z"/></svg></div><div class="board-info"><div class="board-name">数据服务专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon policy"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><div class="board-info"><div class="board-name">政策学习专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    </div>
+
+                    <div class="section-label">社区开发者</div>
+                    <div class="board-grid">
+                        <div class="board-card"><div class="board-icon dev"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-info"><div class="board-name">数据资源申请专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon devprod"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-info"><div class="board-name">数据产品开发专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon scene"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7l-3 4h8l-2.5-3.5-1.5 2z"/></svg></div><div class="board-info"><div class="board-name">应用场景专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon help"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></div><div class="board-info"><div class="board-name">问题求助专区</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    </div>
+
+                    <div class="section-label">其他交流区</div>
+                    <div class="board-grid">
+                        <div class="board-card"><div class="board-icon chat"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></div><div class="board-info"><div class="board-name">开发者杂谈</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon guide"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></div><div class="board-info"><div class="board-name">教程指导</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon share"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div class="board-info"><div class="board-name">个人分享</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                        <div class="board-card"><div class="board-icon hot"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><div class="board-info"><div class="board-name">热门点评</div><div class="board-meta"><span>主题 27</span><span>帖数 1万</span></div><div class="board-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    </div>
+                </div>
+
+                <!-- ====== 最新热门 ====== -->
+                <div class="cm-panel" id="panel-hot">
+                    <div class="post-list">
+                        <div class="post-item">
+                            <div class="post-avatar"><div class="avatar-text">Y</div></div>
+                            <div class="post-content">
+                                <div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">2分钟前</span></div>
+                                <div class="post-title">🔥 数据交易市场还要多少年进入成熟阶段？ <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">数据交易市场还要多少年进入成熟阶段？;</div>
+                                <div class="post-footer"><span class="post-tag">站长杂谈</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 1</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div>
+                            </div>
+                        </div>
+                        <div class="post-item">
+                            <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=Q&background=0ea5e9&color=fff&size=44" alt=""></div>
+                            <div class="post-content">
+                                <div class="post-user-row"><span class="post-username">q18341427</span><span class="post-time">昨天 14:52</span></div>
+                                <div class="post-title">登录提示内部错误，大神给看看这是哪里出问题了 <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">安全提问和密码输入后，提示内部错误，无法显示此内容。</div>
+                                <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 97</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 3</span></div>
+                            </div>
+                        </div>
+                        <div class="post-item">
+                            <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=C&background=f97316&color=fff&size=44" alt=""></div>
+                            <div class="post-content">
+                                <div class="post-user-row"><span class="post-username">cwzlk</span><span class="post-time">28分钟前</span></div>
+                                <div class="post-title">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解？ <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解。试了各种代码，也无法解决，不知道是否有同样问题的人。;调用论坛类模块显示的png图片是正常的，如图1。;调用展示类分类信息，用的是后台编辑的模版...</div>
+                                <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 13</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div>
+                            </div>
+                        </div>
+                        <div class="post-item">
+                            <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=技&background=8b5cf6&color=fff&size=44" alt=""></div>
+                            <div class="post-content">
+                                <div class="post-user-row"><span class="post-username">技术控</span><span class="post-time">昨天 14:49</span></div>
+                                <div class="post-title">注册验证回答，回答正确或错误时，√和×不能正常显示 <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">为了防止机器人注册，设置了注册验证回答，回答正确或错误时，√或×不能正常显示出来，请教一下是什么原因？;</div>
+                                <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 85</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 2</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== 最新发布/最新回复/最新精华/抢沙发 共用帖子列表样式 ====== -->
+                <div class="cm-panel" id="panel-new">
+                    <div class="post-list">
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">数</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">数据小白</span><span class="post-time">5分钟前</span></div><div class="post-title">如何快速申请数据资源？新手求教 <span class="tag-new">New</span></div><div class="post-excerpt">刚注册平台，想申请一些公共数据资源做分析，但不太清楚流程，有没有大佬指导一下？</div><div class="post-footer"><span class="post-tag">数据资源申请专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 5</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=L&background=10b981&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">龙岗开发者</span><span class="post-time">15分钟前</span></div><div class="post-title">数据产品上架审核流程说明 <span class="tag-new">New</span></div><div class="post-excerpt">整理了一份数据产品上架审核的完整流程说明，包含材料准备、审核标准、常见驳回原因等内容，希望对大家有帮助。</div><div class="post-footer"><span class="post-tag">数据产品开发专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 32</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 8</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=W&background=3b82f6&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">王数据</span><span class="post-time">1小时前</span></div><div class="post-title">低空经济数据应用场景探讨</div><div class="post-excerpt">龙岗在低空经济领域的数据应用有哪些创新场景？大家一起来聊聊无人机物流、空中出行等方面的数据需求。</div><div class="post-footer"><span class="post-tag">应用场景专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 67</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 12</span></div></div></div>
+                    </div>
+                </div>
+
+                <div class="cm-panel" id="panel-reply"><div class="post-list"><div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=Z&background=ef4444&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">张三</span><span class="post-time">刚刚</span></div><div class="post-title">关于数据交易合规性的几点建议</div><div class="post-excerpt">最近在研究数据交易的合规问题，整理了几点建议分享给大家，涉及数据分类分级、个人信息保护等方面。</div><div class="post-footer"><span class="post-tag">政策学习专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 156</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 24</span></div></div></div></div></div>
+
+                <div class="cm-panel" id="panel-best"><div class="post-list"><div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=官&background=2d6a4f&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">官方管理员</span><span class="post-time">3天前</span></div><div class="post-title">【精华】龙岗数据聚合服务平台使用指南（2025最新版）</div><div class="post-excerpt">本帖汇总平台所有功能模块的使用教程，包括数据资源申请、数据产品上架、交易流程、会员权益等内容，建议收藏！</div><div class="post-footer"><span class="post-tag">教程指导</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 2,341</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 89</span></div></div></div></div></div>
+
+                <div class="cm-panel" id="panel-first"><div class="post-list"><div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=新&background=f59e0b&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">新手上路</span><span class="post-time">10分钟前</span></div><div class="post-title">CIM数据服务有哪些应用案例？</div><div class="post-excerpt">想了解一下CIM数据服务在城市管理方面的具体应用案例，有没有相关的资料分享？</div><div class="post-footer"><span class="post-tag">应用场景专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 3</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div></div></div></div></div>
+
+                <!-- ====== 我的帖子 ====== -->
+                <div class="cm-panel" id="panel-mine">
+                    <div class="my-filter-bar">
+                        <div class="my-sub-tabs">
+                            <div class="my-sub-tab active">全部</div>
+                            <div class="my-sub-tab">帖子</div>
+                            <div class="my-sub-tab">投票</div>
+                            <div class="my-sub-tab">活动</div>
+                        </div>
+                        <select class="my-filter-select"><option>全部状态</option><option>待审核</option><option>已发布</option><option>审核不通过</option><option>违规删除</option><option>草稿</option></select>
+                        <div class="my-filter-search">
+                            <input type="text" placeholder="标题关键字搜索">
+                            <button class="btn-query">查询</button>
+                        </div>
+                    </div>
+                    <div class="post-list">
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">2分钟前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="pending" data-status-msg="">数据资源申请提交后一直显示"处理中"，请问怎么解决？</div><div class="post-excerpt">各位大佬好，我在平台上申请了一批公共数据资源，提交申请后页面一直显示"处理中"状态，已经过了3天了还是没有变化……</div><div class="post-footer"><span class="post-tag">问题求助专区</span><span class="status-tag pending">待审核</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 156</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">1小时前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="rejected" data-status-msg="内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条">🔥 数据交易市场还要多少年进入成熟阶段？</div><div class="post-excerpt">数据交易市场还要多少年进入成熟阶段？</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag rejected">审核不通过</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 328</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div><div class="post-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条</div></div></div>
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">3小时前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="published" data-status-msg="">活动：数商招募活动</div><div class="post-excerpt">本次数商招募活动以培育壮大数字经济生态下的数据要素市场主体为核心，面向全社会招引具备数据服务能力、数字创新思维的企业与个人数商，共同挖掘数据要素价值，助力数字经济与实体经济深度融合。</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag published">已发布</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 1205</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">昨天 16:20</span><span class="post-actions"><button class="btn-sm">编辑</button><button class="btn-sm danger btn-post-delete">删除</button></span></div><div class="post-title" data-status="deleted" data-status-msg="该帖子因多次被用户举报，经管理员核实，内容含有恶意引导外部链接及虚假数据产品推广信息，违反《社区管理条例》第8条，已做删除处理">数据交易市场分析</div><div class="post-excerpt">中国数据交易市场正处于政策驱动、规模扩容、生态升级的关键期，2024 年交易规模约 2115.4 亿元，2025 年预计达 2840.9 亿元，呈现"场内场外并行、合规与创新双驱"的格局。</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag deleted">违规删除</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 89</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 3</span></div><div class="post-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>该帖子因多次被用户举报，经管理员核实，内容含有恶意引导外部链接及虚假数据产品推广信息，违反《社区管理条例》第8条，已做删除处理</div></div></div>
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">前天 10:30</span><span class="post-actions"><button class="btn-sm">编辑</button><button class="btn-sm danger btn-post-delete">删除</button></span></div><div class="post-title" data-status="draft" data-status-msg="">龙岗区数据要素产业发展报告（草稿）</div><div class="post-excerpt">龙岗区数据要素产业发展报告，涵盖政策环境、市场规模、产业生态、典型案例等维度的深度分析……</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag draft">草稿</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 0</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div></div></div>
+                    </div>
+                </div>
+
+                <!-- ====== 我的收藏 ====== -->
+                <div class="cm-panel" id="panel-fav">
+                    <div class="post-list">
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=C&background=f97316&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">cwzlk</span><span class="post-time">28分钟前</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解？ <span class="tag-new">New</span></div><div class="post-excerpt">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解。试了各种代码，也无法解决，不知道是否有同样问题的人。;调用论坛类模块显示的png图片是正常的...</div><div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 13</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=技&background=8b5cf6&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">技术控</span><span class="post-time">昨天 14:49</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">注册验证回答，回答正确或错误时，√和×不能正常显示 <span class="tag-new">New</span></div><div class="post-excerpt">为了防止机器人注册，设置了注册验证回答，回答正确或错误时，√或×不能正常显示出来，请教一下是什么原因？;</div><div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 85</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 2</span></div></div></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 右侧边栏 -->
+            <div class="cm-sidebar">
+                <a href="community-post.html" class="sidebar-post-btn" style="text-decoration:none">+ 我要发帖</a>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">官方公告</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗发布 AICity 标杆城区解决方案，"4T 数字生活空间"落地</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张三</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗区数据公司 GPU 算力服务器项目启动采购</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">李四</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">深创赛国际赛粤照明项目 Nobula 落户龙岗</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张丽</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗南湾 15 万㎡商办综合体及文体设施年内开工</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">王朝</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗区七届人大七次会议召开，锁定"四有"城区目标</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">周磊</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗两会聚焦 AI 与产业融合，打造数字孪生城区</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张强</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗明确"十五五"产业目标，AI 产业规模冲刺千亿</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">李振</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗区发布数据要素市场化配置改革实施方案</span><span class="sidebar-item-meta">98 回答</span></div><div class="sidebar-item-author">赵磊</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗可信数据空间通过国家级安全认证</span><span class="sidebar-item-meta">87 回答</span></div><div class="sidebar-item-author">刘洋</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗数据交易平台累计交易额突破 10 亿元</span><span class="sidebar-item-meta">76 回答</span></div><div class="sidebar-item-author">陈华</div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">社区新闻</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">深圳龙岗等三区启动租房帮扶政策</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张三</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗启动"人机元旦节"，推出 7 条特色 Citywalk 线路</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">李四</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗龙城 CC 创意街区举办文创跨年市集</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张丽</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗"虚拟社区"入选广东省"百千万工程"典型案例</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">王朝</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗获全国智慧医保大赛一等奖</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">周磊</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗以"AI + 数据要素 ×"赋能工业场景</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">张强</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗发布 564 个 AI 场景清单，建"超级试验场"</span><span class="sidebar-item-meta">126 回答</span></div><div class="sidebar-item-author">李振</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗坂田街道打造数字经济产业高地</span><span class="sidebar-item-meta">108 回答</span></div><div class="sidebar-item-author">赵磊</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗区"数字政府"建设经验获全省推广</span><span class="sidebar-item-meta">95 回答</span></div><div class="sidebar-item-author">刘洋</div>
+                    <div class="sidebar-item"><span class="sidebar-item-text">龙岗大运新城智慧园区项目正式启用</span><span class="sidebar-item-meta">82 回答</span></div><div class="sidebar-item-author">陈华</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <script>
+    // Tab切换
+    var tabs = document.querySelectorAll('#cmTabs .cm-tab');
+    var panelMap = { boards: 'panel-boards', hot: 'panel-hot', new: 'panel-new', reply: 'panel-reply', best: 'panel-best', first: 'panel-first', mine: 'panel-mine', fav: 'panel-fav' };
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            Object.values(panelMap).forEach(function(id) {
+                document.getElementById(id).classList.remove('active');
+            });
+            document.getElementById(panelMap[tab.dataset.tab]).classList.add('active');
+        });
+    });
+
+    // hash跳转支持（如 #mine）
+    function activateTabByHash() {
+        var hash = location.hash.replace('#', '');
+        if (hash && panelMap[hash]) {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.cm-panel').forEach(function(p) { p.classList.remove('active'); });
+            var target = document.querySelector('.cm-tab[data-tab="' + hash + '"]');
+            if (target) target.classList.add('active');
+            document.getElementById(panelMap[hash]).classList.add('active');
+        }
+    }
+    activateTabByHash();
+    window.addEventListener('hashchange', activateTabByHash);
+
+    // 我的帖子子tab
+    var subTabs = document.querySelectorAll('.my-sub-tab');
+    subTabs.forEach(function(st) {
+        st.addEventListener('click', function() {
+            subTabs.forEach(function(s) { s.classList.remove('active'); });
+            st.classList.add('active');
+        });
+    });
+
+    // 板块卡片点击跳转（传递板块名称）
+    document.querySelectorAll('.board-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            var name = card.querySelector('.board-name').textContent.trim();
+            window.location.href = 'community-board.html?board=' + encodeURIComponent(name);
+        });
+    });
+
+    // 帖子标题点击跳转详情（根据标题内容判断类型，带来源参数和状态参数）
+    document.querySelectorAll('.post-title').forEach(function(title) {
+        title.addEventListener('click', function() {
+            var text = title.textContent.trim();
+            var type = 'post';
+            if (text.indexOf('数据交易市场还要多少年') !== -1) type = 'vote';
+            else if (text.indexOf('数商招募活动') !== -1) type = 'activity';
+            var activeTab = document.querySelector('.cm-tab.active');
+            var hash = activeTab ? (activeTab.dataset.tab || '') : '';
+            var from = 'community.html' + (hash ? '#' + hash : '');
+            var url = 'community-detail.html?type=' + type + '&from=' + encodeURIComponent(from);
+            var status = title.getAttribute('data-status');
+            var statusMsg = title.getAttribute('data-status-msg');
+            if (status) url += '&status=' + encodeURIComponent(status);
+            if (statusMsg) url += '&statusMsg=' + encodeURIComponent(statusMsg);
+            window.location.href = url;
+        });
+    });
+
+    // 我的帖子 — 删除按钮确认提示
+    document.querySelectorAll('.btn-post-delete').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var postItem = btn.closest('.post-item');
+            var titleEl = postItem ? postItem.querySelector('.post-title') : null;
+            var text = titleEl ? titleEl.textContent.trim() : '';
+            GlobalDialog.danger({
+                title: '确认删除',
+                desc: '<div style="display:flex;align-items:baseline;white-space:nowrap"><span>您确定要删除【</span><span style="display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + text + '</span><span>】的记录吗？</span></div><div style="color:#aaa;font-size:12px;margin-top:6px">删除后该帖子将无法恢复</div>',
+                confirmText: '确认删除',
+                cancelText: '取 消',
+                onConfirm: function() {
+                    postItem.style.transition = 'opacity .3s, max-height .3s';
+                    postItem.style.opacity = '0';
+                    setTimeout(function() {
+                        postItem.style.maxHeight = '0';
+                        postItem.style.overflow = 'hidden';
+                        postItem.style.padding = '0';
+                        postItem.style.margin = '0';
+                        postItem.style.borderBottom = 'none';
+                    }, 300);
+                    setTimeout(function() {
+                        GlobalDialog.success({ title: '删除成功', desc: '帖子已成功删除' });
+                    }, 400);
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

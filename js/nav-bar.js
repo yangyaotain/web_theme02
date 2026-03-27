@@ -73,7 +73,7 @@ class NavBar extends HTMLElement {
             { id: 'data-space',     label: '可信数据空间', href: 'data-space.html' },
             { id: 'consulting',     label: '数据咨询服务', href: 'data-consulting.html' },
             { id: 'solutions',      label: '行业解决方案', href: 'industry-solutions.html' },
-            { id: 'community',      label: '数据社区',     href: '#' },
+            { id: 'community',      label: '数据社区',     href: 'community.html' },
             { id: 'policy',         label: '政策资讯',     href: 'policy-news.html' },
             { id: 'help',           label: '帮助中心',     href: 'help-center.html' },
         ];
@@ -201,7 +201,7 @@ class NavBar extends HTMLElement {
     z-index: 100;
 }
 .nav-container {
-    max-width: 1920px; height: 100%; margin: 0 auto; padding: 0 32px;
+    max-width: var(--content-max-width); height: 100%; margin: 0 auto; padding: 0 32px;
     display: flex; align-items: center; justify-content: space-between;
 }
 

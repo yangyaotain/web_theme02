@@ -199,7 +199,7 @@ web_theme02/
 | 类名 | 说明 |
 |------|------|
 | `.g-page-wrapper` | 页面顶层容器（含 padding-top: 72px 避让导航栏） |
-| `.g-container` | 内容容器（max-width: 1920px + 左右间距） |
+| `.g-container` | 内容容器（max-width: var(--content-max-width) + 左右间距） |
 | `.g-container--pb` | 追加底部间距 |
 | `.g-card` | 白色卡片容器（圆角 + 边框 + 内边距） |
 
