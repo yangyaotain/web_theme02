@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据社区管理 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+    /* ====== 双栏布局 ====== */
+    .cms-layout { display: flex; gap: 0; height: calc(100vh - 64px); }
+    .cms-module-list {
+        width: 160px; flex-shrink: 0; background: #fff;
+        border-right: 1px solid #e4e7ed; overflow-y: auto;
+    }
+    .cms-module-title {
+        font-size: 13px; font-weight: 600; color: #909399;
+        padding: 16px 16px 8px; letter-spacing: .03em;
+    }
+    .cms-module-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 16px; font-size: 13px; color: #606266;
+        cursor: pointer; transition: .15s; border-left: 3px solid transparent;
+    }
+    .cms-module-item:hover { color: var(--forest-green); background: #f5f7fa; }
+    .cms-module-item.active { color: var(--forest-green); font-weight: 600; background: #e8f5e9; border-left-color: var(--forest-green); }
+    .cms-module-badge {
+        font-size: 11px; color: #fff; background: #f56c6c; border-radius: 10px;
+        padding: 1px 6px; min-width: 18px; text-align: center; line-height: 16px;
+    }
+    .cms-content { flex: 1; min-width: 0; overflow-y: auto; padding: 24px 28px; background: #f5f7fa; }
+    .cms-panel { display: none; }
+    .cms-panel.active { display: block; }
+
+    /* ====== 板块管理右侧栏 ====== */
+    .board-sidebar { width: 280px; flex-shrink: 0; }
+    .board-sidebar-section {
+        background: #fff; border-radius: 8px; padding: 16px;
+        margin-bottom: 16px; border: 1px solid #ebeef5;
+    }
+    .board-sidebar-title {
+        font-size: 14px; font-weight: 700; color: #303133;
+        padding-bottom: 10px; border-bottom: 1px solid #f0f2f5;
+        margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .board-sidebar-config {
+        font-size: 12px; font-weight: 400; color: var(--forest-green); cursor: pointer;
+    }
+    .board-sidebar-config:hover { text-decoration: underline; }
+    .board-sidebar-item {
+        display: flex; align-items: flex-start; justify-content: space-between;
+        padding: 6px 0; border-bottom: 1px solid #fafafa; gap: 8px;
+    }
+    .board-sidebar-text {
+        flex: 1; font-size: 12px; color: #606266; line-height: 1.5;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .board-sidebar-meta {
+        font-size: 11px; color: #909399; white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* ====== 板块管理 ====== */
+    .board-group { margin-bottom: 28px; }
+    .board-group-header {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+        padding-bottom: 12px; border-bottom: 1px solid #e4e7ed;
+    }
+    .board-group-name { font-size: 16px; font-weight: 700; color: #303133; }
+    .board-group-edit {
+        width: 20px; height: 20px; border: none; background: none; cursor: pointer;
+        color: #909399; display: flex; align-items: center; justify-content: center;
+        border-radius: 3px; transition: .15s; flex-shrink: 0;
+    }
+    .board-group-edit:hover { color: var(--forest-green); background: #e8f5e9; }
+    .board-group-edit svg { width: 14px; height: 14px; }
+    .board-group-name-input {
+        font-size: 16px; font-weight: 700; color: #303133; border: none;
+        border-bottom: 2px solid var(--forest-green); outline: none; background: transparent;
+        padding: 0 0 2px; width: auto; min-width: 60px;
+    }
+    .board-group-actions { margin-left: auto; display: flex; gap: 8px; }
+    .btn-add-sm {
+        padding: 4px 12px; font-size: 12px; color: var(--forest-green); background: #e8f5e9;
+        border: 1px solid #a5d6b8; border-radius: 4px; cursor: pointer; transition: .15s;
+    }
+    .btn-add-sm:hover { background: var(--forest-green); color: #fff; }
+    .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .board-card {
+        display: flex; gap: 14px; padding: 16px; background: #fff;
+        border-radius: 8px; border: 1px solid #ebeef5;
+        box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: .15s;
+    }
+    .board-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .board-card-icon {
+        width: 52px; height: 52px; flex-shrink: 0; border-radius: 8px;
+        background: var(--forest-green); display: flex; align-items: center; justify-content: center;
+    }
+    .board-card-icon svg { width: 28px; height: 28px; color: #fff; }
+    .board-card-body { flex: 1; min-width: 0; }
+    .board-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .board-card-name { font-size: 14px; font-weight: 600; color: #303133; }
+    .board-card-ops { display: flex; gap: 8px; }
+    .board-card-ops span {
+        font-size: 12px; padding: 2px 8px; border-radius: 3px; cursor: pointer; transition: .15s;
+    }
+    .board-card-ops .op-edit { color: var(--forest-green); background: #e8f5e9; }
+    .board-card-ops .op-edit:hover { background: var(--forest-green); color: #fff; }
+    .board-card-ops .op-del { color: #f56c6c; background: #fef0f0; }
+    .board-card-ops .op-del:hover { background: #f56c6c; color: #fff; }
+    .board-card-stats { font-size: 12px; color: #909399; margin-bottom: 6px; }
+    .board-card-stats span { margin-right: 10px; }
+    .board-card-desc { font-size: 12px; color: #b0b3b8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .board-sort-tip {
+        margin-bottom: 20px; padding: 12px 16px; background: #fffbe6;
+        border: 1px solid #ffe58f; border-radius: 6px; font-size: 12px; color: #d48806; line-height: 1.8;
+    }
+    .board-sort-tip strong { color: #ad6800; }
+
+    /* ====== 内容管理 / 审核 / 违规 通用 ====== */
+    .content-layout { display: flex; gap: 0; height: calc(100vh - 64px - 48px - 48px); min-height: 500px; }
+    .tree-sidebar {
+        width: 220px; flex-shrink: 0; background: #fff; border-right: 1px solid #e4e7ed;
+        overflow-y: auto; padding: 12px 0;
+    }
+    .tree-search {
+        margin: 0 12px 10px; padding: 6px 10px; font-size: 12px;
+        border: 1px solid #dcdfe6; border-radius: 4px; width: calc(100% - 24px);
+    }
+    .tree-search:focus { outline: none; border-color: var(--forest-green); }
+    .tree-group {
+        padding: 6px 12px 2px 10px; font-size: 13px; font-weight: 600; color: #303133;
+        cursor: pointer; display: flex; align-items: center; gap: 5px; user-select: none;
+    }
+    .tree-group svg:first-child { width: 12px; height: 12px; color: #909399; transition: .15s; flex-shrink: 0; }
+    .tree-group.open > svg:first-child { transform: rotate(90deg); }
+    .tree-group-icon { width: 16px; height: 16px; color: #e6a23c; flex-shrink: 0; }
+    .tree-children { padding-left: 0; }
+    .tree-item {
+        padding: 5px 12px 5px 40px; font-size: 12px; color: #606266; cursor: pointer;
+        border-radius: 4px; display: flex; align-items: center; gap: 5px; transition: .1s;
+    }
+    .tree-item:hover { background: #f5f7fa; color: var(--forest-green); }
+    .tree-item.active { background: #e8f5e9; color: var(--forest-green); font-weight: 600; }
+    .tree-item svg { width: 14px; height: 14px; color: #e6a23c; flex-shrink: 0; }
+    .tree-item .tree-count { display: none; }
+    .content-main { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .content-title { font-size: 16px; font-weight: 700; color: #303133; padding: 16px 20px 0; }
+    .content-tabs {
+        display: flex; gap: 0; padding: 0 20px; border-bottom: 1px solid #e4e7ed;
+    }
+    .content-tab {
+        padding: 10px 20px; font-size: 13px; color: #606266; cursor: pointer;
+        border-bottom: 2px solid transparent; transition: .15s;
+    }
+    .content-tab:hover { color: var(--forest-green); }
+    .content-tab.active { color: var(--forest-green); font-weight: 600; border-bottom-color: var(--forest-green); }
+    .content-hint {
+        margin: 12px 20px 0; padding: 8px 14px; background: #fffbe6;
+        border: 1px solid #ffe58f; border-radius: 4px; font-size: 12px; color: #d48806;
+    }
+    .content-filter {
+        display: flex; align-items: center; gap: 8px; padding: 12px 20px; flex-wrap: wrap;
+    }
+    .filter-btn-group { display: flex; gap: 0; }
+    .filter-btn {
+        padding: 5px 12px; font-size: 12px; border: 1px solid #dcdfe6; background: #fff;
+        color: #606266; cursor: pointer; transition: .15s;
+    }
+    .filter-btn:first-child { border-radius: 4px 0 0 4px; }
+    .filter-btn:last-child { border-radius: 0 4px 4px 0; }
+    .filter-btn + .filter-btn { margin-left: -1px; }
+    .filter-btn:hover { color: var(--forest-green); border-color: var(--forest-green); z-index: 1; }
+    .filter-btn.primary { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+    .filter-btn.btn-op-orange { color: #e6a23c; }
+    .filter-btn.btn-op-orange:hover { color: #e6a23c; border-color: #e6a23c; background: #fdf0e2; z-index: 1; }
+    .filter-btn.btn-op-green { color: #67c23a; }
+    .filter-btn.btn-op-green:hover { color: #67c23a; border-color: #67c23a; background: #e8f5e9; z-index: 1; }
+    .filter-btn.btn-op-blue { color: var(--forest-green); }
+    .filter-btn.btn-op-blue:hover { color: var(--forest-green); border-color: var(--forest-green); background: #e8f5e9; z-index: 1; }
+    .filter-btn.btn-op-purple { color: #722ed1; }
+    .filter-btn.btn-op-purple:hover { color: #722ed1; border-color: #722ed1; background: #f3e8ff; z-index: 1; }
+    .filter-btn.danger { background: #fff; color: #f56c6c; border-color: #dcdfe6; }
+    .filter-btn.danger:hover { color: #f56c6c; border-color: #f56c6c; background: #fef0f0; z-index: 1; }
+    .filter-btn.warning { background: #e6a23c; color: #fff; border-color: #e6a23c; }
+    .filter-select {
+        padding: 5px 10px; font-size: 12px; border: 1px solid #dcdfe6;
+        border-radius: 4px; color: #606266; background: #fff;
+    }
+    .filter-input {
+        padding: 5px 10px; font-size: 12px; border: 1px solid #dcdfe6;
+        border-radius: 4px; width: 180px; color: #606266;
+    }
+    .filter-input:focus, .filter-select:focus { outline: none; border-color: var(--forest-green); }
+    .btn-query {
+        padding: 5px 20px; font-size: 12px; background: var(--forest-green); color: #fff;
+        border: none; border-radius: 4px; cursor: pointer;
+    }
+    .btn-query:hover { background: #15803d; }
+    .filter-sep { width: 1px; height: 20px; background: #e4e7ed; margin: 0 4px; }
+    .filter-label { font-size: 12px; color: #909399; }
+    .content-table-wrap { flex: 1; overflow: auto; padding: 0 20px; }
+    .cm-table {
+        width: 100%; border-collapse: collapse; font-size: 12px;
+    }
+    .cm-table th {
+        position: sticky; top: 0; background: #fafbfc; padding: 10px 8px;
+        text-align: left; font-weight: 600; color: #606266;
+        border-bottom: 2px solid #e4e7ed; white-space: nowrap; z-index: 1;
+    }
+    .cm-table td {
+        padding: 10px 8px; border-bottom: 1px solid #ebeef5; color: #303133;
+        vertical-align: middle;
+    }
+    .cm-table tr:hover td { background: #f5f7fa; }
+    .cm-table .col-ck { width: 32px; text-align: center; }
+    .cm-table .col-op { white-space: nowrap; }
+    .cm-table .col-op a { color: var(--forest-green); cursor: pointer; margin-right: 8px; }
+    .cm-table .col-op a:hover { text-decoration: underline; }
+    .cm-table .col-op a.danger { color: #f56c6c; }
+    .tag-sm {
+        display: inline-block; padding: 1px 6px; border-radius: 3px;
+        font-size: 11px; margin-right: 4px; white-space: nowrap;
+    }
+    .tag-orange { background: #fdf0e2; color: #e6a23c; }
+    .tag-green { background: #e8f5e9; color: #67c23a; }
+    .tag-blue { background: #e8f5e9; color: var(--forest-green); }
+    .tag-red { background: #fef0f0; color: #f56c6c; }
+    .tag-yellow { background: #fffbe6; color: #d48806; }
+    .tag-gray { background: #f0f2f5; color: #909399; }
+    .tag-purple { background: #f3e8ff; color: #722ed1; }
+    .tag-cyan { background: #e6fffb; color: #13c2c2; }
+    .cm-pagination {
+        display: flex; align-items: center; justify-content: center;
+        gap: 6px; padding: 16px 20px; font-size: 12px; color: #606266;
+        border-top: 1px solid #ebeef5; flex-shrink: 0;
+    }
+    .cm-pagination span { white-space: nowrap; }
+    .cm-page-btn {
+        min-width: 28px; height: 28px; padding: 0 6px;
+        border: 1px solid #dcdfe6; background: #fff; border-radius: 4px;
+        font-size: 12px; color: #606266; cursor: pointer; transition: .15s;
+    }
+    .cm-page-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
+    .cm-page-btn.active { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+    .cm-page-select {
+        padding: 4px 6px; border: 1px solid #dcdfe6; border-radius: 4px;
+        font-size: 12px; color: #606266;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ====== 禁用账号 ====== */
+    .ban-top-actions { display: flex; gap: 8px; padding: 0 0 12px; }
+    .ban-top-actions .filter-btn { padding: 6px 16px; font-size: 13px; }
+    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    .status-dot.red { background: #f56c6c; }
+    .status-dot.green { background: #67c23a; }
+    .ban-remark { font-size: 11px; color: #f56c6c; }
+
+    /* ====== 添加板块弹窗 ====== */
+    .board-modal-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .board-modal-mask.show { display: flex; }
+    .board-modal {
+        width: 680px; max-height: 90vh; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18);
+        display: flex; flex-direction: column;
+    }
+    .board-modal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .board-modal-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .board-modal-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        color: #bbb; display: flex; align-items: center; justify-content: center;
+        border-radius: 4px; transition: .15s;
+    }
+    .board-modal-close:hover { background: #f5f5f5; color: #333; }
+    .board-modal-close svg { width: 18px; height: 18px; }
+    .board-modal-body { padding: 24px; overflow-y: auto; flex: 1; min-height: 0; }
+    .bm-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+    .bm-row:last-child { margin-bottom: 0; }
+    .bm-label {
+        width: 80px; flex-shrink: 0; font-size: 13px; color: #606266;
+        line-height: 32px; text-align: right; padding-right: 12px;
+    }
+    .bm-label .req { color: #f56c6c; margin-right: 2px; }
+    .bm-value { flex: 1; min-width: 0; }
+    .bm-input {
+        width: 100%; padding: 6px 12px; font-size: 13px; border: 1px solid #dcdfe6;
+        border-radius: 4px; color: #303133; transition: .15s;
+    }
+    .bm-input:focus { outline: none; border-color: var(--forest-green); }
+    .bm-textarea {
+        width: 100%; padding: 8px 12px; font-size: 13px; border: 1px solid #dcdfe6;
+        border-radius: 4px; color: #303133; resize: vertical; min-height: 70px;
+        font-family: inherit; transition: .15s;
+    }
+    .bm-textarea:focus { outline: none; border-color: var(--forest-green); }
+    .bm-upload {
+        width: 80px; height: 80px; border: 1px dashed #dcdfe6; border-radius: 6px;
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer; color: #c0c4cc; font-size: 28px; transition: .15s;
+        background: #fafbfc; vertical-align: middle;
+    }
+    .bm-upload:hover { border-color: var(--forest-green); color: var(--forest-green); }
+    .bm-upload-hint { display: inline-block; vertical-align: middle; margin-left: 12px; font-size: 12px; color: #909399; }
+    .bm-checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; line-height: 32px; }
+    .bm-checkbox-group label {
+        display: flex; align-items: center; gap: 6px; font-size: 13px; color: #606266; cursor: pointer;
+    }
+    .bm-checkbox-group input[type="checkbox"] {
+        width: 16px; height: 16px; accent-color: var(--forest-green);
+    }
+    .board-modal-footer {
+        display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .btn-bm-submit {
+        padding: 8px 28px; font-size: 13px; background: var(--forest-green); color: #fff;
+        border: none; border-radius: 4px; cursor: pointer; transition: .15s;
+    }
+    .btn-bm-submit:hover { background: #15803d; }
+    .btn-bm-cancel {
+        padding: 8px 28px; font-size: 13px; background: #fff; color: #606266;
+        border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; transition: .15s;
+    }
+    .btn-bm-cancel:hover { border-color: #c0c4cc; }
+
+    /* ====== 板块配置弹窗 ====== */
+    .scfg-modal-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .scfg-modal-mask.show { display: flex; }
+    .scfg-modal {
+        width: 580px; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18);
+        display: flex; flex-direction: column; max-height: 90vh;
+    }
+    .scfg-modal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .scfg-modal-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .scfg-modal-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        color: #bbb; display: flex; align-items: center; justify-content: center;
+        border-radius: 4px; transition: .15s;
+    }
+    .scfg-modal-close:hover { background: #f5f5f5; color: #333; }
+    .scfg-modal-close svg { width: 18px; height: 18px; }
+    .scfg-modal-body { padding: 24px; overflow-y: auto; flex: 1; min-height: 0; }
+    .scfg-modal-footer {
+        display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .scfg-row { display: flex; align-items: flex-start; }
+    .scfg-label {
+        width: 80px; flex-shrink: 0; font-size: 13px; color: #606266;
+        line-height: 34px; text-align: right; padding-right: 12px; white-space: nowrap;
+    }
+    .scfg-label .req { color: #f56c6c; margin-right: 2px; }
+    .scfg-value { flex: 1; min-width: 0; position: relative; }
+    .scfg-select {
+        width: 100%; height: 34px; padding: 0 32px 0 12px; font-size: 13px;
+        border: 1px solid #dcdfe6; border-radius: 4px; color: #303133;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23909399' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E") right 10px center no-repeat;
+        cursor: pointer; outline: none; transition: .15s; appearance: none; -webkit-appearance: none;
+        display: flex; align-items: center;
+    }
+    .scfg-select:focus { border-color: var(--forest-green); }
+    .scfg-dropdown {
+        display: none; position: fixed; z-index: 10001;
+        background: #fff; border: 1px solid #dcdfe6; border-radius: 4px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.15); max-height: 360px;
+        overflow-y: auto; flex-direction: column;
+    }
+    .scfg-dropdown.show { display: flex; }
+    .scfg-dropdown-search {
+        display: flex; align-items: center; padding: 8px 10px;
+        border-bottom: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .scfg-dropdown-search input {
+        flex: 1; border: 1px solid #dcdfe6; border-radius: 4px;
+        padding: 5px 10px; font-size: 12px; color: #303133; outline: none;
+    }
+    .scfg-dropdown-search input:focus { border-color: var(--forest-green); }
+    .scfg-dropdown-search svg {
+        width: 16px; height: 16px; color: var(--forest-green); margin-left: 6px; flex-shrink: 0; cursor: pointer;
+    }
+    .scfg-tree { padding: 6px 0; }
+    .scfg-tree-group {
+        display: flex; align-items: center; gap: 4px; padding: 5px 10px;
+        font-size: 13px; font-weight: 600; color: #303133; cursor: pointer;
+    }
+    .scfg-tree-group:hover { background: #f5f7fa; }
+    .scfg-tree-group .tg-toggle {
+        width: 14px; height: 14px; font-size: 12px; color: #909399;
+        display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .scfg-tree-group .tg-icon {
+        width: 18px; height: 18px; color: #e6a23c; flex-shrink: 0;
+    }
+    .scfg-tree-children { }
+    .scfg-tree-item {
+        display: flex; align-items: center; gap: 4px;
+        padding: 5px 10px 5px 36px; font-size: 13px; color: #606266; cursor: pointer;
+    }
+    .scfg-tree-item:hover { background: #f5f7fa; color: var(--forest-green); }
+    .scfg-tree-item.selected { background: #e8f5e9; color: var(--forest-green); font-weight: 600; }
+    .scfg-tree-item .ti-icon {
+        width: 16px; height: 16px; color: #e6a23c; flex-shrink: 0;
+    }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="#" class="topbar-nav-item">运维中心</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">运营中心</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>平台概览</span>
+                </a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>用户管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a class="sidebar-item disabled"><span>用户列表</span></a>
+                    <a class="sidebar-item disabled"><span>角色管理</span></a>
+                </div>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg><span>连接器管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>数据目录审批</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><span>数据目录监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg><span>订单合同监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>数据交付监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg><span>交易费用监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>费用管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>可信存证</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6v-4zm6-6h4v3h-4V7zM6 7h5v5H6V7zm6 4h4v6h-4v-6z"/></svg><span>开发工具监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg><span>数据专区配置</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>供需管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    <span>会员管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="operation-center.html" class="sidebar-item"><span>会员审核</span></a>
+                    <a href="member-manage.html" class="sidebar-item"><span>会员管理</span></a>
+                    <a href="member-system.html" class="sidebar-item"><span>会员体系</span></a>
+                </div>
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub">
+                    <a href="cms-portal.html" class="sidebar-item"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html" class="sidebar-item active"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content" style="padding:0;">
+            <div class="cms-layout">
+                <!-- 模块列表 -->
+                <div class="cms-module-list">
+                    <div class="cms-module-title">模块列表</div>
+                    <div class="cms-module-item active" data-panel="board">板块管理</div>
+                    <div class="cms-module-item" data-panel="content">内容管理</div>
+                    <div class="cms-module-item" data-panel="audit">内容审核 <span class="cms-module-badge">10</span></div>
+                    <div class="cms-module-item" data-panel="violation">违规管理 <span class="cms-module-badge">8</span></div>
+                    <div class="cms-module-item" data-panel="ban">禁用账号 <span class="cms-module-badge">6</span></div>
+                </div>
+
+                <div class="cms-content">
+
+<!-- ========================================== -->
+<!-- ====== 1. 板块管理 ====== -->
+<!-- ========================================== -->
+<div class="cms-panel active" id="panel-board">
+    <div style="display:flex;gap:24px;">
+        <div style="flex:1;min-width:0;">
+            <div class="board-group">
+                <div class="board-group-header">
+                    <span class="board-group-name">社区公共区</span>
+                    <button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+                    <div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div>
+                </div>
+                <div class="board-grid">
+                    <div class="board-card"><div class="board-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">社区新闻</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#67c23a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">官方公告</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                </div>
+            </div>
+            <div class="board-group">
+                <div class="board-group-header"><span class="board-group-name">社区交流与讨论</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-grid">
+                    <div class="board-card"><div class="board-card-icon" style="background:#20A565"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据提供方专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#e6a23c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据需求方专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#9254de"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据资源专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#36cfc9"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h12v12z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据产品专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#597ef7"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM5 15h14v3H5z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据服务专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#f759ab"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">政策学习专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                </div>
+            </div>
+            <div class="board-group">
+                <div class="board-group-header"><span class="board-group-name">社区开发者</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-grid">
+                    <div class="board-card"><div class="board-card-icon" style="background:#73d13d"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据资源申请专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#ff7a45"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据产品开发专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#ffc53d"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7l-3 4h8l-2.5-3.5-1.5 2z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">应用场景专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#ff4d4f"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">问题求助专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                </div>
+            </div>
+            <div class="board-group">
+                <div class="board-group-header"><span class="board-group-name">其他交流区</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-grid">
+                    <div class="board-card"><div class="board-card-icon" style="background:#722ed1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">开发者杂谈</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#13c2c2"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">教程指导</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#eb2f96"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">个人分享</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                    <div class="board-card"><div class="board-card-icon" style="background:#faad14"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">热门点评</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="board-sidebar">
+            <div class="board-sidebar-section">
+                <div class="board-sidebar-title">官方公告 <a class="board-sidebar-config">配置</a></div>
+                <div class="board-sidebar-list">
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗发布 AICity 标杆城区解决方案，"4T 数字生活空间"落地</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗区数据公司 GPU 算力服务器项目启动采购</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">深创赛国际赛粤照明项目 Nobula 落户龙岗</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗南湾 15 万㎡商办综合体及文体设施年内开工</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗区七届人大七次会议召开，锁定"四有"城区目标</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗两会聚焦 AI 与产业融合，打造数字孪生城区</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗明确"十五五"产业目标，AI 产业规模冲刺千亿</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗区发布数据要素市场化配置改革实施方案</span><span class="board-sidebar-meta">98 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗可信数据空间通过国家级安全认证</span><span class="board-sidebar-meta">87 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗数据交易平台累计交易额突破 10 亿元</span><span class="board-sidebar-meta">76 回答</span></div>
+                </div>
+            </div>
+            <div class="board-sidebar-section">
+                <div class="board-sidebar-title">社区新闻 <a class="board-sidebar-config">配置</a></div>
+                <div class="board-sidebar-list">
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">深圳龙岗等三区启动租房帮扶政策</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗启动"人机元旦节"，推出 7 条特色 Citywalk 线路</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗龙城 CC 创意街区举办文创跨年市集</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗"虚拟社区"入选广东省"百千万工程"典型案例</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗获全国智慧医保大赛一等奖</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗以"AI + 数据要素 ×"赋能工业场景</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗发布 564 个 AI 场景清单，建"超级试验场"</span><span class="board-sidebar-meta">126 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗坂田街道打造数字经济产业高地</span><span class="board-sidebar-meta">108 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗区"数字政府"建设经验获全省推广</span><span class="board-sidebar-meta">95 回答</span></div>
+                    <div class="board-sidebar-item"><span class="board-sidebar-text">龙岗大运新城智慧园区项目正式启用</span><span class="board-sidebar-meta">82 回答</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- ====== 2. 内容管理 ====== -->
+<!-- ========================================== -->
+<div class="cms-panel" id="panel-content" style="height:100%;display:none;">
+    <div class="content-title">数据社区-内容管理</div>
+    <div style="display:flex;flex:1;overflow:hidden;">
+        <div class="tree-sidebar">
+            <input type="text" class="tree-search" placeholder="关键字搜索">
+            <div class="tree-group open" onclick="this.classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                <svg class="tree-group-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                社区公共区
+            </div>
+            <div class="tree-children">
+                <div class="tree-item active"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 社区新闻 <span class="tree-count">(12)</span></div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 官方公告 <span class="tree-count">(8)</span></div>
+            </div>
+            <div class="tree-group open" onclick="this.classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                <svg class="tree-group-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                社区交流与讨论
+            </div>
+            <div class="tree-children">
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据提供方专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据需求方专区 <span class="tree-count">(12)</span></div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据资源专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据产品专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据服务专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 政策学习专区</div>
+            </div>
+            <div class="tree-group" onclick="this.classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                <svg class="tree-group-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                社区开发者
+            </div>
+            <div class="tree-children" style="display:none">
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据资源申请专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 数据产品开发专区</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 应用场景专区</div>
+            </div>
+            <div class="tree-group" onclick="this.classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                <svg class="tree-group-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                其他交流区
+            </div>
+            <div class="tree-children" style="display:none">
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 开发者杂谈</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 教程指导</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 个人分享</div>
+                <div class="tree-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 热门点评</div>
+            </div>
+        </div>
+        <div class="content-main">
+            <div class="content-filter">
+                <div class="filter-btn-group">
+                    <button class="filter-btn btn-op-orange" data-act="mark" data-label="置顶">置顶</button><button class="filter-btn btn-op-green" data-act="mark" data-label="精华">精华</button><button class="filter-btn btn-op-blue" data-act="mark" data-label="推荐">推荐</button><button class="filter-btn btn-op-purple" data-act="mark" data-label="高亮">高亮</button><button class="filter-btn" data-act="close">关闭</button><button class="filter-btn" data-act="open">打开</button><button class="filter-btn" data-act="move">移动</button><button class="filter-btn danger" data-act="delete">删除</button>
+                </div>
+                <div class="filter-sep"></div>
+                <span class="filter-label">标注：</span>
+                <select class="filter-select"><option>全部</option><option>置顶</option><option>精华</option><option>推荐</option><option>高亮</option><option>普通</option><option>已关闭</option></select>
+                <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+                <button class="btn-query">查询</button>
+            </div>
+            <div class="content-table-wrap">
+                <table class="cm-table">
+                    <thead><tr>
+                        <th class="col-ck"><input type="checkbox"></th>
+                        <th>标题</th><th>标注</th><th>作者</th><th>发布时间</th><th>查看</th><th>回复</th><th>最后发表时间</th>
+                    </tr></thead>
+                    <tbody id="contentTbody"></tbody>
+                </table>
+            </div>
+            <div class="cm-pagination">
+                <span>第1-10条记录，共128条记录，每页显示</span>
+                <select class="cm-page-select"><option>10</option></select>
+                <span>记录</span>
+                <button class="cm-page-btn">上一页</button>
+                <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button>
+                <span>...</span><button class="cm-page-btn">89</button>
+                <button class="cm-page-btn">下一页</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- ====== 3. 内容审核 ====== -->
+<!-- ========================================== -->
+<div class="cms-panel" id="panel-audit" style="height:100%;display:none;">
+    <div class="content-tabs">
+        <div class="content-tab active" data-tab="audit-pending">待审核</div>
+        <div class="content-tab" data-tab="audit-done">已处理</div>
+    </div>
+    <!-- 待审核 -->
+    <div class="tab-panel active" id="audit-pending">
+        <div style="display:flex;flex:1;overflow:hidden;">
+            <div class="tree-sidebar" id="auditTree1"></div>
+            <div class="content-main">
+                <div class="content-filter">
+                    <button class="filter-btn primary">处理</button>
+                    <div class="filter-sep"></div>
+                    <span class="filter-label">类型：</span>
+                    <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
+                    <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+                    <button class="btn-query">查询</button>
+                </div>
+                <div class="content-table-wrap">
+                    <table class="cm-table">
+                        <thead><tr>
+                            <th class="col-ck"><input type="checkbox"></th>
+                            <th>主题/回复内容</th><th>类型</th><th>状态</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
+                        </tr></thead>
+                        <tbody id="auditPendingTbody"></tbody>
+                    </table>
+                </div>
+                <div class="cm-pagination">
+                    <span>第1-10条记录，共128条记录，每页显示</span>
+                    <select class="cm-page-select"><option>10</option></select><span>记录</span>
+                    <button class="cm-page-btn">上一页</button>
+                    <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button><span>...</span><button class="cm-page-btn">89</button>
+                    <button class="cm-page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 已处理 -->
+    <div class="tab-panel" id="audit-done">
+        <div style="display:flex;flex:1;overflow:hidden;">
+            <div class="tree-sidebar" id="auditTree2"></div>
+            <div class="content-main">
+                <div class="content-filter">
+                    <span class="filter-label">状态：</span>
+                    <select class="filter-select"><option>全部</option><option>审核通过</option><option>审核驳回</option></select>
+                    <span class="filter-label">类型：</span>
+                    <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
+                    <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+                    <button class="btn-query">查询</button>
+                </div>
+                <div class="content-table-wrap">
+                    <table class="cm-table">
+                        <thead><tr>
+                            <th>主题/回复内容</th><th>类型</th><th>状态</th><th>审核意见</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
+                        </tr></thead>
+                        <tbody id="auditDoneTbody"></tbody>
+                    </table>
+                </div>
+                <div class="cm-pagination">
+                    <span>第1-10条记录，共128条记录，每页显示</span>
+                    <select class="cm-page-select"><option>10</option></select><span>记录</span>
+                    <button class="cm-page-btn">上一页</button>
+                    <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button><span>...</span><button class="cm-page-btn">89</button>
+                    <button class="cm-page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- ====== 4. 违规管理 ====== -->
+<!-- ========================================== -->
+<div class="cms-panel" id="panel-violation" style="height:100%;display:none;">
+    <div class="content-tabs">
+        <div class="content-tab active" data-tab="vio-pending">待处理</div>
+        <div class="content-tab" data-tab="vio-done">已处理</div>
+    </div>
+    <!-- 待处理 -->
+    <div class="tab-panel active" id="vio-pending">
+        <div class="content-hint">举报：对广告、不实信息、违禁内容等违规内容</div>
+        <div style="display:flex;flex:1;overflow:hidden;">
+            <div class="tree-sidebar" id="vioTree1"></div>
+            <div class="content-main">
+                <div class="content-filter">
+                    <button class="filter-btn warning">处理</button>
+                    <div class="filter-sep"></div>
+                    <span class="filter-label">类型：</span>
+                    <select class="filter-select"><option>全部</option></select>
+                    <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+                    <button class="btn-query">查询</button>
+                </div>
+                <div class="content-table-wrap">
+                    <table class="cm-table">
+                        <thead><tr>
+                            <th class="col-ck"><input type="checkbox"></th>
+                            <th>主题/回复内容</th><th>类型</th><th>作者</th><th>发布时间</th><th>举报说明</th><th>举报结果</th><th class="col-op">操作</th>
+                        </tr></thead>
+                        <tbody id="vioPendingTbody"></tbody>
+                    </table>
+                </div>
+                <div class="cm-pagination">
+                    <span>第1-10条记录，共128条记录，每页显示</span>
+                    <select class="cm-page-select"><option>10</option></select><span>记录</span>
+                    <button class="cm-page-btn">上一页</button>
+                    <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button><span>...</span><button class="cm-page-btn">89</button>
+                    <button class="cm-page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 已处理 -->
+    <div class="tab-panel" id="vio-done">
+        <div class="content-hint">举报：对广告、不实信息、违禁内容等违规内容</div>
+        <div style="display:flex;flex:1;overflow:hidden;">
+            <div class="tree-sidebar" id="vioTree2"></div>
+            <div class="content-main">
+                <div class="content-filter">
+                    <button class="filter-btn warning">处理</button>
+                    <div class="filter-sep"></div>
+                    <span class="filter-label">类型：</span>
+                    <select class="filter-select"><option>全部</option></select>
+                    <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+                    <button class="btn-query">查询</button>
+                </div>
+                <div class="content-table-wrap">
+                    <table class="cm-table">
+                        <thead><tr>
+                            <th>主题/回复内容</th><th>类型</th><th>作者</th><th>发布时间</th><th>举报说明</th><th>举报结果</th><th class="col-op">操作</th>
+                        </tr></thead>
+                        <tbody id="vioDoneTbody"></tbody>
+                    </table>
+                </div>
+                <div class="cm-pagination">
+                    <span>第1-10条记录，共128条记录，每页显示</span>
+                    <select class="cm-page-select"><option>10</option></select><span>记录</span>
+                    <button class="cm-page-btn">上一页</button>
+                    <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button><span>...</span><button class="cm-page-btn">89</button>
+                    <button class="cm-page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- ====== 5. 禁用账号 ====== -->
+<!-- ========================================== -->
+<div class="cms-panel" id="panel-ban" style="display:none;">
+    <div class="ban-top-actions">
+        <button class="filter-btn primary">启用</button>
+        <button class="filter-btn warning">禁用</button>
+    </div>
+    <div class="content-filter" style="padding:0 0 12px;">
+        <span class="filter-label">账号状态：</span>
+        <select class="filter-select"><option>全部</option><option>已禁用</option><option>正常</option></select>
+        <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
+        <button class="btn-query">查询</button>
+    </div>
+    <div style="overflow:auto;flex:1;">
+        <table class="cm-table">
+            <thead><tr>
+                <th class="col-ck"><input type="checkbox"></th>
+                <th>账号</th><th>姓名</th><th>发布主题</th><th>回复内容</th><th>违规次数</th><th>账号状态</th><th>备注</th><th class="col-op">操作</th>
+            </tr></thead>
+            <tbody>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="cm-pagination">
+        <span>第1-10条记录，共128条记录，每页显示</span>
+        <select class="cm-page-select"><option>10</option></select><span>记录</span>
+        <button class="cm-page-btn">上一页</button>
+        <button class="cm-page-btn active">1</button><button class="cm-page-btn">2</button><button class="cm-page-btn">3</button><button class="cm-page-btn">4</button><button class="cm-page-btn">5</button><span>...</span><button class="cm-page-btn">89</button>
+        <button class="cm-page-btn">下一页</button>
+    </div>
+</div>
+
+                </div><!-- /cms-content -->
+            </div><!-- /cms-layout -->
+        </main>
+    </div>
+
+    <!-- ====== 添加板块弹窗 ====== -->
+    <div class="board-modal-mask" id="boardModal">
+        <div class="board-modal">
+            <div class="board-modal-header">
+                <span class="board-modal-title">添加板块</span>
+                <button class="board-modal-close" id="boardModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="board-modal-body">
+                <div class="bm-row">
+                    <div class="bm-label"><span class="req">*</span>标题：</div>
+                    <div class="bm-value"><input class="bm-input" type="text" placeholder="50字以内" maxlength="50"></div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label"><span class="req">*</span>图片：</div>
+                    <div class="bm-value">
+                        <div class="bm-upload">+</div>
+                        <span class="bm-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</span>
+                    </div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label"><span class="req">*</span>概述：</div>
+                    <div class="bm-value"><textarea class="bm-textarea" placeholder="100字以内" maxlength="100"></textarea></div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label"><span class="req">*</span>发布权限</div>
+                    <div class="bm-value">
+                        <div class="bm-checkbox-group">
+                            <label><input type="checkbox" checked>运营管理方</label>
+                            <label><input type="checkbox" checked>需求方</label>
+                            <label><input type="checkbox" checked>数据提供方</label>
+                            <label><input type="checkbox" checked>服务提供方</label>
+                            <label><input type="checkbox" checked>游客</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label"><span class="req">*</span>审核机制</div>
+                    <div class="bm-value">
+                        <div class="bm-checkbox-group">
+                            <label><input type="checkbox" checked>审核新主题</label>
+                            <label><input type="checkbox">审核新回复</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="board-modal-footer">
+                <button class="btn-bm-submit" id="boardModalSubmit">确定</button>
+                <button class="btn-bm-cancel" id="boardModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 板块配置弹窗 ====== -->
+    <div class="scfg-modal-mask" id="scfgModal">
+        <div class="scfg-modal">
+            <div class="scfg-modal-header">
+                <span class="scfg-modal-title">配置</span>
+                <button class="scfg-modal-close" id="scfgModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="scfg-modal-body">
+                <div class="scfg-row">
+                    <div class="scfg-label"><span class="req">*</span>板块配置：</div>
+                    <div class="scfg-value">
+                        <div class="scfg-select" id="scfgSelectDisplay">社区公共区/官方公告</div>
+                        <div class="scfg-dropdown" id="scfgDropdown">
+                            <div class="scfg-dropdown-search">
+                                <input type="text" placeholder="关键字搜索" id="scfgSearchInput">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div class="scfg-tree" id="scfgTree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scfg-modal-footer">
+                <button class="btn-bm-submit" id="scfgModalSubmit">确定</button>
+                <button class="btn-bm-cancel" id="scfgModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 移动弹窗 ====== -->
+    <div class="scfg-modal-mask" id="moveModal">
+        <div class="scfg-modal">
+            <div class="scfg-modal-header">
+                <span class="scfg-modal-title">移动</span>
+                <button class="scfg-modal-close" id="moveModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="scfg-modal-body">
+                <p class="move-hint" style="font-size:13px;color:#606266;margin-bottom:16px;">您选择<span id="moveCount" style="font-weight:600">XX</span>条记录。</p>
+                <div class="scfg-row">
+                    <div class="scfg-label" style="white-space:nowrap"><span class="req">*</span>移动到：</div>
+                    <div class="scfg-value">
+                        <div class="scfg-select" id="moveSelectDisplay">社区公共区/官方公告</div>
+                        <div class="scfg-dropdown" id="moveDropdown">
+                            <div class="scfg-dropdown-search">
+                                <input type="text" placeholder="关键字搜索" id="moveSearchInput">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div class="scfg-tree" id="moveTree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scfg-modal-footer">
+                <button class="btn-bm-submit" id="moveModalSubmit">确定</button>
+                <button class="btn-bm-cancel" id="moveModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 审核处理弹窗 ====== -->
+    <div class="board-modal-mask" id="auditModal">
+        <div class="board-modal" style="width:560px;">
+            <div class="board-modal-header">
+                <span class="board-modal-title">审核处理</span>
+                <button class="board-modal-close" id="auditModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="board-modal-body">
+                <div class="bm-row">
+                    <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>审核对象：</div>
+                    <div class="bm-value" style="line-height:34px;color:#303133;font-weight:500;">您已经选择<b id="auditCountText" style="color:var(--forest-green)">0</b>条记录</div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>审核结果：</div>
+                    <div class="bm-value">
+                        <select class="bm-input" id="auditResultSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="pass">通过</option>
+                            <option value="reject">驳回</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bm-row" style="align-items:flex-start;">
+                    <div class="bm-label" style="white-space:nowrap;line-height:20px;padding-top:8px;"><span class="bm-required">*</span>审核意见：</div>
+                    <div class="bm-value" style="position:relative;">
+                        <textarea id="auditOpinionText" class="bm-input" style="width:100%;height:120px;padding:10px 12px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;resize:none;outline:none;font-family:inherit;line-height:1.6;" maxlength="200" placeholder="200字以内；"></textarea>
+                        <div id="auditCharCount" style="position:absolute;bottom:8px;right:12px;font-size:12px;color:#c0c4cc;">0/200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="board-modal-footer">
+                <button class="btn-bm-submit" id="auditModalSubmit">确定</button>
+                <button class="btn-bm-cancel" id="auditModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ====== 模块切换 ======
+    var items = document.querySelectorAll('.cms-module-item');
+    var panels = document.querySelectorAll('.cms-panel');
+    function switchPanel(panelName) {
+        items.forEach(function(i) { i.classList.remove('active'); });
+        panels.forEach(function(p) { p.classList.remove('active'); p.style.display = 'none'; });
+        var matchItem = document.querySelector('.cms-module-item[data-panel="' + panelName + '"]');
+        var target = document.getElementById('panel-' + panelName);
+        if (matchItem) matchItem.classList.add('active');
+        if (target) { target.classList.add('active'); target.style.display = ''; }
+    }
+    items.forEach(function(item) {
+        item.addEventListener('click', function() { switchPanel(item.dataset.panel); });
+    });
+    // URL 参数自动定位模块 + 子TAB
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var from = params.get('from') || params.get('panel');
+        if (!from) return;
+        var tabMap = {
+            'audit-done': { panel: 'audit', tab: 'audit-done' },
+            'audit-pending': { panel: 'audit', tab: 'audit-pending' },
+            'vio-done': { panel: 'violation', tab: 'vio-done' },
+            'vio-pending': { panel: 'violation', tab: 'vio-pending' }
+        };
+        var mapped = tabMap[from];
+        if (mapped) {
+            switchPanel(mapped.panel);
+            var parentPanel = document.getElementById('panel-' + mapped.panel);
+            if (parentPanel) {
+                parentPanel.querySelectorAll('.content-tab').forEach(function(t) { t.classList.remove('active'); });
+                parentPanel.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+                var targetTab = parentPanel.querySelector('.content-tab[data-tab="' + mapped.tab + '"]');
+                var targetPanel = document.getElementById(mapped.tab);
+                if (targetTab) targetTab.classList.add('active');
+                if (targetPanel) targetPanel.classList.add('active');
+            }
+        } else {
+            switchPanel(from);
+        }
+    })();
+
+    // ====== Tab 切换 ======
+    document.querySelectorAll('.content-tabs').forEach(function(bar) {
+        bar.querySelectorAll('.content-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                bar.querySelectorAll('.content-tab').forEach(function(t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+                var panel = bar.closest('.cms-panel');
+                panel.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+                var target = document.getElementById(tab.dataset.tab);
+                if (target) target.classList.add('active');
+            });
+        });
+    });
+
+    // ====== 树形目录展开/折叠 ======
+    document.querySelectorAll('.tree-group').forEach(function(g) {
+        var children = g.nextElementSibling;
+        if (children && children.classList.contains('tree-children')) {
+            if (g.classList.contains('open')) children.style.display = '';
+            g.addEventListener('click', function() {
+                children.style.display = g.classList.contains('open') ? '' : 'none';
+            });
+        }
+    });
+    document.querySelectorAll('.tree-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            item.closest('.tree-sidebar').querySelectorAll('.tree-item').forEach(function(i) { i.classList.remove('active'); });
+            item.classList.add('active');
+        });
+    });
+
+    // ====== 复制树结构到审核/违规面板 ======
+    var srcTree = document.querySelector('#panel-content .tree-sidebar');
+    function initCopiedTree(el, addAllRoot, addCounts) {
+        if (!el || !srcTree) return;
+        el.innerHTML = srcTree.innerHTML;
+
+        // 清除从源树复制过来的 inline onclick
+        el.querySelectorAll('.tree-group').forEach(function(g) { g.removeAttribute('onclick'); });
+        // 清除复制过来的 active 状态
+        el.querySelectorAll('.tree-item.active').forEach(function(i) { i.classList.remove('active'); });
+
+        if (addAllRoot) {
+            var searchInput = el.querySelector('.tree-search');
+            var origNodes = [];
+            var node = searchInput ? searchInput.nextSibling : el.firstChild;
+            while (node) { var next = node.nextSibling; origNodes.push(node); node = next; }
+
+            // "全部"根节点
+            var allGroup = document.createElement('div');
+            allGroup.className = 'tree-group open';
+            allGroup.style.cssText = 'padding-left:12px;';
+            allGroup.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg><svg class="tree-group-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg> 全部';
+
+            var allChildren = document.createElement('div');
+            allChildren.className = 'tree-children';
+            allChildren.style.cssText = 'padding-left:14px;';
+            origNodes.forEach(function(n) { allChildren.appendChild(n); });
+
+            // 内部子级的 tree-item 也要再缩进
+            allChildren.querySelectorAll('.tree-item').forEach(function(ti) {
+                ti.style.paddingLeft = '40px';
+            });
+
+            if (searchInput) {
+                el.appendChild(allGroup);
+                el.appendChild(allChildren);
+            } else {
+                el.innerHTML = '';
+                el.appendChild(allGroup);
+                el.appendChild(allChildren);
+            }
+
+            allGroup.addEventListener('click', function(e) {
+                e.stopPropagation();
+                allGroup.classList.toggle('open');
+                allChildren.style.display = allGroup.classList.contains('open') ? '' : 'none';
+            });
+        }
+
+        if (addCounts) {
+            var countMap = { '社区新闻': 5, '数据提供方专区': 3, '数据资源专区': 8 };
+            el.querySelectorAll('.tree-item').forEach(function(item) {
+                var text = item.textContent.trim().replace(/\s*\(.*?\)\s*$/, '');
+                if (countMap[text] !== undefined) {
+                    var oldCount = item.querySelector('.tree-count');
+                    if (oldCount) oldCount.remove();
+                    var badge = document.createElement('span');
+                    badge.className = 'audit-count';
+                    badge.style.cssText = 'color:#f56c6c;font-weight:600;font-size:12px;margin-left:4px;display:inline !important;';
+                    badge.textContent = '(' + countMap[text] + ')';
+                    item.appendChild(badge);
+                }
+            });
+        }
+
+        el.querySelectorAll('.tree-group').forEach(function(g) {
+            var children = g.nextElementSibling;
+            if (children && children.classList.contains('tree-children')) {
+                g.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    g.classList.toggle('open');
+                    children.style.display = g.classList.contains('open') ? '' : 'none';
+                });
+            }
+        });
+        el.querySelectorAll('.tree-item').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                el.querySelectorAll('.tree-item').forEach(function(i) { i.classList.remove('active'); });
+                item.classList.add('active');
+            });
+        });
+    }
+    initCopiedTree(document.getElementById('auditTree1'), true, true);
+    initCopiedTree(document.getElementById('auditTree2'), true, false);
+    initCopiedTree(document.getElementById('vioTree1'), true, true);
+    initCopiedTree(document.getElementById('vioTree2'), true, false);
+
+    // ====== 填充示例表格数据 ======
+    var posts = [
+        { t: '数智万物·智创未来 —— 数据资源开发利用与数据产品创新实践论坛', tags: ['置顶'], author: 'wanglin', time: '2026-3-8', views: 1352, reply: 87, last: '2026-3-11' },
+        { t: '赋能与活力并举：数据交易生态构建与数据资源价值释放战略峰会', tags: ['精华'], author: 'liuwei', time: '2026-3-5', views: 986, reply: 53, last: '2026-3-10' },
+        { t: '数据产品从标准化与市场化之路 —— 从原始数据到交易落地专题研讨会', tags: ['推荐'], author: 'chenfang', time: '2026-3-3', views: 724, reply: 41, last: '2026-3-9' },
+        { t: '产业数基·交易赋能 —— 各领域数据资源向产品转化的路径与实践论坛', tags: ['高亮'], author: 'zhangsan', time: '2026-2-28', views: 631, reply: 35, last: '2026-3-8' },
+        { t: '数据要素流通新范式：交易机制创新与数据产品价值评估论坛', tags: ['普通'], author: 'sunqiang', time: '2026-2-25', views: 418, reply: 19, last: '2026-3-6' },
+        { t: '数据驱动与大模型应用：交易场景下的数据产品合规格局论坛', tags: ['精华'], author: 'zhaoming', time: '2026-2-20', views: 1105, reply: 68, last: '2026-3-5' },
+        { t: '安全为本·交易为桥 —— 数据资源保护与合规化产品开发论坛', tags: ['推荐'], author: 'hejia', time: '2026-2-18', views: 573, reply: 29, last: '2026-3-3' },
+        { t: '全国数据交易市场协同发展：资源共享、产品互通、规则共建峰会', tags: ['已关闭'], author: 'yangkai', time: '2026-2-10', views: 892, reply: 46, last: '2026-2-28' },
+        { t: '数商生态培育与数据产品创新 —— 数据交易赋能实体经济论坛', tags: ['普通'], author: 'lixue', time: '2026-2-5', views: 307, reply: 12, last: '2026-2-25' },
+        { t: '从"数据资源"到"数据资产"：交易场景下的产品设计与价值实现研讨会', tags: ['高亮'], author: 'wugang', time: '2026-1-29', views: 465, reply: 24, last: '2026-2-20' },
+    ];
+    var tagColors = { '置顶': 'orange', '精华': 'green', '推荐': 'blue', '高亮': 'purple', '普通': 'gray', '已关闭': 'red' };
+    var tbody = document.getElementById('contentTbody');
+    posts.forEach(function(p) {
+        var tagHtml = p.tags.map(function(t) { return '<span class="tag-sm tag-' + (tagColors[t]||'gray') + '">' + t + '</span>'; }).join('');
+        tbody.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-detail.html?from=content" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tagHtml + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td>' + p.views + '</td><td>' + p.reply + '</td><td>' + p.last + '</td></tr>';
+    });
+
+    // 审核-待审核
+    var auditPending = document.getElementById('auditPendingTbody');
+    var types1 = ['主题','主题','主题','主题','主题','回复','回复','回复','回复','回复'];
+    posts.forEach(function(p,i) {
+        var ty = types1[i] || '主题';
+        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
+        var stTag = '<span class="tag-sm tag-gray">待审核</span>';
+        auditPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + stTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">处理</a></td></tr>';
+    });
+
+    // ====== 审核处理弹窗逻辑 ======
+    var auditModal = document.getElementById('auditModal');
+    var auditOpinionText = document.getElementById('auditOpinionText');
+    var auditCharCount = document.getElementById('auditCharCount');
+    var auditCountText = document.getElementById('auditCountText');
+
+    function getAuditCheckedCount() {
+        return document.querySelectorAll('#auditPendingTbody input[type="checkbox"]:checked').length;
+    }
+    function openAuditModal(count) {
+        auditCountText.textContent = count;
+        document.getElementById('auditResultSelect').value = 'pass';
+        auditOpinionText.value = '';
+        auditCharCount.textContent = '0/200';
+        auditModal.classList.add('show');
+    }
+    function closeAuditModal() { auditModal.classList.remove('show'); }
+
+    auditOpinionText.addEventListener('input', function() {
+        var len = this.value.length;
+        auditCharCount.textContent = len + '/200';
+        auditCharCount.style.color = len >= 200 ? '#f56c6c' : '#c0c4cc';
+    });
+
+    // 批量处理按钮
+    document.querySelector('#audit-pending .filter-btn.primary').addEventListener('click', function() {
+        openAuditModal(getAuditCheckedCount());
+    });
+    document.getElementById('auditModalClose').addEventListener('click', closeAuditModal);
+    document.getElementById('auditModalCancel').addEventListener('click', closeAuditModal);
+    document.getElementById('auditModalSubmit').addEventListener('click', function() {
+        closeAuditModal();
+    });
+    auditModal.addEventListener('click', function(e) { if (e.target === auditModal) closeAuditModal(); });
+
+    // 审核-已处理
+    var auditDone = document.getElementById('auditDoneTbody');
+    var auditDoneData = [
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核驳回', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核驳回', opinion:'内容含有不实信息，不能发布' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核驳回', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' }
+    ];
+    posts.forEach(function(p,i) {
+        var d = auditDoneData[i];
+        var ty = types1[i] || '主题';
+        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
+        var stClass = d.st==='审核通过' ? 'tag-green' : 'tag-red';
+        var stTag = '<span class="tag-sm ' + stClass + '">' + d.st + '</span>';
+        var viewParam = d.st==='审核通过' ? 'pass' : 'reject';
+        auditDone.innerHTML += '<tr><td><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + stTag + '</td><td>' + d.opinion + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">查看</a></td></tr>';
+    });
+
+    // 违规-待处理
+    var vioPending = document.getElementById('vioPendingTbody');
+    posts.forEach(function(p,i) {
+        var ty = (i < 5) ? '主题' : '回复';
+        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
+        vioPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-audit.html?from=violation" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td></td><td></td><td class="col-op"><a href="cms-community-audit.html?from=violation" style="color:var(--forest-green);cursor:pointer">处理</a></td></tr>';
+    });
+
+    // 违规-已处理
+    var vioDone = document.getElementById('vioDoneTbody');
+    var vioReasons = ['内容含广告','不实信息','违禁内容等','内容含广告','不实信息','内容含广告','违禁内容等','不实信息','内容含广告','违禁内容等'];
+    var vioResults = ['内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次','内容含广告，不实信息，违禁<br>内容等违规广告 10次'];
+    posts.forEach(function(p,i) {
+        var ty = (i < 5) ? '主题' : '回复';
+        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
+        vioDone.innerHTML += '<tr><td>' + p.t + '</td><td>' + tyTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td>' + vioReasons[i] + '</td><td><span class="tag-sm tag-red">' + vioResults[i] + '</span></td><td class="col-op"><a>查看</a></td></tr>';
+    });
+
+    // ====== 分组名称编辑 ======
+    document.querySelectorAll('.board-group-edit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var header = btn.closest('.board-group-header');
+            var nameEl = header.querySelector('.board-group-name');
+            if (!nameEl) return;
+            var oldName = nameEl.textContent.trim();
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'board-group-name-input';
+            input.value = oldName;
+            input.style.width = Math.max(oldName.length * 18, 60) + 'px';
+            nameEl.replaceWith(input);
+            input.focus();
+            input.select();
+            function save() {
+                var val = input.value.trim() || oldName;
+                var span = document.createElement('span');
+                span.className = 'board-group-name';
+                span.textContent = val;
+                input.replaceWith(span);
+            }
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+                if (e.key === 'Escape') { input.value = oldName; input.blur(); }
+            });
+        });
+    });
+
+    // ====== 添加板块弹窗 ======
+    var boardModal = document.getElementById('boardModal');
+    function openBoardModal() {
+        boardModal.classList.add('show');
+    }
+    function closeBoardModal() {
+        boardModal.classList.remove('show');
+    }
+    document.getElementById('boardModalClose').addEventListener('click', closeBoardModal);
+    document.getElementById('boardModalCancel').addEventListener('click', closeBoardModal);
+    document.getElementById('boardModalSubmit').addEventListener('click', function() {
+        closeBoardModal();
+        if (window.GlobalNotify) {
+            GlobalNotify.success('板块添加成功');
+        }
+    });
+    boardModal.addEventListener('click', function(e) {
+        if (e.target === boardModal) closeBoardModal();
+    });
+    document.querySelectorAll('.btn-add-sm').forEach(function(btn) {
+        if (btn.textContent.trim() === '添加板块') {
+            btn.addEventListener('click', function() {
+                document.querySelector('.board-modal-title').textContent = '添加板块';
+                openBoardModal();
+            });
+        }
+    });
+
+    // ====== 板块编辑弹窗 ======
+    document.querySelectorAll('.board-card .op-edit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelector('.board-modal-title').textContent = '编辑板块';
+            openBoardModal();
+        });
+    });
+
+    // ====== 板块删除确认 ======
+    document.querySelectorAll('.board-card .op-del').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var card = btn.closest('.board-card');
+            var name = card.querySelector('.board-card-name').textContent.trim();
+            GlobalDialog.danger({
+                title: '删除确认',
+                desc: '您确定要删除【<span style="display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + name + '</span>】的记录吗？<br>删除后该板块将无法恢复',
+                confirmText: '确定删除',
+                cancelText: '取消',
+                onConfirm: function() {
+                    card.style.transition = 'opacity .3s';
+                    card.style.opacity = '0';
+                    setTimeout(function() { card.remove(); }, 300);
+                }
+            });
+        });
+    });
+
+    // ====== 板块配置弹窗 ======
+    var scfgModal = document.getElementById('scfgModal');
+    var scfgSelectDisplay = document.getElementById('scfgSelectDisplay');
+    var scfgDropdown = document.getElementById('scfgDropdown');
+    var scfgTree = document.getElementById('scfgTree');
+    var scfgSearchInput = document.getElementById('scfgSearchInput');
+    var scfgSelectedValue = '';
+    var scfgCurrentSection = '';
+
+    function buildScfgTree() {
+        var groups = document.querySelectorAll('#panel-board .board-group');
+        var html = '';
+        groups.forEach(function(g) {
+            var nameEl = g.querySelector('.board-group-name');
+            var groupName = nameEl ? nameEl.textContent.trim() : '';
+            var cards = g.querySelectorAll('.board-card-name');
+            var folderSvg = '<svg class="tg-icon" viewBox="0 0 24 24" fill="#e6a23c"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+            var itemSvg = '<svg class="ti-icon" viewBox="0 0 24 24" fill="#e6a23c"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+            html += '<div class="scfg-tree-group" data-group="' + groupName + '"><span class="tg-toggle">⊟</span>' + folderSvg + ' <span>' + groupName + '</span></div>';
+            html += '<div class="scfg-tree-children">';
+            cards.forEach(function(c) {
+                var cardName = c.textContent.trim();
+                var fullPath = groupName + '/' + cardName;
+                html += '<div class="scfg-tree-item" data-path="' + fullPath + '">' + itemSvg + ' ' + cardName + '</div>';
+            });
+            html += '</div>';
+        });
+        scfgTree.innerHTML = html;
+        bindScfgTreeEvents();
+    }
+
+    function bindScfgTreeEvents() {
+        scfgTree.querySelectorAll('.scfg-tree-group').forEach(function(g) {
+            g.addEventListener('click', function() {
+                var toggle = g.querySelector('.tg-toggle');
+                var children = g.nextElementSibling;
+                if (children && children.classList.contains('scfg-tree-children')) {
+                    var hidden = children.style.display === 'none';
+                    children.style.display = hidden ? '' : 'none';
+                    toggle.textContent = hidden ? '⊟' : '⊞';
+                }
+            });
+        });
+        scfgTree.querySelectorAll('.scfg-tree-item').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                scfgTree.querySelectorAll('.scfg-tree-item').forEach(function(i) { i.classList.remove('selected'); });
+                item.classList.add('selected');
+                scfgSelectedValue = item.getAttribute('data-path');
+                scfgSelectDisplay.textContent = scfgSelectedValue;
+                scfgDropdown.classList.remove('show');
+            });
+        });
+    }
+
+    function positionScfgDropdown() {
+        var rect = scfgSelectDisplay.getBoundingClientRect();
+        scfgDropdown.style.top = (rect.bottom + 4) + 'px';
+        scfgDropdown.style.left = rect.left + 'px';
+        scfgDropdown.style.width = rect.width + 'px';
+    }
+
+    scfgSelectDisplay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        buildScfgTree();
+        var isOpen = scfgDropdown.classList.contains('show');
+        scfgDropdown.classList.toggle('show');
+        if (!isOpen) {
+            positionScfgDropdown();
+            scfgSearchInput.value = '';
+            filterScfgTree('');
+        }
+    });
+
+    scfgSearchInput.addEventListener('input', function() {
+        filterScfgTree(scfgSearchInput.value.trim().toLowerCase());
+    });
+    scfgSearchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+
+    function filterScfgTree(kw) {
+        scfgTree.querySelectorAll('.scfg-tree-group').forEach(function(g) {
+            var children = g.nextElementSibling;
+            if (!children) return;
+            var items = children.querySelectorAll('.scfg-tree-item');
+            var groupVisible = false;
+            items.forEach(function(item) {
+                var text = item.textContent.trim().toLowerCase();
+                var match = !kw || text.indexOf(kw) !== -1;
+                item.style.display = match ? '' : 'none';
+                if (match) groupVisible = true;
+            });
+            var groupText = g.textContent.trim().toLowerCase();
+            if (!kw || groupText.indexOf(kw) !== -1) groupVisible = true;
+            g.style.display = groupVisible ? '' : 'none';
+            if (children) children.style.display = groupVisible ? '' : 'none';
+            if (groupVisible) g.querySelector('.tg-toggle').textContent = '⊟';
+        });
+    }
+
+    function openScfgModal(sectionName) {
+        scfgCurrentSection = sectionName;
+        document.querySelector('.scfg-modal-title').textContent = '右侧推荐设置';
+        scfgDropdown.classList.remove('show');
+        buildScfgTree();
+        scfgModal.classList.add('show');
+    }
+    function closeScfgModal() {
+        scfgModal.classList.remove('show');
+        scfgDropdown.classList.remove('show');
+    }
+
+    document.getElementById('scfgModalClose').addEventListener('click', closeScfgModal);
+    document.getElementById('scfgModalCancel').addEventListener('click', closeScfgModal);
+    document.getElementById('scfgModalSubmit').addEventListener('click', function() {
+        closeScfgModal();
+    });
+    scfgModal.addEventListener('click', function(e) {
+        if (e.target === scfgModal) closeScfgModal();
+    });
+    document.addEventListener('click', function() {
+        scfgDropdown.classList.remove('show');
+    });
+
+    document.querySelectorAll('.board-sidebar-config').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var titleEl = btn.closest('.board-sidebar-title');
+            var name = titleEl ? titleEl.childNodes[0].textContent.trim() : '配置';
+            openScfgModal(name);
+        });
+    });
+
+    // ====== 内容管理操作按钮弹窗 ======
+    function getCheckedCount() {
+        var cbs = document.querySelectorAll('#contentTbody input[type="checkbox"]:checked');
+        return cbs.length || 'XX';
+    }
+
+    // 置顶/精华/推荐/高亮
+    document.querySelectorAll('[data-act="mark"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var label = btn.getAttribute('data-label');
+            var cnt = getCheckedCount();
+            GlobalDialog.confirm({
+                title: '操作确认',
+                desc: '您确定选择' + cnt + '条记录，标注为【' + label + '】吗？',
+                confirmText: '确定',
+                cancelText: '取消'
+            });
+        });
+    });
+
+    // 关闭
+    document.querySelector('[data-act="close"]').addEventListener('click', function() {
+        var cnt = getCheckedCount();
+        GlobalDialog.confirm({
+            title: '操作确认',
+            desc: '您确定选择' + cnt + '条记录，设置为【关闭】锁帖吗，关闭后，仅可查看，不可回复/编辑？',
+            confirmText: '确定',
+            cancelText: '取消'
+        });
+    });
+
+    // 打开
+    document.querySelector('[data-act="open"]').addEventListener('click', function() {
+        var cnt = getCheckedCount();
+        GlobalDialog.confirm({
+            title: '操作确认',
+            desc: '您确定选择' + cnt + '条记录，设置为【打开】解锁吗，打开后，<span style="color:#e6a23c;font-weight:600">恢复互动</span>，可正常回复/编辑/评论？',
+            confirmText: '确定',
+            cancelText: '取消'
+        });
+    });
+
+    // 删除
+    document.querySelector('[data-act="delete"]').addEventListener('click', function() {
+        var cnt = getCheckedCount();
+        GlobalDialog.danger({
+            title: '删除确认',
+            desc: '您确定要删除选中的' + cnt + '条记录吗？',
+            confirmText: '确定',
+            cancelText: '取消'
+        });
+    });
+
+    // ====== 移动弹窗 ======
+    var moveModal = document.getElementById('moveModal');
+    var moveSelectDisplay = document.getElementById('moveSelectDisplay');
+    var moveDropdown = document.getElementById('moveDropdown');
+    var moveTree = document.getElementById('moveTree');
+    var moveSearchInput = document.getElementById('moveSearchInput');
+
+    function buildMoveTree() {
+        var groups = document.querySelectorAll('#panel-board .board-group');
+        var html = '';
+        groups.forEach(function(g) {
+            var nameEl = g.querySelector('.board-group-name');
+            var groupName = nameEl ? nameEl.textContent.trim() : '';
+            var cards = g.querySelectorAll('.board-card-name');
+            var folderSvg = '<svg class="tg-icon" viewBox="0 0 24 24" fill="#e6a23c"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+            var itemSvg = '<svg class="ti-icon" viewBox="0 0 24 24" fill="#e6a23c"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+            html += '<div class="scfg-tree-group" data-group="' + groupName + '"><span class="tg-toggle">⊟</span>' + folderSvg + ' <span>' + groupName + '</span></div>';
+            html += '<div class="scfg-tree-children">';
+            cards.forEach(function(c) {
+                var cardName = c.textContent.trim();
+                var fullPath = groupName + '/' + cardName;
+                html += '<div class="scfg-tree-item" data-path="' + fullPath + '">' + itemSvg + ' ' + cardName + '</div>';
+            });
+            html += '</div>';
+        });
+        moveTree.innerHTML = html;
+        bindMoveTreeEvents();
+    }
+
+    function bindMoveTreeEvents() {
+        moveTree.querySelectorAll('.scfg-tree-group').forEach(function(g) {
+            g.addEventListener('click', function() {
+                var toggle = g.querySelector('.tg-toggle');
+                var children = g.nextElementSibling;
+                if (children && children.classList.contains('scfg-tree-children')) {
+                    var hidden = children.style.display === 'none';
+                    children.style.display = hidden ? '' : 'none';
+                    toggle.textContent = hidden ? '⊟' : '⊞';
+                }
+            });
+        });
+        moveTree.querySelectorAll('.scfg-tree-item').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                moveTree.querySelectorAll('.scfg-tree-item').forEach(function(i) { i.classList.remove('selected'); });
+                item.classList.add('selected');
+                moveSelectDisplay.textContent = item.getAttribute('data-path');
+                moveDropdown.classList.remove('show');
+            });
+        });
+    }
+
+    function positionMoveDropdown() {
+        var rect = moveSelectDisplay.getBoundingClientRect();
+        moveDropdown.style.top = (rect.bottom + 4) + 'px';
+        moveDropdown.style.left = rect.left + 'px';
+        moveDropdown.style.width = rect.width + 'px';
+    }
+
+    moveSelectDisplay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        buildMoveTree();
+        var isOpen = moveDropdown.classList.contains('show');
+        moveDropdown.classList.toggle('show');
+        if (!isOpen) {
+            positionMoveDropdown();
+            moveSearchInput.value = '';
+            filterMoveTree('');
+        }
+    });
+
+    moveSearchInput.addEventListener('input', function() {
+        filterMoveTree(moveSearchInput.value.trim().toLowerCase());
+    });
+    moveSearchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+
+    function filterMoveTree(kw) {
+        moveTree.querySelectorAll('.scfg-tree-group').forEach(function(g) {
+            var children = g.nextElementSibling;
+            if (!children) return;
+            var items = children.querySelectorAll('.scfg-tree-item');
+            var groupVisible = false;
+            items.forEach(function(item) {
+                var text = item.textContent.trim().toLowerCase();
+                var match = !kw || text.indexOf(kw) !== -1;
+                item.style.display = match ? '' : 'none';
+                if (match) groupVisible = true;
+            });
+            var groupText = g.textContent.trim().toLowerCase();
+            if (!kw || groupText.indexOf(kw) !== -1) groupVisible = true;
+            g.style.display = groupVisible ? '' : 'none';
+            if (children) children.style.display = groupVisible ? '' : 'none';
+            if (groupVisible) g.querySelector('.tg-toggle').textContent = '⊟';
+        });
+    }
+
+    function openMoveModal() {
+        document.getElementById('moveCount').textContent = getCheckedCount();
+        moveDropdown.classList.remove('show');
+        buildMoveTree();
+        moveModal.classList.add('show');
+    }
+    function closeMoveModal() {
+        moveModal.classList.remove('show');
+        moveDropdown.classList.remove('show');
+    }
+
+    document.querySelector('[data-act="move"]').addEventListener('click', openMoveModal);
+    document.getElementById('moveModalClose').addEventListener('click', closeMoveModal);
+    document.getElementById('moveModalCancel').addEventListener('click', closeMoveModal);
+    document.getElementById('moveModalSubmit').addEventListener('click', closeMoveModal);
+    moveModal.addEventListener('click', function(e) {
+        if (e.target === moveModal) closeMoveModal();
+    });
+    document.addEventListener('click', function() {
+        moveDropdown.classList.remove('show');
+    });
+    </script>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

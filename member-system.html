@@ -219,6 +219,21 @@
                     <a href="member-manage.html" class="sidebar-item"><span>会员管理</span></a>
                     <a class="sidebar-item active"><span>会员体系</span></a>
                 </div>
+
+                <!-- 内容管理 -->
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="cms-portal.html" class="sidebar-item"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html" class="sidebar-item"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                </div>
             </nav>
         </aside>
 
@@ -313,7 +328,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="member-level"><span class="level-dot diamond"></span>钻金会员</span></td>
+                            <td><span class="member-level"><span class="level-dot diamond"></span>铂金会员</span></td>
                             <td class="col-position">生态合作层</td>
                             <td class="col-audience">龙头企业、政府部门、核心生态伙伴</td>
                             <td>
@@ -404,7 +419,7 @@
             permission: '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；\n2、可以进行相关资源申请授权和数据产品交易；\n3、享受数据产品等相关交易6折优惠；'
         },
         {
-            name: '钻金会员', position: '生态合作层',
+            name: '铂金会员', position: '生态合作层',
             audience: '龙头企业、政府部门、核心生态伙伴', discount: 5,
             permission: '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；\n2、可以进行相关资源申请授权和数据产品交易；\n3、享受数据产品等相关交易5折优惠；'
         }
@@ -452,7 +467,7 @@
 
     function moveRow(idx, dir) { /* static prototype */ }
 
-    var memberNames = ['银卡会员', '金卡会员', '钻金会员'];
+    var memberNames = ['银卡会员', '金卡会员', '铂金会员'];
     function deleteRow(idx) {
         var name = memberNames[idx] || '该等级';
         GlobalDialog.danger({

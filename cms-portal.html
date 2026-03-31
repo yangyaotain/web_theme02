@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>门户管理 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+        /* ====== 内容区双栏布局 ====== */
+        .cms-layout {
+            display: flex; gap: 0; height: calc(100vh - 64px);
+        }
+        .cms-module-list {
+            width: 180px; flex-shrink: 0; background: #fff;
+            border-right: 1px solid #e4e7ed; overflow-y: auto;
+        }
+        .cms-module-title {
+            font-size: 13px; font-weight: 600; color: #909399;
+            padding: 16px 16px 8px; text-transform: uppercase; letter-spacing: .03em;
+        }
+        .cms-module-item {
+            display: block; padding: 10px 16px; font-size: 13px; color: #606266;
+            cursor: pointer; transition: .15s; border-left: 3px solid transparent;
+        }
+        .cms-module-item:hover { color: var(--forest-green); background: #f5f7fa; }
+        .cms-module-item.active {
+            color: var(--forest-green); font-weight: 600; background: #e8f5e9;
+            border-left-color: var(--forest-green);
+        }
+        .cms-content {
+            flex: 1; min-width: 0; overflow-y: auto; padding: 24px 28px;
+            background: #f5f7fa;
+        }
+
+        /* ====== 内容面板 ====== */
+        .cms-panel { display: none; }
+        .cms-panel.active { display: block; }
+
+        /* ====== 顶部标题行 ====== */
+        .cms-header {
+            display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .cms-header-title { font-size: 16px; font-weight: 700; color: #303133; }
+        .cms-header-hint { font-size: 12px; color: #909399; }
+        .btn-config {
+            padding: 6px 20px; font-size: 13px; font-weight: 500;
+            background: #fff; color: var(--forest-green); border: 1px solid var(--forest-green);
+            border-radius: 4px; cursor: pointer; transition: .15s;
+        }
+        .btn-config:hover { background: #e8f5e9; }
+
+        /* ====== 轮播图管理 ====== */
+        .carousel-list { display: flex; flex-direction: column; gap: 20px; }
+        .carousel-card {
+            background: #fff; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06); border: 1px solid #ebeef5;
+        }
+        .carousel-card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; border-bottom: 1px solid #f0f2f5;
+        }
+        .carousel-card-title { font-size: 14px; font-weight: 600; color: #303133; }
+        .carousel-card-ops { display: flex; gap: 12px; }
+        .carousel-card-ops span {
+            font-size: 12px; color: var(--forest-green); cursor: pointer; transition: .15s;
+        }
+        .carousel-card-ops span:hover { text-decoration: underline; }
+        .carousel-card-ops span.op-del { color: #f56c6c; }
+        .carousel-card-body { padding: 0; position: relative; }
+        .carousel-card-body img {
+            width: 100%; display: block; object-fit: contain;
+        }
+        .carousel-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 16px; font-size: 12px; color: #909399;
+            border-top: 1px solid #f0f2f5;
+        }
+        .carousel-card-footer .link-tag {
+            color: var(--forest-green); background: #e8f5e9; padding: 2px 8px;
+            border-radius: 3px; font-size: 11px;
+        }
+        .carousel-status-on { color: #67c23a; font-weight: 500; }
+
+        /* ====== 导航圆点 ====== */
+        .carousel-dots {
+            display: flex; justify-content: center; gap: 8px;
+            padding: 16px 0 4px;
+        }
+        .carousel-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #dcdfe6; transition: .2s;
+        }
+        .carousel-dot.active { width: 28px; border-radius: 5px; background: var(--forest-green); }
+
+        /* ====== 流程指引面板 ====== */
+        .flow-card {
+            background: #fff; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06); border: 1px solid #ebeef5;
+        }
+        .flow-card-header {
+            padding: 20px 24px; text-align: center;
+        }
+        .flow-card-header h3 { font-size: 20px; font-weight: 700; color: #303133; margin-bottom: 8px; }
+        .flow-card-header p { font-size: 13px; color: #909399; line-height: 1.6; }
+        .flow-card-body { padding: 0 24px 24px; text-align: center; }
+        .flow-card-body img {
+            width: 100%; max-width: 900px; display: inline-block;
+        }
+        .flow-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 24px; font-size: 12px; color: #909399;
+            border-top: 1px solid #f0f2f5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="#" class="topbar-nav-item">运维中心</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Left Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">运营中心</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>平台概览</span>
+                </a>
+
+                <!-- 用户管理 -->
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>用户管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a class="sidebar-item disabled"><span>用户列表</span></a>
+                    <a class="sidebar-item disabled"><span>角色管理</span></a>
+                </div>
+
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg>
+                    <span>连接器管理</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    <span>数据目录审批</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    <span>数据目录监测</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                    <span>订单合同监测</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                    <span>数据交付监测</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                    <span>交易费用监测</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                    <span>费用管理</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    <span>可信存证</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6v-4zm6-6h4v3h-4V7zM6 7h5v5H6V7zm6 4h4v6h-4v-6z"/></svg>
+                    <span>开发工具监测</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    <span>数据专区配置</span>
+                </a>
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    <span>供需管理</span>
+                </a>
+
+                <!-- 会员管理 -->
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    <span>会员管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="operation-center.html" class="sidebar-item"><span>会员审核</span></a>
+                    <a href="member-manage.html" class="sidebar-item"><span>会员管理</span></a>
+                    <a href="member-system.html" class="sidebar-item"><span>会员体系</span></a>
+                </div>
+
+                <!-- 内容管理 -->
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub">
+                    <a href="cms-portal.html" class="sidebar-item active"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html" class="sidebar-item"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content" style="padding:0;">
+            <div class="cms-layout">
+                <!-- 模块列表 -->
+                <div class="cms-module-list">
+                    <div class="cms-module-title">模块列表</div>
+                    <div class="cms-module-item active" data-panel="carousel">首页-轮播图</div>
+                    <div class="cms-module-item" data-panel="flow">首页-流程指引</div>
+                </div>
+
+                <!-- 内容区 -->
+                <div class="cms-content">
+                    <!-- ====== 首页-轮播图 ====== -->
+                    <div class="cms-panel active" id="panel-carousel">
+                        <div class="cms-header">
+                            <span class="cms-header-title">首页-轮播图</span>
+                            <span class="cms-header-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</span>
+                            <button class="btn-config">配置</button>
+                        </div>
+
+                        <div class="carousel-list">
+                            <!-- 轮播图1 -->
+                            <div class="carousel-card" data-idx="0">
+                                <div class="carousel-card-header">
+                                    <span class="carousel-card-title">轮播图 1</span>
+                                    <div class="carousel-card-ops">
+                                        <span class="op-edit">编辑</span><span>上移</span><span>下移</span><span class="op-del">删除</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-card-body">
+                                    <img src="images/carousel-slide-1.png" alt="破解数字鸿沟 实现数字平权">
+                                </div>
+                                <div class="carousel-card-footer">
+                                    <span>链接：<span class="link-tag">policy-detail-4t.html</span></span>
+                                </div>
+                            </div>
+
+                            <!-- 轮播图2 -->
+                            <div class="carousel-card" data-idx="1">
+                                <div class="carousel-card-header">
+                                    <span class="carousel-card-title">轮播图 2</span>
+                                    <div class="carousel-card-ops">
+                                        <span class="op-edit">编辑</span><span>上移</span><span>下移</span><span class="op-del">删除</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-card-body">
+                                    <img src="images/carousel-slide-2.png" alt="打造万P算力 新基建">
+                                </div>
+                                <div class="carousel-card-footer">
+                                    <span>链接：<span class="link-tag">policy-detail-ai.html</span></span>
+                                </div>
+                            </div>
+
+                            <!-- 轮播图3 -->
+                            <div class="carousel-card" data-idx="2">
+                                <div class="carousel-card-header">
+                                    <span class="carousel-card-title">轮播图 3</span>
+                                    <div class="carousel-card-ops">
+                                        <span class="op-edit">编辑</span><span>上移</span><span>下移</span><span class="op-del">删除</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-card-body">
+                                    <img src="images/carousel-slide-3.png" alt="构建数据要素 流通新生态">
+                                </div>
+                                <div class="carousel-card-footer">
+                                    <span>链接：<span class="link-tag">policy-detail-data-space.html</span></span>
+                                </div>
+                            </div>
+
+                            <!-- 轮播图4 -->
+                            <div class="carousel-card" data-idx="3">
+                                <div class="carousel-card-header">
+                                    <span class="carousel-card-title">轮播图 4</span>
+                                    <div class="carousel-card-ops">
+                                        <span class="op-edit">编辑</span><span>上移</span><span>下移</span><span class="op-del">删除</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-card-body">
+                                    <img src="images/carousel-slide-4.png" alt="释放数据要素 新价值">
+                                </div>
+                                <div class="carousel-card-footer">
+                                    <span>链接：<span class="link-tag">policy-detail-public-data.html</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ====== 首页-流程指引 ====== -->
+                    <div class="cms-panel" id="panel-flow">
+                        <div class="cms-header">
+                            <span class="cms-header-title">首页-流程指引</span>
+                            <span class="cms-header-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</span>
+                            <button class="btn-config">配置</button>
+                        </div>
+
+                        <div class="flow-card">
+                            <div class="flow-card-header">
+                                <h3>数据产品交易流通指引</h3>
+                                <p>需方申请数据产品，供方授权后，两方签合同，供方支付后需求确认已支付，供方数据交付，需方确认交付内容，数据消费后交付结束。</p>
+                            </div>
+                            <div class="flow-card-body">
+                                <img src="images/process-flow.png" alt="数据产品交易流通指引">
+                            </div>
+                            <div class="flow-card-footer">
+                                <span>引用位置：首页 &gt; 交易流程</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ====== 配置弹窗样式 ====== -->
+    <style>
+    .cfg-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .cfg-mask.show { display: flex; }
+    .cfg-modal {
+        width: 720px; max-height: 90vh; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18);
+        animation: cfgIn .2s ease;
+        display: flex; flex-direction: column;
+    }
+    @keyframes cfgIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+    .cfg-header {
+        display: flex; align-items: center; gap: 12px;
+        padding: 24px 28px 16px; border-bottom: 1px solid #f0f2f5;
+        flex-shrink: 0;
+    }
+    .cfg-close {
+        margin-left: auto; width: 28px; height: 28px;
+        display: flex; align-items: center; justify-content: center;
+        border: none; background: none; cursor: pointer; color: #bbb;
+        border-radius: 4px; transition: .15s;
+    }
+    .cfg-close:hover { background: #f5f5f5; color: #333; }
+    .cfg-close svg { width: 18px; height: 18px; }
+    .cfg-title { font-size: 18px; font-weight: 700; color: #303133; }
+    .cfg-hint { font-size: 13px; color: #909399; }
+    .cfg-body { padding: 20px 28px; overflow-y: auto; flex: 1; min-height: 0; }
+    .cfg-footer {
+        display: flex; gap: 12px; padding: 16px 28px 24px;
+        border-top: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .btn-cfg-submit {
+        padding: 9px 32px; font-size: 14px; font-weight: 600;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 4px;
+        cursor: pointer; transition: .15s;
+    }
+    .btn-cfg-submit:hover { background: #15803d; }
+    .btn-cfg-cancel {
+        padding: 9px 32px; font-size: 14px; font-weight: 500;
+        background: #fff; color: #606266; border: 1px solid #dcdfe6; border-radius: 4px;
+        cursor: pointer; transition: .15s;
+    }
+    .btn-cfg-cancel:hover { border-color: #c0c4cc; color: #333; }
+
+    /* 屏卡片 */
+    .cfg-screen {
+        border: 1px solid #ebeef5; border-radius: 6px; margin-bottom: 20px; overflow: hidden;
+    }
+    .cfg-screen-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 16px; background: #fafbfc; border-bottom: 1px solid #ebeef5;
+    }
+    .cfg-screen-title { font-size: 14px; font-weight: 700; color: #303133; }
+    .cfg-screen-ops { display: flex; gap: 8px; }
+    .cfg-screen-ops .cfg-op {
+        width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; color: var(--forest-green); border: none; background: none; border-radius: 4px; transition: .15s;
+    }
+    .cfg-screen-ops .cfg-op:hover { background: #e8f5e9; }
+    .cfg-screen-ops .cfg-op.op-del { color: #909399; }
+    .cfg-screen-ops .cfg-op.op-del:hover { color: #f56c6c; background: #fef0f0; }
+    .cfg-screen-ops .cfg-op svg { width: 18px; height: 18px; }
+    .cfg-screen-body { padding: 20px 16px; }
+    .cfg-row {
+        display: flex; align-items: flex-start; margin-bottom: 16px;
+    }
+    .cfg-row:last-child { margin-bottom: 0; }
+    .cfg-label {
+        width: 60px; flex-shrink: 0; font-size: 13px; color: #606266;
+        line-height: 36px; text-align: right; padding-right: 10px;
+    }
+    .cfg-label .req { color: #f56c6c; }
+    .cfg-value { flex: 1; min-width: 0; }
+    .cfg-upload-area {
+        width: 360px; border: 1px dashed #dcdfe6; border-radius: 6px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        cursor: pointer; transition: .15s; background: #fafbfc; overflow: hidden;
+    }
+    .cfg-upload-area:hover { border-color: var(--forest-green); background: #e8f5e9; }
+    .cfg-upload-area svg { width: 28px; height: 28px; color: #c0c4cc; }
+    .cfg-upload-area img {
+        width: 100%; display: block; object-fit: contain;
+    }
+    .cfg-upload-hint { font-size: 12px; color: #909399; margin-top: 8px; }
+    .cfg-input {
+        width: 100%; padding: 8px 12px; font-size: 13px;
+        border: 1px solid #dcdfe6; border-radius: 4px; outline: none; color: #333;
+        transition: .15s;
+    }
+    .cfg-input:focus { border-color: var(--forest-green); }
+    </style>
+
+    <!-- ====== 轮播图配置弹窗 ====== -->
+    <div class="cfg-mask" id="cfgCarouselModal">
+        <div class="cfg-modal">
+            <div class="cfg-header">
+                <span class="cfg-title">首页-轮播图</span>
+                <span class="cfg-hint">支持1-4个轮播图片</span>
+                <button class="cfg-close" title="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="cfg-body" id="cfgCarouselBody">
+                <!-- 第1屏 -->
+                <div class="cfg-screen">
+                    <div class="cfg-screen-header">
+                        <span class="cfg-screen-title">第1屏</span>
+                        <div class="cfg-screen-ops">
+                            <button class="cfg-op" title="添加"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+                            <button class="cfg-op op-del" title="删除"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+                        </div>
+                    </div>
+                    <div class="cfg-screen-body">
+                        <div class="cfg-row">
+                            <div class="cfg-label"><span class="req">*</span>图片：</div>
+                            <div class="cfg-value">
+                                <div class="cfg-upload-area">
+                                    <img src="images/carousel-slide-1.png" alt="">
+                                </div>
+                                <div class="cfg-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</div>
+                            </div>
+                        </div>
+                        <div class="cfg-row">
+                            <div class="cfg-label">链接：</div>
+                            <div class="cfg-value">
+                                <input type="text" class="cfg-input" value="policy-detail-4t.html" placeholder="请输入图片跳转链接">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第2屏 -->
+                <div class="cfg-screen">
+                    <div class="cfg-screen-header">
+                        <span class="cfg-screen-title">第2屏</span>
+                        <div class="cfg-screen-ops">
+                            <button class="cfg-op" title="添加"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+                            <button class="cfg-op op-del" title="删除"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+                        </div>
+                    </div>
+                    <div class="cfg-screen-body">
+                        <div class="cfg-row">
+                            <div class="cfg-label"><span class="req">*</span>图片：</div>
+                            <div class="cfg-value">
+                                <div class="cfg-upload-area">
+                                    <img src="images/carousel-slide-2.png" alt="">
+                                </div>
+                                <div class="cfg-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</div>
+                            </div>
+                        </div>
+                        <div class="cfg-row">
+                            <div class="cfg-label">链接：</div>
+                            <div class="cfg-value">
+                                <input type="text" class="cfg-input" value="policy-detail-ai.html" placeholder="请输入图片跳转链接">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第3屏 -->
+                <div class="cfg-screen">
+                    <div class="cfg-screen-header">
+                        <span class="cfg-screen-title">第3屏</span>
+                        <div class="cfg-screen-ops">
+                            <button class="cfg-op" title="添加"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+                            <button class="cfg-op op-del" title="删除"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+                        </div>
+                    </div>
+                    <div class="cfg-screen-body">
+                        <div class="cfg-row">
+                            <div class="cfg-label"><span class="req">*</span>图片：</div>
+                            <div class="cfg-value">
+                                <div class="cfg-upload-area">
+                                    <img src="images/carousel-slide-3.png" alt="">
+                                </div>
+                                <div class="cfg-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</div>
+                            </div>
+                        </div>
+                        <div class="cfg-row">
+                            <div class="cfg-label">链接：</div>
+                            <div class="cfg-value">
+                                <input type="text" class="cfg-input" value="policy-detail-data-space.html" placeholder="请输入图片跳转链接">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 第4屏 -->
+                <div class="cfg-screen">
+                    <div class="cfg-screen-header">
+                        <span class="cfg-screen-title">第4屏</span>
+                        <div class="cfg-screen-ops">
+                            <button class="cfg-op" title="添加"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+                            <button class="cfg-op op-del" title="删除"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+                        </div>
+                    </div>
+                    <div class="cfg-screen-body">
+                        <div class="cfg-row">
+                            <div class="cfg-label"><span class="req">*</span>图片：</div>
+                            <div class="cfg-value">
+                                <div class="cfg-upload-area">
+                                    <img src="images/carousel-slide-4.png" alt="">
+                                </div>
+                                <div class="cfg-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</div>
+                            </div>
+                        </div>
+                        <div class="cfg-row">
+                            <div class="cfg-label">链接：</div>
+                            <div class="cfg-value">
+                                <input type="text" class="cfg-input" value="policy-detail-public-data.html" placeholder="请输入图片跳转链接">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cfg-footer">
+                <button class="btn-cfg-submit" id="btnCfgCarouselOk">确定</button>
+                <button class="btn-cfg-cancel" id="btnCfgCarouselCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 流程指引配置弹窗 ====== -->
+    <div class="cfg-mask" id="cfgFlowModal">
+        <div class="cfg-modal">
+            <div class="cfg-header">
+                <span class="cfg-title">首页-流程指引</span>
+                <span class="cfg-hint">配置首页交易流程指引图片</span>
+                <button class="cfg-close" title="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="cfg-body">
+                <div class="cfg-screen">
+                    <div class="cfg-screen-header">
+                        <span class="cfg-screen-title">流程指引图</span>
+                    </div>
+                    <div class="cfg-screen-body">
+                        <div class="cfg-row">
+                            <div class="cfg-label"><span class="req">*</span>图片：</div>
+                            <div class="cfg-value">
+                                <div class="cfg-upload-area" style="width:100%;height:auto;padding:0;border-style:solid;cursor:pointer">
+                                    <img src="images/process-flow-full.png" alt="" style="position:static;width:100%;height:auto;object-fit:contain">
+                                </div>
+                                <div class="cfg-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cfg-footer">
+                <button class="btn-cfg-submit" id="btnCfgFlowOk">确定</button>
+                <button class="btn-cfg-cancel" id="btnCfgFlowCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 模块列表切换
+    var moduleItems = document.querySelectorAll('.cms-module-item');
+    var panels = document.querySelectorAll('.cms-panel');
+    moduleItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            moduleItems.forEach(function(m) { m.classList.remove('active'); });
+            item.classList.add('active');
+            panels.forEach(function(p) { p.classList.remove('active'); });
+            var target = document.getElementById('panel-' + item.dataset.panel);
+            if (target) target.classList.add('active');
+        });
+    });
+
+    // 配置弹窗逻辑
+    function bindCfgModal(btnSelector, modalId) {
+        var btns = document.querySelectorAll(btnSelector);
+        var modal = document.getElementById(modalId);
+        function open() { modal.classList.add('show'); }
+        function close() { modal.classList.remove('show'); }
+        btns.forEach(function(b) { b.addEventListener('click', open); });
+        modal.addEventListener('click', function(e) { if (e.target === modal) close(); });
+        modal.querySelectorAll('.btn-cfg-cancel').forEach(function(b) { b.addEventListener('click', close); });
+        modal.querySelectorAll('.cfg-close').forEach(function(b) { b.addEventListener('click', close); });
+        modal.querySelectorAll('.btn-cfg-submit').forEach(function(b) {
+            b.addEventListener('click', function() { close(); });
+        });
+    }
+
+    bindCfgModal('#panel-carousel .btn-config', 'cfgCarouselModal');
+    bindCfgModal('#panel-flow .btn-config', 'cfgFlowModal');
+
+    // 编辑按钮 → 打开配置弹窗并高亮对应屏
+    (function() {
+        var modal = document.getElementById('cfgCarouselModal');
+        var screens = modal.querySelectorAll('.cfg-screen');
+
+        document.querySelectorAll('.carousel-card .op-edit').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var idx = parseInt(btn.closest('.carousel-card').dataset.idx, 10);
+                screens.forEach(function(s, i) {
+                    if (i === idx) {
+                        s.style.display = '';
+                        s.style.border = '2px solid var(--forest-green, #16a34a)';
+                    } else {
+                        s.style.display = 'none';
+                    }
+                });
+                modal.classList.add('show');
+                modal._editMode = true;
+            });
+        });
+
+        function resetScreens() {
+            if (modal._editMode) {
+                screens.forEach(function(s) {
+                    s.style.display = '';
+                    s.style.border = '';
+                });
+                modal._editMode = false;
+            }
+        }
+        modal.querySelectorAll('.btn-cfg-cancel, .cfg-close').forEach(function(b) {
+            b.addEventListener('click', resetScreens);
+        });
+        modal.querySelectorAll('.btn-cfg-submit').forEach(function(b) {
+            b.addEventListener('click', resetScreens);
+        });
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) resetScreens();
+        });
+    })();
+
+    // 删除按钮 → GlobalDialog.danger 确认
+    document.querySelectorAll('.carousel-card .op-del').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var card = btn.closest('.carousel-card');
+            var title = card.querySelector('.carousel-card-title').textContent.trim();
+            GlobalDialog.danger({
+                title: '删除确认',
+                desc: '您确定要删除【<span style="display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + title + '</span>】的记录吗？<br>删除后该轮播图将无法恢复',
+                confirmText: '确定删除',
+                cancelText: '取消',
+                onConfirm: function() {
+                    card.style.transition = 'opacity .3s, max-height .3s';
+                    card.style.opacity = '0';
+                    card.style.maxHeight = '0';
+                    card.style.overflow = 'hidden';
+                    card.style.marginBottom = '0';
+                    setTimeout(function() { card.remove(); }, 350);
+                }
+            });
+        });
+    });
+    </script>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

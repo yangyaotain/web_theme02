@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>审核处理 - 数据社区管理 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+    .detail-toolbar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 20px; background: #fff; border-bottom: 1px solid #e4e7ed;
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 10px; }
+    .toolbar-right { display: flex; align-items: center; gap: 16px; }
+    .btn-back-list {
+        font-size: 13px; color: #909399; cursor: pointer; transition: .15s;
+        display: flex; align-items: center; gap: 4px; text-decoration: none;
+    }
+    .btn-back-list:hover { color: var(--forest-green); }
+    .btn-back-list svg { width: 14px; height: 14px; }
+
+    .report-tag {
+        display: inline-flex; align-items: center; padding: 4px 12px; font-size: 12px;
+        font-weight: 600; border-radius: 3px; white-space: nowrap;
+    }
+    .report-tag.red { background: #fef0f0; color: #f56c6c; border: 1px solid #fbc4c4; }
+    .btn-audit {
+        padding: 5px 18px; font-size: 12px; font-weight: 600; border: none;
+        border-radius: 4px; cursor: pointer; color: #fff; background: var(--forest-green);
+        transition: .15s;
+    }
+    .btn-audit:hover { background: #15803d; }
+    .report-reason {
+        display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px;
+        font-size: 12px; color: #e6a23c; background: #fdf6ec; border: 1px solid #faecd8;
+        border-radius: 3px; white-space: nowrap;
+    }
+    .report-reason svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .cms-layout { display: flex; gap: 0; height: calc(100vh - 64px); }
+    .cms-module-list {
+        width: 160px; flex-shrink: 0; background: #fff;
+        border-right: 1px solid #e4e7ed; overflow-y: auto;
+    }
+    .cms-module-title {
+        font-size: 13px; font-weight: 600; color: #909399;
+        padding: 16px 16px 8px; letter-spacing: .03em;
+    }
+    .cms-module-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 16px; font-size: 13px; color: #606266;
+        cursor: pointer; transition: .15s; border-left: 3px solid transparent;
+        text-decoration: none;
+    }
+    .cms-module-item:hover { color: var(--forest-green); background: #f5f7fa; }
+    .cms-module-item.active { color: var(--forest-green); font-weight: 600; background: #e8f5e9; border-left-color: var(--forest-green); }
+    .cms-module-badge {
+        font-size: 11px; color: #fff; background: #f56c6c; border-radius: 10px;
+        padding: 0 6px; min-width: 18px; text-align: center; line-height: 18px;
+    }
+    .cms-detail-main { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .detail-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+    .post-info {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 4px;
+        font-size: 12px; color: #909399;
+    }
+    .post-info b { color: var(--forest-green); font-weight: 600; }
+    .post-title { font-size: 18px; font-weight: 700; color: #303133; margin-bottom: 16px; }
+    .post-title .tag-label {
+        display: inline-block; padding: 2px 8px; font-size: 11px; border-radius: 3px;
+        margin-right: 6px; vertical-align: middle; font-weight: 500;
+    }
+    .tag-label.tl-help { background: #fff3cd; color: #856404; }
+
+    .post-floor { display: flex; border-bottom: 1px solid #f0f2f5; }
+    .post-floor:last-child { border-bottom: none; }
+    .floor-author {
+        width: 100px; flex-shrink: 0; padding: 16px 12px; text-align: center;
+        border-right: 1px solid #f0f2f5;
+    }
+    .floor-author-name { font-size: 12px; font-weight: 500; color: #555; margin-bottom: 8px; }
+    .floor-avatar { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin: 0 auto; }
+    .floor-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .floor-content { flex: 1; min-width: 0; padding: 16px 20px; }
+    .floor-meta {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        font-size: 12px; color: #aaa;
+    }
+    .floor-meta svg { width: 14px; height: 14px; vertical-align: -2px; }
+    .floor-badge {
+        display: inline-block; padding: 1px 8px; border-radius: 3px;
+        font-size: 11px; font-weight: 600;
+    }
+    .floor-badge.owner { background: #fff3e0; color: #f97316; }
+    .floor-badge.reply-floor { background: #e8f5e9; color: var(--forest-green); }
+    .floor-body { font-size: 14px; color: #444; line-height: 1.8; }
+    .floor-body b { font-weight: 600; }
+    .floor-actions {
+        display: flex; align-items: center; gap: 12px; margin-top: 16px; padding-top: 10px;
+        border-top: 1px solid #f5f6f8; font-size: 12px; color: #ccc; flex-wrap: wrap;
+    }
+
+    .post-main {
+        background: #fff; border-radius: 6px; border: 1px solid #ebeef5;
+        overflow: hidden;
+    }
+
+    /* 审核弹窗 */
+    .audit-modal-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .audit-modal-mask.show { display: flex; }
+    .audit-modal {
+        width: 560px; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18);
+        display: flex; flex-direction: column; max-height: 90vh;
+    }
+    .audit-modal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .audit-modal-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .audit-modal-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        color: #bbb; display: flex; align-items: center; justify-content: center;
+        border-radius: 4px; transition: .15s;
+    }
+    .audit-modal-close:hover { background: #f5f5f5; color: #333; }
+    .audit-modal-close svg { width: 18px; height: 18px; }
+    .audit-modal-body { padding: 24px; overflow-y: auto; flex: 1; min-height: 0; }
+    .audit-modal-footer {
+        display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .am-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+    .am-row:last-child { margin-bottom: 0; }
+    .am-label {
+        width: 90px; flex-shrink: 0; font-size: 13px; color: #606266;
+        text-align: right; padding-right: 12px; line-height: 34px; white-space: nowrap;
+    }
+    .am-required { color: #f56c6c; margin-right: 2px; }
+    .am-value { flex: 1; min-width: 0; }
+    .btn-am-submit {
+        padding: 8px 28px; font-size: 13px; background: var(--forest-green); color: #fff;
+        border: none; border-radius: 4px; cursor: pointer; transition: .15s;
+    }
+    .btn-am-submit:hover { background: #15803d; }
+    .btn-am-cancel {
+        padding: 8px 28px; font-size: 13px; background: #fff; color: #606266;
+        border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; transition: .15s;
+    }
+    .btn-am-cancel:hover { border-color: #c0c4cc; }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="#" class="topbar-nav-item">运维中心</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">运营中心</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>平台概览</span>
+                </a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>用户管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a class="sidebar-item disabled"><span>用户列表</span></a>
+                    <a class="sidebar-item disabled"><span>角色管理</span></a>
+                </div>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg><span>连接器管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>数据目录审批</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><span>数据目录监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg><span>订单合同监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>数据交付监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg><span>交易费用监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>费用管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>可信存证</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6v-4zm6-6h4v3h-4V7zM6 7h5v5H6V7zm6 4h4v6h-4v-6z"/></svg><span>开发工具监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg><span>数据专区配置</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>供需管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    <span>会员管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="operation-center.html" class="sidebar-item"><span>会员审核</span></a>
+                    <a href="member-manage.html" class="sidebar-item"><span>会员管理</span></a>
+                    <a href="member-system.html" class="sidebar-item"><span>会员体系</span></a>
+                </div>
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub">
+                    <a href="cms-portal.html" class="sidebar-item"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html?from=audit" class="sidebar-item active"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content" style="padding:0;">
+            <div class="cms-layout">
+                <div class="cms-module-list">
+                    <div class="cms-module-title">模块列表</div>
+                    <a href="cms-community.html?from=board" class="cms-module-item">板块管理</a>
+                    <a href="cms-community.html?from=content" class="cms-module-item">内容管理</a>
+                    <a href="cms-community.html?from=audit" class="cms-module-item">内容审核 <span class="cms-module-badge">10</span></a>
+                    <a href="cms-community.html?from=violation" class="cms-module-item active">违规管理 <span class="cms-module-badge">8</span></a>
+                    <a href="cms-community.html?from=ban" class="cms-module-item">禁用账号 <span class="cms-module-badge">6</span></a>
+                </div>
+                <div class="cms-detail-main">
+
+            <!-- 顶部操作栏 -->
+            <div class="detail-toolbar">
+                <div class="toolbar-left">
+                    <span class="report-tag red">主题被举报</span>
+                    <button class="btn-audit" id="btnAuditTopic">处理</button>
+                    <span class="report-reason">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        内容含广告、不实信息等违规内容
+                    </span>
+                </div>
+                <div class="toolbar-right">
+                    <a class="btn-back-list" href="cms-community.html?from=violation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                        返回列表
+                    </a>
+                </div>
+            </div>
+
+            <!-- 帖子详情 -->
+            <div class="detail-body">
+                <div class="post-info">
+                    <span>查看: <b>97</b></span>
+                    <span>回复: <b>3</b></span>
+                </div>
+                <div class="post-title">
+                    <span class="tag-label tl-help">[求助]</span>
+                    登录提示内部错误，大神给看看这是哪里出问题了
+                </div>
+
+                <div class="post-main">
+                    <!-- 楼主 -->
+                    <div class="post-floor">
+                        <div class="floor-author">
+                            <div class="floor-author-name">q18341427</div>
+                            <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=Q&background=f97316&color=fff&size=80" alt=""></div>
+                        </div>
+                        <div class="floor-content">
+                            <div class="floor-meta">
+                                <div>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    发表于 前天 14:52 &nbsp;▸&nbsp; 只看楼主 &nbsp;|&nbsp; 只看大图
+                                </div>
+                                <span class="floor-badge owner">楼主</span>
+                            </div>
+                            <div class="floor-body">
+                                <p>各位大佬好，我在平台上申请了一批公共数据资源，提交申请后页面一直显示<b style="color:#f97316">"处理中"</b>状态，已经过了3天了还是没有变化。</p>
+                                <p style="margin-top:12px">具体操作步骤如下：</p>
+                                <p>1、进入数据资源列表页面，选择了"龙岗区城市管理数据集"；</p>
+                                <p>2、点击"申请使用"按钮，填写了申请理由和使用用途；</p>
+                                <p>3、提交申请后，状态一直是"处理中"。</p>
+                                <div style="margin-top:14px;display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff3cd;border-radius:6px;border:1px solid #ffc107">
+                                    <svg viewBox="0 0 24 24" fill="#f59e0b" width="20" height="20"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    <span style="font-size:13px;color:#856404">申请状态：<b>处理中</b> — 提交时间：2026-03-08 14:30</span>
+                                </div>
+                                <p style="margin-top:14px">请问这是正常的审核周期吗？还是系统出了什么问题？有没有遇到相同情况的朋友？</p>
+                                <p style="margin-top:8px;color:#aaa;font-size:13px">环境信息：Chrome 120 / Windows 10 / 普通会员账号</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 回复1：沙发 -->
+                    <div class="post-floor">
+                        <div class="floor-author">
+                            <div class="floor-author-name">TaC</div>
+                            <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=T&background=1a1a2e&color=fff&size=80" alt=""></div>
+                        </div>
+                        <div class="floor-content">
+                            <div class="floor-meta">
+                                <div>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    发表于 昨天 22:46 &nbsp;▸&nbsp; 只看Ta
+                                </div>
+                                <span class="floor-badge reply-floor">沙发</span>
+                            </div>
+                            <div class="floor-body">
+                                <p>这类问题，不管是程序上的，或是你站上的。要是我直接忽略，关掉这些安全提问。不过，真实也没遇到过，感觉这些体验感不好。如果你网站修改不多，或排除修改的文件，用官方文件直接覆盖一下，大多能解决问题。</p>
+                            </div>
+                            <div class="floor-actions">
+                                <span class="report-tag red">回复被举报</span>
+                                <button class="btn-audit btn-audit-reply">处理</button>
+                                <span class="report-reason">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    内容含广告、不实信息等违规内容
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 回复2：板凳 -->
+                    <div class="post-floor">
+                        <div class="floor-author">
+                            <div class="floor-author-name">龙岗开发者</div>
+                            <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=L&background=10b981&color=fff&size=80" alt=""></div>
+                        </div>
+                        <div class="floor-content">
+                            <div class="floor-meta">
+                                <div>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    发表于 昨天 09:15 &nbsp;▸&nbsp; 只看Ta
+                                </div>
+                                <span class="floor-badge reply-floor">板凳</span>
+                            </div>
+                            <div class="floor-body">
+                                <p>楼主你好，这个问题我之前也遇到过，分享一下我的经验：</p>
+                                <p style="margin-top:8px">1、公共数据资源的审核周期一般是 <b>3-5 个工作日</b>，如果是敏感数据集可能更长；</p>
+                                <p>2、你可以到 <b>用户中心 → 我的申请</b> 里查看详细的审核进度，正常的话会显示当前审核节点；</p>
+                                <p>3、如果超过5个工作日还没有变化，建议联系平台客服（右下角智能客服也可以），提供你的申请编号让他们查一下；</p>
+                                <p style="margin-top:8px">另外，有些数据集需要 <span style="color:var(--forest-green);font-weight:600">银卡会员</span> 及以上才能申请，普通会员提交后可能会在权限审核环节卡住。你可以检查下该数据集的申请条件。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 回复3：地板 -->
+                    <div class="post-floor">
+                        <div class="floor-author">
+                            <div class="floor-author-name">平台管理员</div>
+                            <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=管&background=2563eb&color=fff&size=80" alt=""></div>
+                        </div>
+                        <div class="floor-content">
+                            <div class="floor-meta">
+                                <div>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    发表于 昨天 10:22 &nbsp;▸&nbsp; 只看Ta
+                                </div>
+                                <span class="floor-badge reply-floor">地板</span>
+                            </div>
+                            <div class="floor-body">
+                                <p>您好，感谢您的反馈。经查询，您的申请编号为 <b>DR-2026030814-0056</b>，当前处于数据安全审核环节。</p>
+                                <p style="margin-top:8px">由于"龙岗区城市管理数据集"属于<b style="color:var(--forest-green)">L3级敏感数据</b>，审核流程需经过以下环节：</p>
+                                <p>1、数据管理部门初审（已通过）</p>
+                                <p>2、数据安全合规审查（进行中）</p>
+                                <p>3、数据提供方最终确认</p>
+                                <p style="margin-top:8px">预计将在 <b>2个工作日</b> 内完成，届时系统会发送站内信通知您。如有紧急需求，可拨打服务热线：0755-8888-6666。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                </div><!-- /cms-detail-main -->
+            </div><!-- /cms-layout -->
+        </main>
+    </div>
+
+    <!-- ====== 审核处理弹窗 ====== -->
+    <div class="audit-modal-mask" id="auditModal">
+        <div class="audit-modal">
+            <div class="audit-modal-header">
+                <span class="audit-modal-title">审核处理</span>
+                <button class="audit-modal-close" id="auditModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="audit-modal-body">
+                <div class="am-row">
+                    <div class="am-label"><span class="am-required">*</span>审核对象：</div>
+                    <div class="am-value" style="line-height:34px;color:#303133;font-weight:500;" id="auditTargetText">您已经选择1条记录</div>
+                </div>
+                <div class="am-row">
+                    <div class="am-label"><span class="am-required">*</span>审核结果：</div>
+                    <div class="am-value">
+                        <select id="auditResultSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="pass">通过</option>
+                            <option value="reject">驳回</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="am-row" style="align-items:flex-start;">
+                    <div class="am-label" style="line-height:20px;padding-top:8px;"><span class="am-required">*</span>审核意见：</div>
+                    <div class="am-value" style="position:relative;">
+                        <textarea id="auditOpinionText" style="width:100%;height:120px;padding:10px 12px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;resize:none;outline:none;font-family:inherit;line-height:1.6;box-sizing:border-box;" maxlength="200" placeholder="200字以内；"></textarea>
+                        <div id="auditCharCount" style="position:absolute;bottom:8px;right:12px;font-size:12px;color:#c0c4cc;">0/200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="audit-modal-footer">
+                <button class="btn-am-submit" id="auditModalSubmit">确定</button>
+                <button class="btn-am-cancel" id="auditModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ====== 审核弹窗逻辑 ======
+    var auditModal = document.getElementById('auditModal');
+    var auditOpinionText = document.getElementById('auditOpinionText');
+    var auditCharCount = document.getElementById('auditCharCount');
+
+    function openAuditModal(targetText) {
+        document.getElementById('auditTargetText').textContent = targetText;
+        document.getElementById('auditResultSelect').value = 'pass';
+        auditOpinionText.value = '';
+        auditCharCount.textContent = '0/200';
+        auditCharCount.style.color = '#c0c4cc';
+        auditModal.classList.add('show');
+    }
+    function closeAuditModal() { auditModal.classList.remove('show'); }
+
+    auditOpinionText.addEventListener('input', function() {
+        var len = this.value.length;
+        auditCharCount.textContent = len + '/200';
+        auditCharCount.style.color = len >= 200 ? '#f56c6c' : '#c0c4cc';
+    });
+
+    document.getElementById('auditModalClose').addEventListener('click', closeAuditModal);
+    document.getElementById('auditModalCancel').addEventListener('click', closeAuditModal);
+    document.getElementById('auditModalSubmit').addEventListener('click', closeAuditModal);
+    auditModal.addEventListener('click', function(e) { if (e.target === auditModal) closeAuditModal(); });
+
+    // 顶部主题处理按钮
+    document.getElementById('btnAuditTopic').addEventListener('click', function() {
+        openAuditModal('您已经选择1条主题记录');
+    });
+
+    // 回复处理按钮
+    document.querySelectorAll('.btn-audit-reply').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            openAuditModal('您已经选择1条回复记录');
+        });
+    });
+    </script>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

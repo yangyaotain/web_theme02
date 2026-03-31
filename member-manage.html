@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
     <style>
         /* Page-specific: card, modal, form */
         .card {
@@ -148,6 +149,21 @@
                     <a class="sidebar-item active"><span>会员管理</span></a>
                     <a href="member-system.html" class="sidebar-item"><span>会员体系</span></a>
                 </div>
+
+                <!-- 内容管理 -->
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="cms-portal.html" class="sidebar-item"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html" class="sidebar-item"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                </div>
             </nav>
         </aside>
 
@@ -158,9 +174,10 @@
                 <input class="filter-input" type="text" placeholder="申请主体/申请人/主体名称">
                 <select class="filter-select">
                     <option value="">会员类型</option>
+                    <option>普通会员</option>
                     <option>银卡会员</option>
                     <option>金卡会员</option>
-                    <option>钻金会员</option>
+                    <option>铂金会员</option>
                 </select>
                 <input class="filter-date" type="text" placeholder="到期时间：开始时间 — 结束时间">
                 <span class="filter-icon" title="搜索">
@@ -189,24 +206,24 @@
                     <tbody>
                         <tr>
                             <td>中国电子云</td>
-                            <td>银卡会员</td>
-                            <td>1年</td>
+                            <td>铂金会员</td>
+                            <td>5年</td>
                             <td>张三</td>
-                            <td>2026-3-9 15:00:00</td>
-                            <td>2027-3-9 16:52:00</td>
+                            <td>2025-6-15 10:30:00</td>
+                            <td>2030-6-15 10:30:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('silver')">管理</span>
+                                <span class="link-green" onclick="openManageModal('platinum')">管理</span>
                             </td>
                         </tr>
                         <tr>
-                            <td>中国电子云</td>
+                            <td>深圳华数信息技术有限公司</td>
                             <td>金卡会员</td>
                             <td>3年</td>
-                            <td>张三</td>
-                            <td>2026-3-9 15:00:00</td>
-                            <td>2030-3-9 16:52:00</td>
+                            <td>李明</td>
+                            <td>2025-8-20 14:00:00</td>
+                            <td>2028-8-20 14:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
@@ -214,16 +231,107 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>中国电子云</td>
+                            <td>龙岗区智慧城市发展中心</td>
+                            <td>银卡会员</td>
+                            <td>2年</td>
+                            <td>王芳</td>
+                            <td>2025-11-5 09:15:00</td>
+                            <td>2027-11-5 09:15:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('silver')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>广东数据要素集团</td>
                             <td>铂金会员</td>
-                            <td>5年</td>
-                            <td>张三</td>
-                            <td>2026-3-9 15:00:00</td>
-                            <td>2032-3-9 16:52:00</td>
+                            <td>10年</td>
+                            <td>赵刚</td>
+                            <td>2024-12-1 11:00:00</td>
+                            <td>2034-12-1 11:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
                                 <span class="link-green" onclick="openManageModal('platinum')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>深圳前海数据交易所</td>
+                            <td>金卡会员</td>
+                            <td>3年</td>
+                            <td>陈静</td>
+                            <td>2026-1-18 16:30:00</td>
+                            <td>2029-1-18 16:30:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('gold')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>坪山区政务数据管理局</td>
+                            <td>普通会员</td>
+                            <td>1年</td>
+                            <td>刘伟</td>
+                            <td>2026-2-10 08:45:00</td>
+                            <td>2027-2-10 08:45:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('normal')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>南方科技大学大数据研究院</td>
+                            <td>银卡会员</td>
+                            <td>1年</td>
+                            <td>周涛</td>
+                            <td>2025-9-3 13:20:00</td>
+                            <td>2026-9-3 13:20:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('silver')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>鹏城实验室</td>
+                            <td>铂金会员</td>
+                            <td>5年</td>
+                            <td>吴昊</td>
+                            <td>2025-4-22 10:00:00</td>
+                            <td>2030-4-22 10:00:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('platinum')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>深圳市腾讯计算机系统有限公司</td>
+                            <td>普通会员</td>
+                            <td>1年</td>
+                            <td>孙丽</td>
+                            <td>2026-3-1 15:10:00</td>
+                            <td>2027-3-1 15:10:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('normal')">管理</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>深圳市大数据资源管理中心</td>
+                            <td>金卡会员</td>
+                            <td>2年</td>
+                            <td>黄磊</td>
+                            <td>2025-7-8 09:00:00</td>
+                            <td>2027-7-8 09:00:00</td>
+                            <td>
+                                <a href="member-detail.html" class="link-green">查看详情</a>
+                                <span class="op-divider">|</span>
+                                <span class="link-green" onclick="openManageModal('gold')">管理</span>
                             </td>
                         </tr>
                     </tbody>
@@ -264,9 +372,10 @@
                             <label class="form-label">会员类型：</label>
                             <div class="form-value">
                                 <select class="form-select" id="manageTypeSelect">
+                                    <option value="normal">普通会员</option>
                                     <option value="silver">银卡会员</option>
                                     <option value="gold">金卡会员</option>
-                                    <option value="platinum">钻金会员</option>
+                                    <option value="platinum">铂金会员</option>
                                 </select>
                             </div>
                         </div>
@@ -305,6 +414,13 @@
 
     <script>
     var memberData = {
+        normal: {
+            title: '普通会员',
+            items: [
+                '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
+                '2、可以进行相关资源申请授权和数据产品交易；'
+            ]
+        },
         silver: {
             title: '银卡会员',
             items: [
@@ -322,7 +438,7 @@
             ]
         },
         platinum: {
-            title: '钻金会员',
+            title: '铂金会员',
             items: [
                 '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
                 '2、可以进行相关资源申请授权和数据产品交易；',
