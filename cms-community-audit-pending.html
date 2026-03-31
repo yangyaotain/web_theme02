@@ -6,7 +6,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>待审核处理 - 数据社区管理 - 龙岗数据聚合服务平台</title>
+    <title>待审核审批 - 数据社区管理 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -248,7 +248,7 @@
             <div class="detail-toolbar">
                 <div class="toolbar-left">
                     <span class="report-tag blue">主题待审核</span>
-                    <button class="btn-audit" id="btnAuditTopic">处理</button>
+                    <button class="btn-audit" id="btnAuditTopic">审批</button>
                 </div>
                 <div class="toolbar-right">
                     <a class="btn-back-list" href="cms-community.html?from=audit">
@@ -319,7 +319,7 @@
                             </div>
                             <div class="floor-actions">
                                 <span class="report-tag blue">回复待审核</span>
-                                <button class="btn-audit btn-audit-reply">处理</button>
+                                <button class="btn-audit btn-audit-reply">审批</button>
                             </div>
                         </div>
                     </div>
@@ -384,7 +384,7 @@
     <div class="audit-modal-mask" id="auditModal">
         <div class="audit-modal">
             <div class="audit-modal-header">
-                <span class="audit-modal-title">审核处理</span>
+                <span class="audit-modal-title">审核审批</span>
                 <button class="audit-modal-close" id="auditModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="audit-modal-body">
@@ -396,8 +396,8 @@
                     <div class="am-label"><span class="am-required">*</span>审核结果：</div>
                     <div class="am-value">
                         <select id="auditResultSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
-                            <option value="pass">通过</option>
-                            <option value="reject">驳回</option>
+                            <option value="pass">同意</option>
+                            <option value="reject">拒绝</option>
                         </select>
                     </div>
                 </div>

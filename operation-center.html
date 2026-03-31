@@ -139,8 +139,8 @@
         <main class="admin-content">
             <!-- Tabs -->
             <div class="content-tabs">
-                <button class="content-tab active" data-tab="pending" onclick="switchTab('pending')">待审核</button>
-                <button class="content-tab" data-tab="approved" onclick="switchTab('approved')">已审核</button>
+                <button class="content-tab active" data-tab="pending" onclick="switchTab('pending')">待审批</button>
+                <button class="content-tab" data-tab="approved" onclick="switchTab('approved')">已审批</button>
             </div>
 
             <!-- ═══════════════ 待审核 Tab ═══════════════ -->
@@ -153,10 +153,6 @@
                         <option>银卡会员</option>
                         <option>金卡会员</option>
                         <option>铂金会员</option>
-                    </select>
-                    <select class="filter-select">
-                        <option value="">审核状态</option>
-                        <option>待审核</option>
                     </select>
                     <input class="filter-date" type="text" placeholder="申请时间：开始时间 — 结束时间">
                     <span class="filter-icon" title="搜索">
@@ -178,7 +174,6 @@
                                 <th>申请人</th>
                                 <th>申请时间</th>
                                 <th>备注说明</th>
-                                <th>审核状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -190,7 +185,6 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-pending">待审核</span></td>
                                 <td><a href="audit-detail.html" class="link-blue">审批</a></td>
                             </tr>
                             <tr>
@@ -200,7 +194,6 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-pending">待审核</span></td>
                                 <td><a href="audit-detail.html" class="link-blue">审批</a></td>
                             </tr>
                             <tr>
@@ -210,7 +203,69 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-pending">待审核</span></td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">深圳华数信息技术有限公司</a></td>
+                                <td>金卡会员</td>
+                                <td>3年</td>
+                                <td>李明</td>
+                                <td>2026-3-8 11:20:00</td>
+                                <td>业务拓展需要升级会员</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">龙岗区智慧城市发展中心</a></td>
+                                <td>银卡会员</td>
+                                <td>2年</td>
+                                <td>王芳</td>
+                                <td>2026-3-7 09:45:00</td>
+                                <td>政务数据共享需求</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">广东数据要素集团</a></td>
+                                <td>铂金会员</td>
+                                <td>10年</td>
+                                <td>赵刚</td>
+                                <td>2026-3-6 16:30:00</td>
+                                <td>战略合作长期会员申请</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">深圳前海数据交易所</a></td>
+                                <td>金卡会员</td>
+                                <td>3年</td>
+                                <td>陈静</td>
+                                <td>2026-3-5 14:10:00</td>
+                                <td>数据交易业务合作</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">南方科技大学大数据研究院</a></td>
+                                <td>银卡会员</td>
+                                <td>1年</td>
+                                <td>周涛</td>
+                                <td>2026-3-4 10:00:00</td>
+                                <td>科研数据资源申请</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">鹏城实验室</a></td>
+                                <td>铂金会员</td>
+                                <td>5年</td>
+                                <td>吴昊</td>
+                                <td>2026-3-3 13:50:00</td>
+                                <td>实验室数据平台对接</td>
+                                <td><a href="audit-detail.html" class="link-blue">审批</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail.html" class="link-blue">深圳市大数据资源管理中心</a></td>
+                                <td>金卡会员</td>
+                                <td>2年</td>
+                                <td>黄磊</td>
+                                <td>2026-3-2 08:30:00</td>
+                                <td>公共数据开放协作</td>
                                 <td><a href="audit-detail.html" class="link-blue">审批</a></td>
                             </tr>
                         </tbody>
@@ -243,9 +298,9 @@
                         <option>铂金会员</option>
                     </select>
                     <select class="filter-select">
-                        <option value="">审核状态</option>
-                        <option>审核通过</option>
-                        <option>审核驳回</option>
+                        <option value="">处理结果</option>
+                        <option>通过</option>
+                        <option>拒绝</option>
                     </select>
                     <input class="filter-date" type="text" placeholder="申请时间：开始时间 — 结束时间">
                     <span class="filter-icon" title="搜索">
@@ -267,7 +322,7 @@
                                 <th>申请人</th>
                                 <th>申请时间</th>
                                 <th>备注说明</th>
-                                <th>审核状态</th>
+                                <th>处理结果</th>
                                 <th>审核意见</th>
                             </tr>
                         </thead>
@@ -279,7 +334,7 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-pass">审核通过</span></td>
+                                <td><span class="status-pass">通过</span></td>
                                 <td>同意</td>
                             </tr>
                             <tr>
@@ -289,7 +344,7 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-pass">审核通过</span></td>
+                                <td><span class="status-pass">通过</span></td>
                                 <td>同意</td>
                             </tr>
                             <tr>
@@ -299,8 +354,78 @@
                                 <td>张三</td>
                                 <td>2026-3-9 15:00:00</td>
                                 <td>申请会员xxxx</td>
-                                <td><span class="status-reject">审核驳回</span></td>
-                                <td><span class="status-reject">驳回意见：xxxx</span></td>
+                                <td><span class="status-reject">拒绝</span></td>
+                                <td><span class="status-reject">驳回意见：资质材料不齐全</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">深圳华数信息技术有限公司</a></td>
+                                <td>金卡会员</td>
+                                <td>3年</td>
+                                <td>李明</td>
+                                <td>2026-2-25 11:20:00</td>
+                                <td>业务拓展需要升级会员</td>
+                                <td><span class="status-pass">通过</span></td>
+                                <td>同意，材料审核通过</td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">龙岗区智慧城市发展中心</a></td>
+                                <td>银卡会员</td>
+                                <td>2年</td>
+                                <td>王芳</td>
+                                <td>2026-2-20 09:45:00</td>
+                                <td>政务数据共享需求</td>
+                                <td><span class="status-pass">通过</span></td>
+                                <td>同意</td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">广东数据要素集团</a></td>
+                                <td>铂金会员</td>
+                                <td>10年</td>
+                                <td>赵刚</td>
+                                <td>2026-2-15 16:30:00</td>
+                                <td>战略合作长期会员申请</td>
+                                <td><span class="status-pass">通过</span></td>
+                                <td>同意，战略合作伙伴</td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">深圳前海数据交易所</a></td>
+                                <td>金卡会员</td>
+                                <td>3年</td>
+                                <td>陈静</td>
+                                <td>2026-2-10 14:10:00</td>
+                                <td>数据交易业务合作</td>
+                                <td><span class="status-reject">拒绝</span></td>
+                                <td><span class="status-reject">驳回意见：营业执照已过期</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">南方科技大学大数据研究院</a></td>
+                                <td>银卡会员</td>
+                                <td>1年</td>
+                                <td>周涛</td>
+                                <td>2026-2-5 10:00:00</td>
+                                <td>科研数据资源申请</td>
+                                <td><span class="status-pass">通过</span></td>
+                                <td>同意，科研机构优先</td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">鹏城实验室</a></td>
+                                <td>铂金会员</td>
+                                <td>5年</td>
+                                <td>吴昊</td>
+                                <td>2026-1-28 13:50:00</td>
+                                <td>实验室数据平台对接</td>
+                                <td><span class="status-pass">通过</span></td>
+                                <td>同意</td>
+                            </tr>
+                            <tr>
+                                <td><a href="audit-detail-done.html" class="link-blue">深圳市大数据资源管理中心</a></td>
+                                <td>金卡会员</td>
+                                <td>2年</td>
+                                <td>黄磊</td>
+                                <td>2026-1-20 08:30:00</td>
+                                <td>公共数据开放协作</td>
+                                <td><span class="status-reject">拒绝</span></td>
+                                <td><span class="status-reject">驳回意见：申请类型与资质不符</span></td>
                             </tr>
                         </tbody>
                     </table>

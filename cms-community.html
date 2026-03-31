@@ -680,8 +680,8 @@
 <!-- ========================================== -->
 <div class="cms-panel" id="panel-audit" style="height:100%;display:none;">
     <div class="content-tabs">
-        <div class="content-tab active" data-tab="audit-pending">待审核</div>
-        <div class="content-tab" data-tab="audit-done">已处理</div>
+        <div class="content-tab active" data-tab="audit-pending">待审批</div>
+        <div class="content-tab" data-tab="audit-done">已审批</div>
     </div>
     <!-- 待审核 -->
     <div class="tab-panel active" id="audit-pending">
@@ -689,7 +689,7 @@
             <div class="tree-sidebar" id="auditTree1"></div>
             <div class="content-main">
                 <div class="content-filter">
-                    <button class="filter-btn primary">处理</button>
+                    <button class="filter-btn primary">审批</button>
                     <div class="filter-sep"></div>
                     <span class="filter-label">类型：</span>
                     <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
@@ -700,7 +700,7 @@
                     <table class="cm-table">
                         <thead><tr>
                             <th class="col-ck"><input type="checkbox"></th>
-                            <th>主题/回复内容</th><th>类型</th><th>状态</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
+                            <th>主题/回复内容</th><th>类型</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
                         </tr></thead>
                         <tbody id="auditPendingTbody"></tbody>
                     </table>
@@ -722,7 +722,7 @@
             <div class="content-main">
                 <div class="content-filter">
                     <span class="filter-label">状态：</span>
-                    <select class="filter-select"><option>全部</option><option>审核通过</option><option>审核驳回</option></select>
+                    <select class="filter-select"><option>全部</option><option>通过</option><option>拒绝</option></select>
                     <span class="filter-label">类型：</span>
                     <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
                     <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
@@ -986,7 +986,7 @@
     <div class="board-modal-mask" id="auditModal">
         <div class="board-modal" style="width:560px;">
             <div class="board-modal-header">
-                <span class="board-modal-title">审核处理</span>
+                <span class="board-modal-title">审核审批</span>
                 <button class="board-modal-close" id="auditModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="board-modal-body">
@@ -998,8 +998,8 @@
                     <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>审核结果：</div>
                     <div class="bm-value">
                         <select class="bm-input" id="auditResultSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
-                            <option value="pass">通过</option>
-                            <option value="reject">驳回</option>
+                            <option value="pass">同意</option>
+                            <option value="reject">拒绝</option>
                         </select>
                     </div>
                 </div>
@@ -1206,8 +1206,7 @@
     posts.forEach(function(p,i) {
         var ty = types1[i] || '主题';
         var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
-        var stTag = '<span class="tag-sm tag-gray">待审核</span>';
-        auditPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + stTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">处理</a></td></tr>';
+        auditPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">审批</a></td></tr>';
     });
 
     // ====== 审核处理弹窗逻辑 ======
@@ -1248,24 +1247,24 @@
     // 审核-已处理
     var auditDone = document.getElementById('auditDoneTbody');
     var auditDoneData = [
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核驳回', opinion:'内容具有敏感，不合规内容，不允许发布' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核驳回', opinion:'内容含有不实信息，不能发布' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核驳回', opinion:'内容具有敏感，不合规内容，不允许发布' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'审核通过', opinion:'内容正常，合法合规，可以发布主题' }
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'拒绝', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'拒绝', opinion:'内容含有不实信息，不能发布' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'拒绝', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
+        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' }
     ];
     posts.forEach(function(p,i) {
         var d = auditDoneData[i];
         var ty = types1[i] || '主题';
         var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
-        var stClass = d.st==='审核通过' ? 'tag-green' : 'tag-red';
+        var stClass = d.st==='通过' ? 'tag-green' : 'tag-red';
         var stTag = '<span class="tag-sm ' + stClass + '">' + d.st + '</span>';
-        var viewParam = d.st==='审核通过' ? 'pass' : 'reject';
+        var viewParam = d.st==='通过' ? 'pass' : 'reject';
         auditDone.innerHTML += '<tr><td><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + stTag + '</td><td>' + d.opinion + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">查看</a></td></tr>';
     });
 
