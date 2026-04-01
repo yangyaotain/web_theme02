@@ -226,7 +226,7 @@
                     <a class="sidebar-item disabled"><span>政策资讯</span></a>
                     <a href="cms-community.html?from=audit" class="sidebar-item active"><span>数据社区</span></a>
                     <a class="sidebar-item disabled"><span>大屏管理</span></a>
-                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                    <a href="cms-ai-service.html" class="sidebar-item"><span>智能客服</span></a>
                 </div>
             </nav>
         </aside>
@@ -387,78 +387,104 @@
         </main>
     </div>
 
-    <!-- ====== 审核处理弹窗 ====== -->
-    <div class="audit-modal-mask" id="auditModal">
-        <div class="audit-modal">
+    <!-- ====== 违规处理弹窗 ====== -->
+    <div class="audit-modal-mask" id="vioModal">
+        <div class="audit-modal" style="width:600px;">
             <div class="audit-modal-header">
-                <span class="audit-modal-title">审核处理</span>
-                <button class="audit-modal-close" id="auditModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                <span class="audit-modal-title">违规处理</span>
+                <button class="audit-modal-close" id="vioModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="audit-modal-body">
                 <div class="am-row">
-                    <div class="am-label"><span class="am-required">*</span>审核对象：</div>
-                    <div class="am-value" style="line-height:34px;color:#303133;font-weight:500;" id="auditTargetText">您已经选择1条记录</div>
+                    <div class="am-label"><span class="am-required">*</span>处理对象：</div>
+                    <div class="am-value" style="line-height:34px;color:#303133;font-weight:500;" id="vioTargetText"></div>
                 </div>
                 <div class="am-row">
-                    <div class="am-label"><span class="am-required">*</span>审核结果：</div>
+                    <div class="am-label"><span class="am-required">*</span>主题处理：</div>
                     <div class="am-value">
-                        <select id="auditResultSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
-                            <option value="pass">通过</option>
-                            <option value="reject">驳回</option>
+                        <select id="vioTopicSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="delete">删除</option>
+                            <option value="none">不处理</option>
                         </select>
                     </div>
                 </div>
+                <div class="am-row">
+                    <div class="am-label"><span class="am-required">*</span>用户处理：</div>
+                    <div class="am-value" style="display:flex;align-items:center;gap:10px;">
+                        <select id="vioUserSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="ban">禁用用户</option>
+                            <option value="none">不处理</option>
+                        </select>
+                        <input type="number" id="vioBanDays" value="10" min="1" max="999" style="width:70px;height:34px;padding:0 8px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;text-align:center;">
+                        <span id="vioBanDaysLabel" style="font-size:13px;color:#606266;">天</span>
+                    </div>
+                </div>
                 <div class="am-row" style="align-items:flex-start;">
-                    <div class="am-label" style="line-height:20px;padding-top:8px;"><span class="am-required">*</span>审核意见：</div>
+                    <div class="am-label" style="line-height:20px;padding-top:8px;"><span class="am-required">*</span>处理意见</div>
                     <div class="am-value" style="position:relative;">
-                        <textarea id="auditOpinionText" style="width:100%;height:120px;padding:10px 12px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;resize:none;outline:none;font-family:inherit;line-height:1.6;box-sizing:border-box;" maxlength="200" placeholder="200字以内；"></textarea>
-                        <div id="auditCharCount" style="position:absolute;bottom:8px;right:12px;font-size:12px;color:#c0c4cc;">0/200</div>
+                        <textarea id="vioOpinionText" style="width:100%;height:120px;padding:10px 12px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;resize:none;outline:none;font-family:inherit;line-height:1.6;box-sizing:border-box;" maxlength="200" placeholder="200字以内；"></textarea>
+                        <div id="vioCharCount" style="position:absolute;bottom:8px;right:12px;font-size:12px;color:#c0c4cc;">0/200</div>
                     </div>
                 </div>
             </div>
             <div class="audit-modal-footer">
-                <button class="btn-am-submit" id="auditModalSubmit">确定</button>
-                <button class="btn-am-cancel" id="auditModalCancel">取消</button>
+                <button class="btn-am-submit" id="vioModalSubmit">确定</button>
+                <button class="btn-am-cancel" id="vioModalCancel">取消</button>
             </div>
         </div>
     </div>
 
     <script>
-    // ====== 审核弹窗逻辑 ======
-    var auditModal = document.getElementById('auditModal');
-    var auditOpinionText = document.getElementById('auditOpinionText');
-    var auditCharCount = document.getElementById('auditCharCount');
+    // ====== 违规处理弹窗逻辑 ======
+    var vioModal = document.getElementById('vioModal');
+    var vioOpinionText = document.getElementById('vioOpinionText');
+    var vioCharCount = document.getElementById('vioCharCount');
+    var vioUserSelect = document.getElementById('vioUserSelect');
+    var vioBanDays = document.getElementById('vioBanDays');
+    var vioBanDaysLabel = document.getElementById('vioBanDaysLabel');
 
-    function openAuditModal(targetText) {
-        document.getElementById('auditTargetText').textContent = targetText;
-        document.getElementById('auditResultSelect').value = 'pass';
-        auditOpinionText.value = '';
-        auditCharCount.textContent = '0/200';
-        auditCharCount.style.color = '#c0c4cc';
-        auditModal.classList.add('show');
+    function openVioModal(targetText) {
+        document.getElementById('vioTargetText').textContent = targetText;
+        document.getElementById('vioTopicSelect').value = 'delete';
+        vioUserSelect.value = 'ban';
+        vioBanDays.value = 10;
+        vioBanDays.style.display = '';
+        vioBanDaysLabel.style.display = '';
+        vioOpinionText.value = '';
+        vioCharCount.textContent = '0/200';
+        vioCharCount.style.color = '#c0c4cc';
+        vioModal.classList.add('show');
     }
-    function closeAuditModal() { auditModal.classList.remove('show'); }
+    function closeVioModal() { vioModal.classList.remove('show'); }
 
-    auditOpinionText.addEventListener('input', function() {
+    vioOpinionText.addEventListener('input', function() {
         var len = this.value.length;
-        auditCharCount.textContent = len + '/200';
-        auditCharCount.style.color = len >= 200 ? '#f56c6c' : '#c0c4cc';
+        vioCharCount.textContent = len + '/200';
+        vioCharCount.style.color = len >= 200 ? '#f56c6c' : '#c0c4cc';
     });
 
-    document.getElementById('auditModalClose').addEventListener('click', closeAuditModal);
-    document.getElementById('auditModalCancel').addEventListener('click', closeAuditModal);
-    document.getElementById('auditModalSubmit').addEventListener('click', closeAuditModal);
-    auditModal.addEventListener('click', function(e) { if (e.target === auditModal) closeAuditModal(); });
+    vioUserSelect.addEventListener('change', function() {
+        var show = this.value === 'ban';
+        vioBanDays.style.display = show ? '' : 'none';
+        vioBanDaysLabel.style.display = show ? '' : 'none';
+    });
 
-    // 顶部主题处理按钮
+    document.getElementById('vioModalClose').addEventListener('click', closeVioModal);
+    document.getElementById('vioModalCancel').addEventListener('click', closeVioModal);
+    document.getElementById('vioModalSubmit').addEventListener('click', closeVioModal);
+    vioModal.addEventListener('click', function(e) { if (e.target === vioModal) closeVioModal(); });
+
+    // 顶部主题处理按钮 — 单个处理，显示具体名称
     document.getElementById('btnAuditTopic').addEventListener('click', function() {
-        openAuditModal('您已经选择1条主题记录');
+        openVioModal('主题：' + document.querySelector('.post-title').textContent.trim());
     });
 
-    // 回复处理按钮
+    // 回复处理按钮 — 单个处理，显示回复者名称
     document.querySelectorAll('.btn-audit-reply').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            openAuditModal('您已经选择1条回复记录');
+            var floor = btn.closest('.post-floor');
+            var authorName = floor ? floor.querySelector('.floor-author-name').textContent.trim() : '回复';
+            openVioModal('回复：' + authorName + ' 的回复内容');
         });
     });
     </script>

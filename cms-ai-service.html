@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能客服知识库管理 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+    .kb-layout {
+        display: flex; height: calc(100vh - 64px); overflow: hidden;
+    }
+    .kb-tree {
+        width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #e4e7ed;
+        display: flex; flex-direction: column; overflow: hidden;
+    }
+    .kb-tree-header {
+        padding: 14px 14px 10px; border-bottom: 1px solid #f0f2f5;
+        font-size: 14px; font-weight: 700; color: #303133;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .kb-tree-header svg { width: 18px; height: 18px; color: var(--forest-green); }
+    .kb-tree-search {
+        margin: 10px 12px 6px; padding: 6px 10px; font-size: 12px;
+        border: 1px solid #dcdfe6; border-radius: 4px; width: calc(100% - 24px);
+        box-sizing: border-box;
+    }
+    .kb-tree-search:focus { outline: none; border-color: var(--forest-green); }
+    .kb-tree-body { flex: 1; overflow-y: auto; padding: 4px 0 12px; }
+
+    .kb-node { user-select: none; }
+    .kb-node-label {
+        display: flex; align-items: center; gap: 5px;
+        padding: 6px 12px 6px 12px; font-size: 13px; color: #303133;
+        cursor: pointer; border-radius: 4px; margin: 0 6px; transition: .1s;
+    }
+    .kb-node-label:hover { background: #f5f7fa; color: var(--forest-green); }
+    .kb-node-label.active { background: #e8f5e9; color: var(--forest-green); font-weight: 600; }
+    .kb-node-label .kb-arrow {
+        width: 12px; height: 12px; color: #909399; flex-shrink: 0; transition: transform .15s;
+    }
+    .kb-node-label .kb-arrow.open { transform: rotate(90deg); }
+    .kb-node-label .kb-arrow.hidden { visibility: hidden; }
+    .kb-node-label .kb-folder {
+        width: 16px; height: 16px; color: #e6a23c; flex-shrink: 0;
+    }
+    .kb-node-label .kb-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kb-node-children { padding-left: 16px; }
+    .kb-node-children.collapsed { display: none; }
+
+    /* 右键菜单 */
+    .kb-ctx-menu {
+        display: none; position: fixed; z-index: 9999;
+        background: #fff; border: 1px solid #e4e7ed; border-radius: 6px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.12); padding: 4px 0; min-width: 120px;
+    }
+    .kb-ctx-menu.show { display: block; }
+    .kb-ctx-item {
+        padding: 7px 16px; font-size: 13px; color: #303133; cursor: pointer; transition: .1s;
+    }
+    .kb-ctx-item:hover { background: #f5f7fa; color: var(--forest-green); }
+    .kb-ctx-item.danger { color: #f56c6c; }
+    .kb-ctx-item.danger:hover { background: #fef0f0; }
+
+    /* 右侧内容 */
+    .kb-content {
+        flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+        background: #f5f7fa;
+    }
+    .kb-toolbar {
+        display: flex; align-items: center; gap: 10px;
+        padding: 14px 20px; background: #fff; border-bottom: 1px solid #e4e7ed;
+    }
+    .kb-btn {
+        padding: 6px 18px; font-size: 13px; border-radius: 4px; cursor: pointer;
+        border: 1px solid #dcdfe6; background: #fff; color: #606266; transition: .15s;
+    }
+    .kb-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
+    .kb-btn.primary { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+    .kb-btn.primary:hover { opacity: .88; }
+    .kb-btn.danger { background: #f56c6c; color: #fff; border-color: #f56c6c; }
+    .kb-btn.danger:hover { background: #f78989; border-color: #f78989; }
+    .kb-toolbar-sep { width: 1px; height: 22px; background: #e4e7ed; }
+    .kb-toolbar-right {
+        margin-left: auto; display: flex; align-items: center; gap: 8px;
+    }
+    .kb-filter-label { font-size: 13px; color: #606266; white-space: nowrap; }
+    .kb-filter-input {
+        padding: 5px 10px; font-size: 13px; border: 1px solid #dcdfe6; border-radius: 4px;
+        width: 200px; outline: none;
+    }
+    .kb-filter-input:focus { border-color: var(--forest-green); }
+
+    /* 表格 */
+    .kb-table-wrap { flex: 1; overflow: auto; padding: 16px 20px; }
+    .kb-table {
+        width: 100%; border-collapse: collapse; background: #fff;
+        border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .kb-table thead th {
+        padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600;
+        color: #303133; background: #f5f7fa; border-bottom: 1px solid #e4e7ed;
+        white-space: nowrap;
+    }
+    .kb-table tbody td {
+        padding: 9px 14px; font-size: 13px; color: #606266; border-bottom: 1px solid #f0f2f5;
+    }
+    .kb-table tbody tr:hover { background: #fafafa; }
+    .kb-table .col-ck { width: 40px; text-align: center; }
+    .kb-table .col-op { width: 100px; }
+    .kb-table .col-op a {
+        color: var(--forest-green); cursor: pointer; margin-right: 10px; font-size: 13px;
+    }
+    .kb-table .col-op a:hover { text-decoration: underline; }
+    .kb-table .col-op a.op-danger { color: #f56c6c; }
+    .kb-table .col-op a.op-danger:hover { color: #f56c6c; }
+    .kb-file-icon {
+        display: inline-flex; align-items: center; gap: 6px;
+    }
+    .kb-file-icon svg { width: 16px; height: 16px; color: #409eff; flex-shrink: 0; }
+
+    /* 分页 */
+    .kb-pagination {
+        display: flex; align-items: center; gap: 6px;
+        padding: 12px 20px; font-size: 12px; color: #909399; background: #fff;
+        border-top: 1px solid #e4e7ed;
+    }
+    .kb-page-btn {
+        padding: 3px 8px; border: 1px solid #dcdfe6; background: #fff; border-radius: 3px;
+        font-size: 12px; cursor: pointer; color: #606266;
+    }
+    .kb-page-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
+    .kb-page-btn.active { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
+
+    /* 上传弹窗 */
+    .kb-upload-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .kb-upload-mask.show { display: flex; }
+    .kb-upload-box {
+        width: 480px; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18); padding: 0;
+    }
+    .kb-upload-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 24px; border-bottom: 1px solid #f0f2f5;
+    }
+    .kb-upload-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .kb-upload-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        color: #909399; display: flex; align-items: center; justify-content: center; border-radius: 4px;
+    }
+    .kb-upload-close:hover { color: #303133; background: #f5f7fa; }
+    .kb-upload-close svg { width: 18px; height: 18px; stroke-width: 2; }
+    .kb-upload-body { padding: 24px; }
+    .kb-upload-hint {
+        display: flex; align-items: flex-start; gap: 8px;
+        font-size: 13px; color: #606266; margin-bottom: 6px;
+    }
+    .kb-upload-hint svg { width: 16px; height: 16px; color: #409eff; flex-shrink: 0; margin-top: 1px; }
+    .kb-upload-hint-text { line-height: 1.6; }
+    .kb-upload-row {
+        display: flex; align-items: center; gap: 12px; margin-top: 20px;
+    }
+    .kb-upload-label { font-size: 13px; color: #303133; white-space: nowrap; font-weight: 500; }
+    .kb-upload-file-wrap { flex: 1; display: flex; align-items: center; gap: 10px; }
+    .kb-upload-file-btn {
+        padding: 5px 14px; font-size: 13px; border: 1px solid #dcdfe6; border-radius: 4px;
+        background: #fff; color: #606266; cursor: pointer; white-space: nowrap;
+    }
+    .kb-upload-file-btn:hover { border-color: var(--forest-green); color: var(--forest-green); }
+    .kb-upload-file-name { font-size: 12px; color: #909399; }
+    .kb-upload-progress {
+        margin-top: 14px; height: 6px; background: #f0f2f5; border-radius: 3px; overflow: hidden;
+    }
+    .kb-upload-progress-bar {
+        height: 100%; width: 15%; background: var(--forest-green); border-radius: 3px; transition: width .3s;
+    }
+    .kb-upload-status {
+        margin-top: 10px; font-size: 13px;
+    }
+    .kb-upload-status .suc { color: var(--forest-green); font-weight: 600; }
+    .kb-upload-status .fail { color: #f56c6c; font-weight: 600; }
+    .kb-upload-footer {
+        display: flex; justify-content: center; gap: 12px; padding: 0 24px 24px;
+    }
+    .kb-upload-footer .kb-btn { min-width: 80px; text-align: center; }
+
+    /* 编辑弹窗 */
+    .kb-edit-mask {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(0,0,0,.45); justify-content: center; align-items: center;
+    }
+    .kb-edit-mask.show { display: flex; }
+    .kb-edit-box {
+        width: 400px; background: #fff; border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.18);
+    }
+    .kb-edit-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 24px; border-bottom: 1px solid #f0f2f5;
+    }
+    .kb-edit-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .kb-edit-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        color: #909399; display: flex; align-items: center; justify-content: center; border-radius: 4px;
+    }
+    .kb-edit-close:hover { color: #303133; background: #f5f7fa; }
+    .kb-edit-close svg { width: 18px; height: 18px; stroke-width: 2; }
+    .kb-edit-body { padding: 24px; }
+    .kb-edit-row { display: flex; align-items: center; gap: 12px; }
+    .kb-edit-label { font-size: 13px; color: #303133; white-space: nowrap; font-weight: 500; }
+    .kb-edit-input {
+        flex: 1; padding: 7px 10px; font-size: 13px; border: 1px solid #dcdfe6;
+        border-radius: 4px; outline: none;
+    }
+    .kb-edit-input:focus { border-color: var(--forest-green); }
+    .kb-edit-footer {
+        display: flex; justify-content: flex-end; gap: 10px; padding: 0 24px 20px;
+    }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="#" class="topbar-nav-item">运维中心</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">运营中心</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item disabled">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>平台概览</span>
+                </a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>用户管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a class="sidebar-item disabled"><span>用户列表</span></a>
+                    <a class="sidebar-item disabled"><span>角色管理</span></a>
+                </div>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"/></svg><span>连接器管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>数据目录审批</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><span>数据目录监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg><span>订单合同监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>数据交付监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg><span>交易费用监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>费用管理</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>可信存证</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6v-4zm6-6h4v3h-4V7zM6 7h5v5H6V7zm6 4h4v6h-4v-6z"/></svg><span>开发工具监测</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg><span>数据专区配置</span></a>
+                <a class="sidebar-item disabled"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>供需管理</span></a>
+
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    <span>会员管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub" style="display:none">
+                    <a href="operation-center.html" class="sidebar-item"><span>会员审核</span></a>
+                    <a href="member-manage.html" class="sidebar-item"><span>会员管理</span></a>
+                    <a href="member-system.html" class="sidebar-item"><span>会员体系</span></a>
+                </div>
+
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"/></svg>
+                    <span>内容管理</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </div>
+                <div class="sidebar-sub">
+                    <a href="cms-portal.html" class="sidebar-item"><span>门户管理</span></a>
+                    <a class="sidebar-item disabled"><span>帮助中心</span></a>
+                    <a class="sidebar-item disabled"><span>政策资讯</span></a>
+                    <a href="cms-community.html" class="sidebar-item"><span>数据社区</span></a>
+                    <a class="sidebar-item disabled"><span>大屏管理</span></a>
+                    <a href="cms-ai-service.html" class="sidebar-item active"><span>智能客服</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content" style="padding:0;">
+            <div class="kb-layout">
+                <!-- 左侧目录树 -->
+                <div class="kb-tree">
+                    <div class="kb-tree-header">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
+                        智能客服知识库管理
+                    </div>
+                    <input type="text" class="kb-tree-search" placeholder="关键字搜索" id="kbTreeSearch">
+                    <div class="kb-tree-body" id="kbTreeBody"></div>
+                </div>
+
+                <!-- 右侧列表 -->
+                <div class="kb-content">
+                    <div class="kb-toolbar">
+                        <button class="kb-btn primary" id="btnUpload">上传</button>
+                        <button class="kb-btn danger" id="btnBatchDel">删除</button>
+                        <div class="kb-toolbar-sep"></div>
+                        <div class="kb-toolbar-right">
+                            <span class="kb-filter-label">名称：</span>
+                            <input type="text" class="kb-filter-input" placeholder="文档名称查询" id="kbSearchInput">
+                            <button class="kb-btn primary" style="padding:6px 22px;">查询</button>
+                        </div>
+                    </div>
+                    <div class="kb-table-wrap">
+                        <table class="kb-table">
+                            <thead><tr>
+                                <th class="col-ck"><input type="checkbox" id="kbCheckAll"></th>
+                                <th>名称</th>
+                                <th>上传者</th>
+                                <th>上传时间</th>
+                                <th class="col-op">操作</th>
+                            </tr></thead>
+                            <tbody id="kbTbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="kb-pagination">
+                        <span>第1-10条记录，共36条记录，每页显示</span>
+                        <select style="font-size:12px;padding:2px 4px;border:1px solid #dcdfe6;border-radius:3px;"><option>10</option></select>
+                        <span>记录</span>
+                        <button class="kb-page-btn">上一页</button>
+                        <button class="kb-page-btn active">1</button><button class="kb-page-btn">2</button><button class="kb-page-btn">3</button><button class="kb-page-btn">4</button>
+                        <button class="kb-page-btn">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 右键菜单 -->
+    <div class="kb-ctx-menu" id="kbCtxMenu">
+        <div class="kb-ctx-item" data-action="add">新建分类</div>
+        <div class="kb-ctx-item" data-action="edit">编辑</div>
+        <div class="kb-ctx-item danger" data-action="delete">删除</div>
+    </div>
+
+    <!-- 上传弹窗 -->
+    <div class="kb-upload-mask" id="uploadModal">
+        <div class="kb-upload-box">
+            <div class="kb-upload-header">
+                <span class="kb-upload-title">上传文档</span>
+                <button class="kb-upload-close" id="uploadClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="kb-upload-body">
+                <div class="kb-upload-hint">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    <div class="kb-upload-hint-text">
+                        可同时选择多个文件上传<br>
+                        格式为Word/PDF，大小100M以内；
+                    </div>
+                </div>
+                <div class="kb-upload-row">
+                    <span class="kb-upload-label">文件：</span>
+                    <div class="kb-upload-file-wrap">
+                        <label class="kb-upload-file-btn">选择文件<input type="file" multiple accept=".doc,.docx,.pdf" style="display:none" id="uploadFileInput"></label>
+                        <span class="kb-upload-file-name" id="uploadFileName">未选择任何文件</span>
+                    </div>
+                </div>
+                <div class="kb-upload-progress" id="uploadProgress" style="display:none;">
+                    <div class="kb-upload-progress-bar" id="uploadProgressBar"></div>
+                </div>
+                <div class="kb-upload-status" id="uploadStatus" style="display:none;">
+                    <span class="suc">导入成功</span>/<span class="fail">失败</span>
+                </div>
+            </div>
+            <div class="kb-upload-footer">
+                <button class="kb-btn primary" id="uploadSubmit">导入</button>
+                <button class="kb-btn" id="uploadCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑分类弹窗 -->
+    <div class="kb-edit-mask" id="editModal">
+        <div class="kb-edit-box">
+            <div class="kb-edit-header">
+                <span class="kb-edit-title" id="editModalTitle">新建分类</span>
+                <button class="kb-edit-close" id="editClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="kb-edit-body">
+                <div class="kb-edit-row">
+                    <span class="kb-edit-label">分类名称：</span>
+                    <input type="text" class="kb-edit-input" id="editInput" placeholder="请输入分类名称">
+                </div>
+            </div>
+            <div class="kb-edit-footer">
+                <button class="kb-btn primary" id="editSubmit">确定</button>
+                <button class="kb-btn" id="editCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ====== 目录树数据 ======
+    var kbTreeData = {
+        label: '龙岗数据门户', open: true, children: [
+            { label: '业务分类', open: true, children: [
+                { label: '平台操作指南' },
+                { label: '数据交易流程' },
+                { label: '数据资源申请' },
+                { label: '会员服务说明' },
+                { label: '数据产品介绍' }
+            ]},
+            { label: '售后支持', open: true, children: [
+                { label: '常见问题解答' },
+                { label: '投诉与建议' },
+                { label: '数据质量反馈' },
+                { label: '退款与售后政策' },
+                { label: '技术支持指南' }
+            ]}
+        ]
+    };
+
+    var ARROW_SVG = '<svg class="kb-arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>';
+    var FOLDER_SVG = '<svg class="kb-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>';
+
+    var activeTreeNode = null;
+    var ctxTargetNode = null;
+
+    function renderTree() {
+        var body = document.getElementById('kbTreeBody');
+        body.innerHTML = buildTreeNode(kbTreeData, 0);
+        var firstLabel = body.querySelector('.kb-node-label');
+        if (firstLabel) { firstLabel.classList.add('active'); activeTreeNode = firstLabel; }
+    }
+
+    function buildTreeNode(node, depth) {
+        var hasChildren = node.children && node.children.length > 0;
+        var isOpen = node.open !== false;
+        var pad = depth * 16;
+        var html = '<div class="kb-node" data-label="' + escHtml(node.label) + '">';
+        html += '<div class="kb-node-label" style="padding-left:' + (12 + pad) + 'px" data-label="' + escHtml(node.label) + '">';
+        if (hasChildren) {
+            html += ARROW_SVG.replace('class="kb-arrow"', 'class="kb-arrow' + (isOpen ? ' open' : '') + '"');
+        } else {
+            html += ARROW_SVG.replace('class="kb-arrow"', 'class="kb-arrow hidden"');
+        }
+        html += FOLDER_SVG;
+        html += '<span class="kb-text">' + escHtml(node.label) + '</span>';
+        html += '</div>';
+        if (hasChildren) {
+            html += '<div class="kb-node-children' + (isOpen ? '' : ' collapsed') + '">';
+            for (var i = 0; i < node.children.length; i++) {
+                html += buildTreeNode(node.children[i], depth + 1);
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    renderTree();
+
+    // 点击展开/折叠 & 选中
+    document.getElementById('kbTreeBody').addEventListener('click', function(e) {
+        var label = e.target.closest('.kb-node-label');
+        if (!label) return;
+        var node = label.parentElement;
+        var children = node.querySelector('.kb-node-children');
+        var arrow = label.querySelector('.kb-arrow');
+        if (children && arrow && !arrow.classList.contains('hidden')) {
+            children.classList.toggle('collapsed');
+            arrow.classList.toggle('open');
+        }
+        if (activeTreeNode) activeTreeNode.classList.remove('active');
+        label.classList.add('active');
+        activeTreeNode = label;
+    });
+
+    // ====== 右键菜单 ======
+    var ctxMenu = document.getElementById('kbCtxMenu');
+
+    document.getElementById('kbTreeBody').addEventListener('contextmenu', function(e) {
+        var label = e.target.closest('.kb-node-label');
+        if (!label) return;
+        e.preventDefault();
+        ctxTargetNode = label;
+        if (activeTreeNode) activeTreeNode.classList.remove('active');
+        label.classList.add('active');
+        activeTreeNode = label;
+        ctxMenu.style.left = e.clientX + 'px';
+        ctxMenu.style.top = e.clientY + 'px';
+        ctxMenu.classList.add('show');
+    });
+
+    document.addEventListener('click', function() { ctxMenu.classList.remove('show'); });
+
+    ctxMenu.addEventListener('click', function(e) {
+        var item = e.target.closest('.kb-ctx-item');
+        if (!item) return;
+        var action = item.getAttribute('data-action');
+        var nodeName = ctxTargetNode ? ctxTargetNode.getAttribute('data-label') : '';
+        ctxMenu.classList.remove('show');
+
+        if (action === 'add') {
+            openEditModal('新建分类', '');
+        } else if (action === 'edit') {
+            openEditModal('编辑分类', nodeName);
+        } else if (action === 'delete') {
+            GlobalDialog.danger({
+                title: '删除分类',
+                desc: '您确定要删除分类【' + nodeName + '】吗？删除后该分类下的所有文档将被移除。'
+            });
+        }
+    });
+
+    // ====== 编辑分类弹窗 ======
+    var editModal = document.getElementById('editModal');
+    function openEditModal(title, value) {
+        document.getElementById('editModalTitle').textContent = title;
+        document.getElementById('editInput').value = value;
+        editModal.classList.add('show');
+    }
+    function closeEditModal() { editModal.classList.remove('show'); }
+    document.getElementById('editClose').addEventListener('click', closeEditModal);
+    document.getElementById('editCancel').addEventListener('click', closeEditModal);
+    document.getElementById('editSubmit').addEventListener('click', closeEditModal);
+    editModal.addEventListener('click', function(e) { if (e.target === editModal) closeEditModal(); });
+
+    // ====== 列表数据 ======
+    var kbDocs = [
+        { name: '龙岗数据门户操作手册.docx', uploader: '张明', time: '2025-03-01 09:30:00' },
+        { name: '数据交易流程说明.pdf', uploader: '李华', time: '2025-02-28 14:15:00' },
+        { name: '数据资源申请操作指南.docx', uploader: '王芳', time: '2025-02-25 10:42:00' },
+        { name: '会员权益与等级说明.docx', uploader: '陈刚', time: '2025-02-20 16:08:00' },
+        { name: '数据产品上架规范.pdf', uploader: '赵丽', time: '2025-02-18 11:20:00' },
+        { name: '数据质量标准与评估.docx', uploader: '孙伟', time: '2025-02-15 08:55:00' },
+        { name: '平台常见问题FAQ.pdf', uploader: '周强', time: '2025-02-10 13:40:00' },
+        { name: '数据安全与隐私政策.docx', uploader: '吴敏', time: '2025-02-08 09:12:00' },
+        { name: '数据交付与验收流程.pdf', uploader: '郑涛', time: '2025-02-05 15:30:00' },
+        { name: '退款与售后服务政策.docx', uploader: '黄丽', time: '2025-01-30 10:05:00' }
+    ];
+
+    var FILE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+
+    function renderDocs() {
+        var tbody = document.getElementById('kbTbody');
+        var html = '';
+        for (var i = 0; i < kbDocs.length; i++) {
+            var d = kbDocs[i];
+            html += '<tr>' +
+                '<td class="col-ck"><input type="checkbox"></td>' +
+                '<td><span class="kb-file-icon">' + FILE_ICON + ' ' + escHtml(d.name) + '</span></td>' +
+                '<td>' + escHtml(d.uploader) + '</td>' +
+                '<td>' + d.time + '</td>' +
+                '<td class="col-op"><a class="kb-download">下载</a><a class="op-danger kb-del-single" data-name="' + escHtml(d.name) + '">删除</a></td>' +
+                '</tr>';
+        }
+        tbody.innerHTML = html;
+    }
+    renderDocs();
+
+    // 全选
+    document.getElementById('kbCheckAll').addEventListener('change', function() {
+        var cbs = document.querySelectorAll('#kbTbody input[type=checkbox]');
+        for (var i = 0; i < cbs.length; i++) cbs[i].checked = this.checked;
+    });
+
+    // ====== 批量删除 ======
+    document.getElementById('btnBatchDel').addEventListener('click', function() {
+        var cnt = document.querySelectorAll('#kbTbody input[type=checkbox]:checked').length;
+        GlobalDialog.danger({
+            title: '批量删除',
+            desc: '您确定要删除选择的' + cnt + '个文档吗？'
+        });
+    });
+
+    // ====== 单个删除 ======
+    document.getElementById('kbTbody').addEventListener('click', function(e) {
+        var link = e.target.closest('.kb-del-single');
+        if (!link) return;
+        e.preventDefault();
+        var name = link.getAttribute('data-name');
+        GlobalDialog.danger({
+            title: '删除文档',
+            desc: '您确定要删除【' + name + '】吗？'
+        });
+    });
+
+    // ====== 上传弹窗 ======
+    var uploadModal = document.getElementById('uploadModal');
+    function openUpload() { uploadModal.classList.add('show'); }
+    function closeUpload() {
+        uploadModal.classList.remove('show');
+        document.getElementById('uploadFileName').textContent = '未选择任何文件';
+        document.getElementById('uploadProgress').style.display = 'none';
+        document.getElementById('uploadStatus').style.display = 'none';
+        document.getElementById('uploadFileInput').value = '';
+    }
+    document.getElementById('btnUpload').addEventListener('click', openUpload);
+    document.getElementById('uploadClose').addEventListener('click', closeUpload);
+    document.getElementById('uploadCancel').addEventListener('click', closeUpload);
+    uploadModal.addEventListener('click', function(e) { if (e.target === uploadModal) closeUpload(); });
+
+    document.getElementById('uploadFileInput').addEventListener('change', function() {
+        var files = this.files;
+        if (files.length === 0) {
+            document.getElementById('uploadFileName').textContent = '未选择任何文件';
+        } else if (files.length === 1) {
+            document.getElementById('uploadFileName').textContent = files[0].name;
+        } else {
+            document.getElementById('uploadFileName').textContent = '已选择' + files.length + '个文件';
+        }
+    });
+
+    document.getElementById('uploadSubmit').addEventListener('click', function() {
+        document.getElementById('uploadProgress').style.display = 'block';
+        document.getElementById('uploadProgressBar').style.width = '15%';
+        setTimeout(function() { document.getElementById('uploadProgressBar').style.width = '60%'; }, 300);
+        setTimeout(function() { document.getElementById('uploadProgressBar').style.width = '100%'; }, 700);
+        setTimeout(function() { document.getElementById('uploadStatus').style.display = 'block'; }, 900);
+    });
+    </script>
+    <script src="js/admin-topbar.js"></script>
+</body>
+</html>

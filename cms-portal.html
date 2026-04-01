@@ -76,8 +76,12 @@
         }
         .carousel-card-ops span:hover { text-decoration: underline; }
         .carousel-card-ops span.op-del { color: #f56c6c; }
-        .carousel-card-body { padding: 0; position: relative; }
-        .carousel-card-body img {
+        .carousel-card-body { padding: 12px 16px; position: relative; }
+        .carousel-card-img-wrap {
+            width: 70%; border: 1px dashed #dcdfe6; border-radius: 6px;
+            overflow: hidden; background: #fafbfc; box-sizing: border-box;
+        }
+        .carousel-card-img-wrap img {
             width: 100%; display: block; object-fit: contain;
         }
         .carousel-card-footer {
@@ -230,7 +234,7 @@
                     <a class="sidebar-item disabled"><span>政策资讯</span></a>
                     <a href="cms-community.html" class="sidebar-item"><span>数据社区</span></a>
                     <a class="sidebar-item disabled"><span>大屏管理</span></a>
-                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                    <a href="cms-ai-service.html" class="sidebar-item"><span>智能客服</span></a>
                 </div>
             </nav>
         </aside>
@@ -265,7 +269,7 @@
                                     </div>
                                 </div>
                                 <div class="carousel-card-body">
-                                    <img src="images/carousel-slide-1.png" alt="破解数字鸿沟 实现数字平权">
+                                    <div class="carousel-card-img-wrap"><img src="images/carousel-slide-1.png" alt="破解数字鸿沟 实现数字平权"></div>
                                 </div>
                                 <div class="carousel-card-footer">
                                     <span>链接：<span class="link-tag">policy-detail-4t.html</span></span>
@@ -281,7 +285,7 @@
                                     </div>
                                 </div>
                                 <div class="carousel-card-body">
-                                    <img src="images/carousel-slide-2.png" alt="打造万P算力 新基建">
+                                    <div class="carousel-card-img-wrap"><img src="images/carousel-slide-2.png" alt="打造万P算力 新基建"></div>
                                 </div>
                                 <div class="carousel-card-footer">
                                     <span>链接：<span class="link-tag">policy-detail-ai.html</span></span>
@@ -297,7 +301,7 @@
                                     </div>
                                 </div>
                                 <div class="carousel-card-body">
-                                    <img src="images/carousel-slide-3.png" alt="构建数据要素 流通新生态">
+                                    <div class="carousel-card-img-wrap"><img src="images/carousel-slide-3.png" alt="构建数据要素 流通新生态"></div>
                                 </div>
                                 <div class="carousel-card-footer">
                                     <span>链接：<span class="link-tag">policy-detail-data-space.html</span></span>
@@ -313,7 +317,7 @@
                                     </div>
                                 </div>
                                 <div class="carousel-card-body">
-                                    <img src="images/carousel-slide-4.png" alt="释放数据要素 新价值">
+                                    <div class="carousel-card-img-wrap"><img src="images/carousel-slide-4.png" alt="释放数据要素 新价值"></div>
                                 </div>
                                 <div class="carousel-card-footer">
                                     <span>链接：<span class="link-tag">policy-detail-public-data.html</span></span>
@@ -643,12 +647,14 @@
             btn.addEventListener('click', function() {
                 var idx = parseInt(btn.closest('.carousel-card').dataset.idx, 10);
                 screens.forEach(function(s, i) {
+                    var ops = s.querySelector('.cfg-screen-ops');
                     if (i === idx) {
                         s.style.display = '';
                         s.style.border = '2px solid var(--forest-green, #16a34a)';
                     } else {
                         s.style.display = 'none';
                     }
+                    if (ops) ops.style.display = 'none';
                 });
                 modal.classList.add('show');
                 modal._editMode = true;
@@ -660,6 +666,8 @@
                 screens.forEach(function(s) {
                     s.style.display = '';
                     s.style.border = '';
+                    var ops = s.querySelector('.cfg-screen-ops');
+                    if (ops) ops.style.display = '';
                 });
                 modal._editMode = false;
             }
@@ -674,6 +682,38 @@
             if (e.target === modal) resetScreens();
         });
     })();
+
+    // 图片上传区域点击上传
+    document.querySelectorAll('.cfg-upload-area').forEach(function(area) {
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/png,image/jpeg,image/jpg';
+        fileInput.style.display = 'none';
+        area.appendChild(fileInput);
+
+        area.addEventListener('click', function() { fileInput.click(); });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                var img = area.querySelector('img');
+                reader.onload = function(e) {
+                    if (img) {
+                        img.src = e.target.result;
+                    } else {
+                        img = document.createElement('img');
+                        img.src = e.target.result;
+                        var svg = area.querySelector('svg');
+                        if (svg) svg.style.display = 'none';
+                        var hint = area.querySelector('.cfg-upload-hint');
+                        if (hint) hint.style.display = 'none';
+                        area.appendChild(img);
+                    }
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
 
     // 删除按钮 → GlobalDialog.danger 确认
     document.querySelectorAll('.carousel-card .op-del').forEach(function(btn) {

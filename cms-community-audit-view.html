@@ -175,7 +175,7 @@
                     <a class="sidebar-item disabled"><span>政策资讯</span></a>
                     <a href="cms-community.html?from=audit" class="sidebar-item active"><span>数据社区</span></a>
                     <a class="sidebar-item disabled"><span>大屏管理</span></a>
-                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                    <a href="cms-ai-service.html" class="sidebar-item"><span>智能客服</span></a>
                 </div>
             </nav>
         </aside>
@@ -356,7 +356,7 @@
         var opinion = document.getElementById('topicOpinion');
         if (result === 'reject') {
             tag.className = 'audit-result-tag red';
-            tag.textContent = '审核驳回';
+            tag.textContent = '审核不通过';
             opinion.className = 'audit-opinion red';
             opinion.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>内容具有敏感，不合规内容，不允许发布';
         }

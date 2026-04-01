@@ -260,6 +260,8 @@
     /* ====== 禁用账号 ====== */
     .ban-top-actions { display: flex; gap: 8px; padding: 0 0 12px; }
     .ban-top-actions .filter-btn { padding: 6px 16px; font-size: 13px; }
+    .ban-top-actions .filter-btn.danger { background: #f56c6c; color: #fff; border-color: #f56c6c; }
+    .ban-top-actions .filter-btn.danger:hover { background: #f78989; border-color: #f78989; }
     .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
     .status-dot.red { background: #f56c6c; }
     .status-dot.green { background: #67c23a; }
@@ -488,7 +490,7 @@
                     <a class="sidebar-item disabled"><span>政策资讯</span></a>
                     <a href="cms-community.html" class="sidebar-item active"><span>数据社区</span></a>
                     <a class="sidebar-item disabled"><span>大屏管理</span></a>
-                    <a class="sidebar-item disabled"><span>智能客服</span></a>
+                    <a href="cms-ai-service.html" class="sidebar-item"><span>智能客服</span></a>
                 </div>
             </nav>
         </aside>
@@ -722,7 +724,7 @@
             <div class="content-main">
                 <div class="content-filter">
                     <span class="filter-label">状态：</span>
-                    <select class="filter-select"><option>全部</option><option>通过</option><option>拒绝</option></select>
+                    <select class="filter-select"><option>全部</option><option>通过</option><option>不通过</option></select>
                     <span class="filter-label">类型：</span>
                     <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
                     <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
@@ -758,12 +760,11 @@
     </div>
     <!-- 待处理 -->
     <div class="tab-panel active" id="vio-pending">
-        <div class="content-hint">举报：对广告、不实信息、违禁内容等违规内容</div>
         <div style="display:flex;flex:1;overflow:hidden;">
             <div class="tree-sidebar" id="vioTree1"></div>
             <div class="content-main">
                 <div class="content-filter">
-                    <button class="filter-btn warning">处理</button>
+                    <button class="filter-btn primary">处理</button>
                     <div class="filter-sep"></div>
                     <span class="filter-label">类型：</span>
                     <select class="filter-select"><option>全部</option></select>
@@ -791,12 +792,11 @@
     </div>
     <!-- 已处理 -->
     <div class="tab-panel" id="vio-done">
-        <div class="content-hint">举报：对广告、不实信息、违禁内容等违规内容</div>
         <div style="display:flex;flex:1;overflow:hidden;">
             <div class="tree-sidebar" id="vioTree2"></div>
             <div class="content-main">
                 <div class="content-filter">
-                    <button class="filter-btn warning">处理</button>
+                    <button class="filter-btn primary">处理</button>
                     <div class="filter-sep"></div>
                     <span class="filter-label">类型：</span>
                     <select class="filter-select"><option>全部</option></select>
@@ -828,8 +828,8 @@
 <!-- ========================================== -->
 <div class="cms-panel" id="panel-ban" style="display:none;">
     <div class="ban-top-actions">
-        <button class="filter-btn primary">启用</button>
-        <button class="filter-btn warning">禁用</button>
+        <button class="filter-btn primary" id="banBatchEnable">启用</button>
+        <button class="filter-btn danger" id="banBatchDisable">禁用</button>
     </div>
     <div class="content-filter" style="padding:0 0 12px;">
         <span class="filter-label">账号状态：</span>
@@ -843,17 +843,17 @@
                 <th class="col-ck"><input type="checkbox"></th>
                 <th>账号</th><th>姓名</th><th>发布主题</th><th>回复内容</th><th>违规次数</th><th>账号状态</th><th>备注</th><th class="col-op">操作</th>
             </tr></thead>
-            <tbody>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a>启用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
-                <tr><td class="col-ck"><input type="checkbox"></td><td>zhans</td><td>张三</td><td>100</td><td>22</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a>禁用</a></td></tr>
+            <tbody id="banTbody">
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhangs</td><td>张三</td><td>100</td><td>22</td><td>3</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余10天）</td><td class="col-op"><a class="ban-op-link" data-action="enable" data-account="zhangs" data-name="张三">启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>lis</td><td>李四</td><td>67</td><td>15</td><td>5</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用60天（剩余32天）</td><td class="col-op"><a class="ban-op-link" data-action="enable" data-account="lis" data-name="李四">启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>wangwu</td><td>王五</td><td>45</td><td>8</td><td>2</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用15天（剩余3天）</td><td class="col-op"><a class="ban-op-link" data-action="enable" data-account="wangwu" data-name="王五">启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhaoliu</td><td>赵六</td><td>88</td><td>31</td><td>4</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用90天（剩余55天）</td><td class="col-op"><a class="ban-op-link" data-action="enable" data-account="zhaoliu" data-name="赵六">启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>sunqi</td><td>孙七</td><td>120</td><td>40</td><td>6</td><td><span class="status-dot red"></span>已禁用</td><td class="ban-remark">禁用30天（剩余18天）</td><td class="col-op"><a class="ban-op-link" data-action="enable" data-account="sunqi" data-name="孙七">启用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhouba</td><td>周八</td><td>55</td><td>12</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a class="ban-op-link" data-action="disable" data-account="zhouba" data-name="周八">禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>wujiu</td><td>吴九</td><td>33</td><td>7</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a class="ban-op-link" data-action="disable" data-account="wujiu" data-name="吴九">禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>zhengshi</td><td>郑十</td><td>78</td><td>25</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a class="ban-op-link" data-action="disable" data-account="zhengshi" data-name="郑十">禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>chenm</td><td>陈明</td><td>92</td><td>18</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a class="ban-op-link" data-action="disable" data-account="chenm" data-name="陈明">禁用</a></td></tr>
+                <tr><td class="col-ck"><input type="checkbox"></td><td>huangl</td><td>黄亮</td><td>61</td><td>10</td><td>0</td><td><span class="status-dot green"></span>正常</td><td>—</td><td class="col-op"><a class="ban-op-link" data-action="disable" data-account="huangl" data-name="黄亮">禁用</a></td></tr>
             </tbody>
         </table>
     </div>
@@ -1014,6 +1014,53 @@
             <div class="board-modal-footer">
                 <button class="btn-bm-submit" id="auditModalSubmit">确定</button>
                 <button class="btn-bm-cancel" id="auditModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 违规处理弹窗 ====== -->
+    <div class="board-modal-mask" id="vioModal">
+        <div class="board-modal" style="width:600px;">
+            <div class="board-modal-header">
+                <span class="board-modal-title">违规处理</span>
+                <button class="board-modal-close" id="vioModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="board-modal-body">
+                <div class="bm-row">
+                    <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>处理对象：</div>
+                    <div class="bm-value" style="line-height:34px;color:#303133;font-weight:500;" id="vioTargetText">您已经选择xxx条记录</div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>主题处理：</div>
+                    <div class="bm-value">
+                        <select class="bm-input" id="vioTopicSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="delete">删除</option>
+                            <option value="none">不处理</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bm-row">
+                    <div class="bm-label" style="white-space:nowrap;"><span class="bm-required">*</span>用户处理：</div>
+                    <div class="bm-value" style="display:flex;align-items:center;gap:10px;">
+                        <select class="bm-input" id="vioUserSelect" style="width:240px;height:34px;padding:0 10px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;">
+                            <option value="ban">禁用用户</option>
+                            <option value="none">不处理</option>
+                        </select>
+                        <input type="number" id="vioBanDays" value="10" min="1" max="999" style="width:70px;height:34px;padding:0 8px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;outline:none;text-align:center;">
+                        <span style="font-size:13px;color:#606266;">天</span>
+                    </div>
+                </div>
+                <div class="bm-row" style="align-items:flex-start;">
+                    <div class="bm-label" style="white-space:nowrap;line-height:20px;padding-top:8px;"><span class="bm-required">*</span>处理意见</div>
+                    <div class="bm-value" style="position:relative;">
+                        <textarea id="vioOpinionText" class="bm-input" style="width:100%;height:120px;padding:10px 12px;font-size:13px;border:1px solid #dcdfe6;border-radius:4px;color:#303133;resize:none;outline:none;font-family:inherit;line-height:1.6;box-sizing:border-box;" maxlength="200" placeholder="200字以内；"></textarea>
+                        <div id="vioCharCount" style="position:absolute;bottom:8px;right:12px;font-size:12px;color:#c0c4cc;">0/200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="board-modal-footer">
+                <button class="btn-bm-submit" id="vioModalSubmit">确定</button>
+                <button class="btn-bm-cancel" id="vioModalCancel">取消</button>
             </div>
         </div>
     </div>
@@ -1249,12 +1296,12 @@
     var auditDoneData = [
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'拒绝', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'不通过', opinion:'内容具有敏感，不合规内容，不允许发布' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'拒绝', opinion:'内容含有不实信息，不能发布' },
+        { st:'不通过', opinion:'内容含有不实信息，不能发布' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'拒绝', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'不通过', opinion:'内容具有敏感，不合规内容，不允许发布' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' }
     ];
@@ -1671,6 +1718,82 @@
     });
     document.addEventListener('click', function() {
         moveDropdown.classList.remove('show');
+    });
+
+    // ====== 违规处理弹窗逻辑 ======
+    var vioModal = document.getElementById('vioModal');
+    var vioOpinionText = document.getElementById('vioOpinionText');
+    var vioCharCount = document.getElementById('vioCharCount');
+    var vioUserSelect = document.getElementById('vioUserSelect');
+    var vioBanDays = document.getElementById('vioBanDays');
+
+    function openVioModal(targetText) {
+        document.getElementById('vioTargetText').textContent = targetText;
+        document.getElementById('vioTopicSelect').value = 'delete';
+        vioUserSelect.value = 'ban';
+        vioBanDays.value = 10;
+        vioBanDays.style.display = '';
+        vioBanDays.nextElementSibling.style.display = '';
+        vioOpinionText.value = '';
+        vioCharCount.textContent = '0/200';
+        vioCharCount.style.color = '#c0c4cc';
+        vioModal.classList.add('show');
+    }
+    function closeVioModal() { vioModal.classList.remove('show'); }
+
+    vioOpinionText.addEventListener('input', function() {
+        var len = this.value.length;
+        vioCharCount.textContent = len + '/200';
+        vioCharCount.style.color = len >= 200 ? '#f56c6c' : '#c0c4cc';
+    });
+
+    vioUserSelect.addEventListener('change', function() {
+        var show = this.value === 'ban';
+        vioBanDays.style.display = show ? '' : 'none';
+        vioBanDays.nextElementSibling.style.display = show ? '' : 'none';
+    });
+
+    document.getElementById('vioModalClose').addEventListener('click', closeVioModal);
+    document.getElementById('vioModalCancel').addEventListener('click', closeVioModal);
+    document.getElementById('vioModalSubmit').addEventListener('click', closeVioModal);
+    vioModal.addEventListener('click', function(e) { if (e.target === vioModal) closeVioModal(); });
+
+    // 违规-待处理 批量处理按钮
+    document.querySelector('#vio-pending .filter-btn.primary').addEventListener('click', function() {
+        var cnt = document.querySelectorAll('#vioPendingTbody input[type=checkbox]:checked').length;
+        openVioModal('您已经选择' + cnt + '条记录');
+    });
+
+    // ====== 禁用账号 ======
+    // 批量启用
+    document.getElementById('banBatchEnable').addEventListener('click', function() {
+        var cnt = document.querySelectorAll('#banTbody input[type=checkbox]:checked').length;
+        GlobalDialog.confirm({
+            title: '批量启用',
+            desc: '您确定要启用选择的' + cnt + '个账号吗？'
+        });
+    });
+    // 批量禁用
+    document.getElementById('banBatchDisable').addEventListener('click', function() {
+        var cnt = document.querySelectorAll('#banTbody input[type=checkbox]:checked').length;
+        GlobalDialog.confirm({
+            title: '批量禁用',
+            desc: '您确定要禁用选择的' + cnt + '个账号吗？'
+        });
+    });
+    // 单个操作
+    document.getElementById('banTbody').addEventListener('click', function(e) {
+        var link = e.target.closest('.ban-op-link');
+        if (!link) return;
+        e.preventDefault();
+        var action = link.getAttribute('data-action');
+        var account = link.getAttribute('data-account');
+        var name = link.getAttribute('data-name');
+        var label = action === 'enable' ? '启用' : '禁用';
+        GlobalDialog.confirm({
+            title: label + '账号',
+            desc: '您确定要' + label + '【' + account + '（' + name + '）】账号吗？'
+        });
     });
     </script>
     <script src="js/admin-topbar.js"></script>
