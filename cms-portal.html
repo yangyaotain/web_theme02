@@ -508,13 +508,13 @@
                                         <td><div class="dataspace-thumb"><img src="images/space-hero.jpg" alt="低空经济"></div></td>
                                         <td class="dataspace-title">低空经济可信数据空间</td>
                                         <td class="dataspace-desc">低空经济数据生产线是支撑低空经济全产业链运行的核心基础设施，它通过整合新一代信息技术、数据采集与分析技术...</td>
-                                        <td><span class="status-online">已上线</span></td>
+                                        <td><span class="status-offline">未上线</span></td>
                                         <td class="dataspace-ops">
                                             <span class="op-link">上移</span><span class="op-sep">|</span>
                                             <span class="op-link">下移</span><span class="op-sep">|</span>
                                             <span class="op-link">编辑</span><span class="op-sep">|</span>
                                             <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
-                                            <span class="op-link op-offline">下线</span>
+                                            <span class="op-link op-online op-toggle-status">上线</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -527,7 +527,7 @@
                                             <span class="op-link">下移</span><span class="op-sep">|</span>
                                             <span class="op-link">编辑</span><span class="op-sep">|</span>
                                             <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
-                                            <span class="op-link op-offline">下线</span>
+                                            <span class="op-link op-offline op-toggle-status">下线</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -540,7 +540,7 @@
                                             <span class="op-link">下移</span><span class="op-sep">|</span>
                                             <span class="op-link">编辑</span><span class="op-sep">|</span>
                                             <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
-                                            <span class="op-link op-offline">下线</span>
+                                            <span class="op-link op-offline op-toggle-status">下线</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -553,7 +553,7 @@
                                             <span class="op-link">下移</span><span class="op-sep">|</span>
                                             <span class="op-link">编辑</span><span class="op-sep">|</span>
                                             <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
-                                            <span class="op-link op-online">上线</span>
+                                            <span class="op-link op-online op-toggle-status">上线</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1264,23 +1264,36 @@
         if (heroTitleInput) heroTitleInput.addEventListener('input', function () { heroTitlePreview.textContent = this.value; });
         if (heroSubInput) heroSubInput.addEventListener('input', function () { heroSubPreview.textContent = this.value; });
 
-        panel.querySelectorAll('.dataspace-ops .op-del').forEach(function (btn) {
+        panel.querySelectorAll('.dataspace-ops .op-toggle-status').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var row = btn.closest('tr');
                 var title = row.querySelector('.dataspace-title').textContent.trim();
-                GlobalDialog.danger({
-                    title: '删除确认',
-                    desc: '确定要删除【' + title + '】吗？<br>删除后数据将无法恢复',
-                    confirmText: '确定删除',
+                var statusSpan = row.querySelector('.status-online, .status-offline');
+                var isOnline = statusSpan.classList.contains('status-online');
+                var action = isOnline ? '下线' : '上线';
+
+                GlobalDialog.confirm({
+                    title: action + '确认',
+                    desc: '您确定要' + action + '【' + title + '】的记录吗？',
+                    confirmText: '确定' + action,
                     cancelText: '取消',
                     onConfirm: function () {
-                        row.style.transition = 'opacity .3s';
-                        row.style.opacity = '0';
-                        setTimeout(function () { row.remove(); }, 350);
+                        if (isOnline) {
+                            statusSpan.className = 'status-offline';
+                            statusSpan.textContent = '未上线';
+                            btn.className = 'op-link op-online op-toggle-status';
+                            btn.textContent = '上线';
+                        } else {
+                            statusSpan.className = 'status-online';
+                            statusSpan.textContent = '已上线';
+                            btn.className = 'op-link op-offline op-toggle-status';
+                            btn.textContent = '下线';
+                        }
                     }
                 });
             });
         });
+
     })();
 
     // 删除按钮 → GlobalDialog.danger 确认
