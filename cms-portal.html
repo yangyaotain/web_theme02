@@ -125,6 +125,139 @@
             padding: 12px 24px; font-size: 12px; color: #909399;
             border-top: 1px solid #f0f2f5;
         }
+
+        /* ====== 可信数据空间表格 ====== */
+        .dataspace-table-wrap {
+            background: #fff; border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06); border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+        .dataspace-table {
+            width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5;
+            table-layout: fixed;
+        }
+        .dataspace-table th {
+            background: #fafbfc; padding: 12px 16px; text-align: left;
+            font-weight: 600; color: #606266; border-bottom: 1px solid #ebeef5;
+            vertical-align: middle; height: 44px; box-sizing: border-box;
+        }
+        .dataspace-table td {
+            padding: 12px 16px; border-bottom: 1px solid #f0f2f5; vertical-align: middle;
+            height: 52px; box-sizing: border-box; overflow: hidden;
+        }
+        .dataspace-table tr:last-child td { border-bottom: none; }
+        .dataspace-table tr:hover td { background: #fafbfc; }
+        .dataspace-thumb {
+            width: 60px; height: 40px; border-radius: 4px; overflow: hidden;
+            background: #f0f2f5; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .dataspace-thumb img { width: 100%; height: 40px; object-fit: cover; }
+        .dataspace-title { font-weight: 600; color: #303133; line-height: 20px; }
+        .dataspace-desc {
+            color: #909399; font-size: 12px; max-width: 400px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 20px;
+        }
+        .dataspace-ops { text-align: center; white-space: nowrap; }
+        .op-link {
+            font-size: 12px; color: var(--forest-green); cursor: pointer;
+            transition: .15s; white-space: nowrap; line-height: 1;
+        }
+        .op-link:hover { text-decoration: underline; }
+        .op-link.op-offline { color: #e6a23c; }
+        .op-link.op-online { color: #67c23a; }
+        .op-link.op-del { color: #f56c6c; }
+        .status-online {
+            display: inline-block; padding: 2px 8px; font-size: 11px;
+            background: #e8f5e9; color: #16a34a; border-radius: 3px;
+            white-space: nowrap;
+        }
+        .status-offline {
+            display: inline-block; padding: 2px 8px; font-size: 11px;
+            background: #f5f5f5; color: #909399; border-radius: 3px;
+            white-space: nowrap;
+        }
+        .op-sep { color: #dcdfe6; margin: 0 2px; font-size: 12px; }
+
+        /* ====== 工具栏 ====== */
+        .dataspace-toolbar {
+            display: flex; align-items: center; justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+        .dataspace-search { display: flex; align-items: center; gap: 8px; }
+        .search-input {
+            padding: 8px 12px; font-size: 13px; border: 1px solid #dcdfe6;
+            border-radius: 4px; outline: none; width: 200px; color: #333;
+        }
+        .search-input:focus { border-color: var(--forest-green); }
+        .btn-search {
+            padding: 8px 20px; font-size: 13px; font-weight: 500;
+            background: var(--forest-green); color: #fff; border: none; border-radius: 4px;
+            cursor: pointer; transition: .15s;
+        }
+        .btn-search:hover { background: #15803d; }
+
+        /* ====== 编辑面板 ====== */
+        .ds-edit-panel { display: none; }
+        .ds-edit-panel.active { display: block; }
+        .ds-edit-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .ds-edit-header h3 { font-size: 16px; font-weight: 700; color: #303133; margin: 0; }
+        .ds-edit-back { font-size: 13px; color: #909399; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .ds-edit-back:hover { color: var(--forest-green); }
+        .ds-edit-card { background: #fff; border-radius: 8px; border: 1px solid #ebeef5; padding: 24px; margin-bottom: 20px; }
+        .ds-edit-card-title { font-size: 14px; font-weight: 700; color: #303133; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f0f2f5; }
+        .ds-form-row { display: flex; align-items: flex-start; margin-bottom: 18px; }
+        .ds-form-row:last-child { margin-bottom: 0; }
+        .ds-form-label { width: 80px; flex-shrink: 0; font-size: 13px; color: #606266; padding-top: 8px; text-align: right; padding-right: 14px; }
+        .ds-form-value { flex: 1; }
+        .ds-form-input { width: 100%; max-width: 400px; padding: 8px 12px; font-size: 13px; font-family: inherit; color: #303133; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; transition: border-color .15s; }
+        .ds-form-input:focus { border-color: var(--forest-green); }
+        .ds-form-textarea { width: 100%; min-height: 80px; padding: 8px 12px; font-size: 13px; font-family: inherit; color: #303133; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; resize: vertical; transition: border-color .15s; }
+        .ds-form-textarea:focus { border-color: var(--forest-green); }
+        .ds-form-textarea.tall { min-height: 120px; }
+        .ds-thumb-preview { display: flex; align-items: flex-start; gap: 12px; }
+        .ds-thumb-img { width: 120px; height: 80px; border-radius: 4px; object-fit: cover; border: 1px solid #ebeef5; }
+        .ds-thumb-upload { padding: 6px 14px; font-size: 12px; color: #606266; background: #fff; border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; transition: .15s; }
+        .ds-thumb-upload:hover { border-color: var(--forest-green); color: var(--forest-green); }
+        .ds-section-block { background: #fafbfc; border: 1px solid #ebeef5; border-radius: 6px; padding: 16px; margin-bottom: 14px; }
+        .ds-section-block:last-child { margin-bottom: 0; }
+        .ds-section-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: var(--forest-green); color: #fff; font-size: 12px; font-weight: 700; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+        .ds-section-head { display: flex; align-items: center; margin-bottom: 12px; }
+        .ds-section-head .ds-form-input { flex: 1; max-width: 100%; font-weight: 600; }
+        .ds-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .ds-stat-item { background: #fafbfc; border: 1px solid #ebeef5; border-radius: 6px; padding: 12px; }
+        .ds-stat-item label { display: block; font-size: 11px; color: #909399; margin-bottom: 4px; }
+        .ds-stat-item input { width: 100%; padding: 6px 8px; font-size: 13px; font-family: inherit; color: #303133; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; }
+        .ds-stat-item input:focus { border-color: var(--forest-green); }
+        .ds-feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ds-feature-item { background: #fafbfc; border: 1px solid #ebeef5; border-radius: 6px; padding: 12px; }
+        .ds-feature-item label { display: block; font-size: 11px; color: #909399; margin-bottom: 4px; }
+        .ds-feature-item input, .ds-feature-item textarea { width: 100%; padding: 6px 8px; font-size: 13px; font-family: inherit; color: #303133; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; resize: vertical; }
+        .ds-feature-item input:focus, .ds-feature-item textarea:focus { border-color: var(--forest-green); }
+        .ds-cta-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .ds-cta-row label { display: block; font-size: 11px; color: #909399; margin-bottom: 4px; }
+        .ds-cta-row input { width: 100%; padding: 6px 8px; font-size: 13px; font-family: inherit; color: #303133; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; }
+        .ds-cta-row input:focus { border-color: var(--forest-green); }
+        .ds-edit-actions { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+        .ds-btn-save { padding: 8px 28px; font-size: 14px; font-weight: 600; color: #fff; background: var(--forest-green); border: none; border-radius: 4px; cursor: pointer; font-family: inherit; transition: .15s; }
+        .ds-btn-save:hover { background: #15803d; }
+        .ds-btn-cancel { padding: 8px 28px; font-size: 14px; font-weight: 500; color: #606266; background: #fff; border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; font-family: inherit; transition: .15s; }
+        .ds-btn-cancel:hover { border-color: #c0c4cc; }
+        .ds-btn-preview { padding: 8px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green); background: #fff; border: 1px solid var(--forest-green); border-radius: 4px; cursor: pointer; font-family: inherit; transition: .15s; display: inline-flex; align-items: center; gap: 6px; }
+        .ds-btn-preview:hover { background: #f0fdf4; }
+        .ds-btn-preview svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* 横幅预览 */
+        .ds-hero-preview { position: relative; width: 100%; height: 180px; border-radius: 8px; overflow: hidden; background: #f5f7fa; border: 1px solid #ebeef5; }
+        .ds-hero-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .ds-hero-preview-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.15) 100%); display: flex; flex-direction: column; justify-content: center; padding: 24px 32px; color: #fff; pointer-events: none; }
+        .ds-hero-preview-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,.2); backdrop-filter: blur(4px); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 500; width: fit-content; margin-bottom: 10px; }
+        .ds-hero-preview-badge svg { width: 14px; height: 14px; fill: currentColor; }
+        .ds-hero-preview-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; text-shadow: 0 1px 3px rgba(0,0,0,.3); }
+        .ds-hero-preview-sub { font-size: 12px; opacity: .85; line-height: 1.5; }
+        .ds-hero-upload-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+        .ds-hero-upload-bar label { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; font-size: 12px; color: #606266; background: #fff; border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; transition: .15s; }
+        .ds-hero-upload-bar label:hover { border-color: var(--forest-green); color: var(--forest-green); }
+        .ds-hero-upload-bar .ds-hero-size-hint { font-size: 11px; color: #c0c4cc; }
     </style>
 </head>
 <body>
@@ -247,6 +380,7 @@
                     <div class="cms-module-title">模块列表</div>
                     <div class="cms-module-item active" data-panel="carousel">首页-轮播图</div>
                     <div class="cms-module-item" data-panel="flow">首页-流程指引</div>
+                    <div class="cms-module-item" data-panel="dataspace">可信数据空间</div>
                 </div>
 
                 <!-- 内容区 -->
@@ -345,6 +479,282 @@
                             </div>
                             <div class="flow-card-footer">
                                 <span>引用位置：首页 &gt; 交易流程</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ====== 可信数据空间 ====== -->
+                    <div class="cms-panel" id="panel-dataspace">
+                        <div class="dataspace-toolbar">
+                            <div class="dataspace-search">
+                                <input type="text" class="search-input" placeholder="关键查询">
+                                <button class="btn-search">查询</button>
+                            </div>
+                        </div>
+
+                        <div class="dataspace-table-wrap">
+                            <table class="dataspace-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">缩略图</th>
+                                        <th style="width:180px;">标题</th>
+                                        <th>概述</th>
+                                        <th style="width:70px;">状态</th>
+                                        <th style="width:220px; text-align:center;">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="dataspace-thumb"><img src="images/space-hero.jpg" alt="低空经济"></div></td>
+                                        <td class="dataspace-title">低空经济可信数据空间</td>
+                                        <td class="dataspace-desc">低空经济数据生产线是支撑低空经济全产业链运行的核心基础设施，它通过整合新一代信息技术、数据采集与分析技术...</td>
+                                        <td><span class="status-online">已上线</span></td>
+                                        <td class="dataspace-ops">
+                                            <span class="op-link">上移</span><span class="op-sep">|</span>
+                                            <span class="op-link">下移</span><span class="op-sep">|</span>
+                                            <span class="op-link">编辑</span><span class="op-sep">|</span>
+                                            <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
+                                            <span class="op-link op-offline">下线</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="dataspace-thumb"><img src="images/space-hero-robot.jpg" alt="具身智能"></div></td>
+                                        <td class="dataspace-title">具身智能可信数据空间</td>
+                                        <td class="dataspace-desc">机器人训练数据生产线是支撑人工智能模型训练的核心基础设施，其核心流程涵盖数据采集、标注、增强、模型训练及验证...</td>
+                                        <td><span class="status-online">已上线</span></td>
+                                        <td class="dataspace-ops">
+                                            <span class="op-link">上移</span><span class="op-sep">|</span>
+                                            <span class="op-link">下移</span><span class="op-sep">|</span>
+                                            <span class="op-link">编辑</span><span class="op-sep">|</span>
+                                            <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
+                                            <span class="op-link op-offline">下线</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="dataspace-thumb"><img src="images/space-hero-health.jpg" alt="医药健康"></div></td>
+                                        <td class="dataspace-title">医药健康可信数据空间</td>
+                                        <td class="dataspace-desc">大模型训练数据生产线是支撑大模型训练的核心基础设施，其核心目标是通过系统化的流程将原始数据转化为高质量的训练数据...</td>
+                                        <td><span class="status-online">已上线</span></td>
+                                        <td class="dataspace-ops">
+                                            <span class="op-link">上移</span><span class="op-sep">|</span>
+                                            <span class="op-link">下移</span><span class="op-sep">|</span>
+                                            <span class="op-link">编辑</span><span class="op-sep">|</span>
+                                            <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
+                                            <span class="op-link op-offline">下线</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="dataspace-thumb"><img src="images/space-hero-culture.jpg" alt="文化艺术"></div></td>
+                                        <td class="dataspace-title">文化艺术可信数据空间</td>
+                                        <td class="dataspace-desc">数据治理生产线是支撑企业数字化转型的核心工具，通过智能化、一体化的平台实现数据全生命周期管理...</td>
+                                        <td><span class="status-offline">未上线</span></td>
+                                        <td class="dataspace-ops">
+                                            <span class="op-link">上移</span><span class="op-sep">|</span>
+                                            <span class="op-link">下移</span><span class="op-sep">|</span>
+                                            <span class="op-link">编辑</span><span class="op-sep">|</span>
+                                            <span class="op-link op-preview">预览</span><span class="op-sep">|</span>
+                                            <span class="op-link op-online">上线</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- ====== 编辑面板 ====== -->
+                        <div class="ds-edit-panel" id="dsEditPanel">
+                            <div class="ds-edit-header">
+                                <h3 id="dsEditTitle">编辑：低空经济可信数据空间</h3>
+                                <span class="ds-edit-back" id="dsEditBack">← 返回列表</span>
+                            </div>
+
+                            <!-- 基本信息 -->
+                            <div class="ds-edit-card">
+                                <div class="ds-edit-card-title">基本信息</div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">缩略图</div>
+                                    <div class="ds-form-value">
+                                        <div class="ds-thumb-preview">
+                                            <img class="ds-thumb-img" id="dsThumbImg" src="images/space-hero.jpg" alt="缩略图">
+                                            <label class="ds-thumb-upload">
+                                                更换图片
+                                                <input type="file" accept="image/*" style="display:none" id="dsThumbFile">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">标题</div>
+                                    <div class="ds-form-value">
+                                        <input class="ds-form-input" id="dsEditName" value="低空经济可信数据空间">
+                                    </div>
+                                </div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">概述</div>
+                                    <div class="ds-form-value">
+                                        <textarea class="ds-form-textarea" id="dsEditDesc">低空经济数据生产线是支撑低空经济全产业链运行的核心基础设施，它通过整合新一代信息技术、数据采集与分析技术...</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 横幅设置 -->
+                            <div class="ds-edit-card">
+                                <div class="ds-edit-card-title">横幅设置</div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">横幅预览</div>
+                                    <div class="ds-form-value">
+                                        <div class="ds-hero-preview" id="dsHeroPreview">
+                                            <img id="dsHeroBgImg" src="images/space-hero.jpg" alt="横幅背景">
+                                            <div class="ds-hero-preview-overlay">
+                                                <span class="ds-hero-preview-badge">
+                                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                                    <span id="dsHeroBadgePreview">龙岗区数据要素改革试点</span>
+                                                </span>
+                                                <div class="ds-hero-preview-title" id="dsHeroTitlePreview">低空经济可信数据空间</div>
+                                                <div class="ds-hero-preview-sub" id="dsHeroSubPreview">以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系</div>
+                                            </div>
+                                        </div>
+                                        <div class="ds-hero-upload-bar">
+                                            <label>
+                                                <svg viewBox="0 0 24 24" width="14" height="14" fill="#909399"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>
+                                                更换背景图
+                                                <input type="file" accept="image/*" style="display:none" id="dsHeroBgFile">
+                                            </label>
+                                            <span class="ds-hero-size-hint">建议尺寸 1200×400，支持 JPG/PNG</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">角标文字</div>
+                                    <div class="ds-form-value">
+                                        <input class="ds-form-input" id="dsHeroBadge" value="龙岗区数据要素改革试点" placeholder="如：国家级低空经济先行示范区">
+                                    </div>
+                                </div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">横幅标题</div>
+                                    <div class="ds-form-value">
+                                        <input class="ds-form-input" id="dsHeroTitle" value="低空经济可信数据空间" placeholder="横幅区域的大标题">
+                                    </div>
+                                </div>
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">横幅副标题</div>
+                                    <div class="ds-form-value">
+                                        <textarea class="ds-form-textarea" id="dsHeroSubtitle" rows="2" placeholder="横幅区域的副标题描述">以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 空间介绍 -->
+                            <div class="ds-edit-card">
+                                <div class="ds-edit-card-title">空间介绍</div>
+
+                                <!-- 引言 -->
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">引言</div>
+                                    <div class="ds-form-value">
+                                        <textarea class="ds-form-textarea" id="dsEditLead">龙岗区作为深圳市数据要素改革试点区，积极探索数据空间建设运营模式，以"构建数据可信流通环境、释放数据要素价值"为核心，聚焦低空经济、具身智能、医药健康、文化艺术等战略性新兴产业，打造多领域融合的可信数据空间体系。</textarea>
+                                    </div>
+                                </div>
+
+                                <!-- 统计指标 -->
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">统计指标</div>
+                                    <div class="ds-form-value">
+                                        <div class="ds-stat-grid">
+                                            <div class="ds-stat-item">
+                                                <label>数值</label><input value="292">
+                                                <label>单位</label><input value="亿+">
+                                                <label>标签</label><input value="数据资源总量">
+                                            </div>
+                                            <div class="ds-stat-item">
+                                                <label>数值</label><input value="4">
+                                                <label>单位</label><input value="大">
+                                                <label>标签</label><input value="行业数据空间">
+                                            </div>
+                                            <div class="ds-stat-item">
+                                                <label>数值</label><input value="2000">
+                                                <label>单位</label><input value="P">
+                                                <label>标签</label><input value="算力集群规模">
+                                            </div>
+                                            <div class="ds-stat-item">
+                                                <label>数值</label><input value="12.62">
+                                                <label>单位</label><input value="亿+">
+                                                <label>标签</label><input value="数据服务调用量">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 章节1 -->
+                                <div class="ds-form-row">
+                                    <div class="ds-form-label">内容章节</div>
+                                    <div class="ds-form-value">
+                                        <div class="ds-section-block">
+                                            <div class="ds-section-head">
+                                                <span class="ds-section-num">1</span>
+                                                <input class="ds-form-input" value="数据空间：可信流通基础设施">
+                                            </div>
+                                            <textarea class="ds-form-textarea">龙岗可信数据空间是基于隐私计算、区块链等先进技术构建的数据流通基础设施，为企业提供数据安全存储、传输、计算的一体化服务。通过"数据可用不可见"的技术方案，在保障数据安全的前提下，实现跨行业、跨领域的数据共享与价值释放。目前已汇聚业务数据292亿条，形成覆盖政务、产业、民生等多领域的综合性数据资源池。</textarea>
+                                        </div>
+
+                                        <!-- 章节2 -->
+                                        <div class="ds-section-block">
+                                            <div class="ds-section-head">
+                                                <span class="ds-section-num">2</span>
+                                                <input class="ds-form-input" value="&ldquo;1+N&rdquo;授权运营体系">
+                                            </div>
+                                            <textarea class="ds-form-textarea">建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，以公共数据为牵引，带动行业数据、区域数据的融合应用与价值挖掘。数据服务调用量已突破12.62亿次，涵盖企业工商、地理信息、交通出行、医疗健康等多个领域。</textarea>
+                                        </div>
+
+                                        <!-- 章节3：四大行业数据空间 -->
+                                        <div class="ds-section-block">
+                                            <div class="ds-section-head">
+                                                <span class="ds-section-num">3</span>
+                                                <input class="ds-form-input" value="四大行业数据空间">
+                                            </div>
+                                            <div style="margin-top:8px;">
+                                                <label style="font-size:12px;color:#909399;margin-bottom:8px;display:block;">特色卡片（4个行业空间）</label>
+                                                <div class="ds-feature-grid">
+                                                    <div class="ds-feature-item">
+                                                        <label>标题</label><input value="低空经济可信数据空间">
+                                                        <label>描述</label><textarea rows="2">388km²低空空域覆盖，构建"空中高德"时空数字底座</textarea>
+                                                    </div>
+                                                    <div class="ds-feature-item">
+                                                        <label>标题</label><input value="具身智能可信数据空间">
+                                                        <label>描述</label><textarea rows="2">1500+高质量数据集，赋能机器人产业创新</textarea>
+                                                    </div>
+                                                    <div class="ds-feature-item">
+                                                        <label>标题</label><input value="医药健康可信数据空间">
+                                                        <label>描述</label><textarea rows="2">AI赋能智慧医疗，推动健康产业数字化转型</textarea>
+                                                    </div>
+                                                    <div class="ds-feature-item">
+                                                        <label>标题</label><input value="文化艺术可信数据空间">
+                                                        <label>描述</label><textarea rows="2">数字创意产业走廊，文化数据资产化先行先试</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 章节4 -->
+                                        <div class="ds-section-block">
+                                            <div class="ds-section-head">
+                                                <span class="ds-section-num">4</span>
+                                                <input class="ds-form-input" value="数商生态：培育数据服务主体">
+                                            </div>
+                                            <textarea class="ds-form-textarea">龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。通过举办数据应用创新大赛、建设数据要素集聚园区等举措，持续吸引优质数商资源集聚，推动数据要素市场健康发展。</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- 操作按钮 -->
+                            <div class="ds-edit-actions">
+                                <button class="ds-btn-cancel" id="dsEditCancelBtn">取消</button>
+                                <button class="ds-btn-preview" id="dsEditPreviewBtn">
+                                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    预览
+                                </button>
+                                <button class="ds-btn-save" id="dsEditSaveBtn">保存</button>
                             </div>
                         </div>
                     </div>
@@ -714,6 +1124,164 @@
             }
         });
     });
+
+    /* ====== 可信数据空间 — 编辑面板交互 ====== */
+    (function () {
+        var panel = document.getElementById('panel-dataspace');
+        if (!panel) return;
+        var tableWrap = panel.querySelector('.dataspace-table-wrap');
+        var toolbar = panel.querySelector('.dataspace-toolbar');
+        var editPanel = document.getElementById('dsEditPanel');
+        var editTitle = document.getElementById('dsEditTitle');
+        var editName = document.getElementById('dsEditName');
+        var editDesc = document.getElementById('dsEditDesc');
+        var thumbImg = document.getElementById('dsThumbImg');
+        var thumbFile = document.getElementById('dsThumbFile');
+
+        function showEdit(row) {
+            var title = row.querySelector('.dataspace-title').textContent.trim();
+            var desc = row.querySelector('.dataspace-desc').textContent.trim();
+            var imgSrc = row.querySelector('.dataspace-thumb img').src;
+            editTitle.textContent = '编辑：' + title;
+            editName.value = title;
+            editDesc.value = desc;
+            thumbImg.src = imgSrc;
+            tableWrap.style.display = 'none';
+            toolbar.style.display = 'none';
+            editPanel.classList.add('active');
+        }
+
+        function hideEdit() {
+            editPanel.classList.remove('active');
+            tableWrap.style.display = '';
+            toolbar.style.display = '';
+        }
+
+        panel.querySelectorAll('.dataspace-ops .op-link').forEach(function (link) {
+            if (link.textContent.trim() === '编辑') {
+                link.addEventListener('click', function () {
+                    var row = link.closest('tr');
+                    showEdit(row);
+                });
+            }
+        });
+
+        var spacePreviewData = [
+            { heroImg: 'images/space-hero.jpg', heroBadge: '国家级低空经济先行示范区', heroTitle: '低空经济可信数据空间', heroSubtitle: '以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系', lead: '深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。', stats: [{value:'388',unit:'km²',label:'低空空域覆盖面积'},{value:'34',unit:'条',label:'直升机航线'},{value:'99',unit:'%',label:'场景还原度'},{value:'15',unit:'x',label:'任务效率提升'}], sections: [{title:'数字底座：三维立体时空基底',content:'"空中高德"时空数字底座融合地面与低空实时数据，通过三维隐式空间建模与AI深度学习技术，实现全域数据天级更新，真实场景还原度达99%。',features:[]},{title:'空域管理：动态可调航路体系',content:'在龙岗区388平方公里低空空域内，构建了灵活可调的公共航路体系，支持物流无人机、巡检无人机等在高密度环境下融合飞行。',features:[]},{title:'安全屏障：全域智能监控网络',content:'针对城市密集区60%的监控盲区问题，该体系通过多源数据融合与智能计算，增强对"低空、慢速、小型"目标的识别能力。',features:[]},{title:'应用场景：多元商业化落地',content:'',features:[{title:'城市治理',desc:'政务无人机巡查、测绘、应急等任务效率提升15倍'},{title:'物流与医疗',desc:'开通34条直升机航线，支持紧急送药、商圈服务'},{title:'观光旅游',desc:'低空观光、航拍体验等新型业态蓬勃发展'},{title:'产业融合',desc:'龙岗低空智能融合测试基地推动产业创新'}]}] },
+            { heroImg: 'images/space-hero-robot.jpg', heroBadge: '全国首个人工智能与机器人数据聚合服务中心', heroTitle: '具身智能可信数据空间', heroSubtitle: '聚焦机器人训练数据生产、标注加工与智能模型训练，构建具身智能全链条数据服务体系', lead: '龙岗区以"All in AI"战略为引领，率先建设全国首个人工智能与机器人数据聚合服务中心，聚焦具身智能行业数据标准统一、采集效率提升、共享机制建立，为机器人产业发展提供高质量数据底座。', stats: [{value:'1500',unit:'+',label:'高质量数据集'},{value:'40',unit:'+',label:'语料数据供应商'},{value:'6',unit:'大',label:'功能模块'},{value:'200',unit:'万',label:'单企最高扶持额'}], sections: [{title:'数据聚合服务中心：六大核心模块',content:'设立六大功能模块：具身智能数据生产中心、标注加工中心、质量评估中心、知识库中心、语料推荐中心和训推中心。',features:[]},{title:'数据生产与训练：从采集到模型',content:'数据空间覆盖机器人训练数据的全生命周期——从多模态感知数据采集、自动化标注加工、质量评估到模型训练推理。',features:[]},{title:'产业扶持：真金白银助力创新',content:'龙岗区2025年推出具身智能机器人应用扶持项目，单个企业每年合计最高支持200万元。',features:[]},{title:'应用场景：多领域深度融合',content:'',features:[{title:'工业制造',desc:'智能机器人用于精密装配、质检、仓储分拣'},{title:'服务机器人',desc:'酒店、餐饮、零售等场景的智能服务应用'},{title:'医疗康复',desc:'康复机器人辅助训练与远程医疗协助'},{title:'教育科研',desc:'机器人教学实训与科研数据共享'}]}] },
+            { heroImg: 'images/space-hero-health.jpg', heroBadge: '全市首个"AI＋生命健康产业园"', heroTitle: '医药健康可信数据空间', heroSubtitle: '以医疗大数据和AI诊断为核心，构建覆盖临床研究、健康管理、医药创新转化的数字化体系', lead: '龙岗区以"健康龙岗"行动为牵引，打造全市首个"AI＋生命健康产业园"，推动医疗大数据在诊疗辅助、公共卫生、药物研发等领域的深度应用。', stats: [{value:'50',unit:'万+',label:'AI智能导诊访问量'},{value:'95',unit:'%+',label:'AI导诊准确率'},{value:'171',unit:'家',label:'社康机构覆盖'},{value:'99.38',unit:'%',label:'检验结果互认率'}], sections: [{title:'AI赋能医疗：智慧诊疗新范式',content:'龙岗区上线数智健康管家"AI龙岗家医"，在12家区属公立医院及171家社康机构全面应用。',features:[]},{title:'医学创新转化：打通"最后一公里"',content:'成立全市首个区卫生健康创新与转化中心，已开展转化项目46个，专利转化金额达625余万元。',features:[]},{title:'健康产业集聚：龙头企业引领',content:'全市首个"AI＋生命健康产业园"成功吸引威高集团、联影医疗等生物医药产业龙头企业落户。',features:[]},{title:'数据应用场景：全域健康服务',content:'',features:[{title:'AI辅助诊断',desc:'社区医院常见病AI辅助诊断准确率超92%'},{title:'医学影像共享',desc:'区域医学影像、病理、检验资源共享中心'},{title:'药物研发加速',desc:'临床数据驱动的精准医学与新药研发'},{title:'健康数据安全',desc:'隐私计算保障医疗数据安全合规流通'}]}] },
+            { heroImg: 'images/space-hero-culture.jpg', heroBadge: '龙岗数字创意产业走廊', heroTitle: '文化艺术可信数据空间', heroSubtitle: '依托全长46公里数字创意产业走廊，构建文化数据资产化、AI文创赋能与数字内容创新的数据服务体系', lead: '龙岗数字创意产业走廊西起坂田星河云海、东至坪地低碳云城，全长46公里、面积32平方公里，汇聚超万家文化企业，2024年走廊营收突破2291亿元。', stats: [{value:'2291',unit:'亿',label:'走廊年度营收'},{value:'10000',unit:'+',label:'文化企业数量'},{value:'35',unit:'个',label:'文化产业园区'},{value:'46',unit:'km',label:'走廊全长'}], sections: [{title:'文化数据资产化：开创先河',content:'深圳市子曰文化有限公司打造的"中国式文化创作大模型"成为深圳市首个文化类数据资产入表案例。',features:[]},{title:'AI文创赋能：智能创作新引擎',content:'2025年龙岗区修订的文化产业扶持细则重点支持AI文创业，涵盖孵化创业、AI影视创作等多个方向。',features:[]},{title:'产业生态：走廊聚合效应',content:'龙岗数字创意产业走廊拥有6所大学、357家规上文化企业、35个文化产业园区。',features:[]},{title:'数据应用场景：文化数字化全覆盖',content:'',features:[{title:'数字内容创作',desc:'AI辅助影视、动漫、微短剧等原创内容生产'},{title:'数字艺术交易',desc:'文化数据资产确权、评估与合规交易'},{title:'版权保护',desc:'区块链技术实现文化IP全链路确权与溯源'},{title:'文化教育',desc:'6所大学产学研联动，培养数字文化人才'}]}] }
+        ];
+
+        panel.querySelectorAll('.dataspace-ops .op-preview').forEach(function (link, idx) {
+            link.addEventListener('click', function () {
+                if (spacePreviewData[idx]) {
+                    localStorage.setItem('ds-preview-data', JSON.stringify(spacePreviewData[idx]));
+                    window.open('space-preview.html', '_blank');
+                }
+            });
+        });
+
+        document.getElementById('dsEditBack').addEventListener('click', hideEdit);
+        document.getElementById('dsEditCancelBtn').addEventListener('click', hideEdit);
+
+        document.getElementById('dsEditSaveBtn').addEventListener('click', function () {
+            GlobalDialog.success({
+                title: '保存成功',
+                desc: '可信数据空间内容已更新',
+                confirmText: '确定',
+                onConfirm: function () { hideEdit(); }
+            });
+        });
+
+        document.getElementById('dsEditPreviewBtn').addEventListener('click', function () {
+            var data = {
+                heroImg: document.getElementById('dsHeroBgImg').src,
+                heroBadge: (document.getElementById('dsHeroBadge') || {}).value || '',
+                heroTitle: (document.getElementById('dsHeroTitle') || {}).value || '',
+                heroSubtitle: (document.getElementById('dsHeroSubtitle') || {}).value || '',
+                title: document.getElementById('dsEditName').value,
+                desc: document.getElementById('dsEditDesc').value,
+                lead: (document.getElementById('dsEditLead') || {}).value || '',
+                stats: [],
+                sections: []
+            };
+            document.querySelectorAll('#dsEditPanel .ds-stat-grid .ds-stat-item').forEach(function (item) {
+                var inputs = item.querySelectorAll('input');
+                if (inputs.length >= 3) {
+                    data.stats.push({ value: inputs[0].value, unit: inputs[1].value, label: inputs[2].value });
+                }
+            });
+            document.querySelectorAll('#dsEditPanel .ds-section-block').forEach(function (block) {
+                var titleInput = block.querySelector('.ds-section-head .ds-form-input');
+                var textarea = block.querySelector('.ds-form-textarea');
+                var features = [];
+                block.querySelectorAll('.ds-feature-item').forEach(function (fi) {
+                    var fInputs = fi.querySelectorAll('input');
+                    var fTa = fi.querySelector('textarea');
+                    if (fInputs.length && fTa) features.push({ title: fInputs[0].value, desc: fTa.value });
+                });
+                data.sections.push({
+                    title: titleInput ? titleInput.value : '',
+                    content: textarea ? textarea.value : '',
+                    features: features
+                });
+            });
+            localStorage.setItem('ds-preview-data', JSON.stringify(data));
+            window.open('space-preview.html', '_blank');
+        });
+
+        if (thumbFile) {
+            thumbFile.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) { thumbImg.src = e.target.result; };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+
+        /* 横幅设置 — 实时预览同步 */
+        var heroBgFile = document.getElementById('dsHeroBgFile');
+        var heroBgImg = document.getElementById('dsHeroBgImg');
+        var heroBadgeInput = document.getElementById('dsHeroBadge');
+        var heroTitleInput = document.getElementById('dsHeroTitle');
+        var heroSubInput = document.getElementById('dsHeroSubtitle');
+        var heroBadgePreview = document.getElementById('dsHeroBadgePreview');
+        var heroTitlePreview = document.getElementById('dsHeroTitlePreview');
+        var heroSubPreview = document.getElementById('dsHeroSubPreview');
+
+        if (heroBgFile) {
+            heroBgFile.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) { heroBgImg.src = e.target.result; };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+        if (heroBadgeInput) heroBadgeInput.addEventListener('input', function () { heroBadgePreview.textContent = this.value; });
+        if (heroTitleInput) heroTitleInput.addEventListener('input', function () { heroTitlePreview.textContent = this.value; });
+        if (heroSubInput) heroSubInput.addEventListener('input', function () { heroSubPreview.textContent = this.value; });
+
+        panel.querySelectorAll('.dataspace-ops .op-del').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var row = btn.closest('tr');
+                var title = row.querySelector('.dataspace-title').textContent.trim();
+                GlobalDialog.danger({
+                    title: '删除确认',
+                    desc: '确定要删除【' + title + '】吗？<br>删除后数据将无法恢复',
+                    confirmText: '确定删除',
+                    cancelText: '取消',
+                    onConfirm: function () {
+                        row.style.transition = 'opacity .3s';
+                        row.style.opacity = '0';
+                        setTimeout(function () { row.remove(); }, 350);
+                    }
+                });
+            });
+        });
+    })();
 
     // 删除按钮 → GlobalDialog.danger 确认
     document.querySelectorAll('.carousel-card .op-del').forEach(function(btn) {

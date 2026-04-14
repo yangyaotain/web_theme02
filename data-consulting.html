@@ -287,7 +287,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/consult-accounting.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">资产入表</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">资产入表</span><span class="data-card-badge price">3000元/天</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">企业数据资产入表咨询服务</h3>
@@ -317,7 +317,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/consult-financing.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">资产融资</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">资产融资</span><span class="data-card-badge price">3000元/天</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">企业数据资产融资咨询服务</h3>
@@ -347,7 +347,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/consult-incubation.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">产品孵化</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">产品孵化</span><span class="data-card-badge price">3000元/天</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">企业数据产品孵化服务</h3>
@@ -362,7 +362,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/consult-service-a.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">数据质量评估与优化咨询服务</h3>
@@ -433,7 +433,10 @@
     document.querySelectorAll('.data-card').forEach(function (card) {
         card.style.cursor = 'pointer';
         card.addEventListener('click', function () {
-            window.location.href = 'consulting-detail.html';
+            var priceBadge = card.querySelector('.data-card-badge.price');
+            var price = priceBadge ? priceBadge.textContent.trim() : '';
+            var title = card.querySelector('.data-card-title') ? card.querySelector('.data-card-title').textContent.trim() : '';
+            window.location.href = 'consulting-detail.html?price=' + encodeURIComponent(price) + '&title=' + encodeURIComponent(title);
         });
     });
     </script>

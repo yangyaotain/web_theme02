@@ -253,15 +253,35 @@
         }
         .search-inner { display: flex; align-items: center; gap: 8px; }
         .search-type {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .search-type-select {
+            appearance: none;
+            -webkit-appearance: none;
             display: flex; align-items: center; gap: 6px;
-            padding: 12px 16px;
+            padding: 12px 36px 12px 14px;
             background: var(--gray-100);
+            border: none;
             border-radius: var(--radius-xl);
             font-size: 13px; font-weight: 500; color: var(--text-primary);
             cursor: pointer; transition: background var(--transition-fast); white-space: nowrap;
         }
-        .search-type:hover { background: var(--gray-200); }
-        .search-type svg { width: 16px; height: 16px; fill: var(--text-tertiary); }
+        .search-type-select:hover { background: var(--gray-200); }
+        .search-type-select:focus { outline: none; }
+        .search-type::after {
+            content: '';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid var(--text-tertiary);
+            pointer-events: none;
+        }
         .search-input {
             flex: 1; padding: 12px 16px; border: none; background: transparent;
             font-size: 15px; color: var(--text-primary); outline: none;
@@ -572,8 +592,12 @@
             <div class="search-card">
                 <div class="search-inner">
                     <div class="search-type">
-                        数据资源
-                        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                        <select class="search-type-select">
+                            <option value="resource">数据资源</option>
+                            <option value="product">数据产品</option>
+                            <option value="consult">咨询服务</option>
+                            <option value="solution">行业方案</option>
+                        </select>
                     </div>
                     <input type="text" class="search-input" placeholder="搜索数据资源、API、解决方案...">
                     <button class="search-btn">搜索</button>
@@ -593,9 +617,9 @@
     <!-- Content Section -->
     <section class="content-section">
         <div class="tabs">
-            <button class="tab active">热门资源</button>
-            <button class="tab">热门产品</button>
-            <button class="tab">热门服务</button>
+            <button class="tab active">数据资源</button>
+            <button class="tab">数据产品</button>
+            <button class="tab">咨询服务</button>
             <button class="tab">行业方案</button>
         </div>
 

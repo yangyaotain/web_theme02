@@ -43,14 +43,38 @@
         .product-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
         .product-price .amount { font-size: 22px; font-weight: 700; color: #E53935; }
 
+        .measure-row, .qty-row { display: flex; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .measure-row .m-label, .qty-row .m-label { width: 70px; flex-shrink: 0; }
+        .measure-btns { display: flex; }
+        .measure-btn {
+            padding: 6px 18px; font-size: 13px; font-family: inherit; font-weight: 500;
+            color: var(--text-primary); background: #fff; border: 1px solid var(--border-default);
+            cursor: pointer; transition: all var(--transition-fast);
+        }
+        .measure-btn:first-child { border-radius: 4px 0 0 4px; }
+        .measure-btn:last-child { border-radius: 0 4px 4px 0; }
+        .measure-btn:not(:first-child) { margin-left: -1px; }
+        .measure-btn.active { color: #1D4ED8; border-color: #1D4ED8; position: relative; z-index: 1; }
+        .qty-wrap { display: flex; align-items: center; border: 1px solid var(--border-default); border-radius: 4px; overflow: hidden; }
+        .qty-input { width: 120px; padding: 6px 12px; border: none; outline: none; font-size: 13px; font-family: inherit; color: var(--text-primary); }
+        .qty-input::placeholder { color: var(--text-placeholder); }
+        .qty-unit { padding: 6px 12px; font-size: 13px; color: var(--text-secondary); background: #FAFBFC; border-left: 1px solid var(--border-default); }
+
         .action-row { display: flex; gap: 12px; margin-top: 6px; }
-        .btn-service {
+        .btn-buy {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
             background: var(--forest-green); border: none; border-radius: 6px;
             cursor: pointer; font-family: inherit; transition: all 150ms ease;
         }
-        .btn-service:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-buy:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-consult {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green);
+            background: var(--surface-primary); border: 1.5px solid var(--forest-green); border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-consult:hover { background: var(--forest-green); color: #fff; }
 
         .content-area { max-width: var(--content-max-width); margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
         .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
@@ -145,8 +169,24 @@
                     <div class="product-price">
                         参考价：<span class="amount">3000元/天</span>
                     </div>
+                    <div class="measure-row">
+                        <span class="m-label">计量方式：</span>
+                        <div class="measure-btns" id="measureBtns">
+                            <button class="measure-btn active" data-unit="次">按次数</button>
+                            <button class="measure-btn" data-unit="月">按时长</button>
+                            <button class="measure-btn" data-unit="">面议</button>
+                        </div>
+                    </div>
+                    <div class="qty-row" id="qtyRow">
+                        <span class="m-label">购买数量：</span>
+                        <div class="qty-wrap">
+                            <input class="qty-input" id="qtyInput" type="number" min="1" placeholder="请输入">
+                            <span class="qty-unit" id="qtyUnit">次</span>
+                        </div>
+                    </div>
                     <div class="action-row">
-                        <button class="btn-service" onclick="document.getElementById('consultOverlay').classList.add('active')">服务咨询</button>
+                        <button class="btn-buy" id="btnBuy">立即购买</button>
+                        <button class="btn-consult" onclick="document.getElementById('consultOverlay').classList.add('active')">服务咨询</button>
                     </div>
                 </div>
             </div>
@@ -290,6 +330,55 @@
     <script src="js/global-dialog.js"></script>
     <script>
     (function () {
+        /* ── 根据 URL 参数设置价格和计量方式 ── */
+        var params = new URLSearchParams(window.location.search);
+        var urlPrice = params.get('price') || '';
+        var urlTitle = params.get('title') || '';
+        var priceEl = document.querySelector('.product-price .amount');
+        var measureBtns = document.querySelectorAll('#measureBtns .measure-btn');
+        var qtyRow = document.getElementById('qtyRow');
+        var qtyUnit = document.getElementById('qtyUnit');
+
+        if (urlTitle) {
+            document.querySelector('.product-title').textContent = urlTitle;
+            document.querySelector('.current').textContent = urlTitle;
+            document.title = urlTitle + ' - 龙岗数据聚合服务平台';
+        }
+
+        var isNegotiate = (urlPrice === '面议');
+        if (isNegotiate) {
+            priceEl.textContent = '面议';
+            measureBtns.forEach(function (b) { b.classList.remove('active'); });
+            measureBtns[2].classList.add('active');
+            qtyRow.style.display = 'none';
+        } else if (urlPrice) {
+            priceEl.textContent = urlPrice;
+        }
+
+        document.getElementById('btnBuy').addEventListener('click', function () {
+            var titleParam = '&title=' + encodeURIComponent(urlTitle || document.querySelector('.product-title').textContent);
+            if (isNegotiate) {
+                window.location.href = 'solution-buy-negotiate.html?price=面议' + titleParam;
+            } else {
+                window.location.href = 'solution-buy.html?price=' + encodeURIComponent(urlPrice) + titleParam;
+            }
+        });
+
+        /* ── 计量方式切换 ── */
+        measureBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                measureBtns.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var unit = btn.getAttribute('data-unit');
+                if (unit) {
+                    qtyRow.style.display = '';
+                    qtyUnit.textContent = unit;
+                } else {
+                    qtyRow.style.display = 'none';
+                }
+            });
+        });
+
         var overlay = document.getElementById('consultOverlay');
         var txt = document.getElementById('txtConsult');
         var cnt = document.getElementById('consultCount');

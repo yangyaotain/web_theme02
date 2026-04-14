@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购买服务 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <script src="js/smart-service.js" defer></script>
+    <style>
+        .apply-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .apply-meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-divider); display: flex; gap: 32px; }
+        .apply-meta .val { color: var(--text-primary); }
+
+        .order-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+        .order-table th {
+            padding: 12px 16px; font-size: 13px; font-weight: 600;
+            color: var(--text-primary); background: var(--surface-secondary);
+            border: 1px solid var(--border-default); text-align: center;
+        }
+        .order-table td {
+            padding: 12px 16px; font-size: 13px; color: var(--text-primary);
+            border: 1px solid var(--border-default); text-align: center;
+        }
+
+        .form-section-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; }
+        .form-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .form-label { width: 120px; flex-shrink: 0; font-size: 13px; color: var(--text-secondary); padding-top: 8px; text-align: right; padding-right: 12px; }
+        .form-label .required { color: #E53935; margin-right: 2px; }
+        .form-value { flex: 1; }
+
+        .form-input {
+            width: 280px; padding: 8px 12px; font-size: 13px; font-family: inherit;
+            color: var(--text-primary); border: 1px solid var(--border-default);
+            border-radius: 4px; outline: none; transition: border-color var(--transition-fast);
+        }
+        .form-input:focus { border-color: var(--forest-green); }
+        .form-input::placeholder { color: var(--text-placeholder); }
+        .input-with-unit { display: flex; align-items: center; gap: 8px; }
+        .input-unit { font-size: 13px; color: var(--text-secondary); }
+
+        .radio-group { display: flex; gap: 20px; padding-top: 8px; }
+        .radio-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-primary); cursor: pointer; }
+        .radio-item input[type="radio"] { accent-color: var(--forest-green); }
+
+        .form-textarea-wrap { position: relative; max-width: 520px; }
+        .form-textarea {
+            width: 100%; min-height: 100px; padding: 10px 12px; font-size: 13px;
+            font-family: inherit; color: var(--text-primary); border: 1px solid var(--border-default);
+            border-radius: 4px; outline: none; resize: vertical; transition: border-color var(--transition-fast);
+        }
+        .form-textarea:focus { border-color: var(--forest-green); }
+        .form-textarea::placeholder { color: var(--text-placeholder); }
+        .char-count { position: absolute; right: 10px; bottom: 8px; font-size: 12px; color: var(--text-tertiary); }
+
+        .upload-tip { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; }
+        .upload-box { display: flex; align-items: center; gap: 12px; }
+        .upload-input { display: none; }
+        .btn-upload {
+            padding: 7px 16px; font-size: 13px; font-weight: 500; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: 4px; cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-upload:hover { border-color: var(--border-emphasis); background: #FAFBFC; }
+
+        .form-actions { display: flex; justify-content: center; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-divider); }
+        .btn-submit {
+            padding: 8px 28px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: 4px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-submit:hover { background: var(--forest-green-600); }
+        .btn-cancel {
+            padding: 8px 28px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: 4px; cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-cancel:hover { border-color: var(--border-emphasis); }
+    </style>
+</head>
+<body>
+    <nav-bar active="consulting"></nav-bar>
+
+    <div class="g-page-wrapper">
+        <nav class="g-breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="data-consulting.html">数据咨询服务</a>
+            <span class="sep">/</span>
+            <a href="javascript:history.back();" id="breadcrumbDetail">数据资产入表规划咨询服务</a>
+            <span class="sep">/</span>
+            <span class="current">购买服务</span>
+        </nav>
+
+        <div class="g-container g-container--pb">
+            <div class="g-card">
+                <h1 class="apply-title" id="pageTitle">数据资产入表规划咨询服务</h1>
+                <div class="apply-meta">
+                    <span>服务类型：<span class="val" id="metaType">合规评估服务</span></span>
+                    <span>服务提供方：<span class="val">英飞特电子（杭州）股份有限公司</span></span>
+                </div>
+
+                <form id="buyForm" autocomplete="off">
+                    <h3 class="form-section-title">订单信息</h3>
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>类型</th>
+                                <th>付费方式</th>
+                                <th>计量方式</th>
+                                <th>价格</th>
+                                <th>数量</th>
+                                <th>合计</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="orderName">数据资产入表规划咨询服务</td>
+                                <td id="orderType">合规评估服务</td>
+                                <td>预付费</td>
+                                <td>面议</td>
+                                <td>面议</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="form-section-title">购买信息</h3>
+
+                    <div class="form-row">
+                        <label class="form-label">意向价格</label>
+                        <div class="form-value">
+                            <div class="input-with-unit">
+                                <input class="form-input" type="number" min="0" placeholder="请输入意向价格">
+                                <span class="input-unit">元</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>交付方式</label>
+                        <div class="form-value">
+                            <div class="radio-group">
+                                <label class="radio-item"><input type="radio" name="delivery" value="online-offline" checked> 线上+线下</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>使用场景描述</label>
+                        <div class="form-value">
+                            <div class="form-textarea-wrap">
+                                <textarea class="form-textarea" id="txtScene" maxlength="500" placeholder="请输入"></textarea>
+                                <span class="char-count"><span id="sceneCount">0</span>/500</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label"><span class="required">*</span>数据服务相关资料</label>
+                        <div class="form-value">
+                            <div class="upload-box">
+                                <input type="file" class="upload-input" id="fileUpload" accept=".rar,.zip,.pdf,.docx">
+                                <button type="button" class="btn-upload" onclick="document.getElementById('fileUpload').click()">上传文件</button>
+                            </div>
+                            <div class="upload-tip">上传单个文件，上传与数据服务相关的资料，支持RAR、ZIP、PDF、Docx等格式，大小不超过100M</div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="history.back()">取消</button>
+                        <button type="submit" class="btn-submit">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <site-footer></site-footer>
+
+    <script src="js/form-utils.js"></script>
+    <script src="js/global-dialog.js"></script>
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var title = params.get('title') || '';
+        if (title) {
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('orderName').textContent = title;
+            document.getElementById('breadcrumbDetail').textContent = title;
+        }
+
+        FormUtils.charCount('txtScene', 'sceneCount');
+
+        document.getElementById('fileUpload').addEventListener('change', function () {
+            var box = this.closest('.upload-box');
+            var existing = box.querySelector('.upload-filename');
+            if (existing) existing.remove();
+            if (this.files.length > 0) {
+                var span = document.createElement('span');
+                span.className = 'upload-filename';
+                span.style.cssText = 'font-size:13px;color:var(--text-primary);';
+                span.textContent = this.files[0].name;
+                box.appendChild(span);
+            }
+        });
+
+        document.getElementById('buyForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的购买订单已提交，即将返回详情页…',
+                duration: 1600,
+                onClose: function () { history.back(); }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

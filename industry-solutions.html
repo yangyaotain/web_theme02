@@ -262,7 +262,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/solution-realestate.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">房地产行业数据应用解决方案</h3>
@@ -292,7 +292,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/solution-construction.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">建筑业行业数据解决方案</h3>
@@ -322,7 +322,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/solution-manufacturing.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">制造业数据解决方案</h3>
@@ -337,7 +337,7 @@
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/solution-infotech.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">信息科技行业解决方案</h3>
@@ -408,7 +408,10 @@
     document.querySelectorAll('.data-card').forEach(function (card) {
         card.style.cursor = 'pointer';
         card.addEventListener('click', function () {
-            window.location.href = 'solution-detail.html';
+            var priceBadge = card.querySelector('.data-card-badge.price');
+            var price = priceBadge ? priceBadge.textContent.trim() : '';
+            var title = card.querySelector('.data-card-title') ? card.querySelector('.data-card-title').textContent.trim() : '';
+            window.location.href = 'solution-detail.html?price=' + encodeURIComponent(price) + '&title=' + encodeURIComponent(title);
         });
     });
     </script>

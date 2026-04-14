@@ -880,17 +880,111 @@
     <site-footer></site-footer>
 
     <script>
-        document.querySelectorAll('.data-card').forEach(function (card) {
-            card.addEventListener('click', function () {
-                window.location.href = 'data-detail.html';
+    (function() {
+        var tabDataSets = {
+            '公共数据': {
+                count: 86,
+                cards: [
+                    { title: '龙岗区人口统计数据', company: '龙岗区政务数据管理局', desc: '涵盖龙岗区各街道常住人口、户籍人口、流动人口等多维度统计数据，为城市规划和公共服务提供数据支撑', date: '2025-12-15', type: '公共数据', badge: '原始数据', hasApi: true, img: 'images/stock-data.jpg' },
+                    { title: '龙岗区经济运行月度数据', company: '龙岗区统计局', desc: '包含GDP、工业增加值、固定资产投资、社会消费品零售总额等宏观经济运行指标数据', date: '2025-12-10', type: '公共数据', badge: '原始数据', hasApi: true, img: 'images/data-screen.jpg' },
+                    { title: '龙岗区交通运输统计数据', company: '龙岗区交通运输局', desc: '覆盖公共交通客运量、道路通行流量、轨道交通客流等交通运输领域核心统计指标', date: '2025-12-08', type: '公共数据', badge: '原始数据', hasApi: false, img: 'images/traffic-flow.jpg' },
+                    { title: '龙岗区教育资源分布数据', company: '龙岗区教育局', desc: '包括中小学、幼儿园分布信息、师资配置、学位供给等教育资源数据', date: '2025-11-28', type: '公共数据', badge: '加工数据', hasApi: true, img: 'images/weather-service.jpg' },
+                    { title: '龙岗区医疗卫生资源数据', company: '龙岗区卫生健康局', desc: '涵盖医疗机构分布、床位数、医护人员配置、公共卫生服务等医疗卫生领域数据', date: '2025-11-25', type: '公共数据', badge: '原始数据', hasApi: true, img: 'images/water-analysis.jpg' },
+                    { title: '龙岗区市场主体登记数据', company: '龙岗区市场监督管理局', desc: '提供企业注册登记、个体工商户、市场主体存续状态等工商登记信息查询服务', date: '2025-11-20', type: '公共数据', badge: '加工数据', hasApi: true, img: 'images/iot-platform.jpg' },
+                    { title: '龙岗区土地利用现状数据', company: '龙岗区规划和自然资源局', desc: '包含土地利用类型、面积、空间分布等土地资源现状信息，支持城市空间规划决策', date: '2025-11-15', type: '公共数据', badge: '原始数据', hasApi: false, img: 'images/night-light.jpg' },
+                    { title: '龙岗区环境质量监测数据', company: '深圳市生态环境局龙岗管理局', desc: '涵盖空气质量指数、水质监测、噪声监测等环境质量实时和历史监测数据', date: '2025-11-10', type: '公共数据', badge: '原始数据', hasApi: true, img: 'images/realtime-data.jpg' },
+                    { title: '龙岗区社会保障统计数据', company: '龙岗区人力资源局', desc: '包括养老保险、医疗保险、失业保险参保人数及社保基金收支等社会保障领域统计数据', date: '2025-11-05', type: '公共数据', badge: '加工数据', hasApi: false, img: 'images/data-screen.jpg' }
+                ]
+            },
+            '行业数据': {
+                count: 128,
+                cards: [
+                    { title: 'A股上市公司股吧数据集', company: '广东****有限公司', desc: '为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/stock-data.jpg' },
+                    { title: '用户用水指标分析数据', company: '广东****有限公司', desc: '企业用户的用水数据进行加工分析，得出针对各类用户的水用相关指标数据', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/water-analysis.jpg' },
+                    { title: '旅游安全气象服务', company: '广东****有限公司', desc: '通过大数据技术对气象数据进行治理、分类，赋能深汕特别合作区旅游业的安全监管', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/weather-service.jpg' },
+                    { title: '收费站出口小时流量', company: '广东****有限公司', desc: '通过日前查询云南交投路网下辖收费站出口小时流量统计，包括出口ETC/CPC车流量', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/traffic-flow.jpg' },
+                    { title: '智联云通平台', company: '广东****有限公司', desc: '一站式物联网行业应用的解决方案实现，多元化智能设备的无缝接入与集中管理', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/iot-platform.jpg' },
+                    { title: '公司夜灯光数据', company: '广东****有限公司', desc: '利用卫星遥感技术探测计算某制造业公司的夜灯光变量，用于衡量和预测其生产经营情况', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/night-light.jpg' },
+                    { title: '实时数据平台', company: '广东****有限公司', desc: '将企业核心数据实时集中到中央化数据平台中并通过API/SDK反向向周边系统提供数据', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/realtime-data.jpg' },
+                    { title: '城际高速小时车流量迁移统计', company: '广东****有限公司', desc: '按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/data-screen.jpg' },
+                    { title: '制造业供应链物流数据', company: '广东****有限公司', desc: '整合制造业上下游供应链物流运输数据，提供运输时效、成本分析、路径优化等数据服务', date: '2025-10-28', type: '行业数据', badge: '加工数据', hasApi: true, img: 'images/stock-data.jpg' }
+                ]
+            },
+            '企业数据': {
+                count: 95,
+                cards: [
+                    { title: '企业工商登记信息查询服务', company: '广东****有限公司', desc: '整合全国企业工商登记信息，提供企业基本信息、股东信息、变更记录等多维度数据查询服务', date: '2025-11-04', type: '企业数据', badge: '加工数据', hasApi: true, img: 'images/stock-data.jpg' },
+                    { title: '企业信用评级数据', company: '深圳****科技公司', desc: '基于企业经营、财务、法律等多维数据构建信用评级模型，提供企业信用评分和风险预警', date: '2025-11-01', type: '企业数据', badge: '加工数据', hasApi: true, img: 'images/data-screen.jpg' },
+                    { title: '企业知识产权数据', company: '广东****有限公司', desc: '涵盖企业专利申请、商标注册、软件著作权等知识产权信息的综合查询和分析服务', date: '2025-10-28', type: '企业数据', badge: '原始数据', hasApi: true, img: 'images/iot-platform.jpg' },
+                    { title: '企业财务分析报告数据', company: '深圳****数据公司', desc: '提供上市企业和非上市企业的财务报表数据、财务指标分析、行业对标等数据服务', date: '2025-10-25', type: '企业数据', badge: '加工数据', hasApi: false, img: 'images/night-light.jpg' },
+                    { title: '企业用能监测数据', company: '广东****有限公司', desc: '实时采集企业用电、用水、用气等能源消耗数据，支持碳排放核算和节能减排分析', date: '2025-10-20', type: '企业数据', badge: '原始数据', hasApi: true, img: 'images/realtime-data.jpg' },
+                    { title: '企业人才需求数据', company: '深圳****科技公司', desc: '汇聚龙岗区企业招聘岗位、薪酬水平、技能需求等人力资源市场数据，助力人才供需匹配', date: '2025-10-15', type: '企业数据', badge: '加工数据', hasApi: true, img: 'images/weather-service.jpg' },
+                    { title: '企业供应商管理数据', company: '广东****有限公司', desc: '整合企业供应商资质、交货能力、质量评估等信息，支撑供应链风险管理和采购决策', date: '2025-10-10', type: '企业数据', badge: '加工数据', hasApi: false, img: 'images/traffic-flow.jpg' },
+                    { title: '企业产品质量追溯数据', company: '深圳****数据公司', desc: '基于区块链技术实现产品从原材料到终端消费的全链路质量追溯和数据存证服务', date: '2025-10-05', type: '企业数据', badge: '原始数据', hasApi: true, img: 'images/water-analysis.jpg' },
+                    { title: '企业市场竞争分析数据', company: '广东****有限公司', desc: '提供行业市场规模、竞争格局、企业市场份额等竞争情报数据，支持企业战略决策', date: '2025-09-28', type: '企业数据', badge: '加工数据', hasApi: true, img: 'images/stock-data.jpg' }
+                ]
+            }
+        };
+
+        var dataGrid = document.querySelector('.data-grid');
+        var tabs = document.querySelectorAll('.tab');
+        var resultsCount = document.querySelector('.results-count strong');
+
+        function renderCards(tabName) {
+            var data = tabDataSets[tabName];
+            if (!data) return;
+            dataGrid.innerHTML = '';
+            resultsCount.textContent = data.count;
+
+            data.cards.forEach(function(c) {
+                var article = document.createElement('article');
+                article.className = 'data-card';
+                article.innerHTML =
+                    '<div class="data-card-image" style="background:url(\'' + c.img + '\') center/cover;">' +
+                        '<div class="data-card-badges">' +
+                            '<span class="data-card-badge">' + c.badge + '</span>' +
+                            (c.hasApi ? '<span class="data-card-badge api">API</span>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="data-card-content">' +
+                        '<h3 class="data-card-title">' + c.title + '</h3>' +
+                        '<p class="data-card-company">' + c.company + '</p>' +
+                        '<p class="data-card-desc">' + c.desc + '</p>' +
+                        '<div class="data-card-footer">' +
+                            '<span class="data-card-meta">' + c.date + '</span>' +
+                            '<span class="data-card-type">' + c.type + '</span>' +
+                        '</div>' +
+                    '</div>';
+
+                if (tabName === '公共数据') {
+                    article.addEventListener('click', function() {
+                        window.open('https://lgdataops.lggov.cn/dataResource/detail/122', '_blank');
+                    });
+                } else {
+                    article.addEventListener('click', function() {
+                        window.location.href = 'data-detail.html';
+                    });
+                }
+                dataGrid.appendChild(article);
+            });
+        }
+
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                renderCards(this.textContent.trim());
             });
         });
 
-        document.querySelectorAll('.filter-option').forEach(function (option) {
-            option.addEventListener('click', function () {
+        renderCards('公共数据');
+
+        document.querySelectorAll('.filter-option').forEach(function(option) {
+            option.addEventListener('click', function() {
                 this.classList.toggle('active');
             });
         });
+    })();
     </script>
 </body>
 </html>

@@ -174,7 +174,7 @@
         .main-content {
             max-width: var(--content-max-width);
             margin: 0 auto;
-            padding: 32px;
+            padding: 0 32px 32px;
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 40px;
@@ -566,7 +566,856 @@
             display: block;
         }
 
+        /* ==================== 龙岗可信数据空间 Tab 切换 ==================== */
+        .space-detail-tabs {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 24px;
+        }
+
+        .space-tab {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 150ms ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-tab svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .space-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .space-tab.active {
+            color: var(--forest-green);
+            border-bottom-color: var(--forest-green);
+            font-weight: 600;
+        }
+
+        .space-tab-content {
+            display: none;
+        }
+
+        .space-tab-content.active {
+            display: block;
+        }
+
+        /* 数据资源/产品卡片网格 */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .resource-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .resource-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .resource-card-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .resource-card-icon.database {
+            background: #f0fdf6;
+            color: #20A565;
+        }
+
+        .resource-card-icon.api {
+            background: #eef2ff;
+            color: #4F6EF7;
+        }
+
+        .resource-card-icon.doc {
+            background: #fffbeb;
+            color: #E5940A;
+        }
+
+        .resource-card-icon.service {
+            background: #f5f3ff;
+            color: #8B5CF6;
+        }
+
+        .resource-card-type {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resource-card-type.database {
+            background: #f0fdf6;
+            color: #20A565;
+        }
+
+        .resource-card-type.api {
+            background: #eef2ff;
+            color: #4F6EF7;
+        }
+
+        .resource-card-type.doc {
+            background: #fffbeb;
+            color: #E5940A;
+        }
+
+        .resource-card-type.service {
+            background: #f5f3ff;
+            color: #8B5CF6;
+        }
+
+        .resource-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .resource-card-org {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+        }
+
+        .resource-card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .resource-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .resource-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .resource-card-tag {
+            padding: 3px 8px;
+            background: var(--forest-green-50);
+            color: var(--forest-green);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* 产品卡片特有样式 */
+        .product-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-4px);
+        }
+
+        .product-card-image {
+            height: 120px;
+            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-card-image svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--forest-green);
+            opacity: 0.6;
+        }
+
+        .product-card-badges {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .product-card-badge {
+            padding: 3px 8px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .product-card-content {
+            padding: 16px;
+        }
+
+        .product-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .product-card-provider {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+        }
+
+        .product-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .product-card-price {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .product-card-price .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #E53935;
+        }
+
+        .product-card-price .negotiable {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .product-card-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .product-card-btn:hover {
+            background: var(--forest-green);
+            color: white;
+        }
+
+        /* ==================== 数据资源/产品 Tab 内部样式 ==================== */
+        /* 搜索框 */
+        .space-search-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .space-search-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+
+        .space-search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .space-search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .space-search-input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px var(--forest-green-100);
+        }
+
+        .space-search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .space-search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-tertiary);
+        }
+
+        .space-search-btn {
+            padding: 12px 28px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .space-search-tags {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .space-search-tags-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .space-search-tag {
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid var(--border-default);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-search-tag:hover {
+            border-color: var(--forest-green);
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        /* 主内容区：左侧分类 + 右侧卡片 */
+        .space-main-content {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+        }
+
+        /* 左侧分类 */
+        .space-sidebar {
+            width: auto;
+        }
+
+        .space-filter-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 20px;
+        }
+
+        .space-filter-section {
+            margin-bottom: 20px;
+        }
+
+        .space-filter-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .space-filter-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .space-filter-clear {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+        }
+
+        .space-filter-clear:hover {
+            color: var(--forest-green);
+        }
+
+        .space-filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .space-filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-filter-option:hover {
+            background: var(--gray-100);
+        }
+
+        .space-filter-option.active {
+            background: var(--forest-green-50);
+        }
+
+        .space-filter-checkbox {
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .space-filter-option.active .space-filter-checkbox {
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .space-filter-checkbox svg {
+            width: 9px;
+            height: 9px;
+            fill: white;
+            opacity: 0;
+        }
+
+        .space-filter-option.active .space-filter-checkbox svg {
+            opacity: 1;
+        }
+
+        .space-filter-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .space-filter-option.active .space-filter-label {
+            color: var(--forest-green-700);
+            font-weight: 500;
+        }
+
+        .space-filter-count {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-tertiary);
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 100px;
+        }
+
+        .space-filter-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 16px 0;
+        }
+
+        /* 右侧内容区 */
+        .space-content-area {
+            min-width: 0;
+        }
+
+        .space-content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .space-results-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .space-results-count strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .space-sort-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-sort-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .space-sort-select {
+            padding: 6px 10px;
+            font-size: 12px;
+            color: var(--text-primary);
+            background: var(--surface-primary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* 数据卡片网格 - 一行2个 */
+        .space-data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .space-data-card {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .space-data-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .space-data-card-link:hover {
+            text-decoration: none;
+        }
+
+        .space-data-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .space-data-card-image {
+            height: 120px;
+            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .space-data-card-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(32,165,101,0.15)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .space-data-card-badges {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .space-data-card-badge {
+            padding: 3px 8px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .space-data-card-badge.api {
+            background: rgba(64, 158, 255, 0.8);
+        }
+
+        .space-data-card-content {
+            padding: 16px;
+        }
+
+        .space-data-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .space-data-card-type-row {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+        }
+
+        .space-data-card-type-row .val {
+            color: var(--info-blue);
+            font-weight: 500;
+        }
+
+        .space-data-card-company {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .space-data-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .space-data-card-price {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+        }
+
+        .space-data-card-price .price {
+            color: #E53935;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .space-data-card-price .price.negotiate {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .space-data-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .space-data-card-meta {
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+
+        .space-data-card-type {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            padding: 3px 8px;
+            border-radius: 100px;
+        }
+
+        .scene-tags {
+            display: flex;
+            gap: 4px;
+        }
+
+        .scene-tag {
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border-radius: var(--radius-sm);
+        }
+
+        /* 分页组件 */
+        .space-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .space-pagination-btn {
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--surface-primary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .space-pagination-btn:hover:not(.disabled):not(.active) {
+            border-color: var(--forest-green);
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .space-pagination-btn.active {
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            color: white;
+            border-color: var(--forest-green);
+            font-weight: 600;
+        }
+
+        .space-pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .space-pagination-btn.nav {
+            color: var(--text-tertiary);
+        }
+
+        .space-pagination-btn.nav:hover:not(.disabled) {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .space-pagination-ellipsis {
+            padding: 0 8px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        .space-pagination-info {
+            margin-left: 16px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
         /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-banner { grid-template-columns: repeat(2, 1fr); }
+            .feature-grid { grid-template-columns: 1fr; }
+            .image-gallery { grid-template-columns: 1fr; }
+            .gallery-side { flex-direction: row; height: 150px; }
+            .space-main-content { grid-template-columns: 180px 1fr; }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+            .space-card { flex: 1; min-width: 250px; }
+            .space-main-content { grid-template-columns: 1fr; }
+            .space-sidebar { position: static; }
+            .space-filter-card { display: flex; flex-wrap: wrap; gap: 16px; }
+            .space-filter-section { margin-bottom: 0; flex: 1; min-width: 150px; }
+            .space-filter-divider { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .article-title { font-size: 28px; }
+            .article-hero { height: 300px; }
+            .article-hero-content { padding: 24px; }
+            .article-body { padding: 24px; }
+            .section-content, .feature-grid, .image-gallery { margin-left: 0; }
+            .cta-section { flex-direction: column; text-align: center; }
+            .space-data-grid { grid-template-columns: 1fr; }
+            .space-search-inner { flex-direction: column; }
+            .space-search-input-wrapper { width: 100%; }
+            .space-search-btn { width: 100%; }
+        }
         @media (max-width: 1200px) {
             .stats-banner { grid-template-columns: repeat(2, 1fr); }
             .feature-grid { grid-template-columns: 1fr; }
@@ -667,7 +1516,17 @@
     <main class="main-content">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="space-card active">
+            <div class="space-card active" data-panel="overview">
+                <div class="space-card-image">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                <div class="space-card-content">
+                    <h3 class="space-card-title">龙岗可信数据空间</h3>
+                    <p class="space-card-desc">数据要素改革试点，构建可信流通基础设施</p>
+                </div>
+            </div>
+
+            <div class="space-card" data-panel="0">
                 <div class="space-card-image">
                     <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
                 </div>
@@ -677,7 +1536,7 @@
                 </div>
             </div>
 
-            <div class="space-card">
+            <div class="space-card" data-panel="1">
                 <div class="space-card-image">
                     <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
                 </div>
@@ -687,7 +1546,7 @@
                 </div>
             </div>
 
-            <div class="space-card">
+            <div class="space-card" data-panel="2">
                 <div class="space-card-image">
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg>
                 </div>
@@ -697,7 +1556,7 @@
                 </div>
             </div>
 
-            <div class="space-card">
+            <div class="space-card" data-panel="3">
                 <div class="space-card-image">
                     <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
                 </div>
@@ -708,8 +1567,675 @@
             </div>
         </aside>
 
+        <!-- ========== Panel 0: 龙岗可信数据空间概览 ========== -->
+        <div class="article-panel active" data-panel="overview">
+        <article class="article">
+            <div class="article-hero" style="background-image: url('images/space-hero.jpg'); background-position: center 40%;">
+                <div class="article-hero-content">
+                    <span class="article-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        龙岗区数据要素改革试点
+                    </span>
+                    <h1 class="article-title">龙岗可信数据空间</h1>
+                    <p class="article-subtitle">以可信数据空间为基础，以数据交易为纽带，以数商培育为抓手，构建数据要素流通的完整生态闭环</p>
+                </div>
+            </div>
+            <div class="article-body">
+                <!-- Tab 切换按钮 -->
+                <div class="space-detail-tabs">
+                    <button class="space-tab active" data-subtab="intro">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        空间介绍
+                    </button>
+                    <button class="space-tab" data-subtab="resources">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+                        数据资源
+                    </button>
+                    <button class="space-tab" data-subtab="products">
+                        <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+                        数据产品
+                    </button>
+                </div>
+
+                <!-- Tab 1: 空间介绍 -->
+                <div class="space-tab-content active" data-subtab="intro">
+                    <p class="article-lead">龙岗区作为深圳市数据要素改革试点区，积极探索数据空间建设运营模式，以"构建数据可信流通环境、释放数据要素价值"为核心，聚焦低空经济、具身智能、医药健康、文化艺术等战略性新兴产业，打造多领域融合的可信数据空间体系。</p>
+                    <div class="stats-banner">
+                        <div class="stat-card"><div class="stat-number">292<span class="stat-unit">亿+</span></div><div class="stat-label">数据资源总量</div></div>
+                        <div class="stat-card"><div class="stat-number">4<span class="stat-unit">大</span></div><div class="stat-label">行业数据空间</div></div>
+                        <div class="stat-card"><div class="stat-number">2000<span class="stat-unit">P</span></div><div class="stat-label">算力集群规模</div></div>
+                        <div class="stat-card"><div class="stat-number">12.62<span class="stat-unit">亿+</span></div><div class="stat-label">数据服务调用量</div></div>
+                    </div>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数据空间：可信流通基础设施</h2></div>
+                        <p class="section-content">龙岗可信数据空间是基于隐私计算、区块链等先进技术构建的数据流通基础设施，为企业提供数据安全存储、传输、计算的一体化服务。通过"数据可用不可见"的技术方案，在保障数据安全的前提下，实现跨行业、跨领域的数据共享与价值释放。目前已汇聚业务数据292亿条，形成覆盖政务、产业、民生等多领域的综合性数据资源池。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">2</span><h2 class="section-title">"1+N"授权运营体系</h2></div>
+                        <p class="section-content">建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，以公共数据为牵引，带动行业数据、区域数据的融合应用与价值挖掘。数据服务调用量已突破12.62亿次，涵盖企业工商、地理信息、交通出行、医疗健康等多个领域。</p>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">四大行业数据空间</h2></div>
+                        <div class="feature-grid">
+                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div><div><div class="feature-title">低空经济可信数据空间</div><div class="feature-desc">388km²低空空域覆盖，构建"空中高德"时空数字底座</div></div></div>
+                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div><div class="feature-title">具身智能可信数据空间</div><div class="feature-desc">1500+高质量数据集，赋能机器人产业创新</div></div></div>
+                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg></div><div><div class="feature-title">医药健康可信数据空间</div><div class="feature-desc">AI赋能智慧医疗，推动健康产业数字化转型</div></div></div>
+                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div><div><div class="feature-title">文化艺术可信数据空间</div><div class="feature-desc">数字创意产业走廊，文化数据资产化先行先试</div></div></div>
+                        </div>
+                    </section>
+                    <section class="article-section">
+                        <div class="section-header"><span class="section-number">4</span><h2 class="section-title">数商生态：培育数据服务主体</h2></div>
+                        <p class="section-content">龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。通过举办数据应用创新大赛、建设数据要素集聚园区等举措，持续吸引优质数商资源集聚，推动数据要素市场健康发展。</p>
+                    </section>
+                    <div class="cta-section">
+                        <div class="cta-content"><h3>探索龙岗可信数据空间</h3><p>点击左侧导航，探索各行业数据空间详情</p></div>
+                        <a href="https://lgdata.lggov.cn/index" target="_blank" class="cta-button">进入空间</a>
+                    </div>
+                </div>
+
+                <!-- Tab 2: 数据资源 -->
+                <div class="space-tab-content" data-subtab="resources">
+                    <!-- 搜索框 -->
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索数据资源、API、解决方案...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                        <div class="space-search-tags">
+                            <span class="space-search-tags-label">热门：</span>
+                            <span class="space-search-tag">交通运输</span>
+                            <span class="space-search-tag">文化旅游</span>
+                            <span class="space-search-tag">气象服务</span>
+                            <span class="space-search-tag">金融数据</span>
+                            <span class="space-search-tag">企业工商</span>
+                        </div>
+                    </div>
+
+                    <!-- 主内容区：左侧分类 + 右侧卡片 -->
+                    <div class="space-main-content">
+                        <!-- 左侧分类 -->
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">
+                                        行业分类
+                                        <span class="space-filter-clear">清除</span>
+                                    </div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">128</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">交通运输</span>
+                                            <span class="space-filter-count">24</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">金融服务</span>
+                                            <span class="space-filter-count">18</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">文化旅游</span>
+                                            <span class="space-filter-count">15</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">气象服务</span>
+                                            <span class="space-filter-count">12</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">医疗健康</span>
+                                            <span class="space-filter-count">10</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-filter-divider"></div>
+
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">交付方式</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">API 传输</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">文件传输</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">数据库传输</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-filter-divider"></div>
+
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">数据来源</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">原始数据</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">加工数据</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">交易数据</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- 右侧内容区 -->
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">
+                                    共 <strong>128</strong> 条数据资源
+                                </div>
+                                <div class="space-sort-dropdown">
+                                    <span class="space-sort-label">排序：</span>
+                                    <select class="space-sort-select">
+                                        <option>上架时间</option>
+                                        <option>申请量</option>
+                                        <option>浏览量</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-data-grid">
+                                <!-- 数据资源卡片 -->
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/119" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">原始数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区人口统计数据</h3>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">涵盖龙岗区各街道常住人口、户籍人口、流动人口等多维度统计数据，为城市规划和公共服务提供数据支撑</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-12-15</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/120" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">原始数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区经济运行月度数据</h3>
+                                            <p class="space-data-card-company">龙岗区统计局</p>
+                                            <p class="space-data-card-desc">包含GDP、工业增加值、固定资产投资、社会消费品零售总额等宏观经济运行指标数据</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-12-10</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/121" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/traffic-flow.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">原始数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区交通运输统计数据</h3>
+                                            <p class="space-data-card-company">龙岗区交通运输局</p>
+                                            <p class="space-data-card-desc">覆盖公共交通客运量、道路通行流量、轨道交通客流等交通运输领域核心统计指标</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-12-08</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/122" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/weather-service.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">加工数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区教育资源分布数据</h3>
+                                            <p class="space-data-card-company">龙岗区教育局</p>
+                                            <p class="space-data-card-desc">包括中小学、幼儿园分布信息、师资配置、学位供给等教育资源数据</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-11-28</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/123" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analysis.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">原始数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区医疗卫生资源数据</h3>
+                                            <p class="space-data-card-company">龙岗区卫生健康局</p>
+                                            <p class="space-data-card-desc">涵盖医疗机构分布、床位数、医护人员配置、公共卫生服务等医疗卫生领域数据</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-11-25</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/124" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-platform.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">加工数据</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区市场主体登记数据</h3>
+                                            <p class="space-data-card-company">龙岗区市场监督管理局</p>
+                                            <p class="space-data-card-desc">提供企业注册登记、个体工商户、市场主体存续状态等工商登记信息查询服务</p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">2025-11-20</span>
+                                                <span class="space-data-card-type">公共数据</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+
+                            <!-- 分页组件 -->
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                                </button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn">3</button>
+                                <button class="space-pagination-btn">4</button>
+                                <button class="space-pagination-btn">5</button>
+                                <span class="space-pagination-ellipsis">...</span>
+                                <button class="space-pagination-btn">11</button>
+                                <button class="space-pagination-btn nav">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+                                </button>
+                                <span class="space-pagination-info">共 128 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 数据产品 -->
+                <div class="space-tab-content" data-subtab="products">
+                    <!-- 搜索框 -->
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索数据产品、API、解决方案...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                        <div class="space-search-tags">
+                            <span class="space-search-tags-label">热门：</span>
+                            <span class="space-search-tag">低空经济</span>
+                            <span class="space-search-tag">具身智能</span>
+                            <span class="space-search-tag">智慧医疗</span>
+                            <span class="space-search-tag">数字创意</span>
+                        </div>
+                    </div>
+
+                    <!-- 主内容区：左侧分类 + 右侧卡片 -->
+                    <div class="space-main-content">
+                        <!-- 左侧分类 -->
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">
+                                        行业分类
+                                        <span class="space-filter-clear">清除</span>
+                                    </div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">128</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">低空经济</span>
+                                            <span class="space-filter-count">24</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">具身智能</span>
+                                            <span class="space-filter-count">18</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">医药健康</span>
+                                            <span class="space-filter-count">15</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">文化艺术</span>
+                                            <span class="space-filter-count">12</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-filter-divider"></div>
+
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">
+                                        更新频率
+                                        <span class="space-filter-clear">清除</span>
+                                    </div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">次/天</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">次/周</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">次/月</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">次/季度</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-filter-divider"></div>
+
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">
+                                        交付方式
+                                        <span class="space-filter-clear">清除</span>
+                                    </div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">API 传输</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">文件传输</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox">
+                                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                            </div>
+                                            <span class="space-filter-label">数据库传输</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- 右侧内容区 -->
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">
+                                    共 <strong>128</strong> 条数据产品
+                                </div>
+                                <div class="space-sort-dropdown">
+                                    <span class="space-sort-label">排序：</span>
+                                    <select class="space-sort-select">
+                                        <option>上架时间</option>
+                                        <option>购买量</option>
+                                        <option>浏览量</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-data-grid">
+                                <!-- 数据产品卡片 -->
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GHX" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">慧企政策智能推荐</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">广东***有限公司</p>
+                                            <p class="space-data-card-desc">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.1元/次</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-11-4 11:12</span>
+                                                <div class="scene-tags"><span class="scene-tag">经营预测</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GHY" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空经济时空数字底座</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">龙岗区低空经济工作专班</p>
+                                            <p class="space-data-card-desc">面向无人机物流、城市治理、应急救援等场景的时空数据服务产品，包含三维地图、航线规划等核心功能</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">28,800元/年</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-10-28</span>
+                                                <div class="scene-tags"><span class="scene-tag">智慧城市</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GHZ" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/tourism-weather.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">具身智能训练数据集</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">数据集</span></p>
+                                            <p class="space-data-card-company">龙岗区人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">涵盖工业装配、服务机器人、医疗康复等多场景的高质量机器人训练数据集，支持主流深度学习框架</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">56,000元/套</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-10-25</span>
+                                                <div class="scene-tags"><span class="scene-tag">智慧文旅</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GI1" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/toll-traffic.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">AI智慧医疗辅助诊断系统</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">SaaS服务</span></p>
+                                            <p class="space-data-card-company">龙岗区卫生健康局</p>
+                                            <p class="space-data-card-desc">基于深度学习的医学影像辅助诊断系统，支持X光、CT等影像分析，准确率达95%以上</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">128,000元/年</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-10-20</span>
+                                                <div class="scene-tags"><span class="scene-tag">医疗健康</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GI2" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">数字创意内容生成平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">星河云海数字创意基地</p>
+                                            <p class="space-data-card-desc">集成AI文创能力的数字内容创作平台，支持影视、动漫、微短剧等原创内容智能生成</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-10-15</span>
+                                                <div class="scene-tags"><span class="scene-tag">数字创意</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+
+                                <a href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GI3" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                                            <div class="space-data-card-badges">
+                                                <span class="space-data-card-badge">数据产品</span>
+                                                <span class="space-data-card-badge api">API</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">隐私计算数据共享服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">深圳数据交易所</p>
+                                            <p class="space-data-card-desc">基于多方安全计算、联邦学习等技术，提供跨机构数据联合建模服务，实现"数据可用不可见"</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.5元/次</span></p>
+                                            <div class="space-data-card-footer">
+                                                <span class="space-data-card-meta">上架时间：2025-10-10</span>
+                                                <div class="scene-tags"><span class="scene-tag">数据安全</span></div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+
+                            <!-- 分页组件 -->
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                                </button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn">3</button>
+                                <button class="space-pagination-btn">4</button>
+                                <button class="space-pagination-btn">5</button>
+                                <span class="space-pagination-ellipsis">...</span>
+                                <button class="space-pagination-btn">11</button>
+                                <button class="space-pagination-btn nav">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+                                </button>
+                                <span class="space-pagination-info">共 128 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        </div>
+
         <!-- ========== Panel 1: 低空经济可信数据空间 ========== -->
-        <div class="article-panel active" data-panel="0">
+        <div class="article-panel" data-panel="0">
         <article class="article">
             <div class="article-hero" style="background-image: url('images/space-hero.jpg');">
                 <div class="article-hero-content">
@@ -722,13 +2248,31 @@
                 </div>
             </div>
             <div class="article-body">
-                <p class="article-lead">深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。</p>
-                <div class="stats-banner">
-                    <div class="stat-card"><div class="stat-number">388<span class="stat-unit">km²</span></div><div class="stat-label">低空空域覆盖面积</div></div>
-                    <div class="stat-card"><div class="stat-number">34<span class="stat-unit">条</span></div><div class="stat-label">直升机航线</div></div>
-                    <div class="stat-card"><div class="stat-number">99<span class="stat-unit">%</span></div><div class="stat-label">场景还原度</div></div>
-                    <div class="stat-card"><div class="stat-number">15<span class="stat-unit">x</span></div><div class="stat-label">任务效率提升</div></div>
+                <!-- Tab 切换按钮 -->
+                <div class="space-detail-tabs">
+                    <button class="space-tab active" data-subtab="intro0">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        空间介绍
+                    </button>
+                    <button class="space-tab" data-subtab="resources0">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+                        数据资源
+                    </button>
+                    <button class="space-tab" data-subtab="products0">
+                        <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+                        数据产品
+                    </button>
                 </div>
+
+                <!-- Tab 1: 空间介绍 -->
+                <div class="space-tab-content active" data-subtab="intro0">
+                    <p class="article-lead">深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。</p>
+                    <div class="stats-banner">
+                        <div class="stat-card"><div class="stat-number">388<span class="stat-unit">km²</span></div><div class="stat-label">低空空域覆盖面积</div></div>
+                        <div class="stat-card"><div class="stat-number">34<span class="stat-unit">条</span></div><div class="stat-label">直升机航线</div></div>
+                        <div class="stat-card"><div class="stat-number">99<span class="stat-unit">%</span></div><div class="stat-label">场景还原度</div></div>
+                        <div class="stat-card"><div class="stat-number">15<span class="stat-unit">x</span></div><div class="stat-label">任务效率提升</div></div>
+                    </div>
                 <section class="article-section">
                     <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数字底座：三维立体时空基底</h2></div>
                     <p class="section-content">"空中高德"时空数字底座融合地面与低空（600米以下）实时数据，通过三维隐式空间建模与AI深度学习技术，实现全域数据天级更新，真实场景还原度达99%。该底座集成5G-A、ADS-B、RID等通导监设施数据，以及气象、飞行感知等动态信息，汇聚超过30类、100项多源异构数据，形成可孪生管理、智能路径规划的"智慧大脑"。</p>
@@ -758,6 +2302,245 @@
                     <div class="cta-content"><h3>加入低空经济可信数据空间</h3><p>与我们一起探索低空经济的无限可能</p></div>
                     <button class="cta-button">立即申请加入</button>
                 </div>
+                </div>
+
+                <!-- Tab 2: 数据资源 -->
+                <div class="space-tab-content" data-subtab="resources0">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索低空数据资源...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">数据类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">36</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">三维地图</span>
+                                            <span class="space-filter-count">12</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">气象数据</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">航线数据</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-filter-divider"></div>
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">交付方式</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option"><div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span class="space-filter-label">API 传输</span></div>
+                                        <div class="space-filter-option"><div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span class="space-filter-label">文件传输</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>36</strong> 条低空数据资源</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/201" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区三维高精度地图数据</h3>
+                                            <p class="space-data-card-company">龙岗区低空经济工作专班</p>
+                                            <p class="space-data-card-desc">覆盖龙岗区388平方公里三维实景地图数据，包含建筑高度、道路网络、障碍物分布等关键信息</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-15</span><span class="space-data-card-type">基础数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/202" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/weather-service.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空气象实时数据服务</h3>
+                                            <p class="space-data-card-company">龙岗区气象局</p>
+                                            <p class="space-data-card-desc">提供龙岗区600米以下低空域的实时风速、风向、能见度、气压等气象要素数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-10</span><span class="space-data-card-type">实时数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/203" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/traffic-flow.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空公共航路数据</h3>
+                                            <p class="space-data-card-company">龙岗区交通运输局</p>
+                                            <p class="space-data-card-desc">龙岗区低空公共航路规划数据，包含航路坐标、限高限制、飞行规则等核心信息</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-08</span><span class="space-data-card-type">规划数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/204" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analysis.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空飞行态势感知数据</h3>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">集成ADS-B、RID等设备数据的低空飞行器实时位置与轨迹数据服务</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-11-28</span><span class="space-data-card-type">感知数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn">3</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 36 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 数据产品 -->
+                <div class="space-tab-content" data-subtab="products0">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索低空数据产品...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">产品类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">24</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">时空底座</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">航路规划</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">监管服务</span>
+                                            <span class="space-filter-count">5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>24</strong> 条低空数据产品</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdata.lggov.cn/product-market/detail/LOW201" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空经济时空数字底座</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">龙岗区低空经济工作专班</p>
+                                            <p class="space-data-card-desc">面向无人机物流、城市治理、应急救援等场景的时空数据服务产品</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">28,800元/年</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-28</span><div class="scene-tags"><span class="scene-tag">智慧城市</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/LOW202" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">无人机智能航路规划服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">龙岗区人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">基于三维地图和气象数据的智能航线生成与动态调整服务</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.5元/次</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-25</span><div class="scene-tags"><span class="scene-tag">物流配送</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/LOW203" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空飞行安全监管服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">SaaS服务</span></p>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">政务低空飞行服务平台，自动识别飞行禁区，保障飞行安全</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-20</span><div class="scene-tags"><span class="scene-tag">政务飞行</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/LOW204" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">低空应急指挥调度平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">龙岗区应急管理局</p>
+                                            <p class="space-data-card-desc">面向应急救援场景的多机型无人机统一调度与指挥平台</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">58,000元/年</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-15</span><div class="scene-tags"><span class="scene-tag">应急救援</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn">3</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 24 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
         </div>
@@ -776,13 +2559,31 @@
                 </div>
             </div>
             <div class="article-body">
-                <p class="article-lead">龙岗区以"All in AI"战略为引领，率先建设全国首个人工智能与机器人数据聚合服务中心，聚焦具身智能行业数据标准统一、采集效率提升、共享机制建立，为机器人产业发展提供高质量数据底座。</p>
-                <div class="stats-banner">
-                    <div class="stat-card"><div class="stat-number">1500<span class="stat-unit">+</span></div><div class="stat-label">高质量数据集</div></div>
-                    <div class="stat-card"><div class="stat-number">40<span class="stat-unit">+</span></div><div class="stat-label">语料数据供应商</div></div>
-                    <div class="stat-card"><div class="stat-number">6<span class="stat-unit">大</span></div><div class="stat-label">功能模块</div></div>
-                    <div class="stat-card"><div class="stat-number">200<span class="stat-unit">万</span></div><div class="stat-label">单企最高扶持额</div></div>
+                <!-- Tab 切换按钮 -->
+                <div class="space-detail-tabs">
+                    <button class="space-tab active" data-subtab="intro1">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        空间介绍
+                    </button>
+                    <button class="space-tab" data-subtab="resources1">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+                        数据资源
+                    </button>
+                    <button class="space-tab" data-subtab="products1">
+                        <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+                        数据产品
+                    </button>
                 </div>
+
+                <!-- Tab 1: 空间介绍 -->
+                <div class="space-tab-content active" data-subtab="intro1">
+                    <p class="article-lead">龙岗区以"All in AI"战略为引领，率先建设全国首个人工智能与机器人数据聚合服务中心，聚焦具身智能行业数据标准统一、采集效率提升、共享机制建立，为机器人产业发展提供高质量数据底座。</p>
+                    <div class="stats-banner">
+                        <div class="stat-card"><div class="stat-number">1500<span class="stat-unit">+</span></div><div class="stat-label">高质量数据集</div></div>
+                        <div class="stat-card"><div class="stat-number">40<span class="stat-unit">+</span></div><div class="stat-label">语料数据供应商</div></div>
+                        <div class="stat-card"><div class="stat-number">6<span class="stat-unit">大</span></div><div class="stat-label">功能模块</div></div>
+                        <div class="stat-card"><div class="stat-number">200<span class="stat-unit">万</span></div><div class="stat-label">单企最高扶持额</div></div>
+                    </div>
                 <section class="article-section">
                     <div class="section-header"><span class="section-number">1</span><h2 class="section-title">数据聚合服务中心：六大核心模块</h2></div>
                     <p class="section-content">人工智能与机器人数据聚合服务中心由龙岗区政务服务和数据管理局联合深圳数据交易所、深圳市人工智能与机器人研究院共建，设立六大功能模块：具身智能数据生产中心、标注加工中心、质量评估中心、知识库中心、语料推荐中心和训推中心。已汇聚40多家人工智能语料数据供应商和20多家服务商，提供超1500个高质量数据集。</p>
@@ -808,6 +2609,245 @@
                     <div class="cta-content"><h3>加入具身智能可信数据空间</h3><p>携手共建机器人数据生态，赋能智能产业升级</p></div>
                     <button class="cta-button">立即申请加入</button>
                 </div>
+                </div>
+
+                <!-- Tab 2: 数据资源 -->
+                <div class="space-tab-content" data-subtab="resources1">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索具身智能数据资源...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">数据类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">42</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">图像数据</span>
+                                            <span class="space-filter-count">15</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">点云数据</span>
+                                            <span class="space-filter-count">10</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">语料数据</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-filter-divider"></div>
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">标注类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option"><div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span class="space-filter-label">目标检测</span></div>
+                                        <div class="space-filter-option"><div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span class="space-filter-label">语义分割</span></div>
+                                        <div class="space-filter-option"><div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span class="space-filter-label">关键点标注</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>42</strong> 条具身智能数据资源</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/301" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-platform.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">工业机器人装配场景数据集</h3>
+                                            <p class="space-data-card-company">龙岗区人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">涵盖精密装配、螺丝拧紧、元器件插接等工业机器人典型作业场景的多模态数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-15</span><span class="space-data-card-type">训练数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/302" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/tourism-weather.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">服务机器人室内导航数据集</h3>
+                                            <p class="space-data-card-company">深圳市人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">包含室内场景三维点云、语义地图、障碍物标注等导航所需核心数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-10</span><span class="space-data-card-type">训练数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/303" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">医疗康复机器人训练数据集</h3>
+                                            <p class="space-data-card-company">龙岗区卫生健康局</p>
+                                            <p class="space-data-card-desc">用于康复训练机器人的动作示范、姿态校正和效果评估数据集</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-08</span><span class="space-data-card-type">训练数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/304" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">具身智能语料库</h3>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">涵盖机器人对话、技能学习、任务规划等场景的高质量语料数据集</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-11-28</span><span class="space-data-card-type">语料数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn">3</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 42 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 数据产品 -->
+                <div class="space-tab-content" data-subtab="products1">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索具身智能数据产品...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">产品类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">18</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">训练数据集</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">模型服务</span>
+                                            <span class="space-filter-count">5</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">标注工具</span>
+                                            <span class="space-filter-count">3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>18</strong> 条具身智能数据产品</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdata.lggov.cn/product-market/detail/EMB301" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">具身智能训练数据集</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">数据集</span></p>
+                                            <p class="space-data-card-company">龙岗区人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">涵盖工业装配、服务机器人、医疗康复等多场景的高质量机器人训练数据集</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">56,000元/套</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-25</span><div class="scene-tags"><span class="scene-tag">机器人</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/EMB302" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">机器人技能学习服务平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">SaaS服务</span></p>
+                                            <p class="space-data-card-company">深圳市人工智能与机器人研究院</p>
+                                            <p class="space-data-card-desc">基于模仿学习的机器人技能快速习得与迁移服务平台</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">88,000元/年</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-20</span><div class="scene-tags"><span class="scene-tag">技能学习</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/EMB303" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">工具</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">多模态数据标注平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台工具</span></p>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">支持图像、点云、语音等多模态数据的智能化标注与管理平台</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-15</span><div class="scene-tags"><span class="scene-tag">数据标注</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/EMB304" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">机器人模型推理服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">深圳数据交易所</p>
+                                            <p class="space-data-card-desc">提供预训练机器人模型的在线推理API服务，支持主流模型架构</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.8元/次</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-10</span><div class="scene-tags"><span class="scene-tag">模型推理</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 18 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
         </div>
@@ -826,13 +2866,31 @@
                 </div>
             </div>
             <div class="article-body">
-                <p class="article-lead">龙岗区以"健康龙岗"行动为牵引，打造全市首个"AI＋生命健康产业园"，推动医疗大数据在诊疗辅助、公共卫生、药物研发等领域的深度应用，构建安全合规的医药健康数据流通环境。</p>
-                <div class="stats-banner">
-                    <div class="stat-card"><div class="stat-number">50<span class="stat-unit">万+</span></div><div class="stat-label">AI智能导诊访问量</div></div>
-                    <div class="stat-card"><div class="stat-number">95<span class="stat-unit">%+</span></div><div class="stat-label">AI导诊准确率</div></div>
-                    <div class="stat-card"><div class="stat-number">171<span class="stat-unit">家</span></div><div class="stat-label">社康机构覆盖</div></div>
-                    <div class="stat-card"><div class="stat-number">99.38<span class="stat-unit">%</span></div><div class="stat-label">检验结果互认率</div></div>
+                <!-- Tab 切换按钮 -->
+                <div class="space-detail-tabs">
+                    <button class="space-tab active" data-subtab="intro2">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        空间介绍
+                    </button>
+                    <button class="space-tab" data-subtab="resources2">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+                        数据资源
+                    </button>
+                    <button class="space-tab" data-subtab="products2">
+                        <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+                        数据产品
+                    </button>
                 </div>
+
+                <!-- Tab 1: 空间介绍 -->
+                <div class="space-tab-content active" data-subtab="intro2">
+                    <p class="article-lead">龙岗区以"健康龙岗"行动为牵引，打造全市首个"AI＋生命健康产业园"，推动医疗大数据在诊疗辅助、公共卫生、药物研发等领域的深度应用，构建安全合规的医药健康数据流通环境。</p>
+                    <div class="stats-banner">
+                        <div class="stat-card"><div class="stat-number">50<span class="stat-unit">万+</span></div><div class="stat-label">AI智能导诊访问量</div></div>
+                        <div class="stat-card"><div class="stat-number">95<span class="stat-unit">%+</span></div><div class="stat-label">AI导诊准确率</div></div>
+                        <div class="stat-card"><div class="stat-number">171<span class="stat-unit">家</span></div><div class="stat-label">社康机构覆盖</div></div>
+                        <div class="stat-card"><div class="stat-number">99.38<span class="stat-unit">%</span></div><div class="stat-label">检验结果互认率</div></div>
+                    </div>
                 <section class="article-section">
                     <div class="section-header"><span class="section-number">1</span><h2 class="section-title">AI赋能医疗：智慧诊疗新范式</h2></div>
                     <p class="section-content">龙岗区上线数智健康管家"AI龙岗家医"，在12家区属公立医院及171家社康机构全面应用。区域华佗GPT智能导诊和预问诊系统已获得近50万人次访问量，准确率达95%以上。龙岗区公立医院信息共享平台项目更是荣获广东省数据要素比赛二等奖，标志着医疗数据协同共享能力达到省内领先水平。</p>
@@ -858,6 +2916,234 @@
                     <div class="cta-content"><h3>加入医药健康可信数据空间</h3><p>用数据驱动医疗创新，守护全民健康</p></div>
                     <button class="cta-button">立即申请加入</button>
                 </div>
+                </div>
+
+                <!-- Tab 2: 数据资源 -->
+                <div class="space-tab-content" data-subtab="resources2">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索医药健康数据资源...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">数据类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">28</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">临床数据</span>
+                                            <span class="space-filter-count">10</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">检验数据</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">影像数据</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>28</strong> 条医药健康数据资源</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/401" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analysis.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区医院门诊病历数据</h3>
+                                            <p class="space-data-card-company">龙岗区卫生健康局</p>
+                                            <p class="space-data-card-desc">涵盖龙岗区12家区属公立医院的门诊就诊记录、病历摘要等脱敏数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-15</span><span class="space-data-card-type">临床数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/402" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">区域检验结果互认数据</h3>
+                                            <p class="space-data-card-company">龙岗区医学检验中心</p>
+                                            <p class="space-data-card-desc">支持跨机构检验结果互认的标准化检验报告数据，互认率达99.38%</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-10</span><span class="space-data-card-type">检验数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/403" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">医学影像标注数据集</h3>
+                                            <p class="space-data-card-company">龙岗区人民医院</p>
+                                            <p class="space-data-card-desc">X光、CT、MRI等医学影像的AI辅助诊断标注数据集</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-08</span><span class="space-data-card-type">影像数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/404" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-platform.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">居民健康档案数据</h3>
+                                            <p class="space-data-card-company">龙岗区社康管理中心</p>
+                                            <p class="space-data-card-desc">覆盖龙岗区171家社康机构的居民健康档案基础数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-11-28</span><span class="space-data-card-type">健康档案</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 28 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 数据产品 -->
+                <div class="space-tab-content" data-subtab="products2">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索医药健康数据产品...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">产品类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">15</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">AI诊断</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">健康管理</span>
+                                            <span class="space-filter-count">5</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">药物研发</span>
+                                            <span class="space-filter-count">3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>15</strong> 条医药健康数据产品</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdata.lggov.cn/product-market/detail/MED401" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/toll-traffic.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">SaaS</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">AI智慧医疗辅助诊断系统</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">SaaS服务</span></p>
+                                            <p class="space-data-card-company">龙岗区卫生健康局</p>
+                                            <p class="space-data-card-desc">基于深度学习的医学影像辅助诊断系统，支持X光、CT等影像分析</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">128,000元/年</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-20</span><div class="scene-tags"><span class="scene-tag">医疗健康</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/MED402" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">AI龙岗家医智能导诊服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">龙岗区政务数据管理局</p>
+                                            <p class="space-data-card-desc">数智健康管家智能导诊和预问诊系统，准确率达95%以上</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.3元/次</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-15</span><div class="scene-tags"><span class="scene-tag">智慧医疗</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/MED403" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">平台</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">区域医学影像共享平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">龙岗区人民医院</p>
+                                            <p class="space-data-card-desc">区域医学影像、病理、检验资源共享与远程会诊平台</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-10</span><div class="scene-tags"><span class="scene-tag">影像共享</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/MED404" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">个性化健康风险评估服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">龙岗区社康管理中心</p>
+                                            <p class="space-data-card-desc">基于健康档案和检验数据的个性化疾病风险预测与预防建议</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.5元/次</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-05</span><div class="scene-tags"><span class="scene-tag">健康管理</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 15 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
         </div>
@@ -876,13 +3162,31 @@
                 </div>
             </div>
             <div class="article-body">
-                <p class="article-lead">龙岗数字创意产业走廊西起坂田星河云海、东至坪地低碳云城，全长46公里、面积32平方公里，汇聚超万家文化企业、超23万名规上文化企业人才，2024年走廊营收突破2291亿元。文化艺术可信数据空间为这一庞大产业集群提供安全可信的数据流通与价值释放平台。</p>
-                <div class="stats-banner">
-                    <div class="stat-card"><div class="stat-number">2291<span class="stat-unit">亿</span></div><div class="stat-label">走廊年度营收</div></div>
-                    <div class="stat-card"><div class="stat-number">10000<span class="stat-unit">+</span></div><div class="stat-label">文化企业数量</div></div>
-                    <div class="stat-card"><div class="stat-number">35<span class="stat-unit">个</span></div><div class="stat-label">文化产业园区</div></div>
-                    <div class="stat-card"><div class="stat-number">46<span class="stat-unit">km</span></div><div class="stat-label">走廊全长</div></div>
+                <!-- Tab 切换按钮 -->
+                <div class="space-detail-tabs">
+                    <button class="space-tab active" data-subtab="intro3">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        空间介绍
+                    </button>
+                    <button class="space-tab" data-subtab="resources3">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+                        数据资源
+                    </button>
+                    <button class="space-tab" data-subtab="products3">
+                        <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+                        数据产品
+                    </button>
                 </div>
+
+                <!-- Tab 1: 空间介绍 -->
+                <div class="space-tab-content active" data-subtab="intro3">
+                    <p class="article-lead">龙岗数字创意产业走廊西起坂田星河云海、东至坪地低碳云城，全长46公里、面积32平方公里，汇聚超万家文化企业、超23万名规上文化企业人才，2024年走廊营收突破2291亿元。文化艺术可信数据空间为这一庞大产业集群提供安全可信的数据流通与价值释放平台。</p>
+                    <div class="stats-banner">
+                        <div class="stat-card"><div class="stat-number">2291<span class="stat-unit">亿</span></div><div class="stat-label">走廊年度营收</div></div>
+                        <div class="stat-card"><div class="stat-number">10000<span class="stat-unit">+</span></div><div class="stat-label">文化企业数量</div></div>
+                        <div class="stat-card"><div class="stat-number">35<span class="stat-unit">个</span></div><div class="stat-label">文化产业园区</div></div>
+                        <div class="stat-card"><div class="stat-number">46<span class="stat-unit">km</span></div><div class="stat-label">走廊全长</div></div>
+                    </div>
                 <section class="article-section">
                     <div class="section-header"><span class="section-number">1</span><h2 class="section-title">文化数据资产化：开创先河</h2></div>
                     <p class="section-content">龙岗区在文化数据资产化领域走在全国前列。深圳市子曰文化有限公司打造的"中国式文化创作大模型"成为深圳市首个文化类数据资产入表案例，标志着文化创意数据从无形资源向可量化资产的历史性跨越。数据空间通过专业评估、合规辅导、交易撮合等全链条服务，帮助更多文化企业实现数据价值变现。</p>
@@ -908,6 +3212,235 @@
                     <div class="cta-content"><h3>加入文化艺术可信数据空间</h3><p>以数据激活文化创意，共建数字文化新高地</p></div>
                     <button class="cta-button">立即申请加入</button>
                 </div>
+                </div>
+
+                <!-- Tab 2: 数据资源 -->
+                <div class="space-tab-content" data-subtab="resources3">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索文化艺术数据资源...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">数据类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">32</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">IP素材</span>
+                                            <span class="space-filter-count">12</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">创作语料</span>
+                                            <span class="space-filter-count">10</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">版权数据</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>32</strong> 条文化艺术数据资源</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/501" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗文化IP素材库</h3>
+                                            <p class="space-data-card-company">龙岗区文化广电旅游体育局</p>
+                                            <p class="space-data-card-desc">汇聚龙岗区非遗文化、旅游景点、历史建筑等数字化IP素材资源</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-15</span><span class="space-data-card-type">IP素材</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/502" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">AI文创语料数据集</h3>
+                                            <p class="space-data-card-company">星河云海数字创意基地</p>
+                                            <p class="space-data-card-desc">用于训练文化创作大模型的高质量中文创意写作语料库</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-10</span><span class="space-data-card-type">语料数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/503" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-platform.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">原始数据</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">数字艺术品版权登记数据</h3>
+                                            <p class="space-data-card-company">龙岗区市场监督管理局</p>
+                                            <p class="space-data-card-desc">数字艺术品版权确权、登记及流转记录等区块链存证数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-12-08</span><span class="space-data-card-type">版权数据</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdataops.lggov.cn/dataResource/detail/504" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analysis.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">加工数据</span><span class="space-data-card-badge api">数据集</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗区文化产业统计数据</h3>
+                                            <p class="space-data-card-company">龙岗区统计局</p>
+                                            <p class="space-data-card-desc">走廊内文化企业营收、人才规模、园区发展等产业统计数据</p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">2025-11-28</span><span class="space-data-card-type">统计资料</span></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 32 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 数据产品 -->
+                <div class="space-tab-content" data-subtab="products3">
+                    <div class="space-search-card">
+                        <div class="space-search-inner">
+                            <div class="space-search-input-wrapper">
+                                <svg class="space-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="space-search-input" placeholder="搜索文化艺术数据产品...">
+                            </div>
+                            <button class="space-search-btn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="space-main-content">
+                        <aside class="space-sidebar">
+                            <div class="space-filter-card">
+                                <div class="space-filter-section">
+                                    <div class="space-filter-title">产品类型</div>
+                                    <div class="space-filter-options">
+                                        <div class="space-filter-option active">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">全部</span>
+                                            <span class="space-filter-count">20</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">创作平台</span>
+                                            <span class="space-filter-count">8</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">版权服务</span>
+                                            <span class="space-filter-count">6</span>
+                                        </div>
+                                        <div class="space-filter-option">
+                                            <div class="space-filter-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                            <span class="space-filter-label">IP交易</span>
+                                            <span class="space-filter-count">4</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="space-content-area">
+                            <div class="space-content-header">
+                                <div class="space-results-count">共 <strong>20</strong> 条文化艺术数据产品</div>
+                            </div>
+                            <div class="space-data-grid">
+                                <a href="https://lgdata.lggov.cn/product-market/detail/CUL501" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">平台</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">数字创意内容生成平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">星河云海数字创意基地</p>
+                                            <p class="space-data-card-desc">集成AI文创能力的数字内容创作平台，支持影视、动漫、微短剧等原创内容智能生成</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-15</span><div class="scene-tags"><span class="scene-tag">数字创意</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/CUL502" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">API</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">中国式文化创作大模型API</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">API</span></p>
+                                            <p class="space-data-card-company">深圳市子曰文化有限公司</p>
+                                            <p class="space-data-card-desc">深圳市首个文化类数据资产入表案例，支持中文诗词、书法、国画等创作</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">0.2元/次</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-10</span><div class="scene-tags"><span class="scene-tag">AI创作</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/CUL503" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">服务</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">数字版权确权与交易服务</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">深圳数据交易所</p>
+                                            <p class="space-data-card-desc">基于区块链技术的数字艺术品版权确权、评估与合规交易全流程服务</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price">500元/件</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-05</span><div class="scene-tags"><span class="scene-tag">版权保护</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                                <a href="https://lgdata.lggov.cn/product-market/detail/CUL504" target="_blank" class="space-data-card-link">
+                                    <article class="space-data-card">
+                                        <div class="space-data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                                            <div class="space-data-card-badges"><span class="space-data-card-badge">数据产品</span><span class="space-data-card-badge api">平台</span></div>
+                                        </div>
+                                        <div class="space-data-card-content">
+                                            <h3 class="space-data-card-title">龙岗文化IP授权平台</h3>
+                                            <p class="space-data-card-type-row">产品类型：<span class="val">平台服务</span></p>
+                                            <p class="space-data-card-company">龙岗区文化广电旅游体育局</p>
+                                            <p class="space-data-card-desc">提供龙岗区非遗文化、旅游景点等IP素材的授权使用与商业化运营服务</p>
+                                            <p class="space-data-card-price">参考价格：<span class="price negotiate">面议</span></p>
+                                            <div class="space-data-card-footer"><span class="space-data-card-meta">上架时间：2025-10-01</span><div class="scene-tags"><span class="scene-tag">IP授权</span></div></div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                            <div class="space-pagination">
+                                <button class="space-pagination-btn nav disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                                <button class="space-pagination-btn active">1</button>
+                                <button class="space-pagination-btn">2</button>
+                                <button class="space-pagination-btn nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                                <span class="space-pagination-info">共 20 条</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </article>
         </div>
@@ -921,13 +3454,89 @@
         var cards = document.querySelectorAll('.space-card');
         var panels = document.querySelectorAll('.article-panel');
 
+        // 左侧卡片切换
         cards.forEach(function(card, idx) {
             card.addEventListener('click', function() {
                 cards.forEach(function(c) { c.classList.remove('active'); });
                 panels.forEach(function(p) { p.classList.remove('active'); });
                 card.classList.add('active');
                 panels[idx].classList.add('active');
-                panels[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // 龙岗可信数据空间的内部Tab切换
+        var spaceTabs = document.querySelectorAll('[data-panel="overview"] .space-tab');
+        var spaceTabContents = document.querySelectorAll('[data-panel="overview"] .space-tab-content');
+
+        spaceTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                var subtabId = this.dataset.subtab;
+
+                // 切换tab高亮
+                spaceTabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+
+                // 切换内容
+                spaceTabContents.forEach(function(content) {
+                    content.classList.remove('active');
+                    if (content.dataset.subtab === subtabId) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // 子空间(panel 0-3)的Tab切换 - 使用事件委托
+        document.addEventListener('click', function(e) {
+            // 查找被点击的Tab按钮
+            var tabBtn = e.target.closest('.space-tab');
+            if (!tabBtn) return;
+            
+            // 查找最近的 article-panel
+            var panel = tabBtn.closest('.article-panel');
+            if (!panel) return;
+            
+            var subtabId = tabBtn.dataset.subtab;
+            var tabs = panel.querySelectorAll('.space-tab');
+            var contents = panel.querySelectorAll('.space-tab-content');
+            
+            // 切换Tab高亮
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tabBtn.classList.add('active');
+            
+            // 切换内容显示
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+                if (content.dataset.subtab === subtabId) {
+                    content.classList.add('active');
+                }
+            });
+        });
+
+        // 分页按钮交互
+        document.querySelectorAll('.space-pagination-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('disabled') || this.classList.contains('active')) return;
+
+                var container = this.closest('.space-pagination');
+                container.querySelectorAll('.space-pagination-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // 更新导航按钮状态
+                var currentPage = parseInt(this.textContent) || 1;
+                var prevBtn = container.querySelector('.space-pagination-btn.nav:first-child');
+                var nextBtn = container.querySelector('.space-pagination-btn.nav:last-child');
+
+                if (prevBtn) {
+                    prevBtn.classList.toggle('disabled', currentPage === 1);
+                }
+                if (nextBtn) {
+                    // 假设最大页码为11
+                    nextBtn.classList.toggle('disabled', currentPage === 11);
+                }
             });
         });
     })();
