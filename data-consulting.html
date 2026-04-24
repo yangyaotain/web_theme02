@@ -50,7 +50,7 @@
         .filter-option.active .filter-checkbox { background: var(--forest-green); border-color: var(--forest-green); }
         .filter-checkbox svg { width: 10px; height: 10px; fill: white; opacity: 0; }
         .filter-option.active .filter-checkbox svg { opacity: 1; }
-        .filter-label { font-size: 13px; color: var(--text-secondary); }
+        .filter-label { font-size: 13px; color: var(--text-secondary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
         .filter-option.active .filter-label { color: var(--forest-green-700); font-weight: 500; }
         .filter-count { margin-left: auto; font-size: 11px; color: var(--text-tertiary); background: var(--gray-100); padding: 2px 8px; border-radius: 100px; }
         .filter-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
@@ -137,42 +137,49 @@
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">全部</span>
+                            <span class="filter-label" title="全部">全部</span>
                             <span class="filter-count">128</span>
                         </div>
                         <div class="filter-option">
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">数据治理与合规</span>
+                            <span class="filter-label" title="企业数据治理与合规咨询服务">企业数据治理与合规咨询服务</span>
                             <span class="filter-count">24</span>
                         </div>
                         <div class="filter-option">
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">资产入表</span>
+                            <span class="filter-label" title="企业数据资产入表咨询服务">企业数据资产入表咨询服务</span>
                             <span class="filter-count">18</span>
                         </div>
                         <div class="filter-option">
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">托管运营</span>
+                            <span class="filter-label" title="企业数据资源托管运营服务">企业数据资源托管运营服务</span>
                             <span class="filter-count">15</span>
                         </div>
                         <div class="filter-option">
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">资产融资</span>
+                            <span class="filter-label" title="企业数据资产融资咨询服务">企业数据资产融资咨询服务</span>
                             <span class="filter-count">12</span>
                         </div>
                         <div class="filter-option">
                             <div class="filter-checkbox">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </div>
-                            <span class="filter-label">产品孵化</span>
+                            <span class="filter-label" title="行政事业单位及央国企数据资产全过程管理服务">行政事业单位及央国企数据资产全过程管理服务</span>
+                            <span class="filter-count">5</span>
+                        </div>
+                        <div class="filter-option">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label" title="企业数据产品孵化服务">企业数据产品孵化服务</span>
                             <span class="filter-count">10</span>
                         </div>
                     </div>
