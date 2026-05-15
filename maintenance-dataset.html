@@ -418,6 +418,7 @@
         }
 
         .table-panel {
+            position: relative;
             min-width: 0;
             background: #fff;
             border-right: 1px solid #e4e7ed;
@@ -443,6 +444,158 @@
             color: #303133;
         }
 
+        .source-menu-pop {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            top: 56px;
+            z-index: 90;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+        }
+
+        .source-menu-search {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .source-menu-search .ds-input {
+            width: 100%;
+            padding-left: 32px;
+        }
+
+        .source-menu-search .icon-stroke {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: #909399;
+            pointer-events: none;
+        }
+
+        .source-tree {
+            max-height: 380px;
+            overflow: auto;
+            padding: 2px 0;
+        }
+
+        .source-tree-node {
+            margin-bottom: 2px;
+        }
+
+        .source-tree-row {
+            height: 30px;
+            width: 100%;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #303133;
+            background: transparent;
+            border: 0;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .source-tree-row:hover {
+            color: var(--forest-green);
+            background: #f5f7fa;
+        }
+
+        .source-tree-row.active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            font-weight: 700;
+        }
+
+        .source-tree-row .toggle {
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            transition: transform 0.15s;
+        }
+
+        .source-tree-row.collapsed .toggle {
+            transform: rotate(-90deg);
+        }
+
+        .source-tree-row.leaf .toggle {
+            visibility: hidden;
+        }
+
+        .source-tree-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #8aa1b6;
+            flex: 0 0 auto;
+        }
+
+        .source-tree-row.active .source-tree-icon,
+        .source-tree-row:hover .source-tree-icon {
+            color: var(--forest-green);
+        }
+
+        .source-tree-icon svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .source-tree-label {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .source-tree-meta {
+            min-width: 22px;
+            padding: 1px 7px;
+            color: #909399;
+            background: #f2f3f5;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .source-tree-row.active .source-tree-meta {
+            color: var(--forest-green);
+            background: rgba(32, 165, 101, 0.12);
+        }
+
+        .source-tree-children {
+            padding-left: 18px;
+        }
+
+        .source-tree-node.collapsed > .source-tree-children {
+            display: none;
+        }
+
+        .source-tree-empty,
+        .schema-empty {
+            padding: 18px 8px;
+            color: #909399;
+            font-size: 13px;
+            text-align: center;
+        }
+
         .table-list {
             flex: 1;
             min-height: 0;
@@ -450,39 +603,108 @@
             padding: 8px 14px 18px;
         }
 
-        .table-row,
-        .table-group {
-            height: 30px;
+        .schema-node {
+            margin-bottom: 2px;
+        }
+
+        .schema-row {
+            width: 100%;
+            min-height: 30px;
+            padding: 0 6px;
             display: flex;
             align-items: center;
             gap: 6px;
             color: #303133;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
             font-size: 13px;
+            font-family: inherit;
+            text-align: left;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .table-group {
-            font-weight: 600;
-        }
-
-        .table-row {
-            padding-left: 22px;
             cursor: pointer;
         }
 
-        .table-row:hover,
-        .table-row.active {
+        .schema-row:hover,
+        .schema-row.active {
             color: var(--forest-green);
             background: var(--forest-green-50);
+        }
+
+        .schema-table-toggle {
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            flex: 0 0 auto;
+            transition: transform 0.15s;
+        }
+
+        .schema-node.collapsed .schema-table-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .schema-table-icon,
+        .schema-field-icon {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .schema-table-icon {
+            width: 16px;
+            height: 16px;
+            color: #5b8def;
+        }
+
+        .schema-table-icon svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+        }
+
+        .schema-field-icon {
+            width: 16px;
+            height: 16px;
+            color: #fff;
+            background: #72c4b8;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            transform: scale(0.82);
+        }
+
+        .schema-label {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .schema-field-row {
+            padding-left: 40px;
+            color: #303133;
+        }
+
+        .schema-fields {
+            padding: 2px 0 4px;
+        }
+
+        .schema-node.collapsed .schema-fields {
+            display: none;
         }
 
         .edit-main {
             min-width: 0;
             display: flex;
             flex-direction: column;
-            background: #fff;
+            background: #f0f2f5;
             overflow: hidden;
         }
 
@@ -504,17 +726,61 @@
             font-weight: 700;
         }
 
+        .edit-title-input {
+            width: 260px;
+            height: 30px;
+            padding: 0 8px;
+            color: #303133;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            outline: none;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .edit-title-input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.12);
+        }
+
+        .title-edit-btn {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #606266;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .title-edit-btn:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .title-edit-btn .icon-stroke {
+            width: 15px;
+            height: 15px;
+        }
+
         .editor-area {
             display: grid;
-            grid-template-columns: minmax(460px, 38%) 1fr;
-            gap: 16px;
-            padding: 16px;
+            grid-template-columns: minmax(460px, 42%) minmax(360px, 1fr);
+            gap: 12px;
+            padding: 12px 16px;
+            background: #fff;
             border-bottom: 1px solid #e4e7ed;
         }
 
         .sql-card {
             min-width: 0;
             background: #082f4d;
+            border: 1px solid #dcdfe6;
+            overflow: hidden;
         }
 
         .sql-editor {
@@ -535,24 +801,92 @@
             text-align: right;
             user-select: none;
             border-right: 1px solid rgba(255, 255, 255, 0.24);
+            overflow: hidden;
         }
 
+        .sql-code-wrap {
+            position: relative;
+            min-width: 0;
+            height: 100%;
+            background: #062b47;
+            overflow: hidden;
+        }
+
+        .sql-highlight,
         .sql-text {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
+            margin: 0;
             padding: 10px 12px;
-            color: #d9fbff;
-            background: #062b47;
             border: 0;
-            resize: none;
-            outline: none;
             font-family: inherit;
             font-size: 13px;
             line-height: 22px;
+            white-space: pre;
+            tab-size: 4;
+            overflow: auto;
+        }
+
+        .sql-highlight {
+            color: #c8f2ff;
+            background: #062b47;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .sql-highlight code {
+            display: block;
+            min-width: 100%;
+        }
+
+        .sql-text {
+            color: transparent;
+            caret-color: #ffffff;
+            background: transparent;
+            resize: none;
+            outline: none;
+        }
+
+        .sql-text::selection {
+            background: rgba(125, 211, 252, 0.24);
+        }
+
+        .sql-keyword {
+            color: #7dd3fc;
+            font-weight: 700;
+        }
+
+        .sql-function {
+            color: #fde68a;
+            font-weight: 700;
+        }
+
+        .sql-string {
+            color: #86efac;
+        }
+
+        .sql-number {
+            color: #fca5a5;
+        }
+
+        .sql-param {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .sql-comment {
+            color: #8ea8bc;
+            font-style: italic;
+        }
+
+        .sql-operator {
+            color: #fda4af;
         }
 
         .sql-actions {
-            height: 70px;
+            height: 46px;
             padding: 0 16px;
             display: flex;
             align-items: center;
@@ -571,23 +905,26 @@
             min-width: 0;
             display: flex;
             flex-direction: column;
+            border: 1px solid #ebeef5;
+            background: #fff;
         }
 
         .param-title {
-            height: 22px;
+            height: 40px;
+            padding: 0 12px;
             display: flex;
             align-items: center;
             gap: 6px;
             color: #303133;
             font-size: 13px;
             font-weight: 700;
+            border-bottom: 1px solid #ebeef5;
         }
 
         .param-table-wrap {
             flex: 1;
             min-height: 0;
-            border: 1px solid #ebeef5;
-            overflow: auto;
+            overflow: visible;
         }
 
         .param-table,
@@ -624,23 +961,196 @@
             font-weight: 700;
         }
 
+        .param-table th.param-name-col {
+            width: 260px;
+        }
+
+        .param-table th.param-action-col {
+            width: 90px;
+        }
+
+        .field-table {
+            min-width: 920px;
+        }
+
+        .field-table th.field-name-col {
+            width: 168px;
+        }
+
+        .field-table th.field-alias-col {
+            width: 250px;
+        }
+
+        .field-table th.field-type-col {
+            width: 250px;
+        }
+
+        .field-table th.field-attr-col {
+            width: auto;
+        }
+
+        .field-table td {
+            height: 39px;
+            background: #fff;
+        }
+
+        .field-table td.field-attr-cell {
+            overflow: visible;
+        }
+
+        .field-table td.field-alias-cell {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        .field-alias-input {
+            width: 100%;
+            height: 28px;
+            min-width: 0;
+        }
+
+        .param-name-cell {
+            overflow: visible !important;
+        }
+
+        .param-cell-editor {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
         .param-select-wrap {
+            position: relative;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .param-name-trigger {
+            width: 100%;
+            height: 28px;
+            padding: 0 28px 0 10px;
+            display: flex;
+            align-items: center;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
             position: relative;
         }
 
+        .param-name-trigger.placeholder {
+            color: #c0c4cc;
+        }
+
+        .param-name-trigger::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            width: 7px;
+            height: 7px;
+            border-right: 1px solid #a8abb2;
+            border-bottom: 1px solid #a8abb2;
+            transform: translateY(-65%) rotate(45deg);
+        }
+
+        .param-select-wrap.open .param-name-trigger {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.14);
+        }
+
+        .param-name-text {
+            display: block;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .param-copy-btn {
+            width: 24px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        .param-copy-btn:hover {
+            background: var(--forest-green-50);
+        }
+
+        .param-copy-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .param-suggest {
+            display: none;
             position: absolute;
             left: 0;
             top: calc(100% + 4px);
-            z-index: 30;
-            width: 190px;
-            max-height: 224px;
+            z-index: 100;
+            width: 214px;
+            max-height: 336px;
             overflow: auto;
             padding: 6px 0;
             background: #fff;
             border: 1px solid #dcdfe6;
             border-radius: 4px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+        }
+
+        .param-select-wrap.open .param-suggest {
+            display: block;
+        }
+
+        .param-search {
+            position: sticky;
+            top: -6px;
+            z-index: 1;
+            padding: 0 8px 6px;
+            background: #fff;
+        }
+
+        .param-search input {
+            width: 100%;
+            height: 30px;
+            padding: 0 30px 0 10px;
+            color: #303133;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            outline: none;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .param-search input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.14);
+        }
+
+        .param-search .icon-stroke {
+            position: absolute;
+            right: 16px;
+            top: 7px;
+            color: #a8abb2;
+            pointer-events: none;
         }
 
         .param-option {
@@ -650,11 +1160,25 @@
             align-items: center;
             color: #606266;
             cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .param-option:hover {
+        .param-option:hover,
+        .param-option.active {
             background: var(--forest-green-50);
             color: var(--forest-green);
+        }
+
+        .param-option.disabled {
+            color: #c0c4cc;
+            cursor: not-allowed;
+        }
+
+        .param-option.disabled:hover {
+            color: #c0c4cc;
+            background: #fff;
         }
 
         .add-param {
@@ -701,10 +1225,11 @@
         .tab.active {
             color: var(--forest-green);
             background: #fff;
+            box-shadow: inset 0 2px 0 var(--forest-green);
         }
 
         .result-summary {
-            height: 70px;
+            height: 44px;
             padding: 0 20px;
             display: flex;
             align-items: center;
@@ -719,7 +1244,362 @@
             flex: 1;
             min-height: 0;
             overflow: auto;
-            padding: 20px 16px 0;
+            padding: 16px 16px 0;
+            background: #fff;
+        }
+
+        #fieldsPanel {
+            padding: 16px;
+        }
+
+        .field-attr-editor {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .field-select-wrap {
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .field-select-wrap.kind {
+            width: 112px;
+        }
+
+        .field-select-wrap.value {
+            width: 230px;
+        }
+
+        .field-select-trigger {
+            width: 100%;
+            height: 28px;
+            padding: 0 30px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            line-height: 26px;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .field-select-trigger.placeholder {
+            color: #a8abb2;
+        }
+
+        .field-select-trigger::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            width: 7px;
+            height: 7px;
+            border-right: 1px solid #a8abb2;
+            border-bottom: 1px solid #a8abb2;
+            transform: translateY(-65%) rotate(45deg);
+        }
+
+        .field-select-wrap.open .field-select-trigger {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.14);
+        }
+
+        .field-select-menu {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: calc(100% + 4px);
+            z-index: 80;
+            min-width: 100%;
+            max-height: 278px;
+            overflow: auto;
+            padding: 6px 0;
+            background: #fff;
+            border: 1px solid #e4e7ed;
+            border-radius: 3px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.13);
+        }
+
+        .field-select-wrap.open .field-select-menu {
+            display: block;
+        }
+
+        .field-select-wrap.value .field-select-menu {
+            width: 230px;
+        }
+
+        .field-option {
+            height: 32px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            color: #303133;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .field-option:hover,
+        .field-option.active {
+            background: #f5f7fa;
+            color: var(--forest-green);
+        }
+
+        .field-search {
+            position: sticky;
+            top: -6px;
+            z-index: 1;
+            padding: 0 8px 6px;
+            background: #fff;
+        }
+
+        .field-search input {
+            width: 100%;
+            height: 28px;
+            padding: 0 30px 0 10px;
+            color: #303133;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            outline: none;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .field-search input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.14);
+        }
+
+        .field-search .icon-stroke {
+            position: absolute;
+            right: 16px;
+            top: 7px;
+            color: #a8abb2;
+            pointer-events: none;
+        }
+
+        .dimension-tree {
+            min-width: 230px;
+            padding: 8px 0 10px;
+        }
+
+        .dimension-group,
+        .dimension-child {
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-size: 13px;
+        }
+
+        .dimension-group {
+            padding: 0 12px;
+            font-weight: 600;
+        }
+
+        .dimension-child {
+            padding: 0 12px 0 34px;
+            color: #606266;
+            cursor: pointer;
+        }
+
+        .dimension-child:hover,
+        .dimension-child.active {
+            color: var(--forest-green);
+            background: #f5f7fa;
+        }
+
+        .modal-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .dataset-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 210;
+            width: 760px;
+            max-width: 92vw;
+            height: 520px;
+            max-height: 86vh;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 3px;
+            box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18);
+            transform: translate(-50%, -50%);
+        }
+
+        .dataset-modal-head,
+        .dataset-modal-foot {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .dataset-modal-head h3 {
+            margin: 0;
+            color: #303133;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .dataset-modal-close {
+            width: 28px;
+            height: 28px;
+            color: #909399;
+            background: transparent;
+            border: 0;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .dataset-modal-close:hover {
+            color: #303133;
+        }
+
+        .dataset-modal-body {
+            flex: 1;
+            min-height: 0;
+            padding: 26px 56px;
+            background: #fff;
+        }
+
+        .dataset-form-row {
+            display: grid;
+            grid-template-columns: 104px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .dataset-form-label {
+            color: #303133;
+            font-size: 14px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .dataset-form-label.required::before {
+            content: "*";
+            margin-right: 4px;
+            color: #f56c6c;
+        }
+
+        .dataset-form-row .ds-input {
+            width: 100%;
+            height: 34px;
+        }
+
+        .category-picker {
+            position: relative;
+            min-width: 0;
+        }
+
+        .category-trigger {
+            width: 100%;
+            height: 34px;
+            padding: 0 34px 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            outline: none;
+            font-size: 13px;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .category-trigger:focus,
+        .category-picker.open .category-trigger {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.14);
+        }
+
+        .category-clear {
+            position: absolute;
+            right: 10px;
+            top: 9px;
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: #c0c4cc;
+            border-radius: 50%;
+            font-size: 12px;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .category-pop {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 4px);
+            z-index: 230;
+            padding: 8px 0;
+            background: #fff;
+            border: 1px solid #e4e7ed;
+            border-radius: 3px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+        }
+
+        .category-picker.open .category-pop {
+            display: block;
+        }
+
+        .category-row {
+            height: 30px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .category-row.child {
+            padding-left: 32px;
+        }
+
+        .category-row:hover,
+        .category-row.active {
+            background: var(--forest-green-50);
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .category-row .icon {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-orange);
+        }
+
+        .dataset-modal-foot {
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #ebeef5;
+            border-bottom: 0;
         }
 
         .toast {
@@ -823,8 +1703,6 @@
                                 <select class="ds-select" id="typeFilter">
                                     <option value="">请选择数据集类型</option>
                                     <option value="SQL">SQL</option>
-                                    <option value="API">API</option>
-                                    <option value="Excel">Excel</option>
                                 </select>
                                 <input class="ds-input" id="keywordFilter" placeholder="请输入">
                                 <button class="ds-btn primary" type="button" id="btnQuery">查询</button>
@@ -874,9 +1752,16 @@
                         <div class="table-panel-head">
                             <div class="table-panel-title">
                                 <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg>
-                                平台数据
+                                <span id="activeSourceName">销售业务库</span>
                             </div>
-                            <button class="toolbar-icon-btn" type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+                            <button class="toolbar-icon-btn" type="button" id="sourceMenuBtn" title="选择数据源"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+                        </div>
+                        <div class="source-menu-pop hidden" id="sourceMenuPop">
+                            <div class="source-menu-search">
+                                <svg class="icon-stroke" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+                                <input class="ds-input" id="sourceTreeSearch" placeholder="搜索分组 / 数据源">
+                            </div>
+                            <div class="source-tree" id="sourceTree"></div>
                         </div>
                         <div class="catalog-search">
                             <input class="ds-input" id="tableSearch" placeholder="请输入关键字">
@@ -888,7 +1773,10 @@
                         <div class="edit-head">
                             <div class="edit-title">
                                 <span id="editTitle">数据资源访问趋势</span>
-                                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                                <input class="edit-title-input hidden" id="editTitleInput" type="text">
+                                <button class="title-edit-btn" type="button" id="btnEditTitle" title="修改数据集名称">
+                                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                                </button>
                             </div>
                             <div class="toolbar-right">
                                 <button class="ds-btn" type="button" id="btnBack">返回</button>
@@ -899,11 +1787,14 @@
                             <div class="sql-card">
                                 <div class="sql-editor">
                                     <div class="line-nums" id="lineNums">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
-                                    <textarea class="sql-text" id="sqlText" spellcheck="false"></textarea>
+                                    <div class="sql-code-wrap">
+                                        <pre class="sql-highlight" id="sqlHighlight" aria-hidden="true"><code></code></pre>
+                                        <textarea class="sql-text" id="sqlText" spellcheck="false"></textarea>
+                                    </div>
                                 </div>
                                 <div class="sql-actions">
                                     <button class="ds-btn sql-run" type="button" id="btnPreview">执行预览</button>
-                                    <button class="ds-btn" type="button" id="btnFormat">美化</button>
+                                    <button class="ds-btn" type="button" id="btnFormat">格式化</button>
                                 </div>
                             </div>
 
@@ -916,11 +1807,11 @@
                                     <table class="param-table">
                                         <thead>
                                             <tr>
-                                                <th>参数名</th>
+                                                <th class="param-name-col">参数名</th>
                                                 <th>查询控件</th>
                                                 <th>数据格式</th>
                                                 <th>默认值</th>
-                                                <th style="width:90px;">操作</th>
+                                                <th class="param-action-col">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody id="paramBody"></tbody>
@@ -959,11 +1850,10 @@
                                 <table class="field-table">
                                     <thead>
                                         <tr>
-                                            <th>字段名</th>
-                                            <th>字段别名</th>
-                                            <th>数据类型</th>
-                                            <th>字段说明</th>
-                                            <th>是否指标</th>
+                                            <th class="field-name-col">字段名</th>
+                                            <th class="field-alias-col">别名</th>
+                                            <th class="field-type-col">数据类型</th>
+                                            <th class="field-attr-col">字段属性</th>
                                         </tr>
                                     </thead>
                                     <tbody id="fieldBody"></tbody>
@@ -975,6 +1865,41 @@
             </section>
         </main>
     </div>
+
+    <div class="modal-mask hidden" id="datasetEditMask"></div>
+    <section class="dataset-modal hidden" id="datasetEditModal" aria-hidden="true">
+        <div class="dataset-modal-head">
+            <h3>编辑数据集</h3>
+            <button class="dataset-modal-close" type="button" data-dataset-modal-close>×</button>
+        </div>
+        <div class="dataset-modal-body">
+            <div class="dataset-form-row">
+                <label class="dataset-form-label required" for="modalDatasetName">数据集名称：</label>
+                <input class="ds-input" id="modalDatasetName" type="text">
+            </div>
+            <div class="dataset-form-row">
+                <div class="dataset-form-label required">所属分类：</div>
+                <div class="category-picker" id="categoryPicker">
+                    <button class="category-trigger" type="button" id="categoryTrigger">物流数据集</button>
+                    <span class="category-clear">×</span>
+                    <div class="category-pop" id="categoryPop">
+                        <div class="category-row" data-category-id="catalog" data-category-name="数据目录">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>
+                            数据目录
+                        </div>
+                        <div class="category-row child active" data-category-id="logistics" data-category-name="物流数据集">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>
+                            物流数据集
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dataset-modal-foot">
+            <button class="ds-btn" type="button" data-dataset-modal-close>取消</button>
+            <button class="ds-btn primary" type="button" id="datasetModalConfirm">确定</button>
+        </div>
+    </section>
 
     <script src="js/admin-topbar.js"></script>
     <script>
@@ -996,34 +1921,187 @@
         { id: 6, catalog: 'resource', name: '资源授权审批时效', type: 'SQL', linked: false, operator: 'present', updated: '2026-05-10 15:06:33', duration: '0.109秒' },
         { id: 7, catalog: 'member', name: '会员等级增长趋势', type: 'SQL', linked: true, operator: 'present', updated: '2026-05-09 15:06:20', duration: '0.027秒' },
         { id: 8, catalog: 'member', name: '会员申请审批统计', type: 'SQL', linked: true, operator: 'present', updated: '2026-05-09 15:06:05', duration: '0.055秒' },
-        { id: 9, catalog: 'operation', name: '智能客服工单处理', type: 'API', linked: false, operator: 'present', updated: '2026-05-08 15:05:48', duration: '0.231秒' },
+        { id: 9, catalog: 'operation', name: '智能客服工单处理', type: 'SQL', linked: false, operator: 'present', updated: '2026-05-08 15:05:48', duration: '0.231秒' },
         { id: 10, catalog: 'trade', name: '供需撮合转化漏斗', type: 'SQL', linked: true, operator: 'present', updated: '2026-05-08 11:32:05', duration: '0.074秒' },
-        { id: 11, catalog: 'resource', name: '数据空间活跃企业', type: 'Excel', linked: false, operator: 'present', updated: '2026-05-07 16:42:28', duration: '0.188秒' },
+        { id: 11, catalog: 'resource', name: '数据空间活跃企业', type: 'SQL', linked: false, operator: 'present', updated: '2026-05-07 16:42:28', duration: '0.188秒' },
         { id: 12, catalog: 'operation', name: '数据开发平台使用统计', type: 'SQL', linked: true, operator: 'present', updated: '2026-05-07 10:22:18', duration: '0.096秒' }
     ];
 
-    const tableGroups = [
-        { name: '中台数据演示', tables: ['ads_platform_visit_stats', 'ads_resource_apply_stats'] },
-        { name: '业务系统', tables: ['dwd_data_order_detail', 'dwd_product_trade_detail', 'dwd_member_apply_record', 'dwd_resource_auth_record'] },
-        { name: 'ODS-贴源层', tables: ['ods_portal_access_log', 'ods_consult_ticket', 'ods_payment_settlement'] },
-        { name: 'DWS-数据汇总层', tables: ['dws_trade_day_summary', 'dws_member_month_summary', 'dws_resource_service_summary'] },
-        { name: 'ADS-应用层', tables: ['ads_dashboard_kpi', 'ads_policy_read_rank', 'ads_service_sla_monitor'] }
+    const sourceCatalogData = [
+        {
+            id: 'sales',
+            name: '销售域',
+            sources: [
+                {
+                    id: 'sales_business',
+                    name: '销售业务库',
+                    type: 'MySQL',
+                    tables: [
+                        { name: 'ads_trans_order_stats', fields: ['dt', 'recent_days', 'receive_order_count', 'receive_order_amount', 'dispatch_order_count', 'dispatch_order_amount', 'ins_dt', 'ins_by'] },
+                        { name: 'ads_trans_order_stats_td', fields: ['dt', 'td_order_count', 'td_order_amount', 'td_dispatch_count', 'td_dispatch_amount'] },
+                        { name: 'ads_trans_stats', fields: ['stat_date', 'city_code', 'carrier_count', 'finish_rate', 'avg_amount'] },
+                        { name: 'daily_cmp_order', fields: ['biz_date', 'company_id', 'order_count', 'pay_amount'] },
+                        { name: 'daily_cmp_order_202501', fields: ['biz_date', 'company_id', 'order_count', 'pay_amount'] },
+                        { name: 'dm_city_stats', fields: ['city_code', 'city_name', 'province_name', 'order_count'] },
+                        { name: 'dm_driver_stats', fields: ['driver_id', 'driver_name', 'service_score', 'finish_count'] },
+                        { name: 'dm_order_stats', fields: ['order_id', 'order_status', 'receive_time', 'finish_time'] }
+                    ]
+                },
+                {
+                    id: 'order_service',
+                    name: '订单服务库',
+                    type: 'MySQL',
+                    tables: [
+                        { name: 'order_pay', fields: ['pay_id', 'order_id', 'pay_channel', 'pay_amount', 'pay_time'] },
+                        { name: 'order_refund', fields: ['refund_id', 'order_id', 'refund_amount', 'refund_status', 'apply_time'] },
+                        { name: 'pay_channel_dim', fields: ['channel_code', 'channel_name', 'settle_cycle', 'enabled'] }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'customer',
+            name: '客户域',
+            sources: [
+                {
+                    id: 'customer_dw',
+                    name: '客户数据仓库',
+                    type: 'PostgreSQL',
+                    tables: [
+                        { name: 'customer_profile', fields: ['customer_id', 'customer_name', 'cert_type', 'cert_no', 'member_level', 'created_at'] },
+                        { name: 'customer_tag', fields: ['customer_id', 'tag_code', 'tag_name', 'tag_score', 'updated_at'] },
+                        { name: 'customer_event', fields: ['event_id', 'customer_id', 'event_type', 'event_time', 'channel'] },
+                        { name: 'customer_segment', fields: ['segment_id', 'segment_name', 'rule_desc', 'user_count'] }
+                    ]
+                },
+                {
+                    id: 'crm_business',
+                    name: 'CRM 业务库',
+                    type: 'PostgreSQL',
+                    tables: [
+                        { name: 'crm_lead', fields: ['lead_id', 'lead_name', 'source_channel', 'owner_id', 'created_at'] },
+                        { name: 'crm_account', fields: ['account_id', 'account_name', 'industry', 'province', 'city'] },
+                        { name: 'crm_activity', fields: ['activity_id', 'account_id', 'activity_type', 'follow_time'] }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'inventory',
+            name: '库存域',
+            sources: [
+                {
+                    id: 'inventory_analysis',
+                    name: '库存分析库',
+                    type: 'Oracle',
+                    tables: [
+                        { name: 'inventory_log', fields: ['log_id', 'sku_id', 'warehouse_id', 'change_qty', 'change_time'] },
+                        { name: 'inventory_snapshot', fields: ['snapshot_date', 'sku_id', 'warehouse_id', 'stock_qty'] },
+                        { name: 'warehouse_dim', fields: ['warehouse_id', 'warehouse_name', 'city_code', 'enabled'] }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'finance',
+            name: '财务域',
+            sources: [
+                {
+                    id: 'finance_accounting',
+                    name: '财务核算库',
+                    type: 'SQLServer',
+                    tables: [
+                        { name: 'fin_voucher', fields: ['voucher_id', 'period', 'subject_code', 'debit_amount', 'credit_amount'] },
+                        { name: 'fin_account_dim', fields: ['subject_code', 'subject_name', 'subject_level', 'parent_code'] },
+                        { name: 'fin_budget', fields: ['budget_id', 'dept_id', 'period', 'budget_amount', 'used_amount'] }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'operation',
+            name: '运营域',
+            sources: [
+                {
+                    id: 'realtime_analysis',
+                    name: '实时分析库',
+                    type: 'ClickHouse',
+                    tables: [
+                        { name: 'event_track', fields: ['event_id', 'event_name', 'user_id', 'event_time', 'page_url'] },
+                        { name: 'page_view_daily', fields: ['biz_date', 'page_code', 'visit_uv', 'visit_pv', 'avg_stay_seconds'] },
+                        { name: 'campaign_dim', fields: ['campaign_id', 'campaign_name', 'start_time', 'end_time'] }
+                    ]
+                },
+                {
+                    id: 'metric_daily',
+                    name: '运营指标库',
+                    type: 'ClickHouse',
+                    tables: [
+                        { name: 'metric_daily', fields: ['biz_date', 'metric_code', 'metric_name', 'metric_value'] },
+                        { name: 'metric_dim', fields: ['metric_code', 'metric_name', 'metric_unit', 'metric_desc'] }
+                    ]
+                }
+            ]
+        }
     ];
 
+    const sourceTreeIcons = {
+        domain: '<svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 12l8 4 8-4"/><path d="M4 17l8 4 8-4"/></svg>',
+        source: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5V12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V5.5"/><path d="M5 12v6.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V12"/></svg>',
+        table: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18"/><path d="M8 4v16"/></svg>',
+        chevron: '<svg class="icon-stroke" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg>'
+    };
+
     const paramOptions = [
-        { name: 'area_code', label: '区域' },
-        { name: 'biz_date', label: '业务日期' },
-        { name: 'member_level', label: '会员等级' },
-        { name: 'resource_type', label: '资源类型' },
-        { name: 'trade_scene', label: '交易场景' },
-        { name: 'service_channel', label: '服务渠道' }
+        { name: 'areaa', label: '省参数', widget: '', format: '字符串', value: '' },
+        { name: 'dt', label: '分区', widget: '分区', format: '字符串', value: '' },
+        { name: 'p_year', label: '年度', widget: '年份', format: '字符串', value: '2026' },
+        { name: 'area', label: '省份代码', widget: '省份', format: '字符串', value: '440307' },
+        { name: 'truck_list', label: '车队列表', widget: '多选列表', format: '字符串', value: '' },
+        { name: 'base_id', label: '订单状态', widget: '下拉单选', format: '字符串', value: '' },
+        { name: 'GLOBAL_USER_ID', label: '系统用户ID', widget: '系统参数', format: '字符串', value: '' },
+        { name: 'GLOBAL_TENANT_ID', label: '系统租户ID', widget: '系统参数', format: '字符串', value: '' }
     ];
 
     let activeCatalog = 'all';
     let activeEditId = 1;
+    let isNewDataset = false;
+    let activeEditCatalog = 'resource';
+    let activeSaveCategoryId = 'logistics';
+    let activeSourceId = 'sales_business';
+    let sourceTreeKeyword = '';
+    const collapsedSourceDomains = new Set(['inventory', 'finance', 'operation']);
+    const expandedSchemaTables = new Set(['ads_trans_order_stats']);
+    let openParamPicker = null;
     let params = [
-        { name: 'biz_date', widget: '日期', format: '字符串', value: '2026-05-01' },
-        { name: 'area_code', widget: '区域', format: '字符串', value: '龙岗区' }
+        { name: '', widget: '', format: '字符串', value: '' },
+        { name: 'dt', widget: '分区', format: '字符串', value: '' }
+    ];
+
+    const catalogNameMap = {
+        operation: '平台运营数据集',
+        trade: '数据交易数据集',
+        resource: '资源服务数据集',
+        member: '会员服务数据集'
+    };
+
+    const saveCategoryTree = [
+        { id: 'catalog', name: '数据目录', parent: null },
+        { id: 'logistics', name: '物流数据集', parent: 'catalog', catalog: 'resource' }
+    ];
+
+    const fieldAttrKinds = ['度量', '维度', '统计时间', '时间', '属性'];
+    const timeFormatOptions = ['yyyy', 'yyyyMM', 'yyyyMMdd', 'yyyyMMdd HH', 'yyyyMMdd HH:mm', 'yyyyMMdd HH:mm:ss', 'yyyy-MM', 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss'];
+    const dimensionOptions = ['省份', '城市', '行业类型', '资源目录', '数据产品', '服务渠道', '会员等级'];
+    const dimensionTableOptions = ['省份', '城市维度表', '资源类型维度表', '服务渠道维度表', '会员等级维度表'];
+
+    let openFieldPicker = null;
+    let fieldRows = [
+        { id: 'service_request_count', name: 'service_request_count', alias: 'service_request_count', type: 'VARCHAR', attr: { kind: '度量', value: '' } },
+        { id: 'province_name', name: 'province_name', alias: 'province_name', type: 'VARCHAR', attr: { kind: '维度', value: '省份' } },
+        { id: 'stat_date', name: 'stat_date', alias: 'stat_date', type: 'VARCHAR', attr: { kind: '统计时间', value: '' } },
+        { id: 'access_time', name: 'access_time', alias: 'access_time', type: 'VARCHAR', attr: { kind: '时间', value: '' } },
+        { id: 'resource_type', name: 'resource_type', alias: 'resource_type', type: 'VARCHAR', attr: { kind: '属性', value: '' } }
     ];
 
     const defaultSql = [
@@ -1103,28 +2181,124 @@
         }).join('');
     }
 
+    function findSource(sourceId) {
+        for (const domain of sourceCatalogData) {
+            for (const source of domain.sources) {
+                if (source.id === sourceId) return { domain, source };
+            }
+        }
+        return null;
+    }
+
+    function updateActiveSourceLabel() {
+        const found = findSource(activeSourceId);
+        document.getElementById('activeSourceName').textContent = found ? found.source.name : '请选择数据源';
+    }
+
+    function sourceMatchesKeyword(domain, source, keyword) {
+        return !keyword
+            || domain.name.toLowerCase().includes(keyword)
+            || source.name.toLowerCase().includes(keyword)
+            || source.type.toLowerCase().includes(keyword);
+    }
+
+    function renderSourceTree() {
+        const tree = document.getElementById('sourceTree');
+        const keyword = sourceTreeKeyword.trim().toLowerCase();
+        const html = sourceCatalogData.map(domain => {
+            const sources = domain.sources.filter(source => sourceMatchesKeyword(domain, source, keyword));
+            if (!sources.length) return '';
+            const collapsed = !keyword && collapsedSourceDomains.has(domain.id);
+            const sourceHtml = sources.map(source => {
+                const active = source.id === activeSourceId ? ' active' : '';
+                return '<div class="source-tree-node" data-source-id="' + source.id + '">'
+                    + '<button class="source-tree-row leaf' + active + '" type="button" data-source-id="' + source.id + '">'
+                    + '<span class="toggle"></span>'
+                    + '<span class="source-tree-icon">' + sourceTreeIcons.source + '</span>'
+                    + '<span class="source-tree-label" title="' + escapeHtml(source.name) + '">' + escapeHtml(source.name) + '</span>'
+                    + '<span class="source-tree-meta">' + source.tables.length + '</span>'
+                    + '</button>'
+                    + '</div>';
+            }).join('');
+            return '<div class="source-tree-node' + (collapsed ? ' collapsed' : '') + '" data-domain-id="' + domain.id + '">'
+                + '<button class="source-tree-row' + (collapsed ? ' collapsed' : '') + '" type="button" data-domain-id="' + domain.id + '">'
+                + '<span class="toggle">' + sourceTreeIcons.chevron + '</span>'
+                + '<span class="source-tree-icon">' + sourceTreeIcons.domain + '</span>'
+                + '<span class="source-tree-label" title="' + escapeHtml(domain.name) + '">' + escapeHtml(domain.name) + '</span>'
+                + '<span class="source-tree-meta">' + domain.sources.length + '</span>'
+                + '</button>'
+                + '<div class="source-tree-children">' + sourceHtml + '</div>'
+                + '</div>';
+        }).join('');
+        tree.innerHTML = html || '<div class="source-tree-empty">没有匹配的数据源</div>';
+    }
+
+    function tableMatchesKeyword(table, keyword) {
+        return !keyword
+            || table.name.toLowerCase().includes(keyword)
+            || table.fields.some(field => field.toLowerCase().includes(keyword));
+    }
+
     function renderTables() {
-        const keyword = (document.getElementById('tableSearch').value || '').trim();
-        document.getElementById('tableList').innerHTML = tableGroups.map(group => {
-            const tables = group.tables.filter(name => !keyword || name.includes(keyword));
-            if (!tables.length) return '';
-            return '<div class="table-group"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/></svg>' + group.name + '</div>'
-                + tables.map((name, index) => '<div class="table-row' + (name === 'dws_platform_operation_day' ? ' active' : '') + '"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 5v14"/></svg>' + name + '</div>').join('');
+        const found = findSource(activeSourceId);
+        const tableList = document.getElementById('tableList');
+        const keyword = (document.getElementById('tableSearch').value || '').trim().toLowerCase();
+        updateActiveSourceLabel();
+        if (!found) {
+            tableList.innerHTML = '<div class="schema-empty">请先选择数据源</div>';
+            return;
+        }
+        const tables = found.source.tables.filter(table => tableMatchesKeyword(table, keyword));
+        if (!tables.length) {
+            tableList.innerHTML = '<div class="schema-empty">没有匹配的表或字段</div>';
+            return;
+        }
+        tableList.innerHTML = tables.map((table, index) => {
+            const expanded = keyword || expandedSchemaTables.has(table.name) || (!expandedSchemaTables.size && index === 0);
+            const fields = table.fields
+                .filter(field => !keyword || table.name.toLowerCase().includes(keyword) || field.toLowerCase().includes(keyword))
+                .map(field => '<button class="schema-row schema-field-row" type="button" data-field-name="' + escapeHtml(field) + '"><span class="schema-field-icon">A</span><span class="schema-label" title="' + escapeHtml(field) + '">' + escapeHtml(field) + '</span></button>')
+                .join('');
+            return '<div class="schema-node' + (expanded ? '' : ' collapsed') + '" data-table-name="' + escapeHtml(table.name) + '">'
+                + '<button class="schema-row schema-table-row' + (expanded ? ' active' : '') + '" type="button" data-table-name="' + escapeHtml(table.name) + '">'
+                + '<span class="schema-table-toggle">' + sourceTreeIcons.chevron + '</span>'
+                + '<span class="schema-table-icon">' + sourceTreeIcons.table + '</span>'
+                + '<span class="schema-label" title="' + escapeHtml(table.name) + '">' + escapeHtml(table.name) + '</span>'
+                + '</button>'
+                + '<div class="schema-fields">' + fields + '</div>'
+                + '</div>';
         }).join('');
     }
 
     function renderParams() {
         document.getElementById('paramBody').innerHTML = params.map((item, index) => {
-            const isFirst = index === 0;
+            const openCls = openParamPicker === index ? ' open' : '';
+            const valueText = item.name || '';
+            const placeholderCls = valueText ? '' : ' placeholder';
+            const options = paramOptions.map(option => {
+                const active = option.name === item.name ? ' active' : '';
+                const label = option.name + '(' + option.label + ')';
+                return '<div class="param-option' + active + '" data-param-option data-param-index="' + index + '" data-name="' + escapeHtml(option.name) + '" data-label="' + escapeHtml(option.label) + '" data-widget="' + escapeHtml(option.widget) + '" data-format="' + escapeHtml(option.format) + '" data-value="' + escapeHtml(option.value) + '" data-filter-text="' + escapeHtml(label.toLowerCase()) + '">' + escapeHtml(label) + '</div>';
+            }).join('');
+            const copyBtn = item.name
+                ? '<button class="param-copy-btn" type="button" data-copy-param="' + index + '" title="复制参数到SQL"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="13" rx="1.5"/><path d="M5 16H4a1.5 1.5 0 0 1-1.5-1.5v-10A1.5 1.5 0 0 1 4 3h10a1.5 1.5 0 0 1 1.5 1.5V5"/></svg></button>'
+                : '';
             return '<tr>'
-                + '<td>'
-                + (isFirst
-                    ? '<div class="param-select-wrap"><input class="ds-input param-name-input" data-param-index="' + index + '" value="' + item.name + '"><div class="param-suggest hidden" data-suggest="' + index + '"></div></div>'
-                    : item.name)
+                + '<td class="param-name-cell">'
+                + '<div class="param-cell-editor">'
+                + '<div class="param-select-wrap' + openCls + '">'
+                + '<button class="param-name-trigger' + placeholderCls + '" type="button" data-param-trigger="' + index + '"><span class="param-name-text">' + escapeHtml(valueText || '') + '</span></button>'
+                + '<div class="param-suggest">'
+                + '<div class="param-search"><input class="param-search-input" type="text" placeholder=""><svg class="icon-stroke" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg></div>'
+                + options
+                + '</div>'
+                + '</div>'
+                + copyBtn
+                + '</div>'
                 + '</td>'
-                + '<td>' + item.widget + '</td>'
-                + '<td>' + item.format + '</td>'
-                + '<td>' + item.value + '</td>'
+                + '<td>' + escapeHtml(item.widget) + '</td>'
+                + '<td>' + escapeHtml(item.format) + '</td>'
+                + '<td>' + escapeHtml(item.value) + '</td>'
                 + '<td><span class="link-action delete" data-param-delete="' + index + '"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></span></td>'
                 + '</tr>';
         }).join('');
@@ -1144,16 +2318,264 @@
         }).join('');
     }
 
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[ch]));
+    }
+
+    function splitTopLevelCommas(value) {
+        const parts = [];
+        let buffer = '';
+        let depth = 0;
+        let quote = '';
+
+        for (let i = 0; i < value.length; i++) {
+            const ch = value[i];
+            if (quote) {
+                buffer += ch;
+                if (ch === quote) {
+                    if (value[i + 1] === quote) {
+                        buffer += value[i + 1];
+                        i++;
+                    } else {
+                        quote = '';
+                    }
+                }
+                continue;
+            }
+            if (ch === '\'' || ch === '"') {
+                quote = ch;
+                buffer += ch;
+                continue;
+            }
+            if (ch === '(') depth++;
+            if (ch === ')' && depth > 0) depth--;
+            if (ch === ',' && depth === 0) {
+                parts.push(buffer.trim());
+                buffer = '';
+                continue;
+            }
+            buffer += ch;
+        }
+
+        if (buffer.trim()) parts.push(buffer.trim());
+        return parts;
+    }
+
+    function upperSqlKeywords(value) {
+        return value.replace(/\b(union\s+all|group\s+by|order\s+by|left\s+join|right\s+join|inner\s+join|full\s+join|select|from|where|having|limit|join|on|and|or|as|sum|count|avg|min|max|distinct|case|when|then|else|end|between|in|is|null|not|like)\b/gi, match => {
+            return match.replace(/\s+/g, ' ').toUpperCase();
+        });
+    }
+
+    function formatSql(sql) {
+        let text = String(sql || '')
+            .replace(/\r\n?/g, '\n')
+            .replace(/\n+/g, ' ')
+            .replace(/[ \t]+/g, ' ')
+            .trim();
+
+        if (!text) return '';
+
+        text = text
+            .replace(/\s*,\s*/g, ', ')
+            .replace(/\s*(>=|<=|<>|!=|=|>|<)\s*/g, ' $1 ')
+            .replace(/\s+/g, ' ')
+            .replace(/\s+(union\s+all|union)\s+/gi, '\n$1\n')
+            .replace(/\s+(from|where|having|limit)\s+/gi, '\n$1 ')
+            .replace(/\s+(group\s+by|order\s+by)\s+/gi, '\n$1 ')
+            .replace(/\s+(left\s+join|right\s+join|inner\s+join|full\s+join|join)\s+/gi, '\n$1 ')
+            .replace(/\s+(on)\s+/gi, '\n  $1 ')
+            .replace(/\s+(and|or)\s+/gi, '\n  $1 ');
+
+        const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+        const formatted = [];
+
+        lines.forEach(line => {
+            const selectMatch = line.match(/^select\b\s*(.*)$/i);
+            if (selectMatch) {
+                formatted.push('SELECT');
+                const fields = splitTopLevelCommas(selectMatch[1] || '');
+                fields.forEach((field, index) => {
+                    formatted.push('    ' + upperSqlKeywords(field) + (index < fields.length - 1 ? ',' : ''));
+                });
+                return;
+            }
+
+            const indent = /^(and|or|on)\b/i.test(line) ? '  ' : '';
+            formatted.push(indent + upperSqlKeywords(line));
+        });
+
+        return formatted.join('\n');
+    }
+
+    function wrapSqlToken(className, value) {
+        return '<span class="' + className + '">' + escapeHtml(value) + '</span>';
+    }
+
+    function highlightSql(sql) {
+        const keywords = new Set('SELECT FROM WHERE AND OR GROUP BY ORDER HAVING LIMIT JOIN LEFT RIGHT INNER FULL OUTER ON AS UNION ALL CASE WHEN THEN ELSE END DISTINCT BETWEEN IN IS NULL NOT LIKE ASC DESC'.split(' '));
+        const functions = new Set('SUM COUNT AVG MIN MAX ROUND DATE_FORMAT CAST COALESCE NVL'.split(' '));
+        let html = '';
+        let i = 0;
+        const source = String(sql || '');
+
+        while (i < source.length) {
+            const ch = source[i];
+            const next = source[i + 1];
+
+            if (ch === '-' && next === '-') {
+                const end = source.indexOf('\n', i);
+                const token = end === -1 ? source.slice(i) : source.slice(i, end);
+                html += wrapSqlToken('sql-comment', token);
+                i += token.length;
+                continue;
+            }
+
+            if (ch === '\'' || ch === '"') {
+                const quote = ch;
+                let j = i + 1;
+                while (j < source.length) {
+                    if (source[j] === quote) {
+                        if (source[j + 1] === quote) {
+                            j += 2;
+                            continue;
+                        }
+                        j++;
+                        break;
+                    }
+                    j++;
+                }
+                html += wrapSqlToken('sql-string', source.slice(i, j));
+                i = j;
+                continue;
+            }
+
+            if (ch === '$' && next === '{') {
+                const end = source.indexOf('}', i + 2);
+                const token = end === -1 ? source.slice(i) : source.slice(i, end + 1);
+                html += wrapSqlToken('sql-param', token);
+                i += token.length;
+                continue;
+            }
+
+            if (/[0-9]/.test(ch)) {
+                const match = source.slice(i).match(/^\d+(?:\.\d+)?/);
+                html += wrapSqlToken('sql-number', match[0]);
+                i += match[0].length;
+                continue;
+            }
+
+            if (/[A-Za-z_]/.test(ch)) {
+                const match = source.slice(i).match(/^[A-Za-z_][A-Za-z0-9_]*/);
+                const token = match[0];
+                const upper = token.toUpperCase();
+                if (keywords.has(upper)) {
+                    html += wrapSqlToken('sql-keyword', token);
+                } else if (functions.has(upper)) {
+                    html += wrapSqlToken('sql-function', token);
+                } else {
+                    html += escapeHtml(token);
+                }
+                i += token.length;
+                continue;
+            }
+
+            if (/[<>!=+\-*\/%]/.test(ch)) {
+                html += wrapSqlToken('sql-operator', ch);
+                i++;
+                continue;
+            }
+
+            html += escapeHtml(ch);
+            i++;
+        }
+
+        return html || '&nbsp;';
+    }
+
+    function updateSqlHighlight() {
+        const code = document.querySelector('#sqlHighlight code');
+        if (!code) return;
+        code.innerHTML = highlightSql(document.getElementById('sqlText').value);
+    }
+
+    function isFieldPickerOpen(index, role) {
+        return openFieldPicker && openFieldPicker.index === index && openFieldPicker.role === role;
+    }
+
+    function defaultFieldAttrValue(kind) {
+        if (kind === '维度') return '省份';
+        return '';
+    }
+
+    function renderKindSelect(row, index) {
+        const openCls = isFieldPickerOpen(index, 'kind') ? ' open' : '';
+        const options = fieldAttrKinds.map(kind => {
+            const active = row.attr.kind === kind ? ' active' : '';
+            return '<div class="field-option' + active + '" data-field-kind-option data-index="' + index + '" data-value="' + escapeHtml(kind) + '">' + escapeHtml(kind) + '</div>';
+        }).join('');
+        return '<div class="field-select-wrap kind' + openCls + '">'
+            + '<button class="field-select-trigger" type="button" data-field-trigger data-index="' + index + '" data-role="kind">' + escapeHtml(row.attr.kind) + '</button>'
+            + '<div class="field-select-menu">' + options + '</div>'
+            + '</div>';
+    }
+
+    function renderDimensionSelect(row, index, options, placeholder) {
+        const openCls = isFieldPickerOpen(index, 'value') ? ' open' : '';
+        const hasValue = Boolean(row.attr.value);
+        const activeValue = row.attr.value;
+        const children = options.map(option => {
+            const active = activeValue === option ? ' active' : '';
+            return '<div class="dimension-child' + active + '" data-field-value-option data-index="' + index + '" data-value="' + escapeHtml(option) + '">' + escapeHtml(option) + '</div>';
+        }).join('');
+        return '<div class="field-select-wrap value' + openCls + '">'
+            + '<button class="field-select-trigger' + (hasValue ? '' : ' placeholder') + '" type="button" data-field-trigger data-index="' + index + '" data-role="value">' + escapeHtml(activeValue || placeholder) + '</button>'
+            + '<div class="field-select-menu">'
+            + '<div class="dimension-tree">'
+            + '<div class="dimension-group"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>维度管理</div>'
+            + children
+            + '</div>'
+            + '</div>'
+            + '</div>';
+    }
+
+    function renderTimeFormatSelect(row, index) {
+        const openCls = isFieldPickerOpen(index, 'value') ? ' open' : '';
+        const hasValue = Boolean(row.attr.value);
+        const options = timeFormatOptions.map(option => {
+            const active = row.attr.value === option ? ' active' : '';
+            return '<div class="field-option format-option' + active + '" data-filter-text="' + escapeHtml(option.toLowerCase()) + '" data-field-value-option data-index="' + index + '" data-value="' + escapeHtml(option) + '">' + escapeHtml(option) + '</div>';
+        }).join('');
+        return '<div class="field-select-wrap value' + openCls + '">'
+            + '<button class="field-select-trigger' + (hasValue ? '' : ' placeholder') + '" type="button" data-field-trigger data-index="' + index + '" data-role="value">' + escapeHtml(row.attr.value || '请选择') + '</button>'
+            + '<div class="field-select-menu">'
+            + '<div class="field-search"><input class="field-menu-search-input" type="text" placeholder="请选择"><svg class="icon-stroke" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg></div>'
+            + options
+            + '</div>'
+            + '</div>';
+    }
+
+    function renderAttrValueControl(row, index) {
+        if (row.attr.kind === '维度') return renderDimensionSelect(row, index, dimensionOptions, '请选择');
+        if (row.attr.kind === '统计时间' || row.attr.kind === '时间') return renderTimeFormatSelect(row, index);
+        if (row.attr.kind === '属性') return renderDimensionSelect(row, index, dimensionTableOptions, '请选择维度表');
+        return '';
+    }
+
     function renderFields() {
-        const fields = [
-            ['biz_date', '业务日期', 'VARCHAR', '统计日期', '否'],
-            ['apply_count', '申请数量', 'INT', '数据资源申请次数', '是'],
-            ['trade_amount', '交易金额', 'DECIMAL', '数据产品交易金额', '是'],
-            ['resource_visit', '资源访问量', 'INT', '数据资源详情访问量', '是'],
-            ['service_ticket', '服务工单数', 'INT', '咨询与客服工单数量', '是']
-        ];
-        document.getElementById('fieldBody').innerHTML = fields.map(row => {
-            return '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>';
+        document.getElementById('fieldBody').innerHTML = fieldRows.map((row, index) => {
+            return '<tr>'
+                + '<td title="' + escapeHtml(row.name) + '">' + escapeHtml(row.name) + '</td>'
+                + '<td class="field-alias-cell"><input class="ds-input field-alias-input" data-field-alias="' + index + '" value="' + escapeHtml(row.alias) + '"></td>'
+                + '<td>' + escapeHtml(row.type) + '</td>'
+                + '<td class="field-attr-cell"><div class="field-attr-editor">' + renderKindSelect(row, index) + renderAttrValueControl(row, index) + '</div></td>'
+                + '</tr>';
         }).join('');
     }
 
@@ -1162,15 +2584,142 @@
         document.getElementById('lineNums').innerHTML = Array.from({ length: count }, (_, i) => i + 1).join('<br>');
     }
 
-    function openEdit(rowId) {
-        activeEditId = rowId;
-        const row = datasetRows.find(item => item.id === rowId) || datasetRows[0];
-        document.getElementById('editTitle').textContent = row ? row.name : '新增数据集';
+    function syncSqlScroll() {
+        const text = document.getElementById('sqlText');
+        const highlight = document.getElementById('sqlHighlight');
+        const lineNums = document.getElementById('lineNums');
+        if (!text || !highlight || !lineNums) return;
+        highlight.scrollTop = text.scrollTop;
+        highlight.scrollLeft = text.scrollLeft;
+        lineNums.scrollTop = text.scrollTop;
+    }
+
+    function updateSqlEditor() {
+        updateLineNums();
+        updateSqlHighlight();
+        syncSqlScroll();
+    }
+
+    function insertSqlParamAtCursor(paramName) {
+        if (!paramName) return;
+        const sqlText = document.getElementById('sqlText');
+        const token = '${' + paramName + '}';
+        const start = typeof sqlText.selectionStart === 'number' ? sqlText.selectionStart : sqlText.value.length;
+        const end = typeof sqlText.selectionEnd === 'number' ? sqlText.selectionEnd : start;
+        sqlText.focus();
+        if (typeof sqlText.setRangeText === 'function') {
+            sqlText.setRangeText(token, start, end, 'end');
+        } else {
+            sqlText.value = sqlText.value.slice(0, start) + token + sqlText.value.slice(end);
+            sqlText.selectionStart = sqlText.selectionEnd = start + token.length;
+        }
+        updateSqlEditor();
+        showToast('已插入参数 ' + token);
+    }
+
+    function getCurrentEditName() {
+        return document.getElementById('editTitle').textContent.trim() || '未命名数据集';
+    }
+
+    function commitTitleEdit() {
+        const title = document.getElementById('editTitle');
+        const input = document.getElementById('editTitleInput');
+        if (input.classList.contains('hidden')) return;
+        const value = input.value.trim() || '未命名数据集';
+        title.textContent = value;
+        title.classList.remove('hidden');
+        input.classList.add('hidden');
+    }
+
+    function startTitleEdit() {
+        const title = document.getElementById('editTitle');
+        const input = document.getElementById('editTitleInput');
+        input.value = getCurrentEditName();
+        title.classList.add('hidden');
+        input.classList.remove('hidden');
+        input.focus();
+        input.select();
+    }
+
+    function setModalCategory(categoryId) {
+        const item = saveCategoryTree.find(row => row.id === categoryId) || saveCategoryTree[1];
+        activeSaveCategoryId = item.id;
+        activeEditCatalog = item.catalog || activeEditCatalog || 'resource';
+        document.getElementById('categoryTrigger').textContent = item.name;
+        document.querySelectorAll('.category-row').forEach(row => {
+            row.classList.toggle('active', row.dataset.categoryId === activeSaveCategoryId);
+        });
+    }
+
+    function openDatasetModal() {
+        commitTitleEdit();
+        document.getElementById('modalDatasetName').value = getCurrentEditName();
+        setModalCategory(activeSaveCategoryId || 'logistics');
+        document.getElementById('datasetEditMask').classList.remove('hidden');
+        document.getElementById('datasetEditModal').classList.remove('hidden');
+        document.getElementById('datasetEditModal').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeDatasetModal() {
+        document.getElementById('datasetEditMask').classList.add('hidden');
+        document.getElementById('datasetEditModal').classList.add('hidden');
+        document.getElementById('datasetEditModal').setAttribute('aria-hidden', 'true');
+        document.getElementById('categoryPicker').classList.remove('open');
+    }
+
+    function saveDatasetFromModal() {
+        const name = document.getElementById('modalDatasetName').value.trim() || '未命名数据集';
+        const category = saveCategoryTree.find(row => row.id === activeSaveCategoryId);
+        const catalog = (category && category.catalog) || activeEditCatalog || 'resource';
+        if (isNewDataset) {
+            const nextId = Math.max(...datasetRows.map(row => row.id), 0) + 1;
+            datasetRows.unshift({
+                id: nextId,
+                catalog,
+                name,
+                type: 'SQL',
+                linked: false,
+                operator: 'present',
+                updated: '2026-05-15 10:30:00',
+                duration: '0.000秒'
+            });
+            activeEditId = nextId;
+            isNewDataset = false;
+        } else {
+            const row = datasetRows.find(item => item.id === activeEditId);
+            if (row) {
+                row.name = name;
+                row.type = 'SQL';
+                row.catalog = catalog;
+                row.updated = '2026-05-15 10:30:00';
+            }
+        }
+        activeEditCatalog = catalog;
+        document.getElementById('editTitle').textContent = name;
+        renderTable();
+        closeDatasetModal();
+        showToast('已保存数据集');
+    }
+
+    function openEdit(rowId, options) {
+        isNewDataset = options && options.mode === 'new';
+        activeEditId = isNewDataset ? null : rowId;
+        const defaultCatalog = catalogNameMap[activeCatalog] ? activeCatalog : 'operation';
+        const row = isNewDataset
+            ? { name: '', type: 'SQL', catalog: defaultCatalog }
+            : (datasetRows.find(item => item.id === rowId) || datasetRows[0]);
+        document.getElementById('editTitle').textContent = row && row.name ? row.name : '新增数据集';
+        document.getElementById('editTitle').classList.remove('hidden');
+        document.getElementById('editTitleInput').classList.add('hidden');
+        activeEditCatalog = row && row.catalog ? row.catalog : defaultCatalog;
+        activeSaveCategoryId = 'logistics';
         document.getElementById('listView').classList.add('hidden');
         document.getElementById('editView').classList.remove('hidden');
-        document.getElementById('sqlText').value = defaultSql;
-        updateLineNums();
+        document.getElementById('sqlText').value = formatSql(defaultSql);
+        openFieldPicker = null;
+        updateSqlEditor();
         renderTables();
+        renderSourceTree();
         renderParams();
         renderPreview();
         renderFields();
@@ -1203,8 +2752,7 @@
     });
 
     document.getElementById('btnNew').addEventListener('click', () => {
-        openEdit(1);
-        document.getElementById('editTitle').textContent = '新增数据集';
+        openEdit(null, { mode: 'new' });
     });
 
     document.getElementById('datasetBody').addEventListener('click', event => {
@@ -1241,46 +2789,208 @@
     });
 
     document.getElementById('btnBack').addEventListener('click', closeEdit);
-    document.getElementById('btnSave').addEventListener('click', () => showToast('已保存数据集'));
+    document.getElementById('btnEditTitle').addEventListener('click', startTitleEdit);
+    document.getElementById('editTitleInput').addEventListener('blur', commitTitleEdit);
+    document.getElementById('editTitleInput').addEventListener('keydown', event => {
+        if (event.key === 'Enter') commitTitleEdit();
+    });
+    document.getElementById('btnSave').addEventListener('click', openDatasetModal);
+    document.querySelectorAll('[data-dataset-modal-close], #datasetEditMask').forEach(item => {
+        item.addEventListener('click', closeDatasetModal);
+    });
+    document.getElementById('categoryTrigger').addEventListener('click', () => {
+        document.getElementById('categoryPicker').classList.toggle('open');
+    });
+    document.getElementById('categoryPop').addEventListener('click', event => {
+        const row = event.target.closest('[data-category-id]');
+        if (!row || row.dataset.categoryId === 'catalog') return;
+        setModalCategory(row.dataset.categoryId);
+        document.getElementById('categoryPicker').classList.remove('open');
+    });
+    document.getElementById('datasetModalConfirm').addEventListener('click', saveDatasetFromModal);
     document.getElementById('btnPreview').addEventListener('click', () => {
         renderPreview();
         document.getElementById('resultSummary').innerHTML = '<svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/><path d="M9 4v16"/></svg>预览 当前预览10条数据，共计86条，执行耗时0.018秒';
         showToast('预览已刷新');
     });
     document.getElementById('btnFormat').addEventListener('click', () => {
-        document.getElementById('sqlText').value = document.getElementById('sqlText').value.replace(/\\s+from\\s+/i, '\\nfrom ').replace(/\\s+where\\s+/i, '\\nwhere ');
-        updateLineNums();
-        showToast('SQL已美化');
+        const sqlText = document.getElementById('sqlText');
+        sqlText.value = formatSql(sqlText.value);
+        updateSqlEditor();
+        showToast('SQL已格式化');
     });
-    document.getElementById('sqlText').addEventListener('input', updateLineNums);
+    document.getElementById('sqlText').addEventListener('input', updateSqlEditor);
+    document.getElementById('sqlText').addEventListener('scroll', syncSqlScroll);
     document.getElementById('tableSearch').addEventListener('input', renderTables);
 
+    document.getElementById('sourceMenuBtn').addEventListener('click', event => {
+        event.stopPropagation();
+        document.getElementById('sourceMenuPop').classList.toggle('hidden');
+        renderSourceTree();
+    });
+
+    document.getElementById('sourceTreeSearch').addEventListener('input', event => {
+        sourceTreeKeyword = event.target.value || '';
+        renderSourceTree();
+    });
+
+    document.getElementById('sourceTree').addEventListener('click', event => {
+        const sourceRow = event.target.closest('[data-source-id]');
+        const domainRow = event.target.closest('[data-domain-id]');
+        if (sourceRow) {
+            activeSourceId = sourceRow.dataset.sourceId;
+            const found = findSource(activeSourceId);
+            expandedSchemaTables.clear();
+            if (found && found.source.tables[0]) expandedSchemaTables.add(found.source.tables[0].name);
+            document.getElementById('sourceMenuPop').classList.add('hidden');
+            document.getElementById('tableSearch').value = '';
+            renderTables();
+            renderSourceTree();
+            return;
+        }
+        if (domainRow) {
+            const id = domainRow.dataset.domainId;
+            if (collapsedSourceDomains.has(id)) {
+                collapsedSourceDomains.delete(id);
+            } else {
+                collapsedSourceDomains.add(id);
+            }
+            renderSourceTree();
+        }
+    });
+
+    document.getElementById('tableList').addEventListener('click', event => {
+        const tableRow = event.target.closest('.schema-table-row[data-table-name]');
+        if (!tableRow) return;
+        const tableName = tableRow.dataset.tableName;
+        if (expandedSchemaTables.has(tableName)) {
+            expandedSchemaTables.delete(tableName);
+        } else {
+            expandedSchemaTables.add(tableName);
+        }
+        renderTables();
+    });
+
+    document.addEventListener('click', event => {
+        if (!event.target.closest('.table-panel')) {
+            document.getElementById('sourceMenuPop').classList.add('hidden');
+        }
+    });
+
     document.getElementById('btnAddParam').addEventListener('click', () => {
-        params.push({ name: 'resource_type', widget: '资源类型', format: '字符串', value: '公共数据' });
+        params.push({ name: '', widget: '', format: '字符串', value: '' });
         renderParams();
     });
 
     document.getElementById('paramBody').addEventListener('click', event => {
         const del = event.target.closest('[data-param-delete]');
+        const copy = event.target.closest('[data-copy-param]');
+        const option = event.target.closest('[data-param-option]');
+        const trigger = event.target.closest('[data-param-trigger]');
+
         if (del) {
             params.splice(Number(del.dataset.paramDelete), 1);
+            openParamPicker = null;
             renderParams();
             return;
         }
-        const input = event.target.closest('.param-name-input');
-        if (input) {
-            const suggest = document.querySelector('[data-suggest="' + input.dataset.paramIndex + '"]');
-            suggest.innerHTML = paramOptions.map(item => '<div class="param-option" data-option="' + item.name + '" data-label="' + item.label + '">' + item.name + '(' + item.label + ')</div>').join('');
-            suggest.classList.remove('hidden');
+
+        if (copy) {
+            const item = params[Number(copy.dataset.copyParam)];
+            if (item) insertSqlParamAtCursor(item.name);
+            return;
+        }
+
+        if (option) {
+            const index = Number(option.dataset.paramIndex);
+            params[index] = {
+                name: option.dataset.name,
+                widget: option.dataset.widget || option.dataset.label,
+                format: option.dataset.format || '字符串',
+                value: option.dataset.value || ''
+            };
+            openParamPicker = null;
+            renderParams();
+            return;
+        }
+
+        if (trigger) {
+            const index = Number(trigger.dataset.paramTrigger);
+            openParamPicker = openParamPicker === index ? null : index;
+            renderParams();
         }
     });
 
-    document.getElementById('paramBody').addEventListener('click', event => {
-        const option = event.target.closest('[data-option]');
-        if (!option) return;
-        params[0].name = option.dataset.option;
-        params[0].widget = option.dataset.label;
+    document.getElementById('paramBody').addEventListener('input', event => {
+        const input = event.target.closest('.param-search-input');
+        if (!input) return;
+        const keyword = input.value.trim().toLowerCase();
+        const menu = input.closest('.param-suggest');
+        menu.querySelectorAll('[data-param-option]').forEach(option => {
+            option.classList.toggle('hidden', keyword && !option.dataset.filterText.includes(keyword));
+        });
+    });
+
+    document.addEventListener('click', event => {
+        if (openParamPicker === null || event.target.closest('.param-cell-editor')) return;
+        openParamPicker = null;
         renderParams();
+    });
+
+    document.getElementById('fieldBody').addEventListener('click', event => {
+        const valueOption = event.target.closest('[data-field-value-option]');
+        if (valueOption) {
+            const row = fieldRows[Number(valueOption.dataset.index)];
+            if (row) row.attr.value = valueOption.dataset.value;
+            openFieldPicker = null;
+            renderFields();
+            return;
+        }
+
+        const kindOption = event.target.closest('[data-field-kind-option]');
+        if (kindOption) {
+            const row = fieldRows[Number(kindOption.dataset.index)];
+            if (row) {
+                row.attr.kind = kindOption.dataset.value;
+                row.attr.value = defaultFieldAttrValue(row.attr.kind);
+            }
+            openFieldPicker = null;
+            renderFields();
+            return;
+        }
+
+        const trigger = event.target.closest('[data-field-trigger]');
+        if (trigger) {
+            const index = Number(trigger.dataset.index);
+            const role = trigger.dataset.role;
+            const isSame = openFieldPicker && openFieldPicker.index === index && openFieldPicker.role === role;
+            openFieldPicker = isSame ? null : { index, role };
+            renderFields();
+        }
+    });
+
+    document.getElementById('fieldBody').addEventListener('input', event => {
+        const aliasInput = event.target.closest('[data-field-alias]');
+        if (aliasInput) {
+            const row = fieldRows[Number(aliasInput.dataset.fieldAlias)];
+            if (row) row.alias = aliasInput.value;
+            return;
+        }
+
+        const searchInput = event.target.closest('.field-menu-search-input');
+        if (searchInput) {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const menu = searchInput.closest('.field-select-menu');
+            menu.querySelectorAll('[data-filter-text]').forEach(option => {
+                option.classList.toggle('hidden', keyword && !option.dataset.filterText.includes(keyword));
+            });
+        }
+    });
+
+    document.addEventListener('click', event => {
+        if (!openFieldPicker || event.target.closest('.field-select-wrap')) return;
+        openFieldPicker = null;
+        renderFields();
     });
 
     document.querySelectorAll('.tab').forEach(tab => {
@@ -1290,7 +3000,7 @@
             const isPreview = tab.dataset.tab === 'preview';
             document.getElementById('previewPanel').classList.toggle('hidden', !isPreview);
             document.getElementById('fieldsPanel').classList.toggle('hidden', isPreview);
-            document.getElementById('resultSummary').classList.toggle('hidden', false);
+            document.getElementById('resultSummary').classList.toggle('hidden', !isPreview);
         });
     });
     </script>
