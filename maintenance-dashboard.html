@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表盘 - 仪表盘定制 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .maintenance-sidebar .sidebar-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px 10px;
+        }
+
+        .maintenance-menu-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            color: #606266;
+        }
+
+        .maintenance-menu-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .maintenance-sidebar .sidebar-nav {
+            padding: 4px 8px 16px;
+        }
+
+        .maintenance-sidebar .sidebar-item,
+        .maintenance-sidebar .sidebar-group-title {
+            min-height: 40px;
+            margin: 2px 0;
+            border-radius: 4px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .maintenance-sidebar .sidebar-sub {
+            padding: 2px 0 4px;
+        }
+
+        .maintenance-sidebar .sidebar-sub .sidebar-item {
+            min-height: 34px;
+            padding-left: 42px;
+        }
+
+        .maintenance-content {
+            height: calc(100vh - 64px);
+            padding: 0;
+            overflow: hidden;
+            background: #f0f2f5;
+        }
+
+        .db-page {
+            height: 100%;
+            min-width: 0;
+            padding: 8px;
+            color: #303133;
+            font-size: 13px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .icon,
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            fill: currentColor;
+        }
+
+        .icon-stroke {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .db-btn {
+            height: 32px;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+
+        .db-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .db-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .db-btn.primary:hover {
+            color: #fff;
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+
+        .db-input,
+        .db-select {
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .db-input:focus,
+        .db-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .list-view {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 10px;
+        }
+
+        .category-panel,
+        .dashboard-main {
+            min-width: 0;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+
+        .category-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-head {
+            height: 52px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e4e7ed;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .category-title,
+        .main-folder,
+        .designer-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-add {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: var(--forest-green);
+            border: 0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .category-search {
+            padding: 12px 16px 8px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box .db-input {
+            width: 100%;
+            padding-left: 32px;
+        }
+
+        .search-box .icon-stroke {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: #909399;
+        }
+
+        .category-tree {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 4px 16px 18px;
+        }
+
+        .category-row {
+            height: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #303133;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .category-row:hover,
+        .category-row.active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            font-weight: 600;
+        }
+
+        .dashboard-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-head {
+            height: 52px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e4e7ed;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .main-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px 10px;
+        }
+
+        .list-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .toolbar-left,
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left .search-box {
+            width: 440px;
+        }
+
+        .view-btn {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .view-btn.active,
+        .view-btn:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .dashboard-grid {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(216px, 216px));
+            align-content: start;
+            gap: 10px;
+            padding-bottom: 16px;
+        }
+
+        .dashboard-card {
+            height: 152px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .dashboard-card:hover {
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dashboard-card.add-card {
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .dashboard-actions {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.56);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .dashboard-card:not(.add-card):hover .dashboard-actions {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dashboard-action-btn {
+            height: 30px;
+            min-width: 30px;
+            padding: 0 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #fff;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dashboard-action-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .dashboard-action-btn.edit {
+            padding: 0 13px;
+            background: var(--forest-green);
+        }
+
+        .dashboard-action-btn.edit:hover {
+            background: var(--forest-green-600);
+        }
+
+        .add-card .plus {
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        .thumb {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .thumb-name {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            background: #f2f6fc;
+            font-weight: 600;
+        }
+
+        .thumb-bars {
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 9px;
+            padding: 16px 16px 14px;
+        }
+
+        .thumb-bars span,
+        .canvas-bars span {
+            flex: 1;
+            min-width: 8px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, #6ee7b7 100%);
+        }
+
+        .thumb-line {
+            height: 100%;
+            padding: 16px;
+        }
+
+        .sparkline {
+            width: 100%;
+            height: 100%;
+        }
+
+        .thumb-table {
+            padding: 14px 14px 10px;
+        }
+
+        .thumb-table span {
+            display: block;
+            height: 8px;
+            margin-bottom: 9px;
+            background: #e5edf5;
+        }
+
+        .thumb-kpis {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 14px;
+        }
+
+        .thumb-kpis span {
+            height: 36px;
+            border-radius: 3px;
+            background: var(--forest-green-50);
+            border-left: 3px solid var(--forest-green);
+        }
+
+        .pager {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .page-btn {
+            min-width: 28px;
+            height: 28px;
+            color: #606266;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .designer-view {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 232px 1fr 460px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+
+        .component-panel,
+        .setting-panel {
+            min-width: 0;
+            overflow: auto;
+            background: #fff;
+        }
+
+        .component-panel {
+            border-right: 1px solid #dcdfe6;
+            padding: 14px;
+        }
+
+        .component-title {
+            margin-bottom: 10px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .component-search {
+            margin-bottom: 14px;
+        }
+
+        .component-group {
+            margin-bottom: 16px;
+        }
+
+        .group-title {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .component-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .component-item {
+            height: 62px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #606266;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .component-item.active,
+        .component-item:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .component-item .icon-stroke {
+            width: 20px;
+            height: 20px;
+        }
+
+        .component-item span {
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .designer-main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: #f0f2f5;
+        }
+
+        .designer-tabs {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .tab-left,
+        .designer-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px;
+        }
+
+        .tab-pill {
+            height: 36px;
+            padding: 0 18px;
+            display: inline-flex;
+            align-items: center;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            font-weight: 700;
+        }
+
+        .designer-subhead {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: #fff;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .canvas-wrap {
+            flex: 1;
+            min-height: 0;
+            padding: 18px;
+            overflow: auto;
+        }
+
+        .canvas-card {
+            min-height: 640px;
+            background: #fff;
+            padding: 16px 24px 24px;
+            box-shadow: inset 0 0 0 1px #ebeef5;
+        }
+
+        .chart-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 28px;
+            color: #606266;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--forest-green), #6ee7b7);
+        }
+
+        .chart-area {
+            position: relative;
+            height: 560px;
+            margin: 10px 18px 0 56px;
+            border-left: 1px solid #909399;
+            border-bottom: 1px solid #909399;
+            background: repeating-linear-gradient(to top, transparent 0, transparent 118px, #e4e7ed 119px, transparent 120px);
+        }
+
+        .axis-label {
+            position: absolute;
+            left: -54px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .canvas-bars {
+            position: absolute;
+            inset: 24px 14px 0 12px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .setting-panel {
+            border-left: 1px solid #dcdfe6;
+        }
+
+        .setting-tabs {
+            height: 52px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .setting-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid transparent;
+            font-weight: 700;
+        }
+
+        .setting-tab.active {
+            color: var(--forest-green);
+            border-bottom-color: var(--forest-green);
+        }
+
+        .setting-body {
+            padding: 24px 14px;
+        }
+
+        .data-mode {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 24px;
+            border: 1px solid #ebeef5;
+        }
+
+        .data-mode span {
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .data-mode .active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .data-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .drop-section {
+            margin-bottom: 14px;
+        }
+
+        .drop-title {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #303133;
+            background: #f5f7fa;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .drop-item,
+        .field-item {
+            height: 30px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #60758a;
+            background: #eef6ff;
+            border: 1px dashed #d5e5f6;
+            border-radius: 3px;
+        }
+
+        .drop-empty {
+            color: #909399;
+            background: #fff;
+        }
+
+        .setting-field {
+            margin-bottom: 12px;
+        }
+
+        .setting-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .setting-field .db-select,
+        .setting-field .db-input {
+            width: 100%;
+        }
+
+        .switch-line {
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            margin-bottom: 12px;
+            background: #f5f7fa;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .switch {
+            width: 38px;
+            height: 20px;
+            position: relative;
+            border-radius: 10px;
+            background: #c0c4cc;
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 2px;
+            top: 2px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 50;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item active">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar maintenance-sidebar">
+            <div class="sidebar-title">
+                <span>运维中心</span>
+                <span class="maintenance-menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+                </span>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item"><svg viewBox="0 0 24 24"><path d="M4 5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V5zm2 0v14h12V5H6zm2 2h8v2H8V7zm0 4h3v2H8v-2zm5 0h3v2h-3v-2zm-5 4h3v2H8v-2zm5 0h3v2h-3v-2z"/></svg><span>平台登记管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V6l-8-4zm0 2.2 6 3V12c0 4-2.5 7.8-6 8.9C8.5 19.8 6 16 6 12V7.2l6-3z"/></svg><span>基础配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h8v8h-8v-8zm2 2v4h4v-4h-4z"/></svg><span>业务配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h2v2H7V9zm4 0h6v2h-6V9zm-4 4h10v2H7v-2z"/></svg><span>数据通道管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 1 21 6v7c0 5-3.8 9.3-9 10-5.2-.7-9-5-9-10V6l9-5zm0 2.3L5 7.2V13c0 4 2.8 7.3 7 8 4.2-.7 7-4 7-8V7.2l-7-3.9zm0 4.7 1.4 2.8 3.1.4-2.2 2.1.5 3.1L12 15l-2.8 1.4.5-3.1-2.2-2.1 3.1-.4L12 8z"/></svg><span>系统控制策略</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 17h18v2H3v-2zm2-4h4c1.7 0 3-1.3 3-3V5h2v5c0 2.8-2.2 5-5 5H5v-2zm11.5-7.5 4 4-4 4-1.4-1.4 1.6-1.6H14V8.5h2.7l-1.6-1.6 1.4-1.4z"/></svg><span>支付结算配置</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <a class="sidebar-item"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm0 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg><span>门户配置管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><span>消息配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 14c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3S9 3.3 9 5v6c0 1.7 1.3 3 3 3zm5.3-3c0 3-2.5 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.4 2.7 6.2 6 6.7V21h2v-3.3c3.3-.5 6-3.3 6-6.7h-1.7z"/></svg><span>日志管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M5 9h2v10H5V9zm4-4h2v14H9V5zm4 7h2v7h-2v-7zm4-9h2v16h-2V3zM3 21h18v-2H3v2z"/></svg><span>仪表盘定制</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub">
+                    <a href="maintenance-data-board.html" class="sidebar-item"><span>数据看板</span></a>
+                    <a href="maintenance-dashboard.html" class="sidebar-item active"><span>仪表盘</span></a>
+                    <a href="maintenance-query-control.html" class="sidebar-item"><span>查询控件</span></a>
+                    <a href="maintenance-dataset.html" class="sidebar-item"><span>数据集</span></a>
+                    <a href="maintenance-data-source.html" class="sidebar-item"><span>数据源</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content maintenance-content">
+            <section class="db-page">
+                <div class="list-view" id="listView">
+                    <aside class="category-panel">
+                        <div class="category-head">
+                            <div class="category-title">
+                                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                                仪表盘分类
+                            </div>
+                            <button class="category-add" type="button" id="categoryAdd">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            </button>
+                        </div>
+                        <div class="category-search">
+                            <div class="search-box">
+                                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                                <input class="db-input" id="categoryKeyword" placeholder="请输入...">
+                            </div>
+                        </div>
+                        <div class="category-tree" id="categoryTree"></div>
+                    </aside>
+
+                    <div class="dashboard-main">
+                        <div class="main-head">
+                            <div class="main-folder">
+                                <svg class="icon" style="color:var(--accent-orange);" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>
+                                <span id="folderName">全部</span>
+                            </div>
+                        </div>
+                        <div class="main-body">
+                            <div class="list-toolbar">
+                                <div class="toolbar-left">
+                                    <div class="search-box">
+                                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                                        <input class="db-input" id="dashboardKeyword" placeholder="请输入">
+                                    </div>
+                                    <button class="db-btn primary" type="button" id="btnQuery">查询</button>
+                                    <button class="db-btn" type="button" id="btnReset">重置</button>
+                                </div>
+                                <div class="toolbar-right">
+                                    <button class="view-btn active" type="button" title="卡片视图"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                                    <button class="view-btn" type="button" title="列表视图"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></button>
+                                </div>
+                            </div>
+                            <div class="dashboard-grid" id="dashboardGrid"></div>
+                            <div class="pager">
+                                <span>总共 <strong id="totalCount">0</strong> 条数据</span>
+                                <button class="page-btn">&lt;</button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">&gt;</button>
+                                <select class="db-select" style="width:96px;height:28px;"><option>10 条/页</option><option>20 条/页</option></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin-topbar.js"></script>
+    <script>
+    const categories = [
+        { id: 'all', name: '全部' },
+        { id: 'operation', name: '运营分析' },
+        { id: 'resource', name: '资源服务' },
+        { id: 'trade', name: '数据交易' },
+        { id: 'member', name: '会员服务' }
+    ];
+
+    let dashboards = [
+        { id: 1, name: '平台运营总览', category: 'operation', type: 'bar' },
+        { id: 2, name: '资源目录看板', category: 'resource', type: 'table' },
+        { id: 3, name: '数据交易趋势', category: 'trade', type: 'line' },
+        { id: 4, name: '供需服务监测', category: 'resource', type: 'kpi' },
+        { id: 5, name: '会员活跃概览', category: 'member', type: 'kpi' },
+        { id: 6, name: '接口服务质量', category: 'operation', type: 'bar' }
+    ];
+
+    let activeCategory = 'all';
+
+    function showToast(text) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast hidden';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = text;
+        toast.classList.remove('hidden');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toast.classList.add('hidden'), 1800);
+    }
+
+    function renderCategories() {
+        const keyword = document.getElementById('categoryKeyword').value.trim();
+        const rows = categories.filter(item => !keyword || item.name.includes(keyword));
+        document.getElementById('categoryTree').innerHTML = rows.map(item => (
+            '<div class="category-row' + (item.id === activeCategory ? ' active' : '') + '" data-category="' + item.id + '">' +
+            '<svg class="icon" style="color:var(--accent-orange);" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>' +
+            '<span>' + item.name + '</span></div>'
+        )).join('');
+    }
+
+    function thumb(item) {
+        if (item.type === 'table') {
+            return '<div class="thumb-table"><span style="width:92%;"></span><span style="width:78%;"></span><span style="width:86%;"></span><span style="width:64%;"></span><span style="width:70%;"></span></div>';
+        }
+        if (item.type === 'line') {
+            return '<div class="thumb-line"><svg class="sparkline" viewBox="0 0 180 90"><polyline points="0,72 24,58 48,66 72,42 96,50 120,30 144,36 180,18" fill="none" stroke="var(--forest-green)" stroke-width="5"/><polyline points="0,82 24,76 48,72 72,70 96,64 120,62 144,56 180,50" fill="none" stroke="#6ee7b7" stroke-width="5"/></svg></div>';
+        }
+        if (item.type === 'kpi') {
+            return '<div class="thumb-kpis"><span></span><span></span><span></span><span></span></div>';
+        }
+        const heights = [44, 70, 36, 58, 86, 52, 96];
+        return '<div class="thumb-bars">' + heights.map(height => '<span style="height:' + height + '%"></span>').join('') + '</div>';
+    }
+
+    function renderDashboards() {
+        const keyword = document.getElementById('dashboardKeyword').value.trim();
+        const rows = dashboards.filter(item => {
+            const categoryMatched = activeCategory === 'all' || item.category === activeCategory;
+            const keywordMatched = !keyword || item.name.includes(keyword);
+            return categoryMatched && keywordMatched;
+        });
+        const category = categories.find(item => item.id === activeCategory);
+        document.getElementById('folderName').textContent = category ? category.name : '全部';
+        document.getElementById('totalCount').textContent = rows.length;
+        document.getElementById('dashboardGrid').innerHTML = [
+            '<div class="dashboard-card add-card" id="addDashboard"><div class="plus">+</div><div>新建仪表盘</div></div>',
+            ...rows.map(item => '<div class="dashboard-card" data-id="' + item.id + '"><div class="thumb">' + thumb(item) + '</div><div class="thumb-name">' + item.name + '</div><div class="dashboard-actions"><button class="dashboard-action-btn edit" type="button" data-action="edit" data-id="' + item.id + '">编辑</button><button class="dashboard-action-btn" type="button" data-action="preview" data-id="' + item.id + '" title="预览"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="dashboard-action-btn" type="button" data-action="delete" data-id="' + item.id + '" title="删除"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button></div></div>')
+        ].join('');
+    }
+
+    function openDashboardEditor(name, mode) {
+        const params = new URLSearchParams({
+            mode: mode || 'edit',
+            name: name || '新建仪表盘'
+        });
+        window.open('maintenance-dashboard-editor.html?' + params.toString(), '_blank', 'noopener');
+    }
+
+
+
+
+
+    renderCategories();
+    renderDashboards();
+
+    document.getElementById('categoryKeyword').addEventListener('input', renderCategories);
+    document.getElementById('categoryTree').addEventListener('click', event => {
+        const row = event.target.closest('[data-category]');
+        if (!row) return;
+        activeCategory = row.dataset.category;
+        renderCategories();
+        renderDashboards();
+    });
+    document.getElementById('dashboardKeyword').addEventListener('input', renderDashboards);
+    document.getElementById('btnQuery').addEventListener('click', renderDashboards);
+    document.getElementById('btnReset').addEventListener('click', () => {
+        document.getElementById('dashboardKeyword').value = '';
+        renderDashboards();
+    });
+    document.getElementById('dashboardGrid').addEventListener('click', event => {
+        const add = event.target.closest('#addDashboard');
+        if (add) {
+            openDashboardEditor('新建仪表盘', 'create');
+            return;
+        }
+        const action = event.target.closest('[data-action]');
+        if (action) {
+            const item = dashboards.find(row => row.id === Number(action.dataset.id));
+            if (action.dataset.action === 'delete') {
+                dashboards = dashboards.filter(row => row.id !== Number(action.dataset.id));
+                renderDashboards();
+                showToast('已删除仪表盘');
+                return;
+            }
+            openDashboardEditor(item ? item.name : '平台运营总览', action.dataset.action);
+            return;
+        }
+        const card = event.target.closest('[data-id]');
+        if (!card) return;
+        const item = dashboards.find(row => row.id === Number(card.dataset.id));
+        openDashboardEditor(item ? item.name : '平台运营总览', 'edit');
+    });
+    ['categoryAdd'].forEach(id => {
+        document.getElementById(id).addEventListener('click', () => showToast('操作已完成'));
+    });
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.view-btn').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    </script>
+</body>
+</html>

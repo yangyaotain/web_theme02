@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑智能报告 - 龙岗数据聚合服务平台</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: #303133;
+            background: #f0f2f5;
+            font-family: "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+        }
+
+        .icon,
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            fill: currentColor;
+        }
+
+        .icon-stroke {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .report-editor {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 248px minmax(0, 1fr);
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .editor-sidebar {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #dcdfe6;
+            background: #fff;
+        }
+
+        .side-head {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+            border-bottom: 1px solid #ebeef5;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .side-head .side-icon {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border-radius: 4px;
+        }
+
+        .report-meta-panel {
+            padding: 14px 14px 12px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .meta-label {
+            margin-bottom: 6px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .meta-title {
+            margin-bottom: 8px;
+            color: #303133;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .meta-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 22px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .section-head {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            color: #303133;
+            font-weight: 700;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .section-list {
+            flex: 1;
+            min-height: 0;
+            padding: 8px 8px 14px;
+            overflow: auto;
+        }
+
+        .section-link {
+            width: 100%;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            color: #606266;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .section-link:hover,
+        .section-link.active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            font-weight: 700;
+        }
+
+        .editor-main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: #f0f2f5;
+            overflow: hidden;
+        }
+
+        .editor-topbar {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 16px;
+            background: #fff;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .editor-name {
+            flex: 0 1 240px;
+            min-width: 150px;
+        }
+
+        .editor-name strong {
+            display: block;
+            color: #303133;
+            font-size: 15px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .editor-name span {
+            display: block;
+            margin-top: 2px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .topbar-actions {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .schedule-bar {
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            flex: 1 1 auto;
+            min-width: 0;
+            padding-left: 12px;
+            border-left: 1px solid #ebeef5;
+        }
+
+        .schedule-summary {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            color: #606266;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .schedule-summary > span {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .schedule-summary strong {
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .schedule-setting {
+            flex: 0 0 auto;
+            color: var(--forest-green);
+            background: transparent;
+            border: 0;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .schedule-setting:hover {
+            text-decoration: underline;
+        }
+
+        .ed-btn,
+        .ed-icon-btn,
+        .ed-select,
+        .ed-input {
+            height: 32px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .ed-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .ed-icon-btn {
+            width: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .ed-btn:hover,
+        .ed-icon-btn:hover,
+        .ed-select:hover,
+        .ed-input:focus,
+        .ed-select:focus {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .ed-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .ed-btn.primary:hover {
+            color: #fff;
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+
+        .ed-select {
+            min-width: 86px;
+            padding: 0 28px 0 10px;
+            cursor: pointer;
+        }
+
+        .ed-input {
+            padding: 0 10px;
+        }
+
+        .word-input {
+            display: none;
+        }
+
+        .editor-toolbar {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 7px 12px;
+            background: #fff;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .toolbar-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 4px;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: #e4e7ed;
+        }
+
+        .toolbar-btn {
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            color: #606266;
+            background: #fff;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .toolbar-btn:hover,
+        .toolbar-btn.active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border-color: var(--forest-green-200);
+        }
+
+        .toolbar-btn.wide {
+            width: auto;
+            padding: 0 10px;
+            font-weight: 700;
+        }
+
+        .toolbar-color {
+            width: 28px;
+            height: 28px;
+            padding: 3px;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .editor-canvas {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 18px 24px 42px;
+            background: #f0f2f5;
+        }
+
+        .report-paper {
+            max-width: 960px;
+            min-height: calc(100vh - 190px);
+            margin: 0 auto;
+            padding: 34px 42px 58px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            outline: none;
+        }
+
+        .report-paper:focus,
+        .report-paper:focus-within {
+            border-color: rgba(32, 165, 101, 0.45);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.10);
+        }
+
+        .report-paper h1 {
+            margin: 0 0 8px;
+            color: #303133;
+            font-size: 24px;
+            line-height: 1.35;
+            font-weight: 700;
+        }
+
+        .report-paper h2 {
+            margin: 26px 0 12px;
+            padding-left: 10px;
+            color: #303133;
+            border-left: 4px solid var(--forest-green);
+            font-size: 18px;
+            line-height: 1.4;
+            font-weight: 700;
+        }
+
+        .report-paper h3 {
+            margin: 18px 0 8px;
+            color: #303133;
+            font-size: 15px;
+            line-height: 1.45;
+            font-weight: 700;
+        }
+
+        .report-paper p,
+        .report-paper li {
+            color: #606266;
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .report-paper p {
+            margin: 8px 0;
+        }
+
+        .metric-token {
+            color: #1683e8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .report-paper ul,
+        .report-paper ol {
+            margin: 8px 0 8px 22px;
+            padding: 0;
+        }
+
+        .report-meta {
+            color: #909399 !important;
+            font-size: 12px !important;
+        }
+
+        .tag-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0 18px;
+        }
+
+        .tag-row .tag {
+            display: inline-flex;
+            align-items: center;
+            height: 24px;
+            padding: 0 8px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .kpi-card {
+            min-width: 0;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .kpi-card .lbl {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .kpi-card .val {
+            margin-top: 5px;
+            color: #303133;
+            font-size: 22px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .kpi-card .delta {
+            margin-top: 6px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .kpi-card .delta.up {
+            color: var(--forest-green);
+        }
+
+        .kpi-card .delta.warn {
+            color: #e6a23c;
+        }
+
+        .report-paper blockquote {
+            margin: 12px 0;
+            padding: 10px 14px;
+            color: #606266;
+            background: #f5f7fa;
+            border-left: 3px solid var(--forest-green);
+            border-radius: 3px;
+        }
+
+        .report-paper table {
+            width: 100%;
+            margin: 12px 0;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .report-paper th,
+        .report-paper td {
+            padding: 9px 10px;
+            color: #606266;
+            border: 1px solid #ebeef5;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .report-paper th {
+            color: #303133;
+            background: #fafafa;
+            font-weight: 700;
+        }
+
+        .num {
+            text-align: right !important;
+        }
+
+        .chart-block,
+        .dashboard-embed {
+            margin: 14px 0;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .chart-head,
+        .dashboard-embed-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .chart-tag,
+        .dashboard-tag {
+            display: inline-flex;
+            align-items: center;
+            height: 22px;
+            padding: 0 7px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .chart-bars {
+            height: 142px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            padding: 14px 12px 22px;
+            background: repeating-linear-gradient(to top, #fff 0, #fff 34px, #f0f2f5 35px);
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+        }
+
+        .chart-bars span {
+            position: relative;
+            flex: 1;
+            min-width: 12px;
+            height: var(--h);
+            background: linear-gradient(180deg, var(--forest-green), #8fd3b1);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .chart-bars span::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 50%;
+            bottom: -20px;
+            color: #909399;
+            font-size: 11px;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .dashboard-embed-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .dashboard-metric {
+            min-width: 0;
+            padding: 10px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+        }
+
+        .dashboard-metric span {
+            display: block;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .dashboard-metric strong {
+            display: block;
+            margin-top: 4px;
+            color: #303133;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .mini-line {
+            height: 112px;
+            padding: 10px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+        }
+
+        .mini-line svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .modal-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .dashboard-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 2010;
+            width: min(1060px, calc(100vw - 48px));
+            height: min(720px, calc(100vh - 58px));
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .schedule-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 2010;
+            width: min(660px, calc(100vw - 48px));
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .schedule-modal .modal-body {
+            padding: 22px 28px 20px;
+        }
+
+        .schedule-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+        }
+
+        .schedule-row.group-start {
+            margin-top: 2px;
+        }
+
+        .schedule-label {
+            color: #303133;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .schedule-controls {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .schedule-controls .ed-select,
+        .schedule-controls .ed-input {
+            width: 98px;
+            min-width: 0;
+        }
+
+        .schedule-controls .schedule-dynamic {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .schedule-controls .schedule-day-select {
+            width: 62px;
+        }
+
+        .schedule-controls .schedule-wide-select {
+            width: 112px;
+        }
+
+        .schedule-controls .time-field {
+            position: relative;
+            display: inline-flex;
+            width: 132px;
+            flex: 0 0 auto;
+        }
+
+        .schedule-controls .time-field .time-input {
+            width: 100%;
+            padding-right: 30px;
+        }
+
+        .schedule-controls .time-icon {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            color: #909399;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .modal-head,
+        .modal-foot {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .modal-foot {
+            border-top: 1px solid #ebeef5;
+            border-bottom: 0;
+        }
+
+        .modal-title h3 {
+            margin: 0;
+            color: #303133;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .modal-title p {
+            margin: 3px 0 0;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .modal-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 14px 16px;
+            overflow: hidden;
+        }
+
+        .dashboard-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-search {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .filter-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px;
+            background: #f5f7fa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .filter-tab {
+            height: 26px;
+            padding: 0 10px;
+            color: #606266;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            color: var(--forest-green);
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .dashboard-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            overflow: auto;
+            padding: 2px 2px 8px;
+        }
+
+        .dashboard-card {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dashboard-card:hover,
+        .dashboard-card.selected {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.10);
+        }
+
+        .dashboard-card.selected {
+            background: var(--forest-green-50);
+        }
+
+        .card-thumb {
+            height: 92px;
+            padding: 8px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+        }
+
+        .thumb-bars {
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .thumb-bars span {
+            flex: 1;
+            min-width: 4px;
+            height: var(--h);
+            background: linear-gradient(180deg, var(--forest-green), #8fd3b1);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .card-name {
+            color: #303133;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .card-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 260px;
+            color: #909399;
+            border: 1px dashed #dcdfe6;
+            border-radius: 4px;
+        }
+
+        .picked-count {
+            margin-right: auto;
+            color: #606266;
+        }
+
+        .picked-count strong {
+            color: var(--forest-green);
+        }
+
+        .find-bar {
+            position: fixed;
+            top: 70px;
+            right: 22px;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 2200;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1180px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .kpi-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 860px) {
+            .report-editor {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-sidebar {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .dashboard-embed-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-editor">
+        <aside class="editor-sidebar">
+            <div class="side-head">
+                <span class="side-icon">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>
+                </span>
+                智能报告编辑
+            </div>
+            <div class="report-meta-panel">
+                <div class="meta-label">当前报告</div>
+                <div class="meta-title" id="sideReportTitle">数据服务运营月报</div>
+                <div class="meta-line">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+                    <span id="sideReportPeriod">2026年5月</span>
+                </div>
+                <div class="meta-line">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-6"/></svg>
+                    <span id="sideReportSource">平台运营数据</span>
+                </div>
+            </div>
+            <div class="section-head">
+                <span>报告章节</span>
+                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/></svg>
+            </div>
+            <div class="section-list" id="sectionList"></div>
+        </aside>
+
+        <main class="editor-main">
+            <div class="editor-topbar">
+                <div class="topbar-left">
+                    <button class="ed-icon-btn" type="button" id="btnBack" title="返回查看页">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <div class="editor-name">
+                        <strong id="editorTitle">数据服务运营月报</strong>
+                        <span>智能报告 / 富文本编辑</span>
+                    </div>
+                    <div class="schedule-bar">
+                        <div class="schedule-summary">
+                            <span><strong>执行频次：</strong><span id="scheduleSummary">每月 - 1号 - 09:00:00</span></span>
+                            <span><strong>数据时间范围：</strong><span id="rangeSummary">上一月 25号 00:00:00 - 本月 25号 23:59:59</span></span>
+                        </div>
+                        <button class="schedule-setting" type="button" id="btnScheduleSetting">设置</button>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="ed-btn" type="button" id="btnImportWord">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>
+                        导入Word版本
+                    </button>
+                    <input class="word-input" id="wordFileInput" type="file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                    <button class="ed-btn" type="button" id="btnPreview">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg>
+                        预览
+                    </button>
+                    <button class="ed-btn primary" type="button" id="btnSave">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+                        保存
+                    </button>
+                    <button class="ed-btn" type="button" id="btnExit">退出</button>
+                </div>
+            </div>
+
+            <div class="editor-toolbar" id="editorToolbar">
+                <div class="toolbar-group">
+                    <select class="ed-select" id="blockSelect" title="段落 / 标题">
+                        <option value="P">正文</option>
+                        <option value="H1">标题 1</option>
+                        <option value="H2">标题 2</option>
+                        <option value="H3">标题 3</option>
+                    </select>
+                    <select class="ed-select" id="sizeSelect" title="字号">
+                        <option value="">字号</option>
+                        <option value="12px">12</option>
+                        <option value="13px">13</option>
+                        <option value="14px">14</option>
+                        <option value="16px">16</option>
+                        <option value="18px">18</option>
+                        <option value="20px">20</option>
+                        <option value="24px">24</option>
+                    </select>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" type="button" data-cmd="bold" title="加粗"><strong>B</strong></button>
+                    <button class="toolbar-btn" type="button" data-cmd="italic" title="斜体"><em>I</em></button>
+                    <button class="toolbar-btn" type="button" data-cmd="underline" title="下划线"><span style="text-decoration:underline;">U</span></button>
+                    <button class="toolbar-btn" type="button" data-cmd="strikeThrough" title="删除线"><span style="text-decoration:line-through;">S</span></button>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <input class="toolbar-color" id="foreColor" type="color" value="#303133" title="字体颜色">
+                    <input class="toolbar-color" id="backColor" type="color" value="#e8f5e9" title="背景色">
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" type="button" data-cmd="insertUnorderedList" title="无序列表">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+                    </button>
+                    <button class="toolbar-btn" type="button" data-cmd="insertOrderedList" title="有序列表">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 12h2l-2 3h2"/><path d="M4 18h2v3H4"/></svg>
+                    </button>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" type="button" data-cmd="justifyLeft" title="左对齐"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h14"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="justifyCenter" title="居中"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M5 18h14"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="justifyRight" title="右对齐"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M10 12h10"/><path d="M6 18h14"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="outdent" title="减少缩进"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M11 12h9"/><path d="M4 18h16"/><path d="M8 9l-3 3 3 3"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="indent" title="增加缩进"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h9"/><path d="M4 18h16"/><path d="M16 9l3 3-3 3"/></svg></button>
+                    <select class="ed-select" id="lineHeightSelect" title="行间距">
+                        <option value="">行距</option>
+                        <option value="1.5">1.5</option>
+                        <option value="1.75">1.75</option>
+                        <option value="2">2.0</option>
+                    </select>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" type="button" data-action="quote" title="引用"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M7 7h4v4H7v3a3 3 0 0 0 3 3"/><path d="M14 7h4v4h-4v3a3 3 0 0 0 3 3"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-action="hr" title="分割线"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 12h16"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-action="link" title="超链接"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-action="image" title="插入图片"><svg class="icon-stroke" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 17l-5-5-7 7"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-action="table" title="插入表格"><svg class="icon-stroke" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M3 16h18"/><path d="M9 4v16"/><path d="M15 4v16"/></svg></button>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" type="button" data-cmd="undo" title="撤销"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 7h11a6 6 0 0 1 0 12h-3"/><path d="M7 3 3 7l4 4"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="redo" title="重做"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M21 7H10a6 6 0 0 0 0 12h3"/><path d="M17 3l4 4-4 4"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-cmd="removeFormat" title="清除格式"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 5h6"/><path d="M11 5l-2 14"/><path d="M14 12l6 6"/><path d="M20 12l-6 6"/></svg></button>
+                    <button class="toolbar-btn" type="button" data-action="find" title="查找"><svg class="icon-stroke" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></button>
+                </div>
+                <span class="toolbar-divider"></span>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn wide" type="button" id="btnInsertDashboard">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/></svg>
+                        插入仪表盘
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-canvas">
+                <article class="report-paper" id="reportArticle" contenteditable="true" spellcheck="false"></article>
+            </div>
+        </main>
+    </div>
+
+    <div class="find-bar hidden" id="findBar">
+        <input class="ed-input" id="findInput" type="text" placeholder="查找内容">
+        <button class="ed-icon-btn" type="button" id="findPrev" title="上一个">↑</button>
+        <button class="ed-icon-btn" type="button" id="findNext" title="下一个">↓</button>
+        <button class="ed-icon-btn" type="button" id="findClose" title="关闭">×</button>
+    </div>
+
+    <div class="modal-mask hidden" id="scheduleMask"></div>
+    <section class="schedule-modal hidden" id="scheduleModal" aria-hidden="true">
+        <div class="modal-head">
+            <div class="modal-title">
+                <h3>执行机制设置</h3>
+                <p>配置智能报告的生成频次和数据取数时间范围</p>
+            </div>
+            <button class="ed-icon-btn" type="button" data-schedule-close title="关闭">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="schedule-form">
+                <div class="schedule-row">
+                    <div class="schedule-label">执行机制：</div>
+                    <div class="schedule-controls">
+                        <select class="ed-select" id="scheduleCycle">
+                            <option value="每天">每天</option>
+                            <option value="每周">每周</option>
+                            <option value="每月">每月</option>
+                            <option value="每季度">每季度</option>
+                            <option value="每年">每年</option>
+                        </select>
+                        <div class="schedule-dynamic" id="scheduleRunFields"></div>
+                    </div>
+                </div>
+                <div class="schedule-row group-start">
+                    <div class="schedule-label">数据时间范围：</div>
+                    <div class="schedule-controls"></div>
+                </div>
+                <div class="schedule-row">
+                    <div class="schedule-label">开始时间：</div>
+                    <div class="schedule-controls" id="rangeStartControls"></div>
+                </div>
+                <div class="schedule-row">
+                    <div class="schedule-label">结束时间：</div>
+                    <div class="schedule-controls" id="rangeEndControls"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <span></span>
+            <div class="topbar-actions">
+                <button class="ed-btn primary" type="button" id="scheduleConfirm">确定</button>
+                <button class="ed-btn" type="button" data-schedule-close>取消</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-mask hidden" id="dashboardMask"></div>
+    <section class="dashboard-modal hidden" id="dashboardModal" aria-hidden="true">
+        <div class="modal-head">
+            <div class="modal-title">
+                <h3>插入仪表盘</h3>
+                <p>来源：运维中心 / 仪表盘定制 / 仪表盘</p>
+            </div>
+            <button class="ed-icon-btn" type="button" data-modal-close title="关闭">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="dashboard-toolbar">
+                <input class="ed-input dashboard-search" id="dashboardSearch" type="text" placeholder="搜索仪表盘名称">
+                <div class="filter-tabs" id="dashboardFilters">
+                    <button class="filter-tab active" type="button" data-filter="all">全部</button>
+                    <button class="filter-tab" type="button" data-filter="运营">运营</button>
+                    <button class="filter-tab" type="button" data-filter="资源">资源</button>
+                    <button class="filter-tab" type="button" data-filter="交易">交易</button>
+                    <button class="filter-tab" type="button" data-filter="接口">接口</button>
+                    <button class="filter-tab" type="button" data-filter="治理">治理</button>
+                    <button class="filter-tab" type="button" data-filter="运维">运维</button>
+                </div>
+            </div>
+            <div class="dashboard-grid" id="dashboardGrid"></div>
+            <div class="card-empty hidden" id="dashboardEmpty">暂无匹配的仪表盘</div>
+        </div>
+        <div class="modal-foot">
+            <span class="picked-count">已选 <strong id="pickedCount">0</strong> 个</span>
+            <button class="ed-btn" type="button" data-modal-close>取消</button>
+            <button class="ed-btn primary" type="button" id="confirmInsertDashboard" disabled>确定插入</button>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const reports = {
+                'report-monthly': {
+                    title: '数据服务运营月报',
+                    period: '2026年5月',
+                    source: '平台运营数据',
+                    meta: '报告类型：运营月报 · 数据周期：2026年5月 · 数据来源：平台运营、交易履约、接口服务、治理质量',
+                    tags: ['服务运营', '接口调用', '需求撮合', '问题闭环'],
+                    summary: [
+                        ['服务请求', '17,248', '较上月 +8.4%', 'up'],
+                        ['数据产品调用', '8,642', '接口服务贡献主要增量', 'up'],
+                        ['需求撮合', '236', '企业服务场景活跃', 'up'],
+                        ['问题闭环率', '98.6%', '核心链路稳定', 'up']
+                    ],
+                    chapters: [
+                        {
+                            title: '一、总体说明',
+                            html: '<p>2026年5月，平台数据服务总体运行平稳，资源发布、产品订购、需求对接和接口服务均保持增长。交通运行、企业服务和低空经济相关场景调用活跃，是本期主要增量来源。</p><p>本期运营重点从资源供给转向服务转化，平台服务请求 <span class="metric-token">${服务请求数}</span> 次，数据产品调用 <span class="metric-token">${数据产品调用数}</span> 次，需求撮合 <span class="metric-token">${需求撮合数}</span> 单，问题闭环率 <span class="metric-token">${问题闭环率}</span>。</p><blockquote><strong>运营结论：</strong>核心链路可用性保持在99.6%，未出现影响业务连续性的系统故障。</blockquote>'
+                        },
+                        {
+                            title: '二、项目汇总',
+                            html: '<h3>2.1 业务域情况</h3><p>本期累计支撑 <span class="metric-token">${项目数}</span> 个业务项目，覆盖政务服务、交通运行、企业服务和低空经济四个重点业务域，汇聚数据量 <span class="metric-token">${数据量}</span> TB。</p><table><thead><tr><th>业务域</th><th class="num">项目数</th><th class="num">服务请求</th><th class="num">接口数</th><th class="num">数据量(TB)</th><th class="num">完成率</th></tr></thead><tbody><tr><td>政务服务</td><td class="num">12</td><td class="num">4,260</td><td class="num">38</td><td class="num">18.6</td><td class="num">98%</td></tr><tr><td>交通运行</td><td class="num">9</td><td class="num">5,410</td><td class="num">42</td><td class="num">22.3</td><td class="num">97%</td></tr><tr><td>企业服务</td><td class="num">8</td><td class="num">3,984</td><td class="num">31</td><td class="num">15.9</td><td class="num">96%</td></tr><tr><td>低空经济</td><td class="num">7</td><td class="num">3,594</td><td class="num">27</td><td class="num">13.8</td><td class="num">94%</td></tr></tbody></table>'
+                        },
+                        {
+                            title: '三、业务指标统计',
+                            html: '<p>指标推送主要面向运营分析、监管协同和业务专题看板，任务整体稳定，异常任务均完成补偿处理。本期接口调用 <span class="metric-token">${接口调用次数}</span> 次，专题看板日均访问 <span class="metric-token">${看板访问次数}</span> 次。</p>' + chartBlock('5月业务指标推送数', ['资源', '订单', '需求', '接口', '质量', '低空', '交通', '企业'], [58, 43, 48, 74, 38, 52, 67, 45]) + '<p>月内业务请求在第三周达到峰值，主要受企业服务批量核验和交通专题分析任务带动。</p>'
+                        },
+                        {
+                            title: '四、问题与改进',
+                            html: '<p>本期问题主要集中在低频目录曝光不足、个别接口字段说明不完整、外部数据源同步延迟三个方面。</p><ol><li>补齐低频目录的业务标签和适用场景说明，提升搜索命中率。</li><li>对企业服务、交通运行相关接口补充字段注释和示例返回值。</li><li>将外部同步源延迟监控纳入周度巡检，超过阈值时自动提醒责任人。</li></ol>'
+                        }
+                    ]
+                },
+                'report-resource': {
+                    title: '资源供给分析报告',
+                    period: '2026年5月',
+                    source: '资源目录与产品发布',
+                    meta: '报告类型：资源供给分析 · 数据周期：2026年5月 · 数据来源：资源目录、数据产品、需求发布记录',
+                    tags: ['资源供给', '目录热度', '供需匹配', '低空经济'],
+                    summary: [
+                        ['新增资源', '128', '主题表与接口服务为主', 'up'],
+                        ['已发布接口', '416', '本月新增 27 个', 'up'],
+                        ['资源上架率', '92.4%', '治理质量提升', 'up'],
+                        ['热门目录', '3', '交通、企业、信用', 'warn']
+                    ],
+                    chapters: [
+                        {
+                            title: '一、供给概况',
+                            html: '<p>本期平台资源供给侧持续扩充，新增资源集中在城市交通运行、市场主体画像和公共信用服务三个方向。资源结构以数据库表、API服务和文件类产品为主。</p><p>新增资源中完成字段注释、目录标签和使用说明配置的比例达到94.2%，资源供给质量较上月提升。</p>'
+                        },
+                        {
+                            title: '二、目录与资源分布',
+                            html: '<p>资源目录覆盖12个业务主题，高频访问目录主要来自交通、企业服务、空间治理和生态环境。</p><table><thead><tr><th>目录</th><th class="num">资源数</th><th class="num">上架数</th><th class="num">调用次数</th><th>负责人</th></tr></thead><tbody><tr><td>交通运行</td><td class="num">186</td><td class="num">171</td><td class="num">2,931</td><td>数据运营组</td></tr><tr><td>企业服务</td><td class="num">152</td><td class="num">144</td><td class="num">2,208</td><td>产业服务组</td></tr><tr><td>空间治理</td><td class="num">116</td><td class="num">103</td><td class="num">1,506</td><td>城市治理组</td></tr><tr><td>生态环境</td><td class="num">94</td><td class="num">86</td><td class="num">1,012</td><td>公共数据组</td></tr></tbody></table>' + chartBlock('周度资源发布数', ['第1周', '第2周', '第3周', '第4周'], [53, 62, 82, 100])
+                        },
+                        {
+                            title: '三、供需匹配分析',
+                            html: '<p>本期需求命中率为84.3%，企业服务与交通运行类需求匹配效率最高。低空经济需求增长较快，但部分新场景仍需补充实时数据资源。</p><table><thead><tr><th>需求场景</th><th class="num">需求数</th><th class="num">已匹配</th><th class="num">匹配率</th><th>缺口说明</th></tr></thead><tbody><tr><td>企业画像</td><td class="num">86</td><td class="num">78</td><td class="num">90.7%</td><td>字段覆盖较完整</td></tr><tr><td>交通热力</td><td class="num">64</td><td class="num">58</td><td class="num">90.6%</td><td>时空粒度需细化</td></tr><tr><td>低空经济</td><td class="num">42</td><td class="num">31</td><td class="num">73.8%</td><td>实时气象资源不足</td></tr><tr><td>信用核验</td><td class="num">38</td><td class="num">34</td><td class="num">89.5%</td><td>接口授权待优化</td></tr></tbody></table>'
+                        },
+                        {
+                            title: '四、管理建议',
+                            html: '<p>建议按照“高频优先、场景牵引、低频归档”的原则优化资源目录运营，优先保障成交和需求转化能力强的目录。</p><ul><li>围绕低空经济补充空域、气象、飞行计划和应急保障数据。</li><li>对交通热力资源增加分钟级聚合口径，支撑更多实时分析场景。</li><li>将企业服务高频字段沉淀为标准数据产品，减少重复加工。</li></ul>'
+                        }
+                    ]
+                },
+                'report-transaction': {
+                    title: '交易履约报告',
+                    period: '2026年5月',
+                    source: '订单、合同与交付记录',
+                    meta: '报告类型：交易履约 · 数据周期：2026年5月 · 数据来源：交易订单、合同确认、交付验收、费用结算',
+                    tags: ['交易履约', '订单交付', '合同确认', '费用结算'],
+                    summary: [
+                        ['订单总数', '1,268', '较上月 +12.1%', 'up'],
+                        ['履约完成', '1,214', '完成率 95.7%', 'up'],
+                        ['退款率', '0.8%', '风险可控', 'up'],
+                        ['平均交付', '1.7天', '较上月缩短', 'up']
+                    ],
+                    chapters: [
+                        {
+                            title: '一、总体说明',
+                            html: '<p>本期交易服务总体稳定，企业画像、交通热力和信用核验类数据产品成交量较高。订单处理以自动化交付为主，人工复核集中在敏感字段与用途核验环节。</p><blockquote><strong>履约结论：</strong>合同签署与交付确认平均耗时持续缩短，标准数据产品交付链路已基本形成稳定闭环。</blockquote>'
+                        },
+                        {
+                            title: '二、订单与履约概况',
+                            html: '<p>本期订单以标准数据产品和API调用订阅为主，行业解决方案类订单金额较高但数量占比不高。</p><table><thead><tr><th>订单类型</th><th class="num">订单数</th><th class="num">占比</th><th class="num">成交金额</th><th>主要场景</th></tr></thead><tbody><tr><td>标准数据产品</td><td class="num">782</td><td class="num">61.7%</td><td class="num">186.4万</td><td>企业画像、交通热力</td></tr><tr><td>API订阅</td><td class="num">314</td><td class="num">24.8%</td><td class="num">124.8万</td><td>信用核验、地址清洗</td></tr><tr><td>专题数据包</td><td class="num">118</td><td class="num">9.3%</td><td class="num">92.6万</td><td>空间治理、低空经济</td></tr><tr><td>解决方案交付</td><td class="num">54</td><td class="num">4.2%</td><td class="num">82.4万</td><td>监管分析、行业报告</td></tr></tbody></table>'
+                        },
+                        {
+                            title: '三、产品成交分析',
+                            html: '<p>热门产品集中在企业经营、交通出行和公共信用三个方向，复购率较高。</p>' + chartBlock('周度订单履约数', ['第1周', '第2周', '第3周', '第4周'], [80, 84, 100, 90]) + '<p>行业客户中，园区运营、金融风控和交通服务机构贡献订单较多。大型客户更关注接口稳定性、交付留痕和费用对账。</p>'
+                        },
+                        {
+                            title: '四、风险与优化',
+                            html: '<ol><li>下单前补充数据用途校验，减少待补充订单。</li><li>对大额解决方案订单增加交付里程碑和验收留痕。</li><li>按产品类型沉淀标准交付模板，进一步压缩人工处理时间。</li></ol>'
+                        }
+                    ]
+                },
+                'report-quality': {
+                    title: '治理质量周报',
+                    period: '2026年第20周',
+                    source: '治理巡检与质量规则',
+                    meta: '报告类型：治理质量周报 · 数据周期：2026年第20周 · 数据来源：质量规则、巡检任务、问题闭环记录',
+                    tags: ['治理质量', '规则校验', '问题闭环', '字段注释'],
+                    summary: [
+                        ['巡检任务', '842', '覆盖核心库表', 'up'],
+                        ['质量问题', '36', '较上周 -11', 'up'],
+                        ['闭环率', '96.1%', '较上周 +2.4%', 'up'],
+                        ['元数据完整率', '94.8%', '持续提升', 'up']
+                    ],
+                    chapters: [
+                        {
+                            title: '一、质量概况',
+                            html: '<p>本周治理质量整体稳定，核心库表巡检覆盖率保持高位。质量问题数量较上周下降，字段注释缺失和同步延迟类问题已进入常态化跟踪。</p>'
+                        },
+                        {
+                            title: '二、问题闭环情况',
+                            html: '<p>质量问题数量较上周下降，治理闭环效率提升。</p>' + chartBlock('质量问题闭环数', ['周一', '周二', '周三', '周四', '周五'], [67, 92, 50, 75, 100])
+                        },
+                        {
+                            title: '三、规则执行情况',
+                            html: '<p>本周新增5条质量校验规则，主要覆盖日期格式、枚举值范围、主键唯一性和空值比例。</p><table><thead><tr><th>规则类型</th><th class="num">规则数</th><th class="num">命中问题</th><th>处理建议</th></tr></thead><tbody><tr><td>完整性</td><td class="num">36</td><td class="num">14</td><td>补充缺失字段</td></tr><tr><td>一致性</td><td class="num">28</td><td class="num">9</td><td>统一指标口径</td></tr><tr><td>及时性</td><td class="num">18</td><td class="num">7</td><td>检查同步链路</td></tr><tr><td>安全性</td><td class="num">16</td><td class="num">6</td><td>复核权限配置</td></tr></tbody></table>'
+                        },
+                        {
+                            title: '四、改进计划',
+                            html: '<ul><li>对订单主题库增加日终校验，确保看板统计和报表口径一致。</li><li>对交通运行外部同步源增加延迟阈值告警。</li><li>对企业画像相关字段补充脱敏说明和数据来源。</li></ul>'
+                        }
+                    ]
+                }
+            };
+
+            const dashboards = [
+                { id: 'dash-overview', name: '平台运营总览', category: '运营', updated: '2026-05-14 09:20', metrics: [['注册用户', '12,486'], ['数据资源', '3,216'], ['交易订单', '1,268'], ['响应率', '99.6%']], values: [72, 88, 96, 112, 128, 136] },
+                { id: 'dash-resource-match', name: '资源供需分析', category: '资源', updated: '2026-05-13 18:10', metrics: [['资源目录', '42'], ['上架资源', '2,918'], ['需求发布', '326'], ['匹配率', '84.3%']], values: [86, 73, 61, 54, 49, 45] },
+                { id: 'dash-resource-hot', name: '资源目录热度', category: '资源', updated: '2026-05-13 16:45', metrics: [['访问目录', '12'], ['热门资源', '186'], ['检索次数', '9,642'], ['命中率', '91.2%']], values: [95, 76, 82, 61, 54, 38] },
+                { id: 'dash-product-call', name: '数据产品调用排行', category: '运营', updated: '2026-05-12 17:30', metrics: [['产品数', '416'], ['调用次数', '8,642'], ['成功率', '99.1%'], ['异常数', '18']], values: [60, 92, 78, 68, 51, 46] },
+                { id: 'dash-demand-flow', name: '数据需求撮合转化', category: '运营', updated: '2026-05-12 15:10', metrics: [['需求数', '326'], ['有效需求', '291'], ['已匹配', '236'], ['转化率', '72.4%']], values: [100, 89, 72, 58, 44, 31] },
+                { id: 'dash-trade-monitor', name: '交易服务监测', category: '交易', updated: '2026-05-14 08:55', metrics: [['订单总数', '1,268'], ['合同确认', '936'], ['交付完成', '1,214'], ['结算金额', '486.2万']], values: [76, 81, 96, 91, 84, 73] },
+                { id: 'dash-order-trend', name: '订单履约趋势', category: '交易', updated: '2026-05-11 19:20', metrics: [['已完成', '1,214'], ['交付中', '42'], ['待补充', '8'], ['取消', '4']], values: [65, 69, 82, 94, 88, 76] },
+                { id: 'dash-api-run', name: '接口服务运行', category: '接口', updated: '2026-05-14 10:05', metrics: [['接口数', '416'], ['调用量', '8,642'], ['P95耗时', '280ms'], ['可用性', '99.6%']], values: [82, 88, 91, 86, 96, 92] },
+                { id: 'dash-source-sync', name: '数据源同步监控', category: '运维', updated: '2026-05-14 09:50', metrics: [['数据源', '68'], ['同步任务', '214'], ['延迟任务', '6'], ['成功率', '98.9%']], values: [92, 90, 81, 88, 76, 95] },
+                { id: 'dash-dataset-publish', name: '数据集发布统计', category: '运维', updated: '2026-05-13 12:40', metrics: [['数据集', '1,846'], ['本月新增', '128'], ['待审核', '24'], ['发布率', '92.4%']], values: [53, 62, 82, 100, 74, 68] },
+                { id: 'dash-quality', name: '治理质量监测', category: '治理', updated: '2026-05-14 07:40', metrics: [['巡检任务', '842'], ['质量问题', '36'], ['闭环率', '96.1%'], ['完整率', '94.8%']], values: [67, 92, 50, 75, 100, 86] },
+                { id: 'dash-alert', name: '服务告警总览', category: '运维', updated: '2026-05-14 11:15', metrics: [['告警总数', '28'], ['已处理', '24'], ['处理中', '4'], ['严重告警', '0']], values: [32, 46, 28, 41, 36, 24] }
+            ];
+
+            const article = document.getElementById('reportArticle');
+            const sectionList = document.getElementById('sectionList');
+            const toolbar = document.getElementById('editorToolbar');
+            const params = new URLSearchParams(window.location.search);
+            const reportId = reports[params.get('id')] ? params.get('id') : 'report-monthly';
+            let savedRange = null;
+            let activeFilter = 'all';
+            const pickedDashboards = new Set();
+            const scheduleState = {
+                cycle: '每月',
+                run: {
+                    daily: { time: '00:00:00' },
+                    weekly: { weekDay: '周一', time: '09:00:00' },
+                    monthly: { day: '1号', time: '09:00:00' },
+                    quarterly: { quarterMonth: '第一个月', day: '1号', time: '09:00:00' },
+                    yearly: { month: '1月', day: '1号', time: '09:00:00' }
+                },
+                range: {
+                    daily: {
+                        start: { offset: '昨天', time: '00:00:00' },
+                        end: { offset: '当天', time: '00:00:00' }
+                    },
+                    weekly: {
+                        start: { offset: '上一周', weekDay: '周一', time: '09:00:00' },
+                        end: { offset: '本周', weekDay: '周一', time: '09:00:00' }
+                    },
+                    monthly: {
+                        start: { offset: '上一月', day: '25号', time: '00:00:00' },
+                        end: { offset: '本月', day: '25号', time: '23:59:59' }
+                    },
+                    quarterly: {
+                        start: { offset: '上一季度', quarterMonth: '第一个月', day: '1号', time: '09:00:00' },
+                        end: { offset: '本季度', quarterMonth: '第一个月', day: '1号', time: '09:00:00' }
+                    },
+                    yearly: {
+                        start: { offset: '当年', month: '1月', day: '1号', time: '09:00:00' },
+                        end: { offset: '当年', month: '1月', day: '1号', time: '09:00:00' }
+                    }
+                }
+            };
+            const scheduleCycleMap = {
+                '每天': 'daily',
+                '每周': 'weekly',
+                '每月': 'monthly',
+                '每季度': 'quarterly',
+                '每年': 'yearly'
+            };
+            const scheduleOptionSets = {
+                weekDays: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                monthDays: Array.from({ length: 31 }, function (_, index) { return (index + 1) + '号'; }).concat(['最后一天']),
+                quarterMonths: ['第一个月', '第二个月', '第三个月'],
+                yearMonths: Array.from({ length: 12 }, function (_, index) { return (index + 1) + '月'; }),
+                dailyOffsets: ['昨天', '当天'],
+                weeklyOffsets: ['上一周', '本周'],
+                monthlyOffsets: ['上一月', '本月'],
+                quarterlyOffsets: ['上一季度', '本季度'],
+                yearlyOffsets: ['上一年', '当年']
+            };
+
+            function escapeHtml(value) {
+                return String(value).replace(/[&<>"']/g, function (char) {
+                    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+                });
+            }
+
+            function chartBlock(title, labels, values) {
+                const bars = labels.map(function (label, index) {
+                    return '<span style="--h:' + values[index] + '%" data-label="' + escapeHtml(label) + '"></span>';
+                }).join('');
+                return '<div class="chart-block" contenteditable="false"><div class="chart-head"><span>' + escapeHtml(title) + '</span><span class="chart-tag">静态图表</span></div><div class="chart-bars">' + bars + '</div></div>';
+            }
+
+            function renderReport() {
+                const data = reports[reportId];
+                document.title = data.title + ' - 编辑智能报告 - 龙岗数据聚合服务平台';
+                document.getElementById('editorTitle').textContent = data.title;
+                document.getElementById('sideReportTitle').textContent = data.title;
+                document.getElementById('sideReportPeriod').textContent = data.period;
+                document.getElementById('sideReportSource').textContent = data.source;
+
+                const tags = data.tags.map(function (tag) {
+                    return '<span class="tag">' + escapeHtml(tag) + '</span>';
+                }).join('');
+                const summary = data.summary.map(function (item) {
+                    return '<div class="kpi-card"><div class="lbl">' + escapeHtml(item[0]) + '</div><div class="val">' + escapeHtml(item[1]) + '</div><div class="delta ' + item[3] + '">' + escapeHtml(item[2]) + '</div></div>';
+                }).join('');
+                const chapters = data.chapters.map(function (chapter, index) {
+                    return '<h2 id="section-' + index + '">' + chapter.title + '</h2>' + chapter.html;
+                }).join('');
+
+                article.innerHTML = '<h1>' + escapeHtml(data.title) + '</h1><p class="report-meta">' + escapeHtml(data.meta) + '</p><div class="tag-row" contenteditable="false">' + tags + '</div><div class="kpi-row" contenteditable="false">' + summary + '</div>' + chapters;
+                rebuildSectionList();
+                requestAnimationFrame(saveSelection);
+            }
+
+            function rebuildSectionList() {
+                const headings = article.querySelectorAll('h2');
+                sectionList.innerHTML = '';
+                headings.forEach(function (heading, index) {
+                    if (!heading.id) heading.id = 'section-' + index;
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'section-link' + (index === 0 ? ' active' : '');
+                    button.dataset.target = heading.id;
+                    button.innerHTML = '<svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/></svg><span>' + escapeHtml(heading.textContent || '未命名章节') + '</span>';
+                    sectionList.appendChild(button);
+                });
+            }
+
+            function saveSelection() {
+                const selection = window.getSelection();
+                if (!selection || !selection.rangeCount) return;
+                if (!article.contains(selection.anchorNode)) return;
+                savedRange = selection.getRangeAt(0).cloneRange();
+            }
+
+            function restoreSelection() {
+                if (!savedRange) return;
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(savedRange);
+            }
+
+            function exec(command, value) {
+                article.focus();
+                restoreSelection();
+                try {
+                    document.execCommand(command, false, value || null);
+                } catch (error) {}
+                saveSelection();
+                rebuildSectionList();
+            }
+
+            function applyInlineStyle(styleText) {
+                article.focus();
+                restoreSelection();
+                const selection = window.getSelection();
+                if (!selection || !selection.rangeCount || selection.isCollapsed) return;
+                const range = selection.getRangeAt(0);
+                const span = document.createElement('span');
+                span.setAttribute('style', styleText);
+                span.appendChild(range.extractContents());
+                range.insertNode(span);
+                selection.removeAllRanges();
+                const nextRange = document.createRange();
+                nextRange.selectNodeContents(span);
+                selection.addRange(nextRange);
+                saveSelection();
+            }
+
+            function insertHtml(html) {
+                article.focus();
+                restoreSelection();
+                const template = document.createElement('template');
+                template.innerHTML = html.trim();
+                const selection = window.getSelection();
+                if (!selection || !selection.rangeCount || !article.contains(selection.anchorNode)) {
+                    article.appendChild(template.content);
+                } else {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(template.content);
+                    selection.removeAllRanges();
+                }
+                rebuildSectionList();
+                saveSelection();
+            }
+
+            function handleAction(action) {
+                if (action === 'quote') {
+                    exec('formatBlock', 'BLOCKQUOTE');
+                    return;
+                }
+                if (action === 'hr') {
+                    insertHtml('<hr>');
+                    return;
+                }
+                if (action === 'link') {
+                    const url = window.prompt('请输入链接地址', 'https://');
+                    if (url) exec('createLink', url);
+                    return;
+                }
+                if (action === 'image') {
+                    const url = window.prompt('请输入图片地址', '');
+                    if (url) insertHtml('<img src="' + escapeHtml(url) + '" alt="" style="max-width:100%;border:1px solid #ebeef5;border-radius:4px;">');
+                    return;
+                }
+                if (action === 'table') {
+                    insertHtml('<table><thead><tr><th>指标</th><th>当前值</th><th>变化</th></tr></thead><tbody><tr><td>数据资源</td><td>3,216</td><td>+128</td></tr><tr><td>接口调用</td><td>8,642</td><td>+8.4%</td></tr><tr><td>订单履约</td><td>1,214</td><td>95.7%</td></tr></tbody></table>');
+                    return;
+                }
+                if (action === 'find') {
+                    openFindBar();
+                }
+            }
+
+            function miniLine(values) {
+                const max = Math.max.apply(null, values);
+                const points = values.map(function (value, index) {
+                    const x = 12 + index * (176 / Math.max(values.length - 1, 1));
+                    const y = 86 - (value / max) * 70;
+                    return x + ',' + y;
+                }).join(' ');
+                return '<div class="mini-line"><svg viewBox="0 0 200 100" preserveAspectRatio="none"><g stroke="#e4e7ed" stroke-width="1"><line x1="10" y1="20" x2="190" y2="20"/><line x1="10" y1="50" x2="190" y2="50"/><line x1="10" y1="80" x2="190" y2="80"/></g><polyline points="' + points + '" fill="none" stroke="#20A565" stroke-width="3"/><polygon points="' + points + ' 188,88 12,88" fill="rgba(32,165,101,0.12)"/></svg></div>';
+            }
+
+            function dashboardThumb(item) {
+                const max = Math.max.apply(null, item.values);
+                return '<div class="thumb-bars">' + item.values.map(function (value) {
+                    return '<span style="--h:' + Math.max(16, Math.round(value / max * 100)) + '%"></span>';
+                }).join('') + '</div>';
+            }
+
+            function dashboardEmbed(item) {
+                const metrics = item.metrics.map(function (metric) {
+                    return '<div class="dashboard-metric"><span>' + escapeHtml(metric[0]) + '</span><strong>' + escapeHtml(metric[1]) + '</strong></div>';
+                }).join('');
+                return '<section class="dashboard-embed" contenteditable="false" data-dashboard-id="' + item.id + '"><div class="dashboard-embed-head"><span>' + escapeHtml(item.name) + '</span><span class="dashboard-tag">' + escapeHtml(item.category) + '</span></div><div class="dashboard-embed-body"><div class="dashboard-metrics">' + metrics + '</div>' + miniLine(item.values) + '</div><p class="report-meta">来源：运维中心 / 仪表盘定制 / 仪表盘 · 更新时间：' + escapeHtml(item.updated) + '</p></section>';
+            }
+
+            function renderDashboardGrid() {
+                const keyword = document.getElementById('dashboardSearch').value.trim();
+                const grid = document.getElementById('dashboardGrid');
+                const empty = document.getElementById('dashboardEmpty');
+                const rows = dashboards.filter(function (item) {
+                    const matchFilter = activeFilter === 'all' || item.category === activeFilter;
+                    const matchKeyword = !keyword || item.name.indexOf(keyword) >= 0 || item.category.indexOf(keyword) >= 0;
+                    return matchFilter && matchKeyword;
+                });
+
+                grid.innerHTML = rows.map(function (item) {
+                    const selected = pickedDashboards.has(item.id) ? ' selected' : '';
+                    return '<button class="dashboard-card' + selected + '" type="button" data-id="' + item.id + '"><div class="card-thumb">' + dashboardThumb(item) + '</div><div class="card-name">' + escapeHtml(item.name) + '</div><div class="card-meta"><span class="dashboard-tag">' + escapeHtml(item.category) + '</span><span>' + escapeHtml(item.updated.slice(5, 16)) + '</span></div></button>';
+                }).join('');
+                empty.classList.toggle('hidden', rows.length > 0);
+                grid.classList.toggle('hidden', rows.length === 0);
+                updatePickedCount();
+            }
+
+            function updatePickedCount() {
+                const count = pickedDashboards.size;
+                document.getElementById('pickedCount').textContent = count;
+                document.getElementById('confirmInsertDashboard').disabled = count === 0;
+            }
+
+            function openDashboardModal() {
+                saveSelection();
+                pickedDashboards.clear();
+                document.getElementById('dashboardSearch').value = '';
+                document.getElementById('dashboardMask').classList.remove('hidden');
+                document.getElementById('dashboardModal').classList.remove('hidden');
+                document.getElementById('dashboardModal').setAttribute('aria-hidden', 'false');
+                renderDashboardGrid();
+            }
+
+            function closeDashboardModal() {
+                document.getElementById('dashboardMask').classList.add('hidden');
+                document.getElementById('dashboardModal').classList.add('hidden');
+                document.getElementById('dashboardModal').setAttribute('aria-hidden', 'true');
+                article.focus();
+            }
+
+            function getScheduleKey(cycle) {
+                return scheduleCycleMap[cycle || scheduleState.cycle] || 'monthly';
+            }
+
+            function selectHtml(id, options, value, extraClass) {
+                return '<select class="ed-select ' + (extraClass || '') + '" id="' + id + '">' + options.map(function (option) {
+                    const selected = option === value ? ' selected' : '';
+                    return '<option value="' + escapeHtml(option) + '"' + selected + '>' + escapeHtml(option) + '</option>';
+                }).join('') + '</select>';
+            }
+
+            function timeInputHtml(id, value) {
+                return '<span class="time-field"><input class="ed-input time-input" id="' + id + '" value="' + escapeHtml(value || '00:00:00') + '"><svg class="time-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>';
+            }
+
+            function renderRunFields(cycle) {
+                const key = getScheduleKey(cycle);
+                const data = scheduleState.run[key];
+                let html = '';
+                if (key === 'weekly') {
+                    html += selectHtml('scheduleWeekDay', scheduleOptionSets.weekDays, data.weekDay, 'schedule-wide-select');
+                } else if (key === 'monthly') {
+                    html += selectHtml('scheduleDay', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                } else if (key === 'quarterly') {
+                    html += selectHtml('scheduleQuarterMonth', scheduleOptionSets.quarterMonths, data.quarterMonth, 'schedule-wide-select');
+                    html += selectHtml('scheduleDay', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                } else if (key === 'yearly') {
+                    html += selectHtml('scheduleMonth', scheduleOptionSets.yearMonths, data.month, 'schedule-wide-select');
+                    html += selectHtml('scheduleDay', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                }
+                html += timeInputHtml('scheduleTime', data.time);
+                document.getElementById('scheduleRunFields').innerHTML = html;
+            }
+
+            function rangeOffsetOptions(key) {
+                if (key === 'daily') return scheduleOptionSets.dailyOffsets;
+                if (key === 'weekly') return scheduleOptionSets.weeklyOffsets;
+                if (key === 'monthly') return scheduleOptionSets.monthlyOffsets;
+                if (key === 'quarterly') return scheduleOptionSets.quarterlyOffsets;
+                return scheduleOptionSets.yearlyOffsets;
+            }
+
+            function renderRangeControls(point, cycle) {
+                const key = getScheduleKey(cycle);
+                const data = scheduleState.range[key][point];
+                const prefix = point === 'start' ? 'rangeStart' : 'rangeEnd';
+                let html = selectHtml(prefix + 'Offset', rangeOffsetOptions(key), data.offset, 'schedule-wide-select');
+                if (key === 'weekly') {
+                    html += selectHtml(prefix + 'WeekDay', scheduleOptionSets.weekDays, data.weekDay, 'schedule-wide-select');
+                } else if (key === 'monthly') {
+                    html += selectHtml(prefix + 'Day', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                } else if (key === 'quarterly') {
+                    html += selectHtml(prefix + 'QuarterMonth', scheduleOptionSets.quarterMonths, data.quarterMonth, 'schedule-wide-select');
+                    html += selectHtml(prefix + 'Day', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                } else if (key === 'yearly') {
+                    html += selectHtml(prefix + 'Month', scheduleOptionSets.yearMonths, data.month, 'schedule-wide-select');
+                    html += selectHtml(prefix + 'Day', scheduleOptionSets.monthDays, data.day, 'schedule-day-select');
+                }
+                html += timeInputHtml(prefix + 'Time', data.time);
+                document.getElementById(prefix + 'Controls').innerHTML = html;
+            }
+
+            function renderScheduleForm(cycle) {
+                renderRunFields(cycle);
+                renderRangeControls('start', cycle);
+                renderRangeControls('end', cycle);
+            }
+
+            function runText(key) {
+                const data = scheduleState.run[key];
+                if (key === 'daily') return data.time;
+                if (key === 'weekly') return data.weekDay + ' - ' + data.time;
+                if (key === 'monthly') return data.day + ' - ' + data.time;
+                if (key === 'quarterly') return data.quarterMonth + ' - ' + data.day + ' - ' + data.time;
+                return data.month + ' - ' + data.day + ' - ' + data.time;
+            }
+
+            function rangePointText(key, point) {
+                const data = scheduleState.range[key][point];
+                if (key === 'daily') return data.offset + ' ' + data.time;
+                if (key === 'weekly') return data.offset + ' ' + data.weekDay + ' ' + data.time;
+                if (key === 'monthly') return data.offset + ' ' + data.day + ' ' + data.time;
+                if (key === 'quarterly') return data.offset + ' ' + data.quarterMonth + ' ' + data.day + ' ' + data.time;
+                return data.offset + ' ' + data.month + ' ' + data.day + ' ' + data.time;
+            }
+
+            function updateScheduleSummary() {
+                const key = getScheduleKey();
+                document.getElementById('scheduleSummary').textContent = scheduleState.cycle + ' - ' + runText(key);
+                document.getElementById('rangeSummary').textContent = rangePointText(key, 'start') + ' - ' + rangePointText(key, 'end');
+            }
+
+            function fillScheduleForm() {
+                document.getElementById('scheduleCycle').value = scheduleState.cycle;
+                renderScheduleForm(scheduleState.cycle);
+            }
+
+            function getFieldValue(id, fallback) {
+                const field = document.getElementById(id);
+                return field ? field.value.trim() || fallback : fallback;
+            }
+
+            function openScheduleModal() {
+                fillScheduleForm();
+                document.getElementById('scheduleMask').classList.remove('hidden');
+                document.getElementById('scheduleModal').classList.remove('hidden');
+                document.getElementById('scheduleModal').setAttribute('aria-hidden', 'false');
+            }
+
+            function closeScheduleModal() {
+                document.getElementById('scheduleMask').classList.add('hidden');
+                document.getElementById('scheduleModal').classList.add('hidden');
+                document.getElementById('scheduleModal').setAttribute('aria-hidden', 'true');
+            }
+
+            function applyScheduleSettings() {
+                scheduleState.cycle = document.getElementById('scheduleCycle').value;
+                const key = getScheduleKey();
+                const run = scheduleState.run[key];
+                run.time = getFieldValue('scheduleTime', run.time || '00:00:00');
+                if (key === 'weekly') run.weekDay = getFieldValue('scheduleWeekDay', run.weekDay);
+                if (key === 'monthly') run.day = getFieldValue('scheduleDay', run.day);
+                if (key === 'quarterly') {
+                    run.quarterMonth = getFieldValue('scheduleQuarterMonth', run.quarterMonth);
+                    run.day = getFieldValue('scheduleDay', run.day);
+                }
+                if (key === 'yearly') {
+                    run.month = getFieldValue('scheduleMonth', run.month);
+                    run.day = getFieldValue('scheduleDay', run.day);
+                }
+                ['start', 'end'].forEach(function (point) {
+                    const prefix = point === 'start' ? 'rangeStart' : 'rangeEnd';
+                    const range = scheduleState.range[key][point];
+                    range.offset = getFieldValue(prefix + 'Offset', range.offset);
+                    range.time = getFieldValue(prefix + 'Time', range.time || '00:00:00');
+                    if (key === 'weekly') range.weekDay = getFieldValue(prefix + 'WeekDay', range.weekDay);
+                    if (key === 'monthly') range.day = getFieldValue(prefix + 'Day', range.day);
+                    if (key === 'quarterly') {
+                        range.quarterMonth = getFieldValue(prefix + 'QuarterMonth', range.quarterMonth);
+                        range.day = getFieldValue(prefix + 'Day', range.day);
+                    }
+                    if (key === 'yearly') {
+                        range.month = getFieldValue(prefix + 'Month', range.month);
+                        range.day = getFieldValue(prefix + 'Day', range.day);
+                    }
+                });
+                updateScheduleSummary();
+                closeScheduleModal();
+                showToast('执行机制设置已更新');
+            }
+
+            function showToast(text) {
+                const old = document.querySelector('.toast');
+                if (old) old.remove();
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = text;
+                document.body.appendChild(toast);
+                setTimeout(function () {
+                    toast.remove();
+                }, 1400);
+            }
+
+            function openFindBar() {
+                const bar = document.getElementById('findBar');
+                bar.classList.remove('hidden');
+                document.getElementById('findInput').focus();
+            }
+
+            function runFind(backward) {
+                const text = document.getElementById('findInput').value.trim();
+                if (!text) return;
+                article.focus();
+                window.find(text, false, backward, true, false, false, false);
+            }
+
+            toolbar.addEventListener('mousedown', function (event) {
+                if (event.target.closest('button')) {
+                    saveSelection();
+                    event.preventDefault();
+                } else if (event.target.closest('select') || event.target.closest('input')) {
+                    saveSelection();
+                }
+            });
+
+            toolbar.addEventListener('click', function (event) {
+                const cmdButton = event.target.closest('[data-cmd]');
+                const actionButton = event.target.closest('[data-action]');
+                if (cmdButton) {
+                    exec(cmdButton.dataset.cmd);
+                    return;
+                }
+                if (actionButton) {
+                    handleAction(actionButton.dataset.action);
+                }
+            });
+
+            document.getElementById('blockSelect').addEventListener('change', function () {
+                exec('formatBlock', this.value);
+                this.value = 'P';
+            });
+
+            document.getElementById('sizeSelect').addEventListener('change', function () {
+                if (this.value) applyInlineStyle('font-size:' + this.value + ';');
+                this.value = '';
+            });
+
+            document.getElementById('lineHeightSelect').addEventListener('change', function () {
+                if (this.value) applyInlineStyle('line-height:' + this.value + ';');
+                this.value = '';
+            });
+
+            document.getElementById('foreColor').addEventListener('change', function () {
+                exec('foreColor', this.value);
+            });
+
+            document.getElementById('backColor').addEventListener('change', function () {
+                exec('hiliteColor', this.value);
+            });
+
+            document.getElementById('btnImportWord').addEventListener('click', function () {
+                const input = document.getElementById('wordFileInput');
+                input.value = '';
+                input.click();
+            });
+            document.getElementById('wordFileInput').addEventListener('change', function () {
+                const file = this.files && this.files[0];
+                if (!file) return;
+                showToast('已选择 Word 文件：' + file.name);
+            });
+            document.getElementById('btnScheduleSetting').addEventListener('click', openScheduleModal);
+            document.getElementById('scheduleCycle').addEventListener('change', function () {
+                renderScheduleForm(this.value);
+            });
+            document.querySelectorAll('[data-schedule-close], #scheduleMask').forEach(function (item) {
+                item.addEventListener('click', closeScheduleModal);
+            });
+            document.getElementById('scheduleConfirm').addEventListener('click', applyScheduleSettings);
+
+            document.getElementById('btnInsertDashboard').addEventListener('click', openDashboardModal);
+            document.getElementById('btnBack').addEventListener('click', function () {
+                window.open('smart-report.html', '_self');
+            });
+            document.getElementById('btnPreview').addEventListener('click', function () {
+                window.open('smart-report.html', '_blank', 'noopener');
+            });
+            document.getElementById('btnSave').addEventListener('click', function () {
+                showToast('报告内容已保存');
+            });
+            document.getElementById('btnExit').addEventListener('click', function () {
+                window.close();
+                setTimeout(function () {
+                    window.location.href = 'smart-report.html';
+                }, 120);
+            });
+
+            sectionList.addEventListener('click', function (event) {
+                const link = event.target.closest('.section-link');
+                if (!link) return;
+                sectionList.querySelectorAll('.section-link').forEach(function (item) {
+                    item.classList.remove('active');
+                });
+                link.classList.add('active');
+                const target = document.getElementById(link.dataset.target);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            article.addEventListener('input', function () {
+                clearTimeout(article._sectionTimer);
+                article._sectionTimer = setTimeout(rebuildSectionList, 500);
+            });
+            article.addEventListener('keyup', saveSelection);
+            article.addEventListener('mouseup', saveSelection);
+            article.addEventListener('click', saveSelection);
+
+            document.addEventListener('selectionchange', saveSelection);
+
+            document.getElementById('dashboardGrid').addEventListener('click', function (event) {
+                const card = event.target.closest('.dashboard-card');
+                if (!card) return;
+                const id = card.dataset.id;
+                if (pickedDashboards.has(id)) {
+                    pickedDashboards.delete(id);
+                } else {
+                    pickedDashboards.add(id);
+                }
+                renderDashboardGrid();
+            });
+
+            document.getElementById('dashboardSearch').addEventListener('input', renderDashboardGrid);
+            document.getElementById('dashboardFilters').addEventListener('click', function (event) {
+                const button = event.target.closest('.filter-tab');
+                if (!button) return;
+                activeFilter = button.dataset.filter;
+                document.querySelectorAll('.filter-tab').forEach(function (item) {
+                    item.classList.toggle('active', item === button);
+                });
+                renderDashboardGrid();
+            });
+
+            document.querySelectorAll('[data-modal-close], #dashboardMask').forEach(function (item) {
+                item.addEventListener('click', closeDashboardModal);
+            });
+
+            document.getElementById('confirmInsertDashboard').addEventListener('click', function () {
+                const html = Array.from(pickedDashboards).map(function (id) {
+                    return dashboardEmbed(dashboards.find(function (item) { return item.id === id; }));
+                }).join('');
+                insertHtml(html);
+                closeDashboardModal();
+                showToast('已插入 ' + pickedDashboards.size + ' 个仪表盘');
+            });
+
+            document.getElementById('findInput').addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') runFind(event.shiftKey);
+                if (event.key === 'Escape') document.getElementById('findBar').classList.add('hidden');
+            });
+            document.getElementById('findPrev').addEventListener('click', function () { runFind(true); });
+            document.getElementById('findNext').addEventListener('click', function () { runFind(false); });
+            document.getElementById('findClose').addEventListener('click', function () {
+                document.getElementById('findBar').classList.add('hidden');
+            });
+
+            try {
+                document.execCommand('styleWithCSS', false, true);
+            } catch (error) {}
+
+            renderReport();
+            updateScheduleSummary();
+        })();
+    </script>
+</body>
+</html>

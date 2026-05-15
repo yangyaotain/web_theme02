@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能报告 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .report-sidebar {
+            width: 212px;
+            background: #fff;
+        }
+
+        .report-sidebar .sidebar-title {
+            height: 52px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e4e7ed;
+            font-size: 16px;
+        }
+
+        .smart-report-content {
+            margin-left: 212px;
+            padding: 0;
+            background: #f0f2f5;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sr-nav {
+            padding: 8px 0 16px;
+        }
+
+        .sr-section-title,
+        .sr-menu-item {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .sr-section-title {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            color: #303133;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .sr-section-title:hover {
+            background: #f5f7fa;
+        }
+
+        .sr-section-title .arrow {
+            margin-left: auto;
+            color: #909399;
+            transition: transform 0.15s;
+        }
+
+        .sr-section.open .sr-section-title .arrow {
+            transform: rotate(90deg);
+        }
+
+        .sr-sub {
+            display: none;
+            padding: 2px 0 8px;
+        }
+
+        .sr-section.open .sr-sub {
+            display: block;
+        }
+
+        .sr-menu-item {
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px 7px 34px;
+            color: #303133;
+            font-size: 13px;
+            line-height: 1.35;
+            text-align: left;
+        }
+
+        .sr-menu-item:hover {
+            background: #f5f7fa;
+            color: var(--forest-green);
+        }
+
+        .sr-menu-item.active {
+            background: #e8f5e9;
+            color: var(--forest-green);
+            font-weight: 700;
+            border-left: 2px solid var(--forest-green);
+            padding-left: 32px;
+        }
+
+        .sr-page {
+            min-height: calc(100vh - 64px);
+        }
+
+        .report-page {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            gap: 0;
+        }
+
+        .report-toc {
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            min-width: 0;
+            padding: 10px;
+            border-right: 1px solid #dcdfe6;
+            background: #fff;
+            overflow: auto;
+        }
+
+        .period-select {
+            width: 100%;
+            height: 32px;
+            padding: 0 28px 0 10px;
+            color: #303133;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .toc-panel {
+            margin-top: 10px;
+            padding: 12px 10px;
+            border: 1px solid #ebeef5;
+            background: #fff;
+        }
+
+        .toc-title {
+            margin-bottom: 10px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .toc-row {
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #303133;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .toc-row a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .toc-row a:hover {
+            color: var(--forest-green);
+        }
+
+        .toc-row.lv1 {
+            margin-top: 4px;
+            font-weight: 700;
+        }
+
+        .toc-row.lv2 {
+            padding-left: 20px;
+            color: #606266;
+        }
+
+        .toc-row.lv3 {
+            padding-left: 38px;
+            color: #606266;
+        }
+
+        .report-document {
+            min-width: 0;
+            padding: 16px 28px 40px;
+            background: #fff;
+        }
+
+        .report-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sr-btn,
+        .view-btn {
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 14px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .sr-btn:hover,
+        .view-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .sr-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .action-menu-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .action-trigger {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            cursor: pointer;
+        }
+
+        .action-trigger:hover {
+            color: var(--forest-green);
+        }
+
+        .action-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            z-index: 30;
+            display: none;
+            min-width: 132px;
+            padding: 8px 0;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .action-menu::before {
+            content: "";
+            position: absolute;
+            top: -9px;
+            right: 0;
+            width: 48px;
+            height: 9px;
+        }
+
+        .action-menu-wrap:hover .action-menu {
+            display: block;
+        }
+
+        .action-menu-item {
+            width: 100%;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px;
+            color: #303133;
+            background: #fff;
+            border: 0;
+            font-family: inherit;
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .action-menu-item:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .doc-title {
+            margin: 6px 0 14px;
+            color: #303133;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .doc-section {
+            margin-top: 18px;
+        }
+
+        .doc-section h3 {
+            margin-bottom: 10px;
+            color: #303133;
+            font-size: 15px;
+        }
+
+        .doc-section p {
+            max-width: 1080px;
+            margin: 0 0 10px;
+            color: #303133;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .report-chapter {
+            max-width: 1180px;
+            margin-top: 22px;
+            padding-top: 2px;
+            scroll-margin-top: 82px;
+        }
+
+        .report-chapter h2 {
+            margin: 0 0 12px;
+            color: #303133;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .report-subsection {
+            margin-top: 18px;
+            scroll-margin-top: 82px;
+        }
+
+        .report-subsection h3 {
+            margin: 0 0 10px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .report-paragraph {
+            max-width: 1080px;
+            margin: 0 0 10px;
+            color: #303133;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .report-highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin: 12px 0 16px;
+        }
+
+        .report-highlight {
+            padding: 12px 14px;
+            background: #f7fbf9;
+            border: 1px solid #dcefe6;
+            border-radius: 4px;
+        }
+
+        .highlight-title {
+            color: #303133;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .highlight-text {
+            margin-top: 6px;
+            color: #606266;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .report-list {
+            display: grid;
+            gap: 8px;
+            margin: 10px 0 16px;
+            padding: 12px 14px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .report-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: #303133;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .report-list-item::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            margin-top: 9px;
+            border-radius: 50%;
+            background: var(--forest-green);
+            flex-shrink: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin: 12px 0 16px;
+        }
+
+        .summary-card,
+        .kpi-card,
+        .chart-card,
+        .dashboard-card,
+        .board-panel {
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .summary-card {
+            padding: 12px 14px;
+        }
+
+        .summary-label {
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .summary-value {
+            margin-top: 6px;
+            color: var(--forest-green);
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .summary-unit {
+            margin-left: 3px;
+            color: #909399;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .mini-table-wrap {
+            max-width: 920px;
+            margin-top: 8px;
+            border: 1px solid #ebeef5;
+            overflow: auto;
+        }
+
+        .mini-table-wrap .data-table thead th,
+        .mini-table-wrap .data-table tbody td {
+            text-align: center;
+        }
+
+        .report-chart {
+            width: min(860px, 100%);
+            margin-top: 12px;
+            border: 1px solid #ebeef5;
+        }
+
+        .chart-title {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            color: #303133;
+            font-weight: 700;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .bar-chart {
+            height: 260px;
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr);
+            gap: 10px;
+            padding: 18px 18px 16px;
+        }
+
+        .axis-y {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: #909399;
+            font-size: 11px;
+            padding-bottom: 26px;
+        }
+
+        .bar-stage {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            padding: 0 4px 26px;
+            border-left: 1px solid #dcdfe6;
+            border-bottom: 1px solid #dcdfe6;
+            background: repeating-linear-gradient(to top, transparent 0, transparent 39px, #edf2f7 40px);
+        }
+
+        .bar-item {
+            min-width: 34px;
+            flex: 1;
+            height: var(--h);
+            max-width: 58px;
+            border-radius: 3px 3px 0 0;
+            background: linear-gradient(180deg, #409eff 0%, #76d8ee 100%);
+            position: relative;
+        }
+
+        .bar-item.alt {
+            background: linear-gradient(180deg, var(--forest-green) 0%, #6ee7b7 100%);
+        }
+
+        .bar-item strong {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #606266;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bar-label {
+            position: absolute;
+            left: 50%;
+            bottom: -22px;
+            transform: translateX(-50%);
+            color: #606266;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .board-page {
+            padding: 16px 18px 40px;
+        }
+
+        .board-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 12px;
+            padding: 0 2px;
+        }
+
+        .board-heading h1 {
+            margin: 0;
+            color: #303133;
+            font-size: 18px;
+        }
+
+        .board-heading p {
+            margin: 4px 0 0;
+            color: #606266;
+            font-size: 13px;
+        }
+
+        .board-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .kpi-card {
+            min-height: 92px;
+            padding: 14px 16px;
+        }
+
+        .kpi-label {
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .kpi-value {
+            margin-top: 8px;
+            color: #303133;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .kpi-trend {
+            margin-top: 10px;
+            color: var(--forest-green);
+            font-size: 12px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(360px, 0.7fr);
+            gap: 10px;
+        }
+
+        .chart-card {
+            min-width: 0;
+        }
+
+        .chart-card.large {
+            min-height: 390px;
+        }
+
+        .chart-card .bar-chart {
+            height: 310px;
+        }
+
+        .line-chart {
+            height: 310px;
+            padding: 18px;
+        }
+
+        .line-chart svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            padding: 12px 14px 0;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 8px;
+            display: inline-block;
+            margin-right: 5px;
+            border-radius: 2px;
+            background: var(--forest-green);
+        }
+
+        .board-panel {
+            margin-top: 10px;
+            padding: 12px 14px;
+        }
+
+        .panel-title {
+            margin-bottom: 10px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(260px, 0.85fr) minmax(360px, 1.15fr) minmax(280px, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .dashboard-card {
+            min-width: 0;
+            min-height: 244px;
+            padding: 12px 14px;
+        }
+
+        .donut-layout {
+            display: grid;
+            grid-template-columns: 122px minmax(0, 1fr);
+            gap: 16px;
+            align-items: center;
+            padding-top: 6px;
+        }
+
+        .donut-chart {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            border-radius: 50%;
+            background: var(--donut-bg);
+        }
+
+        .donut-chart::after {
+            content: "";
+            position: absolute;
+            inset: 28px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #ebeef5;
+        }
+
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            color: #303133;
+            font-size: 12px;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .donut-center strong {
+            color: var(--forest-green);
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .donut-legend {
+            display: grid;
+            gap: 8px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .legend-row {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr) 42px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .legend-row i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--c);
+        }
+
+        .rank-list {
+            display: grid;
+            gap: 11px;
+            padding-top: 4px;
+        }
+
+        .rank-row {
+            display: grid;
+            grid-template-columns: 86px minmax(0, 1fr) 48px;
+            gap: 10px;
+            align-items: center;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .rank-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-track {
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #f0f2f5;
+        }
+
+        .rank-track span {
+            display: block;
+            height: 100%;
+            width: var(--w);
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--forest-green) 0%, #64d8cb 100%);
+        }
+
+        .heat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            padding-top: 4px;
+        }
+
+        .heat-cell {
+            min-height: 58px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            background: #f7fbff;
+        }
+
+        .heat-cell.hot {
+            background: #eef8f4;
+            border-color: var(--forest-green-200);
+        }
+
+        .heat-cell.warn {
+            background: #fff8ec;
+            border-color: #f3d19e;
+        }
+
+        .heat-cell span {
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .heat-cell strong {
+            color: #303133;
+            font-size: 16px;
+        }
+
+        .menu-page {
+            min-height: calc(100vh - 64px);
+            padding: 16px 10px 40px;
+            background: #fff;
+        }
+
+        .menu-title {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .menu-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+        }
+
+        .menu-actions,
+        .menu-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sr-input {
+            width: 240px;
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .sr-input:focus {
+            border-color: var(--forest-green);
+        }
+
+        .table-tools {
+            height: 34px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            color: #606266;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid #ebeef5;
+        }
+
+        .tree-cell {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: var(--indent);
+            color: #303133;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tree-toggle {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            border: 1px solid #dcdfe6;
+            border-radius: 2px;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .row-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--forest-green);
+        }
+
+        .row-icon-btn {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            color: var(--forest-green);
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .row-icon-btn:hover {
+            color: var(--forest-green-700);
+        }
+
+        .row-icon-btn.danger {
+            color: #f56c6c;
+        }
+
+        .row-actions .danger {
+            color: #f56c6c;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            height: 22px;
+            padding: 0 8px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 400;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .drawer-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+            background: rgba(0,0,0,0.42);
+        }
+
+        .drawer-mask.open {
+            display: block;
+        }
+
+        .menu-drawer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 520px;
+            max-width: calc(100vw - 48px);
+            height: 100vh;
+            background: #fff;
+            box-shadow: -8px 0 28px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer-head {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 22px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .drawer-close {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .drawer-close:hover {
+            color: var(--forest-green);
+        }
+
+        .drawer-title {
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .drawer-body {
+            flex: 1;
+            overflow: auto;
+            padding: 24px 22px 28px;
+        }
+
+        .drawer-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .drawer-row {
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr);
+            align-items: center;
+            column-gap: 12px;
+        }
+
+        .drawer-label {
+            color: #303133;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .drawer-label.required::before {
+            content: "*";
+            margin-right: 4px;
+            color: #f56c6c;
+        }
+
+        .drawer-input,
+        .drawer-select {
+            width: 100%;
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .drawer-select {
+            padding-right: 28px;
+            appearance: none;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23909399' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E") right 8px center no-repeat;
+        }
+
+        .drawer-input:focus,
+        .drawer-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .drawer-input:disabled,
+        .drawer-select:disabled {
+            color: #909399;
+            background: #f5f7fa;
+            cursor: not-allowed;
+        }
+
+        .drawer-number {
+            max-width: 160px;
+        }
+
+        .drawer-radio-line,
+        .drawer-check-line,
+        .drawer-switch-line {
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #606266;
+            font-size: 13px;
+        }
+
+        .drawer-radio-line label,
+        .drawer-check-line label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .drawer-switch {
+            width: 38px;
+            height: 20px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 6px;
+            color: #fff;
+            background: #c0c4cc;
+            border-radius: 10px;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .drawer-switch::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+        }
+
+        .drawer-switch.on {
+            justify-content: flex-start;
+            padding-left: 6px;
+            padding-right: 0;
+            background: var(--forest-green);
+        }
+
+        .drawer-switch.on::after {
+            left: 20px;
+        }
+
+        .drawer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding-top: 18px;
+        }
+
+        @media (max-width: 1280px) {
+            .report-page {
+                grid-template-columns: 260px minmax(0, 1fr);
+            }
+
+            .summary-list,
+            .kpi-grid,
+            .report-highlight-grid {
+                grid-template-columns: repeat(2, minmax(180px, 1fr));
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item active">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar report-sidebar">
+            <div class="sidebar-title">
+                <span>智能报告</span>
+                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+            </div>
+            <nav class="sr-nav">
+                <div class="sr-section open">
+                    <button class="sr-section-title" type="button">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2 5 5h-5V4z"/></svg>
+                        智能报告
+                        <svg class="icon arrow" viewBox="0 0 24 24"><path d="M10 6 8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+                    </button>
+                    <div class="sr-sub">
+                        <button class="sr-menu-item active" type="button" data-page="report-monthly">运营服务月报</button>
+                        <button class="sr-menu-item" type="button" data-page="report-resource">资源供给分析</button>
+                        <button class="sr-menu-item" type="button" data-page="report-transaction">交易履约报告</button>
+                        <button class="sr-menu-item" type="button" data-page="report-quality">治理质量周报</button>
+                    </div>
+                </div>
+                <div class="sr-section open">
+                    <button class="sr-section-title" type="button">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M5 9h2v10H5V9zm4-4h2v14H9V5zm4 7h2v7h-2v-7zm4-9h2v16h-2V3zM3 21h18v-2H3v2z"/></svg>
+                        数据看板
+                        <svg class="icon arrow" viewBox="0 0 24 24"><path d="M10 6 8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+                    </button>
+                    <div class="sr-sub">
+                        <button class="sr-menu-item" type="button" data-page="board-overview">运营总览</button>
+                        <button class="sr-menu-item" type="button" data-page="board-resource">资源供需</button>
+                        <button class="sr-menu-item" type="button" data-page="board-trade">交易服务</button>
+                        <button class="sr-menu-item" type="button" data-page="board-governance">治理质量</button>
+                    </div>
+                </div>
+                <div class="sr-section open">
+                    <button class="sr-section-title" type="button">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.3 7.3 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.3 7.3 0 0 0 7 6L4.6 5 2.6 8.5l2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.3 7.3 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.3 7.3 0 0 0 17 18l2.4 1 2-3.5-2-1.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"/></svg>
+                        系统管理
+                        <svg class="icon arrow" viewBox="0 0 24 24"><path d="M10 6 8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+                    </button>
+                    <div class="sr-sub">
+                        <button class="sr-menu-item" type="button" data-page="menu-management">菜单管理</button>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content smart-report-content">
+            <div id="contentRoot" class="sr-page"></div>
+        </main>
+    </div>
+
+    <div class="drawer-mask" id="menuDrawer" aria-hidden="true">
+        <aside class="menu-drawer" role="dialog" aria-modal="true" aria-labelledby="menuDrawerTitle">
+            <div class="drawer-head">
+                <button class="drawer-close" type="button" id="drawerClose" title="关闭">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+                </button>
+                <div class="drawer-title" id="menuDrawerTitle">编辑菜单</div>
+            </div>
+            <div class="drawer-body">
+                <form class="drawer-form" id="menuDrawerForm">
+                    <div class="drawer-row">
+                        <label class="drawer-label required">菜单类型</label>
+                        <div class="drawer-radio-line">
+                            <label><input type="radio" name="drawerMenuType" value="一级菜单"> 一级菜单</label>
+                            <label><input type="radio" name="drawerMenuType" value="子菜单"> 子菜单</label>
+                        </div>
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label required">菜单名称</label>
+                        <input class="drawer-input" id="drawerMenuName" value="">
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label required">上级菜单</label>
+                        <select class="drawer-select" id="drawerParentMenu">
+                            <option>智能报告</option>
+                            <option>数据看板</option>
+                            <option>系统管理</option>
+                        </select>
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label">页面类型</label>
+                        <select class="drawer-select" id="drawerPageType">
+                            <option>智能报告</option>
+                            <option>数据看板</option>
+                            <option>菜单管理</option>
+                        </select>
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label required">图标</label>
+                        <input class="drawer-input" id="drawerMenuIcon" value="">
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label">排序</label>
+                        <input class="drawer-input drawer-number" id="drawerMenuSort" value="0">
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label">菜单共享</label>
+                        <div class="drawer-check-line">
+                            <label><input type="checkbox" id="drawerShared"> </label>
+                        </div>
+                    </div>
+                    <div class="drawer-row">
+                        <label class="drawer-label">是否开启事件</label>
+                        <div class="drawer-switch-line">
+                            <span class="drawer-switch" id="drawerEventSwitch">否</span>
+                        </div>
+                    </div>
+                    <div class="drawer-actions">
+                        <button class="sr-btn primary" type="button" id="drawerSave">保存</button>
+                        <button class="sr-btn" type="button" id="drawerCancel">取消</button>
+                    </div>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <script src="js/admin-topbar.js"></script>
+    <script>
+        const reportPages = {
+            'report-monthly': {
+                title: '数据服务运营月报',
+                period: '2026年5月',
+                tocTitle: '数据服务运营月报目录',
+                summary: [
+                    ['服务请求', '17,248', '次'],
+                    ['数据产品调用', '8,642', '次'],
+                    ['需求撮合', '236', '单'],
+                    ['问题闭环率', '98.6', '%']
+                ],
+                chapters: [
+                    {
+                        title: '第一章 总体说明',
+                        paragraphs: [
+                            '2026年5月，平台数据服务总体运行平稳，资源发布、产品订购、需求对接和接口服务均保持增长。交通运行、企业服务和低空经济相关场景调用活跃，是本期主要增量来源。',
+                            '本期运营重点从资源供给转向服务转化，平台服务请求17,248次，数据产品调用8,642次，需求撮合236单，问题闭环率98.6%。'
+                        ],
+                        highlights: [
+                            ['运行态势', '核心链路可用性保持在99.6%，未出现影响业务连续性的系统故障。'],
+                            ['业务增长', '服务请求较上月增长8.4%，其中接口调用贡献主要增量。'],
+                            ['改进重点', '部分低频目录检索命中率偏低，需优化标签和推荐策略。']
+                        ]
+                    },
+                    {
+                        title: '第二章 项目汇总',
+                        children: [
+                            {
+                                title: '2.1 业务域情况',
+                                paragraphs: ['本期累计支撑36个业务项目，覆盖政务服务、交通运行、企业服务和低空经济四个重点业务域，汇聚数据量70.6TB。'],
+                                table: [
+                                    ['业务域', '项目数', '服务请求', '接口数', '数据量(TB)', '完成率'],
+                                    ['政务服务', '12', '4,260', '38', '18.6', '98%'],
+                                    ['交通运行', '9', '5,410', '42', '22.3', '97%'],
+                                    ['企业服务', '8', '3,984', '31', '15.9', '96%'],
+                                    ['低空经济', '7', '3,594', '27', '13.8', '94%']
+                                ]
+                            },
+                            {
+                                title: '2.2 服务运行情况',
+                                paragraphs: ['服务运行以API调用、数据集下载和专题看板访问为主，本期接口调用8,642次，专题看板日均访问612次。接口响应耗时稳定在平台目标范围内，超时请求主要来自外部同步源。'],
+                                highlights: [
+                                    ['接口响应', 'P95响应耗时为280ms，较上月下降18ms。'],
+                                    ['下载服务', '数据集下载成功率为99.1%，失败记录已完成补偿。'],
+                                    ['看板访问', '专题看板日均访问612次，交通运行看板访问最高。']
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第三章 业务指标统计',
+                        children: [
+                            {
+                                title: '3.1 指标推送',
+                                paragraphs: ['指标推送主要面向运营分析、监管协同和业务专题看板，任务整体稳定，异常任务均完成补偿处理。'],
+                                chart: {
+                                    title: '5月业务指标推送数',
+                                    labels: ['资源', '订单', '需求', '接口', '质量', '低空', '交通', '企业'],
+                                    values: [24, 18, 20, 31, 16, 22, 28, 19]
+                                }
+                            },
+                            {
+                                title: '3.2 趋势分析',
+                                paragraphs: ['月内业务请求在第三周达到峰值，主要受企业服务批量核验和交通专题分析任务带动。'],
+                                table: [
+                                    ['周期', '服务请求', '产品调用', '需求撮合', '问题闭环'],
+                                    ['第1周', '3,840', '1,924', '48', '23'],
+                                    ['第2周', '4,126', '2,031', '56', '28'],
+                                    ['第3周', '4,892', '2,486', '72', '31'],
+                                    ['第4周', '4,390', '2,201', '60', '29']
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第四章 问题与改进',
+                        paragraphs: ['本期问题主要集中在低频目录曝光不足、个别接口字段说明不完整、外部数据源同步延迟三个方面。'],
+                        list: [
+                            '补齐低频目录的业务标签和适用场景说明，提升搜索命中率。',
+                            '对企业服务、交通运行相关接口补充字段注释和示例返回值。',
+                            '将外部同步源延迟监控纳入周度巡检，超过阈值时自动提醒责任人。'
+                        ]
+                    }
+                ]
+            },
+            'report-resource': {
+                title: '资源供给分析报告',
+                period: '2026年5月',
+                tocTitle: '资源供给分析报告目录',
+                summary: [
+                    ['新增资源', '128', '项'],
+                    ['已发布接口', '416', '个'],
+                    ['资源上架率', '92.4', '%'],
+                    ['热门目录', '3', '个']
+                ],
+                chapters: [
+                    {
+                        title: '第一章 供给概况',
+                        paragraphs: [
+                            '本期平台资源供给侧持续扩充，新增资源集中在城市交通运行、市场主体画像和公共信用服务三个方向。资源结构以数据库表、API服务和文件类产品为主。',
+                            '资源供给质量较上月提升，新增资源中完成字段注释、目录标签和使用说明配置的比例达到94.2%。'
+                        ],
+                        highlights: [
+                            ['供给结构', 'API服务占新增资源42%，主题数据表占37%，文件类产品占21%。'],
+                            ['目录热度', '交通运行、企业服务、公共信用三个目录访问量居前。'],
+                            ['治理进度', '历史低频资源已完成首轮复核，建议继续推进归档评估。']
+                        ]
+                    },
+                    {
+                        title: '第二章 目录与资源分布',
+                        children: [
+                            {
+                                title: '2.1 重点目录分布',
+                                paragraphs: ['资源目录覆盖12个业务主题，高频访问目录主要来自交通、企业服务、空间治理和生态环境。'],
+                                table: [
+                                    ['目录', '资源数', '上架数', '调用次数', '负责人'],
+                                    ['交通运行', '186', '171', '2,931', '数据运营组'],
+                                    ['企业服务', '152', '144', '2,208', '产业服务组'],
+                                    ['空间治理', '116', '103', '1,506', '城市治理组'],
+                                    ['生态环境', '94', '86', '1,012', '公共数据组']
+                                ]
+                            },
+                            {
+                                title: '2.2 资源发布趋势',
+                                paragraphs: ['资源发布节奏较上月更平稳，周度新增资源保持在20项以上。'],
+                                chart: {
+                                    title: '周度资源发布数',
+                                    labels: ['第1周', '第2周', '第3周', '第4周'],
+                                    values: [23, 27, 35, 43]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        title: '第三章 供需匹配分析',
+                        children: [
+                            {
+                                title: '3.1 需求命中情况',
+                                paragraphs: ['本期需求命中率为84.3%，企业服务与交通运行类需求匹配效率最高。低空经济需求增长较快，但部分新场景仍需补充实时数据资源。'],
+                                table: [
+                                    ['需求场景', '需求数', '已匹配', '匹配率', '缺口说明'],
+                                    ['企业画像', '86', '78', '90.7%', '字段覆盖较完整'],
+                                    ['交通热力', '64', '58', '90.6%', '时空粒度需细化'],
+                                    ['低空经济', '42', '31', '73.8%', '实时气象资源不足'],
+                                    ['信用核验', '38', '34', '89.5%', '接口授权待优化']
+                                ]
+                            },
+                            {
+                                title: '3.2 后续补充方向',
+                                list: [
+                                    '围绕低空经济补充空域、气象、飞行计划和应急保障数据。',
+                                    '对交通热力资源增加分钟级聚合口径，支撑更多实时分析场景。',
+                                    '将企业服务高频字段沉淀为标准数据产品，减少重复加工。'
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第四章 管理建议',
+                        paragraphs: ['建议按照“高频优先、场景牵引、低频归档”的原则优化资源目录运营，优先保障成交和需求转化能力强的目录。']
+                    }
+                ]
+            },
+            'report-transaction': {
+                title: '交易履约报告',
+                period: '2026年5月',
+                tocTitle: '交易履约报告目录',
+                summary: [
+                    ['订单总数', '1,268', '单'],
+                    ['履约完成', '1,214', '单'],
+                    ['退款率', '0.8', '%'],
+                    ['平均交付', '1.7', '天']
+                ],
+                chapters: [
+                    {
+                        title: '第一章 总体说明',
+                        paragraphs: [
+                            '本期交易服务总体稳定，企业画像、交通热力和信用核验类数据产品成交量较高。订单处理以自动化交付为主，人工复核集中在敏感字段与用途核验环节。',
+                            '合同签署与交付确认平均耗时持续缩短，标准数据产品交付链路已基本形成稳定闭环。'
+                        ],
+                        highlights: [
+                            ['交易规模', '订单总数1,268单，较上月增长12.1%。'],
+                            ['履约效率', '已完成订单1,214单，平均交付周期1.7天。'],
+                            ['风险关注', '个别订单需补充数据用途说明，需强化下单前校验。']
+                        ]
+                    },
+                    {
+                        title: '第二章 订单与履约概况',
+                        children: [
+                            {
+                                title: '2.1 订单结构',
+                                paragraphs: ['本期订单以标准数据产品和API调用订阅为主，行业解决方案类订单金额较高但数量占比不高。'],
+                                table: [
+                                    ['订单类型', '订单数', '占比', '成交金额', '主要场景'],
+                                    ['标准数据产品', '782', '61.7%', '186.4万', '企业画像、交通热力'],
+                                    ['API订阅', '314', '24.8%', '124.8万', '信用核验、地址清洗'],
+                                    ['专题数据包', '118', '9.3%', '92.6万', '空间治理、低空经济'],
+                                    ['解决方案交付', '54', '4.2%', '82.4万', '监管分析、行业报告']
+                                ]
+                            },
+                            {
+                                title: '2.2 履约效率',
+                                paragraphs: ['订单履约状态分布如下，已完成订单占比保持高位，待补充订单主要由用途说明不完整触发。'],
+                                table: [
+                                    ['状态', '订单数', '占比', '平均耗时', '备注'],
+                                    ['已完成', '1,214', '95.7%', '1.7天', '正常'],
+                                    ['交付中', '42', '3.3%', '0.8天', '跟进中'],
+                                    ['待补充', '8', '0.6%', '1.1天', '补充用途'],
+                                    ['已取消', '4', '0.4%', '-', '用户取消']
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第三章 产品成交分析',
+                        children: [
+                            {
+                                title: '3.1 热门产品',
+                                paragraphs: ['热门产品集中在企业经营、交通出行和公共信用三个方向，复购率较高。'],
+                                chart: {
+                                    title: '周度订单履约数',
+                                    labels: ['第1周', '第2周', '第3周', '第4周'],
+                                    values: [286, 302, 358, 322]
+                                }
+                            },
+                            {
+                                title: '3.2 行业客户',
+                                paragraphs: ['行业客户中，园区运营、金融风控和交通服务机构贡献订单较多。大型客户更关注接口稳定性、交付留痕和费用对账。'],
+                                table: [
+                                    ['客户类型', '订单数', '成交金额', '复购率', '关注点'],
+                                    ['园区运营', '318', '126.2万', '42%', '企业画像'],
+                                    ['金融风控', '246', '118.5万', '39%', '信用核验'],
+                                    ['交通服务', '204', '94.1万', '34%', '出行热力'],
+                                    ['政务协同', '156', '72.7万', '28%', '合规留痕']
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第四章 风险与改进',
+                        paragraphs: ['本期交易风险总体可控，主要风险点集中在用途说明、授权边界和交付确认三个环节。'],
+                        list: [
+                            '在下单环节增加用途说明必填校验，降低待补充订单比例。',
+                            '对高敏字段产品增加二次确认和授权范围提示。',
+                            '在交付确认页展示数据版本、交付时间和验收责任人，增强留痕完整性。'
+                        ]
+                    }
+                ]
+            },
+            'report-quality': {
+                title: '治理质量周报',
+                period: '2026年第20周',
+                tocTitle: '治理质量周报目录',
+                summary: [
+                    ['巡检表数', '842', '张'],
+                    ['问题项', '36', '个'],
+                    ['闭环率', '96.1', '%'],
+                    ['元数据完整率', '94.8', '%']
+                ],
+                chapters: [
+                    {
+                        title: '第一章 质量概况',
+                        paragraphs: [
+                            '本周治理质量运行稳定，巡检范围覆盖核心主题库、接口服务和数据产品交付链路。问题以元数据补全、字段口径统一和更新频率校验为主。',
+                            '元数据完整率继续提升，核心库表字段注释、来源说明和更新周期配置更完整。'
+                        ],
+                        highlights: [
+                            ['巡检范围', '覆盖842张表、416个接口和38个重点数据产品。'],
+                            ['问题闭环', '本周关闭问题36个，闭环率达到96.1%。'],
+                            ['重点风险', '外部同步源延迟仍是质量波动的主要来源。']
+                        ]
+                    },
+                    {
+                        title: '第二章 问题分类',
+                        children: [
+                            {
+                                title: '2.1 问题分布',
+                                paragraphs: ['各类问题分布如下，字段注释缺失已安排批量修订。'],
+                                table: [
+                                    ['问题类型', '数量', '影响范围', '处理状态', '负责人'],
+                                    ['字段注释缺失', '14', '主题表', '处理中', '数据治理组'],
+                                    ['口径不一致', '9', '指标项', '已分派', '指标运营组'],
+                                    ['更新延迟', '7', '接口', '已修复', '运维组'],
+                                    ['权限缺失', '6', '看板', '处理中', '权限管理员']
+                                ]
+                            },
+                            {
+                                title: '2.2 闭环趋势',
+                                paragraphs: ['质量问题数量较上周下降，治理闭环效率提升。'],
+                                chart: {
+                                    title: '质量问题闭环数',
+                                    labels: ['周一', '周二', '周三', '周四', '周五'],
+                                    values: [8, 11, 6, 9, 12]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        title: '第三章 规则执行情况',
+                        children: [
+                            {
+                                title: '3.1 校验规则',
+                                paragraphs: ['本周新增5条质量校验规则，主要覆盖日期格式、枚举值范围、主键唯一性和空值比例。'],
+                                table: [
+                                    ['规则类型', '规则数', '命中问题', '处理建议'],
+                                    ['完整性', '36', '14', '补充缺失字段'],
+                                    ['一致性', '28', '9', '统一指标口径'],
+                                    ['及时性', '18', '7', '检查同步链路'],
+                                    ['安全性', '16', '6', '复核权限配置']
+                                ]
+                            },
+                            {
+                                title: '3.2 重点数据源',
+                                list: [
+                                    '对订单主题库增加日终校验，确保看板统计和报表口径一致。',
+                                    '对交通运行外部同步源增加延迟阈值告警。',
+                                    '对企业画像相关字段补充脱敏说明和数据来源。'
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: '第四章 改进计划',
+                        paragraphs: ['下周重点推进字段注释补全、指标口径复核和外部同步源监控，确保治理质量与业务发布节奏同步。']
+                    }
+                ]
+            }
+        };
+
+        const boardPages = {
+            'board-overview': {
+                title: '运营总览看板',
+                desc: '平台用户、资源、订单与服务响应的综合运营情况。',
+                kpis: [
+                    ['注册用户', '12,486', '较上月 +8.2%'],
+                    ['数据资源', '3,216', '本月新增 128'],
+                    ['交易订单', '1,268', '履约率 95.7%'],
+                    ['服务响应率', '99.6%', '稳定运行']
+                ],
+                chartTitle: '平台核心业务趋势',
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                bars: [72, 88, 96, 112, 128, 136],
+                line: [78, 82, 86, 91, 96, 99],
+                sideTitle: '业务活跃度',
+                sideValues: [42, 55, 48, 68, 73, 81],
+                insights: ['资源发布和订单转化同步增长，说明高频目录供给有效带动业务使用。', '企业服务、交通运行两个场景贡献了本期主要增量。', '接口调用峰值集中在工作日上午，建议保持现有弹性容量配置。']
+            },
+            'board-resource': {
+                title: '资源供需看板',
+                desc: '资源目录供给、需求对接和热门场景的运行情况。',
+                kpis: [
+                    ['资源目录', '42', '覆盖12个主题'],
+                    ['上架资源', '2,918', '上架率 90.7%'],
+                    ['需求发布', '326', '有效需求 291'],
+                    ['匹配成功率', '84.3%', '较上月 +3.6%']
+                ],
+                chartTitle: '资源供给与需求发布',
+                labels: ['交通', '企业', '信用', '空间', '低空', '生态'],
+                bars: [186, 152, 126, 116, 84, 94],
+                line: [78, 64, 42, 38, 31, 27],
+                sideTitle: '热门目录访问',
+                sideValues: [86, 73, 61, 54, 49, 45],
+                insights: ['交通运行、企业服务和公共信用目录供需活跃度最高。', '低空经济目录新增需求较快，建议补充实时气象与飞行空域相关数据。', '低频目录保留但降低展示权重，减少资源检索噪音。']
+            },
+            'board-trade': {
+                title: '交易服务看板',
+                desc: '订单、合同、交付和费用结算相关指标。',
+                kpis: [
+                    ['订单总数', '1,268', '本月 +12.1%'],
+                    ['合同确认', '936', '平均 0.8 天'],
+                    ['交付完成', '1,214', '完成率 95.7%'],
+                    ['结算金额', '486.2万', '较上月 +9.4%']
+                ],
+                chartTitle: '交易履约趋势',
+                labels: ['第1周', '第2周', '第3周', '第4周'],
+                bars: [286, 302, 358, 322],
+                line: [92, 94, 96, 97],
+                sideTitle: '产品成交分布',
+                sideValues: [72, 68, 53, 41, 32],
+                insights: ['企业画像、交通热力和信用核验类产品成交靠前。', '本期交付完成率提升，合同确认环节仍是主要等待点。', '大额订单集中在行业解决方案类产品，需同步关注交付验收记录。']
+            },
+            'board-governance': {
+                title: '治理质量看板',
+                desc: '元数据完整性、质量巡检和问题闭环情况。',
+                kpis: [
+                    ['巡检任务', '842', '覆盖核心库表'],
+                    ['质量问题', '36', '较上周 -11'],
+                    ['闭环率', '96.1%', '较上周 +2.4%'],
+                    ['完整率', '94.8%', '持续提升']
+                ],
+                chartTitle: '质量问题处理趋势',
+                labels: ['周一', '周二', '周三', '周四', '周五'],
+                bars: [8, 11, 6, 9, 12],
+                line: [86, 90, 91, 94, 96],
+                sideTitle: '问题分类占比',
+                sideValues: [39, 25, 19, 17],
+                insights: ['字段注释缺失问题下降，但指标口径一致性仍需持续治理。', '接口更新延迟主要集中在外部同步源，已纳入专项监控。', '权限类问题数量可控，建议继续沿用看板发布前校验规则。']
+            }
+        };
+
+        const menuRows = [
+            ['智能报告', '一级菜单', '0', '启用', 0],
+            ['运营服务月报', '子菜单', '1', '启用', 1],
+            ['资源供给分析', '子菜单', '2', '启用', 1],
+            ['交易履约报告', '子菜单', '3', '启用', 1],
+            ['治理质量周报', '子菜单', '4', '启用', 1],
+            ['数据看板', '一级菜单', '1', '启用', 0],
+            ['运营总览', '子菜单', '1', '启用', 1],
+            ['资源供需', '子菜单', '2', '启用', 1],
+            ['交易服务', '子菜单', '3', '启用', 1],
+            ['治理质量', '子菜单', '4', '启用', 1],
+            ['系统管理', '一级菜单', '2', '启用', 0],
+            ['菜单管理', '子菜单', '1', '启用', 1]
+        ];
+
+        function renderBars(labels, values, altEvery) {
+            const max = Math.max(...values, 1);
+            return labels.map((label, index) => {
+                const height = Math.max(12, Math.round(values[index] / max * 100));
+                return '<div class="bar-item' + (altEvery && index % 2 ? ' alt' : '') + '" style="--h:' + height + '%">'
+                    + '<strong>' + values[index] + '</strong><span class="bar-label">' + label + '</span></div>';
+            }).join('');
+        }
+
+        function renderBarChart(labels, values, altEvery) {
+            return '<div class="bar-chart">'
+                + '<div class="axis-y"><span>高</span><span>中</span><span>低</span></div>'
+                + '<div class="bar-stage">' + renderBars(labels, values, altEvery) + '</div>'
+                + '</div>';
+        }
+
+        function renderLineChart(labels, values) {
+            const max = Math.max(...values, 1);
+            const min = Math.min(...values, 0);
+            const range = Math.max(max - min, 1);
+            const points = values.map((value, index) => {
+                const x = 30 + index * (520 / Math.max(values.length - 1, 1));
+                const y = 240 - ((value - min) / range) * 190;
+                return x + ',' + y;
+            }).join(' ');
+            const labelsSvg = labels.map((label, index) => {
+                const x = 30 + index * (520 / Math.max(labels.length - 1, 1));
+                return '<text x="' + x + '" y="282" text-anchor="middle">' + label + '</text>';
+            }).join('');
+            return '<div class="line-chart"><svg viewBox="0 0 590 300" preserveAspectRatio="none">'
+                + '<g stroke="#e4e7ed" stroke-width="1"><line x1="30" y1="50" x2="560" y2="50"/><line x1="30" y1="97" x2="560" y2="97"/><line x1="30" y1="145" x2="560" y2="145"/><line x1="30" y1="192" x2="560" y2="192"/><line x1="30" y1="240" x2="560" y2="240"/></g>'
+                + '<polyline points="' + points + '" fill="none" stroke="#409eff" stroke-width="4"/>'
+                + '<polygon points="' + points + ' 550,240 30,240" fill="rgba(64,158,255,0.12)"/>'
+                + '<g fill="#606266" font-size="12">' + labelsSvg + '</g>'
+                + '</svg></div>';
+        }
+
+        function renderBoardDashboards(data) {
+            const colors = ['#409eff', 'var(--forest-green)', '#f59e0b', '#67c23a', '#909399'];
+            const distribution = data.labels.slice(0, 4).map((label, index) => ({
+                label,
+                value: data.sideValues[index] || data.bars[index] || 0,
+                color: colors[index]
+            }));
+            const total = Math.max(distribution.reduce((sum, item) => sum + item.value, 0), 1);
+            let cursor = 0;
+            const donutBg = distribution.map(item => {
+                const start = cursor;
+                const percent = Math.max(6, Math.round(item.value / total * 100));
+                cursor += percent;
+                return item.color + ' ' + start + '% ' + Math.min(cursor, 100) + '%';
+            }).join(',');
+            const legend = distribution.map(item => {
+                const percent = Math.round(item.value / total * 100);
+                return '<div class="legend-row"><i style="--c:' + item.color + '"></i><span>' + item.label + '</span><strong>' + percent + '%</strong></div>';
+            }).join('');
+            const maxBar = Math.max(...data.bars, 1);
+            const ranks = data.labels.map((label, index) => ({
+                label,
+                value: data.bars[index] || 0
+            })).sort((a, b) => b.value - a.value).slice(0, 5).map(item =>
+                '<div class="rank-row"><span class="rank-name">' + item.label + '</span><div class="rank-track"><span style="--w:' + Math.max(8, Math.round(item.value / maxBar * 100)) + '%"></span></div><strong>' + item.value + '</strong></div>'
+            ).join('');
+            const heat = data.labels.slice(0, 6).map((label, index) => {
+                const value = data.line[index] || data.sideValues[index] || data.bars[index] || 0;
+                const level = value >= 90 ? ' hot' : value >= 70 ? ' warn' : '';
+                return '<div class="heat-cell' + level + '"><span>' + label + '</span><strong>' + value + '</strong></div>';
+            }).join('');
+            return '<div class="dashboard-grid">'
+                + '<div class="dashboard-card"><div class="panel-title">业务结构分布</div><div class="donut-layout"><div class="donut-chart" style="--donut-bg:conic-gradient(' + donutBg + ')"><div class="donut-center"><strong>' + total + '</strong><span>合计</span></div></div><div class="donut-legend">' + legend + '</div></div></div>'
+                + '<div class="dashboard-card"><div class="panel-title">指标贡献排行</div><div class="rank-list">' + ranks + '</div></div>'
+                + '<div class="dashboard-card"><div class="panel-title">周期活跃热力</div><div class="heat-grid">' + heat + '</div></div>'
+                + '</div>';
+        }
+
+        function renderActionMenu(editHref) {
+            const editItem = editHref
+                ? '<a class="action-menu-item" href="' + editHref + '" target="_blank" rel="noopener" data-action="edit"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>编辑</a>'
+                : '<button class="action-menu-item" type="button"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>编辑</button>';
+            return '<div class="action-menu-wrap">'
+                + '<button class="action-trigger" type="button" title="更多操作"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg></button>'
+                + '<div class="action-menu">'
+                + '<button class="action-menu-item" type="button"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>全屏</button>'
+                + editItem
+                + '<button class="action-menu-item" type="button"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>下载PDF</button>'
+                + '</div>'
+                + '</div>';
+        }
+
+        function renderReportTable(table) {
+            return '<div class="mini-table-wrap"><table class="data-table"><thead><tr>'
+                + table[0].map(th => '<th>' + th + '</th>').join('')
+                + '</tr></thead><tbody>'
+                + table.slice(1).map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('')
+                + '</tbody></table></div>';
+        }
+
+        function renderReportBlocks(section) {
+            let html = '';
+            if (section.paragraphs) {
+                html += section.paragraphs.map(text => '<p class="report-paragraph">' + text + '</p>').join('');
+            }
+            if (section.highlights) {
+                html += '<div class="report-highlight-grid">' + section.highlights.map(item =>
+                    '<div class="report-highlight"><div class="highlight-title">' + item[0] + '</div><div class="highlight-text">' + item[1] + '</div></div>'
+                ).join('') + '</div>';
+            }
+            if (section.table) {
+                html += renderReportTable(section.table);
+            }
+            if (section.chart) {
+                html += '<div class="report-chart"><div class="chart-title">' + section.chart.title + '</div>' + renderBarChart(section.chart.labels, section.chart.values, false) + '</div>';
+            }
+            if (section.list) {
+                html += '<div class="report-list">' + section.list.map(item => '<div class="report-list-item">' + item + '</div>').join('') + '</div>';
+            }
+            return html;
+        }
+
+        function renderReport(id) {
+            const data = reportPages[id];
+            const summary = data.summary.map(item => '<div class="summary-card"><div class="summary-label">' + item[0] + '</div><div class="summary-value">' + item[1] + '<span class="summary-unit">' + item[2] + '</span></div></div>').join('');
+            const toc = data.chapters.map((chapter, index) => {
+                const chapterId = 'report-chapter-' + index;
+                const children = (chapter.children || []).map((child, childIndex) =>
+                    '<div class="toc-row lv2"><a href="#report-section-' + index + '-' + childIndex + '">' + child.title + '</a></div>'
+                ).join('');
+                return '<div class="toc-row lv1"><a href="#' + chapterId + '">' + chapter.title + '</a></div>' + children;
+            }).join('');
+            const chapters = data.chapters.map((chapter, index) => {
+                const chapterId = 'report-chapter-' + index;
+                const children = (chapter.children || []).map((child, childIndex) =>
+                    '<section class="report-subsection" id="report-section-' + index + '-' + childIndex + '"><h3>' + child.title + '</h3>' + renderReportBlocks(child) + '</section>'
+                ).join('');
+                return '<section class="report-chapter" id="' + chapterId + '"><h2>' + chapter.title + '</h2>' + renderReportBlocks(chapter) + children + '</section>';
+            }).join('');
+
+            return '<div class="report-page">'
+                + '<aside class="report-toc">'
+                + '<select class="period-select"><option>' + data.period + '</option><option>2026年4月</option><option>2026年3月</option></select>'
+                + '<div class="toc-panel"><div class="toc-title">' + data.tocTitle + '</div>' + toc + '</div>'
+                + '</aside>'
+                + '<article class="report-document">'
+                + '<div class="report-toolbar">' + renderActionMenu('smart-report-editor.html?id=' + encodeURIComponent(id)) + '</div>'
+                + '<h1 class="doc-title">' + data.title + '</h1>'
+                + '<div class="summary-list">' + summary + '</div>'
+                + chapters
+                + '</article>'
+                + '</div>';
+        }
+
+        function renderBoard(id) {
+            const data = boardPages[id];
+            const kpis = data.kpis.map(item => '<div class="kpi-card"><div class="kpi-label">' + item[0] + '</div><div class="kpi-value">' + item[1] + '</div><div class="kpi-trend">' + item[2] + '</div></div>').join('');
+            return '<div class="board-page">'
+                + '<div class="board-heading"><div><h1>' + data.title + '</h1><p>' + data.desc + '</p></div>'
+                + '<div class="board-tools">' + renderActionMenu('smart-report-board-editor.html?id=' + encodeURIComponent(id)) + '</div></div>'
+                + '<div class="kpi-grid">' + kpis + '</div>'
+                + '<div class="chart-grid">'
+                + '<div class="chart-card large"><div class="chart-title">' + data.chartTitle + '</div><div class="legend"><span><i class="legend-dot" style="background:#409eff"></i>数量</span><span><i class="legend-dot"></i>完成率</span></div>' + renderBarChart(data.labels, data.bars, true) + '</div>'
+                + '<div class="chart-card"><div class="chart-title">' + data.sideTitle + '</div>' + renderLineChart(data.labels, data.sideValues) + '</div>'
+                + '</div>'
+                + renderBoardDashboards(data)
+                + '</div>';
+        }
+
+        function renderMenuManagement() {
+            const rows = menuRows.map((row, index) => {
+                const symbol = row[4] === 0 ? '-' : '+';
+                return '<tr><td><span class="tree-cell" style="--indent:' + (row[4] * 22) + 'px"><span class="tree-toggle">' + symbol + '</span><svg class="icon" viewBox="0 0 24 24"><path d="M3 5h7l2 2h9v12H3V5z"/></svg>' + row[0] + '</span></td>'
+                    + '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><span class="status-tag">' + row[3] + '</span></td>'
+                    + '<td><span class="row-actions">'
+                    + '<button class="row-icon-btn" type="button" title="编辑" data-menu-action="edit" data-index="' + index + '"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button>'
+                    + '<button class="row-icon-btn" type="button" title="新增子菜单" data-menu-action="add-child" data-index="' + index + '"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>'
+                    + '<button class="row-icon-btn danger" type="button" title="删除"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>'
+                    + '</span></td></tr>';
+            }).join('');
+
+            return '<div class="menu-page">'
+                + '<div class="menu-title"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5h4v4H4V5zm6 0h10v2H10V5zm0 4h10v2H10V9zM4 15h4v4H4v-4zm6 0h10v2H10v-2zm0 4h10v2H10v-2z"/></svg>菜单管理</div>'
+                + '<div class="menu-toolbar"><div class="menu-actions"><button class="sr-btn" type="button" id="menuAddBtn">新增菜单</button><button class="sr-btn" type="button">展开全部</button><button class="sr-btn" type="button">折叠全部</button></div>'
+                + '<div class="menu-search"><span>菜单名称：</span><input class="sr-input" placeholder="请输入"><button class="sr-btn primary">查询</button><button class="sr-btn">重置</button></div></div>'
+                + '<div class="table-tools"><span>关</span><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M8 7l4-4 4 4"/><path d="M8 17l4 4 4-4"/></svg><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5z"/><path d="m19.4 15 1.4 1.1-2 3.5-1.7-.7a8 8 0 0 1-2.1 1.2L14.7 22h-4l-.3-1.9a8 8 0 0 1-2.1-1.2l-1.7.7-2-3.5L6 15a8.6 8.6 0 0 1 0-2l-1.4-1.1 2-3.5 1.7.7a8 8 0 0 1 2.1-1.2l.3-1.9h4l.3 1.9a8 8 0 0 1 2.1 1.2l1.7-.7 2 3.5L19.4 13a8.6 8.6 0 0 1 0 2z"/></svg><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></div>'
+                + '<div class="table-wrap"><table class="data-table"><thead><tr><th style="min-width:520px;">菜单名称</th><th style="width:220px;">菜单类型</th><th style="width:160px;">排序</th><th style="width:160px;">状态</th><th style="width:180px;">操作</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+                + '</div>';
+        }
+
+        function getParentMenu(index) {
+            for (let i = index; i >= 0; i--) {
+                if (menuRows[i][4] === 0) return menuRows[i][0];
+            }
+            return '智能报告';
+        }
+
+        function getPageType(menuName, parentName) {
+            if (menuName === '数据看板' || parentName === '数据看板') return '数据看板';
+            if (menuName === '系统管理' || parentName === '系统管理') return '菜单管理';
+            return '智能报告';
+        }
+
+        function getMenuIcon(menuName, menuType) {
+            const iconMap = {
+                '智能报告': 'report',
+                '运营服务月报': 'report-month',
+                '资源供给分析': 'resource',
+                '交易履约报告': 'trade',
+                '治理质量周报': 'quality',
+                '数据看板': 'dashboard',
+                '运营总览': 'overview',
+                '资源供需': 'resource-board',
+                '交易服务': 'trade-board',
+                '治理质量': 'quality-board',
+                '系统管理': 'setting',
+                '菜单管理': 'menu'
+            };
+            return iconMap[menuName] || (menuType === '一级菜单' ? 'folder' : 'all-application');
+        }
+
+        function updateDrawerTypeState() {
+            const selected = document.querySelector('input[name="drawerMenuType"]:checked');
+            const parent = document.getElementById('drawerParentMenu');
+            if (!selected || !parent) return;
+            parent.disabled = selected.value === '一级菜单';
+        }
+
+        function setDrawerType(menuType) {
+            document.querySelectorAll('input[name="drawerMenuType"]').forEach(input => {
+                input.checked = input.value === menuType;
+            });
+            updateDrawerTypeState();
+        }
+
+        function openMenuDrawer(mode, index) {
+            const drawer = document.getElementById('menuDrawer');
+            const title = document.getElementById('menuDrawerTitle');
+            const name = document.getElementById('drawerMenuName');
+            const parent = document.getElementById('drawerParentMenu');
+            const pageType = document.getElementById('drawerPageType');
+            const icon = document.getElementById('drawerMenuIcon');
+            const sort = document.getElementById('drawerMenuSort');
+            const shared = document.getElementById('drawerShared');
+            const eventSwitch = document.getElementById('drawerEventSwitch');
+            const source = typeof index === 'number' ? menuRows[index] : null;
+            const isAddChild = mode === 'add-child';
+            const menuType = source && !isAddChild ? source[1] : (isAddChild ? '子菜单' : '一级菜单');
+            const parentName = source ? (isAddChild ? (source[4] === 0 ? source[0] : getParentMenu(index)) : getParentMenu(index)) : '智能报告';
+            const menuName = source && !isAddChild ? source[0] : '';
+
+            title.textContent = mode === 'edit' ? '编辑菜单' : '新增菜单';
+            setDrawerType(menuType);
+            name.value = menuName || (isAddChild ? '新增子菜单' : '');
+            parent.value = parentName;
+            pageType.value = getPageType(menuName, parentName);
+            pageType.disabled = true;
+            icon.value = menuName ? getMenuIcon(menuName, menuType) : (isAddChild ? 'all-application' : 'folder');
+            sort.value = source && !isAddChild ? source[2] : '0';
+            shared.checked = source ? source[0] === '运营总览' || source[0] === '数据看板' : false;
+            eventSwitch.classList.toggle('on', source ? source[0] === '交易履约报告' || source[0] === '交易服务' : false);
+            eventSwitch.textContent = eventSwitch.classList.contains('on') ? '是' : '否';
+            drawer.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeMenuDrawer() {
+            const drawer = document.getElementById('menuDrawer');
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+        }
+
+        function showToast(message) {
+            const old = document.querySelector('.toast');
+            if (old) old.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message || '操作已记录';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 1200);
+        }
+
+        function renderPage(pageId) {
+            const root = document.getElementById('contentRoot');
+            if (reportPages[pageId]) {
+                root.innerHTML = renderReport(pageId);
+                return;
+            }
+            if (boardPages[pageId]) {
+                root.innerHTML = renderBoard(pageId);
+                return;
+            }
+            root.innerHTML = renderMenuManagement();
+        }
+
+        function activateMenu(pageId) {
+            document.querySelectorAll('.sr-menu-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.page === pageId);
+            });
+            renderPage(pageId);
+        }
+
+        document.querySelectorAll('.sr-section-title').forEach(title => {
+            title.addEventListener('click', function () {
+                this.closest('.sr-section').classList.toggle('open');
+            });
+        });
+
+        document.querySelectorAll('.sr-menu-item').forEach(item => {
+            item.addEventListener('click', function () {
+                activateMenu(this.dataset.page);
+            });
+        });
+
+        document.addEventListener('change', function (event) {
+            if (event.target.name === 'drawerMenuType') {
+                updateDrawerTypeState();
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            const drawerTarget = event.target.closest('#drawerClose, #drawerCancel');
+            if (drawerTarget || event.target.id === 'menuDrawer') {
+                closeMenuDrawer();
+                return;
+            }
+
+            if (event.target.closest('#drawerSave')) {
+                closeMenuDrawer();
+                showToast('菜单已保存');
+                return;
+            }
+
+            const switchTarget = event.target.closest('#drawerEventSwitch');
+            if (switchTarget) {
+                switchTarget.classList.toggle('on');
+                switchTarget.textContent = switchTarget.classList.contains('on') ? '是' : '否';
+                return;
+            }
+
+            const addButton = event.target.closest('#menuAddBtn');
+            if (addButton) {
+                openMenuDrawer('add');
+                return;
+            }
+
+            const menuAction = event.target.closest('[data-menu-action]');
+            if (menuAction) {
+                const index = Number(menuAction.dataset.index);
+                openMenuDrawer(menuAction.dataset.menuAction === 'add-child' ? 'add-child' : 'edit', index);
+                return;
+            }
+
+            const button = event.target.closest('.action-menu-item, .row-icon-btn.danger, .menu-actions .sr-btn, .menu-search .sr-btn');
+            if (!button) return;
+            showToast('操作已记录');
+        });
+
+        activateMenu('report-monthly');
+    </script>
+</body>
+</html>

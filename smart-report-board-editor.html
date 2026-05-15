@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑数据看板 - 龙岗数据聚合服务平台</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: #303133;
+            background: #f0f2f5;
+            font-family: "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+        }
+
+        .icon,
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            fill: currentColor;
+        }
+
+        .icon-stroke {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .board-editor {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 238px minmax(0, 1fr);
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .asset-panel {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #dcdfe6;
+            background: #fff;
+        }
+
+        .asset-head {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .asset-title {
+            margin-bottom: 12px;
+            color: #303133;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .asset-search {
+            position: relative;
+        }
+
+        .asset-search .icon-stroke {
+            position: absolute;
+            left: 9px;
+            top: 8px;
+            color: #909399;
+        }
+
+        .designer-input,
+        .designer-select {
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .designer-input:focus,
+        .designer-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .asset-search .designer-input {
+            width: 100%;
+            padding-left: 30px;
+        }
+
+        .asset-tree {
+            flex: 1;
+            min-height: 0;
+            padding: 8px 8px 16px;
+            overflow: auto;
+        }
+
+        .asset-group {
+            margin-bottom: 8px;
+        }
+
+        .asset-group-title {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0 6px;
+            color: #303133;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .asset-group-title:hover {
+            color: var(--forest-green);
+            background: #f5f7fa;
+        }
+
+        .asset-group-title .folder {
+            color: #e6a23c;
+        }
+
+        .asset-items {
+            padding: 2px 0 4px 18px;
+        }
+
+        .asset-item {
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 6px 5px 8px;
+            color: #606266;
+            border-radius: 3px;
+            cursor: grab;
+        }
+
+        .asset-item:active {
+            cursor: grabbing;
+        }
+
+        .asset-item:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .asset-item .asset-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            background: #f0f9f4;
+            border-radius: 3px;
+        }
+
+        .asset-item .name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .asset-item .add {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .asset-item:hover .add {
+            opacity: 1;
+        }
+
+        .asset-empty {
+            padding: 16px 8px;
+            color: #909399;
+            text-align: center;
+        }
+
+        .designer-main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: #f0f2f5;
+            overflow: hidden;
+        }
+
+        .designer-topbar {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 14px;
+            background: #fff;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .board-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            margin-right: 10px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .page-width-field {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+        }
+
+        .page-width-field .designer-input {
+            width: 166px;
+        }
+
+        .info-dot {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #606266;
+            border: 1px solid #c0c4cc;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .designer-btn,
+        .icon-btn {
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+
+        .designer-btn {
+            padding: 0 13px;
+        }
+
+        .icon-btn {
+            width: 30px;
+            padding: 0;
+        }
+
+        .designer-btn:hover,
+        .icon-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .designer-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .designer-btn.primary:hover {
+            color: #fff;
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+
+        .canvas-shell {
+            flex: 1;
+            min-height: 0;
+            padding: 14px;
+            overflow: auto;
+            background: #f0f2f5;
+        }
+
+        .canvas-shell.drag-over .board-canvas {
+            outline: 2px dashed rgba(32, 165, 101, 0.5);
+            outline-offset: 4px;
+            background: #fbfffd;
+        }
+
+        .board-canvas {
+            width: max(100%, var(--page-min-width, 1280px));
+            min-height: calc(100vh - 96px);
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            transition: outline 0.15s, background 0.15s;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .canvas-widget {
+            position: relative;
+            grid-column: span var(--cols, 6);
+            min-width: 0;
+            min-height: 64px;
+            height: var(--height, auto);
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: grab;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+
+        .canvas-widget:active {
+            cursor: grabbing;
+        }
+
+        .canvas-widget:hover {
+            border-color: rgba(32, 165, 101, 0.55);
+        }
+
+        .canvas-widget.selected {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.18), 0 8px 22px rgba(32, 165, 101, 0.12);
+        }
+
+        .canvas-widget.dragging {
+            opacity: 0.55;
+            transform: scale(0.985);
+        }
+
+        .canvas-widget.drop-target::before {
+            content: "";
+            position: absolute;
+            left: -4px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            z-index: 5;
+            background: var(--forest-green);
+            border-radius: 2px;
+        }
+
+        .widget-head {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 12px 0 14px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .widget-head.compact {
+            min-height: 32px;
+            border-bottom: 0;
+        }
+
+        .widget-title {
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #303133;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .widget-title .type-tag {
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 6px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .widget-action-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .widget-menu-btn {
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: #fff;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            cursor: pointer;
+            opacity: 0;
+        }
+
+        .canvas-widget:hover .widget-menu-btn,
+        .canvas-widget.selected .widget-menu-btn,
+        .widget-menu-btn.open {
+            opacity: 1;
+        }
+
+        .widget-menu-btn:hover,
+        .widget-menu-btn.open {
+            color: var(--forest-green);
+            border-color: var(--forest-green-200);
+            background: var(--forest-green-50);
+        }
+
+        .widget-menu-btn .icon-stroke {
+            width: 18px;
+            height: 18px;
+        }
+
+        .widget-menu {
+            position: absolute;
+            top: 30px;
+            right: 0;
+            z-index: 80;
+            display: none;
+            width: 116px;
+            padding: 6px 0;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .widget-menu.open {
+            display: block;
+        }
+
+        .widget-menu button {
+            width: 100%;
+            height: 29px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 0 10px;
+            color: #303133;
+            background: transparent;
+            border: 0;
+            font-family: inherit;
+            font-size: 13px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .widget-menu button:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .widget-menu .danger:hover {
+            color: #f56c6c;
+            background: #fff5f5;
+        }
+
+        .widget-body {
+            flex: 1;
+            min-height: 0;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .widget-query {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ebeef5;
+        }
+
+        .query-chip {
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 8px;
+            color: #606266;
+            background: #f5f7fa;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .filter-row {
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .filter-fields {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-field {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .filter-field label {
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .filter-field .designer-input,
+        .filter-field .designer-select {
+            width: 180px;
+        }
+
+        .query-setting {
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .query-setting:hover {
+            border-color: var(--forest-green);
+        }
+
+        .kpi-editor-grid {
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .kpi-card {
+            min-width: 0;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .kpi-card .label {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .kpi-card .value {
+            margin-top: 5px;
+            color: #303133;
+            font-size: 22px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .kpi-card .trend {
+            margin-top: 6px;
+            color: var(--forest-green);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .chart-card-body {
+            height: 100%;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 14px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: var(--forest-green);
+        }
+
+        .bar-chart,
+        .line-chart,
+        .pie-chart {
+            flex: 1;
+            min-height: 0;
+            background: repeating-linear-gradient(to top, #fff 0, #fff 38px, #f0f2f5 39px);
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 18px 14px 28px;
+        }
+
+        .bar {
+            position: relative;
+            flex: 1;
+            min-width: 8px;
+            height: var(--h);
+            border-radius: 3px 3px 0 0;
+            background: linear-gradient(180deg, var(--forest-green), #8fd3b1);
+        }
+
+        .bar.alt {
+            background: linear-gradient(180deg, #409eff, #9ed1ff);
+        }
+
+        .bar::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 50%;
+            bottom: -22px;
+            color: #909399;
+            font-size: 11px;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .line-chart {
+            padding: 8px;
+        }
+
+        .line-chart svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .pie-chart {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            background: #fff;
+        }
+
+        .pie-circle {
+            width: 136px;
+            height: 136px;
+            border-radius: 50%;
+            background: conic-gradient(var(--forest-green) 0 42%, #409eff 42% 66%, #e6a23c 66% 82%, #67c23a 82% 100%);
+            box-shadow: inset 0 0 0 34px #fff, 0 0 0 1px #ebeef5;
+        }
+
+        .pie-list {
+            display: grid;
+            gap: 8px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .data-list {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-list th,
+        .data-list td {
+            padding: 9px 10px;
+            border-bottom: 1px solid #ebeef5;
+            color: #606266;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .data-list th {
+            color: #303133;
+            background: #fafafa;
+            font-weight: 700;
+        }
+
+        .text-block {
+            color: #606266;
+            line-height: 1.8;
+        }
+
+        .insight-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .insight-item {
+            padding: 9px 10px;
+            color: #606266;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 3px;
+            line-height: 1.6;
+        }
+
+        .dashboard-donut-layout {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr);
+            gap: 14px;
+            align-items: center;
+            padding: 8px 2px;
+        }
+
+        .dashboard-donut {
+            position: relative;
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            background: var(--segments);
+        }
+
+        .dashboard-donut::after {
+            content: "";
+            position: absolute;
+            inset: 27px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #ebeef5;
+        }
+
+        .dashboard-donut-center {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #303133;
+            font-size: 12px;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .dashboard-donut-center strong {
+            color: var(--forest-green);
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            gap: 8px;
+            min-width: 0;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .dashboard-legend-row {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr) 42px;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .dashboard-legend-row i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--c);
+        }
+
+        .dashboard-rank-list {
+            display: grid;
+            gap: 11px;
+            padding: 8px 2px 0;
+        }
+
+        .dashboard-rank-row {
+            display: grid;
+            grid-template-columns: 82px minmax(0, 1fr) 46px;
+            gap: 9px;
+            align-items: center;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .dashboard-rank-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dashboard-rank-track {
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #f0f2f5;
+        }
+
+        .dashboard-rank-track span {
+            display: block;
+            width: var(--w);
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--forest-green) 0%, #64d8cb 100%);
+        }
+
+        .dashboard-heat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            padding: 8px 2px 0;
+        }
+
+        .dashboard-heat-cell {
+            min-height: 54px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            background: #f7fbff;
+        }
+
+        .dashboard-heat-cell.hot {
+            background: #eef8f4;
+            border-color: var(--forest-green-200);
+        }
+
+        .dashboard-heat-cell.warn {
+            background: #fff8ec;
+            border-color: #f3d19e;
+        }
+
+        .dashboard-heat-cell span {
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .dashboard-heat-cell strong {
+            color: #303133;
+            font-size: 16px;
+        }
+
+        .layout-placeholder {
+            height: 100%;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: repeating-linear-gradient(45deg, #fafafa 0, #fafafa 10px, #f5f7fa 10px, #f5f7fa 20px);
+            border: 1px dashed #dcdfe6;
+            border-radius: 3px;
+        }
+
+        .divider-h {
+            height: 1px;
+            margin: 16px 0;
+            background: #dcdfe6;
+        }
+
+        .divider-v {
+            width: 1px;
+            height: 100%;
+            min-height: 120px;
+            margin: 0 auto;
+            background: #dcdfe6;
+        }
+
+        .resize-handle {
+            position: absolute;
+            z-index: 60;
+            opacity: 0;
+            transition: opacity 0.15s, background 0.15s;
+        }
+
+        .canvas-widget:hover .resize-handle,
+        .canvas-widget.selected .resize-handle,
+        .canvas-widget.resizing .resize-handle {
+            opacity: 1;
+        }
+
+        .resize-e {
+            top: 14px;
+            bottom: 14px;
+            right: -3px;
+            width: 6px;
+            cursor: ew-resize;
+            border-radius: 4px;
+        }
+
+        .resize-s {
+            left: 14px;
+            right: 14px;
+            bottom: -3px;
+            height: 6px;
+            cursor: ns-resize;
+            border-radius: 4px;
+        }
+
+        .resize-se {
+            right: 0;
+            bottom: 0;
+            width: 16px;
+            height: 16px;
+            cursor: nwse-resize;
+            border-bottom-right-radius: 4px;
+            background:
+                linear-gradient(135deg, transparent 50%, rgba(32, 165, 101, 0.65) 50%, rgba(32, 165, 101, 0.65) 60%, transparent 60%, transparent 70%, rgba(32, 165, 101, 0.65) 70%, rgba(32, 165, 101, 0.65) 80%, transparent 80%, transparent 90%, rgba(32, 165, 101, 0.65) 90%);
+        }
+
+        .resize-e:hover,
+        .resize-s:hover,
+        .canvas-widget.resizing .resize-e,
+        .canvas-widget.resizing .resize-s {
+            background: rgba(32, 165, 101, 0.3);
+        }
+
+        .canvas-widget.resizing {
+            cursor: nwse-resize;
+            transition: none;
+        }
+
+        .resize-tip {
+            position: fixed;
+            z-index: 3000;
+            pointer-events: none;
+            padding: 4px 8px;
+            color: #fff;
+            background: rgba(48, 49, 51, 0.92);
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .canvas-empty {
+            grid-column: 1 / -1;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #909399;
+            background: #fff;
+            border: 1px dashed #dcdfe6;
+            border-radius: 4px;
+        }
+
+        .canvas-empty .empty-icon {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border-radius: 50%;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 4000;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .property-drawer {
+            position: fixed;
+            right: 18px;
+            top: 68px;
+            z-index: 1600;
+            width: 300px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.16);
+        }
+
+        .drawer-head {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-bottom: 1px solid #ebeef5;
+            font-weight: 700;
+        }
+
+        .drawer-body {
+            padding: 12px;
+        }
+
+        .prop-row {
+            display: grid;
+            grid-template-columns: 78px minmax(0, 1fr);
+            gap: 8px;
+            align-items: center;
+            min-height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .prop-row label {
+            color: #606266;
+        }
+
+        .modal-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 2100;
+            background: rgba(0,0,0,0.35);
+        }
+
+        .preview-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 2110;
+            width: min(920px, calc(100vw - 60px));
+            height: min(620px, calc(100vh - 60px));
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.24);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .preview-head {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            border-bottom: 1px solid #ebeef5;
+            font-weight: 700;
+        }
+
+        .preview-body {
+            flex: 1;
+            min-height: 0;
+            padding: 16px;
+            overflow: auto;
+        }
+
+        .logic-modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 2115;
+            width: min(1120px, calc(100vw - 72px));
+            height: min(700px, calc(100vh - 72px));
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.24);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .logic-head {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 26px;
+            border-bottom: 1px solid #ebeef5;
+            color: #303133;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .logic-body {
+            flex: 1;
+            min-height: 0;
+            padding: 26px;
+            overflow: auto;
+        }
+
+        .logic-desc {
+            max-width: 850px;
+            margin: 0 0 16px;
+            color: #303133;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .logic-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 26px;
+        }
+
+        .logic-rule {
+            display: grid;
+            gap: 14px;
+            padding: 26px 0 28px;
+            border-top: 1px solid #ebeef5;
+        }
+
+        .logic-line {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            min-height: 36px;
+        }
+
+        .logic-label {
+            width: 90px;
+            color: #303133;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .logic-select {
+            width: 226px;
+            height: 36px;
+            padding: 0 32px 0 12px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .logic-select.placeholder {
+            color: #b4c0cf;
+        }
+
+        .logic-select.operator {
+            width: 112px;
+        }
+
+        .logic-circle-btn,
+        .logic-trash {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .logic-circle-btn {
+            color: #1683ff;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .logic-trash {
+            margin-left: auto;
+            color: #f56c6c;
+        }
+
+        .logic-footer {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 0 18px;
+            border-top: 1px solid #ebeef5;
+            flex-shrink: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1100px) {
+            .board-editor {
+                grid-template-columns: 220px minmax(0, 1fr);
+            }
+
+            .kpi-editor-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="board-editor">
+        <aside class="asset-panel">
+            <div class="asset-head">
+                <div class="asset-title">控件 & 仪表盘</div>
+                <div class="asset-search">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                    <input class="designer-input" id="assetSearch" type="text" placeholder="请搜索查询控件和仪表盘">
+                </div>
+            </div>
+            <div class="asset-tree" id="assetTree"></div>
+        </aside>
+
+        <main class="designer-main">
+            <div class="designer-topbar">
+                <div class="topbar-left">
+                    <div class="board-title">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/></svg>
+                        <span id="boardTitleText">运营总览看板</span>
+                    </div>
+                    <div class="page-width-field">
+                        <span>页面最小宽度：</span>
+                        <input class="designer-input" id="pageWidthInput" type="number" min="960" max="2560" value="1280">
+                        <span class="info-dot" title="画布宽度低于该值时出现横向滚动">i</span>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="designer-btn" type="button" id="btnClose">关闭</button>
+                    <button class="designer-btn primary" type="button" id="btnSave">保存</button>
+                </div>
+            </div>
+
+            <section class="canvas-shell" id="editorCanvas">
+                <div class="board-canvas" id="boardCanvas">
+                    <div class="canvas-grid" id="canvasGrid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <aside class="property-drawer hidden" id="propertyDrawer">
+        <div class="drawer-head">
+            <span>组件属性</span>
+            <button class="icon-btn" type="button" id="propertyClose">×</button>
+        </div>
+        <div class="drawer-body" id="propertyBody"></div>
+    </aside>
+
+    <div class="modal-mask hidden" id="previewMask"></div>
+    <section class="preview-modal hidden" id="previewModal">
+        <div class="preview-head">
+            <span id="previewTitle">组件预览</span>
+            <button class="icon-btn" type="button" id="previewClose">×</button>
+        </div>
+        <div class="preview-body">
+            <div class="canvas-grid" id="previewBody"></div>
+        </div>
+    </section>
+
+    <div class="modal-mask hidden" id="logicMask"></div>
+    <section class="logic-modal hidden" id="logicModal">
+        <div class="logic-head">
+            <span>查询控件逻辑设置</span>
+            <button class="icon-btn" type="button" id="logicClose">×</button>
+        </div>
+        <div class="logic-body">
+            <p class="logic-desc">你可以为查询控件（下拉单选、下拉多选）设定一些规则：在选择某选项后，触发其它查询控件显示隐藏。<br>（注：查询控件逻辑设置后删除某个查询控件，逻辑设置会被清空。）</p>
+            <div class="logic-toolbar">
+                <button class="designer-btn primary" type="button" id="logicAdd">
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    添加逻辑
+                </button>
+            </div>
+            <div class="logic-rule">
+                <div class="logic-line">
+                    <span class="logic-label">如果：</span>
+                    <select class="logic-select placeholder"><option>请选择查询控件</option></select>
+                    <select class="logic-select operator"><option>选中</option></select>
+                    <select class="logic-select placeholder"><option>请选择选项</option></select>
+                    <button class="logic-circle-btn" type="button" title="添加条件">+</button>
+                    <button class="logic-trash" type="button" title="删除逻辑"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                </div>
+                <div class="logic-line">
+                    <span class="logic-label">则显示</span>
+                    <select class="logic-select placeholder"><option>请选择查询控件</option></select>
+                    <span>否则不显示</span>
+                    <button class="logic-circle-btn" type="button" title="添加显示控件">+</button>
+                </div>
+            </div>
+            <div class="logic-rule">
+                <div class="logic-line">
+                    <span class="logic-label">如果：</span>
+                    <select class="logic-select placeholder"><option>请选择查询控件</option></select>
+                    <select class="logic-select operator"><option>选中</option></select>
+                    <select class="logic-select placeholder"><option>请选择选项</option></select>
+                    <button class="logic-circle-btn" type="button" title="添加条件">+</button>
+                    <button class="logic-trash" type="button" title="删除逻辑"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                </div>
+                <div class="logic-line">
+                    <span class="logic-label">则显示</span>
+                    <select class="logic-select placeholder"><option>请选择查询控件</option></select>
+                    <span>否则不显示</span>
+                    <button class="logic-circle-btn" type="button" title="添加显示控件">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="logic-footer">
+            <button class="designer-btn" type="button" id="logicCancel">取消</button>
+            <button class="designer-btn primary" type="button" id="logicSave">保存</button>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const initialBoardId = params.get('id') || 'board-overview';
+
+            const boardPages = {
+                'board-overview': {
+                    title: '运营总览看板',
+                    desc: '平台用户、资源、订单与服务响应的综合运营情况。',
+                    kpis: [
+                        ['注册用户', '12,486', '较上月 +8.2%'],
+                        ['数据资源', '3,216', '本月新增 128'],
+                        ['交易订单', '1,268', '履约率 95.7%'],
+                        ['服务响应率', '99.6%', '稳定运行']
+                    ],
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    bars: [72, 88, 96, 112, 128, 136],
+                    line: [78, 82, 86, 91, 96, 99],
+                    chartTitle: '平台核心业务趋势',
+                    sideTitle: '业务活跃度',
+                    sideValues: [42, 55, 48, 68, 73, 81],
+                    insights: ['资源发布和订单转化同步增长，说明高频目录供给有效带动业务使用。', '企业服务、交通运行两个场景贡献了本期主要增量。', '接口调用峰值集中在工作日上午，建议保持现有弹性容量配置。'],
+                    dataset: '平台运营趋势'
+                },
+                'board-resource': {
+                    title: '资源供需看板',
+                    desc: '资源目录供给、需求对接和热门场景的运行情况。',
+                    kpis: [
+                        ['资源目录', '42', '覆盖12个主题'],
+                        ['上架资源', '2,918', '上架率 90.7%'],
+                        ['需求发布', '326', '有效需求 291'],
+                        ['匹配成功率', '84.3%', '较上月 +3.6%']
+                    ],
+                    labels: ['交通', '企业', '信用', '空间', '低空', '生态'],
+                    bars: [186, 152, 126, 116, 84, 94],
+                    line: [78, 64, 42, 38, 31, 27],
+                    chartTitle: '资源供给与需求发布',
+                    sideTitle: '热门目录访问',
+                    sideValues: [86, 73, 61, 54, 49, 45],
+                    insights: ['交通运行、企业服务和公共信用目录供需活跃度最高。', '低空经济目录新增需求较快，建议补充实时气象与飞行空域相关数据。', '低频目录保留但降低展示权重，减少资源检索噪音。'],
+                    dataset: '资源目录统计'
+                },
+                'board-trade': {
+                    title: '交易服务看板',
+                    desc: '订单、合同、交付和费用结算相关指标。',
+                    kpis: [
+                        ['订单总数', '1,268', '本月 +12.1%'],
+                        ['合同确认', '936', '平均 0.8 天'],
+                        ['交付完成', '1,214', '完成率 95.7%'],
+                        ['结算金额', '486.2万', '较上月 +9.4%']
+                    ],
+                    labels: ['第1周', '第2周', '第3周', '第4周'],
+                    bars: [286, 302, 358, 322],
+                    line: [92, 94, 96, 97],
+                    chartTitle: '交易履约趋势',
+                    sideTitle: '产品成交分布',
+                    sideValues: [72, 68, 53, 41, 32],
+                    insights: ['企业画像、交通热力和信用核验类产品成交靠前。', '本期交付完成率提升，合同确认环节仍是主要等待点。', '大额订单集中在行业解决方案类产品，需同步关注交付验收记录。'],
+                    dataset: '交易履约统计'
+                },
+                'board-governance': {
+                    title: '治理质量看板',
+                    desc: '元数据完整性、质量巡检和问题闭环情况。',
+                    kpis: [
+                        ['巡检任务', '842', '覆盖核心库表'],
+                        ['质量问题', '36', '较上周 -11'],
+                        ['闭环率', '96.1%', '较上周 +2.4%'],
+                        ['完整率', '94.8%', '持续提升']
+                    ],
+                    labels: ['周一', '周二', '周三', '周四', '周五'],
+                    bars: [8, 11, 6, 9, 12],
+                    line: [86, 90, 91, 94, 96],
+                    chartTitle: '质量问题处理趋势',
+                    sideTitle: '问题分类占比',
+                    sideValues: [39, 25, 19, 17],
+                    insights: ['字段注释缺失问题下降，但指标口径一致性仍需持续治理。', '接口更新延迟主要集中在外部同步源，已纳入专项监控。', '权限类问题数量可控，建议继续沿用看板发布前校验规则。'],
+                    dataset: '治理质量巡检'
+                }
+            };
+
+            const currentBoardId = boardPages[initialBoardId] ? initialBoardId : 'board-overview';
+            const boardData = boardPages[currentBoardId];
+            const canvas = document.getElementById('canvasGrid');
+            const editorCanvas = document.getElementById('editorCanvas');
+            const assetTree = document.getElementById('assetTree');
+            let selectedUid = null;
+            let internalDragUid = null;
+            let resizeCtx = null;
+
+            const assetGroups = [
+                {
+                    title: '查询控件',
+                    items: [
+                        { key: 'filter-domain', name: '业务域筛选', type: 'filter', icon: 'filter' },
+                        { key: 'filter-period', name: '数据周期', type: 'filter', icon: 'filter' },
+                        { key: 'filter-service', name: '服务类型', type: 'filter', icon: 'filter' }
+                    ]
+                },
+                {
+                    title: '布局组件',
+                    items: [
+                        { key: 'layout-container', name: '布局容器', type: 'layout', icon: 'layout' },
+                        { key: 'layout-tab', name: 'Tab布局容器', type: 'layout', icon: 'layout' }
+                    ]
+                },
+                {
+                    title: '公共仪表盘',
+                    items: [
+                        { key: 'divider-h', name: '横向分割线', type: 'dividerH', icon: 'divider' },
+                        { key: 'divider-v', name: '竖向分割线', type: 'dividerV', icon: 'divider' },
+                        { key: 'text-desc', name: '文本说明', type: 'text', icon: 'text' }
+                    ]
+                },
+                {
+                    title: '仪表盘',
+                    items: [
+                        { key: 'metric-kpis', name: '指标卡', type: 'kpi', icon: 'kpi' },
+                        { key: 'chart-main', name: boardData.chartTitle, type: 'bar', icon: 'chart' },
+                        { key: 'chart-line', name: boardData.sideTitle, type: 'line', icon: 'chart' },
+                        { key: 'chart-pie', name: '业务占比分析', type: 'pie', icon: 'pie' },
+                        { key: 'data-list', name: '数据列表', type: 'table', icon: 'table' }
+                    ]
+                },
+                {
+                    title: '指标管理',
+                    items: [
+                        { key: 'metric-resource', name: '资源访问指标', type: 'bar', icon: 'chart' },
+                        { key: 'metric-trade', name: '交易履约指标', type: 'line', icon: 'chart' }
+                    ]
+                },
+                {
+                    title: '看板组件',
+                    items: [
+                        { key: 'dashboard-donut', name: '业务结构分布', type: 'dashboardDonut', icon: 'pie' },
+                        { key: 'dashboard-rank', name: '指标贡献排行', type: 'dashboardRank', icon: 'chart' },
+                        { key: 'dashboard-heat', name: '周期活跃热力', type: 'dashboardHeat', icon: 'heat' }
+                    ]
+                },
+                {
+                    title: '数据洞察',
+                    items: [
+                        { key: 'data-detail', name: '明细数据列表', type: 'table', icon: 'table' }
+                    ]
+                }
+            ];
+
+            let canvasItems = [
+                createCanvasItem('filter-domain', { uid: 'w-filter', cols: 12, height: 120 }),
+                createCanvasItem('metric-kpis', { uid: 'w-kpis', cols: 12, height: 146 }),
+                createCanvasItem('chart-main', { uid: 'w-main', cols: 7, height: 330 }),
+                createCanvasItem('chart-line', { uid: 'w-side', cols: 5, height: 330 }),
+                createCanvasItem('dashboard-donut', { uid: 'w-donut', cols: 4, height: 244 }),
+                createCanvasItem('dashboard-rank', { uid: 'w-rank', cols: 4, height: 244 }),
+                createCanvasItem('dashboard-heat', { uid: 'w-heat', cols: 4, height: 244 })
+            ];
+
+            function escapeHtml(value) {
+                return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+                    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+                });
+            }
+
+            function iconFor(type) {
+                const map = {
+                    filter: '<path d="M4 5h16"/><path d="M7 12h10"/><path d="M10 19h4"/>',
+                    layout: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M3 10h18"/>',
+                    divider: '<path d="M4 12h16"/>',
+                    text: '<path d="M4 6h16"/><path d="M4 12h11"/><path d="M4 18h14"/>',
+                    kpi: '<path d="M4 19V9"/><path d="M12 19V5"/><path d="M20 19v-7"/><path d="M3 19h18"/>',
+                    chart: '<path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-4 3 2 5-7"/>',
+                    pie: '<path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M12 3a9 9 0 0 1 9 9h-9z"/>',
+                    table: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M9 5v14"/>',
+                    heat: '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>'
+                };
+                return '<svg class="icon-stroke" viewBox="0 0 24 24">' + (map[type] || map.chart) + '</svg>';
+            }
+
+            function createCanvasItem(key, overrides) {
+                const source = findAsset(key) || { key: key, name: '未命名组件', type: 'text' };
+                const defaults = {
+                    uid: 'w-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    key: key,
+                    type: source.type,
+                    title: source.name,
+                    cols: source.type === 'filter' || source.type === 'kpi' || source.type === 'insight' ? 12 : (source.type.indexOf('dashboard') === 0 ? 4 : 6),
+                    height: defaultHeight(source.type),
+                    showTitle: source.type !== 'filter',
+                    showQuery: source.type === 'bar' || source.type === 'line' || source.type === 'pie' || source.type === 'table',
+                    dataset: boardData.dataset
+                };
+
+                if (source.type === 'filter') {
+                    defaults.title = '查询条件';
+                    defaults.filters = ['业务域', '数据周期', '服务类型'];
+                }
+                if (source.type === 'kpi') {
+                    defaults.title = '核心指标';
+                    defaults.kpis = boardData.kpis;
+                }
+                if (source.type === 'bar') {
+                    defaults.title = source.key === 'chart-main' ? boardData.chartTitle : source.name;
+                    defaults.labels = boardData.labels;
+                    defaults.values = source.key === 'metric-resource' ? boardData.bars.map(v => Math.round(v * 0.72)) : boardData.bars;
+                }
+                if (source.type === 'line') {
+                    defaults.title = source.key === 'chart-line' ? boardData.sideTitle : source.name;
+                    defaults.labels = boardData.labels;
+                    defaults.values = boardData.sideValues;
+                }
+                if (source.type === 'pie') {
+                    defaults.title = source.name;
+                    defaults.pie = [
+                        ['资源服务', 42],
+                        ['交易履约', 24],
+                        ['接口调用', 18],
+                        ['治理质量', 16]
+                    ];
+                }
+                if (source.type === 'table') {
+                    defaults.title = source.name;
+                    defaults.rows = tableRows();
+                }
+                if (source.type.indexOf('dashboard') === 0) {
+                    defaults.title = source.name;
+                    defaults.labels = boardData.labels;
+                    defaults.values = source.type === 'dashboardDonut' ? boardData.sideValues : (source.type === 'dashboardHeat' ? boardData.line : boardData.bars);
+                    defaults.height = 244;
+                    defaults.showQuery = false;
+                }
+                if (source.type === 'insight') {
+                    defaults.title = '本期重点';
+                    defaults.insights = boardData.insights;
+                }
+                if (source.type === 'text') {
+                    defaults.title = '文本说明';
+                    defaults.text = boardData.desc;
+                }
+                if (source.type === 'layout') {
+                    defaults.title = source.name;
+                    defaults.cols = source.key === 'layout-tab' ? 12 : 6;
+                    defaults.height = 140;
+                }
+                if (source.type === 'dividerH') {
+                    defaults.title = '横向分割线';
+                    defaults.cols = 12;
+                    defaults.height = 52;
+                    defaults.showTitle = false;
+                    defaults.showQuery = false;
+                }
+                if (source.type === 'dividerV') {
+                    defaults.title = '竖向分割线';
+                    defaults.cols = 2;
+                    defaults.height = 180;
+                    defaults.showTitle = false;
+                    defaults.showQuery = false;
+                }
+                return Object.assign(defaults, overrides || {});
+            }
+
+            function defaultHeight(type) {
+                const map = {
+                    filter: 120,
+                    kpi: 146,
+                    bar: 300,
+                    line: 300,
+                    pie: 280,
+                    table: 300,
+                    dashboardDonut: 244,
+                    dashboardRank: 244,
+                    dashboardHeat: 244,
+                    insight: 136,
+                    text: 130,
+                    layout: 140,
+                    dividerH: 52,
+                    dividerV: 180
+                };
+                return map[type] || 240;
+            }
+
+            function findAsset(key) {
+                for (const group of assetGroups) {
+                    const item = group.items.find(row => row.key === key);
+                    if (item) return item;
+                }
+                return null;
+            }
+
+            function tableRows() {
+                if (currentBoardId === 'board-resource') {
+                    return [
+                        ['交通运行', '186', '2,931', '数据运营组'],
+                        ['企业服务', '152', '2,208', '产业服务组'],
+                        ['空间治理', '116', '1,506', '城市治理组'],
+                        ['生态环境', '94', '1,012', '公共数据组']
+                    ];
+                }
+                if (currentBoardId === 'board-trade') {
+                    return [
+                        ['标准数据产品', '782', '61.7%', '186.4万'],
+                        ['API订阅', '314', '24.8%', '124.8万'],
+                        ['专题数据包', '118', '9.3%', '92.6万'],
+                        ['解决方案交付', '54', '4.2%', '82.4万']
+                    ];
+                }
+                if (currentBoardId === 'board-governance') {
+                    return [
+                        ['完整性', '36', '14', '补充缺失字段'],
+                        ['一致性', '28', '9', '统一指标口径'],
+                        ['及时性', '18', '7', '检查同步链路'],
+                        ['安全性', '16', '6', '复核权限配置']
+                    ];
+                }
+                return [
+                    ['注册用户', '12,486', '+8.2%', '平台用户'],
+                    ['数据资源', '3,216', '+128', '资源目录'],
+                    ['交易订单', '1,268', '95.7%', '交易履约'],
+                    ['服务响应率', '99.6%', '稳定', '接口服务']
+                ];
+            }
+
+            function renderAssets() {
+                const keyword = document.getElementById('assetSearch').value.trim();
+                const groups = assetGroups.map(group => {
+                    const items = group.items.filter(item => !keyword || item.name.indexOf(keyword) >= 0 || group.title.indexOf(keyword) >= 0);
+                    if (!items.length) return '';
+                    return '<div class="asset-group">'
+                        + '<div class="asset-group-title"><span class="folder">' + iconFor('layout') + '</span><span>' + group.title + '</span></div>'
+                        + '<div class="asset-items">' + items.map(item => renderAssetItem(item)).join('') + '</div>'
+                        + '</div>';
+                }).filter(Boolean).join('');
+                assetTree.innerHTML = groups || '<div class="asset-empty">暂无匹配控件</div>';
+            }
+
+            function renderAssetItem(item) {
+                return '<div class="asset-item" draggable="true" data-key="' + item.key + '">'
+                    + '<span class="asset-icon">' + iconFor(item.icon) + '</span>'
+                    + '<span class="name">' + escapeHtml(item.name) + '</span>'
+                    + '<button class="add" type="button" title="加入画布">+</button>'
+                    + '</div>';
+            }
+
+            function renderCanvas() {
+                document.getElementById('boardTitleText').textContent = boardData.title;
+                document.title = boardData.title + ' - 编辑数据看板 - 龙岗数据聚合服务平台';
+                if (!canvasItems.length) {
+                    canvas.innerHTML = '<div class="canvas-empty"><div class="empty-icon">' + iconFor('layout') + '</div><strong>画布为空</strong><span>从左侧拖拽控件或仪表盘到画布区域。</span></div>';
+                    return;
+                }
+                canvas.innerHTML = canvasItems.map(item => renderWidget(item)).join('');
+                if (selectedUid) {
+                    const selected = canvas.querySelector('[data-uid="' + selectedUid + '"]');
+                    if (selected) selected.classList.add('selected');
+                }
+            }
+
+            function renderWidget(item) {
+                const heightStyle = '--cols:' + item.cols + ';--height:' + item.height + 'px;';
+                const headClass = item.showTitle ? 'widget-head' : 'widget-head compact';
+                return '<section class="canvas-widget" draggable="true" data-uid="' + item.uid + '" style="' + heightStyle + '">'
+                    + '<div class="' + headClass + '">'
+                    + '<div class="widget-title">' + (item.showTitle ? '<span>' + escapeHtml(item.title) + '</span><span class="type-tag">' + typeName(item.type) + '</span>' : '') + '</div>'
+                    + '<div class="widget-action-wrap">'
+                    + '<button class="widget-menu-btn" type="button" data-act="menu" title="组件设置"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 6h7"/><path d="M15 6h5"/><circle cx="13" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h9"/><path d="M17 18h3"/><circle cx="15" cy="18" r="2"/></svg></button>'
+                    + renderMenu(item)
+                    + '</div></div>'
+                    + '<div class="widget-body">' + renderWidgetBody(item) + '</div>'
+                    + '<div class="resize-handle resize-e" data-resize="e" title="拖动调整宽度"></div>'
+                    + '<div class="resize-handle resize-s" data-resize="s" title="拖动调整高度"></div>'
+                    + '<div class="resize-handle resize-se" data-resize="se" title="拖动调整大小"></div>'
+                    + '</section>';
+            }
+
+            function renderMenu() {
+                return '<div class="widget-menu">'
+                    + '<button type="button" data-menu="small">小尺寸</button>'
+                    + '<button type="button" data-menu="medium">中尺寸</button>'
+                    + '<button type="button" data-menu="large">大尺寸</button>'
+                    + '<button type="button" data-menu="custom">自定义 <span>›</span></button>'
+                    + '<button type="button" data-menu="title">标题栏 <span>›</span></button>'
+                    + '<button type="button" data-menu="query">查询条件 <span>›</span></button>'
+                    + '<button type="button" data-menu="property">属性 <span>›</span></button>'
+                    + '<button type="button" data-menu="preview">全屏预览</button>'
+                    + '<button type="button" class="danger" data-menu="remove">移除</button>'
+                    + '</div>';
+            }
+
+            function typeName(type) {
+                const map = {
+                    filter: '查询控件',
+                    kpi: '指标卡',
+                    bar: '柱状图',
+                    line: '折线图',
+                    pie: '饼图',
+                    table: '数据列表',
+                    dashboardDonut: '仪表盘',
+                    dashboardRank: '仪表盘',
+                    dashboardHeat: '仪表盘',
+                    insight: '洞察',
+                    text: '文本',
+                    layout: '布局',
+                    dividerH: '分割线',
+                    dividerV: '分割线'
+                };
+                return map[type] || '组件';
+            }
+
+            function renderWidgetBody(item) {
+                const query = item.showQuery ? renderQueryChips() : '';
+                if (item.type === 'filter') return renderFilter(item);
+                if (item.type === 'kpi') return renderKpis(item);
+                if (item.type === 'bar') return query + renderBarChart(item);
+                if (item.type === 'line') return query + renderLineChart(item);
+                if (item.type === 'pie') return query + renderPieChart(item);
+                if (item.type === 'table') return query + renderTable(item);
+                if (item.type === 'dashboardDonut') return renderDashboardDonut(item);
+                if (item.type === 'dashboardRank') return renderDashboardRank(item);
+                if (item.type === 'dashboardHeat') return renderDashboardHeat(item);
+                if (item.type === 'insight') return renderInsights(item);
+                if (item.type === 'text') return '<div class="text-block">' + escapeHtml(item.text || '') + '</div>';
+                if (item.type === 'layout') return '<div class="layout-placeholder">布局容器：拖入后可作为页面结构占位</div>';
+                if (item.type === 'dividerH') return '<div class="divider-h"></div>';
+                if (item.type === 'dividerV') return '<div class="divider-v"></div>';
+                return '';
+            }
+
+            function renderQueryChips() {
+                return '<div class="widget-query"><span class="query-chip">业务域：全部</span><span class="query-chip">周期：2026年5月</span><span class="query-chip">服务类型：全部</span></div>';
+            }
+
+            function renderFilter(item) {
+                return '<div class="filter-row">'
+                    + '<div class="filter-fields">'
+                    + '<div class="filter-field"><label>业务域：</label><select class="designer-select"><option>全部</option><option>资源供给</option><option>交易服务</option><option>治理质量</option></select></div>'
+                    + '<div class="filter-field"><label>数据周期：</label><input class="designer-input" value="' + (currentBoardId === 'board-governance' ? '2026年第20周' : '2026年5月') + '"></div>'
+                    + '<div class="filter-field"><label>服务类型：</label><select class="designer-select"><option>全部</option><option>接口服务</option><option>数据产品</option><option>数据需求</option></select></div>'
+                    + '</div><button class="query-setting" type="button" data-query-setting="true">查询逻辑设置</button></div>';
+            }
+
+            function renderKpis(item) {
+                return '<div class="kpi-editor-grid">' + (item.kpis || []).map(kpi =>
+                    '<div class="kpi-card"><div class="label">' + escapeHtml(kpi[0]) + '</div><div class="value">' + escapeHtml(kpi[1]) + '</div><div class="trend">' + escapeHtml(kpi[2]) + '</div></div>'
+                ).join('') + '</div>';
+            }
+
+            function renderBarChart(item) {
+                const values = item.values || boardData.bars;
+                const labels = item.labels || boardData.labels;
+                const max = Math.max(...values, 1);
+                const bars = values.map((value, index) => {
+                    const h = Math.max(12, Math.round(value / max * 100));
+                    return '<span class="bar' + (index % 2 ? ' alt' : '') + '" style="--h:' + h + '%" data-label="' + escapeHtml(labels[index] || '') + '"></span>';
+                }).join('');
+                return '<div class="chart-card-body"><div class="legend"><span><i class="legend-dot"></i>数量</span><span><i class="legend-dot" style="background:#409eff"></i>完成率</span></div><div class="bar-chart">' + bars + '</div></div>';
+            }
+
+            function renderLineChart(item) {
+                const values = item.values || boardData.sideValues;
+                const labels = item.labels || boardData.labels;
+                const max = Math.max(...values, 1);
+                const min = Math.min(...values, 0);
+                const range = Math.max(max - min, 1);
+                const points = values.map((value, index) => {
+                    const x = 28 + index * (520 / Math.max(values.length - 1, 1));
+                    const y = 216 - ((value - min) / range) * 168;
+                    return x + ',' + y;
+                }).join(' ');
+                const labelSvg = labels.map((label, index) => {
+                    const x = 28 + index * (520 / Math.max(values.length - 1, 1));
+                    return '<text x="' + x + '" y="260" text-anchor="middle">' + escapeHtml(label) + '</text>';
+                }).join('');
+                return '<div class="chart-card-body"><div class="line-chart"><svg viewBox="0 0 580 280" preserveAspectRatio="none"><g stroke="#e4e7ed" stroke-width="1"><line x1="28" y1="48" x2="550" y2="48"/><line x1="28" y1="90" x2="550" y2="90"/><line x1="28" y1="132" x2="550" y2="132"/><line x1="28" y1="174" x2="550" y2="174"/><line x1="28" y1="216" x2="550" y2="216"/></g><polygon points="' + points + ' 550,216 28,216" fill="rgba(32,165,101,0.12)"/><polyline points="' + points + '" fill="none" stroke="#20A565" stroke-width="4"/><g fill="#909399" font-size="12">' + labelSvg + '</g></svg></div></div>';
+            }
+
+            function renderPieChart(item) {
+                const rows = item.pie || [];
+                return '<div class="chart-card-body"><div class="pie-chart"><div class="pie-circle"></div><div class="pie-list">' + rows.map(row => '<div><strong>' + escapeHtml(row[0]) + '</strong>：' + escapeHtml(row[1]) + '%</div>').join('') + '</div></div></div>';
+            }
+
+            function renderTable(item) {
+                const rows = item.rows || tableRows();
+                return '<table class="data-list"><thead><tr><th>名称</th><th>数值</th><th>变化</th><th>说明</th></tr></thead><tbody>' + rows.map(row => '<tr>' + row.map(cell => '<td>' + escapeHtml(cell) + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+            }
+
+            function renderDashboardDonut(item) {
+                const colors = ['#409eff', 'var(--forest-green)', '#f59e0b', '#67c23a'];
+                const rows = (item.labels || boardData.labels).slice(0, 4).map((label, index) => ({
+                    label: label,
+                    value: (item.values || boardData.sideValues)[index] || 0,
+                    color: colors[index]
+                }));
+                const total = Math.max(rows.reduce((sum, row) => sum + row.value, 0), 1);
+                let cursor = 0;
+                const segments = rows.map(row => {
+                    const start = cursor;
+                    const percent = Math.max(6, Math.round(row.value / total * 100));
+                    cursor += percent;
+                    return row.color + ' ' + start + '% ' + Math.min(cursor, 100) + '%';
+                }).join(',');
+                const legend = rows.map(row => {
+                    const percent = Math.round(row.value / total * 100);
+                    return '<div class="dashboard-legend-row"><i style="--c:' + row.color + '"></i><span>' + escapeHtml(row.label) + '</span><strong>' + percent + '%</strong></div>';
+                }).join('');
+                return '<div class="dashboard-donut-layout"><div class="dashboard-donut" style="--segments:conic-gradient(' + segments + ')"><div class="dashboard-donut-center"><strong>' + total + '</strong><span>合计</span></div></div><div class="dashboard-legend">' + legend + '</div></div>';
+            }
+
+            function renderDashboardRank(item) {
+                const labels = item.labels || boardData.labels;
+                const values = item.values || boardData.bars;
+                const max = Math.max(...values, 1);
+                const rows = labels.map((label, index) => ({
+                    label: label,
+                    value: values[index] || 0
+                })).sort((a, b) => b.value - a.value).slice(0, 5);
+                return '<div class="dashboard-rank-list">' + rows.map(row =>
+                    '<div class="dashboard-rank-row"><span class="dashboard-rank-name">' + escapeHtml(row.label) + '</span><div class="dashboard-rank-track"><span style="--w:' + Math.max(8, Math.round(row.value / max * 100)) + '%"></span></div><strong>' + row.value + '</strong></div>'
+                ).join('') + '</div>';
+            }
+
+            function renderDashboardHeat(item) {
+                const labels = item.labels || boardData.labels;
+                const values = item.values || boardData.line || boardData.sideValues;
+                const cells = labels.slice(0, 6).map((label, index) => {
+                    const value = values[index] || 0;
+                    const level = value >= 90 ? ' hot' : value >= 70 ? ' warn' : '';
+                    return '<div class="dashboard-heat-cell' + level + '"><span>' + escapeHtml(label) + '</span><strong>' + value + '</strong></div>';
+                }).join('');
+                return '<div class="dashboard-heat-grid">' + cells + '</div>';
+            }
+
+            function renderInsights(item) {
+                return '<div class="insight-list">' + (item.insights || []).map(text => '<div class="insight-item">' + escapeHtml(text) + '</div>').join('') + '</div>';
+            }
+
+            function addComponent(key, targetUid) {
+                const item = createCanvasItem(key);
+                const targetIndex = targetUid ? canvasItems.findIndex(row => row.uid === targetUid) : -1;
+                if (targetIndex >= 0) {
+                    canvasItems.splice(targetIndex, 0, item);
+                } else {
+                    canvasItems.push(item);
+                }
+                selectedUid = item.uid;
+                renderCanvas();
+                showToast('已加入：' + item.title);
+            }
+
+            function selectWidget(uid) {
+                selectedUid = uid;
+                canvas.querySelectorAll('.canvas-widget').forEach(el => el.classList.toggle('selected', el.dataset.uid === uid));
+            }
+
+            function closeMenus() {
+                document.querySelectorAll('.widget-menu.open').forEach(menu => menu.classList.remove('open'));
+                document.querySelectorAll('.widget-menu-btn.open').forEach(btn => btn.classList.remove('open'));
+            }
+
+            function handleMenu(uid, action) {
+                const item = canvasItems.find(row => row.uid === uid);
+                if (!item) return;
+                if (action === 'small') {
+                    item.cols = Math.min(4, item.cols);
+                    item.height = Math.max(90, Math.min(item.height, 180));
+                    showToast('已切换为小尺寸');
+                } else if (action === 'medium') {
+                    item.cols = Math.max(5, Math.min(8, item.cols || 6));
+                    item.height = Math.max(180, Math.min(300, item.height || 260));
+                    showToast('已切换为中尺寸');
+                } else if (action === 'large') {
+                    item.cols = 12;
+                    item.height = Math.max(260, item.height || 320);
+                    showToast('已切换为大尺寸');
+                } else if (action === 'custom') {
+                    showToast('拖动组件右侧、底部或右下角可自定义尺寸');
+                    return;
+                } else if (action === 'title') {
+                    item.showTitle = !item.showTitle;
+                    showToast(item.showTitle ? '已显示标题栏' : '已隐藏标题栏');
+                } else if (action === 'query') {
+                    item.showQuery = !item.showQuery;
+                    showToast(item.showQuery ? '已显示查询条件' : '已隐藏查询条件');
+                } else if (action === 'property') {
+                    openProperty(item);
+                    return;
+                } else if (action === 'preview') {
+                    openPreview(item);
+                    return;
+                } else if (action === 'remove') {
+                    canvasItems = canvasItems.filter(row => row.uid !== uid);
+                    if (selectedUid === uid) selectedUid = null;
+                    showToast('已移除组件');
+                }
+                closeMenus();
+                renderCanvas();
+            }
+
+            function openProperty(item) {
+                document.getElementById('propertyBody').innerHTML =
+                    '<div class="prop-row"><label>组件名称</label><input class="designer-input" id="propTitle" value="' + escapeHtml(item.title) + '"></div>'
+                    + '<div class="prop-row"><label>组件类型</label><span>' + typeName(item.type) + '</span></div>'
+                    + '<div class="prop-row"><label>占用列数</label><input class="designer-input" id="propCols" type="number" min="1" max="12" value="' + item.cols + '"></div>'
+                    + '<div class="prop-row"><label>高度</label><input class="designer-input" id="propHeight" type="number" min="60" max="800" value="' + item.height + '"></div>'
+                    + '<div class="prop-row"><label>数据集</label><span>' + escapeHtml(item.dataset || boardData.dataset) + '</span></div>'
+                    + '<button class="designer-btn primary" type="button" id="propApply" style="width:100%;margin-top:6px;">应用属性</button>';
+                document.getElementById('propertyDrawer').classList.remove('hidden');
+                document.getElementById('propApply').onclick = function () {
+                    item.title = document.getElementById('propTitle').value.trim() || item.title;
+                    item.cols = clamp(parseInt(document.getElementById('propCols').value, 10) || item.cols, 1, 12);
+                    item.height = clamp(parseInt(document.getElementById('propHeight').value, 10) || item.height, 60, 800);
+                    selectedUid = item.uid;
+                    renderCanvas();
+                    showToast('属性已应用');
+                };
+            }
+
+            function openPreview(item) {
+                document.getElementById('previewTitle').textContent = item.title + ' - 全屏预览';
+                const clone = Object.assign({}, item, { cols: 12, height: 500 });
+                document.getElementById('previewBody').innerHTML = renderWidget(clone);
+                document.getElementById('previewMask').classList.remove('hidden');
+                document.getElementById('previewModal').classList.remove('hidden');
+                closeMenus();
+            }
+
+            function openLogicModal() {
+                document.getElementById('logicMask').classList.remove('hidden');
+                document.getElementById('logicModal').classList.remove('hidden');
+                closeMenus();
+            }
+
+            function closeLogicModal() {
+                document.getElementById('logicMask').classList.add('hidden');
+                document.getElementById('logicModal').classList.add('hidden');
+            }
+
+            function showToast(text) {
+                const old = document.querySelector('.toast');
+                if (old) old.remove();
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = text;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 1400);
+            }
+
+            function clamp(value, min, max) {
+                return Math.max(min, Math.min(max, value));
+            }
+
+            assetTree.addEventListener('dragstart', event => {
+                const item = event.target.closest('.asset-item');
+                if (!item) return;
+                event.dataTransfer.effectAllowed = 'copy';
+                event.dataTransfer.setData('application/x-component', item.dataset.key);
+            });
+
+            assetTree.addEventListener('click', event => {
+                const add = event.target.closest('.add');
+                if (!add) return;
+                const item = add.closest('.asset-item');
+                if (item) addComponent(item.dataset.key);
+            });
+
+            canvas.addEventListener('click', event => {
+                const menuBtn = event.target.closest('.widget-menu-btn');
+                const menuAction = event.target.closest('.widget-menu button');
+                const querySetting = event.target.closest('.query-setting');
+                const widget = event.target.closest('.canvas-widget');
+                if (querySetting && widget) {
+                    event.stopPropagation();
+                    selectWidget(widget.dataset.uid);
+                    openLogicModal();
+                    return;
+                }
+                if (menuAction && widget) {
+                    event.stopPropagation();
+                    handleMenu(widget.dataset.uid, menuAction.dataset.menu);
+                    return;
+                }
+                if (menuBtn && widget) {
+                    event.stopPropagation();
+                    const menu = widget.querySelector('.widget-menu');
+                    const open = menu.classList.contains('open');
+                    closeMenus();
+                    menu.classList.toggle('open', !open);
+                    menuBtn.classList.toggle('open', !open);
+                    selectWidget(widget.dataset.uid);
+                    return;
+                }
+                if (widget) {
+                    selectWidget(widget.dataset.uid);
+                } else {
+                    selectedUid = null;
+                    canvas.querySelectorAll('.canvas-widget.selected').forEach(el => el.classList.remove('selected'));
+                    closeMenus();
+                }
+            });
+
+            document.addEventListener('click', event => {
+                if (!event.target.closest('.widget-action-wrap')) closeMenus();
+            });
+
+            canvas.addEventListener('dragstart', event => {
+                const handle = event.target.closest('.resize-handle, .widget-action-wrap, input, select, button');
+                if (handle) {
+                    event.preventDefault();
+                    return;
+                }
+                const widget = event.target.closest('.canvas-widget');
+                if (!widget) return;
+                internalDragUid = widget.dataset.uid;
+                widget.classList.add('dragging');
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('application/x-widget', internalDragUid);
+            });
+
+            canvas.addEventListener('dragend', () => {
+                canvas.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+                canvas.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+                internalDragUid = null;
+            });
+
+            canvas.addEventListener('dragover', event => {
+                const target = event.target.closest('.canvas-widget');
+                if (!target || !internalDragUid || target.dataset.uid === internalDragUid) return;
+                event.preventDefault();
+                canvas.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+                target.classList.add('drop-target');
+            });
+
+            canvas.addEventListener('drop', event => {
+                if (!internalDragUid) return;
+                const target = event.target.closest('.canvas-widget');
+                if (!target || target.dataset.uid === internalDragUid) return;
+                event.preventDefault();
+                const fromIndex = canvasItems.findIndex(row => row.uid === internalDragUid);
+                const toIndex = canvasItems.findIndex(row => row.uid === target.dataset.uid);
+                if (fromIndex < 0 || toIndex < 0) return;
+                const moved = canvasItems.splice(fromIndex, 1)[0];
+                canvasItems.splice(toIndex, 0, moved);
+                selectedUid = moved.uid;
+                renderCanvas();
+                showToast('已调整组件位置');
+            });
+
+            editorCanvas.addEventListener('dragover', event => {
+                const types = event.dataTransfer && event.dataTransfer.types;
+                if (types && Array.prototype.indexOf.call(types, 'application/x-component') >= 0) {
+                    event.preventDefault();
+                    editorCanvas.classList.add('drag-over');
+                }
+            });
+
+            editorCanvas.addEventListener('dragleave', event => {
+                if (event.target === editorCanvas) editorCanvas.classList.remove('drag-over');
+            });
+
+            editorCanvas.addEventListener('drop', event => {
+                let key = '';
+                try {
+                    key = event.dataTransfer.getData('application/x-component');
+                } catch (error) {}
+                editorCanvas.classList.remove('drag-over');
+                if (!key) return;
+                event.preventDefault();
+                const target = event.target.closest('.canvas-widget');
+                addComponent(key, target ? target.dataset.uid : '');
+            });
+
+            canvas.addEventListener('mousedown', event => {
+                const handle = event.target.closest('.resize-handle');
+                if (!handle) return;
+                const widget = handle.closest('.canvas-widget');
+                const item = canvasItems.find(row => row.uid === widget.dataset.uid);
+                if (!item) return;
+                event.preventDefault();
+                event.stopPropagation();
+                selectWidget(item.uid);
+
+                const rect = widget.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                const gap = 12;
+                const colWidth = (canvasRect.width - gap * 11) / 12;
+
+                widget.setAttribute('draggable', 'false');
+                widget.classList.add('resizing');
+                document.body.style.userSelect = 'none';
+
+                const tip = document.createElement('div');
+                tip.className = 'resize-tip';
+                document.body.appendChild(tip);
+
+                resizeCtx = {
+                    item,
+                    widget,
+                    direction: handle.dataset.resize,
+                    startX: event.clientX,
+                    startY: event.clientY,
+                    startCols: item.cols,
+                    startHeight: item.height || rect.height,
+                    colWidth,
+                    tip
+                };
+                updateResizeTip(event.clientX, event.clientY);
+            });
+
+            document.addEventListener('mousemove', event => {
+                if (!resizeCtx) return;
+                const ctx = resizeCtx;
+                if (ctx.direction === 'e' || ctx.direction === 'se') {
+                    const deltaCols = Math.round((event.clientX - ctx.startX) / (ctx.colWidth + 12));
+                    const cols = clamp(ctx.startCols + deltaCols, 1, 12);
+                    ctx.widget.style.setProperty('--cols', cols);
+                    ctx.liveCols = cols;
+                }
+                if (ctx.direction === 's' || ctx.direction === 'se') {
+                    const height = clamp(ctx.startHeight + (event.clientY - ctx.startY), 60, 800);
+                    ctx.widget.style.setProperty('--height', height + 'px');
+                    ctx.liveHeight = height;
+                }
+                updateResizeTip(event.clientX, event.clientY);
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (!resizeCtx) return;
+                const ctx = resizeCtx;
+                ctx.item.cols = ctx.liveCols || ctx.item.cols;
+                ctx.item.height = ctx.liveHeight || ctx.item.height;
+                ctx.widget.classList.remove('resizing');
+                ctx.widget.setAttribute('draggable', 'true');
+                document.body.style.userSelect = '';
+                if (ctx.tip && ctx.tip.parentNode) ctx.tip.parentNode.removeChild(ctx.tip);
+                resizeCtx = null;
+                renderCanvas();
+                showToast('已调整组件大小');
+            });
+
+            function updateResizeTip(x, y) {
+                if (!resizeCtx || !resizeCtx.tip) return;
+                const cols = resizeCtx.liveCols || resizeCtx.item.cols;
+                const height = resizeCtx.liveHeight || resizeCtx.item.height;
+                resizeCtx.tip.textContent = cols + '列 · ' + Math.round(height) + 'px';
+                resizeCtx.tip.style.left = Math.min(window.innerWidth - 110, x + 12) + 'px';
+                resizeCtx.tip.style.top = Math.min(window.innerHeight - 30, y + 12) + 'px';
+            }
+
+            document.getElementById('pageWidthInput').addEventListener('input', event => {
+                const value = clamp(parseInt(event.target.value, 10) || 1280, 960, 2560);
+                document.getElementById('boardCanvas').style.setProperty('--page-min-width', value + 'px');
+            });
+
+            document.getElementById('assetSearch').addEventListener('input', renderAssets);
+            document.getElementById('propertyClose').addEventListener('click', () => document.getElementById('propertyDrawer').classList.add('hidden'));
+            document.getElementById('previewClose').addEventListener('click', closePreview);
+            document.getElementById('previewMask').addEventListener('click', closePreview);
+            document.getElementById('logicClose').addEventListener('click', closeLogicModal);
+            document.getElementById('logicCancel').addEventListener('click', closeLogicModal);
+            document.getElementById('logicMask').addEventListener('click', closeLogicModal);
+            document.getElementById('logicAdd').addEventListener('click', () => showToast('已添加逻辑'));
+            document.getElementById('logicSave').addEventListener('click', () => {
+                closeLogicModal();
+                showToast('查询逻辑设置已保存');
+            });
+            document.getElementById('btnSave').addEventListener('click', () => showToast('数据看板已保存'));
+            document.getElementById('btnClose').addEventListener('click', () => {
+                window.close();
+                setTimeout(() => { window.location.href = 'smart-report.html'; }, 120);
+            });
+
+            function closePreview() {
+                document.getElementById('previewMask').classList.add('hidden');
+                document.getElementById('previewModal').classList.add('hidden');
+            }
+
+            renderAssets();
+            renderCanvas();
+            document.getElementById('boardCanvas').style.setProperty('--page-min-width', document.getElementById('pageWidthInput').value + 'px');
+        })();
+    </script>
+</body>
+</html>

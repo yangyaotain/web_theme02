@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据看板 - 仪表盘定制 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        .maintenance-sidebar .sidebar-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px 10px;
+        }
+
+        .maintenance-menu-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            color: #606266;
+        }
+
+        .maintenance-menu-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .maintenance-sidebar .sidebar-nav {
+            padding: 4px 8px 16px;
+        }
+
+        .maintenance-sidebar .sidebar-item,
+        .maintenance-sidebar .sidebar-group-title {
+            min-height: 40px;
+            margin: 2px 0;
+            border-radius: 4px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .maintenance-sidebar .sidebar-sub {
+            padding: 2px 0 4px;
+        }
+
+        .maintenance-sidebar .sidebar-sub .sidebar-item {
+            min-height: 34px;
+            padding-left: 42px;
+        }
+
+        .maintenance-content {
+            height: calc(100vh - 64px);
+            padding: 0;
+            overflow: hidden;
+            background: #f0f2f5;
+        }
+
+        .board-page {
+            height: 100%;
+            min-width: 0;
+            padding: 8px;
+            color: #303133;
+            font-size: 13px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .icon,
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            fill: currentColor;
+        }
+
+        .icon-stroke {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .board-shell {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+
+        .board-head {
+            height: 52px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #e4e7ed;
+            color: #1f2d3d;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .board-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 14px 16px 10px;
+        }
+
+        .list-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .toolbar-left,
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .board-btn {
+            height: 32px;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+
+        .board-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .board-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .board-btn.primary:hover {
+            color: #fff;
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+
+        .board-input,
+        .board-select {
+            width: 100%;
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .board-input:focus,
+        .board-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .search-box {
+            position: relative;
+            width: 440px;
+            max-width: 45vw;
+        }
+
+        .search-box .board-input {
+            width: 100%;
+            padding-left: 32px;
+        }
+
+        .search-box .icon-stroke {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: #909399;
+        }
+
+        .view-btn {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .view-btn.active,
+        .view-btn:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .board-grid {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(216px, 216px));
+            align-content: start;
+            gap: 12px;
+            padding-bottom: 16px;
+        }
+
+        .board-card {
+            height: 154px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .board-card:hover {
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-md);
+        }
+
+        .board-card.add-card {
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .add-card .plus {
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        .board-thumb {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 48% 48%, rgba(255,255,255,0.96) 0 14%, rgba(32,165,101,0.18) 15% 26%, transparent 27%),
+                linear-gradient(135deg, rgba(32,165,101,0.08), rgba(64,158,255,0.22)),
+                url("images/data-screen.jpg") center / cover;
+        }
+
+        .board-thumb::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(32,165,101,0.18));
+        }
+
+        .board-name {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            background: #f2f6fc;
+            font-weight: 600;
+        }
+
+        .board-actions {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.58);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .board-card:not(.add-card):hover .board-actions {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .board-action-btn {
+            height: 30px;
+            min-width: 30px;
+            padding: 0 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #fff;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .board-action-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .board-action-btn.edit {
+            padding: 0 13px;
+            background: var(--forest-green);
+        }
+
+        .board-action-btn.edit:hover {
+            background: var(--forest-green-600);
+        }
+
+        .pager {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            color: #303133;
+        }
+
+        .page-btn {
+            min-width: 28px;
+            height: 28px;
+            color: #606266;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .board-editor {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+
+        .editor-tabs {
+            height: 48px;
+            display: flex;
+            align-items: stretch;
+            gap: 28px;
+            padding: 0 16px;
+            background: #fff;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .editor-tab {
+            min-width: 104px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #303133;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .editor-tab.active {
+            color: var(--forest-green);
+            border-bottom-color: var(--forest-green);
+        }
+
+        .editor-panel {
+            flex: 1;
+            min-height: 0;
+            margin: 16px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            overflow: hidden;
+        }
+
+        .system-panel {
+            display: grid;
+            grid-template-columns: minmax(620px, 42%) 1fr;
+        }
+
+        .form-area,
+        .preview-area {
+            min-width: 0;
+            overflow: auto;
+            padding: 18px 24px 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 146px minmax(0, 1fr);
+            align-items: center;
+            column-gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-row.top {
+            align-items: start;
+        }
+
+        .form-row > :not(.form-label) {
+            min-width: 0;
+        }
+
+        .form-label {
+            color: #303133;
+            text-align: right;
+            font-weight: 500;
+            line-height: 32px;
+            white-space: nowrap;
+        }
+
+        .form-row.top .form-label {
+            padding-top: 7px;
+            line-height: 18px;
+        }
+
+        .form-label.required::before {
+            content: "*";
+            margin-right: 4px;
+            color: #f56c6c;
+        }
+
+        .board-textarea {
+            width: 100%;
+            min-height: 72px;
+            padding: 8px 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .board-textarea:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .image-box {
+            width: 104px;
+            height: 104px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dcdfe6;
+            background: #fff;
+        }
+
+        .image-box.large {
+            height: 84px;
+        }
+
+        .image-thumb {
+            width: 84px;
+            height: 52px;
+            background:
+                radial-gradient(circle at 48% 50%, #fff 0 16%, rgba(32,165,101,0.18) 17% 30%, transparent 31%),
+                linear-gradient(135deg, rgba(32,165,101,0.12), rgba(64,158,255,0.24)),
+                url("images/data-screen.jpg") center / cover;
+        }
+
+        .logo-thumb {
+            width: 62px;
+            height: 62px;
+            border-radius: 16px;
+            background: conic-gradient(from 45deg, #f7af1d, #e6fbf0, #20a565, #409eff, #f7af1d);
+            opacity: 0.88;
+        }
+
+        .tag-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            height: 28px;
+            padding: 0 11px;
+            display: inline-flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+        }
+
+        .form-actions,
+        .permission-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-actions {
+            margin-left: 158px;
+            padding-top: 2px;
+        }
+
+        .preview-title {
+            margin-bottom: 12px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .login-preview {
+            width: min(100%, 960px);
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 50% 52%, rgba(255,255,255,0.98) 0 12%, rgba(32,165,101,0.16) 13% 25%, transparent 26%),
+                linear-gradient(135deg, rgba(255,255,255,0.78), rgba(64,158,255,0.26)),
+                url("images/data-screen.jpg") center / cover;
+        }
+
+        .login-box {
+            width: 230px;
+            min-height: 310px;
+            padding: 24px 16px 16px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .login-mark {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            background: conic-gradient(from 45deg, #f7af1d, #20a565, #409eff, #f7af1d);
+        }
+
+        .login-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 14px;
+            color: #606266;
+            font-size: 12px;
+        }
+
+        .login-tabs span:first-child {
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .login-input {
+            height: 32px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            color: #a8abb2;
+            background: #f5f7fa;
+        }
+
+        .login-submit {
+            height: 34px;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .permission-panel {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 16px 18px;
+        }
+
+        .sub-tabs {
+            height: 42px;
+            display: flex;
+            align-items: flex-end;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .sub-tab {
+            width: 118px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-green);
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-bottom: 0;
+            font-weight: 700;
+        }
+
+        .permission-body {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: minmax(220px, 240px) minmax(0, 1fr);
+            gap: 16px;
+            padding-top: 14px;
+        }
+
+        .tree-panel,
+        .resource-panel {
+            border: 1px solid #dcdfe6;
+            overflow: auto;
+        }
+
+        .tree-panel {
+            padding: 8px;
+        }
+
+        .tree-title {
+            margin: 0 0 12px;
+            font-weight: 700;
+        }
+
+        .tree-row {
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: var(--indent);
+            white-space: nowrap;
+        }
+
+        .tree-row input,
+        .resource-name input {
+            accent-color: var(--forest-green);
+        }
+
+        .tree-folder {
+            color: var(--accent-orange);
+        }
+
+        .resource-panel {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .permission-summary {
+            margin-bottom: 12px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .resource-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .resource-toolbar .board-select {
+            width: 78px;
+        }
+
+        .resource-toolbar .board-input {
+            width: 340px;
+            max-width: 100%;
+        }
+
+        .resource-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(216px, 216px));
+            align-content: start;
+            gap: 10px;
+            overflow: auto;
+        }
+
+        .resource-card {
+            height: 154px;
+            border: 1px solid #dcdfe6;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .resource-thumb {
+            height: 120px;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .bar-thumb {
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .bar-thumb span {
+            flex: 1;
+            min-width: 8px;
+            background: linear-gradient(180deg, var(--forest-green), #6ee7b7);
+        }
+
+        .table-thumb span {
+            display: block;
+            height: 8px;
+            margin-bottom: 9px;
+            background: #e5edf5;
+        }
+
+        .pie-thumb {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: conic-gradient(#20a565 0 22%, #409eff 22% 44%, #f7af1d 44% 62%, #8b5cf6 62% 80%, #6ee7b7 80%);
+        }
+
+        .resource-name {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            background: #f2f6fc;
+            font-weight: 600;
+        }
+
+        .permission-footer {
+            margin-top: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 50;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .confirm-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .confirm-dialog {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 310;
+            width: 420px;
+            max-width: calc(100vw - 40px);
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .confirm-head {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .confirm-title {
+            color: #303133;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .confirm-close {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: #fff;
+            border: 0;
+            border-radius: 3px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .confirm-close:hover {
+            color: #303133;
+            background: #f5f7fa;
+        }
+
+        .confirm-body {
+            display: flex;
+            gap: 12px;
+            padding: 18px 18px 16px;
+        }
+
+        .confirm-icon {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            color: #e6a23c;
+            background: #fdf6ec;
+            border-radius: 50%;
+        }
+
+        .confirm-message {
+            margin: 0;
+            color: #303133;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .confirm-sub {
+            margin-top: 4px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .confirm-foot {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 12px 16px 14px;
+            border-top: 1px solid #ebeef5;
+        }
+
+        .board-btn.danger {
+            color: #fff;
+            background: #f56c6c;
+            border-color: #f56c6c;
+        }
+
+        .board-btn.danger:hover {
+            color: #fff;
+            background: #e45656;
+            border-color: #e45656;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item active">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar maintenance-sidebar">
+            <div class="sidebar-title">
+                <span>运维中心</span>
+                <span class="maintenance-menu-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+                </span>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-item"><svg viewBox="0 0 24 24"><path d="M4 5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V5zm2 0v14h12V5H6zm2 2h8v2H8V7zm0 4h3v2H8v-2zm5 0h3v2h-3v-2zm-5 4h3v2H8v-2zm5 0h3v2h-3v-2z"/></svg><span>平台登记管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V6l-8-4zm0 2.2 6 3V12c0 4-2.5 7.8-6 8.9C8.5 19.8 6 16 6 12V7.2l6-3z"/></svg><span>基础配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h8v8h-8v-8zm2 2v4h4v-4h-4z"/></svg><span>业务配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h2v2H7V9zm4 0h6v2h-6V9zm-4 4h10v2H7v-2z"/></svg><span>数据通道管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 1 21 6v7c0 5-3.8 9.3-9 10-5.2-.7-9-5-9-10V6l9-5zm0 2.3L5 7.2V13c0 4 2.8 7.3 7 8 4.2-.7 7-4 7-8V7.2l-7-3.9zm0 4.7 1.4 2.8 3.1.4-2.2 2.1.5 3.1L12 15l-2.8 1.4.5-3.1-2.2-2.1 3.1-.4L12 8z"/></svg><span>系统控制策略</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M3 17h18v2H3v-2zm2-4h4c1.7 0 3-1.3 3-3V5h2v5c0 2.8-2.2 5-5 5H5v-2zm11.5-7.5 4 4-4 4-1.4-1.4 1.6-1.6H14V8.5h2.7l-1.6-1.6 1.4-1.4z"/></svg><span>支付结算配置</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <a class="sidebar-item"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm0 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg><span>门户配置管理</span></a>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><span>消息配置管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M12 14c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3S9 3.3 9 5v6c0 1.7 1.3 3 3 3zm5.3-3c0 3-2.5 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.4 2.7 6.2 6 6.7V21h2v-3.3c3.3-.5 6-3.3 6-6.7h-1.7z"/></svg><span>日志管理</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub" style="display:none"></div>
+                <div class="sidebar-group-title open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><svg viewBox="0 0 24 24"><path d="M5 9h2v10H5V9zm4-4h2v14H9V5zm4 7h2v7h-2v-7zm4-9h2v16h-2V3zM3 21h18v-2H3v2z"/></svg><span>仪表盘定制</span><svg class="arrow" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div>
+                <div class="sidebar-sub">
+                    <a href="maintenance-data-board.html" class="sidebar-item active"><span>数据看板</span></a>
+                    <a href="maintenance-dashboard.html" class="sidebar-item"><span>仪表盘</span></a>
+                    <a href="maintenance-query-control.html" class="sidebar-item"><span>查询控件</span></a>
+                    <a href="maintenance-dataset.html" class="sidebar-item"><span>数据集</span></a>
+                    <a href="maintenance-data-source.html" class="sidebar-item"><span>数据源</span></a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="admin-content maintenance-content">
+            <section class="board-page">
+                <div class="board-shell" id="listView">
+                    <div class="board-head">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                        看板管理
+                    </div>
+                    <div class="board-body">
+                        <div class="list-toolbar">
+                            <div class="toolbar-left">
+                                <div class="search-box">
+                                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                                    <input class="board-input" id="boardKeyword" placeholder="请输入">
+                                </div>
+                                <button class="board-btn primary" type="button" id="btnQuery">查询</button>
+                                <button class="board-btn" type="button" id="btnReset">重置</button>
+                            </div>
+                            <div class="toolbar-right">
+                                <button class="view-btn active" type="button" title="卡片视图"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                                <button class="view-btn" type="button" title="列表视图"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></button>
+                            </div>
+                        </div>
+                        <div class="board-grid" id="boardGrid"></div>
+                        <div class="pager">
+                            <span>总共 <strong id="totalCount">0</strong> 条数据</span>
+                            <button class="page-btn">&lt;</button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">&gt;</button>
+                            <select class="board-select" style="width:96px;height:28px;"><option>10 条/页</option><option>20 条/页</option></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="board-editor hidden" id="editorView">
+                    <div class="editor-tabs">
+                        <button class="editor-tab active" type="button" data-editor-panel="system">系统设置</button>
+                        <button class="editor-tab" type="button" data-editor-panel="permission">权限管理</button>
+                    </div>
+
+                    <div class="editor-panel system-panel" id="systemPanel">
+                        <div class="form-area">
+                            <div class="form-row">
+                                <label class="form-label required">门户名称</label>
+                                <input class="board-input" id="editorBoardName" value="数据资源运营看板">
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label required">门户路径</label>
+                                <input class="board-input" value="/resource-board">
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">门户样式</label>
+                                <select class="board-select"><option>系统默认样式</option><option>政务浅色样式</option></select>
+                            </div>
+                            <div class="form-row top">
+                                <label class="form-label">登录页面背景图</label>
+                                <div class="image-box large"><div class="image-thumb"></div></div>
+                            </div>
+                            <div class="form-row top">
+                                <label class="form-label">登录页面logo</label>
+                                <div class="image-box"><div class="logo-thumb"></div></div>
+                            </div>
+                            <div class="form-row top">
+                                <label class="form-label">登录页的页脚</label>
+                                <textarea class="board-textarea" placeholder="500个字符以内，允许输入中文、英文、数字和特殊字符"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">链接名称</label>
+                                <input class="board-input" placeholder="100个字符以内，允许输入中文、英文、数字和特殊字符">
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">链接地址</label>
+                                <input class="board-input" placeholder="200个字符以内，允许输入中文、英文、数字和特殊字符">
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">水印文案</label>
+                                <div>
+                                    <div class="tag-line">
+                                        <span class="tag">账号</span>
+                                        <span class="tag">姓名</span>
+                                        <span class="tag">手机号</span>
+                                        <svg class="icon-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 17v.01"/><path d="M12 13a3 3 0 1 0-3-3"/></svg>
+                                    </div>
+                                    <input class="board-input" placeholder="请输入水印文案">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label required">管理员设置</label>
+                                <select class="board-select"><option>运营管理员-测试</option><option>数据服务管理员</option></select>
+                            </div>
+                            <div class="form-row top">
+                                <label class="form-label">备注</label>
+                                <textarea class="board-textarea" placeholder="500个字符以内，允许输入中文、英文、数字和特殊字符"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button class="board-btn primary" type="button" id="btnSystemSave">保存</button>
+                                <button class="board-btn" type="button" id="btnSystemCancel">取消</button>
+                            </div>
+                        </div>
+                        <div class="preview-area">
+                            <div class="preview-title">预览页面</div>
+                            <div class="login-preview">
+                                <div class="login-box">
+                                    <div class="login-logo"><span class="login-mark"></span><span id="previewBoardName">数据资源运营看板</span></div>
+                                    <div class="login-tabs"><span>账户密码登录</span><span>手机号登录</span></div>
+                                    <div class="login-input"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>请输入用户名</div>
+                                    <div class="login-input"><svg class="icon-stroke" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>请输入密码</div>
+                                    <div class="login-input"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>请输入验证码</div>
+                                    <div class="login-submit">登录</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editor-panel permission-panel hidden" id="permissionPanel">
+                        <div class="sub-tabs"><div class="sub-tab">可视化</div></div>
+                        <div class="permission-body">
+                            <div class="tree-panel">
+                                <div class="tree-title">可视化权限设置</div>
+                                <div class="tree-row" style="--indent:0px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>全部</div>
+                                <div class="tree-row" style="--indent:22px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>可视化</div>
+                                <div class="tree-row" style="--indent:44px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>仪表盘</div>
+                                <div class="tree-row" style="--indent:66px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>运营分析</div>
+                                <div class="tree-row" style="--indent:44px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>数据报表</div>
+                                <div class="tree-row" style="--indent:66px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>指标洞察</div>
+                                <div class="tree-row" style="--indent:66px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>资源服务</div>
+                                <div class="tree-row" style="--indent:44px"><input type="checkbox" checked><svg class="icon tree-folder" viewBox="0 0 24 24"><path d="M10 4l2 2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6z"/></svg>指标体系</div>
+                            </div>
+                            <div class="resource-panel">
+                                <div class="permission-summary">选择数据：总计 10 条数据, 已选中 9 条数据</div>
+                                <div class="resource-toolbar">
+                                    <select class="board-select"><option>全部</option><option>仪表盘</option></select>
+                                    <input class="board-input" placeholder="请输入">
+                                </div>
+                                <div class="resource-grid" id="resourceGrid"></div>
+                                <div class="pager">
+                                    <span>总共 10 条数据</span>
+                                    <button class="page-btn">&lt;</button>
+                                    <button class="page-btn active">1</button>
+                                    <button class="page-btn">&gt;</button>
+                                    <select class="board-select" style="width:96px;height:28px;"><option>10 条/页</option><option>20 条/页</option></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission-footer">
+                            <button class="board-btn primary" type="button" id="btnPermissionSave">保存</button>
+                            <button class="board-btn" type="button" id="btnPermissionCancel">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="confirm-mask hidden" id="deleteConfirmMask"></div>
+    <section class="confirm-dialog hidden" id="deleteConfirmDialog" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle">
+        <div class="confirm-head">
+            <div class="confirm-title" id="deleteConfirmTitle">删除确认</div>
+            <button class="confirm-close" type="button" data-delete-cancel aria-label="关闭">×</button>
+        </div>
+        <div class="confirm-body">
+            <div class="confirm-icon">
+                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            </div>
+            <div>
+                <p class="confirm-message" id="deleteConfirmMessage">确定要删除该数据看板吗？</p>
+                <div class="confirm-sub">删除后，该数据看板将不再展示。此操作仅影响当前原型示例数据。</div>
+            </div>
+        </div>
+        <div class="confirm-foot">
+            <button class="board-btn" type="button" data-delete-cancel>取消</button>
+            <button class="board-btn danger" type="button" id="deleteConfirmOk">确认删除</button>
+        </div>
+    </section>
+
+    <script src="js/admin-topbar.js"></script>
+    <script>
+    let boards = [
+        { id: 1, name: '数据资源运营看板', path: '/resource-board' }
+    ];
+
+    const resourceCards = [
+        { name: '资源访问趋势', type: 'bar', checked: true },
+        { name: '数据目录清单', type: 'table', checked: true },
+        { name: '交易转化漏斗', type: 'bar', checked: true },
+        { name: '接口调用质量', type: 'bar', checked: true },
+        { name: '会员活跃指标', type: 'kpi', checked: true },
+        { name: '数据产品成交额', type: 'excel', checked: true },
+        { name: '供需服务分析', type: 'bar', checked: true },
+        { name: '资源申请日统计', type: 'stack', checked: true },
+        { name: '目录分类占比', type: 'pie', checked: true },
+        { name: '产业空间访问', type: 'bar', checked: false }
+    ];
+
+    function showToast(text) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast hidden';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = text;
+        toast.classList.remove('hidden');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toast.classList.add('hidden'), 1800);
+    }
+
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[char]);
+    }
+
+    function getSmartReportUrl() {
+        return new URL('smart-report.html', window.location.href).href;
+    }
+
+    function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+        const input = document.createElement('textarea');
+        input.value = text;
+        input.setAttribute('readonly', '');
+        input.style.position = 'fixed';
+        input.style.left = '-9999px';
+        document.body.appendChild(input);
+        input.select();
+        const success = document.execCommand('copy');
+        document.body.removeChild(input);
+        return success ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+    }
+
+    function openBoardEditor(name, mode) {
+        const title = name || '新建看板';
+        document.getElementById('listView').classList.add('hidden');
+        document.getElementById('editorView').classList.remove('hidden');
+        document.getElementById('editorBoardName').value = title;
+        document.getElementById('previewBoardName').textContent = title;
+        switchEditorPanel('system');
+    }
+
+    function closeBoardEditor() {
+        document.getElementById('editorView').classList.add('hidden');
+        document.getElementById('listView').classList.remove('hidden');
+    }
+
+    function switchEditorPanel(name) {
+        document.querySelectorAll('.editor-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.editorPanel === name));
+        document.getElementById('systemPanel').classList.toggle('hidden', name !== 'system');
+        document.getElementById('permissionPanel').classList.toggle('hidden', name !== 'permission');
+        if (name === 'permission') renderResources();
+    }
+
+    function renderResourceThumb(card) {
+        if (card.type === 'table') {
+            return '<div class="table-thumb"><span style="width:92%;"></span><span style="width:72%;"></span><span style="width:86%;"></span><span style="width:62%;"></span><span style="width:78%;"></span></div>';
+        }
+        if (card.type === 'pie') {
+            return '<div class="pie-thumb"></div>';
+        }
+        if (card.type === 'excel') {
+            return '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#15803d;font-size:34px;font-weight:700;background:#e8f5e9;">Excel</div>';
+        }
+        const heights = card.type === 'stack' ? [54, 54, 54, 54, 54, 54, 54] : [44, 72, 36, 58, 86, 24, 68];
+        return '<div class="bar-thumb">' + heights.map(height => '<span style="height:' + height + '%"></span>').join('') + '</div>';
+    }
+
+    function renderResources() {
+        document.getElementById('resourceGrid').innerHTML = resourceCards.map(card => (
+            '<div class="resource-card"><div class="resource-thumb">' + renderResourceThumb(card) + '</div><div class="resource-name"><input type="checkbox"' + (card.checked ? ' checked' : '') + '><span>' + card.name + '</span></div></div>'
+        )).join('');
+    }
+
+    function renderBoards() {
+        const keyword = document.getElementById('boardKeyword').value.trim();
+        const rows = boards.filter(item => !keyword || item.name.includes(keyword) || item.path.includes(keyword));
+        document.getElementById('totalCount').textContent = rows.length;
+        document.getElementById('boardGrid').innerHTML = [
+            '<div class="board-card add-card" id="addBoard"><div class="plus">+</div><div>新建看板</div></div>',
+            ...rows.map(item => '<div class="board-card" data-id="' + item.id + '"><div class="board-thumb"></div><div class="board-name">' + escapeHtml(item.name) + '</div><div class="board-actions"><button class="board-action-btn edit" type="button" data-action="edit" data-id="' + item.id + '">编辑</button><button class="board-action-btn" type="button" data-action="open-report" data-id="' + item.id + '" title="打开智能报告"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg></button><button class="board-action-btn" type="button" data-action="copy-report-link" data-id="' + item.id + '" title="复制智能报告地址"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button><button class="board-action-btn" type="button" data-action="delete" data-id="' + item.id + '" title="删除"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button></div></div>')
+        ].join('');
+    }
+
+    let pendingDeleteId = null;
+
+    function openDeleteConfirm(board) {
+        pendingDeleteId = board ? board.id : null;
+        document.getElementById('deleteConfirmMessage').innerHTML = '确定要删除数据看板「<strong>' + escapeHtml(board ? board.name : '未命名看板') + '</strong>」吗？';
+        document.getElementById('deleteConfirmMask').classList.remove('hidden');
+        document.getElementById('deleteConfirmDialog').classList.remove('hidden');
+    }
+
+    function closeDeleteConfirm() {
+        pendingDeleteId = null;
+        document.getElementById('deleteConfirmMask').classList.add('hidden');
+        document.getElementById('deleteConfirmDialog').classList.add('hidden');
+    }
+
+    renderBoards();
+
+    document.getElementById('btnQuery').addEventListener('click', renderBoards);
+    document.getElementById('boardKeyword').addEventListener('input', renderBoards);
+    document.getElementById('btnReset').addEventListener('click', () => {
+        document.getElementById('boardKeyword').value = '';
+        renderBoards();
+    });
+    document.getElementById('boardGrid').addEventListener('click', event => {
+        const add = event.target.closest('#addBoard');
+        if (add) {
+            openBoardEditor('新建看板', 'create');
+            return;
+        }
+        const action = event.target.closest('[data-action]');
+        if (action) {
+            const board = boards.find(item => item.id === Number(action.dataset.id));
+            if (action.dataset.action === 'delete') {
+                openDeleteConfirm(board);
+                return;
+            }
+            if (action.dataset.action === 'open-report') {
+                window.open(getSmartReportUrl(), '_blank', 'noopener');
+                return;
+            }
+            if (action.dataset.action === 'copy-report-link') {
+                copyText(getSmartReportUrl()).then(() => {
+                    showToast('已复制智能报告地址');
+                }).catch(() => {
+                    showToast('复制失败，请手动复制智能报告地址');
+                });
+                return;
+            }
+            openBoardEditor(board ? board.name : '数据资源运营看板', action.dataset.action);
+            return;
+        }
+        const card = event.target.closest('[data-id]');
+        if (!card) return;
+        const board = boards.find(item => item.id === Number(card.dataset.id));
+        openBoardEditor(board ? board.name : '数据资源运营看板', 'edit');
+    });
+    document.querySelectorAll('[data-delete-cancel], #deleteConfirmMask').forEach(item => {
+        item.addEventListener('click', closeDeleteConfirm);
+    });
+    document.getElementById('deleteConfirmOk').addEventListener('click', () => {
+        if (pendingDeleteId == null) return;
+        const board = boards.find(item => item.id === pendingDeleteId);
+        boards = boards.filter(item => item.id !== pendingDeleteId);
+        closeDeleteConfirm();
+        renderBoards();
+        showToast('已删除数据看板' + (board ? '：' + board.name : ''));
+    });
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.view-btn').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    document.querySelectorAll('.editor-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchEditorPanel(tab.dataset.editorPanel));
+    });
+    document.getElementById('editorBoardName').addEventListener('input', event => {
+        document.getElementById('previewBoardName').textContent = event.target.value || '数据资源运营看板';
+    });
+    ['btnSystemCancel', 'btnPermissionCancel'].forEach(id => {
+        document.getElementById(id).addEventListener('click', closeBoardEditor);
+    });
+    ['btnSystemSave', 'btnPermissionSave'].forEach(id => {
+        document.getElementById(id).addEventListener('click', () => {
+            showToast('已保存看板配置');
+            closeBoardEditor();
+        });
+    });
+    </script>
+</body>
+</html>

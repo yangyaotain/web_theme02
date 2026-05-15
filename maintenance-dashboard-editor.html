@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑仪表盘 - 龙岗数据聚合服务平台</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: #303133;
+            background: #f0f2f5;
+            font-family: "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+        }
+
+        .icon,
+        .icon-stroke {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            fill: currentColor;
+        }
+
+        .icon-stroke {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .db-btn {
+            height: 32px;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+
+        .db-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .db-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .db-btn.primary:hover {
+            color: #fff;
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+
+        .db-input,
+        .db-select {
+            height: 32px;
+            padding: 0 10px;
+            color: #303133;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .db-input:focus,
+        .db-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(32, 165, 101, 0.12);
+        }
+
+        .designer-view {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 232px 1fr 460px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .component-panel,
+        .setting-panel {
+            min-width: 0;
+            overflow: auto;
+            background: #fff;
+        }
+
+        .component-panel {
+            border-right: 1px solid #dcdfe6;
+            padding: 14px;
+        }
+
+        .component-title {
+            margin-bottom: 10px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .search-box .db-input {
+            width: 100%;
+            padding-left: 32px;
+        }
+
+        .search-box .icon-stroke {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: #909399;
+        }
+
+        .component-group {
+            margin-bottom: 16px;
+        }
+
+        .group-title {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .component-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .component-item {
+            height: 62px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #606266;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .component-item.active,
+        .component-item:hover {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .component-item .icon-stroke {
+            width: 20px;
+            height: 20px;
+        }
+
+        .component-item span {
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .designer-main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: #f0f2f5;
+        }
+
+        .designer-tabs {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .tab-left,
+        .designer-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+
+        .tab-pill {
+            height: 36px;
+            padding: 0 18px;
+            display: inline-flex;
+            align-items: center;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            font-weight: 700;
+        }
+
+        .designer-subhead {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: #fff;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .designer-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .canvas-wrap {
+            flex: 1;
+            min-height: 0;
+            padding: 18px;
+            overflow: auto;
+        }
+
+        .canvas-card {
+            min-height: 640px;
+            background: #fff;
+            padding: 16px 24px 24px;
+            box-shadow: inset 0 0 0 1px #ebeef5;
+        }
+
+        .chart-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 28px;
+            color: #606266;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--forest-green), #6ee7b7);
+        }
+
+        .chart-area {
+            position: relative;
+            height: 560px;
+            margin: 10px 18px 0 56px;
+            border-left: 1px solid #909399;
+            border-bottom: 1px solid #909399;
+            background: repeating-linear-gradient(to top, transparent 0, transparent 118px, #e4e7ed 119px, transparent 120px);
+        }
+
+        .axis-label {
+            position: absolute;
+            left: -54px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .canvas-bars {
+            position: absolute;
+            inset: 24px 14px 0 12px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .canvas-bars span {
+            flex: 1;
+            min-width: 8px;
+            background: linear-gradient(180deg, var(--forest-green) 0%, #6ee7b7 100%);
+        }
+
+        .setting-panel {
+            border-left: 1px solid #dcdfe6;
+        }
+
+        .setting-tabs {
+            height: 52px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid #dcdfe6;
+        }
+
+        .setting-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid transparent;
+            font-weight: 700;
+        }
+
+        .setting-tab.active {
+            color: var(--forest-green);
+            border-bottom-color: var(--forest-green);
+        }
+
+        .setting-body {
+            padding: 24px 14px;
+        }
+
+        .data-mode {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 24px;
+            border: 1px solid #ebeef5;
+        }
+
+        .data-mode span {
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .data-mode .active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .data-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .drop-section {
+            margin-bottom: 14px;
+        }
+
+        .drop-title {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #303133;
+            background: #f5f7fa;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .drop-item,
+        .field-item {
+            height: 30px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #60758a;
+            background: #eef6ff;
+            border: 1px dashed #d5e5f6;
+            border-radius: 3px;
+        }
+
+        .drop-empty {
+            color: #909399;
+            background: #fff;
+        }
+
+        .setting-field {
+            margin-bottom: 12px;
+        }
+
+        .setting-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .setting-field .db-select,
+        .setting-field .db-input {
+            width: 100%;
+        }
+
+        .switch-line {
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            margin-bottom: 12px;
+            background: #f5f7fa;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .switch {
+            width: 38px;
+            height: 20px;
+            position: relative;
+            border-radius: 10px;
+            background: #c0c4cc;
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 2px;
+            top: 2px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 50;
+            padding: 8px 14px;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-200);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="designer-view">
+        <aside class="component-panel">
+            <div class="component-title">组件类型</div>
+            <div class="search-box">
+                <svg class="icon-stroke" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+                <input class="db-input" placeholder="请输入搜索关键字">
+            </div>
+            <div id="componentList"></div>
+        </aside>
+
+        <main class="designer-main">
+            <div class="designer-tabs">
+                <div class="tab-left">
+                    <button class="icon-btn" type="button" id="btnClose" title="返回列表">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <div class="tab-pill" id="tabName">平台运营总览</div>
+                    <button class="icon-btn" type="button" title="新增页签">
+                        <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </button>
+                </div>
+                <div class="designer-actions">
+                    <button class="db-btn" type="button" id="btnPreview">预览</button>
+                    <button class="db-btn" type="button" id="btnSaveAs">另存为</button>
+                    <button class="db-btn primary" type="button" id="btnSave">保存</button>
+                </div>
+            </div>
+            <div class="designer-subhead">
+                <div class="designer-title">
+                    <span id="designerTitle">平台运营总览</span>
+                    <svg class="icon-stroke" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                </div>
+            </div>
+            <div class="canvas-wrap">
+                <div class="canvas-card">
+                    <div class="chart-legend"><span class="legend-color"></span>resource_visit_count</div>
+                    <div class="chart-area">
+                        <span class="axis-label" style="top:0;">800,000</span>
+                        <span class="axis-label" style="top:140px;">600,000</span>
+                        <span class="axis-label" style="top:280px;">400,000</span>
+                        <span class="axis-label" style="top:420px;">200,000</span>
+                        <span class="axis-label" style="bottom:-6px;">0</span>
+                        <div class="canvas-bars" id="canvasBars"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="setting-panel">
+            <div class="setting-tabs">
+                <div class="setting-tab">配置</div>
+                <div class="setting-tab active">数据</div>
+            </div>
+            <div class="setting-body">
+                <div class="data-mode"><span>静态数据</span><span class="active">动态数据</span></div>
+                <div class="data-layout">
+                    <div>
+                        <div class="drop-section">
+                            <div class="drop-title">X轴</div>
+                            <div class="drop-item">＋stat_date</div>
+                        </div>
+                        <div class="drop-section">
+                            <div class="drop-title">Y轴</div>
+                            <div class="drop-item">＋resource_visit_count</div>
+                            <div class="drop-item drop-empty">＋拖入字段</div>
+                        </div>
+                        <div class="drop-section">
+                            <div class="drop-title">联动方式</div>
+                            <select class="db-select" style="width:100%;margin-top:8px;"><option>无</option><option>筛选联动</option></select>
+                        </div>
+                        <div class="drop-section">
+                            <div class="drop-title">触发数据</div>
+                            <div class="drop-item drop-empty">＋拖入字段</div>
+                        </div>
+                        <div class="switch-line"><span>自身下钻</span><span class="switch"></span></div>
+                        <div class="drop-section">
+                            <div class="drop-title">数据记录</div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">Top <input class="db-input" value="1000" style="width:80px;"></div>
+                        </div>
+                        <div class="drop-section">
+                            <div class="drop-title">数据展示记录</div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">Top <input class="db-input" value="1000" style="width:80px;"></div>
+                        </div>
+                        <div class="switch-line"><span>数据更新</span><span class="switch"></span></div>
+                    </div>
+                    <div>
+                        <div class="setting-field">
+                            <label>数据集</label>
+                            <select class="db-select"><option>平台运营趋势</option><option>资源目录统计</option><option>交易转化统计</option></select>
+                        </div>
+                        <div class="setting-field">
+                            <label>表字段</label>
+                            <div class="field-item">＋stat_date</div>
+                            <div class="field-item">＋resource_apply_count</div>
+                            <div class="field-item">＋resource_visit_count</div>
+                            <div class="field-item">＋trade_order_count</div>
+                            <div class="field-item">＋active_member_count</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+    const components = [
+        { title: '指标卡', items: ['对比指标卡', '单指标卡', '普通指标卡'] },
+        { title: '柱状图', items: ['柱状图', '堆叠柱状图', '瀑布柱状图'] },
+        { title: '折线图', items: ['折线图', '面积图', '趋势图'] },
+        { title: '饼环图', items: ['饼图', '玫瑰图', '圆环图'] },
+        { title: '散点图', items: ['标准气泡图', '单轴气泡图', '散点图'] },
+        { title: '其他组件', items: ['数据列表', '筛选器', '文本'] }
+    ];
+
+    function showToast(text) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast hidden';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = text;
+        toast.classList.remove('hidden');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toast.classList.add('hidden'), 1800);
+    }
+
+    function renderComponents() {
+        document.getElementById('componentList').innerHTML = components.map((group, groupIndex) => (
+            '<div class="component-group"><div class="group-title"><svg class="icon-stroke" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>' + group.title + '</div>' +
+            '<div class="component-items">' + group.items.map((item, index) => (
+                '<div class="component-item' + (groupIndex === 1 && index === 0 ? ' active' : '') + '">' +
+                '<svg class="icon-stroke" viewBox="0 0 24 24"><path d="M5 19V9"/><path d="M12 19V5"/><path d="M19 19v-7"/><path d="M3 19h18"/></svg><span>' + item + '</span></div>'
+            )).join('') + '</div></div>'
+        )).join('');
+    }
+
+    function renderCanvasBars() {
+        const heights = [4, 12, 26, 14, 34, 16, 40, 22, 46, 30, 52, 36, 58, 42, 64, 48, 70, 54, 76, 60, 82, 66, 88];
+        document.getElementById('canvasBars').innerHTML = heights.map(height => '<span style="height:' + height + '%"></span>').join('');
+    }
+
+    function initTitle() {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name') || '平台运营总览';
+        document.title = name + ' - 编辑仪表盘 - 龙岗数据聚合服务平台';
+        document.getElementById('tabName').textContent = name;
+        document.getElementById('designerTitle').textContent = name;
+    }
+
+    renderComponents();
+    renderCanvasBars();
+    initTitle();
+
+    document.getElementById('btnClose').addEventListener('click', () => window.close());
+    ['btnPreview', 'btnSaveAs', 'btnSave'].forEach(id => {
+        document.getElementById(id).addEventListener('click', () => showToast('操作已完成'));
+    });
+    </script>
+</body>
+</html>
