@@ -464,12 +464,15 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
     }
 
     _bindMessageDropdown() {
-        const bell = this.shadowRoot.querySelector('.notify-bell');
-        if (!bell) return;
+        if (!this.shadowRoot.querySelector('.notify-bell')) return;
 
-        const shadow = this.shadowRoot;
+        const self = this;
         this._loadMessageCenter(function () {
             if (!window.MessageCenter) return;
+            const shadow = self.shadowRoot;
+            const bell = shadow.querySelector('.notify-bell');
+            if (!bell) return;
+
             window.MessageCenter.bindDropdown({
                 root: shadow,
                 trigger: bell,
