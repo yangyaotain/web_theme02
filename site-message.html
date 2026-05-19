@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>站内消息 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <script src="js/message-center.js"></script>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/site-footer.js" defer></script>
+    <style>
+        body {
+            background: #fff;
+            background-image: none;
+        }
+
+        body::before {
+            display: none;
+        }
+
+        .site-message-main {
+            min-height: calc(100vh - 180px);
+            padding: 88px 24px 0;
+            background: #fff;
+        }
+
+        .site-message-title {
+            margin: 0 0 24px;
+            color: #1f2d3d;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .site-message-panel {
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .site-message-main {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav-bar></nav-bar>
+
+    <main class="site-message-main">
+        <h1 class="site-message-title">站内消息</h1>
+        <section class="site-message-panel" id="siteMessageApp"></section>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script>
+        (function () {
+            function render() {
+                if (window.MessageCenter) {
+                    window.MessageCenter.renderPage('#siteMessageApp');
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', render);
+            } else {
+                render();
+            }
+        })();
+    </script>
+</body>
+</html>

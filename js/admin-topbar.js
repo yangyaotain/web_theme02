@@ -40,7 +40,7 @@
         +     '<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'
         +     '首页'
         + '</a>'
-        + '<span class="topbar-notify">'
+        + '<span class="topbar-notify" title="通知">'
         +     '<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>'
         +     '<span class="topbar-notify-dot"></span>'
         + '</span>'
@@ -73,5 +73,42 @@
     var el = document.getElementById('adminUserArea');
     if (el) {
         el.innerHTML = html;
+        bindMessageDropdown(el);
+    }
+
+    function loadMessageCenter(callback) {
+        if (window.MessageCenter) {
+            callback();
+            return;
+        }
+
+        if (window.__messageCenterLoading) {
+            document.addEventListener('message-center-ready', callback, { once: true });
+            return;
+        }
+
+        window.__messageCenterLoading = true;
+        var script = document.createElement('script');
+        script.src = 'js/message-center.js';
+        script.onload = function () {
+            window.__messageCenterLoading = false;
+            document.dispatchEvent(new CustomEvent('message-center-ready'));
+            callback();
+        };
+        document.head.appendChild(script);
+    }
+
+    function bindMessageDropdown(root) {
+        var bell = root.querySelector('.topbar-notify');
+        if (!bell) return;
+
+        loadMessageCenter(function () {
+            if (!window.MessageCenter) return;
+            window.MessageCenter.bindDropdown({
+                root: document,
+                trigger: bell,
+                badgeSelector: '.topbar-notify-dot'
+            });
+        });
     }
 })();
