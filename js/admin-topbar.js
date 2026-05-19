@@ -20,8 +20,7 @@
         { label: '运营中心', href: 'operation-center.html' },
         { label: '运维中心', href: 'maintenance-center.html' },
         { label: '可视化大屏', href: '#' },
-        { label: '智能问数', href: 'smart-query.html', target: '_blank' },
-        { label: '智能报告', href: 'smart-report.html', target: '_blank' },
+        { label: '智能问数', href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' },
         { label: '公共数据运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
         { label: '可信数据空间', href: 'https://lgdata.lggov.cn/index', target: '_blank' },
         { label: '数据开发平台', href: 'data-dev-system.html', target: '_blank' }

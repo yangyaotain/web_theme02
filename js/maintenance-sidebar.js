@@ -30,6 +30,7 @@
             label: '仪表盘定制',
             icon: 'dashboard',
             open: true,
+            hidden: true,
             children: [
                 { key: 'data-board', label: '数据看板', href: 'maintenance-data-board.html' },
                 { key: 'dashboard', label: '仪表盘', href: 'maintenance-dashboard.html' },
@@ -90,7 +91,10 @@
 
     function render(container) {
         const activeKey = getActiveKey(container);
-        const nav = MENU.map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey)).join('');
+        const nav = MENU
+            .filter(item => !item.hidden)
+            .map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey))
+            .join('');
         container.innerHTML = ''
             + '<div class="sidebar-title">'
             + '<span>运维中心</span>'
