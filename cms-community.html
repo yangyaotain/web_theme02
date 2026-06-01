@@ -267,7 +267,7 @@
     .status-dot.green { background: #67c23a; }
     .ban-remark { font-size: 11px; color: #f56c6c; }
 
-    /* ====== 添加板块弹窗 ====== */
+    /* ====== 板块弹窗 ====== */
     .board-modal-mask {
         display: none; position: fixed; inset: 0; z-index: 9999;
         background: rgba(0,0,0,.45); justify-content: center; align-items: center;
@@ -282,7 +282,9 @@
         display: flex; align-items: center; justify-content: space-between;
         padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0;
     }
+    .board-modal-title-wrap { display: flex; flex-direction: column; gap: 4px; }
     .board-modal-title { font-size: 16px; font-weight: 700; color: #303133; }
+    .board-modal-subtitle { font-size: 12px; color: #909399; font-weight: 400; }
     .board-modal-close {
         width: 28px; height: 28px; border: none; background: none; cursor: pointer;
         color: #bbb; display: flex; align-items: center; justify-content: center;
@@ -317,6 +319,9 @@
         background: #fafbfc; vertical-align: middle;
     }
     .bm-upload:hover { border-color: var(--forest-green); color: var(--forest-green); }
+    .bm-upload.has-preview { border-style: solid; color: #fff; }
+    .bm-upload.has-preview:hover { color: #fff; opacity: .9; }
+    .bm-upload.has-preview svg { width: 32px; height: 32px; color: #fff; }
     .bm-upload-hint { display: inline-block; vertical-align: middle; margin-left: 12px; font-size: 12px; color: #909399; }
     .bm-checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; line-height: 32px; }
     .bm-checkbox-group label {
@@ -821,47 +826,49 @@
         </main>
     </div>
 
-    <!-- ====== 添加板块弹窗 ====== -->
+    <!-- ====== 板块新建 / 编辑弹窗 ====== -->
     <div class="board-modal-mask" id="boardModal">
         <div class="board-modal">
             <div class="board-modal-header">
-                <span class="board-modal-title">添加板块</span>
+                <div class="board-modal-title-wrap">
+                    <span class="board-modal-title" id="boardModalTitle">新建板块</span>
+                    <span class="board-modal-subtitle" id="boardModalSubtitle">配置板块基础信息、发布权限和审核机制</span>
+                </div>
                 <button class="board-modal-close" id="boardModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="board-modal-body">
                 <div class="bm-row">
                     <div class="bm-label"><span class="req">*</span>标题：</div>
-                    <div class="bm-value"><input class="bm-input" type="text" placeholder="50字以内" maxlength="50"></div>
+                    <div class="bm-value"><input class="bm-input" id="boardTitleInput" type="text" placeholder="请输入板块标题，50字以内" maxlength="50"></div>
                 </div>
                 <div class="bm-row">
                     <div class="bm-label"><span class="req">*</span>图片：</div>
                     <div class="bm-value">
-                        <div class="bm-upload">+</div>
+                        <div class="bm-upload" id="boardCoverUpload"><span class="bm-upload-plus">+</span></div>
                         <span class="bm-upload-hint">支持png/jpg/jpeg格式，尺寸1920*500，大小不超过5M</span>
                     </div>
                 </div>
                 <div class="bm-row">
                     <div class="bm-label"><span class="req">*</span>概述：</div>
-                    <div class="bm-value"><textarea class="bm-textarea" placeholder="100字以内" maxlength="100"></textarea></div>
+                    <div class="bm-value"><textarea class="bm-textarea" id="boardDescInput" placeholder="请输入板块概述，100字以内" maxlength="100"></textarea></div>
                 </div>
                 <div class="bm-row">
                     <div class="bm-label"><span class="req">*</span>发布权限</div>
                     <div class="bm-value">
-                        <div class="bm-checkbox-group">
-                            <label><input type="checkbox" checked>运营管理方</label>
-                            <label><input type="checkbox" checked>需求方</label>
-                            <label><input type="checkbox" checked>数据提供方</label>
-                            <label><input type="checkbox" checked>服务提供方</label>
-                            <label><input type="checkbox" checked>游客</label>
+                        <div class="bm-checkbox-group" id="boardPermissionGroup">
+                            <label><input type="checkbox" value="运营管理方" checked>运营管理方</label>
+                            <label><input type="checkbox" value="数据需求方" checked>数据需求方</label>
+                            <label><input type="checkbox" value="数据提供方" checked>数据提供方</label>
+                            <label><input type="checkbox" value="游客" checked>游客</label>
                         </div>
                     </div>
                 </div>
                 <div class="bm-row">
                     <div class="bm-label"><span class="req">*</span>审核机制</div>
                     <div class="bm-value">
-                        <div class="bm-checkbox-group">
-                            <label><input type="checkbox" checked>审核新主题</label>
-                            <label><input type="checkbox">审核新回复</label>
+                        <div class="bm-checkbox-group" id="boardAuditGroup">
+                            <label><input type="checkbox" value="审核新主题" checked>审核新主题</label>
+                            <label><input type="checkbox" value="审核新回复">审核新回复</label>
                         </div>
                     </div>
                 </div>
@@ -1313,21 +1320,120 @@
         });
     });
 
-    // ====== 添加板块弹窗 ======
+    // ====== 板块新建 / 编辑弹窗 ======
     var boardModal = document.getElementById('boardModal');
-    function openBoardModal() {
+    var boardModalTitle = document.getElementById('boardModalTitle');
+    var boardModalSubtitle = document.getElementById('boardModalSubtitle');
+    var boardTitleInput = document.getElementById('boardTitleInput');
+    var boardDescInput = document.getElementById('boardDescInput');
+    var boardCoverUpload = document.getElementById('boardCoverUpload');
+    var boardPermissionGroup = document.getElementById('boardPermissionGroup');
+    var boardAuditGroup = document.getElementById('boardAuditGroup');
+    var boardModalSubmit = document.getElementById('boardModalSubmit');
+    var boardModalMode = 'create';
+    var boardEditingCard = null;
+    var boardUploadDefaultHtml = boardCoverUpload.innerHTML;
+
+    function setBoardCheckboxValues(group, values) {
+        group.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+            input.checked = values.indexOf(input.value) !== -1;
+        });
+    }
+
+    function getBoardCheckedValues(group) {
+        return Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).map(function(input) {
+            return input.value;
+        });
+    }
+
+    function resetBoardUpload() {
+        boardCoverUpload.classList.remove('has-preview');
+        boardCoverUpload.removeAttribute('style');
+        boardCoverUpload.innerHTML = boardUploadDefaultHtml;
+    }
+
+    function setBoardUploadFromCard(card) {
+        var icon = card ? card.querySelector('.board-card-icon') : null;
+        if (!icon) {
+            resetBoardUpload();
+            return;
+        }
+        boardCoverUpload.classList.add('has-preview');
+        boardCoverUpload.style.background = getComputedStyle(icon).backgroundColor;
+        boardCoverUpload.style.borderColor = getComputedStyle(icon).backgroundColor;
+        boardCoverUpload.innerHTML = icon.innerHTML;
+    }
+
+    function getBoardGroupName(el) {
+        var group = el ? el.closest('.board-group') : null;
+        var nameEl = group ? group.querySelector('.board-group-name') : null;
+        return nameEl ? nameEl.textContent.trim() : '';
+    }
+
+    function openBoardModal(mode, options) {
+        options = options || {};
+        boardModalMode = mode || 'create';
+        boardEditingCard = options.card || null;
+
+        if (boardModalMode === 'edit' && boardEditingCard) {
+            var boardName = boardEditingCard.querySelector('.board-card-name').textContent.trim();
+            var boardDesc = boardEditingCard.querySelector('.board-card-desc').textContent.trim();
+            var groupName = getBoardGroupName(boardEditingCard);
+            boardModalTitle.textContent = '编辑板块';
+            boardModalSubtitle.textContent = groupName ? groupName + ' / ' + boardName : boardName;
+            boardTitleInput.value = boardName;
+            boardDescInput.value = boardDesc;
+            setBoardUploadFromCard(boardEditingCard);
+            setBoardCheckboxValues(boardPermissionGroup, ['运营管理方', '数据需求方', '数据提供方', '游客']);
+            setBoardCheckboxValues(boardAuditGroup, ['审核新主题']);
+            boardModalSubmit.textContent = '保存';
+        } else {
+            var createGroupName = options.groupName || '';
+            boardModalTitle.textContent = '新建板块';
+            boardModalSubtitle.textContent = createGroupName ? '将在「' + createGroupName + '」下新建板块' : '配置板块基础信息、发布权限和审核机制';
+            boardTitleInput.value = '';
+            boardDescInput.value = '';
+            resetBoardUpload();
+            setBoardCheckboxValues(boardPermissionGroup, ['运营管理方', '数据需求方', '数据提供方', '游客']);
+            setBoardCheckboxValues(boardAuditGroup, ['审核新主题']);
+            boardModalSubmit.textContent = '确定';
+        }
+
         boardModal.classList.add('show');
+        setTimeout(function() { boardTitleInput.focus(); }, 0);
     }
     function closeBoardModal() {
         boardModal.classList.remove('show');
     }
     document.getElementById('boardModalClose').addEventListener('click', closeBoardModal);
     document.getElementById('boardModalCancel').addEventListener('click', closeBoardModal);
-    document.getElementById('boardModalSubmit').addEventListener('click', function() {
-        closeBoardModal();
-        if (window.GlobalNotify) {
-            GlobalNotify.success('板块添加成功');
+    boardModalSubmit.addEventListener('click', function() {
+        var title = boardTitleInput.value.trim();
+        var desc = boardDescInput.value.trim();
+        var permissions = getBoardCheckedValues(boardPermissionGroup);
+        if (!title) {
+            boardTitleInput.focus();
+            GlobalDialog.info({ title: '请填写板块标题', desc: '标题用于板块卡片和内容筛选树展示。' });
+            return;
         }
+        if (!desc) {
+            boardDescInput.focus();
+            GlobalDialog.info({ title: '请填写板块概述', desc: '概述用于说明该板块的交流范围。' });
+            return;
+        }
+        if (!permissions.length) {
+            GlobalDialog.info({ title: '请选择发布权限', desc: '至少选择一个可发布内容的用户角色。' });
+            return;
+        }
+        if (boardModalMode === 'edit' && boardEditingCard) {
+            boardEditingCard.querySelector('.board-card-name').textContent = title;
+            boardEditingCard.querySelector('.board-card-desc').textContent = desc;
+        }
+        closeBoardModal();
+        GlobalDialog.success({
+            title: boardModalMode === 'edit' ? '编辑成功' : '新建成功',
+            desc: boardModalMode === 'edit' ? '板块信息已更新。' : '板块配置已保存。'
+        });
     });
     boardModal.addEventListener('click', function(e) {
         if (e.target === boardModal) closeBoardModal();
@@ -1335,8 +1441,7 @@
     document.querySelectorAll('.btn-add-sm').forEach(function(btn) {
         if (btn.textContent.trim() === '添加板块') {
             btn.addEventListener('click', function() {
-                document.querySelector('.board-modal-title').textContent = '添加板块';
-                openBoardModal();
+                openBoardModal('create', { groupName: getBoardGroupName(btn) });
             });
         }
     });
@@ -1344,8 +1449,7 @@
     // ====== 板块编辑弹窗 ======
     document.querySelectorAll('.board-card .op-edit').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelector('.board-modal-title').textContent = '编辑板块';
-            openBoardModal();
+            openBoardModal('edit', { card: btn.closest('.board-card') });
         });
     });
 

@@ -171,7 +171,6 @@
                 <!-- Tabs -->
                 <div class="g-tabs">
                     <button class="g-tab active" data-tab="intro">资源介绍</button>
-                    <button class="g-tab" data-tab="info">资源信息</button>
                     <button class="g-tab" data-tab="delivery">交付要求</button>
                 </div>
 
@@ -238,15 +237,7 @@
                     </table>
                 </div>
 
-                <!-- Tab 2: 资源信息 -->
-                <div class="g-tab-panel" id="tabInfo">
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-3-7H9v-2h6v2zm0 4H9v-2h6v2zm-2-8H9V7h4v2z"/></svg>
-                        <p>暂无数据</p>
-                    </div>
-                </div>
-
-                <!-- Tab 3: 交付要求 -->
+                <!-- Tab 2: 交付要求 -->
                 <div class="g-tab-panel" id="tabDelivery">
                     <h3 class="g-section-heading">在线交付</h3>
                     <table class="info-table">
@@ -293,7 +284,7 @@
         /* ── Tab 切换 ── */
         var tabs = document.querySelectorAll('.g-tab');
         var panels = document.querySelectorAll('.g-tab-panel');
-        var panelMap = { intro: 'tabIntro', info: 'tabInfo', delivery: 'tabDelivery' };
+        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery' };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {

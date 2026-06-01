@@ -247,7 +247,7 @@
 .vote-pct b { color: #f97316; }
 .btn-vote-submit {
     padding: 7px 24px; font-size: 14px; font-weight: 600;
-    background: #2563eb; color: #fff; border: none; border-radius: 4px;
+    background: var(--forest-green); color: #fff; border: none; border-radius: 4px;
     cursor: pointer; margin-top: 4px;
 }
 
@@ -257,7 +257,7 @@
 .vote-result-hint { font-size: 12px; color: #aaa; margin-bottom: 14px; }
 .vote-result-stats { display: flex; gap: 28px; font-size: 13px; color: #666; margin-bottom: 16px; }
 .vote-result-stats b { color: #333; }
-.vote-status { color: #2563eb; font-weight: 500; }
+.vote-status { color: var(--forest-green); font-weight: 500; }
 .vote-status svg { width: 14px; height: 14px; vertical-align: -2px; }
 .result-bar-row { margin-bottom: 10px; }
 .result-bar-label { font-size: 13px; color: #555; margin-bottom: 4px; }
@@ -274,10 +274,10 @@
 .activity-content h3 { font-size: 15px; font-weight: 700; color: #333; margin: 18px 0 8px; }
 .btn-signup {
     display: inline-block; padding: 10px 32px; font-size: 15px; font-weight: 600;
-    background: #2563eb; color: #fff; border: none; border-radius: 6px;
+    background: var(--forest-green); color: #fff; border: none; border-radius: 6px;
     cursor: pointer; margin: 20px 0; transition: .15s;
 }
-.btn-signup:hover { background: #1d4ed8; }
+.btn-signup:hover { background: var(--forest-green-600); }
 
 /* 报名结果表格 */
 .signup-section { margin-top: 16px; }
@@ -296,12 +296,12 @@
 }
 .signup-search .btn-export {
     padding: 6px 16px; font-size: 13px; font-weight: 500;
-    background: #2563eb; color: #fff; border: none;
+    background: #fff; color: var(--forest-green); border: 1px solid var(--forest-green);
     border-radius: 4px; cursor: pointer;
 }
 .signup-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .signup-table th {
-    background: #2563eb; color: #fff; font-weight: 600;
+    background: var(--forest-green); color: #fff; font-weight: 600;
     padding: 10px 12px; text-align: left; white-space: nowrap;
 }
 .signup-table td {
@@ -317,7 +317,7 @@
     justify-content: center; border: 1px solid #d1d5db; border-radius: 4px;
     background: #fff; color: #555; cursor: pointer; font-size: 13px; transition: .15s;
 }
-.signup-page-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.signup-page-btn.active { background: var(--forest-green); color: #fff; border-color: var(--forest-green); }
 .signup-page-btn:hover { border-color: var(--forest-green); }
 
 /* 帖子截图区域 */
@@ -543,7 +543,7 @@
 
                     <!-- 快速回复（所有类型共用） -->
                     <div class="quick-reply">
-                        <div class="quick-reply-avatar"><img src="https://ui-avatars.com/api/?name=U&background=3b82f6&color=fff&size=40" alt=""></div>
+                        <div class="quick-reply-avatar"><img src="https://ui-avatars.com/api/?name=U&background=20A565&color=fff&size=40" alt=""></div>
                         <input type="text" class="quick-reply-input" placeholder="#在这里快速回复#">
                         <button class="btn-quick-reply">快速回复</button>
                     </div>
@@ -596,7 +596,7 @@
                 <div class="post-floor">
                     <div class="floor-author">
                         <div class="floor-author-name">平台管理员</div>
-                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=管&background=2563eb&color=fff&size=80" alt=""></div>
+                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=管&background=2d6a4f&color=fff&size=80" alt=""></div>
                     </div>
                     <div class="floor-content">
                         <div class="floor-meta">
@@ -794,7 +794,7 @@
                 <div class="post-floor">
                     <div class="floor-author">
                         <div class="floor-author-name">政策研究员</div>
-                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=政&background=0ea5e9&color=fff&size=80" alt=""></div>
+                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=政&background=F7AF1D&color=fff&size=80" alt=""></div>
                     </div>
                     <div class="floor-content">
                         <div class="floor-meta">
@@ -823,7 +823,7 @@
                 <div class="post-floor">
                     <div class="floor-author">
                         <div class="floor-author-name">科技小王</div>
-                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=W&background=0ea5e9&color=fff&size=80" alt=""></div>
+                        <div class="floor-avatar"><img src="https://ui-avatars.com/api/?name=W&background=F7AF1D&color=fff&size=80" alt=""></div>
                     </div>
                     <div class="floor-content">
                         <div class="floor-meta">
@@ -943,7 +943,7 @@
         <!-- 回复编辑器 -->
         <div class="editor-wrap" id="editorArea">
             <div class="editor-user">
-                <div class="editor-user-avatar"><img src="https://ui-avatars.com/api/?name=U&background=3b82f6&color=fff&size=80" alt=""></div>
+                <div class="editor-user-avatar"><img src="https://ui-avatars.com/api/?name=U&background=20A565&color=fff&size=80" alt=""></div>
                 <button class="btn-change-avatar">更换头像</button>
                 <div class="editor-user-info">发帖/创作：30天</div>
                 <span class="editor-account-status status-normal" id="accountStatus">
@@ -1019,14 +1019,14 @@
         vote: {
             title: '数据交易市场还要多少年进入成熟阶段?',
             author: 'yangy',
-            avatar: 'https://ui-avatars.com/api/?name=Y&background=3b82f6&color=fff&size=80',
+            avatar: 'https://ui-avatars.com/api/?name=Y&background=20A565&color=fff&size=80',
             time: '3天前 10:30',
             views: 328, replies: 3
         },
         activity: {
             title: '活动：数商招募活动',
             author: 'yangy',
-            avatar: 'https://ui-avatars.com/api/?name=Y&background=3b82f6&color=fff&size=80',
+            avatar: 'https://ui-avatars.com/api/?name=Y&background=20A565&color=fff&size=80',
             time: '1周前 09:00',
             views: 1205, replies: 4
         }
@@ -1158,10 +1158,10 @@
     .avatar-upload-hint { font-size: 12px; color: #bbb; }
     .btn-upload-avatar {
         display: inline-block; padding: 10px 32px; font-size: 15px; font-weight: 600;
-        background: #2563eb; color: #fff; border: none; border-radius: 8px;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 8px;
         cursor: pointer; transition: .15s; margin-top: 6px;
     }
-    .btn-upload-avatar:hover { background: #1d4ed8; }
+    .btn-upload-avatar:hover { background: var(--forest-green-600); }
 
     /* 步骤2：裁剪 */
     .avatar-crop-wrap {
@@ -1202,10 +1202,10 @@
     .avatar-preview-label { font-size: 12px; color: #aaa; }
     .btn-crop-back {
         padding: 8px 20px; font-size: 13px; font-weight: 600;
-        background: #2563eb; color: #fff; border: none; border-radius: 6px;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 6px;
         cursor: pointer; transition: .15s; width: 100%;
     }
-    .btn-crop-back:hover { background: #1d4ed8; }
+    .btn-crop-back:hover { background: var(--forest-green-600); }
     .avatar-zoom-row {
         display: flex; align-items: center; gap: 8px; width: 100%;
     }
@@ -1225,11 +1225,11 @@
     .btn-avatar-cancel:hover { border-color: #999; color: #333; }
     .btn-avatar-confirm {
         padding: 8px 24px; font-size: 14px; font-weight: 600;
-        background: #2563eb; color: #fff; border: none; border-radius: 6px;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 6px;
         cursor: pointer; transition: .15s;
     }
-    .btn-avatar-confirm:hover { background: #1d4ed8; }
-    .btn-avatar-confirm:disabled { background: #93c5fd; cursor: not-allowed; }
+    .btn-avatar-confirm:hover { background: var(--forest-green-600); }
+    .btn-avatar-confirm:disabled { background: var(--forest-green-200); cursor: not-allowed; }
     </style>
 
     <div class="avatar-modal-mask" id="avatarModal">
@@ -1480,7 +1480,7 @@
     .report-close:hover { background: #f5f5f5; color: #333; }
     .report-close svg { width: 18px; height: 18px; }
     .report-body { padding: 16px 24px 20px; }
-    .report-subtitle { font-size: 14px; color: #2563eb; font-weight: 500; margin-bottom: 16px; }
+    .report-subtitle { font-size: 14px; color: var(--forest-green); font-weight: 500; margin-bottom: 16px; }
     .report-options { display: flex; flex-direction: column; gap: 0; }
     .report-option {
         display: flex; align-items: center; gap: 10px; padding: 10px 0;
@@ -1492,7 +1492,7 @@
         border-radius: 50%; position: relative; cursor: pointer; transition: .15s; flex-shrink: 0;
     }
     .report-option input[type="radio"]:checked {
-        border-color: #2563eb; background: #2563eb;
+        border-color: var(--forest-green); background: var(--forest-green);
     }
     .report-option input[type="radio"]:checked::after {
         content: ''; position: absolute; inset: 3px; background: #fff; border-radius: 50%;
@@ -1502,17 +1502,17 @@
         font-size: 14px; border: 1px solid #d1d5db; border-radius: 6px;
         resize: vertical; outline: none; font-family: inherit; color: #333;
     }
-    .report-textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.1); }
+    .report-textarea:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.12); }
     .report-textarea.show { display: block; }
     .report-footer {
         display: flex; gap: 12px; padding: 0 24px 20px;
     }
     .btn-report-submit {
         padding: 8px 28px; font-size: 14px; font-weight: 600;
-        background: #2563eb; color: #fff; border: none; border-radius: 6px;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 6px;
         cursor: pointer; transition: .15s;
     }
-    .btn-report-submit:hover { background: #1d4ed8; }
+    .btn-report-submit:hover { background: var(--forest-green-600); }
     .btn-report-cancel {
         padding: 8px 28px; font-size: 14px; font-weight: 500;
         background: #fff; color: #555; border: 1px solid #d1d5db; border-radius: 6px;
@@ -1613,16 +1613,16 @@
         border: 1px solid #d1d5db; border-radius: 4px; outline: none;
         color: #333; transition: .15s; background: #fff;
     }
-    .signup-form-input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.1); }
+    .signup-form-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.12); }
     .signup-modal-footer {
         display: flex; gap: 16px; padding: 0 28px 24px; justify-content: center;
     }
     .btn-signup-submit {
         padding: 9px 36px; font-size: 14px; font-weight: 600;
-        background: #2563eb; color: #fff; border: none; border-radius: 6px;
+        background: var(--forest-green); color: #fff; border: none; border-radius: 6px;
         cursor: pointer; transition: .15s;
     }
-    .btn-signup-submit:hover { background: #1d4ed8; }
+    .btn-signup-submit:hover { background: var(--forest-green-600); }
     .btn-signup-cancel {
         padding: 9px 36px; font-size: 14px; font-weight: 500;
         background: #fff; color: #555; border: 1px solid #d1d5db; border-radius: 6px;

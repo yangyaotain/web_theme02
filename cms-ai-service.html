@@ -6,7 +6,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能客服知识库管理 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <title>智能客服管理 - 运营中心 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,8 +15,28 @@
     <link rel="stylesheet" href="css/components.css">
     <script src="js/global-dialog.js"></script>
     <style>
+    .ai-service-page {
+        height: calc(100vh - 64px); display: flex; flex-direction: column;
+        background: #f5f7fa; overflow: hidden;
+    }
+    .ai-tabs {
+        display: flex; align-items: flex-end; gap: 4px; height: 52px;
+        padding: 0 20px; background: #fff; border-bottom: 1px solid #e4e7ed;
+        flex-shrink: 0;
+    }
+    .ai-tab {
+        height: 38px; padding: 0 18px; border: none; border-bottom: 3px solid transparent;
+        background: transparent; color: #606266; font-size: 14px; font-weight: 600;
+        cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: .15s;
+    }
+    .ai-tab svg { width: 16px; height: 16px; }
+    .ai-tab:hover { color: var(--forest-green); background: #f5f7fa; }
+    .ai-tab.active { color: var(--forest-green); border-bottom-color: var(--forest-green); background: #f0fdf4; }
+    .ai-tab-panel { display: none; flex: 1; min-height: 0; overflow: hidden; }
+    .ai-tab-panel.active { display: flex; }
+
     .kb-layout {
-        display: flex; height: calc(100vh - 64px); overflow: hidden;
+        display: flex; height: 100%; width: 100%; overflow: hidden;
     }
     .kb-tree {
         width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #e4e7ed;
@@ -88,6 +108,7 @@
     .kb-btn.primary:hover { opacity: .88; }
     .kb-btn.danger { background: #f56c6c; color: #fff; border-color: #f56c6c; }
     .kb-btn.danger:hover { background: #f78989; border-color: #f78989; }
+    .kb-btn svg { width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; }
     .kb-toolbar-sep { width: 1px; height: 22px; background: #e4e7ed; }
     .kb-toolbar-right {
         margin-left: auto; display: flex; align-items: center; gap: 8px;
@@ -227,6 +248,122 @@
     .kb-edit-footer {
         display: flex; justify-content: flex-end; gap: 10px; padding: 0 24px 20px;
     }
+
+    /* 常见问题管理 */
+    .faq-layout {
+        display: flex; width: 100%; height: 100%; min-height: 0; overflow: hidden;
+        background: #f5f7fa;
+    }
+    .faq-list-panel {
+        width: 360px; flex-shrink: 0; background: #fff; border-right: 1px solid #e4e7ed;
+        display: flex; flex-direction: column; min-height: 0;
+    }
+    .faq-list-header {
+        padding: 16px 16px 12px; border-bottom: 1px solid #f0f2f5;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .faq-list-title { font-size: 15px; font-weight: 700; color: #303133; }
+    .faq-list-sub { margin-top: 3px; font-size: 12px; color: #909399; }
+    .faq-list-tools { padding: 12px 16px; border-bottom: 1px solid #f0f2f5; }
+    .faq-search {
+        width: 100%; box-sizing: border-box; padding: 7px 10px; font-size: 13px;
+        border: 1px solid #dcdfe6; border-radius: 4px; outline: none;
+    }
+    .faq-search:focus { border-color: var(--forest-green); }
+    .faq-list { flex: 1; overflow-y: auto; padding: 8px 10px 14px; }
+    .faq-item {
+        border: 1px solid #ebeef5; border-radius: 6px; background: #fff;
+        padding: 10px 10px 9px; margin-bottom: 8px; cursor: grab; transition: .15s;
+    }
+    .faq-item:active { cursor: grabbing; }
+    .faq-item:hover { border-color: #a5d6b8; box-shadow: 0 2px 8px rgba(45,106,79,.08); }
+    .faq-item.active { border-color: var(--forest-green); background: #f0fdf4; }
+    .faq-item.dragging { opacity: .55; box-shadow: 0 6px 18px rgba(45,106,79,.16); }
+    .faq-item.drag-over { border-color: var(--forest-green); background: #eef8f1; }
+    .faq-item-top { display: flex; align-items: center; gap: 8px; }
+    .faq-drag-handle {
+        width: 18px; height: 22px; color: #b0b3b8; flex-shrink: 0;
+        display: inline-flex; align-items: center; justify-content: center;
+    }
+    .faq-drag-handle svg { width: 14px; height: 14px; }
+    .faq-item-title { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: #303133; line-height: 1.45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .faq-status {
+        display: inline-flex; align-items: center; height: 20px; padding: 0 7px;
+        border-radius: 10px; font-size: 11px; flex-shrink: 0;
+    }
+    .faq-status.on { color: #059669; background: #d1fae5; }
+    .faq-status.off { color: #909399; background: #f3f4f6; }
+    .faq-item-meta { margin: 5px 0 0 26px; font-size: 12px; color: #909399; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .faq-editor-panel {
+        flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+        padding: 16px 20px;
+    }
+    .faq-editor-card {
+        flex: 1; min-height: 0; background: #fff; border: 1px solid #ebeef5;
+        border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.05);
+        display: flex; flex-direction: column; overflow: hidden;
+    }
+    .faq-editor-header {
+        padding: 16px 20px; border-bottom: 1px solid #f0f2f5;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .faq-editor-title { font-size: 16px; font-weight: 700; color: #303133; margin-bottom: 4px; }
+    .faq-editor-sub { font-size: 12px; color: #909399; }
+    .faq-editor-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 20px; }
+    .faq-form-grid {
+        display: grid; grid-template-columns: 1fr 180px; gap: 14px; margin-bottom: 16px;
+    }
+    .faq-form-item label {
+        display: block; margin-bottom: 6px; font-size: 13px; color: #606266; font-weight: 500;
+    }
+    .faq-input, .faq-select {
+        width: 100%; box-sizing: border-box; height: 34px; padding: 0 10px;
+        border: 1px solid #dcdfe6; border-radius: 4px; outline: none;
+        font-size: 13px; color: #303133; background: #fff;
+    }
+    .faq-input:focus, .faq-select:focus { border-color: var(--forest-green); }
+    .faq-richtext {
+        border: 1px solid #dcdfe6; border-radius: 6px; overflow: hidden; background: #fff;
+    }
+    .faq-editor-toolbar {
+        display: flex; flex-direction: column; border-bottom: 1px solid #f0f2f5; background: #fbfcfd;
+    }
+    .faq-toolbar-row {
+        display: flex; align-items: center; min-height: 40px; border-bottom: 1px solid #edf0f5;
+        overflow-x: auto; overflow-y: hidden;
+    }
+    .faq-toolbar-row:last-child { border-bottom: none; }
+    .faq-toolbar-group {
+        display: inline-flex; align-items: center; gap: 2px; padding: 0 8px;
+        border-right: 1px solid #edf0f5; min-height: 40px; flex-shrink: 0;
+    }
+    .faq-tool-btn {
+        height: 30px; min-width: 30px; padding: 0 7px; border: 1px solid transparent;
+        border-radius: 4px; background: transparent; color: #5f6c68; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+        font-size: 12px; transition: .15s;
+    }
+    .faq-tool-btn:hover { color: var(--forest-green); background: #eef8f1; border-color: #cdebd8; }
+    .faq-tool-btn svg { width: 16px; height: 16px; }
+    .faq-tool-btn .caret { width: 9px; height: 9px; margin-left: 2px; color: #9aa5a0; }
+    .faq-tool-select {
+        height: 30px; min-width: 86px; padding: 0 8px; border: 1px solid transparent;
+        border-radius: 4px; background: transparent; color: #303133; font-size: 13px; outline: none;
+    }
+    .faq-tool-select:hover { background: #eef8f1; border-color: #cdebd8; }
+    .faq-answer-editor {
+        min-height: 420px; padding: 16px 18px; outline: none; font-size: 14px;
+        color: #303133; line-height: 1.75; overflow-y: auto;
+    }
+    .faq-answer-editor p { margin: 0 0 8px; }
+    .faq-answer-editor ul, .faq-answer-editor ol { margin: 6px 0 8px 22px; padding: 0; }
+    .faq-answer-editor:empty:before { content: attr(data-placeholder); color: #c0c4cc; }
+    .faq-editor-footer {
+        padding: 14px 20px; border-top: 1px solid #f0f2f5;
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .faq-footer-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
     </style>
 </head>
 <body>
@@ -250,6 +387,19 @@
         <aside class="admin-sidebar" data-operation-sidebar></aside>
 
         <main class="admin-content" style="padding:0;">
+            <div class="ai-service-page">
+                <div class="ai-tabs">
+                    <button class="ai-tab active" type="button" data-ai-tab="kb">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1z"/></svg>
+                        知识库管理
+                    </button>
+                    <button class="ai-tab" type="button" data-ai-tab="faq">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM12 17H6v-2h6v2zm6-4H6v-2h12v2zm0-4H6V7h12v2z"/></svg>
+                        常见问题管理
+                    </button>
+                </div>
+
+                <section class="ai-tab-panel active" id="aiPanelKb" data-ai-panel="kb">
             <div class="kb-layout">
                 <!-- 左侧目录树 -->
                 <div class="kb-tree">
@@ -264,13 +414,19 @@
                 <!-- 右侧列表 -->
                 <div class="kb-content">
                     <div class="kb-toolbar">
-                        <button class="kb-btn primary" id="btnUpload">上传</button>
-                        <button class="kb-btn danger" id="btnBatchDel">删除</button>
+                        <button class="kb-btn primary" id="btnUpload">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>上传
+                        </button>
+                        <button class="kb-btn danger" id="btnBatchDel">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></svg>删除
+                        </button>
                         <div class="kb-toolbar-sep"></div>
                         <div class="kb-toolbar-right">
                             <span class="kb-filter-label">名称：</span>
                             <input type="text" class="kb-filter-input" placeholder="文档名称查询" id="kbSearchInput">
-                            <button class="kb-btn primary" style="padding:6px 22px;">查询</button>
+                            <button class="kb-btn primary" style="padding:6px 22px;">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 3C5.9 3 3 5.9 3 9.5S5.9 16 9.5 16c1.6 0 3.07-.57 4.21-1.53L19.24 20 20.66 18.59l-5.53-5.53A6.47 6.47 0 0 0 16 9.5C16 5.9 13.1 3 9.5 3zm0 2C12 5 14 7 14 9.5S12 14 9.5 14 5 12 5 9.5 7 5 9.5 5z"/></svg>查询
+                            </button>
                         </div>
                     </div>
                     <div class="kb-table-wrap">
@@ -294,6 +450,140 @@
                         <button class="kb-page-btn">下一页</button>
                     </div>
                 </div>
+            </div>
+                </section>
+
+                <section class="ai-tab-panel" id="aiPanelFaq" data-ai-panel="faq">
+                    <div class="faq-layout">
+                        <aside class="faq-list-panel">
+                            <div class="faq-list-header">
+                                <div>
+                                    <div class="faq-list-title">常见问题列表</div>
+                                    <div class="faq-list-sub">对应门户机器人右侧展示顺序</div>
+                                </div>
+                                <button class="kb-btn primary" id="faqAddBtn" type="button">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>新增
+                                </button>
+                            </div>
+                            <div class="faq-list-tools">
+                                <input class="faq-search" id="faqSearchInput" type="text" placeholder="搜索问题标题">
+                            </div>
+                            <div class="faq-list" id="faqList"></div>
+                        </aside>
+
+                        <section class="faq-editor-panel">
+                            <div class="faq-editor-card">
+                                <div class="faq-editor-header">
+                                    <div>
+                                        <div class="faq-editor-title" id="faqEditorTitle">如何找回账号？</div>
+                                        <div class="faq-editor-sub" id="faqEditorSub">编辑问题标题、展示状态与机器人回复内容</div>
+                                    </div>
+                                    <span class="faq-status on" id="faqHeaderStatus">启用</span>
+                                </div>
+                                <div class="faq-editor-body">
+                                    <div class="faq-form-grid">
+                                        <div class="faq-form-item">
+                                            <label>问题标题</label>
+                                            <input class="faq-input" id="faqQuestionInput" type="text" maxlength="60" placeholder="请输入常见问题标题">
+                                        </div>
+                                        <div class="faq-form-item">
+                                            <label>展示状态</label>
+                                            <select class="faq-select" id="faqStatusSelect">
+                                                <option value="on">启用</option>
+                                                <option value="off">停用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="faq-form-item">
+                                        <label>回答内容</label>
+                                        <div class="faq-richtext">
+                                            <div class="faq-editor-toolbar">
+                                                <div class="faq-toolbar-row">
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="undo" title="撤销"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 8c-2.65 0-5.03 1.08-6.76 2.82L3 8.08V15h6.92l-2.76-2.76A7.48 7.48 0 0 1 12.5 10C15.54 10 18.14 11.82 19.3 14.43l1.84-.78C19.68 10.32 16.35 8 12.5 8z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="redo" title="重做"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 8c2.65 0 5.03 1.08 6.76 2.82L21 8.08V15h-6.92l2.76-2.76A7.48 7.48 0 0 0 11.5 10C8.46 10 5.86 11.82 4.7 14.43l-1.84-.78C4.32 10.32 7.65 8 11.5 8z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" title="格式刷"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v5H9v10h4v-8h8V4h-3z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="removeFormat" title="清除格式"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4v3h5v13h3V7h5V4H6zm12.5 14.5L16 16l-1.4 1.4 2.5 2.5-2.5 2.5L16 23.8l2.5-2.5 2.5 2.5 1.4-1.4-2.5-2.5 2.5-2.5L21 16l-2.5 2.5z"/></svg></button>
+                                                    </div>
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button">插入<svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                        <select class="faq-tool-select" data-faq-select="formatBlock" title="段落">
+                                                            <option value="P">段落</option>
+                                                            <option value="H2">标题二</option>
+                                                            <option value="H3">标题三</option>
+                                                        </select>
+                                                        <select class="faq-tool-select" data-faq-select="fontName" title="字体">
+                                                            <option value="Noto Sans SC">系统字体</option>
+                                                            <option value="Microsoft YaHei">微软雅黑</option>
+                                                            <option value="SimSun">宋体</option>
+                                                        </select>
+                                                        <select class="faq-tool-select" data-faq-select="fontSize" title="字号">
+                                                            <option value="3">14px</option>
+                                                            <option value="4">16px</option>
+                                                            <option value="5">18px</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="bold" title="加粗"><strong style="font-size:16px;">B</strong></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="italic" title="斜体"><em style="font-size:16px;">I</em></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="underline" title="下划线"><u style="font-size:16px;">U</u></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="strikeThrough" title="删除线"><s style="font-size:16px;">S</s></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="subscript" title="下标">X<sub>2</sub></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="superscript" title="上标">X<sup>2</sup></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="foreColor" data-value="#1f2937" title="字体颜色"><span style="font-weight:700;border-bottom:3px solid #1f2937;">A</span><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="hiliteColor" data-value="#d1fae5" title="背景色"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.13 1.13 3.75 3.75 1.13-1.13z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                    </div>
+                                                </div>
+                                                <div class="faq-toolbar-row">
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="justifyLeft" title="左对齐"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3V5zm0 4h12v2H3V9zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="justifyCenter" title="居中"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3V5zm3 4h12v2H6V9zm-3 4h18v2H3v-2zm3 4h12v2H6v-2z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="justifyRight" title="右对齐"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3V5zm6 4h12v2H9V9zm-6 4h18v2H3v-2zm6 4h12v2H9v-2z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="justifyFull" title="两端对齐"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3V5zm0 4h18v2H3V9zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="outdent" title="减少缩进"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h10v2H11V7zm0 4h10v2H11v-2zm0 4h10v2H11v-2zM3 12l5-5v10l-5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="indent" title="增加缩进"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h10v2H11V7zm0 4h10v2H11v-2zm0 4h10v2H11v-2zm-8-3 5-5v10l-5-5z"/></svg></button>
+                                                    </div>
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" title="行高"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4h14v2H7V4zm0 7h14v2H7v-2zm0 7h14v2H7v-2zM3 7l2-2 2 2H3zm0 10h4l-2 2-2-2z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertOrderedList" title="有序列表"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-10h1V3H2v1h1v3zm-1 4h1.8L2 13.1V14h3v-1H3.2L5 10.9V10H2v1zm6-7v2h14V4H8zm0 9h14v-2H8v2zm0 7h14v-2H8v2z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertUnorderedList" title="无序列表"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c.83 0 1.5.67 1.5 1.5S4.83 13.5 4 13.5 2.5 12.83 2.5 12 3.17 10.5 4 10.5zm0-7C4.83 3.5 5.5 4.17 5.5 5S4.83 6.5 4 6.5 2.5 5.83 2.5 5 3.17 3.5 4 3.5zm0 14c.83 0 1.5.67 1.5 1.5S4.83 20.5 4 20.5 2.5 19.83 2.5 19 3.17 17.5 4 17.5zM8 4h14v2H8V4zm0 7h14v2H8v-2zm0 7h14v2H8v-2z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                    </div>
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertTable" title="表格"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v4h4V5H5zm6 0v4h8V5h-8zM5 11v8h4v-8H5zm6 0v8h8v-8h-8z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertImage" title="图片"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 11.5l2.5 3.01L14.5 10l4.5 6H5l3.5-4.5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertVideo" title="视频"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V6c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-4.5l4 4v-11l-4 4z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="createLink" title="链接"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertHTML" data-value="Ω" title="特殊符号">Ω</button>
+                                                        <button class="faq-tool-btn" type="button" data-faq-cmd="insertTime" title="时间"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 11h5v-2h-4V6h-2v7z"/></svg><svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+                                                    </div>
+                                                    <div class="faq-toolbar-group">
+                                                        <button class="faq-tool-btn" type="button" title="搜索"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 3C5.9 3 3 5.9 3 9.5S5.9 16 9.5 16c1.6 0 3.07-.57 4.21-1.53L19.24 20 20.66 18.59l-5.53-5.53A6.47 6.47 0 0 0 16 9.5C16 5.9 13.1 3 9.5 3z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" title="预览"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 10.5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></button>
+                                                        <button class="faq-tool-btn" type="button" title="全屏"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 5h5V3H3v7h2V5zm9-2v2h5v5h2V3h-7zM5 14H3v7h7v-2H5v-5zm14 5h-5v2h7v-7h-2v5z"/></svg></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="faq-answer-editor" id="faqAnswerEditor" contenteditable="true" data-placeholder="请输入机器人回复内容"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="faq-editor-footer">
+                                    <button class="kb-btn danger" id="faqDeleteBtn" type="button">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></svg>删除
+                                    </button>
+                                    <div class="faq-footer-actions">
+                                        <button class="kb-btn" id="faqCancelBtn" type="button">
+                                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 13.59L14.59 17 12 14.41 9.41 17 8 15.59 10.59 13 8 10.41 9.41 9 12 11.59 14.59 9 16 10.41 13.41 13 16 15.59z"/></svg>取消
+                                        </button>
+                                        <button class="kb-btn primary" id="faqSaveBtn" type="button">
+                                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zM12 19c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zM6 8V5h9v3H6z"/></svg>保存
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -362,6 +652,267 @@
     </div>
 
     <script>
+    // ====== 智能客服页签 ======
+    document.querySelectorAll('.ai-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var target = tab.getAttribute('data-ai-tab');
+            document.querySelectorAll('.ai-tab').forEach(function(item) { item.classList.remove('active'); });
+            document.querySelectorAll('.ai-tab-panel').forEach(function(panel) { panel.classList.remove('active'); });
+            tab.classList.add('active');
+            document.querySelector('[data-ai-panel="' + target + '"]').classList.add('active');
+        });
+    });
+
+    // ====== 常见问题管理 ======
+    var FAQ_DRAG_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H7v3h3V4zm7 0h-3v3h3V4zM10 10H7v3h3v-3zm7 0h-3v3h3v-3zM10 16H7v3h3v-3zm7 0h-3v3h3v-3z"/></svg>';
+
+    var faqData = [
+        {
+            question: '如何找回账号？',
+            status: 'on',
+            updated: '2026-03-12 14:20',
+            answer: '<p>如忘记账号或密码，可先在登录页点击“忘记密码”进行找回。</p><ol><li>个人用户可通过手机号验证码重置密码。</li><li>企业用户如不清楚机构账号，可提交机构账号找回申请。</li><li>提交材料后，平台工作人员会进行核验并联系您。</li></ol>'
+        },
+        {
+            question: '如何申请数据资源？',
+            status: 'on',
+            updated: '2026-03-08 10:35',
+            answer: '<p>进入数据资源详情页后，点击“申请使用”并填写申请用途、使用周期和联系人信息。</p><p>提交后可在用户中心查看审核进度，审核通过后即可按授权范围使用数据资源。</p>'
+        },
+        {
+            question: '如何上架数据产品？',
+            status: 'on',
+            updated: '2026-03-05 16:10',
+            answer: '<p>数据提供方完成认证后，可在数据产品管理中提交产品信息。</p><ul><li>补充产品名称、适用场景、交付方式和价格说明。</li><li>上传必要的数据样例或说明文档。</li><li>通过平台审核后，产品将在门户展示。</li></ul>'
+        },
+        {
+            question: '如何获得交易角色权限？',
+            status: 'on',
+            updated: '2026-02-28 09:48',
+            answer: '<p>请先完成企业认证，再根据业务需要申请数据需求方或数据提供方角色。</p><p>平台会根据提交的主体资质和业务材料进行审核，审核结果会通过站内消息通知。</p>'
+        },
+        {
+            question: '如何查询数据服务？',
+            status: 'on',
+            updated: '2026-02-24 11:22',
+            answer: '<p>您可以在数据服务页面通过服务类型、行业领域和关键词进行筛选。</p><p>进入服务详情后，可查看服务说明、交付内容、服务周期和咨询入口。</p>'
+        },
+        {
+            question: '如何办理数据产权登记？',
+            status: 'off',
+            updated: '2026-02-18 15:12',
+            answer: '<p>数据产权登记需准备主体材料、数据来源说明、权属证明和合规说明。</p><p>材料准备完成后，可通过平台指引提交登记申请，后续按审核意见补充材料。</p>'
+        },
+        {
+            question: '企业账户如何管理子账号？',
+            status: 'on',
+            updated: '2026-02-12 13:40',
+            answer: '<p>企业管理员可在用户中心进入企业成员管理，新增、停用或调整子账号权限。</p><p>建议按岗位配置最小必要权限，避免多人共用同一账号。</p>'
+        }
+    ];
+    var faqActiveIndex = 0;
+
+    var faqList = document.getElementById('faqList');
+    var faqSearchInput = document.getElementById('faqSearchInput');
+    var faqQuestionInput = document.getElementById('faqQuestionInput');
+    var faqStatusSelect = document.getElementById('faqStatusSelect');
+    var faqAnswerEditor = document.getElementById('faqAnswerEditor');
+    var faqEditorTitle = document.getElementById('faqEditorTitle');
+    var faqEditorSub = document.getElementById('faqEditorSub');
+    var faqHeaderStatus = document.getElementById('faqHeaderStatus');
+    var faqDragIndex = null;
+
+    function nowText() {
+        var d = new Date();
+        var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
+
+    function statusText(status) {
+        return status === 'on' ? '启用' : '停用';
+    }
+
+    function renderFaqList() {
+        var kw = faqSearchInput.value.trim().toLowerCase();
+        var html = '';
+        faqData.forEach(function(item, index) {
+            if (kw && item.question.toLowerCase().indexOf(kw) === -1) return;
+            var active = index === faqActiveIndex ? ' active' : '';
+            var statusClass = item.status === 'on' ? 'on' : 'off';
+            html += '<div class="faq-item' + active + '" data-index="' + index + '" draggable="true">' +
+                '<div class="faq-item-top">' +
+                    '<span class="faq-drag-handle" title="拖动排序">' + FAQ_DRAG_SVG + '</span>' +
+                    '<div class="faq-item-title">' + escHtml(item.question) + '</div>' +
+                    '<span class="faq-status ' + statusClass + '">' + statusText(item.status) + '</span>' +
+                '</div>' +
+                '<div class="faq-item-meta">拖动调整展示顺序 · 更新于 ' + item.updated + '</div>' +
+            '</div>';
+        });
+        faqList.innerHTML = html || '<div style="padding:18px 10px;font-size:13px;color:#909399;text-align:center;">暂无匹配问题</div>';
+    }
+
+    function setHeaderStatus(status) {
+        faqHeaderStatus.className = 'faq-status ' + (status === 'on' ? 'on' : 'off');
+        faqHeaderStatus.textContent = statusText(status);
+    }
+
+    function renderFaqEditor(index) {
+        if (!faqData.length) return;
+        faqActiveIndex = Math.max(0, Math.min(index, faqData.length - 1));
+        var item = faqData[faqActiveIndex];
+        faqEditorTitle.textContent = item.question;
+        faqEditorSub.textContent = '更新于 ' + item.updated + '，左侧拖动调整前台展示顺序';
+        faqQuestionInput.value = item.question;
+        faqStatusSelect.value = item.status;
+        faqAnswerEditor.innerHTML = item.answer;
+        setHeaderStatus(item.status);
+        renderFaqList();
+    }
+
+    function moveFaq(from, to) {
+        if (to < 0 || to >= faqData.length) return;
+        var current = faqData.splice(from, 1)[0];
+        faqData.splice(to, 0, current);
+        renderFaqEditor(to);
+    }
+
+    faqList.addEventListener('click', function(e) {
+        var itemEl = e.target.closest('.faq-item');
+        if (!itemEl) return;
+        var index = Number(itemEl.getAttribute('data-index'));
+        renderFaqEditor(index);
+    });
+
+    faqList.addEventListener('dragstart', function(e) {
+        var itemEl = e.target.closest('.faq-item');
+        if (!itemEl) return;
+        faqDragIndex = Number(itemEl.getAttribute('data-index'));
+        itemEl.classList.add('dragging');
+        if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', faqDragIndex);
+        }
+    });
+
+    faqList.addEventListener('dragover', function(e) {
+        var itemEl = e.target.closest('.faq-item');
+        if (!itemEl) return;
+        e.preventDefault();
+        faqList.querySelectorAll('.faq-item.drag-over').forEach(function(item) { item.classList.remove('drag-over'); });
+        if (!itemEl.classList.contains('dragging')) itemEl.classList.add('drag-over');
+    });
+
+    faqList.addEventListener('dragleave', function(e) {
+        var itemEl = e.target.closest('.faq-item');
+        if (itemEl && !itemEl.contains(e.relatedTarget)) itemEl.classList.remove('drag-over');
+    });
+
+    faqList.addEventListener('drop', function(e) {
+        var itemEl = e.target.closest('.faq-item');
+        if (!itemEl) return;
+        e.preventDefault();
+        var targetIndex = Number(itemEl.getAttribute('data-index'));
+        faqList.querySelectorAll('.faq-item').forEach(function(item) { item.classList.remove('drag-over', 'dragging'); });
+        if (faqDragIndex !== null && faqDragIndex !== targetIndex) moveFaq(faqDragIndex, targetIndex);
+        faqDragIndex = null;
+    });
+
+    faqList.addEventListener('dragend', function() {
+        faqList.querySelectorAll('.faq-item').forEach(function(item) { item.classList.remove('drag-over', 'dragging'); });
+        faqDragIndex = null;
+    });
+
+    faqSearchInput.addEventListener('input', renderFaqList);
+
+    document.getElementById('faqAddBtn').addEventListener('click', function() {
+        faqData.unshift({
+            question: '新建常见问题',
+            status: 'off',
+            updated: nowText(),
+            answer: '<p>请输入该问题在机器人弹窗中的回答内容。</p>'
+        });
+        faqSearchInput.value = '';
+        renderFaqEditor(0);
+        faqQuestionInput.focus();
+        faqQuestionInput.select();
+    });
+
+    document.querySelectorAll('[data-faq-cmd]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var cmd = btn.getAttribute('data-faq-cmd');
+            var value = btn.getAttribute('data-value');
+            faqAnswerEditor.focus();
+            if (cmd === 'createLink') {
+                var link = window.prompt('请输入链接地址', 'https://');
+                if (!link) return;
+                document.execCommand(cmd, false, link);
+            } else if (cmd === 'insertTable') {
+                document.execCommand('insertHTML', false, '<table style="width:100%;border-collapse:collapse;margin:8px 0;"><tr><td style="border:1px solid #dcdfe6;padding:6px;">字段</td><td style="border:1px solid #dcdfe6;padding:6px;">说明</td></tr><tr><td style="border:1px solid #dcdfe6;padding:6px;">示例</td><td style="border:1px solid #dcdfe6;padding:6px;">内容</td></tr></table>');
+            } else if (cmd === 'insertImage' || cmd === 'insertVideo') {
+                GlobalDialog.info({ title: '原型提示', desc: '该按钮用于示意富文本媒体插入能力。' });
+            } else if (cmd === 'insertTime') {
+                document.execCommand('insertHTML', false, nowText());
+            } else {
+                document.execCommand(cmd, false, value || null);
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-faq-select]').forEach(function(select) {
+        select.addEventListener('change', function() {
+            faqAnswerEditor.focus();
+            var cmd = select.getAttribute('data-faq-select');
+            var value = select.value;
+            if (cmd === 'formatBlock') {
+                document.execCommand(cmd, false, value);
+            } else {
+                document.execCommand(cmd, false, value);
+            }
+        });
+    });
+
+    faqQuestionInput.addEventListener('input', function() {
+        faqEditorTitle.textContent = faqQuestionInput.value.trim() || '未命名问题';
+    });
+    faqStatusSelect.addEventListener('change', function() {
+        setHeaderStatus(faqStatusSelect.value);
+    });
+    document.getElementById('faqCancelBtn').addEventListener('click', function() {
+        renderFaqEditor(faqActiveIndex);
+    });
+    document.getElementById('faqDeleteBtn').addEventListener('click', function() {
+        var item = faqData[faqActiveIndex];
+        GlobalDialog.danger({
+            title: '删除常见问题',
+            desc: '您确定要删除【' + escHtml(item.question) + '】吗？删除后前台机器人侧栏将不再展示该问题。',
+            confirmText: '确认删除',
+            cancelText: '取消',
+            onConfirm: function() {
+                faqData.splice(faqActiveIndex, 1);
+                if (!faqData.length) {
+                    faqData.push({ question: '新建常见问题', status: 'off', updated: nowText(), answer: '<p>请输入回答内容。</p>' });
+                }
+                renderFaqEditor(Math.min(faqActiveIndex, faqData.length - 1));
+            }
+        });
+    });
+    document.getElementById('faqSaveBtn').addEventListener('click', function() {
+        var title = faqQuestionInput.value.trim();
+        if (!title) {
+            GlobalDialog.info({ title: '请填写问题标题', desc: '问题标题会展示在门户右下角智能客服弹窗的常见问题列表中。' });
+            faqQuestionInput.focus();
+            return;
+        }
+        faqData[faqActiveIndex].question = title;
+        faqData[faqActiveIndex].status = faqStatusSelect.value;
+        faqData[faqActiveIndex].answer = faqAnswerEditor.innerHTML.trim() || '<p>暂无回答内容</p>';
+        faqData[faqActiveIndex].updated = nowText();
+        renderFaqEditor(faqActiveIndex);
+        GlobalDialog.success({ title: '保存成功', desc: '常见问题及回答内容已更新。' });
+    });
+
+    renderFaqEditor(0);
+
     // ====== 目录树数据 ======
     var kbTreeData = {
         label: '龙岗数据门户', open: true, children: [
