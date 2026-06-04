@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空间审批详情 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .page-wrap { padding: 0; max-width: var(--content-max-width); margin: 0 auto; }
+        .detail-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+        .info-card {
+            background: #fff;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--forest-green);
+            padding: 16px 20px 12px;
+            border-left: 3px solid var(--forest-green);
+            margin: 0;
+            background: #fff;
+        }
+        .section-body { padding: 0 20px 20px; }
+        .space-summary-name { font-size: 16px; font-weight: 700; color: #303133; margin-bottom: 8px; }
+        .space-summary-desc { font-size: 13px; color: #606266; line-height: 1.8; max-width: 780px; }
+        .detail-subtitle {
+            font-size: 14px;
+            font-weight: 700;
+            color: #303133;
+            margin: 16px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+        .field-left, .field-right { display: flex; flex-direction: column; gap: 10px; }
+        .field-row { font-size: 13px; color: #606266; display: flex; min-width: 0; }
+        .field-row .lbl { color: #909399; white-space: nowrap; min-width: 150px; flex-shrink: 0; }
+        .field-row .val { color: #303133; word-break: break-all; min-width: 0; }
+        .code-text { font-family: Consolas, Monaco, monospace; font-size: 12px; }
+        .audit-panel {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 84px;
+        }
+        .audit-form { padding: 20px; }
+        .radio-group { display: flex; gap: 28px; margin-bottom: 16px; }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #303133;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .radio-item input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .radio-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #dcdfe6;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .radio-dot::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: transparent;
+            transition: all 0.15s;
+        }
+        .radio-item:hover .radio-dot { border-color: var(--forest-green); }
+        .radio-item input[type="radio"]:checked + .radio-dot { border-color: var(--forest-green); }
+        .radio-item input[type="radio"]:checked + .radio-dot::after { background: var(--forest-green); }
+        .audit-textarea {
+            width: 100%;
+            height: 90px;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #303133;
+            font-family: inherit;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .audit-textarea::placeholder { color: #c0c4cc; }
+        .audit-textarea:focus { border-color: var(--forest-green); }
+        .char-count { text-align: right; font-size: 12px; color: #c0c4cc; margin-top: 4px; }
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: var(--forest-green);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .submit-btn:hover { background: var(--forest-green-600); }
+        .submit-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .flow-section { border-top: 1px solid #ebeef5; padding: 20px; }
+        .flow-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .flow-title { font-size: 14px; font-weight: 600; color: #303133; }
+        .flow-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--forest-green); }
+        .flow-status-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; background: #fff; }
+        .flow-stats { text-align: center; margin-bottom: 18px; padding: 10px 0; }
+        .flow-stats-label { font-size: 12px; color: #909399; margin-bottom: 4px; }
+        .flow-stats-time { font-size: 13px; color: #303133; }
+        .flow-stats-time b { font-size: 22px; font-weight: 700; color: #303133; }
+        .flow-step { margin-bottom: 16px; }
+        .flow-step-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .flow-step-name { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #303133; }
+        .flow-step-name svg { width: 14px; height: 14px; fill: #909399; }
+        .flow-step-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--forest-green); }
+        .flow-step-status .dot { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid currentColor; background: #fff; }
+        .flow-step-body { margin-left: 20px; padding: 10px 14px; background: #f9fbfd; border-radius: 4px; font-size: 12px; color: #606266; }
+        .flow-step-body .person { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .flow-step-body .person svg { width: 14px; height: 14px; fill: #909399; }
+        .flow-step-body .person-name { color: #303133; font-weight: 500; }
+        .flow-step-body .time-row { color: #909399; line-height: 1.8; }
+        .flow-open-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            color: var(--forest-green);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .flow-open-btn:hover { border-color: var(--forest-green); background: var(--forest-green-50); }
+        .flow-open-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .modal-mask {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0,0,0,0.45);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-mask.show { display: flex; }
+        .flow-modal-box {
+            background: #fff;
+            border-radius: 8px;
+            width: 820px;
+            max-width: 92vw;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+        }
+        .flow-modal-hd { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #ebeef5; }
+        .flow-modal-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; color: #303133; }
+        .flow-modal-title .icon { width: 32px; height: 32px; border-radius: 8px; background: var(--forest-green-50); display: flex; align-items: center; justify-content: center; }
+        .flow-modal-title .icon svg { width: 18px; height: 18px; fill: var(--forest-green); }
+        .flow-modal-title .ver { font-size: 12px; font-weight: 500; color: var(--forest-green); background: var(--forest-green-50); padding: 2px 8px; border-radius: 3px; margin-left: 4px; }
+        .flow-modal-legend { display: flex; align-items: center; gap: 16px; font-size: 12px; color: #606266; }
+        .flow-modal-legend .leg-item { display: flex; align-items: center; gap: 5px; }
+        .leg-box { width: 12px; height: 12px; border-radius: 2px; border: 1px solid; }
+        .leg-box.processing { background: var(--forest-green); border-color: var(--forest-green); }
+        .leg-box.done { background: #67c23a; border-color: #67c23a; }
+        .leg-box.pending { background: #fff; border-color: #dcdfe6; }
+        .flow-modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: #909399; border-radius: 4px; transition: all 0.15s; }
+        .flow-modal-close:hover { background: #f2f6fc; color: #303133; }
+        .flow-modal-close svg { width: 16px; height: 16px; fill: currentColor; }
+        .flow-modal-bd {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: repeating-linear-gradient(0deg, transparent, transparent 19px, #f5f7fa 19px, #f5f7fa 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 19px, #f5f7fa 19px, #f5f7fa 20px);
+            background-size: 20px 20px;
+            min-height: 400px;
+        }
+        .flow-canvas { width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; }
+        .flow-diagram { display: flex; align-items: center; gap: 0; }
+        .flow-node-start, .flow-node-end { width: 32px; height: 32px; border-radius: 50%; border: 2.5px solid; flex-shrink: 0; }
+        .flow-node-start { border-color: #67c23a; background: #fff; }
+        .flow-node-end { border-color: #303133; background: #fff; }
+        .flow-line-dashed { width: 80px; height: 0; border-top: 2px dashed #67c23a; flex-shrink: 0; }
+        .flow-line-solid { width: 80px; height: 0; border-top: 2px solid #303133; flex-shrink: 0; position: relative; }
+        .flow-line-solid::after { content: ''; position: absolute; right: -1px; top: -6px; border: 5px solid transparent; border-left: 8px solid #303133; }
+        .flow-node-task { background: var(--forest-green); color: #fff; padding: 16px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; text-align: center; flex-shrink: 0; min-width: 180px; box-shadow: 0 2px 8px rgba(32,165,101,0.28); }
+        .flow-node-task .task-bars { display: flex; gap: 3px; justify-content: center; margin-top: 8px; }
+        .flow-node-task .task-bar { width: 3px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 1px; }
+        .flow-zoom-bar { position: absolute; top: 16px; right: 16px; display: flex; align-items: center; gap: 6px; background: #fff; border-radius: 6px; padding: 4px 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); font-size: 12px; color: #606266; }
+        .zoom-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: #606266; border-radius: 3px; transition: all 0.15s; font-size: 14px; }
+        .zoom-btn:hover { background: #f5f7fa; color: var(--forest-green); }
+        .zoom-select { font-size: 12px; color: #606266; border: none; background: none; font-family: inherit; cursor: pointer; padding: 0 2px; outline: none; }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+
+        <main class="admin-content">
+            <div class="page-wrap">
+                <a class="back-link" href="space-approval.html">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                    空间审批详情
+                </a>
+
+                <div class="detail-layout">
+                    <div class="detail-left">
+                        <div class="info-card">
+                            <h3 class="section-title">空间申请信息</h3>
+                            <div class="section-body">
+                                <div class="space-summary-name">低空经济可信数据空间</div>
+                                <div class="space-summary-desc">面向低空航路、无人机物流和空域监管的数据可信流通空间，申请接入平台统一可信数据空间管理体系。</div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h3 class="section-title">接入信息详情</h3>
+                            <div class="section-body">
+                                <div class="detail-subtitle">运营主体信息</div>
+                                <div class="field-grid">
+                                    <div class="field-left">
+                                        <div class="field-row"><span class="lbl">平台名称：</span><span class="val">低空经济可信数据空间</span></div>
+                                        <div class="field-row"><span class="lbl">运营主体名称：</span><span class="val">深圳市龙岗区低空经济发展有限公司</span></div>
+                                        <div class="field-row"><span class="lbl">统一社会信用代码：</span><span class="val code-text">91440300MA5K8L3X2P</span></div>
+                                        <div class="field-row"><span class="lbl">申请时间：</span><span class="val">2026-06-03 10:18:36</span></div>
+                                    </div>
+                                    <div class="field-right">
+                                        <div class="field-row"><span class="lbl">联系人：</span><span class="val">陈晓宁</span></div>
+                                        <div class="field-row"><span class="lbl">联系电话：</span><span class="val">138****6021</span></div>
+                                        <div class="field-row"><span class="lbl">联系邮箱：</span><span class="val">ops@low-altitude.lgdata.cn</span></div>
+                                        <div class="field-row"><span class="lbl">主体地址：</span><span class="val">深圳市龙岗区坂田街道环城南路智慧空港服务中心</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-subtitle">网关与安全信息</div>
+                                <div class="field-grid">
+                                    <div class="field-left">
+                                        <div class="field-row"><span class="lbl">网关地址：</span><span class="val code-text">https://gateway.low-altitude.lgdata.cn</span></div>
+                                        <div class="field-row"><span class="lbl">IP 白名单：</span><span class="val code-text">10.26.18.45, 10.26.18.46</span></div>
+                                    </div>
+                                    <div class="field-right">
+                                        <div class="field-row"><span class="lbl">公钥：</span><span class="val code-text">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArY4gF7q8rL2xD0N9...</span></div>
+                                        <div class="field-row"><span class="lbl">接入环境：</span><span class="val">生产环境</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="audit-panel">
+                        <div class="audit-form">
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="auditResult" value="agree" checked><span class="radio-dot"></span> 同意
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="auditResult" value="reject"><span class="radio-dot"></span> 拒绝
+                                </label>
+                            </div>
+                            <textarea class="audit-textarea" id="auditOpinion" placeholder="请输入审批意见" maxlength="200"></textarea>
+                            <div class="char-count"><span id="charNum">0</span>/200</div>
+                            <button class="submit-btn" id="submitAuditBtn">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                提交
+                            </button>
+                        </div>
+
+                        <div class="flow-section">
+                            <div class="flow-header">
+                                <span class="flow-title">流程动态</span>
+                                <span class="flow-status"><span class="flow-status-dot"></span> 进行中</span>
+                                <button class="flow-open-btn" title="查看流程图" onclick="document.getElementById('flowchartModal').classList.add('show')">
+                                    <svg viewBox="0 0 24 24"><path d="M14 4l2.29 2.29-2.88 2.88 1.42 1.42 2.88-2.88L20 10V4zm-4 0H4v6l2.29-2.29 4.71 4.7V20h2v-8.41l-5.29-5.3z"/></svg>
+                                </button>
+                            </div>
+                            <div class="flow-stats">
+                                <div class="flow-stats-label">累计耗时</div>
+                                <div class="flow-stats-time"><b>1</b>天<b>3</b>时<b>26</b>分</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-step-header">
+                                    <span class="flow-step-name"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>运营中心审批</span>
+                                    <span class="flow-step-status"><span class="dot"></span> 处理中</span>
+                                </div>
+                                <div class="flow-step-body">
+                                    <div class="person"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="person-name">平台运营管理员</span></div>
+                                    <div class="time-row">开始时间：2026-06-03 10:19</div>
+                                    <div class="time-row">处理时长：1天3时26分</div>
+                                </div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-step-header">
+                                    <span class="flow-step-name"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>提交申请</span>
+                                    <span class="flow-step-status"><span class="dot"></span> 提交</span>
+                                </div>
+                                <div class="flow-step-body">
+                                    <div class="person"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="person-name">陈晓宁</span><span style="margin-left:auto;color:#909399;font-size:12px;">2026-06-03 10:18</span></div>
+                                    <div class="time-row">开始时间：2026-06-03 10:18</div>
+                                    <div class="time-row">处理时长：0天0时0分</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-mask" id="flowchartModal">
+                <div class="flow-modal-box">
+                    <div class="flow-modal-hd">
+                        <div style="display:flex;align-items:center;gap:20px;">
+                            <div class="flow-modal-title">
+                                <span class="icon"><svg viewBox="0 0 24 24"><path d="M14 4l2.29 2.29-2.88 2.88 1.42 1.42 2.88-2.88L20 10V4zm-4 0H4v6l2.29-2.29 4.71 4.7V20h2v-8.41l-5.29-5.3z"/></svg></span>
+                                可信数据空间接入审批
+                                <span class="ver">V1</span>
+                            </div>
+                            <div class="flow-modal-legend">
+                                <span class="leg-item"><span class="leg-box processing"></span> 处理中</span>
+                                <span class="leg-item"><span class="leg-box done"></span> 已处理</span>
+                                <span class="leg-item"><span class="leg-box pending"></span> 未处理</span>
+                            </div>
+                        </div>
+                        <button class="flow-modal-close" onclick="document.getElementById('flowchartModal').classList.remove('show')">
+                            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        </button>
+                    </div>
+                    <div class="flow-modal-bd">
+                        <div class="flow-zoom-bar">
+                            <button class="zoom-btn" title="缩小">-</button>
+                            <select class="zoom-select"><option>100%</option><option>75%</option><option>125%</option></select>
+                            <button class="zoom-btn" title="放大">+</button>
+                        </div>
+                        <div class="flow-canvas">
+                            <div class="flow-diagram">
+                                <div class="flow-node-start"></div>
+                                <div class="flow-line-dashed"></div>
+                                <div class="flow-node-task">运营中心审批<div class="task-bars"><span class="task-bar"></span><span class="task-bar"></span><span class="task-bar"></span></div></div>
+                                <div class="flow-line-solid"></div>
+                                <div class="flow-node-end"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/global-dialog.js"></script>
+    <script>
+    document.getElementById('auditOpinion').addEventListener('input', function() {
+        document.getElementById('charNum').textContent = this.value.length;
+    });
+    document.getElementById('flowchartModal').addEventListener('click', function(event) {
+        if (event.target === this) this.classList.remove('show');
+    });
+    document.getElementById('submitAuditBtn').addEventListener('click', function() {
+        GlobalDialog.success({
+            title: '提交成功',
+            desc: '空间审批意见已提交，即将返回列表。',
+            duration: 1600,
+            onClose: function() {
+                location.href = 'space-approval.html?tab=approved';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

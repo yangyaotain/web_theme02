@@ -91,6 +91,92 @@
             cursor: pointer; transition: all 0.15s; font-family: inherit;
         }
         .btn-outline:hover { border-color: #c0c4cc; background: #f5f7fa; }
+
+        /* Detail Drawer */
+        .detail-drawer-mask {
+            position: fixed; top: 64px; left: 180px; right: 0; bottom: 0;
+            z-index: 180; background: rgba(15, 23, 42, 0.18);
+            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+        }
+        .detail-drawer-mask.show { opacity: 1; pointer-events: auto; }
+        .detail-drawer {
+            position: absolute; top: 8px; right: 8px; bottom: 8px;
+            width: min(1080px, calc(100vw - 220px));
+            background: #fff; border-radius: 8px;
+            box-shadow: -8px 0 28px rgba(15,23,42,0.16);
+            display: flex; flex-direction: column;
+            transform: translateX(calc(100% + 16px));
+            transition: transform 0.24s ease;
+            overflow: hidden;
+        }
+        .detail-drawer-mask.show .detail-drawer { transform: translateX(0); }
+        .detail-drawer-head {
+            height: 56px; display: flex; align-items: center; gap: 10px;
+            padding: 0 22px; border-bottom: 1px solid #ebeef5; flex-shrink: 0;
+        }
+        .detail-drawer-close {
+            width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+            border: none; background: transparent; color: #909399; border-radius: 4px;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .detail-drawer-close:hover { background: #f5f7fa; color: #303133; }
+        .detail-drawer-close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; }
+        .detail-drawer-title { font-size: 15px; font-weight: 700; color: #303133; }
+        .detail-drawer-body { flex: 1; overflow-y: auto; padding: 24px; background: #fff; }
+        .detail-info-card {
+            background: #fff; border-radius: 4px; margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
+            border: 1px solid #ebeef5;
+        }
+        .detail-section-title {
+            font-size: 14px; font-weight: 700; color: var(--forest-green); padding: 16px 20px 12px;
+            border-left: 3px solid var(--forest-green); margin: 0; background: #fff;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .detail-section-title .expand-icon { width: 14px; height: 14px; fill: #909399; margin-left: 4px; }
+        .detail-section-body { padding: 0 20px 20px; }
+        .member-summary-name { font-size: 15px; font-weight: 600; color: #303133; margin-bottom: 10px; }
+        .member-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .summary-fields { display: flex; flex-direction: column; gap: 6px; }
+        .summary-field { font-size: 13px; color: #606266; display: flex; gap: 4px; }
+        .summary-field .lbl { color: #909399; white-space: nowrap; }
+        .summary-field .val { color: #303133; }
+        .cert-image-area { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+        .cert-image-label { font-size: 13px; color: #909399; }
+        .cert-image-box {
+            width: 120px; height: 80px; border-radius: 4px; overflow: hidden;
+            background: #f5f7fa; border: 1px solid #ebeef5;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cert-image-placeholder {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #e8edf3 0%, #d6dce5 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; color: #909399;
+        }
+        .detail-subtitle {
+            font-size: 14px; font-weight: 700; color: #303133;
+            margin: 16px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #ebeef5;
+        }
+        .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .field-left { display: flex; flex-direction: column; gap: 10px; }
+        .field-right { display: flex; flex-direction: column; gap: 12px; }
+        .field-row { font-size: 13px; color: #606266; display: flex; }
+        .field-row .lbl { color: #909399; white-space: nowrap; min-width: 170px; flex-shrink: 0; }
+        .field-row .val { color: #303133; word-break: break-all; }
+        .id-images { display: flex; flex-direction: column; gap: 10px; }
+        .id-image-label { font-size: 13px; color: #909399; }
+        .id-image-box {
+            width: 140px; height: 90px; border-radius: 4px; overflow: hidden;
+            background: #f5f7fa; border: 1px solid #ebeef5;
+        }
+        .id-image-placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 500;
+        }
+        .id-front { background: linear-gradient(135deg, #e8d4b8 0%, #d4b896 100%); color: #8b6914; }
+        .id-back { background: linear-gradient(135deg, #b8d4e8 0%, #96b8d4 100%); color: #14508b; }
     </style>
 </head>
 <body>
@@ -300,6 +386,103 @@
         </main>
     </div>
 
+    <!-- 会员详情抽屉 -->
+    <div class="detail-drawer-mask" id="detailDrawer" aria-hidden="true">
+        <aside class="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="detailDrawerTitle">
+            <div class="detail-drawer-head">
+                <button class="detail-drawer-close" type="button" id="detailDrawerClose" title="关闭">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <span class="detail-drawer-title" id="detailDrawerTitle">会员详情</span>
+            </div>
+            <div class="detail-drawer-body">
+                <div class="detail-info-card">
+                    <h3 class="detail-section-title">
+                        会员信息
+                        <svg class="expand-icon" viewBox="0 0 24 24"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </h3>
+                    <div class="detail-section-body">
+                        <div class="member-summary-name" id="detailMemberName">中国电子云</div>
+                        <div class="member-summary-grid">
+                            <div class="summary-fields">
+                                <div class="summary-field"><span class="lbl">申请会员：</span><span class="val" id="detailMemberType">金卡会员</span></div>
+                                <div class="summary-field"><span class="lbl">有效期：</span><span class="val" id="detailMemberTerm">3年</span></div>
+                                <div class="summary-field"><span class="lbl">备注说明：</span><span class="val">xxxxxx</span></div>
+                            </div>
+                            <div class="cert-image-area">
+                                <span class="cert-image-label">缴费凭证：</span>
+                                <div class="cert-image-box">
+                                    <div class="cert-image-placeholder">缴费凭证图片</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-info-card">
+                    <h3 class="detail-section-title">
+                        认证信息详情
+                        <svg class="expand-icon" viewBox="0 0 24 24"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </h3>
+                    <div class="detail-section-body">
+                        <div class="detail-subtitle">法人或其他组织基本信息</div>
+                        <div class="field-grid">
+                            <div class="field-left">
+                                <div class="field-row"><span class="lbl">法人或其他组织类型：</span><span class="val">企事业单位法人</span></div>
+                                <div class="field-row"><span class="lbl">法人或其他组织名称：</span><span class="val" id="detailOrgName">中节能铁汉生态环境股份有限公司</span></div>
+                                <div class="field-row"><span class="lbl">统一社会信用代码：</span><span class="val">91440300731109149K</span></div>
+                                <div class="field-row"><span class="lbl">营业期限或有效期：</span><span class="val">长期有效</span></div>
+                                <div class="field-row"><span class="lbl">所属行业类型：</span><span class="val">--</span></div>
+                                <div class="field-row"><span class="lbl">注册金额：</span><span class="val">--</span></div>
+                                <div class="field-row"><span class="lbl">注册日期：</span><span class="val">--</span></div>
+                                <div class="field-row"><span class="lbl">注册地：</span><span class="val">广东省深圳市龙岗区</span></div>
+                                <div class="field-row"><span class="lbl">注册详细地址：</span><span class="val">黄阁坑社区黄阁北路449号龙岗天安数码创新园三号厂房B1401</span></div>
+                                <div class="field-row"><span class="lbl">核准机构：</span><span class="val">--</span></div>
+                                <div class="field-row"><span class="lbl">经营范围或业务范围：</span><span class="val">--</span></div>
+                                <div class="field-row"><span class="lbl">机构简介：</span><span class="val">--</span></div>
+                            </div>
+                            <div class="field-right">
+                                <div>
+                                    <div class="id-image-label">法人或其他组织的证件图片：</div>
+                                    <div class="id-image-box" style="width:160px;height:110px;">
+                                        <div class="cert-image-placeholder" style="background:linear-gradient(135deg,#fce8e8,#f5d0d0);color:#c05050;">营业执照</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="id-image-label">法人或其他组织的LOGO：</div>
+                                    <span style="font-size:13px;color:#909399;">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-subtitle">申请人信息</div>
+                        <div class="field-grid">
+                            <div class="field-left">
+                                <div class="field-row"><span class="lbl">申请人类型：</span><span class="val">法定代表人</span></div>
+                                <div class="field-row"><span class="lbl">法定代表人或负责人证件类型：</span><span class="val">居民身份证</span></div>
+                                <div class="field-row"><span class="lbl">法定代表人或负责人姓名：</span><span class="val" id="detailApplicant">zhangsan</span></div>
+                                <div class="field-row"><span class="lbl">法定代表人或负责人证件号码：</span><span class="val">445281198702202117</span></div>
+                                <div class="field-row"><span class="lbl">法定代表人或负责人手机号：</span><span class="val">13982060008</span></div>
+                                <div class="field-row"><span class="lbl">法定代表人或负责人邮箱：</span><span class="val">--</span></div>
+                            </div>
+                            <div class="field-right">
+                                <div class="id-images">
+                                    <div class="id-image-label">法定代表人或负责人证件图片：</div>
+                                    <div class="id-image-box">
+                                        <div class="id-image-placeholder id-front">身份证正面</div>
+                                    </div>
+                                    <div class="id-image-box">
+                                        <div class="id-image-placeholder id-back">身份证背面</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
     <!-- 会员管理弹窗 -->
     <div class="modal-mask" id="manageModal">
         <div class="modal-box">
@@ -361,6 +544,50 @@
     </div>
 
     <script>
+    var detailDrawer = document.getElementById('detailDrawer');
+    var detailDrawerClose = document.getElementById('detailDrawerClose');
+
+    function setDetailText(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = value || '--';
+    }
+
+    function openDetailDrawer(row) {
+        var cells = row.cells;
+        var subject = cells[0].textContent.trim();
+        var memberType = cells[1].textContent.trim();
+        var term = cells[2].textContent.trim();
+        var applicant = cells[3].textContent.trim();
+        setDetailText('detailMemberName', subject);
+        setDetailText('detailMemberType', memberType);
+        setDetailText('detailMemberTerm', term);
+        setDetailText('detailOrgName', subject);
+        setDetailText('detailApplicant', applicant);
+        detailDrawer.classList.add('show');
+        detailDrawer.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeDetailDrawer() {
+        detailDrawer.classList.remove('show');
+        detailDrawer.setAttribute('aria-hidden', 'true');
+    }
+
+    document.querySelectorAll('a[href="member-detail.html"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            openDetailDrawer(link.closest('tr'));
+        });
+    });
+    detailDrawerClose.addEventListener('click', closeDetailDrawer);
+    detailDrawer.addEventListener('click', function(e) {
+        if (e.target === detailDrawer) closeDetailDrawer();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && detailDrawer.classList.contains('show')) {
+            closeDetailDrawer();
+        }
+    });
+
     var memberData = {
         normal: {
             title: '普通会员',

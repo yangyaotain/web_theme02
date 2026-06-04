@@ -62,6 +62,15 @@
             cursor: pointer; font-family: inherit; transition: all 150ms ease;
         }
         .btn-respond:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-demand-consult {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green);
+            background: var(--surface-primary); border: 1px solid var(--forest-green); border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-demand-consult:hover { background: var(--forest-green); color: #fff; box-shadow: var(--shadow-green-glow); }
+        .btn-respond svg,
+        .btn-demand-consult svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
 
         .content-area { max-width: var(--content-max-width); margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
         .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
@@ -168,7 +177,14 @@
                     </div>
 
                     <div class="action-row">
-                        <button class="btn-respond" onclick="document.getElementById('respondOverlay').classList.add('active')">响应需求</button>
+                        <button class="btn-respond" onclick="document.getElementById('respondOverlay').classList.add('active')">
+                            <svg viewBox="0 0 24 24"><path d="M7 2h10v2h3c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2L2 6c0-1.1.9-2 2-2h3V2zm2 2h6V3H9v1zm2 14l6-6-1.41-1.41L11 15.17l-2.59-2.58L7 14l4 4z"/></svg>
+                            响应需求
+                        </button>
+                        <button class="btn-demand-consult" onclick="document.getElementById('demandConsultOverlay').classList.add('active')">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z"/></svg>
+                            需求咨询
+                        </button>
                     </div>
                 </div>
             </div>
@@ -262,6 +278,52 @@
 
     <site-footer></site-footer>
 
+    <!-- 需求咨询弹窗 -->
+    <div class="consult-overlay" id="demandConsultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="demandConsultClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="demandConsultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static">企业领导驾驶舱服务需求</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtDemandConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="demandConsultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">龙岗数智集成服务有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="demandConsultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- 响应需求弹窗 -->
     <div class="consult-overlay" id="respondOverlay">
         <div class="consult-card">
@@ -272,7 +334,7 @@
             </button>
             <form id="respondForm" autocomplete="off">
                 <div class="consult-row">
-                    <div class="consult-label">相应需求名称：</div>
+                    <div class="consult-label">响应需求名称：</div>
                     <div class="consult-val consult-static">企业领导驾驶舱服务需求</div>
                 </div>
                 <div class="consult-row">
@@ -329,26 +391,56 @@
     <script src="js/global-dialog.js"></script>
     <script>
     (function () {
-        var overlay = document.getElementById('respondOverlay');
-        var txt = document.getElementById('txtReason');
-        var cnt = document.getElementById('reasonCount');
-
-        function closeModal() { overlay.classList.remove('active'); }
-
-        document.getElementById('respondClose').addEventListener('click', closeModal);
-        document.getElementById('respondCancel').addEventListener('click', closeModal);
-        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
-
-        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
-
-        document.getElementById('respondForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            closeModal();
-            GlobalDialog.success({
-                title: '提交成功',
-                desc: '您的响应已提交，我们会尽快处理',
-                duration: 1600
+        function bindCounter(inputId, countId) {
+            var input = document.getElementById(inputId);
+            var count = document.getElementById(countId);
+            if (!input || !count) return;
+            input.addEventListener('input', function () {
+                count.textContent = input.value.length;
             });
+        }
+
+        function bindModal(options) {
+            var overlay = document.getElementById(options.overlayId);
+            var closeBtn = document.getElementById(options.closeId);
+            var cancelBtn = document.getElementById(options.cancelId);
+            var form = document.getElementById(options.formId);
+            if (!overlay || !form) return;
+
+            function closeModal() { overlay.classList.remove('active'); }
+
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+            if (options.counter) bindCounter(options.counter.inputId, options.counter.countId);
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                closeModal();
+                GlobalDialog.success({
+                    title: '提交成功',
+                    desc: options.successDesc,
+                    duration: 1600
+                });
+            });
+        }
+
+        bindModal({
+            overlayId: 'demandConsultOverlay',
+            closeId: 'demandConsultClose',
+            cancelId: 'demandConsultCancel',
+            formId: 'demandConsultForm',
+            counter: { inputId: 'txtDemandConsult', countId: 'demandConsultCount' },
+            successDesc: '您的需求咨询已提交，请在工作台-我的咨询中查看后续沟通'
+        });
+
+        bindModal({
+            overlayId: 'respondOverlay',
+            closeId: 'respondClose',
+            cancelId: 'respondCancel',
+            formId: 'respondForm',
+            counter: { inputId: 'txtReason', countId: 'reasonCount' },
+            successDesc: '您的响应已提交，我们会尽快处理'
         });
     })();
     </script>

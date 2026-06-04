@@ -84,6 +84,7 @@
             font-size: 13px; color: var(--forest-green);
         }
 
+        .action-row { display: flex; gap: 12px; margin-top: 2px; }
         .apply-btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
@@ -91,6 +92,82 @@
             cursor: pointer; font-family: inherit; transition: all 150ms ease;
         }
         .apply-btn:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-consult {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green);
+            background: var(--surface-primary); border: 1.5px solid var(--forest-green); border-radius: 6px;
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .btn-consult:hover { background: var(--forest-green); color: #fff; }
+
+        /* ── 咨询弹窗 ── */
+        .consult-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 200;
+            align-items: center; justify-content: center;
+            animation: consultFadeIn 0.25s ease;
+        }
+        .consult-overlay.active { display: flex; }
+        @keyframes consultFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes consultSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .consult-card {
+            position: relative; width: 560px; max-height: 90vh; overflow-y: auto;
+            background: var(--bg-card); border-radius: 12px;
+            box-shadow: var(--shadow-xl); padding: 36px 40px 32px;
+            animation: consultSlideUp 0.3s ease;
+        }
+        .consult-card::-webkit-scrollbar { width: 4px; }
+        .consult-card::-webkit-scrollbar-thumb { background: var(--border-emphasis); border-radius: 2px; }
+        .consult-close {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border: none; background: transparent; cursor: pointer;
+            color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast);
+        }
+        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close svg { width: 20px; height: 20px; }
+        .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
+        .consult-label {
+            width: 100px; min-width: 100px; text-align: right;
+            font-size: 14px; color: var(--text-secondary);
+            padding-top: 9px; padding-right: 12px;
+        }
+        .consult-val { flex: 1; }
+        .consult-static { font-size: 15px; font-weight: 600; color: var(--text-primary); padding-top: 8px; }
+        .consult-input {
+            width: 100%; height: 40px; padding: 0 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; transition: border-color 150ms ease;
+        }
+        .consult-input:focus { border-color: var(--forest-green); }
+        .consult-input::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-ta-wrap { position: relative; }
+        .consult-textarea {
+            width: 100%; min-height: 120px; padding: 10px 12px;
+            font-size: 14px; font-family: inherit; color: var(--text-primary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); outline: none; resize: vertical; transition: border-color 150ms ease;
+        }
+        .consult-textarea:focus { border-color: var(--forest-green); }
+        .consult-textarea::placeholder { color: var(--text-placeholder, #9CA3AF); }
+        .consult-count { position: absolute; bottom: 8px; right: 12px; font-size: 12px; color: var(--text-tertiary); }
+        .consult-actions { display: flex; gap: 12px; padding-top: 12px; padding-left: 100px; }
+        .consult-btn-ok {
+            padding: 10px 32px; font-size: 14px; font-weight: 600; color: #fff;
+            background: var(--forest-green); border: none; border-radius: var(--radius-md);
+            cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-ok:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .consult-btn-cancel {
+            padding: 10px 32px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            background: var(--surface-primary); border: 1px solid var(--border-default);
+            border-radius: var(--radius-md); cursor: pointer; font-family: inherit; transition: all 150ms ease;
+        }
+        .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
 
         /* ── Main Content Area ─────────────────────────── */
         .content-area {
@@ -158,8 +235,9 @@
                         <span class="delivery-label">交付方式：</span>
                         <span class="delivery-tag">在线交付</span>
                     </div>
-                    <div>
+                    <div class="action-row">
                         <a href="data-apply.html" class="apply-btn">立即申请</a>
+                        <button class="btn-consult" onclick="document.getElementById('consultOverlay').classList.add('active')">资源咨询</button>
                     </div>
                 </div>
             </div>
@@ -279,6 +357,53 @@
 
     <site-footer></site-footer>
 
+    <!-- ── 资源咨询弹窗 ── -->
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static">金融行业A股上市公司股吧数据集</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智云****公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
     <script>
     (function () {
         /* ── Tab 切换 ── */
@@ -293,6 +418,28 @@
                 this.classList.add('active');
                 var id = panelMap[this.getAttribute('data-tab')];
                 if (id) document.getElementById(id).classList.add('active');
+            });
+        });
+
+        var overlay = document.getElementById('consultOverlay');
+        var txt = document.getElementById('txtConsult');
+        var cnt = document.getElementById('consultCount');
+
+        function closeModal() { overlay.classList.remove('active'); }
+
+        document.getElementById('consultClose').addEventListener('click', closeModal);
+        document.getElementById('consultCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+
+        txt.addEventListener('input', function () { cnt.textContent = txt.value.length; });
+
+        document.getElementById('consultForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
+            GlobalDialog.success({
+                title: '提交成功',
+                desc: '您的咨询已提交，我们会尽快回复您',
+                duration: 1600
             });
         });
     })();

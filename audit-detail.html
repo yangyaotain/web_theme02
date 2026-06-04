@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="css/components.css">
     <style>
         /* ══════════════════════════════════════════ Page Layout ══════════════════════════════════════════ */
-        .page-wrap { padding: 84px 24px 40px; max-width: var(--content-max-width); margin: 0 auto; }
+        .page-wrap { padding: 0; max-width: var(--content-max-width); margin: 0 auto; }
 
         .detail-layout {
             display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;
@@ -360,6 +360,10 @@
         <div id="adminUserArea" class="topbar-right"></div>
     </header>
 
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <script src="js/operation-sidebar.js"></script>
+        <main class="admin-content">
     <div class="page-wrap">
         <!-- Back Link -->
         <a class="back-link" href="operation-center.html">
@@ -583,6 +587,8 @@
                 </div>
             </div>
         </div>
+    </div>
+        </main>
     </div>
 
     <script src="js/admin-topbar.js"></script>

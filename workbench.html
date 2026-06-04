@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作台 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/workbench.css">
+    <script src="js/workbench-layout.js" defer></script>
+    <script src="js/admin-topbar.js" defer></script>
+</head>
+<body>
+    <div data-workbench-topbar data-active="workbench"></div>
+
+    <main class="wb-page">
+        <div class="wb-dashboard">
+            <div class="wb-dashboard-grid">
+                <section class="wb-hero">
+                    <div class="wb-hero-main">
+                        <div class="wb-hero-icon">
+                            <svg viewBox="0 0 24 24"><path d="M3 21V3h12v4h6v14H3zm4-2h2v-2H7v2zm0-4h2v-2H7v2zm0-4h2V9H7v2zm0-4h2V5H7v2zm4 12h2v-2h-2v2zm0-4h2v-2h-2v2zm0-4h2V9h-2v2zm0-4h2V5h-2v2zm4 12h4V9h-4v10z"/></svg>
+                        </div>
+                        <div>
+                            <div class="wb-hero-title">
+                                <span>测试供方机构</span>
+                                <span class="wb-chip">SaaS连接器</span>
+                            </div>
+                            <div class="wb-hero-meta">
+                                <span>连接器编码：<b>5020260526114920718000001013784080018W1RHHPG3C</b></span>
+                                <span>业务范围：<b>机构管理员、业务认证用户-数据提供方角色、业务认证用户-服务提供方角色</b></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wb-hero-art">
+                        <svg viewBox="0 0 160 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="82" cy="86" rx="52" ry="12" fill="rgba(255,255,255,.38)"/>
+                            <path d="M79 14c8 0 14 6 14 14v5h7c12 0 22 10 22 22s-10 22-22 22H60c-12 0-22-10-22-22s10-22 22-22h5v-5c0-8 6-14 14-14z" fill="#ECFFF5"/>
+                            <path d="M58 47c0-8 7-15 15-15h18c8 0 15 7 15 15v11c0 8-7 15-15 15H73c-8 0-15-7-15-15V47z" fill="#0B7D51"/>
+                            <circle cx="72" cy="54" r="4" fill="#6EF0A9"/>
+                            <circle cx="92" cy="54" r="4" fill="#6EF0A9"/>
+                            <path d="M76 65c5 3 10 3 16 0" stroke="#6EF0A9" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M101 20l6-10 7 10-7 10-6-10z" fill="#20A565"/>
+                            <path d="M41 48h-9a7 7 0 0 0 0 14h9" stroke="#ECFFF5" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M119 48h9a7 7 0 0 1 0 14h-9" stroke="#ECFFF5" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </section>
+
+                <section class="wb-welcome">
+                    <span class="wb-avatar">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </span>
+                    <div class="wb-welcome-text">你好，1</div>
+                </section>
+
+                <section class="wb-panel wb-todo-panel">
+                    <div class="wb-panel-head">
+                        <h2 class="wb-panel-title">待办中心</h2>
+                        <a class="wb-panel-more" href="supplier-center.html?menu=resource-order">更多</a>
+                    </div>
+                    <div class="wb-panel-body">
+                        <div class="wb-todo-stats">
+                            <div class="wb-todo-stat active">
+                                <div class="wb-stat-left">
+                                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6V8h12v11zm-8.5-3.5L7 13l1.41-1.41L9.5 12.67l3.59-3.59L14.5 10.5l-5 5z"/></svg>
+                                    <span>我的待办</span>
+                                </div>
+                                <span class="wb-stat-num">9</span>
+                            </div>
+                            <div class="wb-todo-stat">
+                                <div class="wb-stat-left">
+                                    <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                                    <span>即将超时</span>
+                                </div>
+                                <span class="wb-stat-num">0</span>
+                            </div>
+                            <div class="wb-todo-stat">
+                                <div class="wb-stat-left">
+                                    <svg viewBox="0 0 24 24"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8.4 3.1 1.8-1 1.7-4.1-2.4V7h2v4.6z"/></svg>
+                                    <span>已超时</span>
+                                </div>
+                                <span class="wb-stat-num">9</span>
+                            </div>
+                        </div>
+                        <div class="wb-todo-list">
+                            <div class="wb-todo-row">
+                                <span class="wb-todo-tag">数据授权</span>
+                                <a class="wb-todo-link" href="supplier-center.html?menu=product-contract">【合同签署】用户提交了合同申请，请及时审批处理</a>
+                                <span class="wb-todo-deadline">刚刚逾期</span>
+                            </div>
+                            <div class="wb-todo-row">
+                                <span class="wb-todo-tag">数据授权</span>
+                                <a class="wb-todo-link" href="supplier-center.html?menu=product-order">产品申请审批</a>
+                                <span class="wb-todo-deadline">逾期4天</span>
+                            </div>
+                            <div class="wb-todo-row">
+                                <span class="wb-todo-tag">数据授权</span>
+                                <a class="wb-todo-link" href="supplier-center.html?menu=resource-order">资源申请审批</a>
+                                <span class="wb-todo-deadline">逾期4天</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="wb-panel wb-shortcuts">
+                    <div class="wb-panel-head">
+                        <h2 class="wb-panel-title">快捷入口</h2>
+                        <span class="wb-panel-more">设置</span>
+                    </div>
+                    <div class="wb-shortcut-grid">
+                        <a class="wb-shortcut" href="supplier-center.html?menu=resource-register">
+                            <span class="wb-shortcut-icon"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg></span>
+                            <span>资源登记管理</span>
+                        </a>
+                        <a class="wb-shortcut" href="supplier-center.html?menu=product-register">
+                            <span class="wb-shortcut-icon purple"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg></span>
+                            <span>产品登记管理</span>
+                        </a>
+                        <a class="wb-shortcut" href="supplier-center.html?menu=resource-shelf">
+                            <span class="wb-shortcut-icon cyan"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg></span>
+                            <span>资源上下架...</span>
+                        </a>
+                        <a class="wb-shortcut" href="supplier-center.html?menu=product-shelf">
+                            <span class="wb-shortcut-icon green"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg></span>
+                            <span>产品上下架...</span>
+                        </a>
+                    </div>
+                    <div class="wb-recent-label">最近操作：</div>
+                </section>
+
+                <section class="wb-panel wb-activity-panel">
+                    <div class="wb-panel-head">
+                        <h2 class="wb-panel-title">最近动态</h2>
+                    </div>
+                    <div class="wb-kpi-strip">
+                        <div class="wb-kpi">
+                            <span class="wb-kpi-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14-4-4 1.41-1.41L11 14.17l4.59-4.58L17 11l-6 6z"/></svg></span>
+                            <span><div class="wb-kpi-label">登记</div><div class="wb-kpi-value">20</div></span>
+                        </div>
+                        <div class="wb-kpi">
+                            <span class="wb-kpi-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm3 3v10h10V7H7zm2 2h6v2H9V9z"/></svg></span>
+                            <span><div class="wb-kpi-label">上架</div><div class="wb-kpi-value">17</div></span>
+                        </div>
+                        <div class="wb-kpi">
+                            <span class="wb-kpi-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2z"/></svg></span>
+                            <span><div class="wb-kpi-label">订单</div><div class="wb-kpi-value">30</div></span>
+                        </div>
+                        <div class="wb-kpi">
+                            <span class="wb-kpi-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+                            <span><div class="wb-kpi-label">交付</div><div class="wb-kpi-value">17</div></span>
+                        </div>
+                    </div>
+                    <div class="wb-empty">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-3.17l-1.84-2H9.01L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 11c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/></svg>
+                        <span>暂无数据</span>
+                    </div>
+                </section>
+
+                <section class="wb-panel wb-message-panel">
+                    <div class="wb-panel-head">
+                        <h2 class="wb-panel-title">我的消息</h2>
+                        <span class="wb-panel-more">更多</span>
+                    </div>
+                    <div class="wb-empty">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-3.17l-1.84-2H9.01L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 11c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/></svg>
+                        <span>暂无数据</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

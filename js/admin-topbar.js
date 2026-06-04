@@ -16,7 +16,7 @@
     var MENU = [
         { label: '用户中心', href: 'user-center.html' },
         { label: '管理中心', href: '#' },
-        { label: '工作台', href: '#' },
+        { label: '工作台', href: 'workbench.html' },
         { label: '运营中心', href: 'operation-center.html' },
         { label: '运维中心', href: 'maintenance-center.html' },
         { label: '可视化大屏', href: '#' },
