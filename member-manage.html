@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
     <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
     <style>
         /* Page-specific: card, modal, form */
         .card {
@@ -73,11 +74,20 @@
         .apply-info-title { font-size: 15px; font-weight: 700; color: #303133; margin-bottom: 16px; }
         .apply-info-list { padding-left: 0; list-style: none; margin: 0; }
         .apply-info-list li { font-size: 13px; color: #303133; line-height: 2; }
+        .term-preview {
+            margin-top: 8px; padding: 9px 10px;
+            background: #f9fbfa; border: 1px solid #ebeef5; border-radius: 3px;
+            font-size: 13px; color: #606266; line-height: 1.6;
+        }
+        .term-preview strong {
+            color: var(--forest-green); font-weight: 700;
+        }
 
         .apply-ft {
             padding: 20px 0 0; display: flex; gap: 12px;
         }
         .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 9px 32px; font-size: 14px; font-weight: 500;
             color: #fff; background: var(--forest-green);
             border: none; border-radius: 3px;
@@ -85,12 +95,17 @@
         }
         .btn-primary:hover { background: var(--forest-green-600); }
         .btn-outline {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 9px 24px; font-size: 14px; font-weight: 500;
             color: #606266; background: #fff;
             border: 1px solid #dcdfe6; border-radius: 3px;
             cursor: pointer; transition: all 0.15s; font-family: inherit;
         }
         .btn-outline:hover { border-color: #c0c4cc; background: #f5f7fa; }
+        .btn-primary svg,
+        .btn-outline svg {
+            width: 16px; height: 16px; fill: currentColor; flex-shrink: 0;
+        }
 
         /* Detail Drawer */
         .detail-drawer-mask {
@@ -241,131 +256,131 @@
                         <tr>
                             <td>中国电子云</td>
                             <td>铂金会员</td>
-                            <td>5年</td>
+                            <td>按年</td>
                             <td>张三</td>
                             <td>2025-6-15 10:30:00</td>
                             <td>2030-6-15 10:30:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum')">管理</span>
+                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>深圳华数信息技术有限公司</td>
                             <td>金卡会员</td>
-                            <td>3年</td>
+                            <td>按半年</td>
                             <td>李明</td>
                             <td>2025-8-20 14:00:00</td>
                             <td>2028-8-20 14:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold')">管理</span>
+                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>龙岗区智慧城市发展中心</td>
                             <td>银卡会员</td>
-                            <td>2年</td>
+                            <td>按季度</td>
                             <td>王芳</td>
                             <td>2025-11-5 09:15:00</td>
                             <td>2027-11-5 09:15:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('silver')">管理</span>
+                                <span class="link-green" onclick="openManageModal('silver', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>广东数据要素集团</td>
                             <td>铂金会员</td>
-                            <td>10年</td>
+                            <td>按年</td>
                             <td>赵刚</td>
                             <td>2024-12-1 11:00:00</td>
                             <td>2034-12-1 11:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum')">管理</span>
+                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>深圳前海数据交易所</td>
                             <td>金卡会员</td>
-                            <td>3年</td>
+                            <td>按半年</td>
                             <td>陈静</td>
                             <td>2026-1-18 16:30:00</td>
                             <td>2029-1-18 16:30:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold')">管理</span>
+                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>坪山区政务数据管理局</td>
                             <td>普通会员</td>
-                            <td>1年</td>
+                            <td>按月</td>
                             <td>刘伟</td>
                             <td>2026-2-10 08:45:00</td>
                             <td>2027-2-10 08:45:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('normal')">管理</span>
+                                <span class="link-green" onclick="openManageModal('normal', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>南方科技大学大数据研究院</td>
                             <td>银卡会员</td>
-                            <td>1年</td>
+                            <td>按月</td>
                             <td>周涛</td>
                             <td>2025-9-3 13:20:00</td>
                             <td>2026-9-3 13:20:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('silver')">管理</span>
+                                <span class="link-green" onclick="openManageModal('silver', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>鹏城实验室</td>
                             <td>铂金会员</td>
-                            <td>5年</td>
+                            <td>按年</td>
                             <td>吴昊</td>
                             <td>2025-4-22 10:00:00</td>
                             <td>2030-4-22 10:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum')">管理</span>
+                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>深圳市腾讯计算机系统有限公司</td>
                             <td>普通会员</td>
-                            <td>1年</td>
+                            <td>按月</td>
                             <td>孙丽</td>
                             <td>2026-3-1 15:10:00</td>
                             <td>2027-3-1 15:10:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('normal')">管理</span>
+                                <span class="link-green" onclick="openManageModal('normal', this)">管理</span>
                             </td>
                         </tr>
                         <tr>
                             <td>深圳市大数据资源管理中心</td>
                             <td>金卡会员</td>
-                            <td>2年</td>
+                            <td>按季度</td>
                             <td>黄磊</td>
                             <td>2025-7-8 09:00:00</td>
                             <td>2027-7-8 09:00:00</td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold')">管理</span>
+                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
                             </td>
                         </tr>
                     </tbody>
@@ -406,7 +421,7 @@
                         <div class="member-summary-grid">
                             <div class="summary-fields">
                                 <div class="summary-field"><span class="lbl">申请会员：</span><span class="val" id="detailMemberType">金卡会员</span></div>
-                                <div class="summary-field"><span class="lbl">有效期：</span><span class="val" id="detailMemberTerm">3年</span></div>
+                                <div class="summary-field"><span class="lbl">有效期：</span><span class="val" id="detailMemberTerm">按半年（2026-6-5 / 2026-12-4）</span></div>
                                 <div class="summary-field"><span class="lbl">备注说明：</span><span class="val">xxxxxx</span></div>
                             </div>
                             <div class="cert-image-area">
@@ -483,12 +498,12 @@
         </aside>
     </div>
 
-    <!-- 会员管理弹窗 -->
+    <!-- 修改会员属性弹窗 -->
     <div class="modal-mask" id="manageModal">
         <div class="modal-box">
             <div class="modal-hd">
-                <span class="modal-title">会员管理</span>
-                <button class="modal-close" onclick="document.getElementById('manageModal').classList.remove('show')">
+                <span class="modal-title">修改会员属性</span>
+                <button class="modal-close" onclick="closeManageModal()">
                     <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </button>
             </div>
@@ -496,8 +511,8 @@
                 <div class="apply-layout">
                     <div class="apply-form">
                         <div class="form-group">
-                            <label class="form-label">申请者：</label>
-                            <div class="form-value"><span class="form-static">中国电子云</span></div>
+                            <label class="form-label">申请主体：</label>
+                            <div class="form-value"><span class="form-static" id="manageApplicant">中国电子云</span></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">会员类型：</label>
@@ -513,18 +528,24 @@
                         <div class="form-group">
                             <label class="form-label">有效期：</label>
                             <div class="form-value">
-                                <select class="form-select">
-                                    <option>1年</option>
-                                    <option>2年</option>
-                                    <option>3年</option>
-                                    <option>5年</option>
-                                    <option>10年</option>
+                                <select class="form-select" id="manageTermSelect">
+                                    <option value="month">按月</option>
+                                    <option value="quarter">按季度</option>
+                                    <option value="halfYear">按半年</option>
+                                    <option value="year">按年</option>
                                 </select>
+                                <div class="term-preview" id="manageTermPreview"><strong>--</strong></div>
                             </div>
                         </div>
                         <div class="apply-ft" style="margin-left:80px;">
-                            <button class="btn-primary" onclick="document.getElementById('manageModal').classList.remove('show')">确定</button>
-                            <button class="btn-outline" onclick="document.getElementById('manageModal').classList.remove('show')">取消</button>
+                            <button class="btn-primary" onclick="submitManageChange()">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                确定
+                            </button>
+                            <button class="btn-outline" onclick="closeManageModal()">
+                                <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.3-6.29z"/></svg>
+                                取消
+                            </button>
                         </div>
                     </div>
                     <div>
@@ -560,7 +581,7 @@
         var applicant = cells[3].textContent.trim();
         setDetailText('detailMemberName', subject);
         setDetailText('detailMemberType', memberType);
-        setDetailText('detailMemberTerm', term);
+        setDetailText('detailMemberTerm', formatTermDetailText(term));
         setDetailText('detailOrgName', subject);
         setDetailText('detailApplicant', applicant);
         detailDrawer.classList.add('show');
@@ -623,12 +644,25 @@
     };
 
     var sel = document.getElementById('manageTypeSelect');
+    var termSel = document.getElementById('manageTermSelect');
+    var termPreviewEl = document.getElementById('manageTermPreview');
+    var manageApplicantEl = document.getElementById('manageApplicant');
     var titleEl = document.getElementById('manageInfoTitle');
     var listEl = document.getElementById('manageInfoList');
+    var manageModal = document.getElementById('manageModal');
+    var currentManageRow = null;
+    var currentManageState = null;
+    var termData = {
+        month: { label: '按月', months: 1 },
+        quarter: { label: '按季度', months: 3 },
+        halfYear: { label: '按半年', months: 6 },
+        year: { label: '按年', months: 12 }
+    };
 
     sel.addEventListener('change', function() {
         updateInfo(this.value);
     });
+    termSel.addEventListener('change', updateTermPreview);
 
     function updateInfo(val) {
         var d = memberData[val];
@@ -637,14 +671,199 @@
         listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
     }
 
-    function openManageModal(type) {
-        sel.value = type;
-        updateInfo(type);
-        document.getElementById('manageModal').classList.add('show');
+    function getTypeValueByLabel(label) {
+        var keys = Object.keys(memberData);
+        for (var i = 0; i < keys.length; i++) {
+            if (memberData[keys[i]].title === label) return keys[i];
+        }
+        return '';
     }
 
-    document.getElementById('manageModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('show');
+    function getTermValueByLabel(label) {
+        if (label === '按月') return 'month';
+        if (label === '按季度') return 'quarter';
+        if (label === '按半年') return 'halfYear';
+        if (label === '按年') return 'year';
+        return 'year';
+    }
+
+    function getTermLabel(value) {
+        return (termData[value] || termData.year).label;
+    }
+
+    function formatTermDetailText(label) {
+        var value = getTermValueByLabel(label);
+        var preview = getTermPreview(value);
+        return getTermLabel(value) + '（' + preview.rangeText + '）';
+    }
+
+    function getCurrentDate() {
+        var now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function addMonths(date, months) {
+        var result = new Date(date.getTime());
+        result.setMonth(result.getMonth() + months);
+        return result;
+    }
+
+    function formatDate(date) {
+        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+
+    function getTermPreview(value) {
+        var d = termData[value] || termData.year;
+        var start = getCurrentDate();
+        var end = addMonths(start, d.months);
+        end.setDate(end.getDate() - 1);
+        return {
+            value: value,
+            label: d.label,
+            startDate: formatDate(start),
+            endDate: formatDate(end),
+            rangeText: formatDate(start) + ' / ' + formatDate(end)
+        };
+    }
+
+    function updateTermPreview() {
+        var preview = getTermPreview(termSel.value);
+        termPreviewEl.innerHTML = '<strong>' + preview.rangeText + '</strong>';
+    }
+
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function closeManageModal() {
+        manageModal.classList.remove('show');
+    }
+
+    function getManageFormValue() {
+        var typeData = memberData[sel.value] || {};
+        var preview = getTermPreview(termSel.value);
+        return {
+            subject: manageApplicantEl.textContent.trim(),
+            typeValue: sel.value,
+            typeLabel: typeData.title || sel.options[sel.selectedIndex].textContent.trim(),
+            termValue: preview.value,
+            term: preview.label,
+            startDate: preview.startDate,
+            endDate: preview.endDate,
+            rangeText: preview.rangeText
+        };
+    }
+
+    function getManageChanges(nextValue) {
+        if (!currentManageState) return [];
+        var changes = [];
+        if (currentManageState.typeLabel !== nextValue.typeLabel) {
+            changes.push({
+                label: '会员类型',
+                before: currentManageState.typeLabel,
+                after: nextValue.typeLabel
+            });
+        }
+        if (currentManageState.termValue !== nextValue.termValue) {
+            changes.push({
+                label: '有效期',
+                before: getTermLabel(currentManageState.termValue),
+                after: nextValue.term
+            });
+        }
+        return changes;
+    }
+
+    function buildManageConfirmDesc(nextValue, changes) {
+        var rows = changes.map(function(item) {
+            return '<div style="display:flex;align-items:center;gap:8px;line-height:1.8">' +
+                '<span style="width:68px;color:#909399;flex-shrink:0">' + escapeHtml(item.label) + '</span>' +
+                '<span style="color:#606266;text-decoration:line-through">' + escapeHtml(item.before) + '</span>' +
+                '<span style="color:#c0c4cc">→</span>' +
+                '<span style="color:var(--forest-green);font-weight:600">' + escapeHtml(item.after) + '</span>' +
+            '</div>';
+        }).join('');
+
+        return '<div style="display:grid;gap:10px">' +
+            '<div>请确认本次修改内容，确认后将在会员列表中生效。</div>' +
+            '<div style="padding:10px 12px;background:#f8faf9;border:1px solid #e4e7ed;border-radius:4px">' +
+                '<div style="margin-bottom:6px;color:#303133;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">申请主体：' + escapeHtml(nextValue.subject) + '</div>' +
+                rows +
+                '<div style="margin-top:6px;color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function submitManageChange() {
+        var nextValue = getManageFormValue();
+        var changes = getManageChanges(nextValue);
+
+        if (!changes.length) {
+            GlobalDialog.info({
+                title: '暂无修改内容',
+                desc: '会员类型和有效期均未发生变化'
+            });
+            return;
+        }
+
+        GlobalDialog.warning({
+            title: '确认修改会员属性',
+            desc: buildManageConfirmDesc(nextValue, changes),
+            confirmText: '确认修改',
+            cancelText: '返回修改',
+            onConfirm: function() {
+                if (currentManageRow) {
+                    currentManageRow.cells[1].textContent = nextValue.typeLabel;
+                    currentManageRow.cells[2].textContent = nextValue.term;
+                    currentManageRow.cells[4].textContent = nextValue.startDate + ' 00:00:00';
+                    currentManageRow.cells[5].textContent = nextValue.endDate + ' 23:59:59';
+                }
+                closeManageModal();
+                currentManageState = {
+                    subject: nextValue.subject,
+                    typeValue: nextValue.typeValue,
+                    typeLabel: nextValue.typeLabel,
+                    term: nextValue.term,
+                    termValue: nextValue.termValue
+                };
+                GlobalDialog.success({
+                    title: '修改成功',
+                    desc: '已更新【' + escapeHtml(nextValue.subject) + '】的会员属性'
+                });
+            }
+        });
+    }
+
+    function openManageModal(type, trigger) {
+        currentManageRow = trigger && trigger.closest ? trigger.closest('tr') : null;
+        var subject = currentManageRow ? currentManageRow.cells[0].textContent.trim() : '中国电子云';
+        var typeLabel = currentManageRow ? currentManageRow.cells[1].textContent.trim() : (memberData[type] ? memberData[type].title : '');
+        var term = currentManageRow ? currentManageRow.cells[2].textContent.trim() : '按年';
+        var resolvedType = getTypeValueByLabel(typeLabel) || type;
+        var resolvedTerm = getTermValueByLabel(term);
+
+        manageApplicantEl.textContent = subject;
+        sel.value = resolvedType;
+        termSel.value = resolvedTerm;
+        updateInfo(resolvedType);
+        updateTermPreview();
+        currentManageState = {
+            subject: subject,
+            typeValue: resolvedType,
+            typeLabel: typeLabel || (memberData[type] ? memberData[type].title : ''),
+            term: getTermLabel(resolvedTerm),
+            termValue: resolvedTerm
+        };
+        manageModal.classList.add('show');
+    }
+
+    manageModal.addEventListener('click', function(e) {
+        if (e.target === this) closeManageModal();
     });
     </script>
     <script src="js/operation-sidebar.js"></script>

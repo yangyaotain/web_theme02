@@ -349,13 +349,13 @@
                     </div>
                     <div class="info-row">
                         <span class="field"><span class="field-l">主体类型：</span><span class="field-v">法人或其他组织</span></span>
-                        <span class="field"><span class="field-l">统一社会信用代码：</span><span class="field-v">965*************CH0F</span></span>
+                        <span class="field"><span class="field-l">统一社会信用代码：</span><span class="field-v">91440300731109149K</span></span>
                         <span class="field"><span class="field-l">业务开通：</span><span class="field-v">数据需求方、数据提供方</span></span>
                     </div>
                     <div class="info-row">
                         <span class="field"><span class="field-l">账号：</span><span class="field-v">dianzyun001</span></span>
-                        <span class="field"><span class="field-l">手机号：</span><span class="field-v">158****3213</span></span>
-                        <span class="field"><span class="field-l">邮箱：</span><span class="field-v">dianz****@cestc.cn</span></span>
+                        <span class="field"><span class="field-l">手机号：</span><span class="field-v">15812343213</span></span>
+                        <span class="field"><span class="field-l">邮箱：</span><span class="field-v">dianzyun001@cestc.cn</span></span>
                     </div>
                     <div style="margin-top: 14px; text-align: right;">
                         <button class="btn-primary" onclick="document.getElementById('applyChangeModal').classList.add('show')">
@@ -541,10 +541,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">有效期：</label>
+                            <label class="form-label">收费方式：</label>
                             <div class="form-value">
                                 <select class="form-select" id="memberTermSelect"></select>
-                                <div class="selected-price" id="memberSelectedPrice">当前价格：<strong>--</strong></div>
+                                <div class="selected-price" id="memberSelectedPrice">有效期：<strong>--</strong></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -612,11 +612,10 @@
                 position: '进阶服务层',
                 audience: '企业数据专员、中小型机构数据负责人',
                 prices: [
-                    { year: 1, price: 1200 },
-                    { year: 2, price: 2200 },
-                    { year: 3, price: 3000 },
-                    { year: 5, price: 4800 },
-                    { year: 10, price: 8600 }
+                    { method: 'month', label: '按月', price: 120 },
+                    { method: 'quarter', label: '按季度', price: 330 },
+                    { method: 'halfYear', label: '按半年', price: 620 },
+                    { method: 'year', label: '按年', price: 1200 }
                 ],
                 items: [
                     '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
@@ -629,11 +628,10 @@
                 position: '企业服务层',
                 audience: '中大型企业数据部门、科研机构',
                 prices: [
-                    { year: 1, price: 2800 },
-                    { year: 2, price: 5200 },
-                    { year: 3, price: 7200 },
-                    { year: 5, price: 11600 },
-                    { year: 10, price: 20800 }
+                    { method: 'month', label: '按月', price: 280 },
+                    { method: 'quarter', label: '按季度', price: 780 },
+                    { method: 'halfYear', label: '按半年', price: 1500 },
+                    { method: 'year', label: '按年', price: 2800 }
                 ],
                 items: [
                     '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
@@ -646,11 +644,10 @@
                 position: '生态合作层',
                 audience: '龙头企业、政府部门、核心生态伙伴',
                 prices: [
-                    { year: 1, price: 5200 },
-                    { year: 2, price: 9800 },
-                    { year: 3, price: 13800 },
-                    { year: 5, price: 22600 },
-                    { year: 10, price: 39800 }
+                    { method: 'month', label: '按月', price: 520 },
+                    { method: 'quarter', label: '按季度', price: 1480 },
+                    { method: 'halfYear', label: '按半年', price: 2860 },
+                    { method: 'year', label: '按年', price: 5200 }
                 ],
                 items: [
                     '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
@@ -667,26 +664,54 @@
         var audEl = document.getElementById('memberInfoAudience');
         var listEl = document.getElementById('memberInfoList');
         var selectedPriceEl = document.getElementById('memberSelectedPrice');
+        var termMonths = {
+            month: 1,
+            quarter: 3,
+            halfYear: 6,
+            year: 12
+        };
 
         function formatPrice(price) {
             return Number(price).toLocaleString('zh-CN');
         }
 
-        function renderSelectedPrice(d) {
-            var currentYear = Number(termSel.value);
-            var current = d.prices.find(function(item) { return item.year === currentYear; }) || d.prices[0];
+        function getCurrentDate() {
+            var now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        function addMonths(date, months) {
+            var result = new Date(date.getTime());
+            result.setMonth(result.getMonth() + months);
+            return result;
+        }
+
+        function formatDate(date) {
+            return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        }
+
+        function getTermRange(method) {
+            var start = getCurrentDate();
+            var end = addMonths(start, termMonths[method] || 12);
+            end.setDate(end.getDate() - 1);
+            return formatDate(start) + ' / ' + formatDate(end);
+        }
+
+        function renderTermPreview(d) {
+            var currentMethod = termSel.value;
+            var current = d.prices.find(function(item) { return item.method === currentMethod; }) || d.prices[0];
             if (!current) {
-                selectedPriceEl.innerHTML = '当前价格：<strong>--</strong>';
+                selectedPriceEl.innerHTML = '有效期：<strong>--</strong>';
                 return;
             }
-            selectedPriceEl.innerHTML = '当前价格：<strong>' + current.year + '年 / ' + formatPrice(current.price) + '元</strong>';
+            selectedPriceEl.innerHTML = '有效期：<strong>' + getTermRange(current.method) + '</strong>';
         }
 
         function renderTerms(d) {
             termSel.innerHTML = d.prices.map(function(item) {
-                return '<option value="' + item.year + '">' + item.year + '年（' + formatPrice(item.price) + '元）</option>';
+                return '<option value="' + item.method + '">' + item.label + '（' + formatPrice(item.price) + '元）</option>';
             }).join('');
-            renderSelectedPrice(d);
+            renderTermPreview(d);
         }
 
         function renderMember(value) {
@@ -705,7 +730,7 @@
 
         termSel.addEventListener('change', function() {
             var d = memberData[sel.value];
-            if (d) renderSelectedPrice(d);
+            if (d) renderTermPreview(d);
         });
 
         renderMember(sel.value);

@@ -178,16 +178,20 @@
             padding: 8px 10px; border-bottom: 1px solid #ebeef5;
             color: #303133; vertical-align: middle;
         }
-        .price-table .col-price-year { width: 40%; }
-        .price-table .col-price-amount { width: 42%; }
-        .price-table .col-price-action {
-            width: 44px; text-align: center;
-        }
-        .price-table td.col-price-action {
-            padding-left: 6px; padding-right: 6px;
-        }
+        .price-table .col-price-method { width: 48%; }
+        .price-table .col-price-amount { width: 52%; }
         .price-table tr:last-child td { border-bottom: none; }
         .price-table tbody tr:hover td { background: #f9fbfa; }
+        .price-method-cell {
+            display: flex; align-items: center; min-height: 32px;
+        }
+        .price-method-name {
+            display: inline-flex; align-items: center;
+            min-width: 92px; padding: 4px 10px;
+            border-radius: 3px; border: 1px solid #d7eee0;
+            background: #f0f9f4; color: var(--forest-green);
+            font-size: 13px; font-weight: 600; white-space: nowrap;
+        }
         .price-input-wrap {
             display: flex; align-items: center; gap: 6px; min-width: 0;
         }
@@ -197,28 +201,11 @@
             border: 1px solid #dcdfe6; border-radius: 3px;
             outline: none; transition: border-color 0.15s;
         }
-        .price-input.year { max-width: 92px; }
-        .price-input.amount { max-width: 148px; }
+        .price-input.amount { max-width: 168px; }
         .price-input:focus { border-color: var(--forest-green); }
         .price-input:hover { border-color: #c0c4cc; }
         .price-unit {
             color: #606266; font-size: 13px; white-space: nowrap; flex-shrink: 0;
-        }
-        .price-delete-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 28px; height: 28px; padding: 0;
-            border: none; border-radius: 3px; background: transparent;
-            color: #f56c6c; cursor: pointer; transition: all 0.15s;
-            font-family: inherit; line-height: 1;
-        }
-        .price-delete-btn:hover {
-            background: #fff2f2;
-            color: #e64545;
-        }
-        .price-delete-btn svg {
-            width: 14px; height: 14px; fill: none; stroke: currentColor;
-            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-            flex-shrink: 0;
         }
 
         .form-ft {
@@ -447,17 +434,12 @@
                                 <svg viewBox="0 0 24 24"><path d="M11 2v20c-5.05-.5-9-4.76-9-9.95C2 6.84 5.95 2.5 11 2zm2 0c5.05.5 9 4.76 9 9.95 0 5.21-3.95 9.55-9 10.05V2zm2 5v2h-4v2h3c1.66 0 3 1.34 3 3s-1.34 3-3 3h-1v2h-2v-2H8v-2h6c.55 0 1-.45 1-1s-.45-1-1-1h-3c-1.66 0-3-1.34-3-3s1.34-3 3-3V5h2v2h2z"/></svg>
                                 <span>会员价格体系</span>
                             </div>
-                            <button class="btn-add" onclick="addPriceRow()" type="button">
-                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-                                新增价格
-                            </button>
                         </div>
                         <table class="price-table">
                             <thead>
                                 <tr>
-                                    <th class="col-price-year">会员年限</th>
+                                    <th class="col-price-method">收费方式</th>
                                     <th class="col-price-amount">会员价格</th>
-                                    <th class="col-price-action">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="priceRows"></tbody>
@@ -482,11 +464,10 @@
     <script src="js/admin-topbar.js"></script>
     <script>
     var defaultPrices = [
-        { year: 1, price: 1200 },
-        { year: 2, price: 2200 },
-        { year: 3, price: 3000 },
-        { year: 5, price: 4800 },
-        { year: 10, price: 8600 }
+        { method: 'month', label: '按月', price: 120 },
+        { method: 'quarter', label: '按季度', price: 330 },
+        { method: 'halfYear', label: '按半年', price: 620 },
+        { method: 'year', label: '按年', price: 1200 }
     ];
 
     var memberRows = [
@@ -495,11 +476,10 @@
             audience: '企业数据专员、中小型机构数据负责人', discount: 8,
             permission: '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；\n2、可以进行相关资源申请授权和数据产品交易；\n3、享受数据产品等相关交易8折优惠；',
             prices: [
-                { year: 1, price: 1200 },
-                { year: 2, price: 2200 },
-                { year: 3, price: 3000 },
-                { year: 5, price: 4800 },
-                { year: 10, price: 8600 }
+                { method: 'month', label: '按月', price: 120 },
+                { method: 'quarter', label: '按季度', price: 330 },
+                { method: 'halfYear', label: '按半年', price: 620 },
+                { method: 'year', label: '按年', price: 1200 }
             ]
         },
         {
@@ -507,11 +487,10 @@
             audience: '中大型企业数据部门、科研机构', discount: 6,
             permission: '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；\n2、可以进行相关资源申请授权和数据产品交易；\n3、享受数据产品等相关交易6折优惠；',
             prices: [
-                { year: 1, price: 2800 },
-                { year: 2, price: 5200 },
-                { year: 3, price: 7200 },
-                { year: 5, price: 11600 },
-                { year: 10, price: 20800 }
+                { method: 'month', label: '按月', price: 280 },
+                { method: 'quarter', label: '按季度', price: 780 },
+                { method: 'halfYear', label: '按半年', price: 1500 },
+                { method: 'year', label: '按年', price: 2800 }
             ]
         },
         {
@@ -519,11 +498,10 @@
             audience: '龙头企业、政府部门、核心生态伙伴', discount: 5,
             permission: '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；\n2、可以进行相关资源申请授权和数据产品交易；\n3、享受数据产品等相关交易5折优惠；',
             prices: [
-                { year: 1, price: 5200 },
-                { year: 2, price: 9800 },
-                { year: 3, price: 13800 },
-                { year: 5, price: 22600 },
-                { year: 10, price: 39800 }
+                { method: 'month', label: '按月', price: 520 },
+                { method: 'quarter', label: '按季度', price: 1480 },
+                { method: 'halfYear', label: '按半年', price: 2860 },
+                { method: 'year', label: '按年', price: 5200 }
             ]
         }
     ];
@@ -533,8 +511,19 @@
     var editingPrices = [];
 
     function clonePrices(list) {
-        return list.map(function(item) {
-            return { year: item.year, price: item.price };
+        var source = Array.isArray(list) ? list : [];
+        return defaultPrices.map(function(item) {
+            var matched = source.find(function(src) {
+                return src.method === item.method || src.label === item.label;
+            });
+            if (!matched && item.method === 'year') {
+                matched = source.find(function(src) { return Number(src.year) === 1; });
+            }
+            return {
+                method: item.method,
+                label: item.label,
+                price: matched && matched.price !== undefined ? matched.price : item.price
+            };
         });
     }
 
@@ -542,19 +531,13 @@
         var tbody = document.getElementById('priceRows');
         tbody.innerHTML = editingPrices.map(function(item, index) {
             return '<tr>' +
-                '<td><div class="price-input-wrap">' +
-                    '<input class="price-input year" type="number" min="1" value="' + (item.year || '') + '" oninput="updatePriceValue(' + index + ',&quot;year&quot;,this.value)">' +
-                    '<span class="price-unit">年</span>' +
+                '<td><div class="price-method-cell">' +
+                    '<span class="price-method-name">' + item.label + '</span>' +
                 '</div></td>' +
                 '<td><div class="price-input-wrap">' +
                     '<input class="price-input amount" type="number" min="0" value="' + (item.price || '') + '" oninput="updatePriceValue(' + index + ',&quot;price&quot;,this.value)">' +
                     '<span class="price-unit">元</span>' +
                 '</div></td>' +
-                '<td class="col-price-action">' +
-                    '<button class="price-delete-btn" type="button" title="删除" aria-label="delete price row" onclick="removePriceRow(' + index + ')">' +
-                        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4c0-.55.45-1 1-1h6c.55 0 1 .45 1 1v2"></path><path d="M19 6l-1 14c-.06 1.06-.94 2-2 2H8c-1.06 0-1.94-.94-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>' +
-                    '</button>' +
-                '</td>' +
             '</tr>';
         }).join('');
     }
@@ -564,29 +547,14 @@
         editingPrices[index][key] = value;
     }
 
-    function addPriceRow() {
-        editingPrices.push({ year: '', price: '' });
-        renderPriceRows();
-        var inputs = document.querySelectorAll('#priceRows .price-input.year');
-        if (inputs.length) inputs[inputs.length - 1].focus();
-    }
-
-    function removePriceRow(index) {
-        editingPrices.splice(index, 1);
-        renderPriceRows();
-    }
-
     function getCurrentPrices() {
-        return editingPrices
-            .filter(function(item) {
-                return item.year !== '' && item.price !== '';
-            })
-            .map(function(item) {
-                return {
-                    year: Number(item.year),
-                    price: Number(item.price)
-                };
-            });
+        return clonePrices(editingPrices).map(function(item) {
+            return {
+                method: item.method,
+                label: item.label,
+                price: item.price === '' ? '' : Number(item.price)
+            };
+        });
     }
 
     function openModal(mode, idx) {

@@ -275,6 +275,10 @@
             border-color: var(--forest-green-200);
         }
 
+        .tab.is-hidden {
+            display: none;
+        }
+
         .content-header {
             display: flex;
             align-items: center;
@@ -667,7 +671,7 @@
         <!-- Content Area -->
         <div class="content-area">
             <div class="content-tabs">
-                <button class="tab active">公共数据</button>
+                <button class="tab active is-hidden">公共数据</button>
                 <button class="tab">行业数据</button>
                 <button class="tab">企业数据</button>
             </div>
