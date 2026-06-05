@@ -67,6 +67,29 @@
         .form-select:focus { border-color: var(--forest-green); }
         .form-select:hover { border-color: #c0c4cc; }
 
+        .form-input {
+            width: 100%; height: 34px; padding: 0 10px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            background: #fff; border: 1px solid #dcdfe6; border-radius: 3px;
+            outline: none; transition: border-color 0.15s;
+        }
+        .form-input:focus { border-color: var(--forest-green); }
+        .form-input:hover { border-color: #c0c4cc; }
+        .form-input::placeholder { color: #c0c4cc; }
+
+        .form-textarea {
+            width: 100%; height: 72px; padding: 8px 10px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            background: #fff; border: 1px solid #dcdfe6; border-radius: 3px;
+            resize: vertical; outline: none; transition: border-color 0.15s;
+        }
+        .form-textarea:focus { border-color: var(--forest-green); }
+        .form-textarea::placeholder { color: #c0c4cc; }
+        .form-help {
+            margin-top: 4px; font-size: 12px; color: #909399;
+            display: flex; justify-content: flex-end;
+        }
+
         .apply-info-panel {
             background: #f0f9f4; border-radius: 4px; padding: 20px; min-height: 200px;
         }
@@ -421,7 +444,8 @@
                         <div class="member-summary-grid">
                             <div class="summary-fields">
                                 <div class="summary-field"><span class="lbl">申请会员：</span><span class="val" id="detailMemberType">金卡会员</span></div>
-                                <div class="summary-field"><span class="lbl">有效期：</span><span class="val" id="detailMemberTerm">按半年（2026-6-5 / 2026-12-4）</span></div>
+                                <div class="summary-field"><span class="lbl">开通周期：</span><span class="val" id="detailMemberCycle">按半年 × 1，合计 6 个月</span></div>
+                                <div class="summary-field"><span class="lbl">有效期：</span><span class="val" id="detailMemberTerm">2026-6-5 / 2026-12-4</span></div>
                                 <div class="summary-field"><span class="lbl">备注说明：</span><span class="val">xxxxxx</span></div>
                             </div>
                             <div class="cert-image-area">
@@ -534,7 +558,20 @@
                                     <option value="halfYear">按半年</option>
                                     <option value="year">按年</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">购买数量：</label>
+                            <div class="form-value">
+                                <input class="form-input" type="number" id="manageQuantityInput" min="1" step="1" value="1" placeholder="请输入购买数量">
                                 <div class="term-preview" id="manageTermPreview"><strong>--</strong></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">修改原因：</label>
+                            <div class="form-value">
+                                <textarea class="form-textarea" id="manageReasonInput" maxlength="200" placeholder="请输入修改原因，200字以内"></textarea>
+                                <div class="form-help"><span id="manageReasonCount">0/200</span></div>
                             </div>
                         </div>
                         <div class="apply-ft" style="margin-left:80px;">
@@ -579,9 +616,13 @@
         var memberType = cells[1].textContent.trim();
         var term = cells[2].textContent.trim();
         var applicant = cells[3].textContent.trim();
+        var startTime = cells[4].textContent.trim();
+        var endTime = cells[5].textContent.trim();
+        var termDetail = getTermDetail(term, startTime, endTime);
         setDetailText('detailMemberName', subject);
         setDetailText('detailMemberType', memberType);
-        setDetailText('detailMemberTerm', formatTermDetailText(term));
+        setDetailText('detailMemberCycle', termDetail.cycleText);
+        setDetailText('detailMemberTerm', termDetail.rangeText);
         setDetailText('detailOrgName', subject);
         setDetailText('detailApplicant', applicant);
         detailDrawer.classList.add('show');
@@ -645,6 +686,9 @@
 
     var sel = document.getElementById('manageTypeSelect');
     var termSel = document.getElementById('manageTermSelect');
+    var quantityInput = document.getElementById('manageQuantityInput');
+    var reasonInput = document.getElementById('manageReasonInput');
+    var reasonCountEl = document.getElementById('manageReasonCount');
     var termPreviewEl = document.getElementById('manageTermPreview');
     var manageApplicantEl = document.getElementById('manageApplicant');
     var titleEl = document.getElementById('manageInfoTitle');
@@ -663,12 +707,18 @@
         updateInfo(this.value);
     });
     termSel.addEventListener('change', updateTermPreview);
+    quantityInput.addEventListener('input', updateTermPreview);
+    reasonInput.addEventListener('input', updateReasonCount);
 
     function updateInfo(val) {
         var d = memberData[val];
         if (!d) return;
         titleEl.textContent = d.title;
         listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
+    }
+
+    function updateReasonCount() {
+        reasonCountEl.textContent = reasonInput.value.length + '/200';
     }
 
     function getTypeValueByLabel(label) {
@@ -680,21 +730,34 @@
     }
 
     function getTermValueByLabel(label) {
-        if (label === '按月') return 'month';
-        if (label === '按季度') return 'quarter';
-        if (label === '按半年') return 'halfYear';
-        if (label === '按年') return 'year';
+        var text = String(label || '').replace(/×\s*\d+/, '').trim();
+        if (text === '按月') return 'month';
+        if (text === '按季度') return 'quarter';
+        if (text === '按半年') return 'halfYear';
+        if (text === '按年') return 'year';
         return 'year';
+    }
+
+    function getTermQuantityByLabel(label) {
+        var match = String(label || '').match(/×\s*(\d+)/);
+        var quantity = match ? Number(match[1]) : 1;
+        return Number.isInteger(quantity) && quantity > 0 ? quantity : 1;
     }
 
     function getTermLabel(value) {
         return (termData[value] || termData.year).label;
     }
 
-    function formatTermDetailText(label) {
-        var value = getTermValueByLabel(label);
-        var preview = getTermPreview(value);
-        return getTermLabel(value) + '（' + preview.rangeText + '）';
+    function getTermDisplayText(value, quantity) {
+        var label = getTermLabel(value);
+        return quantity > 1 ? label + ' × ' + quantity : label;
+    }
+
+    function parseTermText(text) {
+        return {
+            value: getTermValueByLabel(text),
+            quantity: getTermQuantityByLabel(text)
+        };
     }
 
     function getCurrentDate() {
@@ -712,14 +775,60 @@
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     }
 
-    function getTermPreview(value) {
+    function getDateOnly(text) {
+        return String(text || '').trim().split(/\s+/)[0] || '';
+    }
+
+    function parseDateOnly(text) {
+        var parts = getDateOnly(text).split('-').map(Number);
+        if (parts.length < 3 || parts.some(function(part) { return !Number.isFinite(part); })) return null;
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function getMonthDiff(startText, endText) {
+        var start = parseDateOnly(startText);
+        var end = parseDateOnly(endText);
+        if (!start || !end) return 0;
+        return (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    }
+
+    function getTermDetail(label, startTime, endTime) {
+        var parsed = parseTermText(label);
+        var value = parsed.value;
+        var baseMonths = (termData[value] || termData.year).months;
+        var hasExplicitQuantity = /×\s*\d+/.test(String(label || ''));
+        var inferredMonths = getMonthDiff(startTime, endTime);
+        var quantity = parsed.quantity;
+        if (!hasExplicitQuantity && inferredMonths > 0 && baseMonths > 0) {
+            quantity = Math.max(1, Math.round(inferredMonths / baseMonths));
+        }
+        var preview = getTermPreview(value, quantity);
+        var startDate = getDateOnly(startTime) || preview.startDate;
+        var endDate = getDateOnly(endTime) || preview.endDate;
+        return {
+            cycleText: preview.term + '，合计 ' + preview.totalMonths + ' 个月',
+            rangeText: startDate + ' / ' + endDate
+        };
+    }
+
+    function getValidQuantity() {
+        var quantity = Number(quantityInput.value);
+        return Number.isInteger(quantity) && quantity > 0 ? quantity : null;
+    }
+
+    function getTermPreview(value, quantity) {
         var d = termData[value] || termData.year;
+        var safeQuantity = Number.isInteger(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
+        var totalMonths = d.months * safeQuantity;
         var start = getCurrentDate();
-        var end = addMonths(start, d.months);
+        var end = addMonths(start, totalMonths);
         end.setDate(end.getDate() - 1);
         return {
             value: value,
             label: d.label,
+            quantity: safeQuantity,
+            term: getTermDisplayText(value, safeQuantity),
+            totalMonths: totalMonths,
             startDate: formatDate(start),
             endDate: formatDate(end),
             rangeText: formatDate(start) + ' / ' + formatDate(end)
@@ -727,8 +836,13 @@
     }
 
     function updateTermPreview() {
-        var preview = getTermPreview(termSel.value);
-        termPreviewEl.innerHTML = '<strong>' + preview.rangeText + '</strong>';
+        var quantity = getValidQuantity();
+        if (!quantity) {
+            termPreviewEl.innerHTML = '请填写大于 0 的整数购买数量';
+            return;
+        }
+        var preview = getTermPreview(termSel.value, quantity);
+        termPreviewEl.innerHTML = '开通周期：<strong>' + escapeHtml(preview.term) + '</strong>，合计 ' + preview.totalMonths + ' 个月<br>有效期：<strong>' + escapeHtml(preview.rangeText) + '</strong>';
     }
 
     function escapeHtml(str) {
@@ -746,13 +860,24 @@
 
     function getManageFormValue() {
         var typeData = memberData[sel.value] || {};
-        var preview = getTermPreview(termSel.value);
+        var quantity = getValidQuantity();
+        if (!quantity) {
+            return {
+                subject: manageApplicantEl.textContent.trim(),
+                invalidQuantity: true
+            };
+        }
+        var preview = getTermPreview(termSel.value, quantity);
         return {
             subject: manageApplicantEl.textContent.trim(),
             typeValue: sel.value,
             typeLabel: typeData.title || sel.options[sel.selectedIndex].textContent.trim(),
             termValue: preview.value,
-            term: preview.label,
+            termLabel: preview.label,
+            term: preview.term,
+            quantity: preview.quantity,
+            totalMonths: preview.totalMonths,
+            reason: reasonInput.value.trim(),
             startDate: preview.startDate,
             endDate: preview.endDate,
             rangeText: preview.rangeText
@@ -773,7 +898,14 @@
             changes.push({
                 label: '有效期',
                 before: getTermLabel(currentManageState.termValue),
-                after: nextValue.term
+                after: nextValue.termLabel
+            });
+        }
+        if (currentManageState.quantity !== nextValue.quantity) {
+            changes.push({
+                label: '购买数量',
+                before: currentManageState.quantity + ' 份',
+                after: nextValue.quantity + ' 份'
             });
         }
         return changes;
@@ -794,19 +926,30 @@
             '<div style="padding:10px 12px;background:#f8faf9;border:1px solid #e4e7ed;border-radius:4px">' +
                 '<div style="margin-bottom:6px;color:#303133;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">申请主体：' + escapeHtml(nextValue.subject) + '</div>' +
                 rows +
-                '<div style="margin-top:6px;color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</div>' +
+                '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #dcdfe6;display:grid;gap:4px">' +
+                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">开通周期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.term) + '，合计 ' + nextValue.totalMonths + ' 个月</span></div>' +
+                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">最终有效期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</span></div>' +
+                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">修改原因</span><span style="color:#606266">' + escapeHtml(nextValue.reason || '未填写') + '</span></div>' +
+                '</div>' +
             '</div>' +
         '</div>';
     }
 
     function submitManageChange() {
         var nextValue = getManageFormValue();
+        if (nextValue.invalidQuantity) {
+            GlobalDialog.info({
+                title: '请完善购买数量',
+                desc: '购买数量需填写大于 0 的整数'
+            });
+            return;
+        }
         var changes = getManageChanges(nextValue);
 
         if (!changes.length) {
             GlobalDialog.info({
                 title: '暂无修改内容',
-                desc: '会员类型和有效期均未发生变化'
+                desc: '会员类型、有效期和购买数量均未发生变化'
             });
             return;
         }
@@ -829,7 +972,9 @@
                     typeValue: nextValue.typeValue,
                     typeLabel: nextValue.typeLabel,
                     term: nextValue.term,
-                    termValue: nextValue.termValue
+                    termValue: nextValue.termValue,
+                    quantity: nextValue.quantity,
+                    totalMonths: nextValue.totalMonths
                 };
                 GlobalDialog.success({
                     title: '修改成功',
@@ -845,19 +990,23 @@
         var typeLabel = currentManageRow ? currentManageRow.cells[1].textContent.trim() : (memberData[type] ? memberData[type].title : '');
         var term = currentManageRow ? currentManageRow.cells[2].textContent.trim() : '按年';
         var resolvedType = getTypeValueByLabel(typeLabel) || type;
-        var resolvedTerm = getTermValueByLabel(term);
+        var parsedTerm = parseTermText(term);
 
         manageApplicantEl.textContent = subject;
         sel.value = resolvedType;
-        termSel.value = resolvedTerm;
+        termSel.value = parsedTerm.value;
+        quantityInput.value = parsedTerm.quantity;
+        reasonInput.value = '';
+        updateReasonCount();
         updateInfo(resolvedType);
         updateTermPreview();
         currentManageState = {
             subject: subject,
             typeValue: resolvedType,
             typeLabel: typeLabel || (memberData[type] ? memberData[type].title : ''),
-            term: getTermLabel(resolvedTerm),
-            termValue: resolvedTerm
+            term: getTermDisplayText(parsedTerm.value, parsedTerm.quantity),
+            termValue: parsedTerm.value,
+            quantity: parsedTerm.quantity
         };
         manageModal.classList.add('show');
     }

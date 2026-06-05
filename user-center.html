@@ -154,6 +154,7 @@
             max-height: 80vh; display: flex; flex-direction: column;
             box-shadow: 0 6px 30px rgba(0,0,0,0.15);
         }
+        .record-modal .modal-box { width: 1040px; }
         .modal-hd {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 20px; border-bottom: 1px solid #ebeef5;
@@ -175,6 +176,16 @@
         .status-pending { color: var(--forest-green); }
         .status-pass { color: var(--forest-green); }
         .status-reject { color: #f56c6c; }
+        .record-table-wrap { overflow-x: auto; }
+        .record-table th,
+        .record-table td { white-space: nowrap; }
+        .record-table .col-time { min-width: 150px; }
+        .record-table .col-content {
+            min-width: 300px; white-space: normal; word-break: break-word;
+        }
+        .record-table .col-opinion {
+            min-width: 260px; white-space: normal; word-break: break-word;
+        }
 
         /* ══════════════════════════════════════════
            Apply Modal (会员申请变更)
@@ -201,6 +212,16 @@
         }
         .form-select:focus { border-color: var(--forest-green); }
         .form-select:hover { border-color: #c0c4cc; }
+
+        .form-input {
+            width: 100%; height: 34px; padding: 0 10px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            background: #fff; border: 1px solid #dcdfe6; border-radius: 3px;
+            outline: none; transition: border-color 0.15s;
+        }
+        .form-input:focus { border-color: var(--forest-green); }
+        .form-input:hover { border-color: #c0c4cc; }
+        .form-input::placeholder { color: #c0c4cc; }
 
         .selected-price {
             margin-top: 8px; padding: 8px 10px;
@@ -332,7 +353,7 @@
                         </span>
                         <button class="btn-outline" onclick="document.getElementById('applyRecordModal').classList.add('show')">
                             <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l4 4.01L9 12H6c0-3.86 3.14-7 7-7s7 3.14 7 7-3.14 7-7 7c-1.93 0-3.68-.78-4.95-2.05l-1.42 1.42C8.27 20 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.75-1.23-3.5-2.08V8H12z"/></svg>
-                            申请记录
+                            会员记录
                         </button>
                     </div>
                 </div>
@@ -452,57 +473,64 @@
         </main>
     </div>
 
-    <!-- 申请记录弹窗 -->
-    <div class="modal-mask" id="applyRecordModal">
+    <!-- 会员记录弹窗 -->
+    <div class="modal-mask record-modal" id="applyRecordModal">
         <div class="modal-box">
             <div class="modal-hd">
-                <span class="modal-title">申请记录</span>
+                <span class="modal-title">会员记录</span>
                 <button class="modal-close" onclick="this.closest('.modal-mask').classList.remove('show')">
                     <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </button>
             </div>
             <div class="modal-bd">
-                <table class="data-table">
+                <div class="record-table-wrap">
+                <table class="data-table record-table">
                     <thead>
                         <tr>
-                            <th>开始时间</th>
-                            <th>结束时间</th>
-                            <th>审核节点</th>
-                            <th>状态结果</th>
-                            <th>审核意见</th>
+                            <th>类型</th>
+                            <th class="col-time">申请时间</th>
+                            <th>申请会员</th>
+                            <th class="col-content">申请内容</th>
+                            <th>状态</th>
+                            <th class="col-opinion">审核意见</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>2026-3-5 10:00:00</td>
-                            <td>2026-3-5 10:00:00</td>
-                            <td>提交申请</td>
-                            <td><span class="status-pass">提交</span></td>
-                            <td>--</td>
-                        </tr>
-                        <tr>
-                            <td>2026-3-5 10:00:00</td>
-                            <td>2026-3-7 14:30:00</td>
-                            <td>平台运营方审批1</td>
+                            <td>会员申请</td>
+                            <td class="col-time">2026-6-5 16:00:00</td>
+                            <td>银卡会员</td>
+                            <td class="col-content">开通周期：按月 × 1，合计 1 个月；应付金额：120元；有效期：2026-6-5 / 2026-7-4</td>
                             <td><span class="status-pass">通过</span></td>
-                            <td>材料齐全，符合申请条件</td>
+                            <td class="col-opinion">申请材料完整，符合银卡会员开通条件</td>
                         </tr>
                         <tr>
-                            <td>2026-3-7 14:30:00</td>
-                            <td>--</td>
-                            <td>平台运营方审批2</td>
-                            <td><span class="status-pending">处理中</span></td>
-                            <td>--</td>
+                            <td>会员变更</td>
+                            <td class="col-time">2026-7-1 09:20:00</td>
+                            <td>金卡会员</td>
+                            <td class="col-content">开通周期：按季度 × 1，合计 3 个月；应付金额：780元；有效期：2026-7-1 / 2026-9-30</td>
+                            <td><span class="status-pass">通过</span></td>
+                            <td class="col-opinion">业务规模提升，变更会员等级审批通过</td>
                         </tr>
                         <tr>
-                            <td>2026-3-9 09:00:00</td>
-                            <td>2026-3-9 11:15:00</td>
-                            <td>平台运营方审批2</td>
+                            <td>会员申请</td>
+                            <td class="col-time">2026-8-8 10:00:00</td>
+                            <td>铂金会员</td>
+                            <td class="col-content">开通周期：按年 × 1，合计 12 个月；应付金额：5,200元；有效期：2026-8-8 / 2027-8-7</td>
                             <td><span class="status-reject">不通过</span></td>
-                            <td>企业资质证明文件已过期，请更新后重新提交</td>
+                            <td class="col-opinion">企业资质证明文件已过期，请更新后重新提交</td>
+                        </tr>
+                        <tr>
+                            <td>管理员调整</td>
+                            <td class="col-time">2026-9-10 14:10:00</td>
+                            <td>铂金会员</td>
+                            <td class="col-content">开通周期：按半年 × 2，合计 12 个月；有效期：2026-9-10 / 2027-9-9</td>
+                            <td><span class="status-pass">通过</span></td>
+                            <td class="col-opinion">会员管理-管理填写的修改原因：因年度合作协议续签，管理员调整会员等级和有效期</td>
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
             <div class="modal-ft">
                 <button class="btn-outline" onclick="this.closest('.modal-mask').classList.remove('show')">
@@ -544,7 +572,13 @@
                             <label class="form-label">收费方式：</label>
                             <div class="form-value">
                                 <select class="form-select" id="memberTermSelect"></select>
-                                <div class="selected-price" id="memberSelectedPrice">有效期：<strong>--</strong></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">购买数量：</label>
+                            <div class="form-value">
+                                <input class="form-input" type="number" id="memberQuantityInput" min="1" step="1" value="1" placeholder="请输入购买数量">
+                                <div class="selected-price" id="memberSelectedPrice">开通周期：<strong>--</strong></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -664,6 +698,7 @@
         var audEl = document.getElementById('memberInfoAudience');
         var listEl = document.getElementById('memberInfoList');
         var selectedPriceEl = document.getElementById('memberSelectedPrice');
+        var quantityInput = document.getElementById('memberQuantityInput');
         var termMonths = {
             month: 1,
             quarter: 3,
@@ -690,9 +725,9 @@
             return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
         }
 
-        function getTermRange(method) {
+        function getTermRange(method, months) {
             var start = getCurrentDate();
-            var end = addMonths(start, termMonths[method] || 12);
+            var end = addMonths(start, months || termMonths[method] || 12);
             end.setDate(end.getDate() - 1);
             return formatDate(start) + ' / ' + formatDate(end);
         }
@@ -701,10 +736,17 @@
             var currentMethod = termSel.value;
             var current = d.prices.find(function(item) { return item.method === currentMethod; }) || d.prices[0];
             if (!current) {
-                selectedPriceEl.innerHTML = '有效期：<strong>--</strong>';
+                selectedPriceEl.innerHTML = '开通周期：<strong>--</strong><br>应付金额：<strong>--</strong>';
                 return;
             }
-            selectedPriceEl.innerHTML = '有效期：<strong>' + getTermRange(current.method) + '</strong>';
+            var quantity = Number(quantityInput.value);
+            if (!Number.isInteger(quantity) || quantity < 1) {
+                selectedPriceEl.innerHTML = '请填写大于 0 的整数购买数量，系统将自动计算开通周期和应付金额';
+                return;
+            }
+            var totalMonths = (termMonths[current.method] || 12) * quantity;
+            var totalPrice = current.price * quantity;
+            selectedPriceEl.innerHTML = '开通周期：<strong>' + current.label + ' × ' + quantity + '</strong>，合计 ' + totalMonths + ' 个月<br>应付金额：<strong>' + formatPrice(totalPrice) + '元</strong><br>有效期：' + getTermRange(current.method, totalMonths);
         }
 
         function renderTerms(d) {
@@ -729,6 +771,11 @@
         });
 
         termSel.addEventListener('change', function() {
+            var d = memberData[sel.value];
+            if (d) renderTermPreview(d);
+        });
+
+        quantityInput.addEventListener('input', function() {
             var d = memberData[sel.value];
             if (d) renderTermPreview(d);
         });
