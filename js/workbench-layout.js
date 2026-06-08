@@ -106,30 +106,31 @@
     var consultRecords = [
         {
             id: 'demand',
+            audience: 'buyer',
             object: '企业领导驾驶舱服务需求',
             type: '需求咨询',
             typeClass: 'demand',
             unread: true,
             createdAt: '2026-06-03 10:32',
             person: '刘洋',
-            status: '跟进中',
+            status: '待处理',
             submitInfo: {
-                org: '龙岗数智集成服务有限公司',
-                name: '刘洋',
+                org: '智慧数据科技有限公司',
+                name: '周琳',
                 phone: '13809523505',
-                email: 'liuyang@lgdata.cn'
+                email: 'zhoulin@smartdata.cn'
             },
             objectInfo: [
                 ['需求名称', '企业领导驾驶舱服务需求'],
                 ['需求类型', '应用需求'],
-                ['需求方', '智慧数据科技有限公司'],
+                ['响应供方', '龙岗数智集成服务有限公司'],
                 ['需求预算', '面议'],
-                ['截止时间', '2025-11-04']
+                ['截止时间', '2026-06-30']
             ],
             orgInfo: [
                 ['法人或其他组织类型', '企业单位法人'],
-                ['法人或其他组织名称', '龙岗数智集成服务有限公司'],
-                ['统一社会信用代码', '91440300MA5LGD528R'],
+                ['法人或其他组织名称', '智慧数据科技有限公司'],
+                ['统一社会信用代码', '91440300MA5SDT328R'],
                 ['营业期限或有效期', '长期有效'],
                 ['所属行业类型', '软件和信息技术服务业'],
                 ['注册金额', '1200万元'],
@@ -142,21 +143,252 @@
             ],
             messages: [
                 { kind: 'time', text: '2026-06-03 10:32' },
-                { kind: 'msg', from: 'provider', name: '刘洋', text: '您好，我们关注到企业领导驾驶舱服务需求，想确认是否已有固定数据源清单和指标口径。' },
+                { kind: 'msg', from: 'asker', name: '周琳', text: '我们计划建设企业领导驾驶舱，需要咨询是否可以提供指标体系梳理、数据接入评估和原型方案。' },
                 { kind: 'time', text: '2026-06-03 10:48' },
-                { kind: 'msg', from: 'asker', name: '智慧数据科技有限公司', text: '您好，目前已有财务、项目、客户和运营系统数据源，指标口径还需要供应方协助梳理。' },
-                { kind: 'msg', from: 'provider', name: '刘洋', text: '了解。我们可以先提供指标体系梳理和驾驶舱原型方案，再根据数据接入范围评估实施周期。' }
+                { kind: 'msg', from: 'provider', name: '刘洋', text: '您好，可以先确认现有财务、项目、客户和运营系统的数据源清单，再评估驾驶舱指标口径和实施周期。' },
+                { kind: 'msg', from: 'provider', name: '刘洋', text: '请补充当前已有报表样例和希望优先展示的核心指标，我们会据此给出初步建议。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-energy',
+            audience: 'buyer',
+            object: '园区能耗监测数据服务需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            createdAt: '2026-06-02 15:18',
+            person: '黄敏',
+            status: '已处理',
+            submitInfo: {
+                org: '龙岗某园区运营有限公司',
+                name: '黄敏',
+                phone: '13809523506',
+                email: 'huangmin@parkops.cn'
+            },
+            objectInfo: [
+                ['需求名称', '园区能耗监测数据服务需求'],
+                ['需求类型', '数据服务需求'],
+                ['响应供方', '深圳市智碳数据服务有限公司'],
+                ['需求预算', '30万元以内'],
+                ['截止时间', '2026-06-25']
+            ],
+            orgInfo: [
+                ['法人或其他组织类型', '企业单位法人'],
+                ['法人或其他组织名称', '龙岗某园区运营有限公司'],
+                ['统一社会信用代码', '91440300MA5PARK88Q'],
+                ['营业期限或有效期', '长期有效'],
+                ['所属行业类型', '园区运营服务'],
+                ['注册金额', '2500万元'],
+                ['注册日期', '2019-09-16'],
+                ['注册地址', '广东省深圳市龙岗区'],
+                ['注册详细地址', '龙岗区宝龙街道新能源产业园综合楼'],
+                ['核准机构', '深圳市市场监督管理局'],
+                ['经营范围或业务范围', '产业园区运营、能源管理、企业服务'],
+                ['机构简介', '负责园区公共设施运营、企业入驻服务和能耗管理。']
+            ],
+            messages: [
+                { kind: 'time', text: '2026-06-02 15:18' },
+                { kind: 'msg', from: 'asker', name: '黄敏', text: '园区希望接入楼栋、企业和公共区域能耗数据，咨询是否支持按小时统计和异常用能提醒。' },
+                { kind: 'time', text: '2026-06-02 16:05' },
+                { kind: 'msg', from: 'provider', name: '周启', text: '支持按楼栋、楼层和企业维度统计，也可以配置峰谷用电、环比突增和离线设备提醒。' },
+                { kind: 'msg', from: 'asker', name: '黄敏', text: '已收到，后续会整理电表点位清单和现有采集系统说明。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-lowalt',
+            audience: 'buyer',
+            object: '低空巡检影像数据接入需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            createdAt: '2026-05-30 09:42',
+            person: '郭扬',
+            status: '已处理',
+            submitInfo: {
+                org: '深圳市龙岗区城市服务有限公司',
+                name: '郭扬',
+                phone: '13809523507',
+                email: 'guoyang@lgcity.cn'
+            },
+            objectInfo: [
+                ['需求名称', '低空巡检影像数据接入需求'],
+                ['需求类型', '场景应用需求'],
+                ['响应供方', '龙岗低空科技有限公司'],
+                ['需求预算', '面议'],
+                ['截止时间', '2026-06-15']
+            ],
+            orgInfo: [
+                ['法人或其他组织类型', '企业单位法人'],
+                ['法人或其他组织名称', '深圳市龙岗区城市服务有限公司'],
+                ['统一社会信用代码', '91440300MA5CITY26K'],
+                ['营业期限或有效期', '长期有效'],
+                ['所属行业类型', '城市公共服务'],
+                ['注册金额', '5000万元'],
+                ['注册日期', '2017-04-21'],
+                ['注册地址', '广东省深圳市龙岗区'],
+                ['注册详细地址', '龙岗区龙城街道城市服务中心'],
+                ['核准机构', '深圳市市场监督管理局'],
+                ['经营范围或业务范围', '城市运营服务、巡检管理、公共设施维护'],
+                ['机构简介', '承担城市公共空间巡检、设施维护和事件处置协同工作。']
+            ],
+            messages: [
+                { kind: 'time', text: '2026-05-30 09:42' },
+                { kind: 'msg', from: 'asker', name: '郭扬', text: '想咨询低空巡检影像是否可以接入现有城市事件平台，用于识别楼顶堆物和道路积水。' },
+                { kind: 'time', text: '2026-05-30 10:20' },
+                { kind: 'msg', from: 'provider', name: '林峰', text: '可以通过接口推送识别结果和图片地址，建议先选取一个街道做试点验证。' },
+                { kind: 'msg', from: 'asker', name: '郭扬', text: '本次咨询已完成，试点方案后续通过需求响应流程推进。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-traffic',
+            audience: 'buyer',
+            object: '道路交通运行指标分析需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            unread: true,
+            createdAt: '2026-06-04 09:18',
+            person: '许晨',
+            status: '待处理',
+            submitInfo: {
+                org: '龙岗某交通科技有限公司',
+                name: '许晨',
+                phone: '13809523508',
+                email: 'xuchen@lgtraffic.cn'
+            },
+            objectInfo: [
+                ['需求名称', '道路交通运行指标分析需求'],
+                ['需求类型', '数据分析需求'],
+                ['响应供方', '深圳市路网数据服务有限公司'],
+                ['需求预算', '20万元以内'],
+                ['截止时间', '2026-07-05']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-04 09:18' },
+                { kind: 'msg', from: 'asker', name: '许晨', text: '希望咨询道路拥堵指数、平均车速和重点路段通行效率指标是否可以按小时输出。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-credit',
+            audience: 'buyer',
+            object: '企业信用画像数据应用需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            unread: true,
+            createdAt: '2026-06-04 10:46',
+            person: '林雅',
+            status: '待处理',
+            submitInfo: {
+                org: '深圳某产业金融服务有限公司',
+                name: '林雅',
+                phone: '13809523509',
+                email: 'linya@finance.cn'
+            },
+            objectInfo: [
+                ['需求名称', '企业信用画像数据应用需求'],
+                ['需求类型', '数据应用需求'],
+                ['响应供方', '龙岗信用数据服务有限公司'],
+                ['需求预算', '面议'],
+                ['截止时间', '2026-07-08']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-04 10:46' },
+                { kind: 'msg', from: 'asker', name: '林雅', text: '想咨询企业信用画像是否能结合经营、司法、税务和融资行为数据形成评分模型。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-tourism',
+            audience: 'buyer',
+            object: '文旅客流预测数据服务需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            createdAt: '2026-06-04 14:12',
+            person: '何佳',
+            status: '待处理',
+            submitInfo: {
+                org: '龙岗某文旅运营有限公司',
+                name: '何佳',
+                phone: '13809523510',
+                email: 'hejia@culture.cn'
+            },
+            objectInfo: [
+                ['需求名称', '文旅客流预测数据服务需求'],
+                ['需求类型', '场景应用需求'],
+                ['响应供方', '深圳市文旅数智科技有限公司'],
+                ['需求预算', '15万元以内'],
+                ['截止时间', '2026-07-10']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-04 14:12' },
+                { kind: 'msg', from: 'asker', name: '何佳', text: '需要了解节假日客流预测是否可以结合天气、活动日历和历史入园数据进行分析。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-logistics',
+            audience: 'buyer',
+            object: '物流订单履约监测需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            createdAt: '2026-06-05 09:05',
+            person: '邓鹏',
+            status: '待处理',
+            submitInfo: {
+                org: '深圳某供应链管理有限公司',
+                name: '邓鹏',
+                phone: '13809523511',
+                email: 'dengpeng@scm.cn'
+            },
+            objectInfo: [
+                ['需求名称', '物流订单履约监测需求'],
+                ['需求类型', '数据服务需求'],
+                ['响应供方', '龙岗物流数据服务有限公司'],
+                ['需求预算', '25万元以内'],
+                ['截止时间', '2026-07-12']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-05 09:05' },
+                { kind: 'msg', from: 'asker', name: '邓鹏', text: '咨询订单履约监测是否支持运输节点、延误预警和异常签收统计。' }
+            ]
+        },
+        {
+            id: 'buyer-demand-governance',
+            audience: 'buyer',
+            object: '公共数据治理咨询需求',
+            type: '需求咨询',
+            typeClass: 'demand',
+            createdAt: '2026-06-05 11:28',
+            person: '叶宁',
+            status: '待处理',
+            submitInfo: {
+                org: '龙岗某公共服务机构',
+                name: '叶宁',
+                phone: '13809523512',
+                email: 'yening@govservice.cn'
+            },
+            objectInfo: [
+                ['需求名称', '公共数据治理咨询需求'],
+                ['需求类型', '咨询服务需求'],
+                ['响应供方', '深圳市数治咨询有限公司'],
+                ['需求预算', '面议'],
+                ['截止时间', '2026-07-15']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-05 11:28' },
+                { kind: 'msg', from: 'asker', name: '叶宁', text: '希望咨询数据目录梳理、质量规则配置和共享开放前的合规检查工作量。' }
             ]
         },
         {
             id: 'resource',
+            audience: 'supplier',
             object: '金融行业A股上市公司股吧数据集',
             type: '数据资源',
             typeClass: '',
             unread: true,
             createdAt: '2026-06-03 09:28',
             person: '陈雨',
-            status: '跟进中',
+            status: '待处理',
             submitInfo: {
                 org: '中节能铁汉生态环境股份有限公司',
                 name: '陈雨',
@@ -195,13 +427,156 @@
             ]
         },
         {
+            id: 'supplier-resource-traffic',
+            audience: 'supplier',
+            object: '公共交通刷卡与站点客流数据',
+            type: '数据资源',
+            typeClass: '',
+            unread: true,
+            createdAt: '2026-06-04 08:50',
+            person: '宋洁',
+            status: '待处理',
+            submitInfo: {
+                org: '深圳某交通规划研究院',
+                name: '宋洁',
+                phone: '13809523513',
+                email: 'songjie@transport.cn'
+            },
+            objectInfo: [
+                ['资源名称', '公共交通刷卡与站点客流数据'],
+                ['资源类型', '交通出行数据'],
+                ['资源提供方', '龙岗数据'],
+                ['交付方式', '接口调用'],
+                ['上架时间', '2026-05-28 10:00:00']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-04 08:50' },
+                { kind: 'msg', from: 'asker', name: '宋洁', text: '想了解站点客流数据是否支持按线路、站点和时段聚合，用于早晚高峰换乘分析。' }
+            ]
+        },
+        {
+            id: 'supplier-product-risk',
+            audience: 'supplier',
+            object: '企业经营风险预警产品',
+            type: '数据产品',
+            typeClass: 'product',
+            unread: true,
+            createdAt: '2026-06-04 13:26',
+            person: '马宁',
+            status: '待处理',
+            submitInfo: {
+                org: '龙岗某小微金融服务公司',
+                name: '马宁',
+                phone: '13809523514',
+                email: 'maning@microfinance.cn'
+            },
+            objectInfo: [
+                ['产品名称', '企业经营风险预警产品'],
+                ['产品类型', '数据产品'],
+                ['产品提供方', '智慧数据科技有限公司'],
+                ['交付方式', '在线服务'],
+                ['计费方式', '按年订阅']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-04 13:26' },
+                { kind: 'msg', from: 'asker', name: '马宁', text: '咨询企业风险预警是否包含司法、经营异常和舆情变化提醒，是否支持批量企业名单导入。' }
+            ]
+        },
+        {
+            id: 'supplier-service-compliance',
+            audience: 'supplier',
+            object: '数据安全合规体系建设咨询服务',
+            type: '数据咨询服务',
+            typeClass: 'service',
+            createdAt: '2026-06-05 09:40',
+            person: '郑琪',
+            status: '待处理',
+            submitInfo: {
+                org: '深圳某医疗科技有限公司',
+                name: '郑琪',
+                phone: '13809523515',
+                email: 'zhengqi@medtech.cn'
+            },
+            objectInfo: [
+                ['服务名称', '数据安全合规体系建设咨询服务'],
+                ['服务类型', '数据咨询服务'],
+                ['服务提供方', '智慧数据科技有限公司'],
+                ['服务周期', '面议'],
+                ['交付方式', '线上+线下交付']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-05 09:40' },
+                { kind: 'msg', from: 'asker', name: '郑琪', text: '我们有医疗业务数据，希望咨询分类分级、权限管控和共享前脱敏评估的服务范围。' }
+            ]
+        },
+        {
+            id: 'supplier-solution-energy',
+            audience: 'supplier',
+            object: '园区能耗精细化治理方案',
+            type: '行业解决方案',
+            typeClass: 'solution',
+            createdAt: '2026-06-05 10:18',
+            person: '谢文',
+            status: '待处理',
+            submitInfo: {
+                org: '龙岗某产业园区管理公司',
+                name: '谢文',
+                phone: '13809523516',
+                email: 'xiewen@park.cn'
+            },
+            objectInfo: [
+                ['方案名称', '园区能耗精细化治理方案'],
+                ['方案类型', '行业解决方案'],
+                ['方案提供方', '智慧数据科技有限公司'],
+                ['适用行业', '园区运营'],
+                ['交付周期', '面议']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-05 10:18' },
+                { kind: 'msg', from: 'asker', name: '谢文', text: '咨询方案是否支持企业分户能耗核算、异常用能提醒和节能改造效果评估。' }
+            ]
+        },
+        {
+            id: 'supplier-product-supply',
+            audience: 'supplier',
+            object: '产业链供需匹配数据产品',
+            type: '数据产品',
+            typeClass: 'product',
+            createdAt: '2026-06-05 14:06',
+            person: '曹越',
+            status: '待处理',
+            submitInfo: {
+                org: '深圳某产业服务平台运营方',
+                name: '曹越',
+                phone: '13809523517',
+                email: 'caoyue@industry.cn'
+            },
+            objectInfo: [
+                ['产品名称', '产业链供需匹配数据产品'],
+                ['产品类型', '数据产品'],
+                ['产品提供方', '智慧数据科技有限公司'],
+                ['交付方式', '在线服务'],
+                ['计费方式', '按调用量计费']
+            ],
+            orgInfo: [],
+            messages: [
+                { kind: 'time', text: '2026-06-05 14:06' },
+                { kind: 'msg', from: 'asker', name: '曹越', text: '想了解供需匹配产品是否可按企业标签、产品能力和采购需求自动推荐合作对象。' }
+            ]
+        },
+        {
             id: 'product',
+            audience: 'supplier',
             object: '慧企政策智能推荐',
             type: '数据产品',
             typeClass: 'product',
             createdAt: '2026-06-02 16:20',
             person: '李明',
-            status: '已回复',
+            status: '已处理',
             submitInfo: {
                 org: '深圳市龙岗区数字产业服务有限公司',
                 name: '李明',
@@ -240,13 +615,14 @@
         },
         {
             id: 'service',
+            audience: 'supplier',
             object: '数据资产入表规划咨询服务',
             type: '数据咨询服务',
             typeClass: 'service',
             unread: true,
             createdAt: '2026-06-01 11:36',
             person: '王静',
-            status: '待回复',
+            status: '待处理',
             submitInfo: {
                 org: '深圳某制造企业',
                 name: '王静',
@@ -284,12 +660,13 @@
         },
         {
             id: 'solution',
+            audience: 'supplier',
             object: '金融行业数据应用解决方案',
             type: '行业解决方案',
             typeClass: 'solution',
             createdAt: '2026-05-31 14:12',
             person: '赵强',
-            status: '已回复',
+            status: '已处理',
             submitInfo: {
                 org: '龙岗某金融科技企业',
                 name: '赵强',
@@ -361,8 +738,7 @@
         function itemHtml(item) {
             var cls = item.key === active ? 'wb-side-item active' : 'wb-side-item';
             var icon = item.icon ? ICONS[item.icon] : '';
-            var unreadDot = item.key === 'consults' && hasUnreadConsults() ? '<span class="wb-unread-dot"></span>' : '';
-            var content = icon + '<span>' + item.label + '</span>' + unreadDot;
+            var content = icon + '<span>' + item.label + '</span>';
             if (item.href) return '<a class="' + cls + '" href="' + item.href + '">' + content + '</a>';
             return '<span class="' + cls + '">' + content + '</span>';
         }
@@ -398,8 +774,10 @@
         return params.get('menu') || (container && container.dataset.active) || 'consults';
     }
 
-    function hasUnreadConsults() {
-        return consultRecords.some(function (item) { return item.unread; });
+    function getConsultRecords(role) {
+        return consultRecords.filter(function (item) {
+            return item.audience === role;
+        });
     }
 
     function tagClass(item) {
@@ -434,171 +812,464 @@
         }
 
         panel.classList.remove('is-placeholder');
-        var activeId = consultRecords[0].id;
-        var sendKeyMode = 'enter';
+        var consultRecords = getConsultRecords(role);
 
-        function isSelf(from) {
-            return role === 'supplier' ? from === 'provider' : from === 'asker';
+        var activeTab = 'pending';
+        var filters = { keyword: '', type: 'all', status: 'all' };
+        var pagination = { page: 1, pageSize: 5 };
+        var modalState = { id: null, mode: 'view', error: '' };
+        var noticeText = '';
+        var icons = {
+            search: '<svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l4.45 4.44-1.42 1.42-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>',
+            reset: '<svg viewBox="0 0 24 24"><path d="M12 5V2L7 7l5 5V7a5 5 0 1 1-4.55 7.06l-1.82.83A7 7 0 1 0 12 5z"/></svg>',
+            handle: '<svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 5h16v2H4V9zm0 5h10v2H4v-2zm13.7-.7 1.4 1.4-5.6 5.6-3.1-3.1 1.4-1.4 1.7 1.7 4.2-4.2z"/></svg>',
+            view: '<svg viewBox="0 0 24 24"><path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg>',
+            close: '<svg viewBox="0 0 24 24"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5z"/></svg>',
+            submit: '<svg viewBox="0 0 24 24"><path d="M3 20.5 21 12 3 3.5V10l10 2-10 2v6.5z"/></svg>'
+        };
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+            });
         }
 
-        function renderMessages(item) {
-            return item.messages.map(function (message) {
+        function getStatus(item) {
+            return item.status || '待处理';
+        }
+
+        function getStatusClass(status) {
+            if (status === '待处理') return 'pending';
+            return 'done';
+        }
+
+        function findInfoValue(item, labels) {
+            var rows = item.objectInfo || [];
+            for (var i = 0; i < labels.length; i += 1) {
+                var row = rows.find(function (entry) { return entry[0] === labels[i]; });
+                if (row) return row[1];
+            }
+            return '';
+        }
+
+        function getCounterparty(item) {
+            if (role === 'supplier') return item.submitInfo.org;
+            return findInfoValue(item, ['响应供方', '对接供方', '资源提供方', '产品提供方', '服务提供方', '方案提供方']) || item.submitInfo.org;
+        }
+
+        function getHistory(item) {
+            var currentTime = item.createdAt;
+            return (item.messages || []).reduce(function (result, message) {
                 if (message.kind === 'time') {
-                    return '<div class="chat-time"><span>' + message.text + '</span></div>';
+                    currentTime = message.text;
+                    return result;
                 }
-                var self = isSelf(message.from);
-                var cls = self ? 'chat-msg self' : 'chat-msg';
-                var avatar = self ? '我' : message.name.slice(0, 1);
+                result.push({
+                    time: currentTime,
+                    name: message.name,
+                    text: message.text,
+                    from: message.from
+                });
+                return result;
+            }, []);
+        }
+
+        function getLatestReplyTime(item) {
+            var history = getHistory(item);
+            return history.length ? history[history.length - 1].time : '--';
+        }
+
+        function getConsultContent(item) {
+            var history = getHistory(item);
+            return history.length ? history[0].text : '--';
+        }
+
+        function getTabCount(tabKey) {
+            return consultRecords.filter(function (item) {
+                var status = getStatus(item);
+                if (tabKey === 'pending') return status === '待处理';
+                if (tabKey === 'processed') return status !== '待处理';
+                return true;
+            }).length;
+        }
+
+        function getTypeOptions() {
+            return consultRecords.reduce(function (result, item) {
+                if (result.indexOf(item.type) === -1) result.push(item.type);
+                return result;
+            }, []);
+        }
+
+        function option(value, label, current) {
+            var selected = value === current ? ' selected' : '';
+            return '<option value="' + escapeHtml(value) + '"' + selected + '>' + escapeHtml(label) + '</option>';
+        }
+
+        function renderTabs() {
+            var tabs = [
+                { key: 'pending', label: '待处理' },
+                { key: 'processed', label: '已处理' },
+                { key: 'mine', label: '我发起' }
+            ];
+            return tabs.map(function (tab) {
+                var cls = tab.key === activeTab ? 'consult-tab active' : 'consult-tab';
+                return '<button class="' + cls + '" type="button" data-consult-tab="' + tab.key + '">'
+                    + '<span>' + tab.label + '</span><em>' + getTabCount(tab.key) + '</em>'
+                    + '</button>';
+            }).join('');
+        }
+
+        function renderFilters() {
+            var typeOptions = option('all', '全部类型', filters.type) + getTypeOptions().map(function (type) {
+                return option(type, type, filters.type);
+            }).join('');
+            var statusOptions = option('all', '全部状态', filters.status)
+                + option('待处理', '待处理', filters.status)
+                + option('已处理', '已处理', filters.status);
+
+            return ''
+                + '<div class="consult-filter-card">'
+                +   '<div class="consult-filter-main">'
+                +       '<input class="consult-filter-input" type="text" data-consult-keyword placeholder="搜索咨询对象/对接方/联系人" value="' + escapeHtml(filters.keyword) + '">'
+                +       '<select class="consult-filter-select" data-consult-type>' + typeOptions + '</select>'
+                +       '<select class="consult-filter-select" data-consult-status>' + statusOptions + '</select>'
+                +   '</div>'
+                +   '<div class="consult-filter-actions">'
+                +       '<button class="consult-filter-btn primary" type="button" data-consult-search>' + icons.search + '<span>查询</span></button>'
+                +       '<button class="consult-filter-btn" type="button" data-consult-reset>' + icons.reset + '<span>重置</span></button>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function getFilteredRecords() {
+            var keyword = filters.keyword.toLowerCase();
+            return consultRecords.filter(function (item) {
+                var status = getStatus(item);
+                if (activeTab === 'pending' && status !== '待处理') return false;
+                if (activeTab === 'processed' && status === '待处理') return false;
+                if (filters.type !== 'all' && item.type !== filters.type) return false;
+                if (filters.status !== 'all' && status !== filters.status) return false;
+                if (!keyword) return true;
+                var text = [item.object, item.type, item.person, item.submitInfo.org, getCounterparty(item)].join(' ').toLowerCase();
+                return text.indexOf(keyword) !== -1;
+            });
+        }
+
+        function renderPageButton(page, currentPage) {
+            var cls = page === currentPage ? 'consult-page-btn active' : 'consult-page-btn';
+            return '<button class="' + cls + '" type="button" data-consult-page="' + page + '">' + page + '</button>';
+        }
+
+        function renderPagination(total, totalPages, startIndex, pageCount) {
+            var currentPage = pagination.page;
+            var startText = total ? startIndex + 1 : 0;
+            var endText = total ? startIndex + pageCount : 0;
+            var pageButtons = [];
+            for (var i = 1; i <= totalPages; i += 1) {
+                pageButtons.push(renderPageButton(i, currentPage));
+            }
+            var prevCls = currentPage <= 1 ? 'consult-page-btn disabled' : 'consult-page-btn';
+            var nextCls = currentPage >= totalPages ? 'consult-page-btn disabled' : 'consult-page-btn';
+            var sizeOptions = [5, 10, 20].map(function (size) {
+                var selected = size === pagination.pageSize ? ' selected' : '';
+                return '<option value="' + size + '"' + selected + '>' + size + '条/页</option>';
+            }).join('');
+
+            return ''
+                + '<div class="consult-pagination">'
+                +   '<div class="consult-page-info">显示 ' + startText + '-' + endText + ' 条，共 ' + total + ' 条</div>'
+                +   '<div class="consult-page-controls">'
+                +       '<select class="consult-page-size" data-consult-page-size>' + sizeOptions + '</select>'
+                +       '<button class="' + prevCls + '" type="button" data-consult-page="prev">上一页</button>'
+                +       pageButtons.join('')
+                +       '<button class="' + nextCls + '" type="button" data-consult-page="next">下一页</button>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderRows(records) {
+            if (!records.length) {
+                return '<tr><td class="consult-empty-cell" colspan="8">暂无匹配的咨询记录</td></tr>';
+            }
+            return records.map(function (item) {
+                var status = getStatus(item);
+                var actions = activeTab === 'pending' && status === '待处理'
+                    ? '<button class="consult-action-btn primary" type="button" data-consult-action="handle" data-consult-id="' + item.id + '">' + icons.handle + '<span>处理</span></button>'
+                    : '<button class="consult-action-btn" type="button" data-consult-action="view" data-consult-id="' + item.id + '">' + icons.view + '<span>查看</span></button>';
+
                 return ''
-                    + '<div class="' + cls + '">'
-                    +   '<div class="chat-avatar">' + avatar + '</div>'
-                    +   '<div class="chat-content">'
-                    +       '<div class="chat-name">' + (self ? '我' : message.name) + '</div>'
-                    +       '<div class="chat-bubble">' + message.text + '</div>'
+                    + '<tr>'
+                    +   '<td class="consult-name-cell"><a class="consult-object-link" href="javascript:void(0)" data-consult-action="view" data-consult-id="' + item.id + '">' + escapeHtml(item.object) + '</a></td>'
+                    +   '<td><span class="' + tagClass(item) + '">' + escapeHtml(item.type) + '</span></td>'
+                    +   '<td>' + escapeHtml(getCounterparty(item)) + '</td>'
+                    +   '<td>' + escapeHtml(item.person) + '</td>'
+                    +   '<td class="consult-nowrap">' + escapeHtml(item.createdAt) + '</td>'
+                    +   '<td class="consult-nowrap">' + escapeHtml(getLatestReplyTime(item)) + '</td>'
+                    +   '<td><span class="consult-status-badge ' + getStatusClass(status) + '">' + escapeHtml(status) + '</span></td>'
+                    +   '<td><div class="consult-action-group">' + actions + '</div></td>'
+                    + '</tr>';
+            }).join('');
+        }
+
+        function renderTable(records) {
+            var total = records.length;
+            var totalPages = Math.max(1, Math.ceil(total / pagination.pageSize));
+            if (pagination.page > totalPages) pagination.page = totalPages;
+            if (pagination.page < 1) pagination.page = 1;
+            var startIndex = (pagination.page - 1) * pagination.pageSize;
+            var pageRecords = records.slice(startIndex, startIndex + pagination.pageSize);
+
+            return ''
+                + '<section class="consult-table-card">'
+                +   '<div class="consult-table-head">'
+                +       '<div class="consult-table-title">咨询记录</div>'
+                +       '<div class="consult-table-count">共 ' + total + ' 条</div>'
+                +   '</div>'
+                +   '<div class="consult-table-scroll">'
+                +       '<table class="consult-table">'
+                +           '<thead><tr>'
+                +               '<th>咨询对象</th><th>咨询类型</th><th>对接方</th><th>联系人</th><th>提交时间</th><th>最近回复时间</th><th>状态</th><th>操作</th>'
+                +           '</tr></thead>'
+                +           '<tbody>' + renderRows(pageRecords) + '</tbody>'
+                +       '</table>'
+                +   '</div>'
+                +   renderPagination(total, totalPages, startIndex, pageRecords.length)
+                + '</section>';
+        }
+
+        function renderInfoGrid(rows) {
+            return rows.map(function (row) {
+                return '<div class="consult-info-item"><span>' + escapeHtml(row[0]) + '</span><strong>' + escapeHtml(row[1]) + '</strong></div>';
+            }).join('');
+        }
+
+        function renderObjectInfo(item) {
+            return (item.objectInfo || []).map(function (row) {
+                return '<div class="consult-detail-row"><span>' + escapeHtml(row[0]) + '</span><strong>' + escapeHtml(row[1]) + '</strong></div>';
+            }).join('');
+        }
+
+        function renderHistory(item) {
+            var history = getHistory(item);
+            if (!history.length) return '<div class="consult-record-empty">暂无回复记录</div>';
+            return history.map(function (entry) {
+                var actor = entry.name || (entry.from === 'asker' ? '咨询方' : '对接方');
+                return ''
+                    + '<div class="consult-record-item">'
+                    +   '<div class="consult-record-time">' + escapeHtml(entry.time) + '</div>'
+                    +   '<div class="consult-record-main">'
+                    +       '<div class="consult-record-actor">' + escapeHtml(actor) + '</div>'
+                    +       '<div class="consult-record-text">' + escapeHtml(entry.text) + '</div>'
                     +   '</div>'
                     + '</div>';
             }).join('');
         }
 
-        function renderList(activeItem) {
-            return consultRecords.map(function (item) {
-                var cls = item.id === activeItem.id ? 'consult-item active' : 'consult-item';
-                var unreadDot = item.unread ? '<span class="consult-unread-dot"></span>' : '';
-                return ''
-                    + '<button class="' + cls + '" type="button" data-consult-id="' + item.id + '">'
-                    +   '<div class="consult-item-row">'
-                    +       '<span class="consult-object"><span class="consult-object-text">' + item.object + '</span>' + unreadDot + '</span>'
-                    +       '<span class="consult-time">' + item.createdAt.slice(5, 16) + '</span>'
-                    +   '</div>'
-                    +   '<div class="consult-item-row">'
-                    +       '<span class="' + tagClass(item) + '">' + item.type + '</span>'
-                    +       '<span class="consult-person">' + item.person + '</span>'
-                    +   '</div>'
-                    + '</button>';
-            }).join('');
+        function renderModal() {
+            if (!modalState.id) return '';
+            var item = consultRecords.find(function (record) { return record.id === modalState.id; });
+            if (!item) return '';
+            var status = getStatus(item);
+            var isHandle = modalState.mode === 'handle';
+            var title = isHandle ? '处理咨询' : '查看咨询';
+            var baseRows = [
+                ['咨询对象', item.object],
+                ['咨询类型', item.type],
+                ['对接方', getCounterparty(item)],
+                ['联系人', item.person],
+                ['提交时间', item.createdAt],
+                ['状态', status]
+            ];
+            var contactRows = [
+                ['机构名称', item.submitInfo.org],
+                ['联系人姓名', item.submitInfo.name],
+                ['联系人电话', item.submitInfo.phone],
+                ['联系人邮箱', item.submitInfo.email]
+            ];
+            var replySection = isHandle
+                ? '<section class="consult-modal-section">'
+                    + '<div class="consult-section-title">处理回复</div>'
+                    + '<textarea class="consult-reply-textarea" data-consult-reply placeholder="请输入处理回复"></textarea>'
+                    + (modalState.error ? '<div class="consult-form-error">' + escapeHtml(modalState.error) + '</div>' : '')
+                + '</section>'
+                : '';
+            var footer = isHandle
+                ? '<button class="consult-modal-btn" type="button" data-consult-modal-close>' + icons.close + '<span>取消</span></button>'
+                    + '<button class="consult-modal-btn primary" type="button" data-consult-submit>' + icons.submit + '<span>提交回复</span></button>'
+                : '<button class="consult-modal-btn primary" type="button" data-consult-modal-close>' + icons.close + '<span>关闭</span></button>';
+
+            return ''
+                + '<div class="consult-modal-mask show" role="presentation">'
+                +   '<div class="consult-modal-box" role="dialog" aria-modal="true" aria-label="' + title + '">'
+                +       '<div class="consult-modal-head">'
+                +           '<div><div class="consult-modal-title">' + title + '</div><div class="consult-modal-subtitle">' + escapeHtml(item.object) + '</div></div>'
+                +           '<button class="consult-modal-close" type="button" data-consult-modal-close aria-label="关闭">' + icons.close + '</button>'
+                +       '</div>'
+                +       '<div class="consult-modal-body">'
+                +           '<section class="consult-modal-section">'
+                +               '<div class="consult-section-title">咨询基本信息</div>'
+                +               '<div class="consult-info-grid">' + renderInfoGrid(baseRows) + '</div>'
+                +           '</section>'
+                +           '<section class="consult-modal-section">'
+                +               '<div class="consult-section-title">咨询内容</div>'
+                +               '<div class="consult-content-box">' + escapeHtml(getConsultContent(item)) + '</div>'
+                +           '</section>'
+                +           '<section class="consult-modal-section consult-modal-split">'
+                +               '<div>'
+                +                   '<div class="consult-section-title">联系方式</div>'
+                +                   '<div class="consult-detail-list">' + renderInfoGrid(contactRows) + '</div>'
+                +               '</div>'
+                +               '<div>'
+                +                   '<div class="consult-section-title">咨询对象信息</div>'
+                +                   '<div class="consult-detail-list">' + renderObjectInfo(item) + '</div>'
+                +               '</div>'
+                +           '</section>'
+                +           '<section class="consult-modal-section">'
+                +               '<div class="consult-section-title">回复记录</div>'
+                +               '<div class="consult-record-list">' + renderHistory(item) + '</div>'
+                +           '</section>'
+                +           replySection
+                +       '</div>'
+                +       '<div class="consult-modal-footer">' + footer + '</div>'
+                +   '</div>'
+                + '</div>';
         }
 
-        function renderDetail(activeItem) {
-            function sendModeOption(mode, label) {
-                var cls = mode === sendKeyMode ? 'chat-send-option active' : 'chat-send-option';
-                return '<button class="' + cls + '" type="button" data-send-mode="' + mode + '">'
-                    + '<svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>'
-                    + '<span>' + label + '</span>'
-                    + '</button>';
-            }
-
+        function renderPanel() {
+            var records = getFilteredRecords();
             panel.innerHTML = ''
-                + '<aside class="consult-list-pane">'
-                +   '<div class="consult-list-head"><span class="consult-list-title">咨询列表</span><span class="consult-list-count">共 ' + consultRecords.length + ' 条</span></div>'
-                +   '<div class="consult-search"><input type="text" placeholder="搜索咨询对象/咨询人/类型"></div>'
-                +   '<div class="consult-list">' + renderList(activeItem) + '</div>'
-                + '</aside>'
-                + '<section class="consult-chat-pane">'
-                +   '<div class="chat-head"><div class="chat-title">' + activeItem.object + '</div><span class="chat-status">' + activeItem.status + '</span></div>'
-                +   '<div class="chat-body" id="chatBody">' + renderMessages(activeItem) + '</div>'
-                +   '<div class="chat-reply">'
-                +       '<textarea id="chatReplyInput" placeholder="请输入回复内容"></textarea>'
-                +       '<div class="chat-reply-actions">'
-                +           '<div class="chat-send-wrap">'
-                +               '<button class="chat-send-btn" type="button" id="chatSendBtn">发送(S)</button>'
-                +               '<button class="chat-send-menu-btn" type="button" id="chatSendMenuBtn" aria-label="发送快捷键设置"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></button>'
-                +               '<div class="chat-send-menu" id="chatSendMenu">'
-                +                   sendModeOption('enter', '按Enter键发送消息')
-                +                   sendModeOption('ctrlEnter', '按Ctrl+Enter键发送消息')
-                +               '</div>'
-                +           '</div>'
-                +       '</div>'
-                +   '</div>'
-                + '</section>'
-                + '<aside class="consult-info-pane">'
-                +   '<section class="info-card">'
-                +       '<div class="info-card-head">咨询提交信息</div>'
-                +       '<div class="info-card-body">'
-                +           '<div class="info-row"><div class="info-label">机构名称：</div><div class="info-value">' + activeItem.submitInfo.org + '</div></div>'
-                +           '<div class="info-row"><div class="info-label">联系人姓名：</div><div class="info-value">' + activeItem.submitInfo.name + '</div></div>'
-                +           '<div class="info-row"><div class="info-label">联系人电话：</div><div class="info-value">' + activeItem.submitInfo.phone + '</div></div>'
-                +           '<div class="info-row"><div class="info-label">联系人邮箱：</div><div class="info-value">' + activeItem.submitInfo.email + '</div></div>'
-                +       '</div>'
-                +   '</section>'
-                +   '<section class="info-card object-card">'
-                +       '<div class="info-card-head">咨询对象信息</div>'
-                +       '<div class="info-card-body">' + infoRows(activeItem.objectInfo) + '</div>'
-                +   '</section>'
-                +   '<section class="info-card org-card">'
-                +       '<div class="info-card-head">法人或其他组织基本信息</div>'
-                +       '<div class="info-card-body">' + infoRows(activeItem.orgInfo) + '</div>'
-                +   '</section>'
-                + '</aside>';
+                + '<div class="consult-board">'
+                +   (noticeText ? '<div class="consult-notice"><span></span>' + escapeHtml(noticeText) + '</div>' : '')
+                +   '<div class="consult-tabs" role="tablist">' + renderTabs() + '</div>'
+                +   renderFilters()
+                +   renderTable(records)
+                + '</div>'
+                + renderModal();
+            bindEvents();
+        }
 
-            var chatBody = panel.querySelector('#chatBody');
-            if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+        function closeModal() {
+            modalState = { id: null, mode: 'view', error: '' };
+            renderPanel();
+        }
 
-            panel.querySelectorAll('[data-consult-id]').forEach(function (button) {
+        function openModal(id, mode) {
+            var item = consultRecords.find(function (record) { return record.id === id; });
+            if (!item) return;
+            item.unread = false;
+            modalState = { id: id, mode: mode || 'view', error: '' };
+            renderSidebar();
+            renderPanel();
+        }
+
+        function submitReply() {
+            var item = consultRecords.find(function (record) { return record.id === modalState.id; });
+            var input = panel.querySelector('[data-consult-reply]');
+            if (!item || !input) return;
+            var text = input.value.trim();
+            if (!text) {
+                modalState.error = '请填写处理回复。';
+                renderPanel();
+                return;
+            }
+            item.messages.push({ kind: 'time', text: '刚刚' });
+            item.messages.push({ kind: 'msg', from: role === 'supplier' ? 'provider' : 'asker', name: '我', text: text });
+            item.status = '已处理';
+            item.unread = false;
+            activeTab = 'processed';
+            pagination.page = 1;
+            modalState = { id: null, mode: 'view', error: '' };
+            noticeText = '处理回复已提交。';
+            renderSidebar();
+            renderPanel();
+        }
+
+        function bindEvents() {
+            panel.querySelectorAll('[data-consult-tab]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    activeId = this.dataset.consultId;
-                    var next = consultRecords.find(function (item) { return item.id === activeId; }) || consultRecords[0];
-                    next.unread = false;
-                    renderSidebar();
-                    renderDetail(next);
+                    activeTab = this.dataset.consultTab || 'pending';
+                    filters.status = 'all';
+                    pagination.page = 1;
+                    modalState = { id: null, mode: 'view', error: '' };
+                    renderPanel();
                 });
             });
 
-            var sendBtn = panel.querySelector('#chatSendBtn');
-            var menuBtn = panel.querySelector('#chatSendMenuBtn');
-            var sendMenu = panel.querySelector('#chatSendMenu');
-            var input = panel.querySelector('#chatReplyInput');
-            if (sendBtn && input) {
-                function sendCurrentMessage() {
-                    var text = input.value.trim();
-                    if (!text) return;
-                    activeItem.messages.push({ kind: 'time', text: '刚刚' });
-                    activeItem.messages.push({ kind: 'msg', from: role === 'supplier' ? 'provider' : 'asker', name: '我', text: text });
-                    renderDetail(activeItem);
-                }
+            var keywordInput = panel.querySelector('[data-consult-keyword]');
+            var typeSelect = panel.querySelector('[data-consult-type]');
+            var statusSelect = panel.querySelector('[data-consult-status]');
+            var searchButton = panel.querySelector('[data-consult-search]');
+            var resetButton = panel.querySelector('[data-consult-reset]');
 
-                sendBtn.addEventListener('click', sendCurrentMessage);
-
-                input.addEventListener('keydown', function (e) {
-                    var isEnter = e.key === 'Enter';
-                    var shouldSend = isEnter && ((sendKeyMode === 'enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) || (sendKeyMode === 'ctrlEnter' && e.ctrlKey));
-                    if (!shouldSend) return;
-                    e.preventDefault();
-                    sendCurrentMessage();
-                });
-
-                if (menuBtn && sendMenu) {
-                    function closeSendMenuOnOutside(e) {
-                        if (sendMenu.contains(e.target) || menuBtn.contains(e.target)) return;
-                        sendMenu.classList.remove('active');
-                        document.removeEventListener('click', closeSendMenuOnOutside);
-                    }
-
-                    menuBtn.addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        var isOpen = sendMenu.classList.toggle('active');
-                        if (isOpen) {
-                            document.addEventListener('click', closeSendMenuOnOutside);
-                        } else {
-                            document.removeEventListener('click', closeSendMenuOnOutside);
-                        }
-                    });
-
-                    sendMenu.querySelectorAll('[data-send-mode]').forEach(function (option) {
-                        option.addEventListener('click', function () {
-                            sendKeyMode = this.dataset.sendMode || 'enter';
-                            sendMenu.querySelectorAll('[data-send-mode]').forEach(function (item) {
-                                item.classList.toggle('active', item.dataset.sendMode === sendKeyMode);
-                            });
-                            sendMenu.classList.remove('active');
-                            document.removeEventListener('click', closeSendMenuOnOutside);
-                            input.focus();
-                        });
-                    });
-                }
+            function applyKeyword() {
+                filters.keyword = keywordInput ? keywordInput.value.trim() : '';
+                pagination.page = 1;
+                renderPanel();
             }
+
+            if (keywordInput) {
+                keywordInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') applyKeyword();
+                });
+            }
+            if (searchButton) searchButton.addEventListener('click', applyKeyword);
+            if (typeSelect) {
+                typeSelect.addEventListener('change', function () {
+                    filters.type = this.value;
+                    pagination.page = 1;
+                    renderPanel();
+                });
+            }
+            if (statusSelect) {
+                statusSelect.addEventListener('change', function () {
+                    filters.status = this.value;
+                    pagination.page = 1;
+                    renderPanel();
+                });
+            }
+            if (resetButton) {
+                resetButton.addEventListener('click', function () {
+                    filters = { keyword: '', type: 'all', status: 'all' };
+                    pagination.page = 1;
+                    renderPanel();
+                });
+            }
+
+            panel.querySelectorAll('[data-consult-page]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (this.classList.contains('disabled')) return;
+                    var action = this.dataset.consultPage;
+                    if (action === 'prev') pagination.page -= 1;
+                    else if (action === 'next') pagination.page += 1;
+                    else pagination.page = parseInt(action, 10) || 1;
+                    renderPanel();
+                });
+            });
+
+            var pageSizeSelect = panel.querySelector('[data-consult-page-size]');
+            if (pageSizeSelect) {
+                pageSizeSelect.addEventListener('change', function () {
+                    pagination.pageSize = parseInt(this.value, 10) || 5;
+                    pagination.page = 1;
+                    renderPanel();
+                });
+            }
+
+            panel.querySelectorAll('[data-consult-action]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    openModal(this.dataset.consultId, this.dataset.consultAction === 'handle' ? 'handle' : 'view');
+                });
+            });
+
+            panel.querySelectorAll('[data-consult-modal-close]').forEach(function (button) {
+                button.addEventListener('click', closeModal);
+            });
+
+            var submitButton = panel.querySelector('[data-consult-submit]');
+            if (submitButton) submitButton.addEventListener('click', submitReply);
         }
 
-        renderDetail(consultRecords.find(function (item) { return item.id === activeId; }) || consultRecords[0]);
+        renderPanel();
     }
 
     function init() {

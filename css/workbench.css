@@ -480,10 +480,9 @@ button, input, select { font: inherit; }
 .wb-consult-shell {
     flex: 1;
     min-height: 0;
-    display: grid;
-    grid-template-columns: 324px minmax(460px, 1fr) 340px;
-    gap: 14px;
-    background: #fff;
+    display: flex;
+    flex-direction: column;
+    background: #f5f7f6;
     overflow: hidden;
 }
 .wb-consult-shell.is-placeholder {
@@ -513,6 +512,546 @@ button, input, select { font: inherit; }
 .wb-module-empty p {
     font-size: 14px;
     line-height: 1.7;
+}
+
+.consult-board {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.consult-notice {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 1px solid #c9ecd8;
+    border-radius: 8px;
+    color: #23784e;
+    background: #f0fbf5;
+    font-size: 13px;
+    font-weight: 600;
+}
+.consult-notice span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+.consult-tabs {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid #e8ecea;
+    border-radius: 8px;
+    background: #fff;
+}
+.consult-tab {
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 22px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: #7d8a84;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+.consult-tab:hover { color: #33433d; }
+.consult-tab.active {
+    color: var(--forest-green);
+    border-bottom-color: var(--forest-green);
+}
+.consult-tab em {
+    min-width: 22px;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: #edf3f0;
+    color: #6b7b74;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+}
+.consult-tab.active em {
+    color: var(--forest-green);
+    background: #e4f7ed;
+}
+.consult-filter-card {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid #e8ecea;
+    border-radius: 8px;
+    background: #fff;
+}
+.consult-filter-main,
+.consult-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.consult-filter-main { flex: 1; flex-wrap: wrap; }
+.consult-filter-input,
+.consult-filter-select {
+    height: 34px;
+    border: 1px solid #dfe6e2;
+    border-radius: 6px;
+    outline: none;
+    color: #2d3f38;
+    background-color: #fff;
+    font-size: 13px;
+}
+.consult-filter-input {
+    width: 280px;
+    max-width: 100%;
+    padding: 0 12px;
+}
+.consult-filter-input::placeholder { color: #a4afaa; }
+.consult-filter-select {
+    min-width: 132px;
+    padding: 0 30px 0 10px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%237d8a84' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+}
+.consult-filter-input:focus,
+.consult-filter-select:focus { border-color: var(--forest-green); }
+.consult-filter-btn,
+.consult-action-btn,
+.consult-modal-btn,
+.consult-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid #dfe6e2;
+    border-radius: 6px;
+    background: #fff;
+    color: #34443e;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+.consult-filter-btn {
+    height: 34px;
+    padding: 0 14px;
+}
+.consult-filter-btn:hover,
+.consult-action-btn:hover,
+.consult-modal-btn:hover {
+    color: var(--forest-green);
+    border-color: var(--forest-green);
+    background: #f0f9f4;
+}
+.consult-filter-btn.primary,
+.consult-action-btn.primary,
+.consult-modal-btn.primary {
+    color: #fff;
+    border-color: var(--forest-green);
+    background: var(--forest-green);
+}
+.consult-filter-btn.primary:hover,
+.consult-action-btn.primary:hover,
+.consult-modal-btn.primary:hover {
+    color: #fff;
+    border-color: var(--forest-green-600);
+    background: var(--forest-green-600);
+}
+.consult-filter-btn svg,
+.consult-action-btn svg,
+.consult-modal-btn svg,
+.consult-modal-close svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+.consult-table-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e8ecea;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+}
+.consult-table-head {
+    flex: 0 0 auto;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 16px;
+    border-bottom: 1px solid #edf1ef;
+}
+.consult-table-title {
+    color: #1f2b28;
+    font-size: 15px;
+    font-weight: 700;
+}
+.consult-table-count {
+    color: #7d8a84;
+    font-size: 13px;
+}
+.consult-table-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+.consult-table {
+    width: 100%;
+    min-width: 1120px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.consult-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 12px 14px;
+    color: #5f6d67;
+    background: #fafafa;
+    border-bottom: 1px solid #e8ecea;
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+}
+.consult-table tbody td {
+    padding: 13px 14px;
+    color: #50605a;
+    border-bottom: 1px solid #edf1ef;
+    line-height: 1.7;
+    vertical-align: middle;
+}
+.consult-table tbody tr:hover td { background: #f8fbfa; }
+.consult-table tbody tr:last-child td { border-bottom: 0; }
+.consult-name-cell { min-width: 220px; }
+.consult-object-link {
+    color: #1f2b28;
+    font-weight: 700;
+}
+.consult-object-link:hover { color: var(--forest-green); }
+.consult-nowrap { white-space: nowrap; }
+.consult-empty-cell {
+    height: 180px;
+    color: #8b9892;
+    text-align: center;
+}
+.consult-status-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.consult-status-badge.pending { color: #b45309; background: #fff7e6; }
+.consult-status-badge.done { color: var(--forest-green); background: #e9f9f1; }
+.consult-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+.consult-action-btn {
+    height: 30px;
+    padding: 0 10px;
+}
+.consult-pagination {
+    flex: 0 0 auto;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-top: 1px solid #edf1ef;
+    background: #fff;
+}
+.consult-page-info {
+    color: #7d8a84;
+    font-size: 13px;
+    white-space: nowrap;
+}
+.consult-page-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.consult-page-size {
+    height: 30px;
+    min-width: 92px;
+    padding: 0 28px 0 9px;
+    border: 1px solid #dfe6e2;
+    border-radius: 6px;
+    color: #50605a;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%237d8a84' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+}
+.consult-page-size:focus { border-color: var(--forest-green); }
+.consult-page-btn {
+    min-width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 9px;
+    border: 1px solid #dfe6e2;
+    border-radius: 6px;
+    color: #50605a;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+.consult-page-btn:hover {
+    color: var(--forest-green);
+    border-color: var(--forest-green);
+    background: #f0f9f4;
+}
+.consult-page-btn.active {
+    color: #fff;
+    border-color: var(--forest-green);
+    background: var(--forest-green);
+}
+.consult-page-btn.disabled {
+    color: #c0c8c4;
+    background: #f7faf8;
+    cursor: not-allowed;
+}
+.consult-page-btn.disabled:hover {
+    color: #c0c8c4;
+    border-color: #dfe6e2;
+    background: #f7faf8;
+}
+.consult-modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    background: rgba(17, 31, 26, 0.42);
+}
+.consult-modal-mask.show { display: flex; }
+.consult-modal-box {
+    width: 960px;
+    max-width: min(960px, calc(100vw - 48px));
+    max-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(20, 36, 30, 0.22);
+    overflow: hidden;
+}
+.consult-modal-head {
+    flex: 0 0 auto;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #edf1ef;
+}
+.consult-modal-title {
+    color: #1f2b28;
+    font-size: 17px;
+    font-weight: 700;
+}
+.consult-modal-subtitle {
+    max-width: 720px;
+    margin-top: 3px;
+    color: #7d8a84;
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.consult-modal-close {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-color: transparent;
+    color: #7d8a84;
+}
+.consult-modal-close:hover {
+    color: #1f2b28;
+    border-color: #edf1ef;
+    background: #f5f7f6;
+}
+.consult-modal-body {
+    flex: 1;
+    min-height: 0;
+    padding: 18px 20px;
+    overflow-y: auto;
+    background: #f7faf8;
+}
+.consult-modal-section {
+    padding: 16px;
+    border: 1px solid #e8ecea;
+    border-radius: 8px;
+    background: #fff;
+}
+.consult-modal-section + .consult-modal-section { margin-top: 12px; }
+.consult-section-title {
+    margin-bottom: 12px;
+    color: #1f2b28;
+    font-size: 15px;
+    font-weight: 700;
+}
+.consult-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 12px;
+}
+.consult-info-item {
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #f8fbfa;
+}
+.consult-info-item span,
+.consult-detail-row span {
+    display: block;
+    margin-bottom: 4px;
+    color: #8b9892;
+    font-size: 12px;
+    white-space: nowrap;
+}
+.consult-info-item strong,
+.consult-detail-row strong {
+    display: block;
+    min-width: 0;
+    color: #1f2b28;
+    font-size: 13px;
+    font-weight: 600;
+    word-break: break-word;
+}
+.consult-content-box {
+    padding: 12px 14px;
+    border-radius: 6px;
+    color: #30433b;
+    background: #f8fbfa;
+    font-size: 14px;
+    line-height: 1.8;
+}
+.consult-modal-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 14px;
+}
+.consult-detail-list {
+    display: grid;
+    gap: 9px;
+}
+.consult-detail-row {
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #f8fbfa;
+}
+.consult-record-list {
+    display: grid;
+    gap: 10px;
+}
+.consult-record-item {
+    display: grid;
+    grid-template-columns: 142px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #edf1ef;
+    border-radius: 6px;
+    background: #fbfdfc;
+}
+.consult-record-time {
+    color: #7d8a84;
+    font-size: 12px;
+    white-space: nowrap;
+}
+.consult-record-actor {
+    color: #1f2b28;
+    font-size: 13px;
+    font-weight: 700;
+}
+.consult-record-text {
+    margin-top: 4px;
+    color: #50605a;
+    font-size: 13px;
+    line-height: 1.7;
+}
+.consult-record-empty {
+    padding: 18px;
+    color: #8b9892;
+    text-align: center;
+}
+.consult-reply-textarea {
+    width: 100%;
+    min-height: 108px;
+    padding: 10px 12px;
+    border: 1px solid #dfe6e2;
+    border-radius: 6px;
+    outline: none;
+    resize: vertical;
+    color: #1f2b28;
+    font-size: 14px;
+    line-height: 1.7;
+}
+.consult-reply-textarea:focus { border-color: var(--forest-green); }
+.consult-reply-textarea::placeholder { color: #a4afaa; }
+.consult-form-error {
+    margin-top: 8px;
+    color: #f56c6c;
+    font-size: 13px;
+}
+.consult-modal-footer {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 13px 20px;
+    border-top: 1px solid #edf1ef;
+    background: #fff;
+}
+.consult-modal-btn {
+    height: 34px;
+    padding: 0 16px;
 }
 .consult-list-pane,
 .consult-chat-pane,
@@ -941,6 +1480,8 @@ button, input, select { font: inherit; }
     .wb-consult-shell {
         grid-template-columns: 300px minmax(420px, 1fr);
     }
+    .consult-info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .consult-modal-split { grid-template-columns: 1fr; }
     .consult-info-pane {
         grid-column: 1 / -1;
         min-height: 260px;
@@ -964,6 +1505,44 @@ button, input, select { font: inherit; }
         height: auto;
         grid-template-columns: 1fr;
     }
+    .consult-tabs {
+        overflow-x: auto;
+        padding: 0 10px;
+    }
+    .consult-tab {
+        flex: 0 0 auto;
+        padding: 0 16px;
+    }
+    .consult-filter-card {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .consult-filter-main,
+    .consult-filter-actions {
+        width: 100%;
+    }
+    .consult-filter-input,
+    .consult-filter-select {
+        flex: 1 1 180px;
+    }
+    .consult-filter-actions {
+        justify-content: flex-end;
+    }
+    .consult-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .consult-page-controls {
+        justify-content: flex-start;
+    }
+    .consult-modal-mask { padding: 16px; }
+    .consult-modal-box {
+        max-width: calc(100vw - 32px);
+        max-height: calc(100vh - 32px);
+    }
+    .consult-modal-subtitle { max-width: 520px; }
+    .consult-info-grid { grid-template-columns: 1fr; }
+    .consult-record-item { grid-template-columns: 1fr; }
     .consult-list-pane,
     .consult-chat-pane,
     .consult-info-pane {
