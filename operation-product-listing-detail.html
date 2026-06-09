@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品上架详情 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/monitor-pages.css">
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo"><img src="images/logo.png" alt="龙岗数据">龙岗数据聚合服务平台</a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content product-listing-detail-page">
+            <div class="listing-page-title">
+                <a class="listing-back-link" href="operation-product-listing-monitor.html" aria-label="返回">‹</a>
+                <h1>产品上架详情</h1>
+            </div>
+
+            <section class="listing-detail-section">
+                <h2 class="listing-detail-title">基本信息</h2>
+                <div class="listing-detail-card">
+                    <div class="listing-detail-grid">
+                        <div class="listing-detail-field"><span class="label">数据产品名称：</span><span class="value" data-detail-field="name">龙岗企业经营画像数据集晨星园区分析精选版</span></div>
+                        <div class="listing-detail-field"><span class="label">数据产品标识：</span><span class="value" data-detail-field="code">602026060418470066100000101382892ABC5GKX3O3NM</span></div>
+                        <div class="listing-detail-field"><span class="label">上架业务节点：</span><span class="value" data-detail-field="space">流通利用平台</span></div>
+                        <div class="listing-detail-field"><span class="label">上架业务节点ID：</span><span class="value">41234567899876543210018XXKTB1KZE</span></div>
+                        <div class="listing-detail-field"><span class="label">上架业务节点位置：</span><span class="value">https://10.32.123.24/#/platformportal/trade-portal/product/detail...</span></div>
+                        <div class="listing-detail-field"><span class="label">交付方式说明：</span><span class="value">交付方式说明.docx <a class="monitor-table-action" href="javascript:void(0)">预览</a><a class="monitor-table-action" href="javascript:void(0)">下载</a></span></div>
+                        <div class="listing-detail-field full"><span class="label">其他说明：</span><span class="value">数据仅供采购方内部业务分析使用，交付后需按合同约定做好访问控制和数据安全管理。</span></div>
+                        <div class="listing-detail-image-field full"><span class="label">产品主图：</span><img src="images/hero-ai-longgang.jpg" alt="产品主图"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="listing-detail-section">
+                <h2 class="listing-detail-title">定价信息</h2>
+                <table class="data-table listing-price-table">
+                    <thead>
+                        <tr><th>交付方式</th><th>计量方式</th><th>定价(元)</th><th>计量单位</th><th>是否支持后付费</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>文件传输</td><td>按次数</td><td>100</td><td>元/次</td><td>否</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="listing-detail-section">
+                <h2 class="listing-detail-title">交付要求</h2>
+                <div class="listing-transfer-tab">文件传输</div>
+                <div class="listing-detail-card compact">
+                    <div class="listing-detail-grid two">
+                        <div class="listing-detail-field"><span class="label">删除控制：</span><span class="value">到期不删除</span></div>
+                        <div class="listing-detail-field"><span class="label">传输模式：</span><span class="value">拉(pull)</span></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script>
+        (function () {
+            var params = new URLSearchParams(window.location.search || '');
+            ['name', 'code', 'space'].forEach(function (key) {
+                var value = params.get(key);
+                var target = document.querySelector('[data-detail-field="' + key + '"]');
+                if (value && target) target.textContent = value;
+            });
+        })();
+    </script>
+</body>
+</html>

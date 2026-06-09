@@ -17,7 +17,7 @@
         { key: 'workbench', label: '工作台', href: 'workbench.html' },
         { key: 'buyer', label: '需方中心', href: 'buyer-center.html' },
         { key: 'supplier', label: '供方中心', href: 'supplier-center.html' },
-        { key: 'island', label: '数据岛系统', href: 'data-dev-system.html' }
+        { key: 'island', label: '数据岛系统' }
     ];
 
     var sidebarMenus = {
@@ -712,6 +712,7 @@
         var active = container.dataset.active || 'workbench';
         var navHtml = topNav.map(function (item) {
             var cls = item.key === active ? 'topbar-nav-item active' : 'topbar-nav-item';
+            if (!item.href) return '<span class="' + cls + '">' + item.label + '</span>';
             var target = item.key === 'island' ? ' target="_blank"' : '';
             return '<a class="' + cls + '" href="' + item.href + '"' + target + '>' + item.label + '</a>';
         }).join('');

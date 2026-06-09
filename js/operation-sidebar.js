@@ -16,7 +16,6 @@
     };
 
     const MENU = [
-        { type: 'item', key: 'overview', label: '平台概览', icon: 'overview', disabled: true },
         {
             type: 'group',
             key: 'user-config',
@@ -29,10 +28,49 @@
         },
         { type: 'item', key: 'connector', label: '连接器管理', icon: 'connector', disabled: true },
         { type: 'item', key: 'catalog-approval', label: '数据目录审批', icon: 'approval', disabled: true },
-        { type: 'item', key: 'catalog-monitor', label: '数据目录监测', icon: 'monitor', disabled: true },
-        { type: 'item', key: 'contract-monitor', label: '订单合同监测', icon: 'contract', disabled: true },
-        { type: 'item', key: 'delivery-monitor', label: '数据交付监测', icon: 'delivery', disabled: true },
-        { type: 'item', key: 'trade-fee-monitor', label: '交易费用监测', icon: 'money', disabled: true },
+        { type: 'item', key: 'monitor-overview', label: '监测概览', icon: 'overview', href: 'operation-monitor-overview.html' },
+        {
+            type: 'group',
+            key: 'catalog-monitor',
+            label: '数据目录监测',
+            icon: 'monitor',
+            children: [
+                { key: 'resource-register-catalog', label: '资源登记目录', href: 'operation-resource-register-catalog.html' },
+                { key: 'product-register-catalog', label: '产品登记目录', href: 'operation-product-register-catalog.html' },
+                { key: 'resource-listing-monitor', label: '数据资源上架监测', href: 'operation-resource-listing-monitor.html' },
+                { key: 'product-listing-monitor', label: '数据产品上架监测', href: 'operation-product-listing-monitor.html' },
+                { key: 'service-listing-monitor', label: '数据服务上架监测', href: 'operation-service-listing-monitor.html' }
+            ]
+        },
+        {
+            type: 'group',
+            key: 'contract-monitor',
+            label: '订单合同监测',
+            icon: 'contract',
+            children: [
+                { key: 'data-auth-monitor', label: '数据授权监测', href: 'operation-data-auth-monitor.html' },
+                { key: 'contract-list-monitor', label: '交易合同监测', href: 'operation-contract-monitor.html' }
+            ]
+        },
+        {
+            type: 'group',
+            key: 'delivery-monitor',
+            label: '数据交付监测',
+            icon: 'delivery',
+            children: [
+                { key: 'delivery-task-monitor', label: '交付任务监测', href: 'operation-delivery-task-monitor.html' },
+                { key: 'delivery-log-monitor', label: '交付任务日志', href: 'operation-delivery-log.html' }
+            ]
+        },
+        {
+            type: 'group',
+            key: 'trade-fee-monitor',
+            label: '交易费用监测',
+            icon: 'money',
+            children: [
+                { key: 'bill-monitor', label: '交易账单监测', href: 'operation-bill-monitor.html' }
+            ]
+        },
         { type: 'item', key: 'supply-demand', label: '供需管理', icon: 'supply', disabled: true },
         {
             type: 'group',
@@ -76,6 +114,20 @@
         'operation-center.html': 'member-audit',
         'audit-detail.html': 'member-audit',
         'audit-detail-done.html': 'member-audit',
+        'operation-monitor-overview.html': 'monitor-overview',
+        'operation-resource-register-catalog.html': 'resource-register-catalog',
+        'operation-product-register-catalog.html': 'product-register-catalog',
+        'operation-resource-listing-monitor.html': 'resource-listing-monitor',
+        'operation-product-listing-monitor.html': 'product-listing-monitor',
+        'operation-product-listing-detail.html': 'product-listing-monitor',
+        'operation-service-listing-monitor.html': 'service-listing-monitor',
+        'operation-data-auth-monitor.html': 'data-auth-monitor',
+        'operation-contract-monitor.html': 'contract-list-monitor',
+        'operation-delivery-task-monitor.html': 'delivery-task-monitor',
+        'operation-delivery-task-detail.html': 'delivery-log-monitor',
+        'operation-delivery-log.html': 'delivery-log-monitor',
+        'operation-bill-monitor.html': 'bill-monitor',
+        'operation-usage-detail-monitor.html': 'bill-monitor',
         'space-approval.html': 'space-approval',
         'space-approval-detail.html': 'space-approval',
         'space-approval-detail-done.html': 'space-approval',

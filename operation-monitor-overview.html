@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监测概览 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .monitor-overview {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            color: #303133;
+            font-size: 13px;
+        }
+
+        .overview-note {
+            min-height: 34px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #606266;
+            background: #f6f8fa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            line-height: 1.5;
+        }
+
+        .note-label {
+            flex: none;
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .overview-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .summary-card,
+        .flow-stage,
+        .platform-card {
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .summary-card {
+            min-width: 0;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .summary-label {
+            color: #606266;
+            font-weight: 600;
+        }
+
+        .summary-caption {
+            margin-top: 5px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .summary-value {
+            flex: none;
+            color: #303133;
+            font-size: 28px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .summary-card.success .summary-value {
+            color: var(--forest-green);
+        }
+
+        .summary-card.warn .summary-value {
+            color: #303133;
+        }
+
+        .summary-card.danger .summary-value {
+            color: #c45656;
+        }
+
+        .flow-board,
+        .platform-board {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .section-title::before,
+        .card-title::before {
+            content: "";
+            width: 3px;
+            height: 16px;
+            border-radius: 2px;
+            background: var(--forest-green);
+        }
+
+        .section-desc {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend .success i {
+            background: var(--forest-green);
+        }
+
+        .legend .warn i {
+            background: #8c939d;
+        }
+
+        .legend .danger i {
+            background: #c45656;
+        }
+
+        .legend .other i {
+            background: #c0c4cc;
+        }
+
+        .flow-lane {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .flow-stage {
+            position: relative;
+            min-width: 0;
+            padding: 14px;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+
+        .flow-stage:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid #c0c4cc;
+            border-right: 2px solid #c0c4cc;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .flow-stage:hover {
+            border-color: rgba(32, 165, 101, 0.55);
+            box-shadow: 0 4px 12px rgba(32, 165, 101, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .stage-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .stage-index {
+            flex: none;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: var(--forest-green);
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .stage-title-wrap {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .stage-title {
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .stage-subtitle {
+            margin-top: 4px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .stage-total {
+            flex: none;
+            text-align: right;
+        }
+
+        .stage-total .label {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .stage-total .value {
+            margin-top: 2px;
+            color: #303133;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .stage-kpis {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .stage-kpi {
+            min-width: 0;
+            padding: 7px 8px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .stage-kpi .label {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .stage-kpi .value {
+            margin-top: 3px;
+            color: #303133;
+            font-size: 17px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .stage-kpi.warn .value {
+            color: #303133;
+        }
+
+        .stage-kpi.danger .value {
+            color: #c45656;
+        }
+
+        .stack-bar {
+            margin-top: 12px;
+            height: 8px;
+            display: flex;
+            overflow: hidden;
+            background: #edf0f2;
+            border-radius: 999px;
+        }
+
+        .stack-bar span {
+            min-width: 0;
+        }
+
+        .bar-success {
+            background: var(--forest-green);
+        }
+
+        .bar-warn {
+            background: #8c939d;
+        }
+
+        .bar-danger {
+            background: #c45656;
+        }
+
+        .bar-other {
+            background: #c0c4cc;
+        }
+
+        .quick-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .quick-link {
+            min-width: 0;
+            min-height: 30px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            color: #606266;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+
+        .quick-link:hover {
+            color: var(--forest-green);
+            border-color: rgba(32, 165, 101, 0.55);
+            background: #f0f9f4;
+        }
+
+        .quick-link.warn {
+            background: #fafafa;
+            border-color: #ebeef5;
+        }
+
+        .quick-link.danger {
+            background: #fff7f7;
+            border-color: #fbc4c4;
+        }
+
+        .quick-text {
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .quick-value {
+            flex: none;
+            color: #303133;
+            font-weight: 700;
+        }
+
+        .quick-link.warn .quick-value {
+            color: #303133;
+        }
+
+        .quick-link.danger .quick-value {
+            color: #c45656;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .platform-card {
+            min-width: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            margin-top: 5px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .card-badge {
+            flex: none;
+            height: 26px;
+            padding: 0 9px;
+            display: inline-flex;
+            align-items: center;
+            color: var(--forest-green);
+            background: #f0f9f4;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .asset-main,
+        .delivery-main {
+            display: grid;
+            grid-template-columns: 138px minmax(0, 1fr);
+            gap: 16px;
+            align-items: center;
+        }
+
+        .donut,
+        .completion-ring {
+            width: 126px;
+            height: 126px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+        }
+
+        .donut {
+            background: conic-gradient(var(--forest-green) 0 var(--resource-rate), #2f80ed var(--resource-rate) var(--product-rate), #d97706 var(--product-rate) 100%);
+        }
+
+        .completion-ring {
+            background: conic-gradient(var(--forest-green) 0 var(--complete-rate), #e5e7eb var(--complete-rate) 100%);
+        }
+
+        .donut-inner,
+        .ring-inner {
+            width: 86px;
+            height: 86px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px #ebeef5;
+        }
+
+        .donut-number,
+        .ring-number {
+            color: #303133;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .donut-label,
+        .ring-label {
+            margin-top: 5px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .asset-list,
+        .delivery-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .asset-item,
+        .delivery-item {
+            min-width: 0;
+            padding: 9px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .asset-name,
+        .delivery-name {
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #606266;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .asset-dot {
+            flex: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--forest-green);
+        }
+
+        .asset-dot.product {
+            background: #2f80ed;
+        }
+
+        .asset-dot.service {
+            background: #d97706;
+        }
+
+        .asset-value,
+        .delivery-value {
+            flex: none;
+            color: #303133;
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .deal-dashboard {
+            display: grid;
+            grid-template-columns: 136px minmax(0, 1fr);
+            gap: 16px;
+            align-items: center;
+        }
+
+        .deal-ring {
+            width: 126px;
+            height: 126px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: conic-gradient(var(--forest-green) 0 var(--signed-rate), #e5e7eb var(--signed-rate) 100%);
+        }
+
+        .deal-ring-inner {
+            width: 86px;
+            height: 86px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px #ebeef5;
+        }
+
+        .deal-ring-number {
+            color: var(--forest-green);
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .deal-ring-label {
+            margin-top: 5px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .deal-flow {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .deal-node {
+            min-width: 0;
+            min-height: 70px;
+            padding: 10px 11px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #fafafa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .deal-node.strong {
+            background: #f0f9f4;
+            border-color: rgba(32, 165, 101, 0.25);
+        }
+
+        .deal-node-label {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .deal-node-value {
+            color: #303133;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .deal-node.strong .deal-node-value {
+            color: var(--forest-green);
+        }
+
+        .deal-ratio {
+            grid-column: 1 / -1;
+            min-height: 38px;
+            padding: 8px 11px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: #606266;
+            background: #f6f8fa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+
+        .deal-ratio strong {
+            color: var(--forest-green);
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .delivery-item.complete .delivery-value {
+            color: var(--forest-green);
+        }
+
+        .delivery-item.active .delivery-value {
+            color: #b45309;
+        }
+
+        .delivery-item.wait .delivery-value {
+            color: #606266;
+        }
+
+        @media (max-width: 1500px) {
+            .flow-lane,
+            .platform-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .flow-stage:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1380px) {
+            .overview-summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 980px) {
+            .flow-lane,
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .section-head,
+            .card-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .overview-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-main,
+            .deal-dashboard,
+            .delivery-main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo"><img src="images/logo.png" alt="龙岗数据">龙岗数据聚合服务平台</a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content">
+            <div class="monitor-overview">
+                <section class="platform-board" aria-label="平台运营概况">
+                    <div class="section-head">
+                        <div class="section-title">平台运营概况</div>
+                        <div class="section-desc">展示平台资产供给、交易成交与订单交付概况</div>
+                    </div>
+                    <div class="platform-grid" id="platformGrid"></div>
+                </section>
+
+                <div class="overview-note">
+                    <span class="note-label">口径说明</span>
+                    <span>风险项聚焦退回、不通过、失败、下架；待处理聚焦审批、签署、交付、支付确认等进行中状态。</span>
+                </div>
+
+                <section class="overview-summary" id="summaryGrid" aria-label="监测总览汇总"></section>
+
+                <section class="flow-board" aria-label="业务链路驾驶舱">
+                    <div class="section-head">
+                        <div class="section-title">业务链路驾驶舱</div>
+                        <div class="legend" aria-label="状态图例">
+                            <span class="success"><i></i>已完成/正常</span>
+                            <span class="warn"><i></i>待处理</span>
+                            <span class="danger"><i></i>风险项</span>
+                            <span class="other"><i></i>其他状态</span>
+                        </div>
+                    </div>
+                    <div class="flow-lane" id="flowLane"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script>
+        (function () {
+            var stages = [
+                {
+                    step: '01',
+                    name: '目录登记与上架',
+                    module: '数据目录监测',
+                    desc: '资源、产品、服务登记及上架状态',
+                    objects: [
+                        { name: '数据资源登记', href: 'operation-resource-register-catalog.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 80 },
+                            { label: '审批中', query: '登记审核中', value: 6, tone: 'warn' },
+                            { label: '已登记', value: 70, tone: 'success' },
+                            { label: '已退回', value: 4, tone: 'danger' }
+                        ] },
+                        { name: '数据产品登记', href: 'operation-product-register-catalog.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 86 },
+                            { label: '审批中', query: '登记审核中', value: 8, tone: 'warn' },
+                            { label: '已登记', value: 75, tone: 'success' },
+                            { label: '已退回', value: 3, tone: 'danger' }
+                        ] },
+                        { name: '数据资源上架', href: 'operation-resource-listing-monitor.html', statusKey: 'listingStatus', statuses: [
+                            { label: '全部', value: 19 },
+                            { label: '已上架', value: 17, tone: 'success' },
+                            { label: '已下架', value: 2, tone: 'danger' }
+                        ] },
+                        { name: '数据产品上架', href: 'operation-product-listing-monitor.html', statusKey: 'listingStatus', statuses: [
+                            { label: '全部', value: 51 },
+                            { label: '已上架', value: 47, tone: 'success' },
+                            { label: '已下架', value: 4, tone: 'danger' }
+                        ] },
+                        { name: '数据服务上架', href: 'operation-service-listing-monitor.html', statusKey: 'listingStatus', statuses: [
+                            { label: '全部', value: 28 },
+                            { label: '已上架', value: 25, tone: 'success' },
+                            { label: '已下架', value: 3, tone: 'danger' }
+                        ] }
+                    ]
+                },
+                {
+                    step: '02',
+                    name: '授权与合同',
+                    module: '订单合同监测',
+                    desc: '数据授权审批、交付确认及交易合同签署状态',
+                    objects: [
+                        { name: '数据授权', href: 'operation-data-auth-monitor.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 61 },
+                            { label: '待审批', value: 9, tone: 'warn' },
+                            { label: '已撤回', value: 3 },
+                            { label: '审批不通过', value: 2, tone: 'danger' },
+                            { label: '待交付', value: 8, tone: 'warn' },
+                            { label: '待确认交付', value: 6, tone: 'warn' },
+                            { label: '交付完成', value: 33, tone: 'success' }
+                        ] },
+                        { name: '交易合同', href: 'operation-contract-monitor.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 82 },
+                            { label: '待签署', value: 11, tone: 'warn' },
+                            { label: '签署失败', value: 4, tone: 'danger' },
+                            { label: '已签署', value: 62, tone: 'success' },
+                            { label: '作废中', value: 3, tone: 'warn' },
+                            { label: '已作废', value: 2 }
+                        ] }
+                    ]
+                },
+                {
+                    step: '03',
+                    name: '数据交付',
+                    module: '数据交付监测',
+                    desc: '交付任务从未开始、交付中到交付完成的进度',
+                    objects: [
+                        { name: '交付任务', href: 'operation-delivery-task-monitor.html', statusKey: 'stage', statuses: [
+                            { label: '全部', value: 109 },
+                            { label: '未开始交付', value: 11, tone: 'warn' },
+                            { label: '交付中', value: 45, tone: 'warn' },
+                            { label: '交付完成', value: 53, tone: 'success' }
+                        ] }
+                    ]
+                },
+                {
+                    step: '04',
+                    name: '账单与用量',
+                    module: '交易费用监测',
+                    desc: '交易账单支付确认及接口调用结果',
+                    objects: [
+                        { name: '交易账单', href: 'operation-bill-monitor.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 110 },
+                            { label: '待出账', value: 8, tone: 'warn' },
+                            { label: '待支付', value: 14, tone: 'warn' },
+                            { label: '待支付确认', value: 9, tone: 'warn' },
+                            { label: '已结清', value: 68, tone: 'success' },
+                            { label: '待供方确认', value: 6, tone: 'warn' },
+                            { label: '待需方确认', value: 5, tone: 'warn' }
+                        ] },
+                        { name: '用量明细', href: 'operation-usage-detail-monitor.html', statusKey: 'status', statuses: [
+                            { label: '全部', value: 238 },
+                            { label: '调用成功', value: 229, tone: 'success' },
+                            { label: '调用失败', value: 9, tone: 'danger' }
+                        ] }
+                    ]
+                }
+            ];
+
+            function linkHref(item, status) {
+                if (status.label === '全部') return item.href;
+                return item.href + '?' + encodeURIComponent(item.statusKey) + '=' + encodeURIComponent(status.query || status.label);
+            }
+
+            function getTotal(item) {
+                var all = item.statuses.find(function (status) { return status.label === '全部'; });
+                return all ? all.value : item.statuses.reduce(function (sum, status) { return sum + status.value; }, 0);
+            }
+
+            function getStatusValue(item, label) {
+                var status = item.statuses.find(function (entry) { return entry.label === label; });
+                return status ? status.value : 0;
+            }
+
+            function findObject(name) {
+                var found = null;
+                stages.forEach(function (stage) {
+                    stage.objects.forEach(function (item) {
+                        if (item.name === name) found = item;
+                    });
+                });
+                return found;
+            }
+
+            function sumByTone(item, tone) {
+                return item.statuses.reduce(function (sum, status) {
+                    return sum + (status.tone === tone ? status.value : 0);
+                }, 0);
+            }
+
+            function stageSummary(stage) {
+                return stage.objects.reduce(function (result, item) {
+                    var total = getTotal(item);
+                    var success = sumByTone(item, 'success');
+                    var warn = sumByTone(item, 'warn');
+                    var danger = sumByTone(item, 'danger');
+                    result.total += total;
+                    result.success += success;
+                    result.warn += warn;
+                    result.danger += danger;
+                    result.other += Math.max(total - success - warn - danger, 0);
+                    return result;
+                }, { total: 0, success: 0, warn: 0, danger: 0, other: 0 });
+            }
+
+            function totalSummary() {
+                return stages.reduce(function (result, stage) {
+                    var item = stageSummary(stage);
+                    result.total += item.total;
+                    result.success += item.success;
+                    result.warn += item.warn;
+                    result.danger += item.danger;
+                    result.other += item.other;
+                    return result;
+                }, { total: 0, success: 0, warn: 0, danger: 0, other: 0 });
+            }
+
+            function segmentWidth(value, total) {
+                if (!total || !value) return '0%';
+                return (value / total * 100).toFixed(2) + '%';
+            }
+
+            function renderStackBar(summary) {
+                return '<div class="stack-bar" aria-label="状态构成">'
+                    + '<span class="bar-success" style="width:' + segmentWidth(summary.success, summary.total) + '"></span>'
+                    + '<span class="bar-warn" style="width:' + segmentWidth(summary.warn, summary.total) + '"></span>'
+                    + '<span class="bar-danger" style="width:' + segmentWidth(summary.danger, summary.total) + '"></span>'
+                    + '<span class="bar-other" style="width:' + segmentWidth(summary.other, summary.total) + '"></span>'
+                    + '</div>';
+            }
+
+            function renderSummary() {
+                var summary = totalSummary();
+                document.getElementById('summaryGrid').innerHTML = [
+                    { label: '监测总量', value: summary.total, caption: '覆盖 4 个业务阶段', tone: '' },
+                    { label: '待处理', value: summary.warn, caption: '审批、签署、交付、支付确认等', tone: 'warn' },
+                    { label: '风险项', value: summary.danger, caption: '退回、不通过、失败、下架', tone: 'danger' },
+                    { label: '已完成/正常', value: summary.success, caption: '登记、上架、交付、结清、调用成功', tone: 'success' }
+                ].map(function (item) {
+                    return '<article class="summary-card ' + item.tone + '">'
+                        + '<div><div class="summary-label">' + item.label + '</div><div class="summary-caption">' + item.caption + '</div></div>'
+                        + '<div class="summary-value">' + item.value + '</div>'
+                        + '</article>';
+                }).join('');
+            }
+
+            function collectKeyStatuses(stage) {
+                var items = [];
+                stage.objects.forEach(function (item) {
+                    item.statuses.forEach(function (status) {
+                        if ((status.tone === 'danger' || status.tone === 'warn') && status.value > 0) {
+                            items.push({ object: item.name, status: status, href: linkHref(item, status) });
+                        }
+                    });
+                });
+                return items.sort(function (a, b) {
+                    var weightA = a.status.tone === 'danger' ? 2 : 1;
+                    var weightB = b.status.tone === 'danger' ? 2 : 1;
+                    if (weightA !== weightB) return weightB - weightA;
+                    return b.status.value - a.status.value;
+                });
+            }
+
+            function renderQuickLinks(stage) {
+                var items = collectKeyStatuses(stage).slice(0, 3);
+                if (!items.length) {
+                    return '<div class="quick-list"><span class="quick-link"><span class="quick-text">暂无风险或待处理</span><span class="quick-value">0</span></span></div>';
+                }
+                return '<div class="quick-list">' + items.map(function (item) {
+                    return '<a class="quick-link ' + item.status.tone + '" href="' + item.href + '">'
+                        + '<span class="quick-text">' + item.object + ' / ' + item.status.label + '</span>'
+                        + '<span class="quick-value">' + item.status.value + '</span>'
+                        + '</a>';
+                }).join('') + '</div>';
+            }
+
+            function renderFlowLane() {
+                document.getElementById('flowLane').innerHTML = stages.map(function (stage) {
+                    var summary = stageSummary(stage);
+                    return '<article class="flow-stage">'
+                        + '<div class="stage-top">'
+                        + '<div class="stage-index">' + stage.step + '</div>'
+                        + '<div class="stage-title-wrap"><div class="stage-title">' + stage.name + '</div><div class="stage-subtitle">' + stage.desc + '</div></div>'
+                        + '<div class="stage-total"><div class="label">总量</div><div class="value">' + summary.total + '</div></div>'
+                        + '</div>'
+                        + '<div class="stage-kpis">'
+                        + '<div class="stage-kpi warn"><div class="label">待处理</div><div class="value">' + summary.warn + '</div></div>'
+                        + '<div class="stage-kpi danger"><div class="label">风险项</div><div class="value">' + summary.danger + '</div></div>'
+                        + '<div class="stage-kpi"><div class="label">已完成</div><div class="value">' + summary.success + '</div></div>'
+                        + '</div>'
+                        + renderStackBar(summary)
+                        + renderQuickLinks(stage)
+                        + '</article>';
+                }).join('');
+            }
+
+            function renderPlatformOverview() {
+                var resourceListing = findObject('数据资源上架');
+                var productListing = findObject('数据产品上架');
+                var serviceListing = findObject('数据服务上架');
+                var contract = findObject('交易合同');
+                var bill = findObject('交易账单');
+                var delivery = findObject('交付任务');
+
+                var resourceListed = getStatusValue(resourceListing, '已上架');
+                var productListed = getStatusValue(productListing, '已上架');
+                var serviceListed = getStatusValue(serviceListing, '已上架');
+                var assetTotal = resourceListed + productListed + serviceListed;
+                var resourceRate = segmentWidth(resourceListed, assetTotal);
+                var productRate = segmentWidth(resourceListed + productListed, assetTotal);
+
+                var contractTotal = getTotal(contract);
+                var signedContract = getStatusValue(contract, '已签署');
+                var signedRate = contractTotal ? Math.round(signedContract / contractTotal * 100) : 0;
+                var billTotal = getTotal(bill);
+                var settledBill = getStatusValue(bill, '已结清');
+                var closedRate = billTotal ? Math.round(settledBill / billTotal * 100) : 0;
+
+                var taskTotal = getTotal(delivery);
+                var deliveryWaiting = getStatusValue(delivery, '未开始交付');
+                var deliveryDoing = getStatusValue(delivery, '交付中');
+                var deliveryDone = getStatusValue(delivery, '交付完成');
+                var completeRate = taskTotal ? Math.round(deliveryDone / taskTotal * 100) : 0;
+
+                document.getElementById('platformGrid').innerHTML = ''
+                    + '<article class="platform-card">'
+                    + '<div class="card-head"><div><div class="card-title">资产供给概况</div><div class="card-subtitle">平台当前已上架资源、产品和服务</div></div><span class="card-badge">已上架</span></div>'
+                    + '<div class="asset-main">'
+                    + '<div class="donut" style="--resource-rate:' + resourceRate + ';--product-rate:' + productRate + '"><div class="donut-inner"><div class="donut-number">' + assetTotal + '</div><div class="donut-label">上架总量</div></div></div>'
+                    + '<div class="asset-list">'
+                    + '<div class="asset-item"><span class="asset-name"><i class="asset-dot"></i>数据资源</span><span class="asset-value">' + resourceListed + '</span></div>'
+                    + '<div class="asset-item"><span class="asset-name"><i class="asset-dot product"></i>数据产品</span><span class="asset-value">' + productListed + '</span></div>'
+                    + '<div class="asset-item"><span class="asset-name"><i class="asset-dot service"></i>数据服务</span><span class="asset-value">' + serviceListed + '</span></div>'
+                    + '</div></div></article>'
+                    + '<article class="platform-card">'
+                    + '<div class="card-head"><div><div class="card-title">交易成交概况</div><div class="card-subtitle">订单合同与账单闭环情况</div></div><span class="card-badge">交易闭环</span></div>'
+                    + '<div class="deal-dashboard">'
+                    + '<div class="deal-ring" style="--signed-rate:' + signedRate + '%"><div class="deal-ring-inner"><div class="deal-ring-number">' + signedRate + '%</div><div class="deal-ring-label">签署率</div></div></div>'
+                    + '<div class="deal-flow">'
+                    + '<div class="deal-node"><div class="deal-node-label">交易合同</div><div class="deal-node-value">' + contractTotal + '</div></div>'
+                    + '<div class="deal-node strong"><div class="deal-node-label">已签署</div><div class="deal-node-value">' + signedContract + '</div></div>'
+                    + '<div class="deal-node"><div class="deal-node-label">交易账单</div><div class="deal-node-value">' + billTotal + '</div></div>'
+                    + '<div class="deal-node strong"><div class="deal-node-label">已结清</div><div class="deal-node-value">' + settledBill + '</div></div>'
+                    + '<div class="deal-ratio"><span>账单结清率</span><strong>' + closedRate + '%</strong></div>'
+                    + '</div></div>'
+                    + '</article>'
+                    + '<article class="platform-card">'
+                    + '<div class="card-head"><div><div class="card-title">订单交付概况</div><div class="card-subtitle">交付任务推进和完成情况</div></div><span class="card-badge">交付任务</span></div>'
+                    + '<div class="delivery-main">'
+                    + '<div class="completion-ring" style="--complete-rate:' + completeRate + '%"><div class="ring-inner"><div class="ring-number">' + completeRate + '%</div><div class="ring-label">完成率</div></div></div>'
+                    + '<div class="delivery-list">'
+                    + '<div class="delivery-item wait"><span class="delivery-name">未开始交付</span><span class="delivery-value">' + deliveryWaiting + '</span></div>'
+                    + '<div class="delivery-item active"><span class="delivery-name">交付中</span><span class="delivery-value">' + deliveryDoing + '</span></div>'
+                    + '<div class="delivery-item complete"><span class="delivery-name">交付完成</span><span class="delivery-value">' + deliveryDone + '</span></div>'
+                    + '<div class="delivery-item"><span class="delivery-name">交付任务总数</span><span class="delivery-value">' + taskTotal + '</span></div>'
+                    + '</div></div></article>';
+            }
+
+            renderPlatformOverview();
+            renderSummary();
+            renderFlowLane();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交付详情 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/monitor-pages.css">
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo"><img src="images/logo.png" alt="龙岗数据">龙岗数据聚合服务平台</a>
+            <nav class="topbar-nav">
+                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
+                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
+                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
+            </nav>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content delivery-detail-content">
+            <div class="delivery-detail-titlebar">
+                <a class="delivery-back-link" href="operation-delivery-task-monitor.html">‹</a>
+                <h1>交付详情</h1>
+            </div>
+
+            <div class="delivery-detail-page">
+                <section class="delivery-status-card">
+                    <h2>交付完成</h2>
+                    <div class="delivery-status-meta">
+                        <span>任务编号： <strong>02026060419511644600000101382698</strong></span>
+                        <span>订单编号： <strong>2026060419400437100000101148221</strong></span>
+                        <span>创建时间： <strong>2026-06-04 19:51</strong></span>
+                        <span>交付阶段： <strong>交付完成</strong></span>
+                    </div>
+                </section>
+
+                <nav class="delivery-detail-tabs" aria-label="交付详情页签">
+                    <button class="delivery-detail-tab active" type="button" data-delivery-tab="basic">基本信息</button>
+                    <button class="delivery-detail-tab" type="button" data-delivery-tab="goods">交付物</button>
+                    <button class="delivery-detail-tab" type="button" data-delivery-tab="timeline">交付时间轴</button>
+                    <button class="delivery-detail-tab" type="button" data-delivery-tab="metering">交付计量</button>
+                </nav>
+
+                <section class="delivery-panel" data-delivery-panel="basic">
+                    <div class="delivery-section">
+                        <h3>连接器信息</h3>
+                        <div class="delivery-info-grid">
+                            <div class="delivery-info-item wide">
+                                <span class="label">数据需求方连接器 ID：</span>
+                                <span class="value">5020260520142458916000001013782250018THILGLSZX <button class="detail-inline-link" type="button" data-proto-info="数据需求方连接器详情">详情</button></span>
+                            </div>
+                            <div class="delivery-info-item wide">
+                                <span class="label">数据提供方连接器 ID：</span>
+                                <span class="value">502026052210235560000001013782580018KOX3WTBFY <button class="detail-inline-link" type="button" data-proto-info="数据提供方连接器详情">详情</button></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>业务节点信息</h3>
+                        <div class="delivery-info-grid">
+                            <div class="delivery-info-item">
+                                <span class="label">业务节点名称：</span>
+                                <span class="value">流通利用平台</span>
+                            </div>
+                            <div class="delivery-info-item">
+                                <span class="label">业务节点标识码：</span>
+                                <span class="value">41234567899876543210018XXKTB1KZE <button class="detail-inline-link" type="button" data-proto-info="业务节点详情">详情</button></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>交付物基础信息</h3>
+                        <div class="delivery-info-grid">
+                            <div class="delivery-info-item">
+                                <span class="label">产品名称：</span>
+                                <span class="value">坪山区智能制造产业生态图谱</span>
+                            </div>
+                            <div class="delivery-info-item">
+                                <span class="label">数据产品标识码：</span>
+                                <span class="value">602026052518275629000000101382370ABCIY51LM27Z <button class="detail-inline-link" type="button" data-proto-info="数据产品详情">详情</button></span>
+                            </div>
+                            <div class="delivery-info-item">
+                                <span class="label">交付方式：</span>
+                                <span class="value">API传输</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>数字合约</h3>
+                        <div class="delivery-info-grid">
+                            <div class="delivery-info-item">
+                                <span class="label">合约名称：</span>
+                                <span class="value">DC-2026060419400437100000101148221</span>
+                            </div>
+                            <div class="delivery-info-item">
+                                <span class="label">合约标识码：</span>
+                                <span class="value">5291330114MA2KL9LU72109217805732045150MMwP0hzBH</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="delivery-panel hidden" data-delivery-panel="goods">
+                    <div class="delivery-api-block">
+                        <h2>外部注册数据服务_6058</h2>
+                        <p>外部注册数据服务_6058</p>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>基础属性</h3>
+                        <div class="delivery-info-grid">
+                            <div class="delivery-info-item"><span class="label">请求方式：</span><span class="value">GET</span></div>
+                            <div class="delivery-info-item"><span class="label">支持格式：</span><span class="value">JSON</span></div>
+                            <div class="delivery-info-item"><span class="label">请求协议：</span><span class="value">http</span></div>
+                            <div class="delivery-info-item"><span class="label">字符编码：</span><span class="value">UTF-8</span></div>
+                            <div class="delivery-info-item"><span class="label">平均耗时：</span><span class="value">9ms</span></div>
+                            <div class="delivery-info-item wide"><span class="label">调用地址：</span><span class="value"><span class="delivery-method-pill">GET</span> http://172.16.120.46:8090/gateway/ozjxc/wbzcsjfw_6058</span></div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>Headers</h3>
+                        <table class="data-table delivery-inner-table">
+                            <thead><tr><th>Key</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>apiKey</td><td>应用的secretid的值</td></tr>
+                                <tr><td>Token</td><td>id8YG9Q4xsO7bQd3bSSWZc8GXM7ZrQMA</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>请求参数</h3>
+                        <table class="data-table delivery-inner-table">
+                            <thead><tr><th>参数名称</th><th>参数中文名称</th><th>参数类型</th><th>必填</th><th>示例值</th><th>描述</th></tr></thead>
+                            <tbody><tr><td class="delivery-empty" colspan="6">暂无数据</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="delivery-panel hidden" data-delivery-panel="timeline">
+                    <ul class="delivery-timeline">
+                        <li>
+                            <h3>交付任务完结</h3>
+                            <p>整个交付持续时间0天0小时3分15秒</p>
+                            <time>2026-06-04 19:55:55</time>
+                        </li>
+                        <li>
+                            <h3>连接器获取交付任务</h3>
+                            <p>需方连接器更新交易指令，交付阶段：【交付完成】</p>
+                            <time>2026-06-04 19:55:55</time>
+                        </li>
+                        <li>
+                            <h3>数据完成传输（API-拉取）</h3>
+                            <p>需方连接器已完成数据的拉取，交付状态变为：【使用中】</p>
+                            <time>2026-06-04 19:55:37</time>
+                        </li>
+                        <li>
+                            <h3>数据开始传输（API-拉取）</h3>
+                            <p>需方连接器开始拉取数据</p>
+                            <time>2026-06-04 19:55:36</time>
+                        </li>
+                        <li>
+                            <h3>需方连接器发起协商</h3>
+                            <p>需方连接器发起协商，传输方式：拉取，生成传输id：68a39dcda7af4b0eab6c984c7d117b05，交付状态变为：【交付协商中】</p>
+                            <time>2026-06-04 19:55:36</time>
+                        </li>
+                        <li>
+                            <h3>合约规则引擎执行</h3>
+                            <p>合约规则引擎执行成功</p>
+                            <time>2026-06-04 19:55:36</time>
+                        </li>
+                        <li>
+                            <h3>合约规则引擎执行</h3>
+                            <p>合约规则引擎执行开始</p>
+                            <time>2026-06-04 19:55:36</time>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="delivery-panel hidden" data-delivery-panel="metering">
+                    <div class="delivery-section">
+                        <h3>调用概况 <span class="delivery-meter-note">计量方式： 按周期&nbsp;&nbsp;&nbsp;&nbsp;计量单位&nbsp; 元/天&nbsp;&nbsp;&nbsp;&nbsp;使用有效期&nbsp; 2026-06-19~2027-06-30</span></h3>
+                        <div class="delivery-meter-summary">
+                            <div><span>交付总量(天)</span><strong>10</strong></div>
+                            <div><span>已使用(天)</span><strong>--</strong></div>
+                            <div><span>剩余天数(天)</span><strong>--</strong></div>
+                            <div><span>已调用次数(次)</span><strong>0</strong></div>
+                            <div><span>已使用量(B)</span><strong>--</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-section">
+                        <h3>调用明细</h3>
+                        <div class="delivery-call-filter">
+                            <div class="delivery-segment">
+                                <button class="active" type="button">全部</button>
+                                <button type="button">调用成功</button>
+                                <button type="button">调用失败</button>
+                            </div>
+                            <div class="monitor-date-wrap delivery-call-date">
+                                <input class="filter-date" type="text" placeholder="调用时间  开始日期      -      结束日期">
+                                <span><svg viewBox="0 0 24 24"><path d="M7 2v4"/><path d="M17 2v4"/><path d="M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg></span>
+                            </div>
+                        </div>
+                        <table class="data-table delivery-inner-table">
+                            <thead><tr><th>序号</th><th>调用IP</th><th>调用时间</th><th>返回状态</th><th>返回数据量</th><th>操作</th></tr></thead>
+                            <tbody><tr><td class="delivery-empty" colspan="6">暂无数据</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script>
+        document.querySelectorAll('[data-delivery-tab]').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var value = tab.getAttribute('data-delivery-tab');
+                document.querySelectorAll('[data-delivery-tab]').forEach(function (item) {
+                    item.classList.toggle('active', item === tab);
+                });
+                document.querySelectorAll('[data-delivery-panel]').forEach(function (panel) {
+                    panel.classList.toggle('hidden', panel.getAttribute('data-delivery-panel') !== value);
+                });
+            });
+        });
+
+        document.addEventListener('click', function (event) {
+            var target = event.target.closest('[data-proto-info]');
+            if (!target) return;
+            GlobalDialog.info({
+                title: target.getAttribute('data-proto-info'),
+                duration: 1200
+            });
+        });
+    </script>
+</body>
+</html>
