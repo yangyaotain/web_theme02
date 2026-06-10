@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 数据产品</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 复用统一主题配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 - 数据产品默认选中 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 右侧空占位 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 模块标题 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-shopping-bag text-primary"></i>
+        <span>数据产品全景</span>
+      </h2>
+    </div>
+
+    <!-- 第一行：指标卡片区域（7个指标） -->
+    <div class="grid grid-cols-7 gap-6 mb-6">
+      <!-- 数据产品总量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据产品总量</p>
+            <h3 class="text-2xl font-bold text-white">289,568</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-cubes text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据集 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据集</p>
+            <h3 class="text-2xl font-bold text-white">89,780</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-database text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据产品 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据产品</p>
+            <h3 class="text-2xl font-bold text-white">125,640</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>18.5% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-shopping-bag text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据报告 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据报告</p>
+            <h3 class="text-2xl font-bold text-white">45,890</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>9.8% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-file-text-o text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- RWA -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">RWA</p>
+            <h3 class="text-2xl font-bold text-white">18,950</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>25.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-400">
+            <i class="fa fa-exchange text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据模型 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据模型</p>
+            <h3 class="text-2xl font-bold text-white">9,308</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>32.1% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400">
+            <i class="fa fa-cogs text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 总交易金额 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">总交易金额(万元)</p>
+            <h3 class="text-2xl font-bold text-white">8,975.6</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>19.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+            <i class="fa fa-rmb text-lg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：数据产品成交分布、数据产品行业分布 -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- 数据产品成交分布（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-purple-400"></i>
+            <span>数据产品成交分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="transactionTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 数据产品行业分布（堆积柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-secondary"></i>
+            <span>数据产品行业分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="industryDistributionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三行：数据产品类型分布、交付方式分布、热门产品排行榜TOP10 -->
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 数据产品分布（饼图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-pie-chart text-primary"></i>
+            <span>数据产品类型分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="productDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 交付方式分布（环形图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-circle-o-notch text-accent"></i>
+            <span>交付方式分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="deliveryMethodChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 热门产品top10 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-trophy text-yellow-400"></i>
+            <span>热门产品排行榜TOP10</span>
+          </h3>
+        </div>
+        <div class="space-y-3 h-[280px] overflow-y-auto scrollbar-hide pr-2">
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">1</span>
+              <span class="text-sm truncate max-w-[140px]">金融风控数据集</span>
+            </div>
+            <span class="text-sm text-secondary">2,580</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">2</span>
+              <span class="text-sm truncate max-w-[140px]">用户行为分析产品</span>
+            </div>
+            <span class="text-sm text-secondary">2,156</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs">3</span>
+              <span class="text-sm truncate max-w-[140px]">市场洞察分析报告</span>
+            </div>
+            <span class="text-sm text-secondary">1,890</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">4</span>
+              <span class="text-sm truncate max-w-[140px]">供应链RWA凭证</span>
+            </div>
+            <span class="text-sm text-secondary">1,678</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">5</span>
+              <span class="text-sm truncate max-w-[140px]">销量预测数据模型</span>
+            </div>
+            <span class="text-sm text-secondary">1,540</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">6</span>
+              <span class="text-sm truncate max-w-[140px]">用户画像数据集</span>
+            </div>
+            <span class="text-sm text-secondary">1,325</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">7</span>
+              <span class="text-sm truncate max-w-[140px]">竞品分析报告</span>
+            </div>
+            <span class="text-sm text-secondary">1,280</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">8</span>
+              <span class="text-sm truncate max-w-[140px]">物流轨迹数据集</span>
+            </div>
+            <span class="text-sm text-secondary">1,150</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">9</span>
+              <span class="text-sm truncate max-w-[140px]">价格趋势分析模型</span>
+            </div>
+            <span class="text-sm text-secondary">980</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">10</span>
+              <span class="text-sm truncate max-w-[140px]">营销效果RWA凭证</span>
+            </div>
+            <span class="text-sm text-secondary">875</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: { size: 11 },
+            padding: 15
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 10,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0'
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        }
+      },
+      animation: { duration: 1500, easing: 'easeOutQuart' }
+    };
+
+    // 计算百分比工具函数
+    const calculatePercentage = (value, total) => {
+      return ((value / total) * 100).toFixed(2) + '%';
+    };
+
+    // 1. 数据产品类型分布饼图（修改为标准饼图，显示数量和比例）
+    const productDistributionData = [89780, 125640, 45890, 18950, 9308];
+    const productDistributionTotal = productDistributionData.reduce((a, b) => a + b, 0);
+    const productDistributionCtx = document.getElementById('productDistributionChart').getContext('2d');
+    new Chart(productDistributionCtx, {
+      type: 'pie', // 修改为标准饼图
+      data: {
+        labels: ['数据集', '数据产品', '数据报告', 'RWA', '数据模型'],
+        datasets: [{
+          data: productDistributionData,
+          backgroundColor: [
+            'rgba(15, 198, 194, 0.7)',
+            'rgba(79, 110, 247, 0.7)',
+            'rgba(168, 85, 247, 0.7)',
+            'rgba(234, 179, 8, 0.7)',
+            'rgba(34, 197, 94, 0.7)'
+          ],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        ...chartOptions,
+        // 移除XY轴（饼图本身无XY轴，这里确保不显示）
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        },
+        plugins: {
+          ...chartOptions.plugins,
+          legend: { position: 'bottom' },
+          tooltip: {
+            ...chartOptions.plugins.tooltip,
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                const percentage = calculatePercentage(value, productDistributionTotal);
+                return `${label}: ${value.toLocaleString()} (${percentage})`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 2. 交付方式分布环形图（显示数量和比例，移除XY轴）
+    const deliveryMethodData = [65400, 89200, 105600, 18900, 10468];
+    const deliveryMethodTotal = deliveryMethodData.reduce((a, b) => a + b, 0);
+    const deliveryMethodCtx = document.getElementById('deliveryMethodChart').getContext('2d');
+    new Chart(deliveryMethodCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['文件传输', '数据流传输', 'API传输', '人工交付', '数据库传输'],
+        datasets: [{
+          data: deliveryMethodData,
+          backgroundColor: [
+            'rgba(32, 165, 101, 0.72)',
+            'rgba(15, 198, 194, 0.7)',
+            'rgba(79, 110, 247, 0.7)',
+            'rgba(239, 68, 68, 0.7)',
+            'rgba(107, 114, 128, 0.7)'
+          ],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        ...chartOptions,
+        cutout: '70%',
+        // 移除XY轴
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        },
+        plugins: {
+          ...chartOptions.plugins,
+          legend: { position: 'bottom' },
+          tooltip: {
+            ...chartOptions.plugins.tooltip,
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                const percentage = calculatePercentage(value, deliveryMethodTotal);
+                return `${label}: ${value.toLocaleString()} (${percentage})`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 3. 数据产品行业分布堆积柱状图
+    const industryDistributionCtx = document.getElementById('industryDistributionChart').getContext('2d');
+    new Chart(industryDistributionCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [
+          {
+            label: '数据集',
+            data: [12500, 9800, 8500, 7600, 6500, 5800, 9200, 7800, 6500, 5200],
+            backgroundColor: 'rgba(15, 198, 194, 0.7)',
+            borderRadius: 4
+          },
+          {
+            label: '数据产品',
+            data: [18600, 15200, 12800, 10500, 8900, 7800, 11500, 9800, 8200, 7500],
+            backgroundColor: 'rgba(79, 110, 247, 0.7)',
+            borderRadius: 4
+          },
+          {
+            label: '数据报告',
+            data: [8500, 6800, 5900, 4800, 4200, 3800, 7200, 6500, 5800, 4500],
+            backgroundColor: 'rgba(168, 85, 247, 0.7)',
+            borderRadius: 4
+          },
+          {
+            label: 'RWA',
+            data: [4200, 3500, 2800, 2500, 2200, 1900, 3200, 2800, 2500, 1800],
+            backgroundColor: 'rgba(234, 179, 8, 0.7)',
+            borderRadius: 4
+          },
+          {
+            label: '数据模型',
+            data: [2800, 2200, 1900, 1600, 1400, 1200, 2500, 2200, 1800, 1500],
+            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            },
+            stacked: true
+          },
+          y: {
+            ...chartOptions.scales.y,
+            stacked: true
+          }
+        }
+      }
+    });
+
+    // 4. 数据产品成交分布柱状图
+    const transactionTrendCtx = document.getElementById('transactionTrendChart').getContext('2d');
+    new Chart(transactionTrendCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [{
+          label: '成交金额(万元)',
+          data: [2850.5, 1250.8, 980.6, 850.2, 720.9, 650.4, 1580.7, 890.3, 780.5, 480.1],
+          backgroundColor: 'rgba(32, 165, 101, 0.72)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 页面加载动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bg-dark-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>

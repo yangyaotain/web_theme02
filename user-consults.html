@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - 我的咨询</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/workbench.css">
+    <style>
+        body {
+            background: #f5f7fa;
+            color: #303133;
+        }
+        .user-consult-content {
+            height: calc(100vh - 64px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .user-consult-title {
+            flex: 0 0 auto;
+            margin: 0 0 16px;
+            color: #303133;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        .user-consult-content .wb-consult-shell {
+            flex: 1;
+            min-height: 0;
+            border-radius: 4px;
+            background: #f5f7f6;
+        }
+        .user-consult-content .consult-tabs,
+        .user-consult-content .consult-filter-card,
+        .user-consult-content .consult-table-card,
+        .user-consult-content .consult-modal-section {
+            border-radius: 4px;
+        }
+    </style>
+    <script src="js/workbench-layout.js" defer></script>
+    <script src="js/user-center-layout.js" defer></script>
+    <script src="js/admin-topbar.js" defer></script>
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="topbar-logo">
+                <img src="images/logo.png" alt="龙岗数据">
+                龙岗数据聚合服务平台
+            </a>
+        </div>
+        <div id="adminUserArea" class="topbar-right"></div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-user-center-sidebar data-active="consults"></aside>
+        <main class="admin-content user-consult-content">
+            <h1 class="user-consult-title" data-center-title>我的咨询</h1>
+            <section class="wb-consult-shell" data-consult-panel data-role="all"></section>
+        </main>
+    </div>
+</body>
+</html>

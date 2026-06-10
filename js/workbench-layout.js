@@ -21,6 +21,17 @@
     ];
 
     var sidebarMenus = {
+        user: {
+            title: '用户中心',
+            sections: [
+                { key: 'profile', label: '账号中心', icon: 'user', href: 'user-center.html' },
+                { key: 'message', label: '我的消息', icon: 'consult', href: 'user-center.html?menu=message' },
+                { key: 'subscribe', label: '我的订阅', icon: 'invoice', href: 'user-center.html?menu=subscribe' },
+                { key: 'my-demand', label: '我的需求', icon: 'demand', href: 'user-center.html?menu=my-demand' },
+                { key: 'consults', label: '我的咨询', icon: 'consult', href: 'user-consults.html?menu=consults' },
+                { key: 'objection', label: '公示异议', icon: 'dispute', href: 'user-center.html?menu=objection' }
+            ]
+        },
         buyer: {
             title: '需方中心',
             sections: [
@@ -35,14 +46,6 @@
                 },
                 { key: 'fee', label: '费用管理', icon: 'money', href: 'buyer-center.html?menu=fee' },
                 { key: 'invoice', label: '发票管理', icon: 'invoice', href: 'buyer-center.html?menu=invoice' },
-                {
-                    label: '我的需求',
-                    icon: 'demand',
-                    children: [
-                        { key: 'my-demand', label: '我的需求', href: 'buyer-center.html?menu=my-demand' },
-                        { key: 'consults', label: '我的咨询', href: 'buyer-center.html?menu=consults' }
-                    ]
-                },
                 { key: 'dispute', label: '争议仲裁', icon: 'dispute', href: 'buyer-center.html?menu=dispute' },
                 { key: 'contract', label: '合约管理', icon: 'contract', href: 'buyer-center.html?menu=contract' }
             ]
@@ -71,14 +74,7 @@
                 },
                 { key: 'fee', label: '费用管理', icon: 'money', href: 'supplier-center.html?menu=fee' },
                 { key: 'invoice', label: '发票管理', icon: 'invoice', href: 'supplier-center.html?menu=invoice' },
-                {
-                    label: '需求响应',
-                    icon: 'demand',
-                    children: [
-                        { key: 'demand-response', label: '需求响应', href: 'supplier-center.html?menu=demand-response' },
-                        { key: 'consults', label: '我的咨询', href: 'supplier-center.html?menu=consults' }
-                    ]
-                },
+                { key: 'demand-response', label: '需求响应', icon: 'demand', href: 'supplier-center.html?menu=demand-response' },
                 { key: 'dispute', label: '争议仲裁', icon: 'dispute', href: 'supplier-center.html?menu=dispute' },
                 { key: 'contract', label: '合约管理', icon: 'contract', href: 'supplier-center.html?menu=contract' }
             ]
@@ -96,11 +92,23 @@
         'product-shelf': { title: '产品上下架管理', desc: '管理数据产品上架、下架、展示状态和可售配置。' },
         'fee': { title: '费用管理', desc: '查看交易费用、应收应付、结算记录和费用确认事项。' },
         'invoice': { title: '发票管理', desc: '处理发票申请、开票记录和发票状态跟踪。' },
+        'profile': { title: '账号中心', desc: '查看账号信息、会员权益和业务开通情况。' },
+        'message': { title: '我的消息', desc: '查看系统通知、业务提醒和站内消息。' },
+        'subscribe': { title: '我的订阅', desc: '查看已订阅的数据资源、产品和服务动态。' },
         'my-demand': { title: '我的需求', desc: '查看已发布的数据需求、需求状态和响应情况。' },
         'demand-response': { title: '需求响应', desc: '查看可响应需求、已响应记录和需求沟通进度。' },
-        'consults': { title: '我的咨询', desc: '查看资源、产品、咨询服务、解决方案和需求咨询记录。' },
+        'consults': { title: '我的咨询', desc: '查看需求、资源、产品、服务和方案咨询记录。' },
+        'objection': { title: '公示异议', desc: '查看公示异议提交和处理情况。' },
         'dispute': { title: '争议仲裁', desc: '管理交易争议、仲裁申请和处理记录。' },
         'contract': { title: '合约管理', desc: '查看智能合约、合约状态和链上存证信息。' }
+    };
+
+    var CONSULT_TYPES = ['需求咨询', '资源咨询', '产品咨询', '服务咨询', '方案咨询'];
+    var CONSULT_TYPE_MAP = {
+        '数据资源': '资源咨询',
+        '数据产品': '产品咨询',
+        '数据咨询服务': '服务咨询',
+        '行业解决方案': '方案咨询'
     };
 
     var consultRecords = [
@@ -776,9 +784,14 @@
     }
 
     function getConsultRecords(role) {
+        if (role === 'all') return consultRecords;
         return consultRecords.filter(function (item) {
             return item.audience === role;
         });
+    }
+
+    function getConsultType(item) {
+        return CONSULT_TYPE_MAP[item.type] || item.type;
     }
 
     function tagClass(item) {
@@ -854,7 +867,7 @@
         }
 
         function getCounterparty(item) {
-            if (role === 'supplier') return item.submitInfo.org;
+            if (role === 'supplier' || item.audience === 'supplier') return item.submitInfo.org;
             return findInfoValue(item, ['响应供方', '对接供方', '资源提供方', '产品提供方', '服务提供方', '方案提供方']) || item.submitInfo.org;
         }
 
@@ -876,13 +889,24 @@
         }
 
         function getLatestReplyTime(item) {
-            var history = getHistory(item);
-            return history.length ? history[history.length - 1].time : '--';
+            var reply = getReplyEntry(item);
+            return reply ? reply.time : '--';
         }
 
         function getConsultContent(item) {
             var history = getHistory(item);
-            return history.length ? history[0].text : '--';
+            var ask = history.find(function (entry) { return entry.from === 'asker'; });
+            return ask ? ask.text : '--';
+        }
+
+        function getReplyEntry(item) {
+            var history = getHistory(item);
+            return history.find(function (entry) { return entry.from !== 'asker'; });
+        }
+
+        function getReplyContent(item) {
+            var reply = getReplyEntry(item);
+            return reply ? reply.text : '暂无回复内容';
         }
 
         function getTabCount(tabKey) {
@@ -895,10 +919,7 @@
         }
 
         function getTypeOptions() {
-            return consultRecords.reduce(function (result, item) {
-                if (result.indexOf(item.type) === -1) result.push(item.type);
-                return result;
-            }, []);
+            return CONSULT_TYPES;
         }
 
         function option(value, label, current) {
@@ -948,10 +969,10 @@
                 var status = getStatus(item);
                 if (activeTab === 'pending' && status !== '待处理') return false;
                 if (activeTab === 'processed' && status === '待处理') return false;
-                if (filters.type !== 'all' && item.type !== filters.type) return false;
+                if (filters.type !== 'all' && getConsultType(item) !== filters.type) return false;
                 if (filters.status !== 'all' && status !== filters.status) return false;
                 if (!keyword) return true;
-                var text = [item.object, item.type, item.person, item.submitInfo.org, getCounterparty(item)].join(' ').toLowerCase();
+                var text = [item.object, getConsultType(item), item.person, item.submitInfo.org, getCounterparty(item)].join(' ').toLowerCase();
                 return text.indexOf(keyword) !== -1;
             });
         }
@@ -1001,7 +1022,7 @@
                 return ''
                     + '<tr>'
                     +   '<td class="consult-name-cell"><a class="consult-object-link" href="javascript:void(0)" data-consult-action="view" data-consult-id="' + item.id + '">' + escapeHtml(item.object) + '</a></td>'
-                    +   '<td><span class="' + tagClass(item) + '">' + escapeHtml(item.type) + '</span></td>'
+                    +   '<td><span class="' + tagClass(item) + '">' + escapeHtml(getConsultType(item)) + '</span></td>'
                     +   '<td>' + escapeHtml(getCounterparty(item)) + '</td>'
                     +   '<td>' + escapeHtml(item.person) + '</td>'
                     +   '<td class="consult-nowrap">' + escapeHtml(item.createdAt) + '</td>'
@@ -1075,7 +1096,7 @@
             var title = isHandle ? '处理咨询' : '查看咨询';
             var baseRows = [
                 ['咨询对象', item.object],
-                ['咨询类型', item.type],
+                ['咨询类型', getConsultType(item)],
                 ['对接方', getCounterparty(item)],
                 ['联系人', item.person],
                 ['提交时间', item.createdAt],
@@ -1094,6 +1115,12 @@
                     + (modalState.error ? '<div class="consult-form-error">' + escapeHtml(modalState.error) + '</div>' : '')
                 + '</section>'
                 : '';
+            var viewReplySection = isHandle
+                ? ''
+                : '<div class="consult-reply-box">'
+                    + '<div class="consult-reply-title">回复内容</div>'
+                    + '<div class="consult-reply-content">' + escapeHtml(getReplyContent(item)) + '</div>'
+                + '</div>';
             var footer = isHandle
                 ? '<button class="consult-modal-btn" type="button" data-consult-modal-close>' + icons.close + '<span>取消</span></button>'
                     + '<button class="consult-modal-btn primary" type="button" data-consult-submit>' + icons.submit + '<span>提交回复</span></button>'
@@ -1114,6 +1141,7 @@
                 +           '<section class="consult-modal-section">'
                 +               '<div class="consult-section-title">咨询内容</div>'
                 +               '<div class="consult-content-box">' + escapeHtml(getConsultContent(item)) + '</div>'
+                +               viewReplySection
                 +           '</section>'
                 +           '<section class="consult-modal-section consult-modal-split">'
                 +               '<div>'
@@ -1124,10 +1152,6 @@
                 +                   '<div class="consult-section-title">咨询对象信息</div>'
                 +                   '<div class="consult-detail-list">' + renderObjectInfo(item) + '</div>'
                 +               '</div>'
-                +           '</section>'
-                +           '<section class="consult-modal-section">'
-                +               '<div class="consult-section-title">回复记录</div>'
-                +               '<div class="consult-record-list">' + renderHistory(item) + '</div>'
                 +           '</section>'
                 +           replySection
                 +       '</div>'

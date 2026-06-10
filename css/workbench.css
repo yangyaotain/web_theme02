@@ -973,6 +973,25 @@ button, input, select { font: inherit; }
     font-size: 14px;
     line-height: 1.8;
 }
+.consult-reply-box {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid #dceee4;
+    border-radius: 6px;
+    background: #f4fbf7;
+}
+.consult-reply-title {
+    margin-bottom: 8px;
+    color: var(--forest-green);
+    font-size: 13px;
+    font-weight: 700;
+}
+.consult-reply-content {
+    color: #30433b;
+    font-size: 14px;
+    line-height: 1.8;
+    word-break: break-word;
+}
 .consult-modal-split {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);

@@ -10,6 +10,33 @@
  *
  * 登录状态通过 localStorage('lgk_logged_in') 驱动，登录后自动切换右侧 UI。
  */
+function loadLGUserMenuConfig(callback) {
+    if (window.LG_USER_MENU_CONFIG) {
+        callback(window.LG_USER_MENU_CONFIG);
+        return;
+    }
+
+    if (window.__lgUserMenuConfigLoading) {
+        document.addEventListener('lg-user-menu-config-ready', function () {
+            callback(window.LG_USER_MENU_CONFIG);
+        }, { once: true });
+        return;
+    }
+
+    window.__lgUserMenuConfigLoading = true;
+    var script = document.createElement('script');
+    script.src = 'js/user-menu-config.js';
+    script.onload = function () {
+        window.__lgUserMenuConfigLoading = false;
+        callback(window.LG_USER_MENU_CONFIG);
+    };
+    script.onerror = function () {
+        window.__lgUserMenuConfigLoading = false;
+        callback(null);
+    };
+    document.head.appendChild(script);
+}
+
 class NavBar extends HTMLElement {
     static get observedAttributes() {
         return ['active'];
@@ -21,13 +48,19 @@ class NavBar extends HTMLElement {
     }
 
     connectedCallback() {
-        this._render();
-        this._bindEvents();
+        this._refresh();
     }
 
     attributeChangedCallback() {
-        this._render();
-        this._bindEvents();
+        if (this.isConnected) this._refresh();
+    }
+
+    _refresh() {
+        var self = this;
+        loadLGUserMenuConfig(function () {
+            self._render();
+            self._bindEvents();
+        });
     }
 
     _isLoggedIn() {
@@ -95,18 +128,14 @@ class NavBar extends HTMLElement {
             ],
         };
 
-        const USER_MENU = [
-            { label: '用户中心',         href: 'user-center.html' },
-            { label: '管理中心',         href: '#' },
-            { label: '工作台',           href: 'workbench.html' },
-            { label: '运营中心',         href: 'operation-center.html' },
-            { label: '运维中心',         href: 'maintenance-center.html' },
-            { label: '可视化大屏',       href: '#' },
-            { label: '智能问数',         href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' },
-            { label: '公共数据运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
-            { label: '可信数据空间',     href: 'https://lgdata.lggov.cn/index', target: '_blank' },
-            { label: '数据开发平台',     href: 'data-dev-system.html', target: '_blank' },
-        ];
+        const menuConfig = window.LG_USER_MENU_CONFIG || {};
+        const USER = menuConfig.user || {
+            triggerName: '小智',
+            accountName: 'gf_demo01',
+            company: 'xxx科技有限公司',
+            tags: ['数据提供方', '数据需求方']
+        };
+        const USER_MENU = menuConfig.items || [];
 
         const chevronSVG = `<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
 
@@ -136,6 +165,7 @@ class NavBar extends HTMLElement {
         const userMenuHTML = USER_MENU.map(m =>
             `<a href="${m.href}" class="user-menu-item"${m.target ? ' target="' + m.target + '"' : ''}>${m.label}</a>`
         ).join('');
+        const userTagsHTML = (USER.tags || []).map(tag => `<span class="user-tag">${tag}</span>`).join('');
 
         /* ── 右侧区域：登录前 vs 登录后 ── */
         let actionsHTML;
@@ -155,7 +185,7 @@ class NavBar extends HTMLElement {
             <div class="user-dropdown" id="userDropdown">
                 <span class="user-trigger" id="userTrigger">
                     <svg class="user-avatar-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-                    <span class="user-name-text">小智</span>
+                    <span class="user-name-text">${USER.triggerName || USER.accountName}</span>
                     ${chevronSVG}
                 </span>
                 <div class="user-panel" id="userPanel">
@@ -164,13 +194,12 @@ class NavBar extends HTMLElement {
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
                         </div>
                         <div class="user-info-meta">
-                            <div class="user-info-name">gf_demo01</div>
-                            <div class="user-info-company">xxx科技有限公司</div>
+                            <div class="user-info-name">${USER.accountName}</div>
+                            <div class="user-info-company">${USER.company}</div>
                         </div>
                     </div>
                     <div class="user-tags">
-                        <span class="user-tag">数据提供方</span>
-                        <span class="user-tag">数据需求方</span>
+                        ${userTagsHTML}
                     </div>
                     <div class="user-menu-list">${userMenuHTML}</div>
                     <div class="user-logout-wrap">

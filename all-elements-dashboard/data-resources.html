@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 数据资源</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 复用统一主题配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 - 数据资源默认选中 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 右侧空占位 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 模块标题 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-database text-primary"></i>
+        <span>数据资源全景</span>
+      </h2>
+    </div>
+
+    <!-- 第一行：指标卡片区域（调整为6个卡片，新增应用场景数） -->
+    <div class="grid grid-cols-6 gap-6 mb-6">
+      <!-- 资源总量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">资源总量（记录数）</p>
+            <h3 class="text-3xl font-bold text-white">156,892</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>8.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-database text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 公共数据 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">公共数据（记录数）</p>
+            <h3 class="text-3xl font-bold text-white">78,450</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>5.6% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-building-o text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行业数据 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">行业数据（记录数）</p>
+            <h3 class="text-3xl font-bold text-white">45,320</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.1% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-sitemap text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 企业数据 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">企业数据（记录数）</p>
+            <h3 class="text-3xl font-bold text-white">33,122</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>9.8% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-industry text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 新增：应用场景数 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">应用场景数</p>
+            <h3 class="text-3xl font-bold text-white">189</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>21.5% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400">
+            <i class="fa fa-sitemap text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 总授权申请量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">总授权申请量</p>
+            <h3 class="text-3xl font-bold text-white">28,765</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-400">
+            <i class="fa fa-file-text-o text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：数据资源分布、企业数据、热门资源排行榜 -->
+    <div class="grid grid-cols-3 gap-6 mb-6">
+      <!-- 数据资源分布（环形图）- 移除xy轴 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-pie-chart text-primary"></i>
+            <span>数据资源分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="resourceDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 企业数据分类分布（柱状图）- 修改标题 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-accent"></i>
+            <span>企业数据分类分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="enterpriseDataChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 热门资源排行榜top10 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-trophy text-yellow-400"></i>
+            <span>热门资源排行榜TOP10</span>
+          </h3>
+        </div>
+        <div class="space-y-3 h-[280px] overflow-y-auto scrollbar-hide pr-2">
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">1</span>
+              <span class="text-sm truncate max-w-[140px]">政务服务事项清单</span>
+            </div>
+            <span class="text-sm text-secondary">128,542</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">2</span>
+              <span class="text-sm truncate max-w-[140px]">交通出行流量数据</span>
+            </div>
+            <span class="text-sm text-secondary">96,325</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs">3</span>
+              <span class="text-sm truncate max-w-[140px]">企业信用信息库</span>
+            </div>
+            <span class="text-sm text-secondary">85,690</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">4</span>
+              <span class="text-sm truncate max-w-[140px]">医疗健康服务数据</span>
+            </div>
+            <span class="text-sm text-secondary">62,458</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">5</span>
+              <span class="text-sm truncate max-w-[140px]">文旅景点预约数据</span>
+            </div>
+            <span class="text-sm text-secondary">48,921</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">6</span>
+              <span class="text-sm truncate max-w-[140px]">教育资源公共服务数据</span>
+            </div>
+            <span class="text-sm text-secondary">42,156</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">7</span>
+              <span class="text-sm truncate max-w-[140px]">社保医保缴费数据</span>
+            </div>
+            <span class="text-sm text-secondary">38,745</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">8</span>
+              <span class="text-sm truncate max-w-[140px]">环境监测实时数据</span>
+            </div>
+            <span class="text-sm text-secondary">32,890</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">9</span>
+              <span class="text-sm truncate max-w-[140px]">不动产登记信息</span>
+            </div>
+            <span class="text-sm text-secondary">28,654</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">10</span>
+              <span class="text-sm truncate max-w-[140px]">企业工商注册信息</span>
+            </div>
+            <span class="text-sm text-secondary">25,487</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三行：公共数据、行业数据 -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- 公共数据分类（柱状图）- 10个分类 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-secondary"></i>
+            <span>公共数据分类分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="publicDataChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 行业数据分类分布（柱状图）- 修改标题 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-purple-400"></i>
+            <span>行业数据分类分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="industryDataChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: { size: 11 },
+            padding: 15
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 10,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0'
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        }
+      },
+      animation: { duration: 1500, easing: 'easeOutQuart' }
+    };
+
+    // 1. 数据资源分布环形图 - 移除xy轴（环形图本身无轴，配置scales: {} 确保无多余轴线）
+    const resourceDistributionCtx = document.getElementById('resourceDistributionChart').getContext('2d');
+    new Chart(resourceDistributionCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['公共数据', '行业数据', '企业数据'],
+        datasets: [{
+          data: [78450, 45320, 33122],
+          backgroundColor: ['rgba(15, 198, 194, 0.7)', 'rgba(79, 110, 247, 0.7)', 'rgba(168, 85, 247, 0.7)'],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: { size: 11 },
+              padding: 15
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: 'rgba(32, 165, 101, 0.28)',
+            borderWidth: 1,
+            padding: 10,
+            titleColor: '#fff',
+            bodyColor: '#e2e8f0'
+          }
+        },
+        // 明确禁用所有轴线
+        scales: {},
+        animation: { duration: 1500, easing: 'easeOutQuart' }
+      }
+    });
+
+    // 2. 企业数据分类分布柱状图
+    const enterpriseDataCtx = document.getElementById('enterpriseDataChart').getContext('2d');
+    new Chart(enterpriseDataCtx, {
+      type: 'bar',
+      data: {
+        labels: ['国有企业', '民营企业', '外资企业', '合资企业', '小微企业', '个体工商户'],
+        datasets: [{
+          label: '数据记录数',
+          data: [12500, 10800, 6200, 3622, 1800, 1200],
+          backgroundColor: 'rgba(79, 110, 247, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } }
+      }
+    });
+
+    // 3. 公共数据分类分布柱状图 - 10个分类
+    const publicDataCtx = document.getElementById('publicDataChart').getContext('2d');
+    new Chart(publicDataCtx, {
+      type: 'bar',
+      data: {
+        labels: ['政务服务', '交通出行', '医疗健康', '教育文化', '社保民政', '生态环境', '市场监管', '不动产', '税务服务', '公共安全'],
+        datasets: [{
+          label: '数据记录数',
+          data: [25600, 18500, 12400, 9800, 7600, 4550, 3800, 3200, 2800, 2200],
+          backgroundColor: 'rgba(15, 198, 194, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 4. 行业数据分类分布柱状图 - 10个分类
+    const industryDataCtx = document.getElementById('industryDataChart').getContext('2d');
+    new Chart(industryDataCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造业', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [{
+          label: '数据记录数',
+          data: [15600, 12500, 8200, 5800, 3220, 2800, 2500, 2200, 1800, 1500],
+          backgroundColor: 'rgba(168, 85, 247, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 页面加载动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bg-dark-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>

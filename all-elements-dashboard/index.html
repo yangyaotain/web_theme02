@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 配置Tailwind自定义主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        background-image: linear-gradient(90deg, #20A565, #F7AF1D);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 移除右上角消息和管理员要素 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 时间筛选器 - 仅保留标题，移除所有控件 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 flex items-center justify-between border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-bar-chart text-primary"></i>
+        <span>综合分析概览</span>
+      </h2>
+
+      <!-- 移除所有筛选控件 -->
+      <div></div>
+    </div>
+
+    <!-- 指标卡片区域 - 调整为7个指标卡，适配网格布局（已移除进度条） -->
+    <div class="grid grid-cols-7 gap-6 mb-6">
+      <!-- 数据资源 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据资源</p>
+            <h3 class="text-3xl font-bold text-white">128,643</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.5% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-database text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据产品 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据产品</p>
+            <h3 class="text-3xl font-bold text-white">86,421</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>9.8% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-shopping-bag text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据咨询 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据咨询</p>
+            <h3 class="text-3xl font-bold text-white">42,857</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>7.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-comments text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行业方案 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">行业方案</p>
+            <h3 class="text-3xl font-bold text-white">28,943</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>11.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-sitemap text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数商总数（原总用户数） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数商总数</p>
+            <h3 class="text-3xl font-bold text-white">3,842</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>8.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-user-plus text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 需求响应率（原供需对接成功率） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">需求响应率</p>
+            <h3 class="text-3xl font-bold text-white">78.3%</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>3.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-exchange text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 总交易规模 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">总交易规模</p>
+            <h3 class="text-3xl font-bold text-white">¥2,648 <span class="text-xl font-normal">万元</span></h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-rmb text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图表区域 - 置换入驻企业分析和需求响应趋势位置 -->
+    <div class="grid grid-cols-2 grid-rows-2 gap-6">
+      <!-- 平台运营趋势 - 双Y轴柱状折线图 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow row-span-1 col-span-1 transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-line-chart text-primary"></i>
+            <span>平台运营趋势</span>
+          </h3>
+          <div class="flex gap-2">
+            <button class="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary">数据资源</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent">数据产品</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary">数据咨询</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400">行业方案</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-amber-500/10 text-amber-400">成交金额</button>
+          </div>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="operationTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 入驻企业分析（原位置是需求响应趋势） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow row-span-1 col-span-1 transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-users text-secondary"></i>
+            <span>入驻企业分析</span>
+          </h3>
+          <div class="flex gap-2">
+            <button class="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary">入驻企业数</button>
+          </div>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="userTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 需求响应趋势（原位置是入驻企业分析） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow row-span-1 col-span-1 transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-tasks text-accent"></i>
+            <span>需求响应趋势</span>
+          </h3>
+          <div class="flex gap-2">
+            <button class="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary">需求数量</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary">响应数量</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-red-500/10 text-red-400">未响应数量</button>
+          </div>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="demandResponseChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 数据要素行业分布（原数据要素流通态势） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow row-span-1 col-span-1 transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-exchange text-purple-400"></i>
+            <span>数据要素行业分布</span>
+          </h3>
+          <div class="flex gap-2">
+            <button class="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary">数据资源</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent">数据产品</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary">数据咨询</button>
+            <button class="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400">行业方案</button>
+          </div>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="dataFlowChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 12,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0',
+          displayColors: true,
+          boxPadding: 4,
+          usePointStyle: true,
+          callbacks: {
+            label: function(context) {
+              if (context.dataset.label === '成交金额') {
+                return `${context.dataset.label}: ${context.raw.toLocaleString()} 万元`;
+              }
+              return `${context.dataset.label}: ${context.raw.toLocaleString()}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: 'rgba(255, 255, 255, 0.05)',
+            drawBorder: false,
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.6)',
+            font: {
+              size: 11
+            }
+          }
+        },
+        y: {
+          grid: {
+            color: 'rgba(255, 255, 255, 0.05)',
+            drawBorder: false,
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.6)',
+            font: {
+              size: 11
+            },
+            callback: function(value) {
+              if (value >= 1000) {
+                return (value / 1000) + 'k';
+              }
+              return value;
+            }
+          }
+        }
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeOutQuart'
+      }
+    };
+
+    // 月份标签
+    const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    // 数据要素分类
+    const dataCategories = ['政务数据', '金融数据', '医疗数据', '交通数据', '能源数据', '电商数据', '社交数据', '工业数据'];
+
+    // 1. 平台运营趋势图表 - 双Y轴柱状折线图（4个柱子叠加）
+    const operationTrendCtx = document.getElementById('operationTrendChart').getContext('2d');
+    new Chart(operationTrendCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: '数据资源',
+            data: [12000, 13500, 14200, 15800, 17200, 18500, 19800, 21500, 23200, 24800, 26500, 28300],
+            backgroundColor: 'rgba(32, 165, 101, 0.72)',
+            borderRadius: 4,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7,
+            yAxisID: 'y',
+            stack: 'stack1' // 叠加配置
+          },
+          {
+            label: '数据产品',
+            data: [8500, 9200, 9800, 10500, 11200, 12000, 12800, 13500, 14200, 15000, 15800, 16500],
+            backgroundColor: 'rgba(79, 110, 247, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7,
+            yAxisID: 'y',
+            stack: 'stack1' // 叠加配置
+          },
+          {
+            label: '数据咨询',
+            data: [4200, 4500, 4800, 5200, 5500, 5800, 6200, 6500, 6800, 7200, 7500, 7800],
+            backgroundColor: 'rgba(15, 198, 194, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7,
+            yAxisID: 'y',
+            stack: 'stack1' // 叠加配置
+          },
+          {
+            label: '行业方案',
+            data: [2800, 3200, 3500, 3800, 4200, 4500, 4800, 5200, 5500, 5800, 6200, 6500],
+            backgroundColor: 'rgba(168, 85, 247, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.6,
+            categoryPercentage: 0.7,
+            yAxisID: 'y',
+            stack: 'stack1' // 叠加配置
+          },
+          {
+            label: '成交金额',
+            data: [180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510],
+            borderColor: 'rgba(245, 158, 11, 1)',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            type: 'line', // 折线图类型
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+            pointBorderColor: '#fff',
+            pointHoverRadius: 6,
+            pointRadius: 4,
+            pointBorderWidth: 2,
+            yAxisID: 'y1' // 使用右侧Y轴
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 11
+              },
+              padding: 20
+            }
+          }
+        },
+        scales: {
+          ...chartOptions.scales,
+          // 左侧Y轴 (Y1) - 数据要素数量
+          y: {
+            ...chartOptions.scales.y,
+            position: 'left',
+            stacked: true, // 开启柱状图叠加
+            title: {
+              display: true,
+              text: '数量',
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 12
+              }
+            }
+          },
+          // 右侧Y轴 (Y2) - 成交金额
+          y1: {
+            position: 'right',
+            grid: {
+              drawOnChartArea: false, // 不绘制网格线，避免重叠
+            },
+            ticks: {
+              color: 'rgba(245, 158, 11, 0.8)',
+              font: {
+                size: 11
+              },
+              callback: function(value) {
+                return value + ' 万元';
+              }
+            },
+            title: {
+              display: true,
+              text: '成交金额 (万元)',
+              color: 'rgba(245, 158, 11, 0.8)',
+              font: {
+                size: 12
+              }
+            }
+          },
+          x: {
+            ...chartOptions.scales.x,
+            stacked: true // 开启X轴叠加
+          }
+        }
+      }
+    });
+
+    // 2. 入驻企业分析图表（原用户趋势分析图表）
+    const userTrendCtx = document.getElementById('userTrendChart').getContext('2d');
+    new Chart(userTrendCtx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: '入驻企业数',
+            data: [1200, 1350, 1480, 1620, 1750, 1880, 2050, 2200, 2350, 2500, 2680, 2850],
+            borderColor: 'rgba(32, 165, 101, 1)',
+            backgroundColor: 'rgba(32, 165, 101, 0.12)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(32, 165, 101, 1)',
+            pointBorderColor: '#fff',
+            pointHoverRadius: 6,
+            pointRadius: 4,
+            pointBorderWidth: 2
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 11
+              },
+              padding: 20
+            }
+          }
+        },
+        scales: {
+          ...chartOptions.scales,
+          y: {
+            ...chartOptions.scales.y,
+            title: {
+              display: true,
+              text: '数量',
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 3. 需求响应趋势图表
+    const demandResponseCtx = document.getElementById('demandResponseChart').getContext('2d');
+    new Chart(demandResponseCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: '需求数量',
+            data: [1200, 1350, 1420, 1580, 1720, 1850, 1980, 2150, 2320, 2480, 2650, 2830],
+            backgroundColor: 'rgba(32, 165, 101, 0.72)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: '响应需求数量',
+            data: [950, 1100, 1200, 1350, 1500, 1650, 1780, 1950, 2120, 2280, 2450, 2630],
+            backgroundColor: 'rgba(15, 198, 194, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8,
+            stack: 'stack1'
+          },
+          {
+            label: '未响应需求数量',
+            data: [250, 250, 220, 230, 220, 200, 200, 200, 200, 200, 200, 200],
+            backgroundColor: 'rgba(248, 113, 113, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8,
+            stack: 'stack1'
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 11
+              },
+              padding: 20
+            }
+          }
+        },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            stacked: true
+          },
+          y: {
+            ...chartOptions.scales.y,
+            stacked: true
+          }
+        }
+      }
+    });
+
+    // 4. 数据要素行业分布图表（原数据要素流通态势）
+    const dataFlowCtx = document.getElementById('dataFlowChart').getContext('2d');
+    new Chart(dataFlowCtx, {
+      type: 'bar',
+      data: {
+        labels: dataCategories,
+        datasets: [
+          {
+            label: '数据资源',
+            data: [8500, 7200, 6800, 5500, 4800, 9200, 7800, 6200],
+            backgroundColor: 'rgba(32, 165, 101, 0.72)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: '数据产品',
+            data: [5200, 6800, 4500, 3800, 3200, 7500, 6200, 4800],
+            backgroundColor: 'rgba(79, 110, 247, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: '数据咨询',
+            data: [3200, 2800, 2500, 1800, 1500, 3200, 2800, 2200],
+            backgroundColor: 'rgba(15, 198, 194, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: '行业方案',
+            data: [2200, 1800, 1500, 1200, 1000, 2500, 1800, 1500],
+            backgroundColor: 'rgba(168, 85, 247, 0.7)',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: {
+                size: 11
+              },
+              padding: 20
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: {
+                size: 10
+              }
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)',
+              drawBorder: false,
+            },
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: {
+                size: 11
+              },
+              callback: function(value) {
+                if (value >= 1000) {
+                  return (value / 1000) + 'k';
+                }
+                return value;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 添加页面加载动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bg-dark-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -768,7 +768,7 @@
 
                         <div class="ds-form-row">
                             <div class="ds-form-label">内容章节</div>
-                            <div class="ds-form-value">
+                            <div class="ds-form-value" id="dsSectionsEditor">
                                 <div class="ds-section-block">
                                     <div class="ds-section-head">
                                         <span class="ds-section-num">1</span>
@@ -850,22 +850,125 @@
         var editDesc = document.getElementById('dsEditDesc');
         var thumbImg = document.getElementById('dsThumbImg');
         var thumbFile = document.getElementById('dsThumbFile');
+        var currentEditIndex = -1;
 
         var spacePreviewData = [
+            { heroImg: 'images/space-hero.jpg', thumbImg: 'images/space-hero.jpg', status: 'online', desc: '数据要素改革试点，构建可信流通基础设施', heroBadge: '龙岗区数据要素改革试点', heroTitle: '龙岗可信数据空间', heroSubtitle: '以可信数据空间为基础，以数据交易为纽带，以数商培育为抓手，构建数据要素流通的完整生态闭环', lead: '龙岗区作为深圳市数据要素改革试点区，积极探索数据空间建设运营模式，以"构建数据可信流通环境、释放数据要素价值"为核心，围绕公共数据授权运营，聚焦低空经济、具身智能、医药健康、文化艺术等重点领域，打造多领域融合的可信数据空间体系。', stats: [{value:'292',unit:'亿+',label:'数据资源总量'},{value:'5',unit:'大',label:'可信数据空间'},{value:'2000',unit:'P',label:'算力集群规模'},{value:'12.62',unit:'亿+',label:'数据服务调用量'}], sections: [{title:'数据空间：可信流通基础设施',content:'龙岗可信数据空间是基于隐私计算、区块链等先进技术构建的数据流通基础设施，为企业提供数据安全存储、传输、计算的一体化服务。通过"数据可用不可见"的技术方案，在保障数据安全的前提下，实现跨行业、跨领域的数据共享与价值释放。',features:[]},{title:'"1+N"授权运营体系',content:'建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，以公共数据为牵引，带动行业数据、区域数据的融合应用与价值挖掘。',features:[]},{title:'公共数据与四大行业数据空间',content:'围绕公共数据授权运营，聚焦低空经济、具身智能、医药健康、文化艺术等重点领域，打造多领域融合的可信数据空间体系。',features:[{title:'公共数据可信数据空间',desc:'以公共数据授权运营为牵引，推动政务、民生、产业数据可信流通'},{title:'低空经济可信数据空间',desc:'388km²低空空域覆盖，构建"空中高德"时空数字底座'},{title:'具身智能可信数据空间',desc:'1500+高质量数据集，赋能机器人产业创新'},{title:'医药健康可信数据空间',desc:'AI赋能智慧医疗，推动健康产业数字化转型'},{title:'文化艺术可信数据空间',desc:'数字创意产业走廊，文化数据资产化先行先试'}]},{title:'数商生态：培育数据服务主体',content:'龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。',features:[]}] },
+            { heroImg: 'images/hero-public-data.jpg', thumbImg: 'images/hero-public-data.jpg', status: 'online', desc: '公共数据授权运营与可信流通应用', heroBadge: '公共数据授权运营专区', heroTitle: '公共数据可信数据空间', heroSubtitle: '以公共数据授权运营为牵引，构建依法合规、安全可信、场景驱动的数据流通服务体系', lead: '公共数据可信数据空间围绕政务服务、城市治理、民生保障和产业发展等高价值场景，提供公共数据目录、授权运营、可信计算、服务调用和合规审计的一体化能力，让公共数据在安全可控的环境中释放应用价值。', stats: [{value:'292',unit:'亿+',label:'公共数据资源汇聚'},{value:'12.62',unit:'亿+',label:'数据服务调用量'},{value:'50',unit:'+',label:'高价值应用场景'},{value:'1+N',unit:'',label:'授权运营体系'}], sections: [{title:'公共数据目录：资源统一编目',content:'围绕人口、法人、空间地理、教育、交通、市场主体等公共数据主题，建立统一目录、统一标签和统一服务入口，帮助数据需求方快速识别可申请、可调用、可融合的数据资源。',features:[]},{title:'授权运营：依法合规流通',content:'依托区级公共数据授权运营平台，形成申请、审核、授权、交付、使用、审计的闭环流程，支撑公共数据在企业服务、惠企政策、城市治理和民生服务等场景中的合规应用。',features:[]},{title:'可信技术：安全可控使用',content:'通过隐私计算、接口鉴权、调用留痕、用途约束和安全审计等能力，实现数据可用不可见、流向可追踪、使用可核验，保障公共数据在跨主体协作中的安全可信。',features:[]},{title:'典型场景：服务治理与产业',content:'',features:[{title:'政务服务',desc:'支撑身份核验、资格核验、材料免提交等便民服务'},{title:'合规风控',desc:'对授权、调用、用途和审计过程形成可追溯链路'},{title:'城市治理',desc:'面向交通、教育、医疗、市场监管等场景提供数据支撑'},{title:'产业赋能',desc:'以公共数据产品化服务带动企业创新和数商生态发展'}]}] },
             { heroImg: 'images/space-hero.jpg', heroBadge: '国家级低空经济先行示范区', heroTitle: '低空经济可信数据空间', heroSubtitle: '以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系', lead: '深圳龙岗区作为全国低空经济先行示范区，正在打造国内领先的低空经济数据空间。通过整合新一代信息技术与数据采集分析能力，为无人机物流、城市治理、应急救援等场景提供全方位数据支撑。', stats: [{value:'388',unit:'km²',label:'低空空域覆盖面积'},{value:'34',unit:'条',label:'直升机航线'},{value:'99',unit:'%',label:'场景还原度'},{value:'15',unit:'x',label:'任务效率提升'}], sections: [{title:'数字底座：三维立体时空基底',content:'"空中高德"时空数字底座融合地面与低空实时数据，通过三维隐式空间建模与AI深度学习技术，实现全域数据天级更新，真实场景还原度达99%。',features:[]},{title:'空域管理：动态可调航路体系',content:'在龙岗区388平方公里低空空域内，构建了灵活可调的公共航路体系，支持物流无人机、巡检无人机等在高密度环境下融合飞行。',features:[]},{title:'安全屏障：全域智能监控网络',content:'针对城市密集区60%的监控盲区问题，该体系通过多源数据融合与智能计算，增强对"低空、慢速、小型"目标的识别能力。',features:[]},{title:'应用场景：多元商业化落地',content:'',features:[{title:'城市治理',desc:'政务无人机巡查、测绘、应急等任务效率提升15倍'},{title:'物流与医疗',desc:'开通34条直升机航线，支持紧急送药、商圈服务'},{title:'观光旅游',desc:'低空观光、航拍体验等新型业态蓬勃发展'},{title:'产业融合',desc:'龙岗低空智能融合测试基地推动产业创新'}]}] },
             { heroImg: 'images/space-hero-robot.jpg', heroBadge: '全国首个人工智能与机器人数据聚合服务中心', heroTitle: '具身智能可信数据空间', heroSubtitle: '聚焦机器人训练数据生产、标注加工与智能模型训练，构建具身智能全链条数据服务体系', lead: '龙岗区以"All in AI"战略为引领，率先建设全国首个人工智能与机器人数据聚合服务中心，聚焦具身智能行业数据标准统一、采集效率提升、共享机制建立，为机器人产业发展提供高质量数据底座。', stats: [{value:'1500',unit:'+',label:'高质量数据集'},{value:'40',unit:'+',label:'语料数据供应商'},{value:'6',unit:'大',label:'功能模块'},{value:'200',unit:'万',label:'单企最高扶持额'}], sections: [{title:'数据聚合服务中心：六大核心模块',content:'设立六大功能模块：具身智能数据生产中心、标注加工中心、质量评估中心、知识库中心、语料推荐中心和训推中心。',features:[]},{title:'数据生产与训练：从采集到模型',content:'数据空间覆盖机器人训练数据的全生命周期——从多模态感知数据采集、自动化标注加工、质量评估到模型训练推理。',features:[]},{title:'产业扶持：真金白银助力创新',content:'龙岗区2025年推出具身智能机器人应用扶持项目，单个企业每年合计最高支持200万元。',features:[]},{title:'应用场景：多领域深度融合',content:'',features:[{title:'工业制造',desc:'智能机器人用于精密装配、质检、仓储分拣'},{title:'服务机器人',desc:'酒店、餐饮、零售等场景的智能服务应用'},{title:'医疗康复',desc:'康复机器人辅助训练与远程医疗协助'},{title:'教育科研',desc:'机器人教学实训与科研数据共享'}]}] },
             { heroImg: 'images/space-hero-health.jpg', heroBadge: '全市首个"AI＋生命健康产业园"', heroTitle: '医药健康可信数据空间', heroSubtitle: '以医疗大数据和AI诊断为核心，构建覆盖临床研究、健康管理、医药创新转化的数字化体系', lead: '龙岗区以"健康龙岗"行动为牵引，打造全市首个"AI＋生命健康产业园"，推动医疗大数据在诊疗辅助、公共卫生、药物研发等领域的深度应用。', stats: [{value:'50',unit:'万+',label:'AI智能导诊访问量'},{value:'95',unit:'%+',label:'AI导诊准确率'},{value:'171',unit:'家',label:'社康机构覆盖'},{value:'99.38',unit:'%',label:'检验结果互认率'}], sections: [{title:'AI赋能医疗：智慧诊疗新范式',content:'龙岗区上线数智健康管家"AI龙岗家医"，在12家区属公立医院及171家社康机构全面应用。',features:[]},{title:'医学创新转化：打通"最后一公里"',content:'成立全市首个区卫生健康创新与转化中心，已开展转化项目46个，专利转化金额达625余万元。',features:[]},{title:'健康产业集聚：龙头企业引领',content:'全市首个"AI＋生命健康产业园"成功吸引威高集团、联影医疗等生物医药产业龙头企业落户。',features:[]},{title:'数据应用场景：全域健康服务',content:'',features:[{title:'AI辅助诊断',desc:'社区医院常见病AI辅助诊断准确率超92%'},{title:'医学影像共享',desc:'区域医学影像、病理、检验资源共享中心'},{title:'药物研发加速',desc:'临床数据驱动的精准医学与新药研发'},{title:'健康数据安全',desc:'隐私计算保障医疗数据安全合规流通'}]}] },
             { heroImg: 'images/space-hero-culture.jpg', heroBadge: '龙岗数字创意产业走廊', heroTitle: '文化艺术可信数据空间', heroSubtitle: '依托全长46公里数字创意产业走廊，构建文化数据资产化、AI文创赋能与数字内容创新的数据服务体系', lead: '龙岗数字创意产业走廊西起坂田星河云海、东至坪地低碳云城，全长46公里、面积32平方公里，汇聚超万家文化企业，2024年走廊营收突破2291亿元。', stats: [{value:'2291',unit:'亿',label:'走廊年度营收'},{value:'10000',unit:'+',label:'文化企业数量'},{value:'35',unit:'个',label:'文化产业园区'},{value:'46',unit:'km',label:'走廊全长'}], sections: [{title:'文化数据资产化：开创先河',content:'深圳市子曰文化有限公司打造的"中国式文化创作大模型"成为深圳市首个文化类数据资产入表案例。',features:[]},{title:'AI文创赋能：智能创作新引擎',content:'2025年龙岗区修订的文化产业扶持细则重点支持AI文创业，涵盖孵化创业、AI影视创作等多个方向。',features:[]},{title:'产业生态：走廊聚合效应',content:'龙岗数字创意产业走廊拥有6所大学、357家规上文化企业、35个文化产业园区。',features:[]},{title:'数据应用场景：文化数字化全覆盖',content:'',features:[{title:'数字内容创作',desc:'AI辅助影视、动漫、微短剧等原创内容生产'},{title:'数字艺术交易',desc:'文化数据资产确权、评估与合规交易'},{title:'版权保护',desc:'区块链技术实现文化IP全链路确权与溯源'},{title:'文化教育',desc:'6所大学产学研联动，培养数字文化人才'}]}] }
         ];
 
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getSpaceDesc(data) {
+            return data.desc || data.heroSubtitle || data.lead || '';
+        }
+
+        function renderTable() {
+            var tbody = panel.querySelector('.dataspace-table tbody');
+            tbody.innerHTML = spacePreviewData.map(function (data, index) {
+                var online = data.status !== 'offline';
+                var statusClass = online ? 'status-online' : 'status-offline';
+                var statusText = online ? '已上线' : '未上线';
+                var toggleClass = online ? 'op-link op-offline op-toggle-status' : 'op-link op-online op-toggle-status';
+                var toggleText = online ? '下线' : '上线';
+                var title = data.title || data.heroTitle;
+                return '<tr data-index="' + index + '">' +
+                    '<td><div class="dataspace-thumb"><img src="' + escapeHtml(data.thumbImg || data.heroImg) + '" alt="' + escapeHtml(title) + '"></div></td>' +
+                    '<td class="dataspace-title">' + escapeHtml(title) + '</td>' +
+                    '<td class="dataspace-desc">' + escapeHtml(getSpaceDesc(data)) + '</td>' +
+                    '<td><span class="' + statusClass + '">' + statusText + '</span></td>' +
+                    '<td class="dataspace-ops">' +
+                        '<span class="op-link">上移</span><span class="op-sep">|</span>' +
+                        '<span class="op-link">下移</span><span class="op-sep">|</span>' +
+                        '<span class="op-link op-edit">编辑</span><span class="op-sep">|</span>' +
+                        '<span class="op-link op-preview">预览</span><span class="op-sep">|</span>' +
+                        '<span class="' + toggleClass + '">' + toggleText + '</span>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        function setValue(selector, value) {
+            var el = document.querySelector(selector);
+            if (el) el.value = value || '';
+        }
+
+        function syncHeroPreview() {
+            document.getElementById('dsHeroBadgePreview').textContent = document.getElementById('dsHeroBadge').value || '';
+            document.getElementById('dsHeroTitlePreview').textContent = document.getElementById('dsHeroTitle').value || '';
+            document.getElementById('dsHeroSubPreview').textContent = document.getElementById('dsHeroSubtitle').value || '';
+        }
+
+        function fillStats(stats) {
+            document.querySelectorAll('#dsEditPanel .ds-stat-grid .ds-stat-item').forEach(function (item, index) {
+                var inputs = item.querySelectorAll('input');
+                var stat = stats[index] || {};
+                if (inputs.length >= 3) {
+                    inputs[0].value = stat.value || '';
+                    inputs[1].value = stat.unit || '';
+                    inputs[2].value = stat.label || '';
+                }
+            });
+        }
+
+        function renderFeatureEditor(features) {
+            if (!features || !features.length) return '';
+            return '<div style="margin-top:8px;">' +
+                '<label style="font-size:12px;color:#909399;margin-bottom:8px;display:block;">特色卡片</label>' +
+                '<div class="ds-feature-grid">' +
+                    features.map(function (feature) {
+                        return '<div class="ds-feature-item">' +
+                            '<label>标题</label><input value="' + escapeHtml(feature.title) + '">' +
+                            '<label>描述</label><textarea rows="2">' + escapeHtml(feature.desc) + '</textarea>' +
+                        '</div>';
+                    }).join('') +
+                '</div>' +
+            '</div>';
+        }
+
+        function fillSections(sections) {
+            var editor = document.getElementById('dsSectionsEditor');
+            editor.innerHTML = (sections || []).map(function (section, index) {
+                var content = section.content ?
+                    '<textarea class="ds-form-textarea">' + escapeHtml(section.content) + '</textarea>' : '';
+                return '<div class="ds-section-block">' +
+                    '<div class="ds-section-head">' +
+                        '<span class="ds-section-num">' + (index + 1) + '</span>' +
+                        '<input class="ds-form-input" value="' + escapeHtml(section.title) + '">' +
+                    '</div>' +
+                    content +
+                    renderFeatureEditor(section.features || []) +
+                '</div>';
+            }).join('');
+        }
+
         function showEdit(row) {
-            var title = row.querySelector('.dataspace-title').textContent.trim();
-            var desc = row.querySelector('.dataspace-desc').textContent.trim();
-            var imgSrc = row.querySelector('.dataspace-thumb img').src;
+            currentEditIndex = Number(row.getAttribute('data-index'));
+            var data = spacePreviewData[currentEditIndex] || spacePreviewData[0];
+            var title = data.title || data.heroTitle;
             editTitle.textContent = '编辑：' + title;
-            editName.value = title;
-            editDesc.value = desc;
-            thumbImg.src = imgSrc;
+            editName.value = title || '';
+            editDesc.value = getSpaceDesc(data);
+            thumbImg.src = data.thumbImg || data.heroImg;
+            document.getElementById('dsHeroBgImg').src = data.heroImg || '';
+            setValue('#dsHeroBadge', data.heroBadge);
+            setValue('#dsHeroTitle', data.heroTitle);
+            setValue('#dsHeroSubtitle', data.heroSubtitle);
+            setValue('#dsEditLead', data.lead);
+            fillStats(data.stats || []);
+            fillSections(data.sections || []);
+            syncHeroPreview();
             tableWrap.style.display = 'none';
             toolbar.style.display = 'none';
             editPanel.classList.add('active');
@@ -883,6 +986,7 @@
                 heroBadge: document.getElementById('dsHeroBadge').value || '',
                 heroTitle: document.getElementById('dsHeroTitle').value || '',
                 heroSubtitle: document.getElementById('dsHeroSubtitle').value || '',
+                thumbImg: thumbImg.src,
                 title: document.getElementById('dsEditName').value,
                 desc: document.getElementById('dsEditDesc').value,
                 lead: document.getElementById('dsEditLead').value || '',
@@ -916,27 +1020,73 @@
             return data;
         }
 
-        panel.querySelectorAll('.dataspace-ops .op-link').forEach(function (link) {
-            if (link.textContent.trim() === '编辑') {
+        function bindTableEvents() {
+            panel.querySelectorAll('.dataspace-ops .op-edit').forEach(function (link) {
                 link.addEventListener('click', function () {
                     showEdit(link.closest('tr'));
                 });
-            }
-        });
-
-        panel.querySelectorAll('.dataspace-ops .op-preview').forEach(function (link, index) {
-            link.addEventListener('click', function () {
-                if (spacePreviewData[index]) {
-                    localStorage.setItem('ds-preview-data', JSON.stringify(spacePreviewData[index]));
-                    window.open('space-preview.html', '_blank');
-                }
             });
-        });
+
+            panel.querySelectorAll('.dataspace-ops .op-preview').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    var index = Number(link.closest('tr').getAttribute('data-index'));
+                    if (spacePreviewData[index]) {
+                        localStorage.setItem('ds-preview-data', JSON.stringify(spacePreviewData[index]));
+                        window.open('space-preview.html', '_blank');
+                    }
+                });
+            });
+
+            panel.querySelectorAll('.dataspace-ops .op-toggle-status').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var row = btn.closest('tr');
+                    var index = Number(row.getAttribute('data-index'));
+                    var title = row.querySelector('.dataspace-title').textContent.trim();
+                    var statusSpan = row.querySelector('.status-online, .status-offline');
+                    var isOnline = statusSpan.classList.contains('status-online');
+                    var action = isOnline ? '下线' : '上线';
+
+                    GlobalDialog.confirm({
+                        title: action + '确认',
+                        desc: '您确定要' + action + '【' + title + '】的记录吗？',
+                        confirmText: '确定' + action,
+                        cancelText: '取消',
+                        onConfirm: function () {
+                            if (isOnline) {
+                                statusSpan.className = 'status-offline';
+                                statusSpan.textContent = '未上线';
+                                btn.className = 'op-link op-online op-toggle-status';
+                                btn.textContent = '上线';
+                                spacePreviewData[index].status = 'offline';
+                            } else {
+                                statusSpan.className = 'status-online';
+                                statusSpan.textContent = '已上线';
+                                btn.className = 'op-link op-offline op-toggle-status';
+                                btn.textContent = '下线';
+                                spacePreviewData[index].status = 'online';
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        renderTable();
+        bindTableEvents();
 
         document.getElementById('dsEditBack').addEventListener('click', hideEdit);
         document.getElementById('dsEditCancelBtn').addEventListener('click', hideEdit);
 
         document.getElementById('dsEditSaveBtn').addEventListener('click', function () {
+            if (currentEditIndex > -1) {
+                var nextData = buildPreviewData();
+                nextData.heroTitle = nextData.heroTitle || nextData.title;
+                nextData.desc = nextData.desc || nextData.heroSubtitle;
+                nextData.status = (spacePreviewData[currentEditIndex] || {}).status || 'online';
+                spacePreviewData[currentEditIndex] = nextData;
+                renderTable();
+                bindTableEvents();
+            }
             GlobalDialog.success({
                 title: '保存成功',
                 desc: '可信数据空间内容已更新',
@@ -982,36 +1132,6 @@
         if (heroBadgeInput) heroBadgeInput.addEventListener('input', function () { heroBadgePreview.textContent = this.value; });
         if (heroTitleInput) heroTitleInput.addEventListener('input', function () { heroTitlePreview.textContent = this.value; });
         if (heroSubInput) heroSubInput.addEventListener('input', function () { heroSubPreview.textContent = this.value; });
-
-        panel.querySelectorAll('.dataspace-ops .op-toggle-status').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var row = btn.closest('tr');
-                var title = row.querySelector('.dataspace-title').textContent.trim();
-                var statusSpan = row.querySelector('.status-online, .status-offline');
-                var isOnline = statusSpan.classList.contains('status-online');
-                var action = isOnline ? '下线' : '上线';
-
-                GlobalDialog.confirm({
-                    title: action + '确认',
-                    desc: '您确定要' + action + '【' + title + '】的记录吗？',
-                    confirmText: '确定' + action,
-                    cancelText: '取消',
-                    onConfirm: function () {
-                        if (isOnline) {
-                            statusSpan.className = 'status-offline';
-                            statusSpan.textContent = '未上线';
-                            btn.className = 'op-link op-online op-toggle-status';
-                            btn.textContent = '上线';
-                        } else {
-                            statusSpan.className = 'status-online';
-                            statusSpan.textContent = '已上线';
-                            btn.className = 'op-link op-offline op-toggle-status';
-                            btn.textContent = '下线';
-                        }
-                    }
-                });
-            });
-        });
 
         document.getElementById('dataspaceSearchBtn').addEventListener('click', function () {
             var keyword = document.getElementById('dataspaceKeyword').value.trim();

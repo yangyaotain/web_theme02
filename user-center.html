@@ -289,7 +289,7 @@
 
     <div class="admin-layout">
         <!-- Left Sidebar -->
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" data-user-center-sidebar data-active="member">
             <div class="sidebar-title">用户中心</div>
             <nav class="sidebar-nav">
                 <a class="sidebar-item disabled">
@@ -330,6 +330,10 @@
                 <a class="sidebar-item disabled">
                     <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                     <span>我的需求</span>
+                </a>
+                <a href="user-consults.html?menu=consults" class="sidebar-item">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    <span>我的咨询</span>
                 </a>
                 <a class="sidebar-item disabled">
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
@@ -783,6 +787,7 @@
         renderMember(sel.value);
     })();
     </script>
+    <script src="js/user-center-layout.js"></script>
     <script src="js/admin-topbar.js"></script>
 </body>
 </html>

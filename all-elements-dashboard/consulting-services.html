@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 数据咨询</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 复用统一主题配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 - 数据咨询默认选中 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 右侧空占位 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 模块标题 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-comments text-primary"></i>
+        <span>数据咨询全景</span>
+      </h2>
+    </div>
+
+    <!-- 第一行：指标卡片区域（8个指标） -->
+    <div class="grid grid-cols-4 md:grid-cols-8 gap-6 mb-6">
+      <!-- 咨询服务总量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">咨询服务总量</p>
+            <h3 class="text-2xl font-bold text-white">28,568</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-comments text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据治理与合规咨询 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据治理与合规咨询</p>
+            <h3 class="text-2xl font-bold text-white">6,890</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.8% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-table text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据资产入表咨询 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据资产入表咨询</p>
+            <h3 class="text-2xl font-bold text-white">5,420</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>9.6% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-search text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据资源托管运营 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据资源托管运营</p>
+            <h3 class="text-2xl font-bold text-white">4,850</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>18.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-shield text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据资产融资咨询 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据资产融资咨询</p>
+            <h3 class="text-2xl font-bold text-white">3,980</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>11.5% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-400">
+            <i class="fa fa-check-square-o text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据资产全过程管理 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据资产全过程管理</p>
+            <h3 class="text-2xl font-bold text-white">3,650</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>21.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400">
+            <i class="fa fa-code text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 企业数据产品孵化 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">企业数据产品孵化</p>
+            <h3 class="text-2xl font-bold text-white">3,778</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>14.9% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+            <i class="fa fa-filter text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 总交易金额（万元） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">总交易金额（万元）</p>
+            <h3 class="text-2xl font-bold text-white">89,652</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>28.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-money text-lg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：数据咨询成交趋势、数据咨询行业分布 -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- 数据咨询成交趋势（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-purple-400"></i>
+            <span>数据咨询成交趋势</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="consultationDealTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 数据咨询行业分布（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-secondary"></i>
+            <span>数据咨询行业分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="consultationIndustryChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三行：数据咨询类型分布、服务报价分布、热门咨询服务TOP10 -->
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 数据咨询类型分布（饼图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-pie-chart text-primary"></i>
+            <span>数据咨询类型分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="consultationDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 服务报价分布（横向柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-accent"></i>
+            <span>服务报价分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px]">
+          <canvas id="servicePriceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 热门咨询服务top10 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-trophy text-yellow-400"></i>
+            <span>热门咨询服务TOP10</span>
+          </h3>
+        </div>
+        <div class="space-y-3 h-[280px] overflow-y-auto scrollbar-hide pr-2">
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">1</span>
+              <span class="text-sm truncate max-w-[140px]">企业数据资产入表全流程咨询</span>
+            </div>
+            <span class="text-sm text-secondary">2,856</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">2</span>
+              <span class="text-sm truncate max-w-[140px]">数据合规性尽调服务</span>
+            </div>
+            <span class="text-sm text-secondary">2,450</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs">3</span>
+              <span class="text-sm truncate max-w-[140px]">数据质量评估与优化方案</span>
+            </div>
+            <span class="text-sm text-secondary">1,980</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">4</span>
+              <span class="text-sm truncate max-w-[140px]">跨境数据合规咨询</span>
+            </div>
+            <span class="text-sm text-secondary">1,850</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">5</span>
+              <span class="text-sm truncate max-w-[140px]">数据产品开发全流程指导</span>
+            </div>
+            <span class="text-sm text-secondary">1,620</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">6</span>
+              <span class="text-sm truncate max-w-[140px]">数据治理体系搭建咨询</span>
+            </div>
+            <span class="text-sm text-secondary">1,450</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">7</span>
+              <span class="text-sm truncate max-w-[140px]">数据安全等级保护测评</span>
+            </div>
+            <span class="text-sm text-secondary">1,280</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">8</span>
+              <span class="text-sm truncate max-w-[140px]">数据质量监控体系建设</span>
+            </div>
+            <span class="text-sm text-secondary">1,150</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">9</span>
+              <span class="text-sm truncate max-w-[140px]">数据资产价值评估服务</span>
+            </div>
+            <span class="text-sm text-secondary">980</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">10</span>
+              <span class="text-sm truncate max-w-[140px]">数据脱敏方案咨询</span>
+            </div>
+            <span class="text-sm text-secondary">850</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: { size: 11 },
+            padding: 15
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 10,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0'
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        }
+      },
+      animation: { duration: 1500, easing: 'easeOutQuart' }
+    };
+
+    // 1. 数据咨询类型分布饼图（优化记录数和占比展示）
+    const consultationDistributionCtx = document.getElementById('consultationDistributionChart').getContext('2d');
+    // 定义数据
+    const consultationData = {
+      labels: ['数据治理与合规咨询', '数据资产入表咨询', '数据资源托管运营', '数据资产融资咨询', '数据资产全过程管理', '企业数据产品孵化'],
+      values: [6890, 5420, 4850, 3980, 3650, 3778]
+    };
+    // 计算总和
+    const total = consultationData.values.reduce((a, b) => a + b, 0);
+    // 初始化饼图
+    new Chart(consultationDistributionCtx, {
+      type: 'doughnut',
+      data: {
+        labels: consultationData.labels,
+        datasets: [{
+          data: consultationData.values,
+          backgroundColor: [
+            'rgba(15, 198, 194, 0.7)',
+            'rgba(79, 110, 247, 0.7)',
+            'rgba(168, 85, 247, 0.7)',
+            'rgba(234, 179, 8, 0.7)',
+            'rgba(34, 197, 94, 0.7)',
+            'rgba(239, 68, 68, 0.7)'
+          ],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: { size: 11 },
+              padding: 15,
+              // 图例显示记录数
+              callback: function(label, index) {
+                const value = consultationData.values[index];
+                const percentage = ((value / total) * 100).toFixed(1) + '%';
+                return `${label} (${value}条, ${percentage})`;
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: 'rgba(32, 165, 101, 0.28)',
+            borderWidth: 1,
+            padding: 10,
+            titleColor: '#fff',
+            bodyColor: '#e2e8f0',
+            // 提示框显示详细的记录数和占比
+            callbacks: {
+              label: function(context) {
+                const value = context.raw;
+                const percentage = ((value / total) * 100).toFixed(2) + '%';
+                return [
+                  `记录数: ${value} 条`,
+                  `占比: ${percentage}`,
+                  `总计: ${total} 条`
+                ];
+              },
+              title: function(context) {
+                return context[0].label;
+              }
+            }
+          }
+        },
+        scales: {},
+        animation: { duration: 1500, easing: 'easeOutQuart' }
+      }
+    });
+
+    // 2. 服务报价分布横向柱状图
+    const servicePriceCtx = document.getElementById('servicePriceChart').getContext('2d');
+    new Chart(servicePriceCtx, {
+      type: 'bar',
+      data: {
+        labels: ['5000以下', '5001-10000', '10001-15000', '15001-20000', '20000以上', '面议'],
+        datasets: [{
+          label: '服务数量',
+          data: [8560, 7890, 5680, 3250, 2150, 1038],
+          backgroundColor: 'rgba(79, 110, 247, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        ...chartOptions,
+        indexAxis: 'y', // 横向柱状图
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          y: {
+            ...chartOptions.scales.y,
+            ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+          },
+          x: {
+            ...chartOptions.scales.x,
+            title: {
+              display: true,
+              text: '金额（万元）',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }
+          }
+        }
+      }
+    });
+
+    // 3. 数据咨询行业分布（普通柱状图-总记录数）
+    const consultationIndustryCtx = document.getElementById('consultationIndustryChart').getContext('2d');
+    new Chart(consultationIndustryCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [{
+          label: '总记录数',
+          data: [4950, 4180, 3820, 3620, 3280, 3150, 3050, 2850, 2680, 2550],
+          backgroundColor: 'rgba(15, 198, 194, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          },
+          y: {
+            ...chartOptions.scales.y,
+            title: {
+              display: true,
+              text: '总记录数',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }
+          }
+        }
+      }
+    });
+
+    // 4. 数据咨询成交趋势（季度堆积柱状图-咨询量/成交量）
+    const consultationDealTrendCtx = document.getElementById('consultationDealTrendChart').getContext('2d');
+    new Chart(consultationDealTrendCtx, {
+      type: 'bar',
+      data: {
+        labels: ['第一季度', '第二季度', '第三季度', '第四季度'],
+        datasets: [
+          // 数据治理与合规咨询
+          {
+            label: '数据治理与合规咨询-咨询量',
+            data: [1500, 1800, 2000, 2200],
+            backgroundColor: 'rgba(15, 198, 194, 0.6)',
+            borderRadius: 4,
+            stack: 'stack1'
+          },
+          {
+            label: '数据治理与合规咨询-成交量',
+            data: [800, 1000, 1200, 1500],
+            backgroundColor: 'rgba(15, 198, 194, 0.9)',
+            borderRadius: 4,
+            stack: 'stack1'
+          },
+          // 数据资产入表咨询
+          {
+            label: '数据资产入表-咨询量',
+            data: [1200, 1400, 1600, 1800],
+            backgroundColor: 'rgba(114, 46, 209, 0.6)',
+            borderRadius: 4,
+            stack: 'stack2'
+          },
+          {
+            label: '数据资产入表-成交量',
+            data: [600, 800, 900, 1100],
+            backgroundColor: 'rgba(114, 46, 209, 0.9)',
+            borderRadius: 4,
+            stack: 'stack2'
+          },
+          // 数据资源托管运营
+          {
+            label: '数据资源托管运-咨询量',
+            data: [1000, 1100, 1300, 1500],
+            backgroundColor: 'rgba(168, 85, 247, 0.6)',
+            borderRadius: 4,
+            stack: 'stack3'
+          },
+          {
+            label: '数据资源托管运-成交量',
+            data: [500, 700, 800, 900],
+            backgroundColor: 'rgba(168, 85, 247, 0.9)',
+            borderRadius: 4,
+            stack: 'stack3'
+          },
+          // 数据资产融资咨询
+          {
+            label: '数据资产融资咨询-咨询量',
+            data: [900, 1000, 1100, 1300],
+            backgroundColor: 'rgba(234, 179, 8, 0.6)',
+            borderRadius: 4,
+            stack: 'stack4'
+          },
+          {
+            label: '数据资产融资咨询-成交量',
+            data: [400, 600, 700, 800],
+            backgroundColor: 'rgba(234, 179, 8, 0.9)',
+            borderRadius: 4,
+            stack: 'stack4'
+          },
+          // 数据资产全过程管理
+          {
+            label: '数据资产全过程管理-咨询量',
+            data: [800, 900, 1000, 1200],
+            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+            borderRadius: 4,
+            stack: 'stack5'
+          },
+          {
+            label: '数据资产全过程管理-成交量',
+            data: [350, 500, 600, 750],
+            backgroundColor: 'rgba(34, 197, 94, 0.9)',
+            borderRadius: 4,
+            stack: 'stack5'
+          },
+          // 企业数据产品孵化
+          {
+            label: '企业数据产品孵化-咨询量',
+            data: [850, 950, 1100, 1300],
+            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+            borderRadius: 4,
+            stack: 'stack6'
+          },
+          {
+            label: '企业数据产品孵化-成交量',
+            data: [400, 550, 700, 850],
+            backgroundColor: 'rgba(239, 68, 68, 0.9)',
+            borderRadius: 4,
+            stack: 'stack6'
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: 'rgba(255, 255, 255, 0.7)',
+              font: { size: 9 },
+              padding: 8
+            }
+          }
+        },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            stacked: true,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 10 }
+            }
+          },
+          y: {
+            ...chartOptions.scales.y,
+            stacked: true,
+            title: {
+              display: true,
+              text: '记录数',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

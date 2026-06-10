@@ -4,37 +4,56 @@
  * 用法：在页面 topbar-right 区域放置 <div id="adminUserArea"></div>，
  *       引入此脚本后自动注入 首页链接 + 通知铃 + 用户下拉面板。
  *
- * 修改用户信息或菜单只需改此文件，所有后台页面自动生效。
+ * 用户信息和菜单来自 user-menu-config.js，所有后台页面自动生效。
  */
 (function () {
-    var USER = {
-        name: 'gf_demo01',
-        company: 'xxx科技有限公司',
-        tags: ['数据提供方', '数据需求方']
-    };
+    function loadLGUserMenuConfig(callback) {
+        if (window.LG_USER_MENU_CONFIG) {
+            callback(window.LG_USER_MENU_CONFIG);
+            return;
+        }
 
-    var MENU = [
-        { label: '用户中心', href: 'user-center.html' },
-        { label: '管理中心', href: '#' },
-        { label: '工作台', href: 'workbench.html' },
-        { label: '运营中心', href: 'operation-center.html' },
-        { label: '运维中心', href: 'maintenance-center.html' },
-        { label: '可视化大屏', href: '#' },
-        { label: '智能问数', href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' },
-        { label: '公共数据运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
-        { label: '可信数据空间', href: 'https://lgdata.lggov.cn/index', target: '_blank' },
-        { label: '数据开发平台', href: 'data-dev-system.html', target: '_blank' }
-    ];
+        if (window.__lgUserMenuConfigLoading) {
+            document.addEventListener('lg-user-menu-config-ready', function () {
+                callback(window.LG_USER_MENU_CONFIG);
+            }, { once: true });
+            return;
+        }
 
-    var tagsHTML = USER.tags.map(function (t) {
-        return '<span class="user-tag">' + t + '</span>';
-    }).join('');
+        window.__lgUserMenuConfigLoading = true;
+        var script = document.createElement('script');
+        script.src = 'js/user-menu-config.js';
+        script.onload = function () {
+            window.__lgUserMenuConfigLoading = false;
+            callback(window.LG_USER_MENU_CONFIG);
+        };
+        script.onerror = function () {
+            window.__lgUserMenuConfigLoading = false;
+            callback(null);
+        };
+        document.head.appendChild(script);
+    }
 
-    var menuHTML = MENU.map(function (m) {
-        return '<a href="' + m.href + '" class="user-menu-item"' + (m.target ? ' target="' + m.target + '"' : '') + '>' + m.label + '</a>';
-    }).join('');
+    function renderAdminUserArea() {
+        var menuConfig = window.LG_USER_MENU_CONFIG || {};
+        var configUser = menuConfig.user || {};
+        var USER = {
+            name: configUser.accountName || 'gf_demo01',
+            company: configUser.company || 'xxx科技有限公司',
+            tags: configUser.tags || ['数据提供方', '数据需求方']
+        };
 
-    var html = ''
+        var MENU = menuConfig.items || [];
+
+        var tagsHTML = USER.tags.map(function (t) {
+            return '<span class="user-tag">' + t + '</span>';
+        }).join('');
+
+        var menuHTML = MENU.map(function (m) {
+            return '<a href="' + m.href + '" class="user-menu-item"' + (m.target ? ' target="' + m.target + '"' : '') + '>' + m.label + '</a>';
+        }).join('');
+
+        var html = ''
         + '<a href="index.html" class="topbar-home">'
         +     '<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'
         +     '首页'
@@ -69,11 +88,14 @@
         +     '</div>'
         + '</div>';
 
-    var el = document.getElementById('adminUserArea');
-    if (el) {
-        el.innerHTML = html;
-        bindMessageDropdown(el);
+        var el = document.getElementById('adminUserArea');
+        if (el) {
+            el.innerHTML = html;
+            bindMessageDropdown(el);
+        }
     }
+
+    loadLGUserMenuConfig(renderAdminUserArea);
 
     function loadMessageCenter(callback) {
         if (window.MessageCenter) {

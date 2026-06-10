@@ -105,6 +105,24 @@
         .term-preview strong {
             color: var(--forest-green); font-weight: 700;
         }
+        .form-group.is-hidden { display: none; }
+        .data-table .link-green {
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .data-table .link-green::before {
+            content: ""; width: 14px; height: 14px; flex-shrink: 0;
+            background: currentColor;
+            -webkit-mask: center / contain no-repeat;
+            mask: center / contain no-repeat;
+        }
+        .data-table a.link-green::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 5c5.5 0 9.5 5.1 9.5 7s-4 7-9.5 7-9.5-5.1-9.5-7S6.5 5 12 5zm0 2C8 7 4.9 10.5 4.5 12c.4 1.5 3.5 5 7.5 5s7.1-3.5 7.5-5C19.1 10.5 16 7 12 7zm0 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 5c5.5 0 9.5 5.1 9.5 7s-4 7-9.5 7-9.5-5.1-9.5-7S6.5 5 12 5zm0 2C8 7 4.9 10.5 4.5 12c.4 1.5 3.5 5 7.5 5s7.1-3.5 7.5-5C19.1 10.5 16 7 12 7zm0 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z'/%3E%3C/svg%3E");
+        }
+        .data-table span.link-green::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.7 7.7 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.7 7.7 0 0 0 17 18l2.4 1 2-3.5-2-1.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.7 7.7 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.7 7.7 0 0 0 17 18l2.4 1 2-3.5-2-1.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z'/%3E%3C/svg%3E");
+        }
 
         .apply-ft {
             padding: 20px 0 0; display: flex; gap: 12px;
@@ -549,7 +567,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="manageTermGroup">
                             <label class="form-label">有效期：</label>
                             <div class="form-value">
                                 <select class="form-select" id="manageTermSelect">
@@ -560,7 +578,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="manageQuantityGroup">
                             <label class="form-label">购买数量：</label>
                             <div class="form-value">
                                 <input class="form-input" type="number" id="manageQuantityInput" min="1" step="1" value="1" placeholder="请输入购买数量">
@@ -690,6 +708,8 @@
     var reasonInput = document.getElementById('manageReasonInput');
     var reasonCountEl = document.getElementById('manageReasonCount');
     var termPreviewEl = document.getElementById('manageTermPreview');
+    var termGroupEl = document.getElementById('manageTermGroup');
+    var quantityGroupEl = document.getElementById('manageQuantityGroup');
     var manageApplicantEl = document.getElementById('manageApplicant');
     var titleEl = document.getElementById('manageInfoTitle');
     var listEl = document.getElementById('manageInfoList');
@@ -705,6 +725,7 @@
 
     sel.addEventListener('change', function() {
         updateInfo(this.value);
+        updateTypeRelatedFields();
     });
     termSel.addEventListener('change', updateTermPreview);
     quantityInput.addEventListener('input', updateTermPreview);
@@ -715,6 +736,19 @@
         if (!d) return;
         titleEl.textContent = d.title;
         listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
+    }
+
+    function isNormalMember(value) {
+        return value === 'normal';
+    }
+
+    function updateTypeRelatedFields() {
+        var hidden = isNormalMember(sel.value);
+        termGroupEl.classList.toggle('is-hidden', hidden);
+        quantityGroupEl.classList.toggle('is-hidden', hidden);
+        termSel.disabled = hidden;
+        quantityInput.disabled = hidden;
+        if (!hidden) updateTermPreview();
     }
 
     function updateReasonCount() {
@@ -836,6 +870,7 @@
     }
 
     function updateTermPreview() {
+        if (isNormalMember(sel.value)) return;
         var quantity = getValidQuantity();
         if (!quantity) {
             termPreviewEl.innerHTML = '请填写大于 0 的整数购买数量';
@@ -860,6 +895,22 @@
 
     function getManageFormValue() {
         var typeData = memberData[sel.value] || {};
+        if (isNormalMember(sel.value)) {
+            return {
+                subject: manageApplicantEl.textContent.trim(),
+                typeValue: sel.value,
+                typeLabel: typeData.title || sel.options[sel.selectedIndex].textContent.trim(),
+                termValue: '',
+                termLabel: '',
+                term: '--',
+                quantity: null,
+                totalMonths: 0,
+                reason: reasonInput.value.trim(),
+                startDate: '--',
+                endDate: '--',
+                rangeText: '--'
+            };
+        }
         var quantity = getValidQuantity();
         if (!quantity) {
             return {
@@ -894,14 +945,14 @@
                 after: nextValue.typeLabel
             });
         }
-        if (currentManageState.termValue !== nextValue.termValue) {
+        if (!isNormalMember(nextValue.typeValue) && !isNormalMember(currentManageState.typeValue) && currentManageState.termValue !== nextValue.termValue) {
             changes.push({
                 label: '有效期',
                 before: getTermLabel(currentManageState.termValue),
                 after: nextValue.termLabel
             });
         }
-        if (currentManageState.quantity !== nextValue.quantity) {
+        if (!isNormalMember(nextValue.typeValue) && !isNormalMember(currentManageState.typeValue) && currentManageState.quantity !== nextValue.quantity) {
             changes.push({
                 label: '购买数量',
                 before: currentManageState.quantity + ' 份',
@@ -926,12 +977,18 @@
             '<div style="padding:10px 12px;background:#f8faf9;border:1px solid #e4e7ed;border-radius:4px">' +
                 '<div style="margin-bottom:6px;color:#303133;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">申请主体：' + escapeHtml(nextValue.subject) + '</div>' +
                 rows +
-                '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #dcdfe6;display:grid;gap:4px">' +
-                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">开通周期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.term) + '，合计 ' + nextValue.totalMonths + ' 个月</span></div>' +
-                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">最终有效期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</span></div>' +
-                    '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">修改原因</span><span style="color:#606266">' + escapeHtml(nextValue.reason || '未填写') + '</span></div>' +
-                '</div>' +
+                buildManageConfirmExtra(nextValue) +
             '</div>' +
+        '</div>';
+    }
+
+    function buildManageConfirmExtra(nextValue) {
+        var periodRows = isNormalMember(nextValue.typeValue) ? '' :
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">开通周期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.term) + '，合计 ' + nextValue.totalMonths + ' 个月</span></div>' +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">最终有效期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</span></div>';
+        return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #dcdfe6;display:grid;gap:4px">' +
+            periodRows +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">修改原因</span><span style="color:#606266">' + escapeHtml(nextValue.reason || '未填写') + '</span></div>' +
         '</div>';
     }
 
@@ -949,7 +1006,7 @@
         if (!changes.length) {
             GlobalDialog.info({
                 title: '暂无修改内容',
-                desc: '会员类型、有效期和购买数量均未发生变化'
+                desc: isNormalMember(nextValue.typeValue) ? '会员类型未发生变化' : '会员类型、有效期和购买数量均未发生变化'
             });
             return;
         }
@@ -962,9 +1019,15 @@
             onConfirm: function() {
                 if (currentManageRow) {
                     currentManageRow.cells[1].textContent = nextValue.typeLabel;
-                    currentManageRow.cells[2].textContent = nextValue.term;
-                    currentManageRow.cells[4].textContent = nextValue.startDate + ' 00:00:00';
-                    currentManageRow.cells[5].textContent = nextValue.endDate + ' 23:59:59';
+                    if (isNormalMember(nextValue.typeValue)) {
+                        currentManageRow.cells[2].textContent = '--';
+                        currentManageRow.cells[4].textContent = '--';
+                        currentManageRow.cells[5].textContent = '--';
+                    } else {
+                        currentManageRow.cells[2].textContent = nextValue.term;
+                        currentManageRow.cells[4].textContent = nextValue.startDate + ' 00:00:00';
+                        currentManageRow.cells[5].textContent = nextValue.endDate + ' 23:59:59';
+                    }
                 }
                 closeManageModal();
                 currentManageState = {
@@ -999,7 +1062,7 @@
         reasonInput.value = '';
         updateReasonCount();
         updateInfo(resolvedType);
-        updateTermPreview();
+        updateTypeRelatedFields();
         currentManageState = {
             subject: subject,
             typeValue: resolvedType,

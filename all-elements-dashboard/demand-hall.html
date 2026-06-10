@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 需求大厅</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 复用统一主题配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 - 需求大厅默认选中 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 右侧空占位 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 模块标题 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-tasks text-primary"></i>
+        <span>需求大厅全景</span>
+      </h2>
+    </div>
+
+    <!-- 第一行：指标卡片区域（6个指标） -->
+    <div class="grid grid-cols-6 gap-6 mb-6">
+      <!-- 需求总量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">需求总量</p>
+            <h3 class="text-3xl font-bold text-white">89,756</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-list-alt text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据需求 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">数据需求</p>
+            <h3 class="text-3xl font-bold text-white">42,890</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>18.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-database text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 服务需求 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">服务需求</p>
+            <h3 class="text-3xl font-bold text-white">25,630</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.5% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-handshake-o text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 应用需求 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">应用需求</p>
+            <h3 class="text-3xl font-bold text-white">18,245</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>9.8% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-mobile text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 响应需求数（原匹配需求数） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">响应需求数</p>
+            <h3 class="text-3xl font-bold text-white">76,892</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>11.2% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center text-green-400">
+            <i class="fa fa-check-circle text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 新增：响应需求成功数 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">响应需求成功数</p>
+            <h3 class="text-3xl font-bold text-white">70,586</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>13.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <i class="fa fa-thumbs-up text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：需求场景分布、需求新增和响应趋势 -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- 需求场景分布（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-secondary"></i>
+            <span>需求场景分布</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="sceneChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 需求新增和响应趋势（折线图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-line-chart text-purple-400"></i>
+            <span>需求新增和响应趋势</span>
+          </h3>
+        </div>
+        <div class="h-[320px]">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三行：需求优先级、需求状态、热门需求top10 -->
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 需求优先级（环形图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-donut-chart text-primary"></i>
+            <span>需求优先级分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="priorityChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 需求状态（饼图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-pie-chart text-accent"></i>
+            <span>需求状态分布</span>
+          </h3>
+        </div>
+        <div class="h-[280px] flex items-center justify-center">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 热门需求top10 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-trophy text-yellow-400"></i>
+            <span>热门需求排行榜TOP10</span>
+          </h3>
+        </div>
+        <div class="space-y-3 h-[280px] overflow-y-auto scrollbar-hide pr-2">
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">1</span>
+              <span class="text-sm truncate max-w-[140px]">政务数据共享接口开发</span>
+            </div>
+            <span class="text-sm text-secondary">28,542</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">2</span>
+              <span class="text-sm truncate max-w-[140px]">交通流量数据分析服务</span>
+            </div>
+            <span class="text-sm text-secondary">25,325</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs">3</span>
+              <span class="text-sm truncate max-w-[140px]">企业信用数据查询接口</span>
+            </div>
+            <span class="text-sm text-secondary">22,690</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">4</span>
+              <span class="text-sm truncate max-w-[140px]">医疗健康数据统计分析</span>
+            </div>
+            <span class="text-sm text-secondary">18,458</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">5</span>
+              <span class="text-sm truncate max-w-[140px]">文旅景点数据可视化</span>
+            </div>
+            <span class="text-sm text-secondary">16,921</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">6</span>
+              <span class="text-sm truncate max-w-[140px]">教育资源数据共享平台</span>
+            </div>
+            <span class="text-sm text-secondary">14,156</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">7</span>
+              <span class="text-sm truncate max-w-[140px]">社保医保数据对接服务</span>
+            </div>
+            <span class="text-sm text-secondary">12,745</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">8</span>
+              <span class="text-sm truncate max-w-[140px]">环境监测数据实时推送</span>
+            </div>
+            <span class="text-sm text-secondary">10,890</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">9</span>
+              <span class="text-sm truncate max-w-[140px]">不动产登记数据查询</span>
+            </div>
+            <span class="text-sm text-secondary">9,654</span>
+          </div>
+          <div class="flex items-center justify-between p-2 bg-dark rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-gray-300 text-dark flex items-center justify-center text-xs">10</span>
+              <span class="text-sm truncate max-w-[140px]">企业工商数据接口开发</span>
+            </div>
+            <span class="text-sm text-secondary">8,487</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: { size: 11 },
+            padding: 15
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 10,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0',
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed !== null) {
+                // 饼图/环形图显示数量和比例
+                if (context.chart.config.type === 'doughnut' || context.chart.config.type === 'pie') {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = ((context.parsed / total) * 100).toFixed(1) + '%';
+                  label += `${context.parsed} (${percentage})`;
+                } else {
+                  label += context.parsed;
+                }
+              }
+              return label;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        }
+      },
+      animation: { duration: 1500, easing: 'easeOutQuart' }
+    };
+
+    // 1. 需求优先级环形图（移除坐标轴）
+    const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+    new Chart(priorityCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['紧急', '较高', '普通'],
+        datasets: [{
+          data: [15680, 32540, 41536],
+          backgroundColor: ['rgba(239, 68, 68, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(15, 198, 194, 0.7)'],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        ...chartOptions,
+        cutout: '60%',
+        plugins: {
+          ...chartOptions.plugins,
+          legend: { position: 'bottom' }
+        },
+        // 移除坐标轴
+        scales: {
+          x: {
+            display: false
+          },
+          y: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // 2. 需求状态饼图（移除坐标轴）
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+      type: 'pie',
+      data: {
+        labels: ['匹配中', '已截止'],
+        datasets: [{
+          data: [76892, 12864],
+          backgroundColor: ['rgba(32, 165, 101, 0.72)', 'rgba(79, 110, 247, 0.7)'],
+          borderColor: '#142B23',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: { position: 'bottom' }
+        },
+        // 移除坐标轴
+        scales: {
+          x: {
+            display: false
+          },
+          y: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // 3. 需求场景分布柱状图
+    const sceneCtx = document.getElementById('sceneChart').getContext('2d');
+    new Chart(sceneCtx, {
+      type: 'bar',
+      data: {
+        labels: ['政务服务', '交通出行', '医疗健康', '教育文化', '社保民政', '生态环境', '市场监管', '不动产', '税务服务', '公共安全'],
+        datasets: [{
+          label: '需求数量',
+          data: [18500, 12600, 9800, 8500, 7600, 6200, 5800, 4500, 3800, 2456],
+          backgroundColor: 'rgba(15, 198, 194, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 4. 需求新增和响应趋势折线图
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        datasets: [
+          {
+            label: '新增需求',
+            data: [5200, 6800, 7500, 6900, 8200, 9500, 8800, 9200, 8500, 9800, 10500, 11200],
+            borderColor: 'rgba(32, 165, 101, 0.8)',
+            backgroundColor: 'rgba(32, 165, 101, 0.12)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: 'rgba(32, 165, 101, 1)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '响应需求', // 同步修改图例文字
+            data: [4800, 6200, 7000, 6500, 7800, 8900, 8200, 8800, 8000, 9200, 9800, 10500],
+            borderColor: 'rgba(114, 46, 209, 0.8)',
+            backgroundColor: 'rgba(114, 46, 209, 0.1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: 'rgba(114, 46, 209, 1)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { position: 'top' } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 10 }
+            }
+          }
+        }
+      }
+    });
+
+    // 页面加载动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bg-dark-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>

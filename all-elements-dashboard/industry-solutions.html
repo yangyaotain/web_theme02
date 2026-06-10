@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 行业方案</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- 复用统一主题配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#4F6EF7',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .table-hover tr:hover {
+        background-color: rgba(32, 165, 101, 0.12);
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <!-- 顶部导航栏 - 行业方案默认选中 -->
+  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
+    <div class="w-full flex justify-between items-center">
+      <!-- 左侧Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <i class="fa fa-line-chart text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
+      </div>
+
+      <!-- 中间导航菜单 -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-dashboard"></i>
+          <span>综合分析</span>
+        </a>
+        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-database"></i>
+          <span>数据资源</span>
+        </a>
+        <a href="data-products.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-shopping-bag"></i>
+          <span>数据产品</span>
+        </a>
+        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-comments"></i>
+          <span>数据咨询</span>
+        </a>
+        <a href="industry-solutions.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
+          <i class="fa fa-sitemap"></i>
+          <span>行业方案</span>
+        </a>
+        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
+          <i class="fa fa-tasks"></i>
+          <span>需求大厅</span>
+        </a>
+      </nav>
+
+      <!-- 右侧空占位 -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <!-- 模块标题 -->
+    <div class="bg-dark-card rounded-xl p-4 mb-6 border border-dark-border">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">
+        <i class="fa fa-sitemap text-primary"></i>
+        <span>行业方案全景</span>
+      </h2>
+    </div>
+
+    <!-- 第一行：指标卡片区域 -->
+    <div class="grid grid-cols-4 gap-6 mb-6">
+      <!-- 解决方案总量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">解决方案总量</p>
+            <h3 class="text-3xl font-bold text-white">2,856</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>15.7% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-sitemap text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 浏览量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">浏览量</p>
+            <h3 class="text-3xl font-bold text-white">896,542</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>22.3% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-eye text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 咨询量 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">咨询量</p>
+            <h3 class="text-3xl font-bold text-white">158,790</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>18.9% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-comments text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成交金额（万元） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">成交金额（万元）</p>
+            <h3 class="text-3xl font-bold text-white">6,892.5</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>28.4% 较上月</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-rmb text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：行业成交分布、时间成交趋势 -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- 行业成交分布（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-accent"></i>
+            <span>行业成交分布</span>
+          </h3>
+        </div>
+        <div class="h-[380px]">
+          <canvas id="industryDealTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 时间成交趋势（折线图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-line-chart text-secondary"></i>
+            <span>时间成交趋势</span>
+          </h3>
+          <!-- 新增行业筛选下拉框 -->
+          <div class="relative">
+            <select id="industrySelect" class="bg-dark-card border border-dark-border text-gray-200 rounded-md px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+              <option value="all">全部行业</option>
+              <option value="finance">金融行业</option>
+              <option value="manufacturing">制造业行业</option>
+              <option value="retail">零售行业</option>
+              <option value="logistics">物流行业</option>
+              <option value="energy">能源行业</option>
+              <option value="telecom">电信行业</option>
+              <option value="medical">医疗行业</option>
+              <option value="education">教育行业</option>
+              <option value="culture">文旅行业</option>
+              <option value="construction">建筑行业</option>
+            </select>
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+              <i class="fa fa-chevron-down text-gray-400 text-xs"></i>
+            </div>
+          </div>
+        </div>
+        <div class="h-[380px]">
+          <canvas id="timeDealTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三行：解决方案行业分布、热门解决方案TOP10 -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- 解决方案行业分布（柱状图） -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-primary"></i>
+            <span>解决方案行业分布</span>
+          </h3>
+        </div>
+        <div class="h-[380px]">
+          <canvas id="solutionIndustryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 热门解决方案TOP10 -->
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-star text-yellow-500"></i>
+            <span>热门解决方案TOP10</span>
+          </h3>
+        </div>
+        <div class="h-[380px] overflow-auto scrollbar-hide">
+          <table class="w-full text-sm table-hover">
+            <thead>
+              <tr class="border-b border-dark-border">
+                <th class="py-3 px-2 text-left text-gray-300 font-medium">排名</th>
+                <th class="py-3 px-2 text-left text-gray-300 font-medium">解决方案名称</th>
+                <th class="py-3 px-2 text-right text-gray-300 font-medium">咨询量</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">1</td>
+                <td class="py-3 px-2">金融风控大数据分析解决方案</td>
+                <td class="py-3 px-2 text-right">28,540</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">2</td>
+                <td class="py-3 px-2">制造业智能生产调度系统</td>
+                <td class="py-3 px-2 text-right">25,680</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">3</td>
+                <td class="py-3 px-2">零售行业用户画像分析平台</td>
+                <td class="py-3 px-2 text-right">22,350</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">4</td>
+                <td class="py-3 px-2">物流行业智能路径规划系统</td>
+                <td class="py-3 px-2 text-right">19,870</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">5</td>
+                <td class="py-3 px-2">能源消耗监测与优化解决方案</td>
+                <td class="py-3 px-2 text-right">18,420</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">6</td>
+                <td class="py-3 px-2">电信用户行为分析平台</td>
+                <td class="py-3 px-2 text-right">16,790</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">7</td>
+                <td class="py-3 px-2">医疗大数据分析与诊断系统</td>
+                <td class="py-3 px-2 text-right">15,380</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">8</td>
+                <td class="py-3 px-2">教育行业个性化学习推荐系统</td>
+                <td class="py-3 px-2 text-right">14,210</td>
+              </tr>
+              <tr class="border-b border-dark-border/50">
+                <td class="py-3 px-2 text-primary font-bold">9</td>
+                <td class="py-3 px-2">文旅行业客流分析平台</td>
+                <td class="py-3 px-2 text-right">12,850</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-2 text-primary font-bold">10</td>
+                <td class="py-3 px-2">建筑行业成本管控解决方案</td>
+                <td class="py-3 px-2 text-right">10,630</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 图表通用配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255, 255, 255, 0.7)',
+            font: { size: 11 },
+            padding: 15
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          borderColor: 'rgba(32, 165, 101, 0.28)',
+          borderWidth: 1,
+          padding: 10,
+          titleColor: '#fff',
+          bodyColor: '#e2e8f0'
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        }
+      },
+      animation: { duration: 1500, easing: 'easeOutQuart' }
+    };
+
+    // 各行业时间成交趋势数据
+    const industryTimeData = {
+      all: [420.5, 480.2, 520.8, 580.4, 650.9, 720.3, 680.7, 750.1, 820.6, 890.8, 950.2, 1020.5],
+      finance: [120.5, 140.2, 160.8, 180.4, 210.9, 240.3, 220.7, 250.1, 280.6, 310.8, 340.2, 370.5],
+      manufacturing: [90.5, 100.2, 110.8, 120.4, 130.9, 140.3, 130.7, 150.1, 160.6, 170.8, 180.2, 190.5],
+      retail: [60.5, 70.2, 80.8, 90.4, 100.9, 110.3, 105.7, 115.1, 125.6, 135.8, 145.2, 155.5],
+      logistics: [50.5, 55.2, 60.8, 65.4, 70.9, 75.3, 72.7, 78.1, 83.6, 88.8, 93.2, 98.5],
+      energy: [40.5, 45.2, 50.8, 55.4, 60.9, 65.3, 62.7, 68.1, 73.6, 78.8, 83.2, 88.5],
+      telecom: [30.5, 35.2, 40.8, 45.4, 50.9, 55.3, 52.7, 58.1, 63.6, 68.8, 73.2, 78.5],
+      medical: [25.5, 30.2, 35.8, 40.4, 45.9, 50.3, 47.7, 52.1, 57.6, 62.8, 67.2, 72.5],
+      education: [20.5, 25.2, 30.8, 35.4, 40.9, 45.3, 42.7, 48.1, 53.6, 58.8, 63.2, 68.5],
+      culture: [15.5, 20.2, 25.8, 30.4, 35.9, 40.3, 37.7, 42.1, 47.6, 52.8, 57.2, 62.5],
+      construction: [10.5, 15.2, 20.8, 25.4, 30.9, 35.3, 32.7, 38.1, 43.6, 48.8, 53.2, 58.5]
+    };
+
+    // 1. 解决方案行业分布柱状图（10个行业分类，解决方案数量）
+    const solutionIndustryCtx = document.getElementById('solutionIndustryChart').getContext('2d');
+    new Chart(solutionIndustryCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造业', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [{
+          label: '解决方案数量',
+          data: [480, 420, 350, 290, 260, 220, 200, 180, 150, 106],
+          backgroundColor: 'rgba(32, 165, 101, 0.72)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 2. 时间成交趋势折线图（1-12月，成交金额）
+    const timeDealTrendCtx = document.getElementById('timeDealTrendChart').getContext('2d');
+    const timeDealChart = new Chart(timeDealTrendCtx, {
+      type: 'line',
+      data: {
+        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        datasets: [{
+          label: '成交金额（万元）',
+          data: industryTimeData.all,
+          borderColor: 'rgba(15, 198, 194, 1)',
+          backgroundColor: 'rgba(15, 198, 194, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: 'rgba(15, 198, 194, 1)',
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+          }
+        }
+      }
+    });
+
+    // 3. 行业成交分布柱状图（10个行业分类，成交金额）
+    const industryDealTrendCtx = document.getElementById('industryDealTrendChart').getContext('2d');
+    new Chart(industryDealTrendCtx, {
+      type: 'bar',
+      data: {
+        labels: ['金融', '制造业', '零售', '物流', '能源', '电信', '医疗', '教育', '文旅', '建筑'],
+        datasets: [{
+          label: '成交金额（万元）',
+          data: [1580.5, 1250.8, 890.2, 750.6, 680.4, 520.9, 480.3, 390.7, 280.1, 168.0],
+          backgroundColor: 'rgba(79, 110, 247, 0.7)',
+          borderRadius: 4,
+          barPercentage: 0.7
+        }]
+      },
+      options: {
+        ...chartOptions,
+        plugins: { ...chartOptions.plugins, legend: { display: false } },
+        scales: {
+          ...chartOptions.scales,
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.6)',
+              font: { size: 9 },
+              rotation: 45
+            }
+          }
+        }
+      }
+    });
+
+    // 行业筛选下拉框事件监听
+    document.getElementById('industrySelect').addEventListener('change', function() {
+      const selectedIndustry = this.value;
+      // 更新折线图数据
+      timeDealChart.data.datasets[0].data = industryTimeData[selectedIndustry];
+      // 重新渲染图表
+      timeDealChart.update();
+    });
+
+    // 页面加载动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bg-dark-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>
