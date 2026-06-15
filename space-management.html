@@ -345,6 +345,7 @@
         .ds-section-head {
             display: flex;
             align-items: center;
+            gap: 8px;
             margin-bottom: 12px;
         }
 
@@ -356,12 +357,13 @@
 
         .ds-stat-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
             gap: 12px;
         }
 
         .ds-stat-item,
         .ds-feature-item {
+            position: relative;
             background: #fafbfc;
             border: 1px solid #ebeef5;
             border-radius: 6px;
@@ -394,11 +396,231 @@
         .ds-feature-item input:focus,
         .ds-feature-item textarea:focus { border-color: var(--forest-green); }
 
+        .ds-editor-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .ds-mini-btn,
+        .ds-delete-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 28px;
+            padding: 0 10px;
+            font-size: 12px;
+            line-height: 1;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: .15s;
+            font-family: inherit;
+        }
+
+        .ds-mini-btn {
+            color: var(--forest-green);
+            background: #fff;
+            border: 1px solid var(--forest-green);
+        }
+
+        .ds-mini-btn:hover { background: #f0fdf4; }
+
+        .ds-delete-btn {
+            color: #f56c6c;
+            background: #fff;
+            border: 1px solid #fbc4c4;
+            flex-shrink: 0;
+        }
+
+        .ds-delete-btn:hover {
+            background: #fef0f0;
+            border-color: #f56c6c;
+        }
+
+        .ds-mini-btn svg,
+        .ds-delete-btn svg {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+
+        .ds-stat-head,
+        .ds-feature-headline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .ds-drag-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .ds-drag-handle svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .ds-drag-handle:active { cursor: grabbing; }
+
+        .ds-dragging {
+            opacity: .2;
+            border-color: #e6a23c;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+            transform: scale(.99);
+            pointer-events: none;
+        }
+
+        .ds-drag-ghost {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            box-sizing: border-box;
+            background: #fff;
+            border: 1px solid var(--forest-green);
+            border-radius: 6px;
+            box-shadow: 0 12px 28px rgba(0,0,0,.18);
+            opacity: .96;
+        }
+
+        body.ds-is-sorting {
+            user-select: none;
+            cursor: grabbing;
+        }
+
+        .ds-sort-active {
+            outline: 1px dashed rgba(32, 165, 101, .35);
+            outline-offset: 4px;
+            border-radius: 6px;
+        }
+
+        .ds-drop-placeholder {
+            min-height: 72px;
+            border: 2px dashed var(--forest-green);
+            border-radius: 6px;
+            background: #f0fdf4;
+            box-shadow: inset 0 0 0 1px rgba(32, 165, 101, .12);
+            pointer-events: none;
+        }
+
+        .ds-drop-placeholder::after {
+            content: '释放到这里';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: inherit;
+            color: var(--forest-green);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .ds-drop-placeholder.section {
+            margin-bottom: 14px;
+        }
+
+        .ds-drop-placeholder.section::after {
+            min-height: 56px;
+        }
+
+        .ds-drag-over {
+            border-color: var(--forest-green);
+            background: #f0fdf4;
+        }
+
         .ds-feature-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
+
+        .ds-feature-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 12px;
+            color: #909399;
+        }
+
+        .ds-feature-editor-row {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 12px;
+            align-items: start;
+        }
+
+        .ds-feature-image-upload {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border: 1px dashed #dcdfe6;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f8faf9;
+            color: #909399;
+            font-size: 11px;
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        .ds-feature-image-upload:hover {
+            border-color: var(--forest-green);
+            background: #f0fdf4;
+            color: var(--forest-green);
+        }
+
+        .ds-feature-image-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        .ds-feature-image-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .ds-feature-image-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: 100%;
+            height: 100%;
+            line-height: 1.2;
+        }
+
+        .ds-feature-image-empty svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .ds-feature-fields {
+            min-width: 0;
+        }
+
+        .ds-feature-fields label:first-child { margin-top: 0; }
 
         .ds-edit-actions {
             display: flex;
@@ -741,7 +963,7 @@
                         <div class="ds-form-row">
                             <div class="ds-form-label">统计指标</div>
                             <div class="ds-form-value">
-                                <div class="ds-stat-grid">
+                                <div class="ds-stat-grid" id="dsStatsEditor">
                                     <div class="ds-stat-item">
                                         <label>数值</label><input value="292">
                                         <label>单位</label><input value="亿+">
@@ -763,29 +985,36 @@
                                         <label>标签</label><input value="数据服务调用量">
                                     </div>
                                 </div>
+                                <div class="ds-editor-toolbar">
+                                    <button type="button" class="ds-mini-btn" id="dsAddStatBtn">
+                                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                        新增指标
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="ds-form-row">
                             <div class="ds-form-label">内容章节</div>
-                            <div class="ds-form-value" id="dsSectionsEditor">
-                                <div class="ds-section-block">
+                            <div class="ds-form-value">
+                                <div id="dsSectionsEditor">
+                                    <div class="ds-section-block">
                                     <div class="ds-section-head">
                                         <span class="ds-section-num">1</span>
                                         <input class="ds-form-input" value="数据空间：可信流通基础设施">
                                     </div>
                                     <textarea class="ds-form-textarea">龙岗可信数据空间是基于隐私计算、区块链等先进技术构建的数据流通基础设施，为企业提供数据安全存储、传输、计算的一体化服务。通过"数据可用不可见"的技术方案，在保障数据安全的前提下，实现跨行业、跨领域的数据共享与价值释放。目前已汇聚业务数据292亿条，形成覆盖政务、产业、民生等多领域的综合性数据资源池。</textarea>
-                                </div>
+                                    </div>
 
-                                <div class="ds-section-block">
+                                    <div class="ds-section-block">
                                     <div class="ds-section-head">
                                         <span class="ds-section-num">2</span>
                                         <input class="ds-form-input" value="&ldquo;1+N&rdquo;授权运营体系">
                                     </div>
                                     <textarea class="ds-form-textarea">建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，以公共数据为牵引，带动行业数据、区域数据的融合应用与价值挖掘。数据服务调用量已突破12.62亿次，涵盖企业工商、地理信息、交通出行、医疗健康等多个领域。</textarea>
-                                </div>
+                                    </div>
 
-                                <div class="ds-section-block">
+                                    <div class="ds-section-block">
                                     <div class="ds-section-head">
                                         <span class="ds-section-num">3</span>
                                         <input class="ds-form-input" value="四大行业数据空间">
@@ -811,14 +1040,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    </div>
 
-                                <div class="ds-section-block">
+                                    <div class="ds-section-block">
                                     <div class="ds-section-head">
                                         <span class="ds-section-num">4</span>
                                         <input class="ds-form-input" value="数商生态：培育数据服务主体">
                                     </div>
                                     <textarea class="ds-form-textarea">龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。通过举办数据应用创新大赛、建设数据要素集聚园区等举措，持续吸引优质数商资源集聚，推动数据要素市场健康发展。</textarea>
+                                    </div>
+                                </div>
+                                <div class="ds-editor-toolbar">
+                                    <button type="button" class="ds-mini-btn" id="dsAddSectionBtn">
+                                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                        新增章节
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -910,47 +1146,246 @@
             document.getElementById('dsHeroSubPreview').textContent = document.getElementById('dsHeroSubtitle').value || '';
         }
 
-        function fillStats(stats) {
-            document.querySelectorAll('#dsEditPanel .ds-stat-grid .ds-stat-item').forEach(function (item, index) {
-                var inputs = item.querySelectorAll('input');
-                var stat = stats[index] || {};
-                if (inputs.length >= 3) {
-                    inputs[0].value = stat.value || '';
-                    inputs[1].value = stat.unit || '';
-                    inputs[2].value = stat.label || '';
-                }
-            });
+        function addIcon() {
+            return '<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>';
         }
 
-        function renderFeatureEditor(features) {
-            if (!features || !features.length) return '';
-            return '<div style="margin-top:8px;">' +
-                '<label style="font-size:12px;color:#909399;margin-bottom:8px;display:block;">特色卡片</label>' +
-                '<div class="ds-feature-grid">' +
-                    features.map(function (feature) {
-                        return '<div class="ds-feature-item">' +
-                            '<label>标题</label><input value="' + escapeHtml(feature.title) + '">' +
-                            '<label>描述</label><textarea rows="2">' + escapeHtml(feature.desc) + '</textarea>' +
-                        '</div>';
-                    }).join('') +
+        function deleteIcon() {
+            return '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
+        }
+
+        function dragIcon() {
+            return '<svg viewBox="0 0 24 24"><path d="M10 4h4v2h-4V4zm0 7h4v2h-4v-2zm0 7h4v2h-4v-2zM5 4h3v2H5V4zm0 7h3v2H5v-2zm0 7h3v2H5v-2zm11-14h3v2h-3V4zm0 7h3v2h-3v-2zm0 7h3v2h-3v-2z"/></svg>';
+        }
+
+        function dragHandleText() {
+            return '<span class="ds-drag-handle">' + dragIcon() + '拖动排序</span>';
+        }
+
+        function renderStatItem(stat) {
+            stat = stat || {};
+            return '<div class="ds-stat-item" draggable="false">' +
+                '<div class="ds-stat-head">' +
+                    dragHandleText() +
+                    '<button type="button" class="ds-delete-btn" data-action="delete-stat">' + deleteIcon() + '删除</button>' +
+                '</div>' +
+                '<label>数值</label><input value="' + escapeHtml(stat.value) + '">' +
+                '<label>单位</label><input value="' + escapeHtml(stat.unit) + '">' +
+                '<label>标签</label><input value="' + escapeHtml(stat.label) + '">' +
+            '</div>';
+        }
+
+        function fillStats(stats) {
+            document.getElementById('dsStatsEditor').innerHTML = (stats || []).map(renderStatItem).join('');
+        }
+
+        function renderFeatureImage(feature) {
+            var image = feature && (feature.img || feature.image) || '';
+            var preview = image ?
+                '<img src="' + escapeHtml(image) + '" alt="特色图片">' :
+                '<span class="ds-feature-image-empty">' +
+                    '<svg viewBox="0 0 24 24"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>' +
+                    '<span>上传图片</span>' +
+                '</span>';
+            return '<label class="ds-feature-image-upload">' +
+                '<span class="ds-feature-image-preview">' + preview + '</span>' +
+                '<input type="file" accept="image/*" class="ds-feature-image-input" style="display:none">' +
+            '</label>' +
+            '<input type="hidden" class="ds-feature-image-value" value="' + escapeHtml(image) + '">';
+        }
+
+        function renderFeatureItem(feature) {
+            feature = feature || {};
+            return '<div class="ds-feature-item" draggable="false">' +
+                '<div class="ds-feature-headline">' +
+                    dragHandleText() +
+                    '<button type="button" class="ds-delete-btn" data-action="delete-feature">' + deleteIcon() + '删除</button>' +
+                '</div>' +
+                '<div class="ds-feature-editor-row">' +
+                    renderFeatureImage(feature) +
+                    '<div class="ds-feature-fields">' +
+                        '<label>标题</label><input class="ds-feature-title-input" value="' + escapeHtml(feature.title) + '">' +
+                        '<label>描述</label><textarea class="ds-feature-desc-input" rows="2">' + escapeHtml(feature.desc) + '</textarea>' +
+                    '</div>' +
                 '</div>' +
             '</div>';
         }
 
+        function renderFeatureEditor(features) {
+            return '<div class="ds-feature-panel">' +
+                '<div class="ds-feature-card-title">' +
+                    '<span>特色卡片</span>' +
+                    '<button type="button" class="ds-mini-btn" data-action="add-feature">' + addIcon() + '新增卡片</button>' +
+                '</div>' +
+                '<div class="ds-feature-grid">' +
+                    (features || []).map(renderFeatureItem).join('') +
+                '</div>' +
+            '</div>';
+        }
+
+        function renderSectionItem(section, index) {
+            section = section || {};
+            return '<div class="ds-section-block" draggable="false">' +
+                '<div class="ds-section-head">' +
+                    '<span class="ds-section-num">' + (index + 1) + '</span>' +
+                    dragHandleText() +
+                    '<input class="ds-form-input ds-section-title-input" value="' + escapeHtml(section.title) + '">' +
+                    '<button type="button" class="ds-delete-btn" data-action="delete-section">' + deleteIcon() + '删除</button>' +
+                '</div>' +
+                '<textarea class="ds-form-textarea ds-section-content-input">' + escapeHtml(section.content) + '</textarea>' +
+                renderFeatureEditor(section.features || []) +
+            '</div>';
+        }
+
+        function refreshSectionNumbers() {
+            document.querySelectorAll('#dsSectionsEditor .ds-section-num').forEach(function (num, index) {
+                num.textContent = index + 1;
+            });
+        }
+
         function fillSections(sections) {
             var editor = document.getElementById('dsSectionsEditor');
-            editor.innerHTML = (sections || []).map(function (section, index) {
-                var content = section.content ?
-                    '<textarea class="ds-form-textarea">' + escapeHtml(section.content) + '</textarea>' : '';
-                return '<div class="ds-section-block">' +
-                    '<div class="ds-section-head">' +
-                        '<span class="ds-section-num">' + (index + 1) + '</span>' +
-                        '<input class="ds-form-input" value="' + escapeHtml(section.title) + '">' +
-                    '</div>' +
-                    content +
-                    renderFeatureEditor(section.features || []) +
-                '</div>';
-            }).join('');
+            editor.innerHTML = (sections || []).map(renderSectionItem).join('');
+        }
+
+        function getDropReference(container, selector, x, y) {
+            var items = Array.prototype.slice.call(container.querySelectorAll(selector + ':not(.ds-dragging)'));
+            var isGrid = selector !== '.ds-section-block';
+
+            if (!isGrid) {
+                for (var listIndex = 0; listIndex < items.length; listIndex++) {
+                    var listBox = items[listIndex].getBoundingClientRect();
+                    if (y < listBox.top + listBox.height / 2) return items[listIndex];
+                }
+                return null;
+            }
+
+            var rowItems = [];
+            items.forEach(function (child) {
+                var box = child.getBoundingClientRect();
+                if (y >= box.top && y <= box.bottom) {
+                    rowItems.push({ element: child, box: box });
+                }
+            });
+
+            if (rowItems.length) {
+                rowItems.sort(function (a, b) { return a.box.left - b.box.left; });
+                for (var rowIndex = 0; rowIndex < rowItems.length; rowIndex++) {
+                    if (x < rowItems[rowIndex].box.left + rowItems[rowIndex].box.width / 2) {
+                        return rowItems[rowIndex].element;
+                    }
+                }
+
+                var rowBottom = Math.max.apply(null, rowItems.map(function (item) { return item.box.bottom; }));
+                for (var nextIndex = 0; nextIndex < items.length; nextIndex++) {
+                    var nextBox = items[nextIndex].getBoundingClientRect();
+                    if (nextBox.top > rowBottom - 1) return items[nextIndex];
+                }
+                return null;
+            }
+
+            for (var fallbackIndex = 0; fallbackIndex < items.length; fallbackIndex++) {
+                var fallbackBox = items[fallbackIndex].getBoundingClientRect();
+                if (y < fallbackBox.top + fallbackBox.height / 2) return items[fallbackIndex];
+            }
+            return null;
+        }
+
+        function createDropPlaceholder(item, selector) {
+            var placeholder = document.createElement('div');
+            placeholder.className = 'ds-drop-placeholder' + (selector === '.ds-section-block' ? ' section' : '');
+            placeholder.style.minHeight = Math.max(56, item.offsetHeight) + 'px';
+            return placeholder;
+        }
+
+        function createDragGhost(item) {
+            var rect = item.getBoundingClientRect();
+            var ghost = item.cloneNode(true);
+            ghost.classList.add('ds-drag-ghost');
+            ghost.style.width = rect.width + 'px';
+            ghost.style.height = rect.height + 'px';
+            document.body.appendChild(ghost);
+            return ghost;
+        }
+
+        function positionDragGhost(ghost, x, y, offsetX, offsetY) {
+            ghost.style.left = (x - offsetX) + 'px';
+            ghost.style.top = (y - offsetY) + 'px';
+        }
+
+        function movePlaceholder(container, selector, placeholder, x, y) {
+            var reference = getDropReference(container, selector, x, y);
+            if (reference == null) {
+                container.appendChild(placeholder);
+            } else if (reference !== placeholder) {
+                container.insertBefore(placeholder, reference);
+            }
+        }
+
+        function bindSortable(container, selector, afterSort) {
+            container.addEventListener('mousedown', function (event) {
+                if (event.button !== 0) return;
+
+                var item = event.target.closest(selector);
+                if (!item || !container.contains(item)) return;
+
+                var nearestSortable = event.target.closest('.ds-stat-item, .ds-section-block, .ds-feature-item');
+                if (nearestSortable !== item || !event.target.closest('.ds-drag-handle')) return;
+
+                event.preventDefault();
+
+                var rect = item.getBoundingClientRect();
+                var offsetX = event.clientX - rect.left;
+                var offsetY = event.clientY - rect.top;
+                var placeholder = createDropPlaceholder(item, selector);
+                var ghost = createDragGhost(item);
+
+                item.parentNode.insertBefore(placeholder, item.nextSibling);
+                item.classList.add('ds-dragging');
+                item.style.display = 'none';
+                container.classList.add('ds-sort-active');
+                document.body.classList.add('ds-is-sorting');
+                positionDragGhost(ghost, event.clientX, event.clientY, offsetX, offsetY);
+
+                function onMouseMove(moveEvent) {
+                    moveEvent.preventDefault();
+                    positionDragGhost(ghost, moveEvent.clientX, moveEvent.clientY, offsetX, offsetY);
+                    movePlaceholder(container, selector, placeholder, moveEvent.clientX, moveEvent.clientY);
+                }
+
+                function cleanup(shouldCommit) {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    document.body.classList.remove('ds-is-sorting');
+                    container.classList.remove('ds-sort-active');
+
+                    if (shouldCommit && placeholder.parentNode) {
+                        placeholder.parentNode.insertBefore(item, placeholder);
+                    }
+
+                    item.style.display = '';
+                    item.classList.remove('ds-dragging');
+
+                    if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+                    if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+                    if (shouldCommit && typeof afterSort === 'function') afterSort();
+                }
+
+                function onMouseUp() {
+                    cleanup(true);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        }
+
+        function bindFeatureSortables(scope) {
+            (scope || document).querySelectorAll('.ds-feature-grid').forEach(function (grid) {
+                if (grid.dataset.sortableBound === 'true') return;
+                grid.dataset.sortableBound = 'true';
+                bindSortable(grid, '.ds-feature-item');
+            });
         }
 
         function showEdit(row) {
@@ -968,6 +1403,7 @@
             setValue('#dsEditLead', data.lead);
             fillStats(data.stats || []);
             fillSections(data.sections || []);
+            bindFeatureSortables(editPanel);
             syncHeroPreview();
             tableWrap.style.display = 'none';
             toolbar.style.display = 'none';
@@ -994,21 +1430,28 @@
                 sections: []
             };
 
-            document.querySelectorAll('#dsEditPanel .ds-stat-grid .ds-stat-item').forEach(function (item) {
+            document.querySelectorAll('#dsStatsEditor .ds-stat-item').forEach(function (item) {
                 var inputs = item.querySelectorAll('input');
                 if (inputs.length >= 3) {
                     data.stats.push({ value: inputs[0].value, unit: inputs[1].value, label: inputs[2].value });
                 }
             });
 
-            document.querySelectorAll('#dsEditPanel .ds-section-block').forEach(function (block) {
-                var titleInput = block.querySelector('.ds-section-head .ds-form-input');
-                var textarea = block.querySelector('.ds-form-textarea');
+            document.querySelectorAll('#dsSectionsEditor .ds-section-block').forEach(function (block) {
+                var titleInput = block.querySelector('.ds-section-title-input');
+                var textarea = block.querySelector('.ds-section-content-input');
                 var features = [];
                 block.querySelectorAll('.ds-feature-item').forEach(function (item) {
-                    var inputs = item.querySelectorAll('input');
-                    var desc = item.querySelector('textarea');
-                    if (inputs.length && desc) features.push({ title: inputs[0].value, desc: desc.value });
+                    var title = item.querySelector('.ds-feature-title-input');
+                    var desc = item.querySelector('.ds-feature-desc-input');
+                    var image = item.querySelector('.ds-feature-image-value');
+                    if (title || desc || image) {
+                        features.push({
+                            title: title ? title.value : '',
+                            desc: desc ? desc.value : '',
+                            img: image ? image.value : ''
+                        });
+                    }
                 });
                 data.sections.push({
                     title: titleInput ? titleInput.value : '',
@@ -1071,8 +1514,79 @@
             });
         }
 
+        function bindEditEvents() {
+            var statsEditor = document.getElementById('dsStatsEditor');
+            var sectionsEditor = document.getElementById('dsSectionsEditor');
+            bindSortable(statsEditor, '.ds-stat-item');
+            bindSortable(sectionsEditor, '.ds-section-block', refreshSectionNumbers);
+
+            document.getElementById('dsAddStatBtn').addEventListener('click', function () {
+                statsEditor.insertAdjacentHTML('beforeend', renderStatItem({ value: '', unit: '', label: '' }));
+            });
+
+            statsEditor.addEventListener('click', function (event) {
+                var btn = event.target.closest('[data-action="delete-stat"]');
+                if (btn) btn.closest('.ds-stat-item').remove();
+            });
+
+            document.getElementById('dsAddSectionBtn').addEventListener('click', function () {
+                var index = sectionsEditor.querySelectorAll('.ds-section-block').length;
+                sectionsEditor.insertAdjacentHTML('beforeend', renderSectionItem({
+                    title: '新增内容章节',
+                    content: '',
+                    features: []
+                }, index));
+                bindFeatureSortables(sectionsEditor);
+            });
+
+            sectionsEditor.addEventListener('click', function (event) {
+                var btn = event.target.closest('[data-action]');
+                if (!btn) return;
+                var action = btn.getAttribute('data-action');
+
+                if (action === 'delete-section') {
+                    btn.closest('.ds-section-block').remove();
+                    refreshSectionNumbers();
+                    return;
+                }
+
+                if (action === 'add-feature') {
+                    var block = btn.closest('.ds-section-block');
+                    var grid = block.querySelector('.ds-feature-grid');
+                    grid.insertAdjacentHTML('beforeend', renderFeatureItem({ title: '', desc: '', img: '' }));
+                    bindFeatureSortables(block);
+                    return;
+                }
+
+                if (action === 'delete-feature') {
+                    btn.closest('.ds-feature-item').remove();
+                }
+            });
+
+            sectionsEditor.addEventListener('change', function (event) {
+                if (!event.target.classList.contains('ds-feature-image-input')) return;
+                if (!event.target.files || !event.target.files[0]) return;
+
+                var item = event.target.closest('.ds-feature-item');
+                var preview = item.querySelector('.ds-feature-image-preview');
+                var hidden = item.querySelector('.ds-feature-image-value');
+                var reader = new FileReader();
+
+                reader.onload = function (readerEvent) {
+                    var img = document.createElement('img');
+                    img.src = readerEvent.target.result;
+                    img.alt = '特色图片';
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                    hidden.value = readerEvent.target.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            });
+        }
+
         renderTable();
         bindTableEvents();
+        bindEditEvents();
 
         document.getElementById('dsEditBack').addEventListener('click', hideEdit);
         document.getElementById('dsEditCancelBtn').addEventListener('click', hideEdit);

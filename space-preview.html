@@ -75,6 +75,8 @@
         .feature-card { background: var(--surface-secondary); border-radius: var(--radius-xl); padding: 24px; display: flex; gap: 16px; box-shadow: var(--shadow-sm); }
         .feature-icon { width: 48px; height: 48px; background: var(--forest-green-100); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .feature-icon svg { width: 24px; height: 24px; fill: var(--forest-green); }
+        .feature-icon.feature-image { background: #f5f7fa; overflow: hidden; }
+        .feature-icon.feature-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .feature-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
         .feature-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
 
@@ -198,7 +200,10 @@
                 if (sec.features && sec.features.length) {
                     secHtml += '<div class="feature-grid">';
                     sec.features.forEach(function (f, fi) {
-                        secHtml += '<div class="feature-card"><div class="feature-icon">' + (featureIcons[fi % featureIcons.length]) + '</div><div><div class="feature-title">' + f.title + '</div><div class="feature-desc">' + f.desc + '</div></div></div>';
+                        var media = f.img ?
+                            '<div class="feature-icon feature-image"><img src="' + f.img + '" alt="' + f.title + '"></div>' :
+                            '<div class="feature-icon">' + (featureIcons[fi % featureIcons.length]) + '</div>';
+                        secHtml += '<div class="feature-card">' + media + '<div><div class="feature-title">' + f.title + '</div><div class="feature-desc">' + f.desc + '</div></div></div>';
                     });
                     secHtml += '</div>';
                 }

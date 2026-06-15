@@ -1384,6 +1384,340 @@
             color: var(--text-tertiary);
         }
 
+        /* 数据资源/数据产品市场列表 */
+        .space-market-layout {
+            display: grid;
+            grid-template-columns: 220px minmax(0, 1fr);
+            gap: 24px;
+            background: #f5f6f8;
+            padding: 24px;
+            margin: -4px -8px 0;
+            border-radius: var(--radius-xl);
+        }
+
+        .space-market-sidebar {
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            box-shadow: var(--shadow-sm);
+            align-self: start;
+            overflow: hidden;
+        }
+
+        .space-market-sidebar-title {
+            padding: 18px 16px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: #f7f7f7;
+        }
+
+        .space-market-category {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 14px 18px;
+            color: var(--text-primary);
+            background: #fff;
+            border: 0;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-market-category:hover,
+        .space-market-category.active {
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+        }
+
+        .space-market-main {
+            min-width: 0;
+        }
+
+        .space-market-search {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 76px;
+            margin-bottom: 22px;
+        }
+
+        .space-market-search input {
+            height: 48px;
+            padding: 0 18px;
+            color: var(--text-primary);
+            background: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px 0 0 4px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .space-market-search input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px var(--forest-green-100);
+        }
+
+        .space-market-search button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            color: #fff;
+            background: var(--forest-green);
+            border: 0;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-market-search button:hover {
+            background: var(--forest-green-600);
+        }
+
+        .space-market-search svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .space-market-filters {
+            display: grid;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .space-market-filter-row {
+            display: grid;
+            grid-template-columns: 86px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .space-market-filter-label {
+            padding-top: 2px;
+            font-size: 14px;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .space-market-filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 34px;
+        }
+
+        .space-market-filter-option {
+            padding: 0;
+            color: var(--text-primary);
+            background: transparent;
+            border: 0;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 22px;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+
+        .space-market-filter-option:hover,
+        .space-market-filter-option.active {
+            color: var(--forest-green);
+            font-weight: 600;
+        }
+
+        .space-market-result-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 50px;
+            padding: 0 24px;
+            margin-bottom: 24px;
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .space-market-count {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .space-market-sort-group {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .space-market-sort {
+            padding: 0;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 0;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .space-market-sort.active,
+        .space-market-sort:hover {
+            color: var(--forest-green);
+            font-weight: 600;
+        }
+
+        .space-market-cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .space-market-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 218px;
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all var(--transition-fast);
+        }
+
+        .space-market-card:hover {
+            border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .space-market-card-title {
+            padding: 14px 20px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .space-market-card-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 16px 20px 18px;
+        }
+
+        .space-market-info-row {
+            display: grid;
+            grid-template-columns: 78px minmax(0, 1fr);
+            gap: 10px;
+            margin-bottom: 13px;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .space-market-info-row .label {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .space-market-info-row .value {
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .space-market-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .space-market-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 18px;
+            color: var(--forest-green);
+            background: var(--forest-green-50);
+            border: 1px solid var(--forest-green-300);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .space-market-action:hover {
+            color: #fff;
+            background: var(--forest-green);
+            text-decoration: none;
+        }
+
+        .space-market-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 26px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .space-market-page-size,
+        .space-market-jump-input {
+            height: 34px;
+            color: var(--text-primary);
+            background: #fff;
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .space-market-page-size {
+            width: 118px;
+            padding: 0 10px;
+        }
+
+        .space-market-page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            color: var(--text-secondary);
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .space-market-page-btn.active {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .space-market-page-btn.disabled {
+            color: var(--text-tertiary);
+            background: #f0f2f5;
+            cursor: not-allowed;
+        }
+
+        .space-market-jump-input {
+            width: 56px;
+            padding: 0 8px;
+            text-align: center;
+            outline: none;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .stats-banner { grid-template-columns: repeat(2, 1fr); }
@@ -1415,6 +1749,14 @@
             .space-search-inner { flex-direction: column; }
             .space-search-input-wrapper { width: 100%; }
             .space-search-btn { width: 100%; }
+            .space-market-layout { grid-template-columns: 1fr; padding: 18px; margin-left: 0; margin-right: 0; }
+            .space-market-cards,
+            .space-market-cards.resource { grid-template-columns: 1fr; }
+            .space-market-filter-row { grid-template-columns: 1fr; gap: 8px; }
+            .space-market-filter-options { gap: 10px 18px; }
+            .space-market-result-bar { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px; }
+            .space-market-search { grid-template-columns: minmax(0, 1fr) 60px; }
+            .space-market-pagination { flex-wrap: wrap; }
         }
         @media (max-width: 1200px) {
             .stats-banner { grid-template-columns: repeat(2, 1fr); }
@@ -3754,6 +4096,267 @@
 
     <script>
     (function() {
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        var marketCategories = ['金融服务', '城市管理', '宏观经济', '智慧教育', '医疗健康', '工业制造', '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用'];
+        var marketIndustries = ['农、林、牧、渔业', '采矿业', '制造业', '电力、热力、燃气及水生产和供应业', '建筑业', '批发和零售业', '交通运输、仓储和邮政业', '住宿和餐饮业', '信息传输、软件和信息技术服务业', '金融业', '房地产业', '租赁和商务服务业', '科学研究和技术服务业', '水利、环境和公共设施管理业', '居民服务、修理和其他服务业', '教育', '卫生和社会工作', '文化、体育和娱乐业', '公共管理、社会保障和社会组织', '国际组织'];
+        var marketSources = ['深圳市龙岗区政务服务和数据管理局', '深圳市龙岗区数据有限公司', '深圳市龙岗区卫生健康局（中共深圳市龙岗区委卫生健康工作委员会）', '深圳市龙岗区智城大数据有限公司'];
+        var resourceTypes = ['库表', '接口资源', '文件', '流式数据'];
+        var productTypes = ['数据集', 'API产品', '数据应用', '数据报告', '其他'];
+        var regionScopes = ['本域功能节点', '全域功能节点'];
+
+        var marketData = {
+            overview: {
+                resources: [
+                    { title: '医保测试数据0605', desc: '医保测试数据0605', date: '2026-06-04', node: '--', source: '深圳市龙岗区智城大数据有限公司' },
+                    { title: '龙岗区交通运输统计数据', desc: '覆盖公共交通客运量、道路通行流量、轨道交通客流等核心统计指标。', date: '2026-05-30', node: '本域功能节点', source: '深圳市龙岗区政务服务和数据管理局' },
+                    { title: '企业服务综合画像数据', desc: '汇聚企业登记、政策申报、信用评价和产业标签等企业服务数据。', date: '2026-05-26', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' }
+                ],
+                products: [
+                    { title: '医保测试产品0605', intro: '医保测试产品0605', type: '数据集', industry: '卫生和社会工作', views: 7 },
+                    { title: '龙岗大运片区时空流量透视报告', intro: '产品依托龙岗“一网统飞”数据，形成区域人流、车流与低空作业热力洞察。', type: '数据报告', industry: '信息传输、软件和信息技术服务业', views: 30 },
+                    { title: '低空航线安全评估服务_API', intro: '本产品依托龙岗区CIM数据、航线数据和气象感知数据提供安全评估。', type: 'API产品', industry: '交通运输、仓储和邮政业', views: 38 },
+                    { title: '产业空间运行态势看板', intro: '面向园区、企业和产业链提供多维指标监测与态势分析。', type: '数据应用', industry: '租赁和商务服务业', views: 22 }
+                ]
+            },
+            public: {
+                resources: [
+                    { title: '公共数据授权目录清单', desc: '覆盖人口、法人、空间地理、交通、教育等公共数据主题目录。', date: '2026-05-28', node: '本域功能节点', source: '深圳市龙岗区政务服务和数据管理局' },
+                    { title: '政务服务事项办理数据', desc: '记录政务服务事项办理、材料免提交、无感申报等服务运行数据。', date: '2026-05-24', node: '本域功能节点', source: '深圳市龙岗区政务服务和数据管理局' },
+                    { title: '城市治理事件归集数据', desc: '归集网格事件、处置流程、问题类型和区域分布等治理数据。', date: '2026-05-20', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' }
+                ],
+                products: [
+                    { title: '公共数据授权调用审计服务', intro: '面向授权数据调用过程提供留痕、用途核验与合规审计。', type: 'API产品', industry: '公共管理、社会保障和社会组织', views: 42 },
+                    { title: '企业画像融合数据集', intro: '融合企业登记、信用、经营与政策匹配数据，支撑企业服务。', type: '数据集', industry: '租赁和商务服务业', views: 35 },
+                    { title: '惠企政策智能推荐报告', intro: '根据企业特征自动匹配可申报政策并输出推荐说明。', type: '数据报告', industry: '公共管理、社会保障和社会组织', views: 27 },
+                    { title: '公共数据目录检索服务', intro: '提供跨主题公共数据目录检索、标签筛选和申请入口聚合。', type: '数据应用', industry: '公共管理、社会保障和社会组织', views: 19 }
+                ]
+            },
+            '0': {
+                resources: [
+                    { title: '低空航路与起降点数据', desc: '包含低空航路、起降点、禁飞区、气象感知点等基础资源。', date: '2026-06-01', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' },
+                    { title: '低空气象感知数据', desc: '提供风速、降水、能见度、温湿度等低空飞行气象观测数据。', date: '2026-05-29', node: '本域功能节点', source: '深圳市龙岗区数据有限公司' },
+                    { title: '无人机巡检任务数据', desc: '覆盖巡检任务、航迹、作业时长、处置结果等低空治理数据。', date: '2026-05-25', node: '全域功能节点', source: '深圳市龙岗区智城大数据有限公司' }
+                ],
+                products: [
+                    { title: '低空航线安全评估服务_API', intro: '基于CIM、气象和航路运行数据提供低空飞行安全评分。', type: 'API产品', industry: '交通运输、仓储和邮政业', views: 38 },
+                    { title: '无人机巡检任务效率分析', intro: '对政务巡检、测绘、应急任务形成效率评估与路线建议。', type: '数据报告', industry: '公共管理、社会保障和社会组织', views: 31 },
+                    { title: '低空经济时空数字底座', intro: '提供三维地图、航线规划、空域协同等低空数据应用能力。', type: '数据应用', industry: '信息传输、软件和信息技术服务业', views: 46 },
+                    { title: '低空物流运行监测报告', intro: '围绕物流航线、配送时效、起降频次和区域覆盖形成分析报告。', type: '数据报告', industry: '交通运输、仓储和邮政业', views: 25 }
+                ]
+            },
+            '1': {
+                resources: [
+                    { title: '具身智能训练语料数据集', desc: '面向机器人感知、操作、导航训练的多模态高质量样本数据。', date: '2026-05-22', node: '本域功能节点', source: '深圳市龙岗区数据有限公司' },
+                    { title: '机器人动作标注数据', desc: '包含抓取、分拣、避障、协作等机器人动作标注样本。', date: '2026-05-18', node: '本域功能节点', source: '深圳市龙岗区数据有限公司' },
+                    { title: '智能制造视觉质检数据', desc: '面向工业视觉检测的缺陷图像、工位标签和质检结果数据。', date: '2026-05-14', node: '全域功能节点', source: '深圳市龙岗区智城大数据有限公司' }
+                ],
+                products: [
+                    { title: '机器人训练数据质量评估服务', intro: '对采集、标注、清洗后的具身智能数据进行质量评分。', type: 'API产品', industry: '制造业', views: 29 },
+                    { title: '具身智能知识库检索应用', intro: '提供机器人行业知识、场景动作和训练语料推荐检索。', type: '数据应用', industry: '科学研究和技术服务业', views: 21 },
+                    { title: '智能制造场景样本数据集', intro: '面向装配、质检、仓储分拣等工业场景提供训练样本。', type: '数据集', industry: '工业制造', views: 34 },
+                    { title: '机器人场景语料推荐服务', intro: '按行业场景推荐训练语料、动作样本和知识库内容。', type: 'API产品', industry: '科学研究和技术服务业', views: 18 }
+                ]
+            },
+            '2': {
+                resources: [
+                    { title: '区域医疗检验互认数据', desc: '覆盖社康机构、区属医院检验结果互认和诊疗辅助数据。', date: '2026-05-19', node: '本域功能节点', source: '深圳市龙岗区卫生健康局（中共深圳市龙岗区委卫生健康工作委员会）' },
+                    { title: 'AI导诊问诊语料数据', desc: '沉淀常见病症、预问诊问题、导诊路径和服务反馈数据。', date: '2026-05-15', node: '本域功能节点', source: '深圳市龙岗区卫生健康局（中共深圳市龙岗区委卫生健康工作委员会）' },
+                    { title: '社康机构服务资源数据', desc: '包含社康机构覆盖、医生排班、服务能力和预约资源数据。', date: '2026-05-12', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' }
+                ],
+                products: [
+                    { title: 'AI龙岗家医智能导诊服务', intro: '基于健康档案与问诊语料提供智能导诊和预问诊服务。', type: 'API产品', industry: '卫生和社会工作', views: 50 },
+                    { title: '区域医学影像共享平台', intro: '整合影像、病理、检验资源，支撑远程会诊和影像共享。', type: '数据应用', industry: '卫生和社会工作', views: 41 },
+                    { title: '个性化健康风险评估服务', intro: '基于检验数据和健康档案输出疾病风险预测建议。', type: 'API产品', industry: '卫生和社会工作', views: 33 },
+                    { title: '检验结果互认分析报告', intro: '面向医疗机构提供检验互认覆盖、使用趋势和服务效果分析。', type: '数据报告', industry: '卫生和社会工作', views: 23 }
+                ]
+            },
+            '3': {
+                resources: [
+                    { title: '龙岗文化IP素材库', desc: '汇聚非遗文化、旅游景点、历史建筑等数字化IP素材资源。', date: '2026-05-16', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' },
+                    { title: '数字创意企业统计数据', desc: '覆盖文化企业规模、园区分布、人才结构和产业营收数据。', date: '2026-05-11', node: '本域功能节点', source: '深圳市龙岗区政务服务和数据管理局' },
+                    { title: '文旅客流与活动数据', desc: '整合景区客流、活动参与、票务预约和空间热力等文旅数据。', date: '2026-05-08', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' }
+                ],
+                products: [
+                    { title: '数字创意内容生成平台', intro: '集成AI文创能力，支持影视、动漫、微短剧等原创内容生成。', type: '数据应用', industry: '文化、体育和娱乐业', views: 37 },
+                    { title: '中国式文化创作大模型API', intro: '支持中文诗词、书法、国画等文化内容智能创作。', type: 'API产品', industry: '文化、体育和娱乐业', views: 28 },
+                    { title: '数字版权确权与交易服务', intro: '基于区块链技术提供文化IP确权、评估和交易服务。', type: '其他', industry: '文化、体育和娱乐业', views: 24 },
+                    { title: '文旅活动人群洞察报告', intro: '基于客流、活动参与和消费数据形成文旅运营洞察。', type: '数据报告', industry: '文化、体育和娱乐业', views: 20 }
+                ]
+            }
+        };
+
+        function getMarketConfig(panel) {
+            var key = panel && panel.dataset ? panel.dataset.panel : 'overview';
+            return marketData[key] || marketData.overview;
+        }
+
+        function getPanelName(panel) {
+            var title = panel ? panel.querySelector('.article-title') : null;
+            return title ? title.textContent.trim() : '可信数据空间';
+        }
+
+        function ensureSixMarketItems(kind, items, panelName) {
+            var nextItems = (items || []).slice(0, 6);
+            var resourceTemplates = [
+                { title: '产业运行基础数据', desc: '汇聚空间内产业主体、服务能力、资源目录和运行态势等基础数据。', date: '2026-05-06', node: '本域功能节点', source: '深圳市龙岗区数据有限公司' },
+                { title: '重点场景服务调用数据', desc: '记录重点业务场景下的数据服务调用、接口响应和使用反馈情况。', date: '2026-05-03', node: '全域功能节点', source: '深圳市龙岗区智城大数据有限公司' },
+                { title: '空间运营监测数据', desc: '覆盖数据接入、授权流通、合规审计和资源活跃度等运营监测指标。', date: '2026-04-29', node: '本域功能节点', source: '深圳市龙岗区政务服务和数据管理局' },
+                { title: '数据服务目录标签数据', desc: '沉淀资源分类、主题标签、服务对象和适用场景等目录治理数据。', date: '2026-04-25', node: '全域功能节点', source: '深圳市龙岗区数据有限公司' },
+                { title: '场景应用成效数据', desc: '面向空间应用场景沉淀服务效果、业务反馈和协同处置结果数据。', date: '2026-04-20', node: '本域功能节点', source: '深圳市龙岗区智城大数据有限公司' },
+                { title: '可信流通审计数据', desc: '记录数据授权、调用留痕、用途核验和审计结果等可信流通数据。', date: '2026-04-16', node: '全域功能节点', source: '深圳市龙岗区政务服务和数据管理局' }
+            ];
+            var productTemplates = [
+                { title: '数据服务目录检索应用', intro: '提供空间资源目录检索、标签筛选和服务申请入口聚合能力。', type: '数据应用', industry: '信息传输、软件和信息技术服务业' },
+                { title: '场景运行分析报告', intro: '围绕重点应用场景输出运行态势、资源使用和服务成效分析。', type: '数据报告', industry: '公共管理、社会保障和社会组织' },
+                { title: '可信数据调用服务_API', intro: '为业务系统提供标准化数据调用、鉴权校验和调用留痕能力。', type: 'API产品', industry: '信息传输、软件和信息技术服务业' },
+                { title: '空间资源主题数据集', intro: '按空间业务主题汇聚形成可申请、可订阅、可分析的数据集。', type: '数据集', industry: '科学研究和技术服务业' },
+                { title: '合规审计辅助服务', intro: '对授权、使用、流向和审计过程提供辅助核验与风险提示。', type: 'API产品', industry: '公共管理、社会保障和社会组织' },
+                { title: '数据应用成效看板', intro: '以可视化方式呈现数据资源接入、调用和场景应用成效。', type: '数据应用', industry: '信息传输、软件和信息技术服务业' }
+            ];
+            var templates = kind === 'resource' ? resourceTemplates : productTemplates;
+
+            for (var i = 0; nextItems.length < 6; i++) {
+                var item = Object.assign({}, templates[i % templates.length]);
+                item.title = panelName.replace('可信数据空间', '').replace('龙岗', '龙岗区') + item.title;
+                nextItems.push(item);
+            }
+            return nextItems;
+        }
+
+        function renderMarketSidebar(kind) {
+            return '<aside class="space-market-sidebar">' +
+                '<div class="space-market-sidebar-title">' + (kind === 'resource' ? '数据资源类目' : '数据产品类目') + '</div>' +
+                marketCategories.map(function (item, index) {
+                    return '<button type="button" class="space-market-category' + (index === 1 ? ' active' : '') + '">' +
+                        '<span>' + escapeHtml(item) + '</span><span>⌄</span>' +
+                    '</button>';
+                }).join('') +
+            '</aside>';
+        }
+
+        function renderFilterRow(label, options, activeIndex) {
+            return '<div class="space-market-filter-row">' +
+                '<div class="space-market-filter-label">' + escapeHtml(label) + '：</div>' +
+                '<div class="space-market-filter-options">' +
+                    options.map(function (item, index) {
+                        return '<button type="button" class="space-market-filter-option' + (index === activeIndex ? ' active' : '') + '">' + escapeHtml(item) + '</button>';
+                    }).join('') +
+                '</div>' +
+            '</div>';
+        }
+
+        function renderMarketFilters(kind) {
+            var rows = [
+                renderFilterRow('所属行业', marketIndustries, -1)
+            ];
+            if (kind === 'resource') {
+                rows.push(renderFilterRow('数据来源', marketSources, -1));
+                rows.push(renderFilterRow('资源类型', resourceTypes, -1));
+            } else {
+                rows.push(renderFilterRow('产品类型', productTypes, -1));
+            }
+            rows.push(renderFilterRow('区域范围', regionScopes, -1));
+            return '<div class="space-market-filters">' + rows.join('') + '</div>';
+        }
+
+        function renderResourceCard(item) {
+            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.desc, item.source].join(' ')) + '">' +
+                '<h3 class="space-market-card-title">' + escapeHtml(item.title) + '</h3>' +
+                '<div class="space-market-card-body">' +
+                    '<div class="space-market-info-row"><span class="label">资源描述:</span><span class="value">' + escapeHtml(item.desc) + '</span></div>' +
+                    '<div class="space-market-info-row"><span class="label">更新时间:</span><span class="value">' + escapeHtml(item.date) + '</span></div>' +
+                    '<div class="space-market-info-row"><span class="label">空间节点:</span><span class="value">' + escapeHtml(item.node) + '</span></div>' +
+                    '<div class="space-market-info-row"><span class="label">数据来源:</span><span class="value">' + escapeHtml(item.source) + '</span></div>' +
+                    '<div class="space-market-actions"><a class="space-market-action" href="data-detail.html">数据详情</a></div>' +
+                '</div>' +
+            '</article>';
+        }
+
+        function renderProductCard(item) {
+            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.intro, item.type, item.industry].join(' ')) + '">' +
+                '<h3 class="space-market-card-title">' + escapeHtml(item.title) + '</h3>' +
+                '<div class="space-market-card-body">' +
+                    '<div class="space-market-info-row"><span class="label">产品介绍:</span><span class="value">' + escapeHtml(item.intro) + '</span></div>' +
+                    '<div class="space-market-info-row"><span class="label">产品类型:</span><span class="value">' + escapeHtml(item.type) + '</span></div>' +
+                    '<div class="space-market-info-row"><span class="label">所属行业:</span><span class="value">' + escapeHtml(item.industry) + '</span></div>' +
+                    '<div class="space-market-actions"><a class="space-market-action" href="product-detail.html">产品详情</a></div>' +
+                '</div>' +
+            '</article>';
+        }
+
+        function renderMarketMain(kind, items) {
+            var label = kind === 'resource' ? '数据资源' : '数据产品';
+            return '<section class="space-market-main" data-market-kind="' + kind + '">' +
+                '<div class="space-market-search">' +
+                    '<input type="text" class="space-market-search-input" placeholder="请输入搜索内容">' +
+                    '<button type="button" class="space-market-search-button" aria-label="搜索"><svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l5.45 5.44-1.42 1.42-5.44-5.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg></button>' +
+                '</div>' +
+                renderMarketFilters(kind) +
+                '<div class="space-market-result-bar">' +
+                    '<div class="space-market-count">共 <strong>' + items.length + '</strong> 个' + label + '</div>' +
+                    '<div class="space-market-sort-group"><button type="button" class="space-market-sort active">默认排序</button><button type="button" class="space-market-sort">更新时间排序</button></div>' +
+                '</div>' +
+                '<div class="space-market-cards ' + kind + '">' +
+                    items.map(kind === 'resource' ? renderResourceCard : renderProductCard).join('') +
+                '</div>' +
+                '<div class="space-market-pagination">' +
+                    '<span>共 ' + items.length + ' 条</span>' +
+                    '<select class="space-market-page-size"><option>9条/页</option><option>18条/页</option></select>' +
+                    '<button type="button" class="space-market-page-btn disabled">‹</button>' +
+                    '<button type="button" class="space-market-page-btn active">1</button>' +
+                    '<button type="button" class="space-market-page-btn">›</button>' +
+                    '<span>前往</span><input class="space-market-jump-input" value="1"><span>页</span>' +
+                '</div>' +
+            '</section>';
+        }
+
+        function renderSpaceMarketTabs() {
+            document.querySelectorAll('.space-tab-content').forEach(function (content) {
+                var subtab = content.dataset.subtab || '';
+                var isResource = subtab.indexOf('resources') === 0;
+                var isProduct = subtab.indexOf('products') === 0;
+                if (!isResource && !isProduct) return;
+
+                var panel = content.closest('.article-panel');
+                var config = getMarketConfig(panel);
+                var kind = isResource ? 'resource' : 'product';
+                var items = ensureSixMarketItems(kind, isResource ? config.resources : config.products, getPanelName(panel));
+                content.innerHTML = '<div class="space-market-layout">' + renderMarketSidebar(kind) + renderMarketMain(kind, items) + '</div>';
+            });
+        }
+
+        function updateMarketCount(marketMain) {
+            var cards = marketMain.querySelectorAll('.space-market-card');
+            var visible = Array.prototype.filter.call(cards, function (card) { return card.style.display !== 'none'; }).length;
+            var kind = marketMain.dataset.marketKind === 'resource' ? '数据资源' : '数据产品';
+            var count = marketMain.querySelector('.space-market-count strong');
+            var pager = marketMain.querySelector('.space-market-pagination span');
+            if (count) count.textContent = visible;
+            if (pager) pager.textContent = '共 ' + visible + ' 条';
+            var label = marketMain.querySelector('.space-market-count');
+            if (label) label.lastChild.textContent = ' 个' + kind;
+        }
+
+        function filterMarketCards(marketMain) {
+            var input = marketMain.querySelector('.space-market-search-input');
+            var keyword = input ? input.value.trim().toLowerCase() : '';
+            marketMain.querySelectorAll('.space-market-card').forEach(function (card) {
+                var text = (card.dataset.cardText || card.textContent || '').toLowerCase();
+                card.style.display = !keyword || text.indexOf(keyword) > -1 ? '' : 'none';
+            });
+            updateMarketCount(marketMain);
+        }
+
+        renderSpaceMarketTabs();
+
         var cards = document.querySelectorAll('.space-card');
         var panels = document.querySelectorAll('.article-panel');
 
@@ -3815,6 +4418,52 @@
                     content.classList.add('active');
                 }
             });
+        });
+
+        document.addEventListener('click', function(e) {
+            var categoryBtn = e.target.closest('.space-market-category');
+            if (categoryBtn) {
+                var sidebar = categoryBtn.closest('.space-market-sidebar');
+                sidebar.querySelectorAll('.space-market-category').forEach(function(btn) { btn.classList.remove('active'); });
+                categoryBtn.classList.add('active');
+                return;
+            }
+
+            var filterBtn = e.target.closest('.space-market-filter-option');
+            if (filterBtn) {
+                var row = filterBtn.closest('.space-market-filter-row');
+                row.querySelectorAll('.space-market-filter-option').forEach(function(btn) { btn.classList.remove('active'); });
+                filterBtn.classList.add('active');
+                return;
+            }
+
+            var sortBtn = e.target.closest('.space-market-sort');
+            if (sortBtn) {
+                var sortGroup = sortBtn.closest('.space-market-sort-group');
+                sortGroup.querySelectorAll('.space-market-sort').forEach(function(btn) { btn.classList.remove('active'); });
+                sortBtn.classList.add('active');
+                return;
+            }
+
+            var searchBtn = e.target.closest('.space-market-search-button');
+            if (searchBtn) {
+                filterMarketCards(searchBtn.closest('.space-market-main'));
+                return;
+            }
+
+            var pageBtn = e.target.closest('.space-market-page-btn');
+            if (pageBtn && !pageBtn.classList.contains('disabled')) {
+                var pager = pageBtn.closest('.space-market-pagination');
+                pager.querySelectorAll('.space-market-page-btn').forEach(function(btn) { btn.classList.remove('active'); });
+                pageBtn.classList.add('active');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (!e.target.classList.contains('space-market-search-input')) return;
+            if (e.key === 'Enter') {
+                filterMarketCards(e.target.closest('.space-market-main'));
+            }
         });
 
         // 分页按钮交互
