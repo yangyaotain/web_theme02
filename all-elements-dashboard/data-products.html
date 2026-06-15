@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script src="dashboard-nav.js" defer></script>
 
   <!-- 复用统一主题配置 -->
   <script>
@@ -52,49 +53,7 @@
   </style>
 </head>
 <body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
-  <!-- 顶部导航栏 - 数据产品默认选中 -->
-  <header class="bg-dark border-b border-dark-border h-16 flex items-center px-8">
-    <div class="w-full flex justify-between items-center">
-      <!-- 左侧Logo -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-          <i class="fa fa-line-chart text-white text-xl"></i>
-        </div>
-        <h1 class="text-xl font-bold text-white">全要素展示驾驶舱</h1>
-      </div>
-
-      <!-- 中间导航菜单 -->
-      <nav class="flex items-center gap-2">
-        <a href="index.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
-          <i class="fa fa-dashboard"></i>
-          <span>综合分析</span>
-        </a>
-        <a href="data-resources.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
-          <i class="fa fa-database"></i>
-          <span>数据资源</span>
-        </a>
-        <a href="data-products.html" class="px-6 py-2 rounded-md bg-primary/10 text-primary border border-primary flex items-center gap-2 font-medium transition-all duration-300 hover:bg-primary/20">
-          <i class="fa fa-shopping-bag"></i>
-          <span>数据产品</span>
-        </a>
-        <a href="consulting-services.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
-          <i class="fa fa-comments"></i>
-          <span>数据咨询</span>
-        </a>
-        <a href="industry-solutions.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
-          <i class="fa fa-sitemap"></i>
-          <span>行业方案</span>
-        </a>
-        <a href="demand-hall.html" class="px-6 py-2 rounded-md hover:bg-dark-card flex items-center gap-2 font-medium transition-all duration-300">
-          <i class="fa fa-tasks"></i>
-          <span>需求大厅</span>
-        </a>
-      </nav>
-
-      <!-- 右侧空占位 -->
-      <div></div>
-    </div>
-  </header>
+  <div data-dashboard-nav data-active="products"></div>
 
   <!-- 主内容区 -->
   <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">

@@ -232,10 +232,49 @@
             color: var(--forest-green); font-size: 15px; font-weight: 700;
         }
 
-        .form-file {
-            font-size: 13px; color: #606266; line-height: 34px;
+        .form-label .required { color: #f56c6c; margin-right: 2px; }
+        .form-file { font-size: 13px; color: #606266; }
+        .voucher-form-group { margin-bottom: 10px; }
+        .voucher-upload { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+        .voucher-input { display: none; }
+        .voucher-trigger {
+            width: 100px; height: 92px; display: inline-flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 8px;
+            font-size: 13px; color: #303133; font-family: inherit;
+            background: #fff; border: 1px dashed #d8e0dc; border-radius: 8px;
+            cursor: pointer; transition: all 0.15s;
         }
-        .form-file input[type="file"] { font-size: 12px; font-family: inherit; }
+        .voucher-trigger:hover,
+        .voucher-trigger:focus {
+            color: var(--forest-green); border-color: var(--forest-green);
+            background: var(--forest-green-50); outline: none;
+        }
+        .voucher-plus { font-size: 26px; line-height: 1; font-weight: 300; }
+        .voucher-file {
+            min-height: 34px; max-width: 220px; padding: 8px 10px;
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #f9fbfa; border: 1px solid #ebeef5; border-radius: 4px;
+            color: #303133; line-height: 1.4;
+        }
+        .voucher-file[hidden] { display: none; }
+        .voucher-file svg { width: 15px; height: 15px; fill: var(--forest-green); flex-shrink: 0; }
+        .voucher-file-name {
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .voucher-remove {
+            width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;
+            border: none; background: transparent; color: #909399; cursor: pointer; border-radius: 3px;
+        }
+        .voucher-remove:hover { color: #f56c6c; background: #fef0f0; }
+        .voucher-remove svg { width: 14px; height: 14px; fill: currentColor; }
+        .voucher-tip {
+            margin-top: 10px; color: #606f7b; font-size: 12px; line-height: 1.7;
+        }
+        .voucher-error {
+            color: #f56c6c; font-size: 12px; line-height: 1.5;
+        }
+        .voucher-error:empty { display: none; }
+        .voucher-error:not(:empty) { margin-top: 4px; }
 
         .form-textarea {
             width: 100%; height: 80px; padding: 8px 10px;
@@ -585,10 +624,25 @@
                                 <div class="selected-price" id="memberSelectedPrice">开通周期：<strong>--</strong></div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">缴费凭证：</label>
+                        <div class="form-group voucher-form-group">
+                            <label class="form-label"><span class="required">*</span>缴费凭证：</label>
                             <div class="form-value form-file">
-                                <input type="file">
+                                <div class="voucher-upload">
+                                    <input class="voucher-input" type="file" id="paymentVoucherInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                                    <button class="voucher-trigger" type="button" id="paymentVoucherTrigger" aria-label="上传缴费凭证">
+                                        <span class="voucher-plus">+</span>
+                                        <span>上传图片</span>
+                                    </button>
+                                    <div class="voucher-file" id="paymentVoucherFile" hidden>
+                                        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 11.5l2.5 3.01L14.5 10l4.5 6H5l3.5-4.5z"/></svg>
+                                        <span class="voucher-file-name" id="paymentVoucherFileName"></span>
+                                        <button class="voucher-remove" type="button" id="paymentVoucherRemove" aria-label="移除缴费凭证">
+                                            <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.3-6.29z"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="voucher-tip">上传单个文件，支持jpg、jpeg、png等格式，单个文件不超过2MB</div>
+                                <div class="voucher-error" id="paymentVoucherError" aria-live="polite"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -598,7 +652,7 @@
                             </div>
                         </div>
                         <div class="apply-ft" style="margin-left: 80px;">
-                            <button class="btn-primary" onclick="this.closest('.modal-mask').classList.remove('show')">
+                            <button class="btn-primary" id="memberApplySubmit">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                                 申请
                             </button>
@@ -703,12 +757,21 @@
         var listEl = document.getElementById('memberInfoList');
         var selectedPriceEl = document.getElementById('memberSelectedPrice');
         var quantityInput = document.getElementById('memberQuantityInput');
+        var voucherInput = document.getElementById('paymentVoucherInput');
+        var voucherTrigger = document.getElementById('paymentVoucherTrigger');
+        var voucherFile = document.getElementById('paymentVoucherFile');
+        var voucherFileName = document.getElementById('paymentVoucherFileName');
+        var voucherRemove = document.getElementById('paymentVoucherRemove');
+        var voucherError = document.getElementById('paymentVoucherError');
+        var applySubmit = document.getElementById('memberApplySubmit');
         var termMonths = {
             month: 1,
             quarter: 3,
             halfYear: 6,
             year: 12
         };
+        var voucherAllowedExt = ['jpg', 'jpeg', 'png'];
+        var voucherMaxSize = 2 * 1024 * 1024;
 
         function formatPrice(price) {
             return Number(price).toLocaleString('zh-CN');
@@ -770,6 +833,28 @@
             renderTerms(d);
         }
 
+        function setVoucherError(message) {
+            voucherError.textContent = message || '';
+        }
+
+        function resetVoucher() {
+            voucherInput.value = '';
+            voucherFileName.textContent = '';
+            voucherFile.hidden = true;
+            setVoucherError('');
+        }
+
+        function validateVoucher(file) {
+            var ext = (file.name.split('.').pop() || '').toLowerCase();
+            if (voucherAllowedExt.indexOf(ext) === -1) {
+                return '请上传jpg、jpeg、png格式的缴费凭证。';
+            }
+            if (file.size > voucherMaxSize) {
+                return '单个文件不超过2MB，请重新选择。';
+            }
+            return '';
+        }
+
         sel.addEventListener('change', function() {
             renderMember(this.value);
         });
@@ -782,6 +867,37 @@
         quantityInput.addEventListener('input', function() {
             var d = memberData[sel.value];
             if (d) renderTermPreview(d);
+        });
+
+        voucherTrigger.addEventListener('click', function() {
+            voucherInput.click();
+        });
+
+        voucherInput.addEventListener('change', function() {
+            var file = this.files && this.files[0];
+            if (!file) {
+                resetVoucher();
+                return;
+            }
+            var error = validateVoucher(file);
+            if (error) {
+                resetVoucher();
+                setVoucherError(error);
+                return;
+            }
+            voucherFileName.textContent = file.name;
+            voucherFile.hidden = false;
+            setVoucherError('');
+        });
+
+        voucherRemove.addEventListener('click', resetVoucher);
+
+        applySubmit.addEventListener('click', function() {
+            if (!voucherInput.files || !voucherInput.files.length) {
+                setVoucherError('请上传缴费凭证。');
+                return;
+            }
+            this.closest('.modal-mask').classList.remove('show');
         });
 
         renderMember(sel.value);
