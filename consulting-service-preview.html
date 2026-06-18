@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咨询服务预览 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        body {
+            padding-top: 46px;
+            background: var(--surface-secondary);
+        }
+        .preview-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            color: #fff;
+            background: linear-gradient(135deg, #0b1a14 0%, #1a3a2a 100%);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .preview-bar svg,
+        .preview-close svg,
+        .preview-action svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .preview-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: var(--forest-green);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .preview-close {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 6px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+        .preview-close:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+        .preview-shell {
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            padding: 40px 32px 56px;
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 40px;
+        }
+        .preview-sidebar {
+            position: sticky;
+            top: 86px;
+            height: fit-content;
+        }
+        .preview-tab-card {
+            display: grid;
+            gap: 12px;
+            padding: 14px;
+            border: 2px solid var(--forest-green);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.08) 100%);
+            box-shadow: var(--shadow-glow);
+        }
+        .preview-tab-card img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: block;
+            border-radius: var(--radius-lg);
+            object-fit: cover;
+            background: #edf1ef;
+        }
+        .preview-tab-card strong {
+            color: var(--forest-green-700);
+            font-size: 15px;
+            line-height: 1.45;
+            font-weight: 800;
+        }
+        .preview-tab-card p {
+            color: var(--text-tertiary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .preview-article {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-2xl);
+            background: var(--surface-elevated);
+            box-shadow: var(--shadow-md);
+        }
+        .preview-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            min-height: 380px;
+            background: #0f1f1a;
+        }
+        .preview-hero-main {
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            align-items: flex-end;
+            background-size: cover;
+            background-position: center;
+        }
+        .preview-hero-main::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%);
+        }
+        .preview-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            padding: 42px;
+            color: #fff;
+        }
+        .preview-kicker {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            background: rgba(32, 165, 101, 0.92);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .preview-title {
+            margin-bottom: 14px;
+            color: #fff;
+            font-size: 40px;
+            line-height: 1.18;
+            font-weight: 800;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+        }
+        .preview-subtitle {
+            max-width: 680px;
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+        .preview-action-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 30px 28px;
+            background: #fff;
+        }
+        .preview-price-label {
+            margin-bottom: 8px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+        .preview-price {
+            color: #e53935;
+            font-size: 34px;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+        .preview-facts {
+            display: grid;
+            gap: 14px;
+            padding: 18px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .preview-fact {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+        }
+        .preview-fact span:first-child {
+            color: var(--text-tertiary);
+        }
+        .preview-fact span:last-child {
+            color: var(--text-primary);
+            font-weight: 700;
+            text-align: right;
+        }
+        .preview-action {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: var(--radius-lg);
+            color: #fff;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .preview-body {
+            padding: 42px;
+        }
+        .preview-lead {
+            margin-bottom: 42px;
+            padding-left: 22px;
+            border-left: 4px solid var(--forest-green);
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.9;
+        }
+        .preview-section {
+            margin-bottom: 46px;
+        }
+        .preview-section:last-child {
+            margin-bottom: 0;
+        }
+        .preview-section-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .preview-section-num {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #fff;
+            background: var(--forest-green);
+            font-size: 18px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .preview-section-title {
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .preview-rich {
+            margin-left: 56px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+        .preview-rich p + p {
+            margin-top: 12px;
+        }
+        .preview-process,
+        .preview-advantages {
+            margin-left: 56px;
+            display: grid;
+            gap: 16px;
+        }
+        .preview-process {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .preview-advantages {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .preview-process-card,
+        .preview-advantage-card {
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            background: var(--surface-secondary);
+        }
+        .preview-process-card {
+            min-height: 150px;
+            padding: 20px;
+        }
+        .preview-process-index {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            border-radius: 50%;
+            color: var(--forest-green-700);
+            background: var(--forest-green-100);
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .preview-card-title {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .preview-card-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+        .preview-advantage-card {
+            display: flex;
+            gap: 16px;
+            padding: 22px;
+        }
+        .preview-advantage-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            color: var(--forest-green);
+            background: var(--forest-green-100);
+            font-weight: 800;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .preview-advantage-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .preview-cases {
+            margin-left: 56px;
+            display: grid;
+            gap: 16px;
+        }
+        .preview-case-card {
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr);
+            gap: 24px;
+            padding: 26px;
+            border: 1px solid rgba(32, 165, 101, 0.16);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.05) 100%);
+        }
+        @media (max-width: 1280px) {
+            .preview-hero { grid-template-columns: 1fr; }
+            .preview-action-card {
+                display: grid;
+                grid-template-columns: 240px minmax(0, 1fr) 220px;
+                align-items: center;
+            }
+            .preview-process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 1024px) {
+            .preview-shell { grid-template-columns: 1fr; }
+            .preview-sidebar { position: static; }
+            .preview-action-card { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .preview-shell { padding: 28px 16px 36px; }
+            .preview-hero-main { min-height: 320px; }
+            .preview-hero-content,
+            .preview-body { padding: 28px; }
+            .preview-title { font-size: 30px; }
+            .preview-process,
+            .preview-advantages,
+            .preview-case-card { grid-template-columns: 1fr; }
+            .preview-rich,
+            .preview-process,
+            .preview-advantages,
+            .preview-cases { margin-left: 0; }
+            .preview-close span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-bar">
+        <svg viewBox="0 0 24 24"><path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg>
+        <span class="preview-badge">预览</span>
+        咨询服务门户展示预览
+        <button class="preview-close" type="button" onclick="window.close()">
+            <svg viewBox="0 0 24 24"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5z"/></svg>
+            <span>关闭预览</span>
+        </button>
+    </div>
+
+    <main class="preview-shell">
+        <aside class="preview-sidebar">
+            <div class="preview-tab-card">
+                <img id="pvThumb" src="images/consult-governance.jpg" alt="服务缩略图">
+                <strong id="pvTabTitle">企业数据治理与合规咨询服务</strong>
+                <p id="pvTabDesc">治理合规、风险识别、整改落地</p>
+            </div>
+        </aside>
+
+        <article class="preview-article">
+            <div class="preview-hero">
+                <div class="preview-hero-main" id="pvHero" style="background-image: url('images/consult-governance.jpg');">
+                    <div class="preview-hero-content">
+                        <div class="preview-kicker" id="pvBadge">数据治理与合规</div>
+                        <h1 class="preview-title" id="pvTitle">企业数据治理与合规咨询服务</h1>
+                        <p class="preview-subtitle" id="pvSubtitle">面向企业数据资源盘点、治理体系建设、合规风险识别和整改落地，帮助企业建立可管理、可审计、可流通的数据资产基础。</p>
+                    </div>
+                </div>
+                <aside class="preview-action-card">
+                    <div>
+                        <div class="preview-price-label">参考价</div>
+                        <div class="preview-price" id="pvPrice">面议</div>
+                    </div>
+                    <div class="preview-facts">
+                        <div class="preview-fact"><span>付费模式</span><span id="pvPayMode">预付费</span></div>
+                        <div class="preview-fact"><span>计量方式</span><span id="pvMeasures">按次数 / 按时长 / 面议</span></div>
+                        <div class="preview-fact"><span>交付方式</span><span id="pvDelivery">线下交付</span></div>
+                    </div>
+                    <button class="preview-action" type="button">
+                        <svg viewBox="0 0 24 24"><path d="M6 7h15l-2 9H8L6 7zM6 7 5 4H2v2h1.6l2.4 12h13v-2H7.6l-.4-2H19l2.4-9H6zm3 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm9 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+                        <span>立即购买</span>
+                    </button>
+                </aside>
+            </div>
+            <div class="preview-body">
+                <p class="preview-lead" id="pvLead"></p>
+                <div id="pvSections"></div>
+            </div>
+        </article>
+    </main>
+
+    <script>
+    (function () {
+        var fallback = {
+            thumb: 'images/consult-governance.jpg',
+            heroImg: 'images/consult-governance.jpg',
+            tabTitle: '企业数据治理与合规咨询服务',
+            tabDesc: '治理合规、风险识别、整改落地',
+            badge: '数据治理与合规',
+            heroTitle: '企业数据治理与合规咨询服务',
+            heroSubtitle: '面向企业数据资源盘点、治理体系建设、合规风险识别和整改落地，帮助企业建立可管理、可审计、可流通的数据资产基础。',
+            lead: '本服务围绕企业数据全生命周期治理与合规经营要求，帮助客户完成数据资源摸底、分类分级、制度流程建设、合规风险整改和数据资产化准备。',
+            delivery: '线下交付',
+            pricing: { payMode: '预付费', measures: ['按次数', '按时长', '面议'], referencePrice: '面议' },
+            sections: []
+        };
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+            });
+        }
+
+        function getReferencePrice(data) {
+            var pricing = data.pricing || {};
+            if (pricing.countPrice) return pricing.countPrice + (pricing.countUnit || '');
+            if (pricing.durationPrice) return pricing.durationPrice + (pricing.durationUnit || '');
+            if ((pricing.measures || []).indexOf('面议') !== -1) return '面议';
+            return pricing.referencePrice || data.price || '面议';
+        }
+
+        function renderRichText(text) {
+            return String(text || '').split('\n').filter(Boolean).map(function (line) {
+                return '<p>' + escapeHtml(line) + '</p>';
+            }).join('');
+        }
+
+        function renderProcess(cards) {
+            return '<div class="preview-process">' + cards.map(function (card, index) {
+                return '<div class="preview-process-card"><div class="preview-process-index">' + String(index + 1).padStart(2, '0') + '</div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
+            }).join('') + '</div>';
+        }
+
+        function renderAdvantages(cards) {
+            return '<div class="preview-advantages">' + cards.map(function (card, index) {
+                var icon = card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="' + escapeHtml(card.title) + '">' : (index + 1);
+                return '<div class="preview-advantage-card"><div class="preview-advantage-icon">' + icon + '</div><div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div></div>';
+            }).join('') + '</div>';
+        }
+
+        function renderCases(cards) {
+            return '<div class="preview-cases">' + cards.map(function (card) {
+                return '<div class="preview-case-card"><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
+            }).join('') + '</div>';
+        }
+
+        function renderCards(section) {
+            var defaultType = section.title.indexOf('流程') > -1 ? 'sequence' : (section.title.indexOf('案例') > -1 ? 'integrated' : 'icon');
+            var cards = (section.cards || section.features || []).map(function (card) {
+                return Object.assign({ type: defaultType }, card);
+            });
+            if (!cards.length) return '';
+            var sequenceCards = cards.filter(function (card) { return card.type === 'sequence'; });
+            var iconCards = cards.filter(function (card) { return card.type === 'icon'; });
+            var integratedCards = cards.filter(function (card) { return card.type === 'integrated'; });
+            return ''
+                + (sequenceCards.length ? renderProcess(sequenceCards) : '')
+                + (iconCards.length ? renderAdvantages(iconCards) : '')
+                + (integratedCards.length ? renderCases(integratedCards) : '');
+        }
+
+        function renderSections(sections) {
+            return (sections || []).map(function (section, index) {
+                return '<section class="preview-section">'
+                    + '<div class="preview-section-head"><span class="preview-section-num">' + (index + 1) + '</span><h2 class="preview-section-title">' + escapeHtml(section.title) + '</h2></div>'
+                    + (section.content ? '<div class="preview-rich">' + renderRichText(section.content) + '</div>' : '')
+                    + renderCards(section)
+                    + '</section>';
+            }).join('');
+        }
+
+        var raw = localStorage.getItem('consult-service-preview-data');
+        var data = fallback;
+        if (raw) {
+            try {
+                data = Object.assign({}, fallback, JSON.parse(raw));
+            } catch (error) {
+                data = fallback;
+            }
+        }
+
+        document.title = (data.heroTitle || data.tabTitle || '咨询服务') + ' - 咨询服务预览';
+        document.getElementById('pvThumb').src = data.thumb || data.cover || data.heroImg || fallback.thumb;
+        document.getElementById('pvTabTitle').textContent = data.tabTitle || data.name || data.serviceType || fallback.tabTitle;
+        document.getElementById('pvTabDesc').textContent = data.tabDesc || fallback.tabDesc;
+        document.getElementById('pvHero').style.backgroundImage = "url('" + (data.heroImg || data.cover || fallback.heroImg) + "')";
+        document.getElementById('pvBadge').textContent = data.badge || fallback.badge;
+        document.getElementById('pvTitle').textContent = data.heroTitle || data.tabTitle || fallback.heroTitle;
+        document.getElementById('pvSubtitle').textContent = data.heroSubtitle || data.tabDesc || fallback.heroSubtitle;
+        document.getElementById('pvLead').textContent = data.lead || fallback.lead;
+        document.getElementById('pvPrice').textContent = getReferencePrice(data);
+        document.getElementById('pvPayMode').textContent = (data.pricing && data.pricing.payMode) || '预付费';
+        document.getElementById('pvMeasures').textContent = ((data.pricing && data.pricing.measures) || ['面议']).join(' / ');
+        document.getElementById('pvDelivery').textContent = data.delivery || '线下交付';
+        document.getElementById('pvSections').innerHTML = renderSections(data.sections || []);
+    })();
+    </script>
+</body>
+</html>

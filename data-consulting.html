@@ -9,84 +9,670 @@
     <title>数据咨询服务 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <style>
-        /* ==================== Search Section ==================== */
-        .search-section { padding: 0; margin-top: -20px; position: relative; z-index: 10; }
-        .search-container { max-width: var(--content-max-width); margin: 0 auto; padding: 0 32px; }
-        .search-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px; }
-        .search-inner { display: flex; align-items: center; gap: 12px; }
-        .search-input-wrapper { flex: 1; position: relative; }
-        .search-input { width: 100%; padding: 14px 20px 14px 48px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); font-size: 14px; color: var(--text-primary); outline: none; transition: all var(--transition-fast); }
-        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
-        .search-input::placeholder { color: var(--text-tertiary); }
-        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: var(--text-tertiary); }
-        .search-btn { padding: 14px 32px; background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%); color: white; border: none; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); transition: all var(--transition-fast); }
-        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
-        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
-        .search-tag { padding: 4px 12px; background: transparent; border: 1px solid var(--border-default); border-radius: 100px; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); }
-        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
+        .main-content {
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            padding: 96px 32px 48px;
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 40px;
+        }
 
-        /* ==================== Main Content ==================== */
-        .main-content { max-width: var(--content-max-width); margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 260px 1fr; gap: 32px; }
+        .service-sidebar {
+            position: sticky;
+            top: 96px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-        /* ==================== Sidebar Filters ==================== */
-        .sidebar { width: auto; position: sticky; top: 96px; height: fit-content; }
-        .filter-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-sm); }
-        .filter-section { margin-bottom: 24px; }
-        .filter-section:last-child { margin-bottom: 0; }
-        .filter-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-        .filter-clear { font-size: 11px; font-weight: 500; color: var(--text-tertiary); cursor: pointer; }
-        .filter-clear:hover { color: var(--forest-green); }
-        .filter-options { display: flex; flex-direction: column; gap: 8px; }
-        .filter-option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast); }
-        .filter-option:hover { background: var(--gray-100); }
-        .filter-option.active { background: var(--forest-green-50); }
-        .filter-checkbox { width: 16px; height: 16px; border: 1.5px solid var(--gray-300); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); flex-shrink: 0; }
-        .filter-option.active .filter-checkbox { background: var(--forest-green); border-color: var(--forest-green); }
-        .filter-checkbox svg { width: 10px; height: 10px; fill: white; opacity: 0; }
-        .filter-option.active .filter-checkbox svg { opacity: 1; }
-        .filter-label { font-size: 13px; color: var(--text-secondary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-        .filter-option.active .filter-label { color: var(--forest-green-700); font-weight: 500; }
-        .filter-count { margin-left: auto; font-size: 11px; color: var(--text-tertiary); background: var(--gray-100); padding: 2px 8px; border-radius: 100px; }
-        .filter-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
+        .service-card {
+            background: var(--surface-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 16px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
 
-        /* ==================== Content Area ==================== */
-        .content-area { min-width: 0; }
-        .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .results-count { font-size: 13px; color: var(--text-secondary); }
-        .results-count strong { color: var(--text-primary); font-weight: 600; }
-        .sort-dropdown { display: flex; align-items: center; gap: 8px; }
-        .sort-label { font-size: 12px; color: var(--text-tertiary); }
-        .sort-select { padding: 6px 12px; font-size: 13px; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); cursor: pointer; outline: none; }
+        .service-card:hover {
+            border-color: var(--forest-green-200);
+            transform: translateX(4px);
+        }
 
-        /* ==================== Card Grid ==================== */
-        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .data-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden; transition: all var(--transition-base); box-shadow: var(--shadow-sm); position: relative; }
-        .data-card::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-xl); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8); pointer-events: none; }
-        .data-card:hover { border-color: var(--forest-green-200); box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1); transform: translateY(-4px); }
-        .data-card-image { height: 160px; position: relative; overflow: hidden; }
-        .data-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .data-card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
-        .data-card-badge { padding: 4px 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: 100px; font-size: 10px; font-weight: 500; color: white; }
-        .data-card-badge.price { background: rgba(229,57,53,0.85); }
-        .data-card-content { padding: 20px; }
-        .data-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px; }
-        .data-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .data-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
-        .data-card-meta { font-size: 11px; color: var(--text-tertiary); }
-        .data-card-meta .price { color: #E53935; font-weight: 700; }
-        .data-card-type { font-size: 11px; font-weight: 500; color: var(--forest-green); background: var(--forest-green-50); padding: 4px 10px; border-radius: 100px; }
+        .service-card.active {
+            border-color: var(--forest-green);
+            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.08) 100%);
+            box-shadow: var(--shadow-glow);
+        }
 
-        /* ==================== Responsive ==================== */
-        @media (max-width: 1200px) { .data-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 1024px) { .main-content { grid-template-columns: 1fr; } .sidebar { position: static; } .filter-card { display: flex; flex-wrap: wrap; gap: 24px; } .filter-section { margin-bottom: 0; flex: 1; min-width: 200px; } .filter-divider { display: none; } }
-        @media (max-width: 768px) { .data-grid { grid-template-columns: 1fr; } .search-inner { flex-direction: column; } .search-input-wrapper { width: 100%; } .search-btn { width: 100%; } .main-content { padding: 24px 16px; } }
+        .service-card.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 4px;
+            background: var(--forest-green);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .service-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-lg);
+            background: #10261E;
+            color: var(--forest-green);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-card-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .service-card-content {
+            flex: 1;
+            min-width: 0;
+            text-align: left;
+        }
+
+        .service-card-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.45;
+            margin-bottom: 6px;
+        }
+
+        .service-card.active .service-card-title {
+            color: var(--forest-green-700);
+        }
+
+        .service-card-desc {
+            display: block;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .content-area {
+            min-width: 0;
+        }
+
+        .service-panel {
+            display: none;
+        }
+
+        .service-panel.active {
+            display: block;
+        }
+
+        .service-article {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .service-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            min-height: 380px;
+            background: #0F1F1A;
+        }
+
+        .service-hero-main {
+            position: relative;
+            min-height: 380px;
+            background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-governance.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .service-hero-content {
+            color: #fff;
+            padding: 42px;
+            max-width: 780px;
+        }
+
+        .service-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            background: rgba(32, 165, 101, 0.92);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .service-kicker svg,
+        .action-button svg,
+        .outline-button svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .service-title {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.18;
+            margin-bottom: 14px;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+        }
+
+        .service-desc {
+            max-width: 680px;
+            font-size: 16px;
+            line-height: 1.75;
+            color: rgba(255, 255, 255, 0.86);
+        }
+
+        .service-action-card {
+            background: #fff;
+            padding: 30px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 24px;
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .price-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .price-value {
+            font-size: 34px;
+            font-weight: 800;
+            color: #E53935;
+            line-height: 1.1;
+        }
+
+        .action-facts {
+            display: grid;
+            gap: 14px;
+            padding: 18px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .action-fact {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .action-fact span:first-child {
+            color: var(--text-tertiary);
+        }
+
+        .action-fact span:last-child {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-button,
+        .outline-button {
+            width: 100%;
+            min-height: 44px;
+            border-radius: var(--radius-lg);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .action-button {
+            color: #fff;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .outline-button {
+            color: var(--forest-green);
+            background: #fff;
+            border: 1.5px solid var(--forest-green);
+        }
+
+        .outline-button:hover {
+            background: var(--forest-green-50);
+        }
+
+        .service-body {
+            padding: 42px;
+        }
+
+        .article-lead {
+            font-size: 18px;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--forest-green);
+            padding-left: 22px;
+            margin-bottom: 42px;
+        }
+
+        .content-section {
+            margin-bottom: 46px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .section-number {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--forest-green);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .rich-copy {
+            margin-left: 56px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .rich-copy p + p {
+            margin-top: 12px;
+        }
+
+        .process-list {
+            margin-left: 56px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .process-card {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            position: relative;
+            min-height: 150px;
+        }
+
+        .process-index {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--forest-green-100);
+            color: var(--forest-green-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .process-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .process-desc {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--text-secondary);
+        }
+
+        .advantage-grid {
+            margin-left: 56px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .advantage-card {
+            display: flex;
+            gap: 16px;
+            background: var(--surface-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+        }
+
+        .advantage-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: var(--forest-green-100);
+            color: var(--forest-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .advantage-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .advantage-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .advantage-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .case-list {
+            margin-left: 56px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .case-card {
+            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.05) 100%);
+            border: 1px solid rgba(32, 165, 101, 0.16);
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr);
+            gap: 24px;
+        }
+
+        .case-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .case-content {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .consult-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 18, 15, 0.45);
+            backdrop-filter: blur(8px);
+            padding: 24px;
+        }
+
+        .consult-overlay.active {
+            display: flex;
+        }
+
+        .consult-card {
+            width: min(720px, 100%);
+            background: var(--surface-elevated);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: 34px 38px 30px;
+            position: relative;
+            animation: consultIn 180ms ease-out;
+        }
+
+        @keyframes consultIn {
+            from { opacity: 0; transform: translateY(18px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .consult-close {
+            position: absolute;
+            right: 18px;
+            top: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .consult-close:hover {
+            color: var(--text-primary);
+            background: var(--gray-100);
+        }
+
+        .consult-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .consult-row {
+            display: grid;
+            grid-template-columns: 110px minmax(0, 1fr);
+            gap: 14px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .consult-label {
+            padding-top: 9px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .consult-val {
+            color: var(--text-primary);
+            font-size: 14px;
+            min-width: 0;
+        }
+
+        .consult-static {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .consult-input {
+            width: 100%;
+            height: 38px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 0 12px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .consult-input:focus {
+            border-color: var(--forest-green);
+        }
+
+        .consult-ta-wrap {
+            position: relative;
+        }
+
+        .consult-textarea {
+            width: 100%;
+            min-height: 128px;
+            resize: vertical;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 12px 14px 28px;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 1.6;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .consult-textarea:focus {
+            border-color: var(--forest-green);
+        }
+
+        .consult-count {
+            position: absolute;
+            right: 12px;
+            bottom: 8px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .consult-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding-top: 10px;
+        }
+
+        .consult-btn-ok,
+        .consult-btn-cancel {
+            min-width: 96px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .consult-btn-ok {
+            border: none;
+            color: #fff;
+            background: var(--forest-green);
+        }
+
+        .consult-btn-ok:hover {
+            background: var(--forest-green-600);
+            box-shadow: var(--shadow-green-glow);
+        }
+
+        .consult-btn-cancel {
+            color: var(--text-secondary);
+            background: #fff;
+            border: 1px solid var(--border-default);
+        }
+
+        .consult-btn-cancel:hover {
+            color: var(--text-primary);
+            border-color: var(--border-emphasis);
+        }
+
+        @media (max-width: 1280px) {
+            .service-hero { grid-template-columns: 1fr; }
+            .service-action-card {
+                display: grid;
+                grid-template-columns: 240px minmax(0, 1fr) 240px;
+                align-items: center;
+            }
+            .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .service-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .service-card:hover { transform: translateY(-2px); }
+            .service-action-card { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 88px 16px 36px; }
+            .service-sidebar { grid-template-columns: 1fr; }
+            .service-hero-main { min-height: 320px; }
+            .service-hero-content,
+            .service-body { padding: 28px; }
+            .service-title { font-size: 30px; }
+            .process-list,
+            .advantage-grid,
+            .case-card { grid-template-columns: 1fr; }
+            .rich-copy,
+            .process-list,
+            .advantage-grid,
+            .case-list { margin-left: 0; }
+            .consult-card { padding: 30px 20px 24px; }
+            .consult-row { grid-template-columns: 1fr; gap: 8px; }
+            .consult-label { text-align: left; padding-top: 0; }
+        }
     </style>
     <script src="js/nav-bar.js"></script>
     <script src="js/site-footer.js" defer></script>
@@ -95,357 +681,777 @@
 <body>
     <nav-bar active="consulting"></nav-bar>
 
-    <header class="page-header">
-        <div class="page-header-container">
-            <h1 class="page-title">数据咨询服务</h1>
-            <p class="page-subtitle">专业数据咨询团队，助力企业数据资产化与合规经营</p>
-        </div>
-    </header>
-
-    <section class="search-section">
-        <div class="search-container">
-            <div class="search-card">
-                <div class="search-inner">
-                    <div class="search-input-wrapper">
-                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                        <input type="text" class="search-input" placeholder="请输入关键字">
-                    </div>
-                    <button class="search-btn">搜索</button>
-                </div>
-                <div class="search-tags">
-                    <span class="search-tags-label">热门：</span>
-                    <span class="search-tag">企业数据治理与合规咨询服务</span>
-                    <span class="search-tag">企业数据资产入表咨询服务</span>
-                    <span class="search-tag">交通运输</span>
-                    <span class="search-tag">文化旅游</span>
-                    <span class="search-tag">气象服务</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <main class="main-content">
-        <aside class="sidebar">
-            <div class="filter-card">
-                <div class="filter-section">
-                    <div class="filter-title">
-                        服务类型
-                        <span class="filter-clear">清除</span>
-                    </div>
-                    <div class="filter-options">
-                        <div class="filter-option active">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="全部">全部</span>
-                            <span class="filter-count">128</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="企业数据治理与合规咨询服务">企业数据治理与合规咨询服务</span>
-                            <span class="filter-count">24</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="企业数据资产入表咨询服务">企业数据资产入表咨询服务</span>
-                            <span class="filter-count">18</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="企业数据资源托管运营服务">企业数据资源托管运营服务</span>
-                            <span class="filter-count">15</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="企业数据资产融资咨询服务">企业数据资产融资咨询服务</span>
-                            <span class="filter-count">12</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="行政事业单位及央国企数据资产全过程管理服务">行政事业单位及央国企数据资产全过程管理服务</span>
-                            <span class="filter-count">5</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label" title="企业数据产品孵化服务">企业数据产品孵化服务</span>
-                            <span class="filter-count">10</span>
-                        </div>
-                    </div>
-                </div>
+        <aside class="service-sidebar" aria-label="数据咨询服务目录">
+            <button class="service-card active" type="button" data-panel="governance">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/>
+                        <path d="M9 12l2 2 4-5"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">企业数据治理与合规咨询服务</span>
+                    <span class="service-card-desc">治理合规、风险识别、整改落地</span>
+                </span>
+            </button>
 
-                <div class="filter-divider"></div>
+            <button class="service-card" type="button" data-panel="accounting">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 5h16v14H4z"/>
+                        <path d="M8 9h8M8 13h8M8 17h4"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">企业数据资产入表咨询服务</span>
+                    <span class="service-card-desc">资产识别、评估入表、披露辅导</span>
+                </span>
+            </button>
 
-                <div class="filter-section">
-                    <div class="filter-title">行业分类</div>
-                    <div class="filter-options">
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">金融业</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">制造业</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">房地产</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">教育</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">医疗健康</span>
-                        </div>
-                    </div>
-                </div>
+            <button class="service-card" type="button" data-panel="hosting">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 7h14M5 12h14M5 17h14"/>
+                        <path d="M8 5v14M16 5v14"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">企业数据资源托管运营服务</span>
+                    <span class="service-card-desc">资源托管、运营治理、价值提升</span>
+                </span>
+            </button>
 
-                <div class="filter-divider"></div>
+            <button class="service-card" type="button" data-panel="financing">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19h16"/>
+                        <path d="M7 16V9l5-4 5 4v7"/>
+                        <path d="M9.5 13h5"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">企业数据资产融资咨询服务</span>
+                    <span class="service-card-desc">资产评估、融资设计、机构对接</span>
+                </span>
+            </button>
 
-                <div class="filter-section">
-                    <div class="filter-title">服务报价</div>
-                    <div class="filter-options">
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">5000以下</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">5001-10000</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">10001-20000</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">20000以上</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">面议</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <button class="service-card" type="button" data-panel="state-owned">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 20h16"/>
+                        <path d="M6 20V8l6-4 6 4v12"/>
+                        <path d="M9 12h6M9 16h6"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">行政事业单位及央国企数据资产全过程管理服务</span>
+                    <span class="service-card-desc">目录梳理、授权运营、持续监管</span>
+                </span>
+            </button>
+
+            <button class="service-card" type="button" data-panel="incubation">
+                <span class="service-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v18"/>
+                        <path d="M6 9c3.5 0 6 2.5 6 6"/>
+                        <path d="M18 7c-3.5 0-6 2.5-6 6"/>
+                    </svg>
+                </span>
+                <span class="service-card-content">
+                    <span class="service-card-title">企业数据产品孵化服务</span>
+                    <span class="service-card-desc">产品策划、上架包装、运营陪跑</span>
+                </span>
+            </button>
         </aside>
 
         <div class="content-area">
-            <div class="content-header">
-                <div class="results-count">共 <strong>128</strong> 条咨询服务</div>
-                <div class="sort-dropdown">
-                    <span class="sort-label">排序：</span>
-                    <select class="sort-select">
-                        <option>发布时间</option>
-                        <option>价格</option>
-                        <option>浏览量</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="data-grid">
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-governance.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据治理与合规</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据治理与合规咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">项目化入为客户开展数据治理建议与合规咨询服务，覆盖数据产权、技术与运营治理，在安全合规层面整合数据产品治理流程</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel active" data-panel="governance">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/>
+                                        <path d="M9 12l2 2 4-5"/>
+                                    </svg>
+                                    数据治理与合规
+                                </div>
+                                <h2 class="service-title">企业数据治理与合规咨询服务</h2>
+                                <p class="service-desc">面向企业数据资源盘点、治理体系建设、合规风险识别和整改落地，帮助企业建立可管理、可审计、可流通的数据资产基础。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div>
+                                <div class="price-label">参考价</div>
+                                <div class="price-value" data-price>面议</div>
+                            </div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按次数 / 按时长 / 面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="企业数据治理与合规咨询服务" data-price="面议">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M6 7h15l-2 9H8L6 7z"/>
+                                        <path d="M6 7L5 4H2"/>
+                                        <circle cx="9" cy="20" r="1"/>
+                                        <circle cx="18" cy="20" r="1"/>
+                                    </svg>
+                                    立即购买
+                                </button>
+                                <button class="outline-button" type="button" data-consult data-title="企业数据治理与合规咨询服务">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                                    </svg>
+                                    服务咨询
+                                </button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务围绕企业数据全生命周期治理与合规经营要求，帮助客户完成数据资源摸底、分类分级、制度流程建设、合规风险整改和数据资产化准备，为后续数据产品发布、数据交易流通和数据资产入表打好基础。</p>
+
+                        <section class="content-section">
+                            <div class="section-header">
+                                <span class="section-number">1</span>
+                                <h3 class="section-title">服务说明</h3>
+                            </div>
+                            <div class="rich-copy">
+                                <p>咨询团队将结合企业业务系统、数据资源目录、数据使用场景和外部合规要求，识别企业在数据采集、存储、加工、共享、交易、销毁等环节的治理短板与合规风险。</p>
+                                <p>服务成果包括数据资源清单、数据分类分级建议、数据治理制度框架、关键流程规范、合规风险清单和整改路线图，帮助企业形成可执行、可追踪、可持续优化的数据治理体系。</p>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header">
+                                <span class="section-number">2</span>
+                                <h3 class="section-title">服务流程</h3>
+                            </div>
+                            <div class="process-list">
+                                <div class="process-card">
+                                    <div class="process-index">01</div>
+                                    <div class="process-title">需求调研</div>
+                                    <p class="process-desc">访谈业务、技术、法务和管理部门，明确治理目标、数据范围、业务场景和交付边界。</p>
+                                </div>
+                                <div class="process-card">
+                                    <div class="process-index">02</div>
+                                    <div class="process-title">数据盘点</div>
+                                    <p class="process-desc">梳理数据来源、系统分布、字段口径、共享链路和责任主体，形成数据资源基础台账。</p>
+                                </div>
+                                <div class="process-card">
+                                    <div class="process-index">03</div>
+                                    <div class="process-title">合规评估</div>
+                                    <p class="process-desc">围绕数据安全、个人信息保护、授权使用和跨主体流通开展风险识别与差距分析。</p>
+                                </div>
+                                <div class="process-card">
+                                    <div class="process-index">04</div>
+                                    <div class="process-title">治理方案</div>
+                                    <p class="process-desc">设计分类分级、权限管理、质量管理、共享审批和审计留痕等治理规则与流程。</p>
+                                </div>
+                                <div class="process-card">
+                                    <div class="process-index">05</div>
+                                    <div class="process-title">制度落地</div>
+                                    <p class="process-desc">辅导企业建立制度模板、流程表单、岗位职责和整改计划，推动治理动作进入日常运营。</p>
+                                </div>
+                                <div class="process-card">
+                                    <div class="process-index">06</div>
+                                    <div class="process-title">验收优化</div>
+                                    <p class="process-desc">复核整改结果，输出验收材料和持续优化建议，为后续数据资产化和流通应用提供支撑。</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header">
+                                <span class="section-number">3</span>
+                                <h3 class="section-title">服务优势</h3>
+                            </div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card">
+                                    <div class="advantage-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/>
+                                            <path d="M9 12l2 2 4-5"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="advantage-title">合规要求与业务场景结合</div>
+                                        <p class="advantage-desc">不是单纯罗列法规条款，而是结合企业实际数据来源、使用路径和交易场景形成可落地规则。</p>
+                                    </div>
+                                </div>
+                                <div class="advantage-card">
+                                    <div class="advantage-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 6h16M4 12h16M4 18h10"/>
+                                            <path d="M18 15l2 2 3-4"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="advantage-title">交付成果结构清晰</div>
+                                        <p class="advantage-desc">输出清单、制度、流程、风险和整改计划，方便企业内部评审、协同执行和后续复盘。</p>
+                                    </div>
+                                </div>
+                                <div class="advantage-card">
+                                    <div class="advantage-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 19V5"/>
+                                            <path d="M4 19h16"/>
+                                            <path d="M8 15l3-3 3 2 5-7"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="advantage-title">衔接数据资产化路径</div>
+                                        <p class="advantage-desc">治理成果可继续支撑数据产品发布、数据资产入表、授权流通和融资评估等后续服务。</p>
+                                    </div>
+                                </div>
+                                <div class="advantage-card">
+                                    <div class="advantage-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 20v-6"/>
+                                            <path d="M6 20V10"/>
+                                            <path d="M18 20V4"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="advantage-title">持续改进机制</div>
+                                        <p class="advantage-desc">通过指标、责任和审计机制固化治理能力，避免咨询成果停留在一次性文档层面。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header">
+                                <span class="section-number">4</span>
+                                <h3 class="section-title">服务案例</h3>
+                            </div>
+                            <div class="case-list">
+                                <div class="case-card">
+                                    <div>
+                                        <div class="case-title">制造企业数据治理与合规整改</div>
+                                    </div>
+                                    <p class="case-content">为龙岗区某制造企业梳理生产、设备、供应链和客户服务数据资源，识别数据授权不清、共享审批缺失、质量口径不一致等问题，形成数据资源台账、分类分级规则和合规整改路线图，支撑企业后续开展数据产品包装和资产化评估。</p>
+                                </div>
+                                <div class="case-card">
+                                    <div>
+                                        <div class="case-title">科技服务企业数据产品发布前合规评估</div>
+                                    </div>
+                                    <p class="case-content">针对某科技服务企业拟上架的数据产品，梳理数据来源、授权链路、加工规则和对外服务边界，完成个人信息与敏感数据风险识别，输出产品发布前合规审查清单和整改建议，帮助企业降低上架审核与后续交易风险。</p>
+                                </div>
+                                <div class="case-card">
+                                    <div>
+                                        <div class="case-title">商贸集团多系统数据分类分级治理</div>
+                                    </div>
+                                    <p class="case-content">面向某商贸集团会员、交易、仓储和供应链系统数据分散的问题，建立统一的数据分类分级口径和权限管理规则，明确各类数据的使用范围、共享审批流程和审计要求，提升集团跨部门数据协同效率。</p>
+                                </div>
+                                <div class="case-card">
+                                    <div>
+                                        <div class="case-title">园区运营企业数据共享授权流程优化</div>
+                                    </div>
+                                    <p class="case-content">为某产业园区运营企业梳理企业服务、空间管理、能耗监测和招商运营数据的共享场景，设计数据使用申请、授权确认、调用留痕和周期复核机制，帮助园区形成可复用的数据共享管理规范。</p>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </article>
+            </section>
 
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-accounting.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">资产入表</span><span class="data-card-badge price">3000元/天</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据资产入表咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">公司围绕行业数据合规数据资产入表这项建议，覆盖数据产权与运营治理，设计调研明确可行的数据资产入表方案及管理规范</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel" data-panel="accounting">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main" style="background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-accounting.jpg');">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M4 5h16v14H4z"/>
+                                        <path d="M8 9h8M8 13h8M8 17h4"/>
+                                    </svg>
+                                    数据资产入表
+                                </div>
+                                <h2 class="service-title">企业数据资产入表咨询服务</h2>
+                                <p class="service-desc">面向企业数据资源资产化和财务入表需求，提供资源识别、价值评估、会计处理、审计协同和披露辅导的一体化咨询服务。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div>
+                                <div class="price-label">参考价</div>
+                                <div class="price-value" data-price>3000元/天</div>
+                            </div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按时长 / 按项目面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="企业数据资产入表咨询服务" data-price="3000元/天">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M6 7h15l-2 9H8L6 7z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
+                                    </svg>
+                                    立即购买
+                                </button>
+                                <button class="outline-button" type="button" data-consult data-title="企业数据资产入表咨询服务">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                                    </svg>
+                                    服务咨询
+                                </button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务帮助企业把可识别、可控制、可计量的数据资源转化为规范化的数据资产管理对象，围绕数据资产确认、计量、列报和后续运营建立可审计的入表路径。</p>
+
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">1</span><h3 class="section-title">服务说明</h3></div>
+                            <div class="rich-copy">
+                                <p>咨询团队将结合企业业务模式、数据来源、权属边界、成本归集和收益场景，判断数据资源是否具备资产确认基础，并形成入表可行性诊断。</p>
+                                <p>服务成果包括数据资产识别清单、入表路径建议、价值评估思路、会计处理建议、审计沟通材料和数据资产后续管理建议，支撑企业稳妥推进数据资源入表。</p>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">2</span><h3 class="section-title">服务流程</h3></div>
+                            <div class="process-list">
+                                <div class="process-card"><div class="process-index">01</div><div class="process-title">资源盘点</div><p class="process-desc">梳理企业数据资源类型、来源系统、形成过程和应用场景，明确重点入表对象。</p></div>
+                                <div class="process-card"><div class="process-index">02</div><div class="process-title">确认边界</div><p class="process-desc">核验数据权属、控制能力、使用限制和合规基础，判断资产确认条件。</p></div>
+                                <div class="process-card"><div class="process-index">03</div><div class="process-title">价值评估</div><p class="process-desc">结合成本投入、应用收益和市场参考，建立数据资产价值评估口径。</p></div>
+                                <div class="process-card"><div class="process-index">04</div><div class="process-title">入表方案</div><p class="process-desc">制定入表路径、科目建议、披露内容和管理制度配套方案。</p></div>
+                                <div class="process-card"><div class="process-index">05</div><div class="process-title">审计协同</div><p class="process-desc">协助准备底稿、证明材料和沟通要点，降低审计确认过程的不确定性。</p></div>
+                                <div class="process-card"><div class="process-index">06</div><div class="process-title">持续管理</div><p class="process-desc">建立数据资产台账、更新机制和后续减值、披露、运营管理建议。</p></div>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">3</span><h3 class="section-title">服务优势</h3></div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8M8 17h4"/></svg></div><div><div class="advantage-title">贴合会计处理要求</div><p class="advantage-desc">围绕企业数据资源相关会计处理要求，形成清晰的确认、计量和披露逻辑。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg></div><div><div class="advantage-title">评估口径可解释</div><p class="advantage-desc">将数据质量、应用价值、成本投入和收益预期纳入评估，便于内部决策和外部沟通。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/><path d="M9 12l2 2 4-5"/></svg></div><div><div class="advantage-title">审计沟通前置</div><p class="advantage-desc">提前准备证明材料和底稿框架，提升入表过程的规范性和通过率。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg></div><div><div class="advantage-title">兼顾后续运营</div><p class="advantage-desc">不仅完成一次性入表规划，也同步建立数据资产台账和持续管理机制。</p></div></div>
+                            </div>
+                        </section>
+
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">4</span><h3 class="section-title">服务案例</h3></div>
+                            <div class="case-list">
+                                <div class="case-card"><div><div class="case-title">文化科技企业模型数据资产入表</div></div><p class="case-content">为某文化科技企业梳理大模型训练语料、标注成果和模型服务数据，明确成本归集口径和资产确认边界，形成入表方案和审计沟通材料。</p></div>
+                                <div class="case-card"><div><div class="case-title">制造企业设备运行数据资产评估</div></div><p class="case-content">围绕设备监测、故障诊断和产线优化数据，建立数据资源台账、价值评估模型和后续管理机制，支撑企业开展数据资产确认。</p></div>
+                                <div class="case-card"><div><div class="case-title">平台企业客户运营数据入表辅导</div></div><p class="case-content">针对客户画像、交易行为和运营标签数据，梳理数据形成过程、授权基础和收益应用场景，输出数据资产入表可行性报告。</p></div>
+                                <div class="case-card"><div><div class="case-title">物流企业运输调度数据资产化</div></div><p class="case-content">对线路调度、车辆轨迹和配送效率数据进行分类评估，形成可管理的数据资产清单和财务入表准备材料。</p></div>
+                            </div>
+                        </section>
                     </div>
                 </article>
+            </section>
 
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-hosting.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">托管运营</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据资源托管运营服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">为企业提供一站式数据资源托管服务，覆盖数据产品上市、数据运营治理与运营服务管理，提升数据资产价值</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel" data-panel="hosting">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main" style="background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-hosting.jpg');">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/><path d="M8 5v14M16 5v14"/></svg>
+                                    托管运营
+                                </div>
+                                <h2 class="service-title">企业数据资源托管运营服务</h2>
+                                <p class="service-desc">为企业提供数据资源接入、编目、治理、运营、监测和价值提升服务，让沉淀在系统里的数据资源持续产生业务价值。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div><div class="price-label">参考价</div><div class="price-value" data-price>面议</div></div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按项目 / 按周期面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="企业数据资源托管运营服务" data-price="面议"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h15l-2 9H8L6 7z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>立即购买</button>
+                                <button class="outline-button" type="button" data-consult data-title="企业数据资源托管运营服务"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>服务咨询</button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务面向拥有多源数据但缺少运营能力的企业，提供从资源托管、数据治理、服务封装到持续运营的陪伴式服务，帮助企业把数据资源转化为可管理、可调用、可交易的服务能力。</p>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">1</span><h3 class="section-title">服务说明</h3></div>
+                            <div class="rich-copy">
+                                <p>服务团队将对企业数据资产现状、系统接口、数据质量、合规基础和应用需求进行评估，明确托管运营范围和服务边界。</p>
+                                <p>交付内容涵盖数据资源目录、运营台账、质量规则、调用服务规范、运营监测指标和定期优化建议，支撑企业长期运营数据资源。</p>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">2</span><h3 class="section-title">服务流程</h3></div>
+                            <div class="process-list">
+                                <div class="process-card"><div class="process-index">01</div><div class="process-title">接入评估</div><p class="process-desc">评估数据源、接口条件、权限范围和安全要求，明确托管运营目标。</p></div>
+                                <div class="process-card"><div class="process-index">02</div><div class="process-title">资源编目</div><p class="process-desc">统一梳理数据资源目录、字段口径、更新周期和责任主体。</p></div>
+                                <div class="process-card"><div class="process-index">03</div><div class="process-title">托管治理</div><p class="process-desc">建立质量校验、权限控制、变更管理和审计留痕规则。</p></div>
+                                <div class="process-card"><div class="process-index">04</div><div class="process-title">服务封装</div><p class="process-desc">围绕调用、查询、报表或产品化需求，设计可运营的数据服务形态。</p></div>
+                                <div class="process-card"><div class="process-index">05</div><div class="process-title">运行监测</div><p class="process-desc">跟踪数据更新、调用量、质量异常、服务响应和客户反馈。</p></div>
+                                <div class="process-card"><div class="process-index">06</div><div class="process-title">迭代优化</div><p class="process-desc">按周期输出运营分析和优化建议，持续提升数据资源价值。</p></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">3</span><h3 class="section-title">服务优势</h3></div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M5 12h14M5 17h14"/><path d="M8 5v14M16 5v14"/></svg></div><div><div class="advantage-title">资源目录清晰</div><p class="advantage-desc">通过统一编目和责任划分，让企业清楚掌握可运营的数据资源底盘。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M18 15l2 2 3-4"/></svg></div><div><div class="advantage-title">治理运营一体</div><p class="advantage-desc">把质量、权限、安全和运营指标放在同一套机制里管理，避免只建不运。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg></div><div><div class="advantage-title">服务价值可跟踪</div><p class="advantage-desc">通过调用量、服务响应、质量问题和业务反馈持续衡量运营成效。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg></div><div><div class="advantage-title">支撑后续交易</div><p class="advantage-desc">托管成果可进一步支撑数据产品孵化、授权流通和对外服务交付。</p></div></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">4</span><h3 class="section-title">服务案例</h3></div>
+                            <div class="case-list">
+                                <div class="case-card"><div><div class="case-title">园区企业服务数据托管运营</div></div><p class="case-content">为某园区运营主体托管企业画像、诉求工单和空间资源数据，建立目录、质量规则和运营看板，提升园区精准服务能力。</p></div>
+                                <div class="case-card"><div><div class="case-title">商贸企业会员数据运营管理</div></div><p class="case-content">围绕会员标签、交易行为和营销触达数据，建立托管台账和调用规范，支撑企业开展精细化运营。</p></div>
+                                <div class="case-card"><div><div class="case-title">制造企业供应链数据服务化</div></div><p class="case-content">将供应商、库存、采购和交付数据统一治理并封装为内部查询服务，提升供应链协同效率。</p></div>
+                                <div class="case-card"><div><div class="case-title">文旅企业客流数据持续运营</div></div><p class="case-content">托管景区客流、票务和活动数据，形成周期性运营分析报告，为经营决策和活动排期提供支撑。</p></div>
+                            </div>
+                        </section>
                     </div>
                 </article>
+            </section>
 
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-financing.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">资产融资</span><span class="data-card-badge price">3000元/天</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据资产融资咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">聚焦为方含数据资产(数据产品)相关的企业提供资产融资咨询服务，实现数据要素RDA、链式入RBA等多种融资模式</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel" data-panel="financing">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main" style="background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-financing.jpg');">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"/><path d="M7 16V9l5-4 5 4v7"/><path d="M9.5 13h5"/></svg>
+                                    数据资产融资
+                                </div>
+                                <h2 class="service-title">企业数据资产融资咨询服务</h2>
+                                <p class="service-desc">围绕企业数据资产价值识别、融资路径设计、增信材料准备和金融机构对接，帮助企业探索数据资产价值转化的新通道。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div><div class="price-label">参考价</div><div class="price-value" data-price>3000元/天</div></div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按时长 / 按项目面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="企业数据资产融资咨询服务" data-price="3000元/天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h15l-2 9H8L6 7z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>立即购买</button>
+                                <button class="outline-button" type="button" data-consult data-title="企业数据资产融资咨询服务"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>服务咨询</button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务面向具备数据资源、数据产品或数据资产化基础的企业，提供融资可行性诊断、资产价值说明、融资材料准备和机构沟通辅导，提升数据资产在融资场景中的可识别性和可信度。</p>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">1</span><h3 class="section-title">服务说明</h3></div>
+                            <div class="rich-copy">
+                                <p>咨询团队将围绕企业数据资产权属、质量、应用价值、收入贡献、合规基础和可持续运营能力，评估其在融资场景中的表达方式与支撑材料。</p>
+                                <p>服务成果包括融资诊断报告、数据资产价值说明、增信材料清单、融资路径建议、金融机构沟通材料和后续管理建议。</p>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">2</span><h3 class="section-title">服务流程</h3></div>
+                            <div class="process-list">
+                                <div class="process-card"><div class="process-index">01</div><div class="process-title">融资诊断</div><p class="process-desc">识别企业融资目标、资金用途、数据资产基础和可行融资方式。</p></div>
+                                <div class="process-card"><div class="process-index">02</div><div class="process-title">资产确认</div><p class="process-desc">梳理数据权属、形成过程、运营场景和可持续收益基础。</p></div>
+                                <div class="process-card"><div class="process-index">03</div><div class="process-title">价值说明</div><p class="process-desc">围绕成本、收益、市场和场景价值，形成金融机构可理解的价值表达。</p></div>
+                                <div class="process-card"><div class="process-index">04</div><div class="process-title">增信方案</div><p class="process-desc">准备治理制度、合规证明、运营记录、交易记录等支撑材料。</p></div>
+                                <div class="process-card"><div class="process-index">05</div><div class="process-title">机构对接</div><p class="process-desc">协助企业进行融资方案说明、问题回应和材料补充。</p></div>
+                                <div class="process-card"><div class="process-index">06</div><div class="process-title">融后管理</div><p class="process-desc">建立数据资产运营跟踪和价值复核机制，支撑持续信用管理。</p></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">3</span><h3 class="section-title">服务优势</h3></div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M7 16V9l5-4 5 4v7"/><path d="M9.5 13h5"/></svg></div><div><div class="advantage-title">懂数据也懂融资表达</div><p class="advantage-desc">将数据资产的技术、运营和价值逻辑转化为金融机构可评估的材料。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/><path d="M9 12l2 2 4-5"/></svg></div><div><div class="advantage-title">重视合规和权属基础</div><p class="advantage-desc">优先梳理权属、授权和使用边界，降低融资审核中的合规疑虑。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg></div><div><div class="advantage-title">价值材料可复用</div><p class="advantage-desc">融资材料可复用于资产评估、产品上架、交易洽谈和内部管理。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg></div><div><div class="advantage-title">关注融后持续运营</div><p class="advantage-desc">帮助企业建立资产运营和价值复核机制，提升后续融资与信用管理能力。</p></div></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">4</span><h3 class="section-title">服务案例</h3></div>
+                            <div class="case-list">
+                                <div class="case-card"><div><div class="case-title">制造企业设备数据融资材料准备</div></div><p class="case-content">基于设备运行、维保和产能优化数据，梳理数据资产价值说明和增信材料，辅助企业与金融机构沟通融资方案。</p></div>
+                                <div class="case-card"><div><div class="case-title">平台企业交易数据融资诊断</div></div><p class="case-content">围绕交易流水、客户画像和运营指标，评估数据资产对业务收入和信用评价的支撑价值。</p></div>
+                                <div class="case-card"><div><div class="case-title">物流企业调度数据价值说明</div></div><p class="case-content">将线路调度、运输效率和车辆轨迹数据整理为资产价值材料，支撑企业开展授信沟通。</p></div>
+                                <div class="case-card"><div><div class="case-title">文创企业内容数据融资辅导</div></div><p class="case-content">针对版权、用户行为和内容消费数据，梳理资产边界和运营价值，为融资洽谈准备说明材料。</p></div>
+                            </div>
+                        </section>
                     </div>
                 </article>
+            </section>
 
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-government.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">全过程管理</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">行政事业单位及央国企数据资产全过程管理服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">作为龙岗区公共数据搬砖一级授权运营单位，公司面向行政事业单位及央国企，提供公共数据资源管理及核心收费数据资产全过程管理服务</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel" data-panel="state-owned">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main" style="background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-government.jpg');">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M6 20V8l6-4 6 4v12"/><path d="M9 12h6M9 16h6"/></svg>
+                                    全过程管理
+                                </div>
+                                <h2 class="service-title">行政事业单位及央国企数据资产全过程管理服务</h2>
+                                <p class="service-desc">面向行政事业单位、央国企及公共数据运营主体，提供数据资源普查、目录管理、授权运营、资产管理和成效评估服务。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div><div class="price-label">参考价</div><div class="price-value" data-price>面议</div></div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按项目 / 按周期面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="行政事业单位及央国企数据资产全过程管理服务" data-price="面议"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h15l-2 9H8L6 7z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>立即购买</button>
+                                <button class="outline-button" type="button" data-consult data-title="行政事业单位及央国企数据资产全过程管理服务"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>服务咨询</button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务帮助行政事业单位及央国企构建覆盖数据资源发现、编目、确权、授权、运营、监管和评价的全过程管理体系，让公共属性强、组织链条长的数据资产管理更规范、更透明、更可持续。</p>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">1</span><h3 class="section-title">服务说明</h3></div>
+                            <div class="rich-copy">
+                                <p>咨询团队将结合单位职责、业务系统、数据目录、共享需求和监管要求，建立数据资源台账和资产管理规则。</p>
+                                <p>服务成果包括数据资源普查报告、目录台账、授权运营流程、资产管理制度、监管指标体系和成效评估报告。</p>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">2</span><h3 class="section-title">服务流程</h3></div>
+                            <div class="process-list">
+                                <div class="process-card"><div class="process-index">01</div><div class="process-title">资源普查</div><p class="process-desc">梳理单位数据系统、数据资源、共享接口和业务场景，形成资源底账。</p></div>
+                                <div class="process-card"><div class="process-index">02</div><div class="process-title">目录台账</div><p class="process-desc">建立统一目录、字段说明、责任部门和更新维护机制。</p></div>
+                                <div class="process-card"><div class="process-index">03</div><div class="process-title">确权授权</div><p class="process-desc">明确数据管理责任、使用边界、授权审批和安全要求。</p></div>
+                                <div class="process-card"><div class="process-index">04</div><div class="process-title">资产管理</div><p class="process-desc">建立资产分类、登记、变更、评价和退出管理机制。</p></div>
+                                <div class="process-card"><div class="process-index">05</div><div class="process-title">运营监管</div><p class="process-desc">设计运营监测、调用审计、风险预警和绩效评价指标。</p></div>
+                                <div class="process-card"><div class="process-index">06</div><div class="process-title">成效评估</div><p class="process-desc">复盘管理成果、应用价值和治理问题，形成持续优化建议。</p></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">3</span><h3 class="section-title">服务优势</h3></div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V8l6-4 6 4v12"/><path d="M9 12h6M9 16h6"/></svg></div><div><div class="advantage-title">适配公共治理场景</div><p class="advantage-desc">兼顾职责边界、公共属性、授权规则和监管要求，适合多部门协同推进。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M18 15l2 2 3-4"/></svg></div><div><div class="advantage-title">目录与资产管理贯通</div><p class="advantage-desc">从资源目录延伸到资产登记、运营和评价，避免资源清单与管理动作脱节。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3z"/><path d="M9 12l2 2 4-5"/></svg></div><div><div class="advantage-title">监管留痕清晰</div><p class="advantage-desc">围绕授权、调用、共享和运营过程建立留痕机制，便于审计与复核。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg></div><div><div class="advantage-title">关注运营成效</div><p class="advantage-desc">通过绩效指标和应用价值评价，让数据资产管理真正服务业务和公共服务。</p></div></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">4</span><h3 class="section-title">服务案例</h3></div>
+                            <div class="case-list">
+                                <div class="case-card"><div><div class="case-title">公共服务单位数据资源普查</div></div><p class="case-content">梳理政务服务、办事记录和公共服务数据资源，形成目录台账和共享边界建议。</p></div>
+                                <div class="case-card"><div><div class="case-title">国企经营数据资产管理体系建设</div></div><p class="case-content">围绕经营、客户、合同和项目数据建立资产登记、更新维护和价值评价机制。</p></div>
+                                <div class="case-card"><div><div class="case-title">公共数据授权运营流程设计</div></div><p class="case-content">设计授权申请、审批、调用、审计和退出流程，支撑公共数据安全合规运营。</p></div>
+                                <div class="case-card"><div><div class="case-title">事业单位数据资产绩效评价</div></div><p class="case-content">建立数据资产应用成效指标，对共享次数、服务对象、应用价值和风险问题进行评价。</p></div>
+                            </div>
+                        </section>
                     </div>
                 </article>
+            </section>
 
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-incubation.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">产品孵化</span><span class="data-card-badge price">3000元/天</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据产品孵化服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">面向台合数据资源企业，公司依托丰标准化的数据投放管理模型，提供数据产品策划及标准化孵化工程，全流程陪伴式数据产品孵化</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">金融业</span>
+            <section class="service-panel" data-panel="incubation">
+                <article class="service-article">
+                    <div class="service-hero">
+                        <div class="service-hero-main" style="background-image: linear-gradient(180deg, rgba(15, 31, 26, 0.08) 0%, rgba(15, 31, 26, 0.86) 100%), url('images/consult-incubation.jpg');">
+                            <div class="service-hero-content">
+                                <div class="service-kicker">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M6 9c3.5 0 6 2.5 6 6"/><path d="M18 7c-3.5 0-6 2.5-6 6"/></svg>
+                                    产品孵化
+                                </div>
+                                <h2 class="service-title">企业数据产品孵化服务</h2>
+                                <p class="service-desc">面向具备数据资源但缺少产品化能力的企业，提供场景识别、产品策划、数据加工、合规包装、上架运营和持续迭代服务。</p>
+                            </div>
                         </div>
+
+                        <aside class="service-action-card">
+                            <div><div class="price-label">参考价</div><div class="price-value" data-price>3000元/天</div></div>
+                            <div class="action-facts">
+                                <div class="action-fact"><span>付费模式</span><span>预付费</span></div>
+                                <div class="action-fact"><span>计量方式</span><span>按时长 / 按项目面议</span></div>
+                                <div class="action-fact"><span>交付方式</span><span>线下交付</span></div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-button" type="button" data-buy data-title="企业数据产品孵化服务" data-price="3000元/天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h15l-2 9H8L6 7z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>立即购买</button>
+                                <button class="outline-button" type="button" data-consult data-title="企业数据产品孵化服务"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>服务咨询</button>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="service-body">
+                        <p class="article-lead">本服务帮助企业把分散的数据资源转化为面向市场和业务场景的数据产品，补齐从需求洞察、产品定义、数据加工、合规校验到上架运营的关键能力。</p>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">1</span><h3 class="section-title">服务说明</h3></div>
+                            <div class="rich-copy">
+                                <p>咨询团队将从企业数据资源、目标客户、业务痛点、合规基础和交付能力出发，识别适合产品化的数据场景。</p>
+                                <p>服务成果包括产品定位、目标客户画像、数据加工方案、产品说明书、合规材料、上架资料和运营迭代计划。</p>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">2</span><h3 class="section-title">服务流程</h3></div>
+                            <div class="process-list">
+                                <div class="process-card"><div class="process-index">01</div><div class="process-title">场景识别</div><p class="process-desc">分析企业数据资源和目标市场，筛选具备产品化价值的业务场景。</p></div>
+                                <div class="process-card"><div class="process-index">02</div><div class="process-title">产品策划</div><p class="process-desc">定义产品名称、客户对象、核心能力、交付方式和收费模式。</p></div>
+                                <div class="process-card"><div class="process-index">03</div><div class="process-title">数据加工</div><p class="process-desc">设计清洗、脱敏、聚合、标签和指标加工规则，形成可服务的数据形态。</p></div>
+                                <div class="process-card"><div class="process-index">04</div><div class="process-title">合规包装</div><p class="process-desc">准备授权、来源、脱敏、安全和使用边界说明，降低产品上架风险。</p></div>
+                                <div class="process-card"><div class="process-index">05</div><div class="process-title">上架运营</div><p class="process-desc">完善产品介绍、应用场景、服务说明和交付材料，支撑平台展示和交易。</p></div>
+                                <div class="process-card"><div class="process-index">06</div><div class="process-title">迭代增长</div><p class="process-desc">根据咨询、调用、交易和反馈情况优化产品能力和定价策略。</p></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">3</span><h3 class="section-title">服务优势</h3></div>
+                            <div class="advantage-grid">
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M6 9c3.5 0 6 2.5 6 6"/><path d="M18 7c-3.5 0-6 2.5-6 6"/></svg></div><div><div class="advantage-title">从资源到产品</div><p class="advantage-desc">把数据资源、业务场景和客户需求连接起来，形成可理解、可购买的数据产品。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M18 15l2 2 3-4"/></svg></div><div><div class="advantage-title">合规材料同步准备</div><p class="advantage-desc">在产品策划阶段同步梳理数据来源、授权和使用边界，减少后续返工。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg></div><div><div class="advantage-title">关注交易转化</div><p class="advantage-desc">围绕客户痛点、展示内容和交付体验设计产品，提升咨询和交易转化效率。</p></div></div>
+                                <div class="advantage-card"><div class="advantage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg></div><div><div class="advantage-title">可持续运营迭代</div><p class="advantage-desc">根据市场反馈持续优化产品描述、数据能力、定价和交付方式。</p></div></div>
+                            </div>
+                        </section>
+                        <section class="content-section">
+                            <div class="section-header"><span class="section-number">4</span><h3 class="section-title">服务案例</h3></div>
+                            <div class="case-list">
+                                <div class="case-card"><div><div class="case-title">交通运行数据产品孵化</div></div><p class="case-content">围绕拥堵指数、路段速度和事件数据，策划交通态势监测产品，形成指标口径、产品说明和上架材料。</p></div>
+                                <div class="case-card"><div><div class="case-title">园区企业画像数据产品</div></div><p class="case-content">基于企业工商、空间、用能和服务记录数据，孵化园区企业画像产品，支撑招商和企业服务场景。</p></div>
+                                <div class="case-card"><div><div class="case-title">消费客群洞察数据产品</div></div><p class="case-content">整合会员、交易和活动数据，设计客群标签和消费趋势产品，服务商业运营决策。</p></div>
+                                <div class="case-card"><div><div class="case-title">设备运维数据服务产品</div></div><p class="case-content">将设备运行、告警和维修数据加工为运维评分和风险预警服务，辅助制造企业降本增效。</p></div>
+                            </div>
+                        </section>
                     </div>
                 </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-service-a.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">数据质量评估与优化咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">为企业提供数据质量全面评估，覆盖数据完整性、准确性、一致性等维度，输出优化改进方案与实施路线图</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">制造业</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-service-b.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">综合评估</span><span class="data-card-badge price">3000元/天</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">数据安全合规体系建设咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">依据国家数据安全法规及行业标准，为企业搭建数据安全管理框架，制定分类分级策略与风险防控方案</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">信息科技</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/consult-governance.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据战略</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据战略规划咨询服务</h3>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">围绕企业数字化转型目标，提供数据战略顶层设计、数据中台架构规划及数据驱动业务创新路径咨询</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-4</span>
-                            <span class="data-card-type">综合</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
-            <nav class="pagination">
-                <button class="pagination-btn" disabled>上一页</button>
-                <div class="pagination-numbers">
-                    <button class="pagination-number active">1</button>
-                    <button class="pagination-number">2</button>
-                    <button class="pagination-number">3</button>
-                    <button class="pagination-number">4</button>
-                    <button class="pagination-number">5</button>
-                    <span class="pagination-ellipsis">...</span>
-                    <button class="pagination-number">89</button>
-                </div>
-                <button class="pagination-btn">下一页</button>
-            </nav>
+            </section>
         </div>
     </main>
 
     <site-footer></site-footer>
 
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static" id="consultTarget">企业数据治理与合规咨询服务</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" value="张三" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" value="15812343213" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" value="dianzyun001@cestc.cn" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok">确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
     <script>
-    document.querySelectorAll('.filter-option').forEach(function (option) {
-        option.addEventListener('click', function () {
-            this.classList.toggle('active');
+    (function () {
+        var cards = document.querySelectorAll('.service-card');
+        var panels = document.querySelectorAll('.service-panel');
+        var consultOverlay = document.getElementById('consultOverlay');
+        var consultTarget = document.getElementById('consultTarget');
+        var consultTextarea = document.getElementById('txtConsult');
+        var consultCount = document.getElementById('consultCount');
+
+        function switchPanel(panelId) {
+            cards.forEach(function (card) {
+                card.classList.toggle('active', card.getAttribute('data-panel') === panelId);
+            });
+            panels.forEach(function (panel) {
+                panel.classList.toggle('active', panel.getAttribute('data-panel') === panelId);
+            });
+        }
+
+        cards.forEach(function (card) {
+            card.addEventListener('click', function () {
+                switchPanel(card.getAttribute('data-panel'));
+            });
         });
-    });
-    document.querySelectorAll('.data-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function () {
-            var priceBadge = card.querySelector('.data-card-badge.price');
-            var price = priceBadge ? priceBadge.textContent.trim() : '';
-            var title = card.querySelector('.data-card-title') ? card.querySelector('.data-card-title').textContent.trim() : '';
-            window.location.href = 'consulting-detail.html?price=' + encodeURIComponent(price) + '&title=' + encodeURIComponent(title);
+
+        document.querySelectorAll('[data-buy]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var title = button.getAttribute('data-title') || '企业数据治理与合规咨询服务';
+                var price = button.getAttribute('data-price') || '面议';
+                var titleParam = '&title=' + encodeURIComponent(title);
+                if (price === '面议') {
+                    window.location.href = 'consulting-buy-negotiate.html?price=' + encodeURIComponent(price) + titleParam;
+                } else {
+                    window.location.href = 'consulting-buy.html?price=' + encodeURIComponent(price) + titleParam;
+                }
+            });
         });
-    });
+
+        document.querySelectorAll('[data-consult]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                consultTarget.textContent = button.getAttribute('data-title') || '企业数据治理与合规咨询服务';
+                consultOverlay.classList.add('active');
+            });
+        });
+
+        function closeConsult() {
+            consultOverlay.classList.remove('active');
+        }
+
+        document.getElementById('consultClose').addEventListener('click', closeConsult);
+        document.getElementById('consultCancel').addEventListener('click', closeConsult);
+        consultOverlay.addEventListener('click', function (event) {
+            if (event.target === consultOverlay) closeConsult();
+        });
+
+        consultTextarea.addEventListener('input', function () {
+            consultCount.textContent = consultTextarea.value.length;
+        });
+
+        document.getElementById('consultForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            closeConsult();
+            if (window.GlobalDialog) {
+                GlobalDialog.success({
+                    title: '提交成功',
+                    desc: '您的咨询已提交，服务人员将尽快与您联系。',
+                    duration: 1600
+                });
+            }
+        });
+    })();
     </script>
 </body>
 </html>
