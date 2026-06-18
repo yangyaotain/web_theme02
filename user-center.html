@@ -70,6 +70,16 @@
         .info-tag.gray { color: #909399; border-color: #d3d4d6; background: #f4f4f5; }
         .info-tag.orange { color: #e6a23c; border-color: #f5dab1; background: #fdf6ec; }
         .info-tag.red { color: #f56c6c; border-color: #fbc4c4; background: #fef0f0; }
+        .member-status {
+            padding: 1px 8px; font-size: 11px; font-weight: 500;
+            border-radius: 2px; border: 1px solid;
+        }
+        .member-status.status-normal {
+            color: var(--forest-green); border-color: var(--forest-green-200); background: var(--forest-green-50);
+        }
+        .member-status.status-frozen {
+            color: #f56c6c; border-color: #fbc4c4; background: #fef0f0;
+        }
         .expire-text { font-size: 12px; color: #909399; }
 
         .field { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; min-width: 200px; margin-right: 16px; }
@@ -431,13 +441,12 @@
                 <div class="card-bd">
                     <div class="info-row">
                         <span class="company-name">中国电子云</span>
-                        <div class="tag-group">
+                        <div class="tag-group" id="memberIdentityTags">
                             <span class="info-tag blue">普通用户</span>
-                            <span class="info-tag gray">银卡会员</span>
                             <span class="info-tag orange">金卡会员</span>
-                            <span class="info-tag red">铂金会员</span>
                         </div>
-                        <span class="expire-text">会员到期时间：2026.10.8 14:50:00</span>
+                        <span class="member-status status-normal" id="memberStatusText">会员状态：正常</span>
+                        <span class="expire-text" id="memberExpireText">会员到期时间：2026.10.8 14:50:00</span>
                     </div>
                     <div class="info-row">
                         <span class="field"><span class="field-l">主体类型：</span><span class="field-v">法人或其他组织</span></span>
@@ -746,6 +755,7 @@
 
     (function() {
         var CURRENT_MEMBER_TYPE = 'gold';
+        var CURRENT_MEMBER_STATUS = 'normal';
         var currentExpireAt = new Date(2026, 9, 8, 14, 50, 0);
         var currentMode = 'apply';
         var lastPayableAmount = 0;
@@ -819,7 +829,7 @@
             change: {
                 title: '会员变更',
                 submit: '提交变更',
-                hint: '当前会员：金卡会员，请选择变更的会员。',
+                hint: '当前会员：金卡会员，请选择更高等级的会员。',
                 rule: '变更说明：当前会员剩余有效期会先折算为可用余额，用于抵扣变更后会员费用；可覆盖则无需补差，余额继续折算有效期，覆盖不足时仅补差额。'
             }
         };
@@ -846,6 +856,9 @@
         var voucherTip = document.getElementById('paymentVoucherTip');
         var applySubmit = document.getElementById('memberApplySubmit');
         var submitText = document.getElementById('memberSubmitText');
+        var memberIdentityTags = document.getElementById('memberIdentityTags');
+        var memberStatusText = document.getElementById('memberStatusText');
+        var memberExpireText = document.getElementById('memberExpireText');
         var termMonths = {
             month: 1,
             quarter: 3,
@@ -878,6 +891,30 @@
 
         function formatDate(date) {
             return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        }
+
+        function padTime(num) {
+            return String(num).padStart(2, '0');
+        }
+
+        function formatMemberExpireTime(date) {
+            return date.getFullYear() + '.' + (date.getMonth() + 1) + '.' + date.getDate() + ' ' +
+                padTime(date.getHours()) + ':' + padTime(date.getMinutes()) + ':' + padTime(date.getSeconds());
+        }
+
+        function renderCurrentMemberInfo() {
+            var isFrozen = CURRENT_MEMBER_STATUS === 'frozen';
+            var currentMember = memberData[CURRENT_MEMBER_TYPE];
+            var tagClassMap = { silver: 'gray', gold: 'orange', platinum: 'red' };
+            var memberTag = !isFrozen && currentMember
+                ? '<span class="info-tag ' + (tagClassMap[CURRENT_MEMBER_TYPE] || 'gray') + '">' + currentMember.title + '</span>'
+                : '';
+            memberIdentityTags.innerHTML = '<span class="info-tag blue">普通用户</span>' + memberTag;
+            memberStatusText.textContent = '会员状态：' + (isFrozen ? '已冻结' : '正常');
+            memberStatusText.className = 'member-status ' + (isFrozen ? 'status-frozen' : 'status-normal');
+            memberExpireText.textContent = isFrozen
+                ? '冻结后按普通用户展示'
+                : '会员到期时间：' + formatMemberExpireTime(currentExpireAt);
         }
 
         function getTermRange(months) {
@@ -959,14 +996,13 @@
             var currentDayPrice = getDayPrice(currentMember);
             var targetDayPrice = getDayPrice(d);
             var oldRemainValue = remainingDays * currentDayPrice;
-            var direction = d.level > currentMember.level ? '升档' : '降档';
             var baseRange = getTermRange(totalMonths);
             var balanceDiff = oldRemainValue - totalPrice;
             var payable = Math.max(0, -balanceDiff);
             var extraDays = balanceDiff > 0 ? Math.floor(balanceDiff / targetDayPrice) : 0;
             var endDate = balanceDiff > 0 ? addDays(baseRange.end, extraDays) : baseRange.end;
             var lines = [
-                { text: '变更类型：<strong>' + direction + '</strong>（' + currentMember.title + ' → ' + d.title + '）' },
+                { text: '会员变更：<strong>' + currentMember.title + ' → ' + d.title + '</strong>' },
                 { text: '目标周期：<strong>' + priceItem.label + ' × ' + quantity + '</strong>，费用 ' + formatPrice(totalPrice) + '元' },
                 { text: '旧有效期换算：剩余 ' + remainingDays + ' 天，可抵扣约 <strong>' + formatPrice(oldRemainValue) + '元</strong>' }
             ];
@@ -1036,7 +1072,8 @@
         function renderMemberOptions(mode) {
             var values = Object.keys(memberData);
             if (mode === 'change') {
-                values = values.filter(function(key) { return key !== CURRENT_MEMBER_TYPE; });
+                var currentLevel = memberData[CURRENT_MEMBER_TYPE].level;
+                values = values.filter(function(key) { return memberData[key].level > currentLevel; });
             }
             sel.innerHTML = values.map(function(key) {
                 return '<option value="' + key + '">' + memberData[key].title + '</option>';
@@ -1139,6 +1176,7 @@
             this.closest('.modal-mask').classList.remove('show');
         });
 
+        renderCurrentMemberInfo();
         setMemberMode('apply');
     })();
     </script>
