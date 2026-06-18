@@ -105,7 +105,24 @@
         .term-preview strong {
             color: var(--forest-green); font-weight: 700;
         }
+        .term-preview .preview-line { margin-bottom: 4px; }
+        .term-preview .preview-line:last-child { margin-bottom: 0; }
+        .term-preview .preview-note {
+            margin-top: 8px; padding-top: 8px; border-top: 1px dashed #dfe8e2;
+            color: #606f7b; font-size: 12px;
+        }
+        .term-preview .payable strong { color: #f56c6c; }
         .form-group.is-hidden { display: none; }
+        .member-type-static {
+            min-height: 34px; padding: 0 10px; display: inline-flex; align-items: center;
+            background: #f5f7fa; border: 1px solid #e4e7ed; border-radius: 3px;
+            font-size: 13px; font-weight: 600; color: #303133;
+        }
+        .member-type-static[hidden] { display: none; }
+        .member-mode-note {
+            margin-top: 6px; font-size: 12px; color: #909399; line-height: 1.6;
+        }
+        .member-mode-note:empty { display: none; }
         .data-table .link-green {
             display: inline-flex; align-items: center; gap: 4px;
         }
@@ -123,6 +140,51 @@
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.7 7.7 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.7 7.7 0 0 0 17 18l2.4 1 2-3.5-2-1.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.7 7.7 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.7 7.7 0 0 0 17 18l2.4 1 2-3.5-2-1.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z'/%3E%3C/svg%3E");
         }
+        .data-table span.link-green.op-renew::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 3a9 9 0 1 1-6.36 15.36l1.42-1.42A7 7 0 1 0 6 12h3l-4 4-4-4h3a9 9 0 0 1 9-9zm-1 5h2v4.1l3.2 1.9-1 1.73L12 13.2V8z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 3a9 9 0 1 1-6.36 15.36l1.42-1.42A7 7 0 1 0 6 12h3l-4 4-4-4h3a9 9 0 0 1 9-9zm-1 5h2v4.1l3.2 1.9-1 1.73L12 13.2V8z'/%3E%3C/svg%3E");
+        }
+        .data-table span.link-green.op-change::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.5-2.5a1 1 0 0 0-1.41 0l-1.96 1.96 3.75 3.75 2.12-1.8z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.5-2.5a1 1 0 0 0-1.41 0l-1.96 1.96 3.75 3.75 2.12-1.8z'/%3E%3C/svg%3E");
+        }
+        .data-table span.link-green.op-freeze::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17 9V7A5 5 0 0 0 7 7v2H5v12h14V9h-2zm-8 0V7a3 3 0 1 1 6 0v2H9zm4 7.73V18h-2v-1.27a2 2 0 1 1 2 0z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17 9V7A5 5 0 0 0 7 7v2H5v12h14V9h-2zm-8 0V7a3 3 0 1 1 6 0v2H9zm4 7.73V18h-2v-1.27a2 2 0 1 1 2 0z'/%3E%3C/svg%3E");
+        }
+        .data-table span.link-green.op-unfreeze::before {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17 9V7a5 5 0 0 0-9.58-2L9.2 5.9A3 3 0 0 1 15 7v2H5v12h14V9h-2zm-4 7.73V18h-2v-1.27a2 2 0 1 1 2 0z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17 9V7a5 5 0 0 0-9.58-2L9.2 5.9A3 3 0 0 1 15 7v2H5v12h14V9h-2zm-4 7.73V18h-2v-1.27a2 2 0 1 1 2 0z'/%3E%3C/svg%3E");
+        }
+        .freeze-status {
+            min-width: 54px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+            padding: 0 8px; border-radius: 3px; border: 1px solid transparent;
+            font-size: 12px; font-weight: 500; line-height: 1;
+        }
+        .freeze-status.status-normal {
+            color: var(--forest-green); background: var(--forest-green-50); border-color: var(--forest-green-200);
+        }
+        .freeze-status.status-frozen {
+            color: #f56c6c; background: #fef0f0; border-color: #fbc4c4;
+        }
+        .freeze-info-panel {
+            display: grid; gap: 10px; padding: 14px 16px;
+            background: #f8faf9; border: 1px solid #e4e7ed; border-radius: 3px;
+        }
+        .freeze-info-row {
+            display: grid; grid-template-columns: 72px 1fr; gap: 8px;
+            font-size: 13px; line-height: 1.7;
+        }
+        .freeze-info-row .lbl { color: #909399; }
+        .freeze-info-row .val { color: #303133; font-weight: 500; word-break: break-all; }
+        .freeze-info-row .val.status-text { color: var(--forest-green); }
+        .freeze-info-row .val.status-text.is-frozen { color: #f56c6c; }
+        .member-rule-tip {
+            margin-top: 14px; padding: 10px 12px; background: #fff;
+            border: 1px solid #dcefe4; border-radius: 3px;
+            font-size: 12px; line-height: 1.7; color: #606266;
+        }
+        .member-rule-tip b { color: var(--forest-green); font-weight: 600; }
 
         .apply-ft {
             padding: 20px 0 0; display: flex; gap: 12px;
@@ -269,6 +331,11 @@
                     <option>金卡会员</option>
                     <option>铂金会员</option>
                 </select>
+                <select class="filter-select" id="freezeStatusFilter">
+                    <option value="">冻结状态</option>
+                    <option value="normal">正常</option>
+                    <option value="frozen">已冻结</option>
+                </select>
                 <input class="filter-date" type="text" placeholder="到期时间：开始时间 — 结束时间">
                 <span class="filter-icon" title="搜索">
                     <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
@@ -290,6 +357,7 @@
                             <th>申请人</th>
                             <th>开通时间</th>
                             <th>到期时间</th>
+                            <th>冻结状态</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -301,10 +369,11 @@
                             <td>张三</td>
                             <td>2025-6-15 10:30:00</td>
                             <td>2030-6-15 10:30:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -314,10 +383,11 @@
                             <td>李明</td>
                             <td>2025-8-20 14:00:00</td>
                             <td>2028-8-20 14:00:00</td>
+                            <td><span class="freeze-status status-frozen" data-status="frozen">已冻结</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
+                                <span class="link-green op-unfreeze" data-freeze-action="unfreeze" onclick="openFreezeModal('unfreeze', this)">解冻</span>
                             </td>
                         </tr>
                         <tr>
@@ -327,10 +397,11 @@
                             <td>王芳</td>
                             <td>2025-11-5 09:15:00</td>
                             <td>2027-11-5 09:15:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('silver', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -340,10 +411,11 @@
                             <td>赵刚</td>
                             <td>2024-12-1 11:00:00</td>
                             <td>2034-12-1 11:00:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -353,10 +425,11 @@
                             <td>陈静</td>
                             <td>2026-1-18 16:30:00</td>
                             <td>2029-1-18 16:30:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -366,10 +439,11 @@
                             <td>刘伟</td>
                             <td>2026-2-10 08:45:00</td>
                             <td>2027-2-10 08:45:00</td>
+                            <td><span class="freeze-status status-frozen" data-status="frozen">已冻结</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('normal', this)">管理</span>
+                                <span class="link-green op-unfreeze" data-freeze-action="unfreeze" onclick="openFreezeModal('unfreeze', this)">解冻</span>
                             </td>
                         </tr>
                         <tr>
@@ -379,10 +453,11 @@
                             <td>周涛</td>
                             <td>2025-9-3 13:20:00</td>
                             <td>2026-9-3 13:20:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('silver', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -392,10 +467,11 @@
                             <td>吴昊</td>
                             <td>2025-4-22 10:00:00</td>
                             <td>2030-4-22 10:00:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('platinum', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                         <tr>
@@ -405,10 +481,11 @@
                             <td>孙丽</td>
                             <td>2026-3-1 15:10:00</td>
                             <td>2027-3-1 15:10:00</td>
+                            <td><span class="freeze-status status-frozen" data-status="frozen">已冻结</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('normal', this)">管理</span>
+                                <span class="link-green op-unfreeze" data-freeze-action="unfreeze" onclick="openFreezeModal('unfreeze', this)">解冻</span>
                             </td>
                         </tr>
                         <tr>
@@ -418,10 +495,11 @@
                             <td>黄磊</td>
                             <td>2025-7-8 09:00:00</td>
                             <td>2027-7-8 09:00:00</td>
+                            <td><span class="freeze-status status-normal" data-status="normal">正常</span></td>
                             <td>
                                 <a href="member-detail.html" class="link-green">查看详情</a>
                                 <span class="op-divider">|</span>
-                                <span class="link-green" onclick="openManageModal('gold', this)">管理</span>
+                                <span class="link-green op-freeze" data-freeze-action="freeze" onclick="openFreezeModal('freeze', this)">冻结</span>
                             </td>
                         </tr>
                     </tbody>
@@ -540,11 +618,11 @@
         </aside>
     </div>
 
-    <!-- 修改会员属性弹窗 -->
+    <!-- 会员续期/变更弹窗 -->
     <div class="modal-mask" id="manageModal">
         <div class="modal-box">
             <div class="modal-hd">
-                <span class="modal-title">修改会员属性</span>
+                <span class="modal-title" id="manageModalTitle">会员续期</span>
                 <button class="modal-close" onclick="closeManageModal()">
                     <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </button>
@@ -565,10 +643,12 @@
                                     <option value="gold">金卡会员</option>
                                     <option value="platinum">铂金会员</option>
                                 </select>
+                                <span class="member-type-static" id="manageTypeStatic" hidden>金卡会员</span>
+                                <div class="member-mode-note" id="manageTypeHint"></div>
                             </div>
                         </div>
                         <div class="form-group" id="manageTermGroup">
-                            <label class="form-label">有效期：</label>
+                            <label class="form-label">收费方式：</label>
                             <div class="form-value">
                                 <select class="form-select" id="manageTermSelect">
                                     <option value="month">按月</option>
@@ -612,6 +692,72 @@
                                 <li>2、可以进行相关资源申请授权和数据产品交易；</li>
                                 <li>3、享受数据产品等相关交易<b>8折</b>优惠；</li>
                             </ol>
+                            <div class="member-rule-tip" id="manageRuleTip">管理员可为当前会员续期，续期有效期将顺延到原到期时间之后。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 冻结/解冻弹窗 -->
+    <div class="modal-mask" id="freezeModal">
+        <div class="modal-box">
+            <div class="modal-hd">
+                <span class="modal-title" id="freezeModalTitle">冻结会员</span>
+                <button class="modal-close" onclick="closeFreezeModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="modal-bd">
+                <div class="apply-layout">
+                    <div class="apply-form">
+                        <div class="form-group">
+                            <label class="form-label">当前主体：</label>
+                            <div class="form-value"><span class="form-static" id="freezeSubject">中国电子云</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">会员类型：</label>
+                            <div class="form-value"><span class="form-static" id="freezeMemberType">铂金会员</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">会员有效期：</label>
+                            <div class="form-value"><span class="form-static" id="freezeMemberTerm">2025-6-15 / 2030-6-15</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">当前状态：</label>
+                            <div class="form-value"><span class="form-static" id="freezeCurrentStatus">正常</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" id="freezeReasonLabel">冻结原因：</label>
+                            <div class="form-value">
+                                <textarea class="form-textarea" id="freezeReasonInput" maxlength="200" placeholder="请输入冻结原因，200字以内"></textarea>
+                                <div class="form-help"><span id="freezeReasonCount">0/200</span></div>
+                            </div>
+                        </div>
+                        <div class="apply-ft" style="margin-left:80px;">
+                            <button class="btn-primary" onclick="submitFreezeChange()">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                <span id="freezeSubmitText">确定冻结</span>
+                            </button>
+                            <button class="btn-outline" onclick="closeFreezeModal()">
+                                <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.3-6.29z"/></svg>
+                                取消
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="apply-info-label">会员信息：</div>
+                        <div class="apply-info-panel">
+                            <div class="apply-info-title" id="freezeInfoTitle">中国电子云</div>
+                            <div class="freeze-info-panel">
+                                <div class="freeze-info-row"><span class="lbl">会员类型</span><span class="val" id="freezeInfoType">铂金会员</span></div>
+                                <div class="freeze-info-row"><span class="lbl">收费方式</span><span class="val" id="freezeInfoTerm">按年</span></div>
+                                <div class="freeze-info-row"><span class="lbl">开通时间</span><span class="val" id="freezeInfoStart">2025-6-15 10:30:00</span></div>
+                                <div class="freeze-info-row"><span class="lbl">到期时间</span><span class="val" id="freezeInfoEnd">2030-6-15 10:30:00</span></div>
+                                <div class="freeze-info-row"><span class="lbl">冻结状态</span><span class="val status-text" id="freezeInfoStatus">正常</span></div>
+                            </div>
+                            <div class="member-rule-tip" id="freezeRuleTip">冻结后该会员状态将显示为已冻结；解冻后恢复为正常状态。</div>
                         </div>
                     </div>
                 </div>
@@ -671,6 +817,13 @@
     var memberData = {
         normal: {
             title: '普通会员',
+            level: 0,
+            prices: [
+                { method: 'month', price: 0 },
+                { method: 'quarter', price: 0 },
+                { method: 'halfYear', price: 0 },
+                { method: 'year', price: 0 }
+            ],
             items: [
                 '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
                 '2、可以进行相关资源申请授权和数据产品交易；'
@@ -678,6 +831,13 @@
         },
         silver: {
             title: '银卡会员',
+            level: 1,
+            prices: [
+                { method: 'month', price: 120 },
+                { method: 'quarter', price: 330 },
+                { method: 'halfYear', price: 620 },
+                { method: 'year', price: 1200 }
+            ],
             items: [
                 '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
                 '2、可以进行相关资源申请授权和数据产品交易；',
@@ -686,6 +846,13 @@
         },
         gold: {
             title: '金卡会员',
+            level: 2,
+            prices: [
+                { method: 'month', price: 280 },
+                { method: 'quarter', price: 780 },
+                { method: 'halfYear', price: 1500 },
+                { method: 'year', price: 2800 }
+            ],
             items: [
                 '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
                 '2、可以进行相关资源申请授权和数据产品交易；',
@@ -694,6 +861,13 @@
         },
         platinum: {
             title: '铂金会员',
+            level: 3,
+            prices: [
+                { method: 'month', price: 520 },
+                { method: 'quarter', price: 1480 },
+                { method: 'halfYear', price: 2860 },
+                { method: 'year', price: 5200 }
+            ],
             items: [
                 '1、浏览门户公开数据信息，包括数据资源、数据商店、数据产品、行业解决方案、咨询服务等门户内容；',
                 '2、可以进行相关资源申请授权和数据产品交易；',
@@ -702,7 +876,26 @@
         }
     };
 
+    var modeConfig = {
+        renew: {
+            title: '会员续期',
+            submitTitle: '确认会员续期',
+            confirmText: '确认续期',
+            successTitle: '续期成功',
+            rule: '管理员可为当前会员续期，本次购买的有效期会顺延到原到期时间之后。'
+        },
+        change: {
+            title: '会员变更',
+            submitTitle: '确认会员变更',
+            confirmText: '确认变更',
+            successTitle: '变更成功',
+            rule: '管理员变更会员时，当前会员剩余有效期会先折算为可用余额，用于抵扣变更后会员费用；可覆盖则无需补差，余额继续折算有效期，覆盖不足时仅补差额。'
+        }
+    };
+
     var sel = document.getElementById('manageTypeSelect');
+    var typeStaticEl = document.getElementById('manageTypeStatic');
+    var typeHintEl = document.getElementById('manageTypeHint');
     var termSel = document.getElementById('manageTermSelect');
     var quantityInput = document.getElementById('manageQuantityInput');
     var reasonInput = document.getElementById('manageReasonInput');
@@ -711,11 +904,34 @@
     var termGroupEl = document.getElementById('manageTermGroup');
     var quantityGroupEl = document.getElementById('manageQuantityGroup');
     var manageApplicantEl = document.getElementById('manageApplicant');
+    var modalTitleEl = document.getElementById('manageModalTitle');
     var titleEl = document.getElementById('manageInfoTitle');
     var listEl = document.getElementById('manageInfoList');
+    var ruleTipEl = document.getElementById('manageRuleTip');
     var manageModal = document.getElementById('manageModal');
     var currentManageRow = null;
     var currentManageState = null;
+    var manageMode = 'renew';
+    var freezeModal = document.getElementById('freezeModal');
+    var freezeModalTitleEl = document.getElementById('freezeModalTitle');
+    var freezeSubjectEl = document.getElementById('freezeSubject');
+    var freezeMemberTypeEl = document.getElementById('freezeMemberType');
+    var freezeMemberTermEl = document.getElementById('freezeMemberTerm');
+    var freezeCurrentStatusEl = document.getElementById('freezeCurrentStatus');
+    var freezeReasonLabelEl = document.getElementById('freezeReasonLabel');
+    var freezeReasonInput = document.getElementById('freezeReasonInput');
+    var freezeReasonCountEl = document.getElementById('freezeReasonCount');
+    var freezeSubmitTextEl = document.getElementById('freezeSubmitText');
+    var freezeInfoTitleEl = document.getElementById('freezeInfoTitle');
+    var freezeInfoTypeEl = document.getElementById('freezeInfoType');
+    var freezeInfoTermEl = document.getElementById('freezeInfoTerm');
+    var freezeInfoStartEl = document.getElementById('freezeInfoStart');
+    var freezeInfoEndEl = document.getElementById('freezeInfoEnd');
+    var freezeInfoStatusEl = document.getElementById('freezeInfoStatus');
+    var freezeRuleTipEl = document.getElementById('freezeRuleTip');
+    var freezeStatusFilter = document.getElementById('freezeStatusFilter');
+    var currentFreezeRow = null;
+    var currentFreezeAction = 'freeze';
     var termData = {
         month: { label: '按月', months: 1 },
         quarter: { label: '按季度', months: 3 },
@@ -730,6 +946,12 @@
     termSel.addEventListener('change', updateTermPreview);
     quantityInput.addEventListener('input', updateTermPreview);
     reasonInput.addEventListener('input', updateReasonCount);
+    freezeReasonInput.addEventListener('input', updateFreezeReasonCount);
+    freezeStatusFilter.addEventListener('change', applyFreezeStatusFilter);
+    document.querySelector('.filter-reset').addEventListener('click', function() {
+        freezeStatusFilter.value = '';
+        applyFreezeStatusFilter();
+    });
 
     function updateInfo(val) {
         var d = memberData[val];
@@ -738,17 +960,12 @@
         listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
     }
 
-    function isNormalMember(value) {
-        return value === 'normal';
-    }
-
     function updateTypeRelatedFields() {
-        var hidden = isNormalMember(sel.value);
-        termGroupEl.classList.toggle('is-hidden', hidden);
-        quantityGroupEl.classList.toggle('is-hidden', hidden);
-        termSel.disabled = hidden;
-        quantityInput.disabled = hidden;
-        if (!hidden) updateTermPreview();
+        termGroupEl.classList.remove('is-hidden');
+        quantityGroupEl.classList.remove('is-hidden');
+        termSel.disabled = false;
+        quantityInput.disabled = false;
+        updateTermPreview();
     }
 
     function updateReasonCount() {
@@ -805,8 +1022,18 @@
         return result;
     }
 
+    function addDays(date, days) {
+        var result = new Date(date.getTime());
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
     function formatDate(date) {
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+
+    function formatPrice(price) {
+        return Number(Math.max(0, Math.round(price))).toLocaleString('zh-CN');
     }
 
     function getDateOnly(text) {
@@ -836,7 +1063,7 @@
         if (!hasExplicitQuantity && inferredMonths > 0 && baseMonths > 0) {
             quantity = Math.max(1, Math.round(inferredMonths / baseMonths));
         }
-        var preview = getTermPreview(value, quantity);
+        var preview = getTermRangeFromToday(value, quantity);
         var startDate = getDateOnly(startTime) || preview.startDate;
         var endDate = getDateOnly(endTime) || preview.endDate;
         return {
@@ -850,34 +1077,170 @@
         return Number.isInteger(quantity) && quantity > 0 ? quantity : null;
     }
 
-    function getTermPreview(value, quantity) {
-        var d = termData[value] || termData.year;
+    function getPriceItem(typeValue, termValue) {
+        var prices = (memberData[typeValue] && memberData[typeValue].prices) || [];
+        return prices.find(function(item) { return item.method === termValue; }) || { method: termValue, price: 0 };
+    }
+
+    function getAnnualPrice(member) {
+        var prices = member && member.prices ? member.prices : [];
+        var annual = prices.find(function(item) { return item.method === 'year'; });
+        return annual ? annual.price : 0;
+    }
+
+    function getDayPrice(member) {
+        return getAnnualPrice(member) / 365;
+    }
+
+    function getRemainingDays() {
+        var today = getCurrentDate();
+        var expire = currentManageState ? parseDateOnly(currentManageState.endDate) : null;
+        if (!expire) return 0;
+        return Math.max(0, Math.ceil((expire.getTime() - today.getTime()) / 86400000));
+    }
+
+    function getPurchasePreview(typeValue, termValue, quantity) {
+        var d = termData[termValue] || termData.year;
         var safeQuantity = Number.isInteger(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
         var totalMonths = d.months * safeQuantity;
-        var start = getCurrentDate();
-        var end = addMonths(start, totalMonths);
-        end.setDate(end.getDate() - 1);
+        var priceItem = getPriceItem(typeValue, termValue);
         return {
-            value: value,
+            value: termValue,
             label: d.label,
             quantity: safeQuantity,
-            term: getTermDisplayText(value, safeQuantity),
+            term: getTermDisplayText(termValue, safeQuantity),
             totalMonths: totalMonths,
-            startDate: formatDate(start),
-            endDate: formatDate(end),
-            rangeText: formatDate(start) + ' / ' + formatDate(end)
+            totalPrice: (priceItem.price || 0) * safeQuantity
         };
     }
 
-    function updateTermPreview() {
-        if (isNormalMember(sel.value)) return;
+    function getTermRangeFromToday(termValue, quantity) {
+        var preview = getPurchasePreview(sel.value, termValue, quantity);
+        var start = getCurrentDate();
+        var end = addMonths(start, preview.totalMonths);
+        end.setDate(end.getDate() - 1);
+        preview.startDate = formatDate(start);
+        preview.endDate = formatDate(end);
+        preview.rangeText = preview.startDate + ' / ' + preview.endDate;
+        preview.endDateObj = end;
+        return preview;
+    }
+
+    function renderPreview(lines, note) {
+        return lines.map(function(line) {
+            return '<div class="preview-line' + (line.payable ? ' payable' : '') + '">' + line.text + '</div>';
+        }).join('') + (note ? '<div class="preview-note">' + note + '</div>' : '');
+    }
+
+    function buildRenewValue() {
         var quantity = getValidQuantity();
-        if (!quantity) {
+        if (!quantity) return { invalidQuantity: true, subject: manageApplicantEl.textContent.trim() };
+        var purchase = getPurchasePreview(currentManageState.typeValue, termSel.value, quantity);
+        var today = getCurrentDate();
+        var currentEnd = parseDateOnly(currentManageState.endDate) || today;
+        var baseEnd = currentEnd.getTime() >= today.getTime() ? currentEnd : today;
+        var finalEnd = addMonths(baseEnd, purchase.totalMonths);
+        var typeData = memberData[currentManageState.typeValue] || {};
+        return {
+            mode: 'renew',
+            subject: manageApplicantEl.textContent.trim(),
+            typeValue: currentManageState.typeValue,
+            typeLabel: currentManageState.typeLabel,
+            termValue: purchase.value,
+            termLabel: purchase.label,
+            term: purchase.term,
+            quantity: purchase.quantity,
+            totalMonths: purchase.totalMonths,
+            totalPrice: purchase.totalPrice,
+            payableAmount: purchase.totalPrice,
+            amountLabel: '应收金额',
+            reason: reasonInput.value.trim(),
+            startDate: currentManageState.startDate,
+            endDate: formatDate(finalEnd),
+            rangeText: currentManageState.startDate + ' / ' + formatDate(finalEnd),
+            previewNote: '本次续期会顺延到原到期时间之后。',
+            infoTitle: typeData.title || currentManageState.typeLabel
+        };
+    }
+
+    function buildChangeValue() {
+        var quantity = getValidQuantity();
+        if (!quantity) return { invalidQuantity: true, subject: manageApplicantEl.textContent.trim() };
+        var target = memberData[sel.value] || {};
+        var currentMember = memberData[currentManageState.typeValue] || {};
+        var purchase = getTermRangeFromToday(termSel.value, quantity);
+        var remainingDays = getRemainingDays();
+        var oldRemainValue = remainingDays * getDayPrice(currentMember);
+        var targetDayPrice = getDayPrice(target);
+        var balanceDiff = oldRemainValue - purchase.totalPrice;
+        var payable = Math.max(0, -balanceDiff);
+        var extraDays = balanceDiff > 0 && targetDayPrice > 0 ? Math.floor(balanceDiff / targetDayPrice) : 0;
+        var finalEnd = balanceDiff > 0 && targetDayPrice > 0 ? addDays(purchase.endDateObj, extraDays) : purchase.endDateObj;
+        var direction = (target.level || 0) > (currentMember.level || 0) ? '升档' : '降档';
+        var note = '';
+        if (payable > 0) {
+            note = '旧有效期余额不足以覆盖本次' + (target.title || '') + '费用，需要补足差额后完成变更。';
+        } else if (targetDayPrice > 0) {
+            note = '旧有效期余额已覆盖本次' + (target.title || '') + '费用，原则不退款，结余部分继续折算为' + (target.title || '') + '有效期。';
+        } else {
+            note = '变更为普通会员不涉及补差，原付费会员剩余价值原则不退款。';
+        }
+        return {
+            mode: 'change',
+            subject: manageApplicantEl.textContent.trim(),
+            typeValue: sel.value,
+            typeLabel: target.title || sel.options[sel.selectedIndex].textContent.trim(),
+            termValue: purchase.value,
+            termLabel: purchase.label,
+            term: purchase.term,
+            quantity: purchase.quantity,
+            totalMonths: purchase.totalMonths,
+            totalPrice: purchase.totalPrice,
+            payableAmount: payable,
+            amountLabel: '应收/补差金额',
+            reason: reasonInput.value.trim(),
+            startDate: purchase.startDate,
+            endDate: formatDate(finalEnd),
+            rangeText: purchase.startDate + ' / ' + formatDate(finalEnd),
+            remainingDays: remainingDays,
+            oldRemainValue: oldRemainValue,
+            extraDays: extraDays,
+            direction: direction,
+            previewNote: note
+        };
+    }
+
+    function buildCurrentManageValue() {
+        return manageMode === 'change' ? buildChangeValue() : buildRenewValue();
+    }
+
+    function updateTermPreview() {
+        var nextValue = buildCurrentManageValue();
+        if (nextValue.invalidQuantity) {
             termPreviewEl.innerHTML = '请填写大于 0 的整数购买数量';
             return;
         }
-        var preview = getTermPreview(termSel.value, quantity);
-        termPreviewEl.innerHTML = '开通周期：<strong>' + escapeHtml(preview.term) + '</strong>，合计 ' + preview.totalMonths + ' 个月<br>有效期：<strong>' + escapeHtml(preview.rangeText) + '</strong>';
+        var lines = [];
+        if (manageMode === 'renew') {
+            lines = [
+                { text: '当前会员：<strong>' + escapeHtml(nextValue.typeLabel) + '</strong>' },
+                { text: '当前到期：' + escapeHtml(currentManageState.endDate) },
+                { text: '续期周期：<strong>' + escapeHtml(nextValue.term) + '</strong>，合计 ' + nextValue.totalMonths + ' 个月' },
+                { text: '应收金额：<strong>' + formatPrice(nextValue.payableAmount) + '元</strong>', payable: true },
+                { text: '续期后到期：<strong>' + escapeHtml(nextValue.endDate) + '</strong>' }
+            ];
+            ruleTipEl.innerHTML = modeConfig.renew.rule;
+        } else {
+            lines = [
+                { text: '变更类型：<strong>' + escapeHtml(nextValue.direction) + '</strong>（' + escapeHtml(currentManageState.typeLabel) + ' → ' + escapeHtml(nextValue.typeLabel) + '）' },
+                { text: '目标周期：<strong>' + escapeHtml(nextValue.term) + '</strong>，费用 ' + formatPrice(nextValue.totalPrice) + '元' },
+                { text: '旧有效期换算：剩余 ' + nextValue.remainingDays + ' 天，可抵扣约 <strong>' + formatPrice(nextValue.oldRemainValue) + '元</strong>' },
+                { text: '应收/补差金额：<strong>' + formatPrice(nextValue.payableAmount) + '元</strong>', payable: true },
+                { text: nextValue.payableAmount > 0 ? '变更后有效期：' + escapeHtml(nextValue.rangeText) : '变更后有效期：本次周期 ' + nextValue.totalMonths + ' 个月，结余折算约 ' + nextValue.extraDays + ' 天，到期至 <strong>' + escapeHtml(nextValue.endDate) + '</strong>' }
+            ];
+            ruleTipEl.innerHTML = modeConfig.change.rule;
+        }
+        termPreviewEl.innerHTML = renderPreview(lines, nextValue.previewNote);
     }
 
     function escapeHtml(str) {
@@ -894,72 +1257,24 @@
     }
 
     function getManageFormValue() {
-        var typeData = memberData[sel.value] || {};
-        if (isNormalMember(sel.value)) {
-            return {
-                subject: manageApplicantEl.textContent.trim(),
-                typeValue: sel.value,
-                typeLabel: typeData.title || sel.options[sel.selectedIndex].textContent.trim(),
-                termValue: '',
-                termLabel: '',
-                term: '--',
-                quantity: null,
-                totalMonths: 0,
-                reason: reasonInput.value.trim(),
-                startDate: '--',
-                endDate: '--',
-                rangeText: '--'
-            };
-        }
-        var quantity = getValidQuantity();
-        if (!quantity) {
-            return {
-                subject: manageApplicantEl.textContent.trim(),
-                invalidQuantity: true
-            };
-        }
-        var preview = getTermPreview(termSel.value, quantity);
-        return {
-            subject: manageApplicantEl.textContent.trim(),
-            typeValue: sel.value,
-            typeLabel: typeData.title || sel.options[sel.selectedIndex].textContent.trim(),
-            termValue: preview.value,
-            termLabel: preview.label,
-            term: preview.term,
-            quantity: preview.quantity,
-            totalMonths: preview.totalMonths,
-            reason: reasonInput.value.trim(),
-            startDate: preview.startDate,
-            endDate: preview.endDate,
-            rangeText: preview.rangeText
-        };
+        return buildCurrentManageValue();
     }
 
     function getManageChanges(nextValue) {
-        if (!currentManageState) return [];
-        var changes = [];
-        if (currentManageState.typeLabel !== nextValue.typeLabel) {
-            changes.push({
-                label: '会员类型',
-                before: currentManageState.typeLabel,
-                after: nextValue.typeLabel
-            });
+        if (!currentManageState || nextValue.invalidQuantity) return [];
+        if (nextValue.mode === 'renew') {
+            return [
+                { label: '管理动作', before: '--', after: '续期' },
+                { label: '续期周期', before: '--', after: nextValue.term + '，合计 ' + nextValue.totalMonths + ' 个月' },
+                { label: '到期时间', before: currentManageState.endDate, after: nextValue.endDate }
+            ];
         }
-        if (!isNormalMember(nextValue.typeValue) && !isNormalMember(currentManageState.typeValue) && currentManageState.termValue !== nextValue.termValue) {
-            changes.push({
-                label: '有效期',
-                before: getTermLabel(currentManageState.termValue),
-                after: nextValue.termLabel
-            });
-        }
-        if (!isNormalMember(nextValue.typeValue) && !isNormalMember(currentManageState.typeValue) && currentManageState.quantity !== nextValue.quantity) {
-            changes.push({
-                label: '购买数量',
-                before: currentManageState.quantity + ' 份',
-                after: nextValue.quantity + ' 份'
-            });
-        }
-        return changes;
+        return [
+            { label: '管理动作', before: '--', after: '变更' },
+            { label: '会员类型', before: currentManageState.typeLabel, after: nextValue.typeLabel },
+            { label: '购买周期', before: '--', after: nextValue.term + '，合计 ' + nextValue.totalMonths + ' 个月' },
+            { label: '到期时间', before: currentManageState.endDate, after: nextValue.endDate }
+        ];
     }
 
     function buildManageConfirmDesc(nextValue, changes) {
@@ -973,7 +1288,7 @@
         }).join('');
 
         return '<div style="display:grid;gap:10px">' +
-            '<div>请确认本次修改内容，确认后将在会员列表中生效。</div>' +
+            '<div>请确认本次管理员调整内容，确认后将在会员列表中生效。</div>' +
             '<div style="padding:10px 12px;background:#f8faf9;border:1px solid #e4e7ed;border-radius:4px">' +
                 '<div style="margin-bottom:6px;color:#303133;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">申请主体：' + escapeHtml(nextValue.subject) + '</div>' +
                 rows +
@@ -983,12 +1298,12 @@
     }
 
     function buildManageConfirmExtra(nextValue) {
-        var periodRows = isNormalMember(nextValue.typeValue) ? '' :
-            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">开通周期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.term) + '，合计 ' + nextValue.totalMonths + ' 个月</span></div>' +
-            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">最终有效期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</span></div>';
+        var amountText = nextValue.payableAmount > 0 ? formatPrice(nextValue.payableAmount) + '元' : '0元';
         return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #dcdfe6;display:grid;gap:4px">' +
-            periodRows +
-            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:68px;color:#909399;flex-shrink:0">修改原因</span><span style="color:#606266">' + escapeHtml(nextValue.reason || '未填写') + '</span></div>' +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">最终有效期</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextValue.rangeText) + '</span></div>' +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">' + escapeHtml(nextValue.amountLabel) + '</span><span style="color:#f56c6c;font-weight:600">' + escapeHtml(amountText) + '</span></div>' +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">规则说明</span><span style="color:#606266">' + escapeHtml(nextValue.previewNote) + '</span></div>' +
+            '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">修改原因</span><span style="color:#606266">' + escapeHtml(nextValue.reason || '未填写') + '</span></div>' +
         '</div>';
     }
 
@@ -1003,31 +1318,19 @@
         }
         var changes = getManageChanges(nextValue);
 
-        if (!changes.length) {
-            GlobalDialog.info({
-                title: '暂无修改内容',
-                desc: isNormalMember(nextValue.typeValue) ? '会员类型未发生变化' : '会员类型、有效期和购买数量均未发生变化'
-            });
-            return;
-        }
-
         GlobalDialog.warning({
-            title: '确认修改会员属性',
+            title: modeConfig[manageMode].submitTitle,
             desc: buildManageConfirmDesc(nextValue, changes),
-            confirmText: '确认修改',
+            confirmText: modeConfig[manageMode].confirmText,
             cancelText: '返回修改',
             onConfirm: function() {
                 if (currentManageRow) {
                     currentManageRow.cells[1].textContent = nextValue.typeLabel;
-                    if (isNormalMember(nextValue.typeValue)) {
-                        currentManageRow.cells[2].textContent = '--';
-                        currentManageRow.cells[4].textContent = '--';
-                        currentManageRow.cells[5].textContent = '--';
-                    } else {
-                        currentManageRow.cells[2].textContent = nextValue.term;
+                    currentManageRow.cells[2].textContent = nextValue.term;
+                    if (nextValue.mode === 'change') {
                         currentManageRow.cells[4].textContent = nextValue.startDate + ' 00:00:00';
-                        currentManageRow.cells[5].textContent = nextValue.endDate + ' 23:59:59';
                     }
+                    currentManageRow.cells[5].textContent = nextValue.endDate + ' 23:59:59';
                 }
                 closeManageModal();
                 currentManageState = {
@@ -1037,45 +1340,216 @@
                     term: nextValue.term,
                     termValue: nextValue.termValue,
                     quantity: nextValue.quantity,
-                    totalMonths: nextValue.totalMonths
+                    totalMonths: nextValue.totalMonths,
+                    startDate: nextValue.startDate,
+                    endDate: nextValue.endDate
                 };
                 GlobalDialog.success({
-                    title: '修改成功',
-                    desc: '已更新【' + escapeHtml(nextValue.subject) + '】的会员属性'
+                    title: modeConfig[manageMode].successTitle,
+                    desc: '已完成【' + escapeHtml(nextValue.subject) + '】的会员' + (nextValue.mode === 'renew' ? '续期' : '变更')
                 });
             }
         });
     }
 
-    function openManageModal(type, trigger) {
+    function renderManageTypeOptions(mode, currentType) {
+        var values = Object.keys(memberData);
+        if (mode === 'change') {
+            values = values.filter(function(key) { return key !== currentType; });
+        } else {
+            values = [currentType];
+        }
+        sel.innerHTML = values.map(function(key) {
+            return '<option value="' + key + '">' + memberData[key].title + '</option>';
+        }).join('');
+        sel.hidden = mode === 'renew';
+        typeStaticEl.hidden = mode !== 'renew';
+        typeStaticEl.textContent = memberData[currentType] ? memberData[currentType].title : '';
+        typeHintEl.textContent = mode === 'change'
+            ? '当前会员：' + (memberData[currentType] ? memberData[currentType].title : '--') + '，请选择变更的会员。'
+            : '';
+        sel.value = mode === 'change' ? values[0] : currentType;
+    }
+
+    function openManageModal(mode, type, trigger) {
+        manageMode = modeConfig[mode] ? mode : 'renew';
         currentManageRow = trigger && trigger.closest ? trigger.closest('tr') : null;
         var subject = currentManageRow ? currentManageRow.cells[0].textContent.trim() : '中国电子云';
         var typeLabel = currentManageRow ? currentManageRow.cells[1].textContent.trim() : (memberData[type] ? memberData[type].title : '');
         var term = currentManageRow ? currentManageRow.cells[2].textContent.trim() : '按年';
+        var startTime = currentManageRow ? currentManageRow.cells[4].textContent.trim() : formatDate(getCurrentDate()) + ' 00:00:00';
+        var endTime = currentManageRow ? currentManageRow.cells[5].textContent.trim() : formatDate(getCurrentDate()) + ' 23:59:59';
         var resolvedType = getTypeValueByLabel(typeLabel) || type;
         var parsedTerm = parseTermText(term);
 
+        modalTitleEl.textContent = modeConfig[manageMode].title;
+        reasonInput.placeholder = manageMode === 'renew' ? '请输入续期原因，200字以内' : '请输入变更原因，200字以内';
         manageApplicantEl.textContent = subject;
-        sel.value = resolvedType;
         termSel.value = parsedTerm.value;
         quantityInput.value = parsedTerm.quantity;
         reasonInput.value = '';
         updateReasonCount();
-        updateInfo(resolvedType);
-        updateTypeRelatedFields();
         currentManageState = {
             subject: subject,
             typeValue: resolvedType,
             typeLabel: typeLabel || (memberData[type] ? memberData[type].title : ''),
             term: getTermDisplayText(parsedTerm.value, parsedTerm.quantity),
             termValue: parsedTerm.value,
-            quantity: parsedTerm.quantity
+            quantity: parsedTerm.quantity,
+            startDate: getDateOnly(startTime),
+            startTimeRaw: startTime,
+            endDate: getDateOnly(endTime),
+            endTimeRaw: endTime
         };
+        renderManageTypeOptions(manageMode, resolvedType);
+        updateInfo(sel.value);
+        updateTypeRelatedFields();
         manageModal.classList.add('show');
     }
 
     manageModal.addEventListener('click', function(e) {
         if (e.target === this) closeManageModal();
+    });
+
+    function updateFreezeReasonCount() {
+        freezeReasonCountEl.textContent = freezeReasonInput.value.length + '/200';
+    }
+
+    function getFreezeStatusLabel(status) {
+        return status === 'frozen' ? '已冻结' : '正常';
+    }
+
+    function getRowFreezeStatus(row) {
+        var statusEl = row ? row.querySelector('.freeze-status') : null;
+        if (!statusEl) return 'normal';
+        return statusEl.dataset.status || (statusEl.textContent.trim() === '已冻结' ? 'frozen' : 'normal');
+    }
+
+    function getFreezeRowInfo(row) {
+        var cells = row ? row.cells : [];
+        return {
+            subject: cells[0] ? cells[0].textContent.trim() : '--',
+            typeLabel: cells[1] ? cells[1].textContent.trim() : '--',
+            term: cells[2] ? cells[2].textContent.trim() : '--',
+            startTime: cells[4] ? cells[4].textContent.trim() : '--',
+            endTime: cells[5] ? cells[5].textContent.trim() : '--',
+            status: getRowFreezeStatus(row)
+        };
+    }
+
+    function setFreezeStatusText(label) {
+        freezeCurrentStatusEl.textContent = label;
+        freezeInfoStatusEl.textContent = label;
+        freezeInfoStatusEl.classList.toggle('is-frozen', label === '已冻结');
+    }
+
+    function openFreezeModal(action, trigger) {
+        currentFreezeAction = action === 'unfreeze' ? 'unfreeze' : 'freeze';
+        currentFreezeRow = trigger && trigger.closest ? trigger.closest('tr') : null;
+        var info = getFreezeRowInfo(currentFreezeRow);
+        var isUnfreeze = currentFreezeAction === 'unfreeze';
+        var actionName = isUnfreeze ? '解冻' : '冻结';
+        var statusLabel = getFreezeStatusLabel(info.status);
+
+        freezeModalTitleEl.textContent = actionName + '会员';
+        freezeReasonLabelEl.textContent = actionName + '原因：';
+        freezeReasonInput.placeholder = '请输入' + actionName + '原因，200字以内';
+        freezeSubmitTextEl.textContent = '确定' + actionName;
+        freezeRuleTipEl.textContent = isUnfreeze
+            ? '解冻后该会员将恢复为正常状态，列表中可继续按正常会员展示。'
+            : '冻结后该会员状态将显示为已冻结，后续可通过解冻恢复正常。';
+
+        freezeSubjectEl.textContent = info.subject;
+        freezeMemberTypeEl.textContent = info.typeLabel;
+        freezeMemberTermEl.textContent = info.startTime + ' / ' + info.endTime;
+        freezeInfoTitleEl.textContent = info.subject;
+        freezeInfoTypeEl.textContent = info.typeLabel;
+        freezeInfoTermEl.textContent = info.term;
+        freezeInfoStartEl.textContent = info.startTime;
+        freezeInfoEndEl.textContent = info.endTime;
+        setFreezeStatusText(statusLabel);
+
+        freezeReasonInput.value = '';
+        updateFreezeReasonCount();
+        freezeModal.classList.add('show');
+    }
+
+    function closeFreezeModal() {
+        freezeModal.classList.remove('show');
+    }
+
+    function buildFreezeConfirmDesc(info, reason) {
+        var actionName = currentFreezeAction === 'unfreeze' ? '解冻' : '冻结';
+        var nextStatus = currentFreezeAction === 'unfreeze' ? '正常' : '已冻结';
+        return '<div style="display:grid;gap:10px">' +
+            '<div>请确认本次会员' + actionName + '操作，确认后将在会员列表中生效。</div>' +
+            '<div style="padding:10px 12px;background:#f8faf9;border:1px solid #e4e7ed;border-radius:4px">' +
+                '<div style="margin-bottom:6px;color:#303133;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">当前主体：' + escapeHtml(info.subject) + '</div>' +
+                '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">会员类型</span><span style="color:#606266">' + escapeHtml(info.typeLabel) + '</span></div>' +
+                '<div style="display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">有效期</span><span style="color:#606266">' + escapeHtml(info.startTime) + ' / ' + escapeHtml(info.endTime) + '</span></div>' +
+                '<div style="display:flex;align-items:center;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">冻结状态</span><span style="color:#606266;text-decoration:line-through">' + escapeHtml(getFreezeStatusLabel(info.status)) + '</span><span style="color:#c0c4cc">→</span><span style="color:var(--forest-green);font-weight:600">' + escapeHtml(nextStatus) + '</span></div>' +
+                '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #dcdfe6;display:flex;gap:8px;line-height:1.8"><span style="width:78px;color:#909399;flex-shrink:0">' + actionName + '原因</span><span style="color:#606266">' + escapeHtml(reason) + '</span></div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function setRowFreezeState(row, status) {
+        var statusEl = row ? row.querySelector('.freeze-status') : null;
+        var actionEl = row ? row.querySelector('[data-freeze-action]') : null;
+        var nextAction = status === 'frozen' ? 'unfreeze' : 'freeze';
+        if (statusEl) {
+            statusEl.dataset.status = status;
+            statusEl.textContent = getFreezeStatusLabel(status);
+            statusEl.classList.toggle('status-normal', status === 'normal');
+            statusEl.classList.toggle('status-frozen', status === 'frozen');
+        }
+        if (actionEl) {
+            actionEl.dataset.freezeAction = nextAction;
+            actionEl.textContent = nextAction === 'unfreeze' ? '解冻' : '冻结';
+            actionEl.classList.toggle('op-freeze', nextAction === 'freeze');
+            actionEl.classList.toggle('op-unfreeze', nextAction === 'unfreeze');
+            actionEl.setAttribute('onclick', "openFreezeModal('" + nextAction + "', this)");
+        }
+        applyFreezeStatusFilter();
+    }
+
+    function submitFreezeChange() {
+        var reason = freezeReasonInput.value.trim();
+        var actionName = currentFreezeAction === 'unfreeze' ? '解冻' : '冻结';
+        if (!reason) {
+            GlobalDialog.info({
+                title: '请填写' + actionName + '原因',
+                desc: actionName + '原因用于记录本次管理员调整依据。'
+            });
+            return;
+        }
+        var info = getFreezeRowInfo(currentFreezeRow);
+        GlobalDialog.warning({
+            title: '确认' + actionName + '会员',
+            desc: buildFreezeConfirmDesc(info, reason),
+            confirmText: '确认' + actionName,
+            cancelText: '返回修改',
+            onConfirm: function() {
+                setRowFreezeState(currentFreezeRow, currentFreezeAction === 'unfreeze' ? 'normal' : 'frozen');
+                closeFreezeModal();
+                GlobalDialog.success({
+                    title: actionName + '成功',
+                    desc: '已完成【' + escapeHtml(info.subject) + '】的会员' + actionName + '。'
+                });
+            }
+        });
+    }
+
+    function applyFreezeStatusFilter() {
+        var value = freezeStatusFilter.value;
+        document.querySelectorAll('.data-table tbody tr').forEach(function(row) {
+            var rowStatus = getRowFreezeStatus(row);
+            row.style.display = !value || rowStatus === value ? '' : 'none';
+        });
+    }
+
+    freezeModal.addEventListener('click', function(e) {
+        if (e.target === this) closeFreezeModal();
     });
     </script>
     <script src="js/operation-sidebar.js"></script>
