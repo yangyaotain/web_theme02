@@ -75,6 +75,11 @@
         .field { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; min-width: 200px; margin-right: 16px; }
         .field-l { color: #909399; white-space: nowrap; }
         .field-v { color: #303133; }
+        .member-action-row {
+            margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+        }
+        .member-action-row .btn-primary,
+        .member-action-row .btn-outline { min-width: 76px; }
 
         /* ══════════════════════════════════════════
            Table
@@ -212,6 +217,16 @@
         }
         .form-select:focus { border-color: var(--forest-green); }
         .form-select:hover { border-color: #c0c4cc; }
+        .member-type-static {
+            min-height: 34px; padding: 0 10px; display: inline-flex; align-items: center;
+            background: #f5f7fa; border: 1px solid #e4e7ed; border-radius: 3px;
+            font-size: 13px; font-weight: 600; color: #303133;
+        }
+        .member-type-static[hidden] { display: none; }
+        .member-mode-note {
+            margin-top: 6px; font-size: 12px; color: #909399; line-height: 1.6;
+        }
+        .member-mode-note:empty { display: none; }
 
         .form-input {
             width: 100%; height: 34px; padding: 0 10px;
@@ -231,6 +246,13 @@
         .selected-price strong {
             color: var(--forest-green); font-size: 15px; font-weight: 700;
         }
+        .selected-price .preview-line { margin-bottom: 4px; }
+        .selected-price .preview-line:last-child { margin-bottom: 0; }
+        .selected-price .preview-note {
+            margin-top: 8px; padding-top: 8px; border-top: 1px dashed #dfe8e2;
+            color: #606f7b; font-size: 12px;
+        }
+        .selected-price .payable strong { color: #f56c6c; }
 
         .form-label .required { color: #f56c6c; margin-right: 2px; }
         .form-file { font-size: 13px; color: #606266; }
@@ -302,6 +324,12 @@
             font-size: 13px; color: #303133; line-height: 2;
             position: relative;
         }
+        .member-rule-tip {
+            margin-top: 14px; padding: 10px 12px; background: #fff;
+            border: 1px solid #dcefe4; border-radius: 3px;
+            font-size: 12px; line-height: 1.7; color: #606266;
+        }
+        .member-rule-tip b { color: var(--forest-green); font-weight: 600; }
         .apply-ft {
             padding: 20px 0 0; display: flex; gap: 12px;
         }
@@ -409,7 +437,7 @@
                             <span class="info-tag orange">金卡会员</span>
                             <span class="info-tag red">铂金会员</span>
                         </div>
-                        <span class="expire-text">会员到期时间：2031.3.8 14:50:00</span>
+                        <span class="expire-text">会员到期时间：2026.10.8 14:50:00</span>
                     </div>
                     <div class="info-row">
                         <span class="field"><span class="field-l">主体类型：</span><span class="field-v">法人或其他组织</span></span>
@@ -421,10 +449,18 @@
                         <span class="field"><span class="field-l">手机号：</span><span class="field-v">15812343213</span></span>
                         <span class="field"><span class="field-l">邮箱：</span><span class="field-v">dianzyun001@cestc.cn</span></span>
                     </div>
-                    <div style="margin-top: 14px; text-align: right;">
-                        <button class="btn-primary" onclick="document.getElementById('applyChangeModal').classList.add('show')">
+                    <div class="member-action-row">
+                        <button class="btn-outline" onclick="openMemberModal('apply')">
                             <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1 14h-2v-4H7v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                            会员申请/会员变更
+                            申请
+                        </button>
+                        <button class="btn-primary" onclick="openMemberModal('renew')">
+                            <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l4 4.01L9 12H6c0-3.86 3.14-7 7-7s7 3.14 7 7-3.14 7-7 7c-1.93 0-3.68-.78-4.95-2.05l-1.42 1.42C8.27 20 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.75-1.23-3.5-2.08V8H12z"/></svg>
+                            续费
+                        </button>
+                        <button class="btn-outline" onclick="openMemberModal('change')">
+                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04c.39-.39.39-1.02 0-1.41l-2.5-2.5a.9959.9959 0 0 0-1.41 0l-1.96 1.96 3.75 3.75 2.12-1.8z"/></svg>
+                            变更
                         </button>
                     </div>
                 </div>
@@ -588,7 +624,7 @@
     <div class="modal-mask apply-modal" id="applyChangeModal">
         <div class="modal-box">
             <div class="modal-hd">
-                <span class="modal-title">会员申请/会员变更</span>
+                <span class="modal-title" id="memberModalTitle">会员申请</span>
                 <button class="modal-close" onclick="this.closest('.modal-mask').classList.remove('show')">
                     <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </button>
@@ -609,6 +645,8 @@
                                     <option value="gold">金卡会员</option>
                                     <option value="platinum">铂金会员</option>
                                 </select>
+                                <span class="member-type-static" id="memberTypeStatic" hidden>金卡会员</span>
+                                <div class="member-mode-note" id="memberTypeHint"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -625,7 +663,7 @@
                             </div>
                         </div>
                         <div class="form-group voucher-form-group">
-                            <label class="form-label"><span class="required">*</span>缴费凭证：</label>
+                            <label class="form-label"><span class="required" id="voucherRequiredMark">*</span>缴费凭证：</label>
                             <div class="form-value form-file">
                                 <div class="voucher-upload">
                                     <input class="voucher-input" type="file" id="paymentVoucherInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
@@ -641,7 +679,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="voucher-tip">上传单个文件，支持jpg、jpeg、png等格式，单个文件不超过2MB</div>
+                                <div class="voucher-tip" id="paymentVoucherTip">上传单个文件，支持jpg、jpeg、png等格式，单个文件不超过2MB</div>
                                 <div class="voucher-error" id="paymentVoucherError" aria-live="polite"></div>
                             </div>
                         </div>
@@ -654,7 +692,7 @@
                         <div class="apply-ft" style="margin-left: 80px;">
                             <button class="btn-primary" id="memberApplySubmit">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                                申请
+                                <span id="memberSubmitText">申请</span>
                             </button>
                             <button class="btn-outline" onclick="this.closest('.modal-mask').classList.remove('show')">
                                 <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.3-6.29z"/></svg>
@@ -682,6 +720,7 @@
                                 <li>2、可以进行相关资源申请授权和数据产品交易；</li>
                                 <li>3、享受数据产品等相关交易<b>8折</b>优惠；</li>
                             </ol>
+                            <div class="member-rule-tip" id="memberRuleTip">申请会员时，系统按所选会员类型、收费方式和购买数量计算应付金额与有效期。</div>
                         </div>
                     </div>
                 </div>
@@ -698,9 +737,14 @@
     });
 
     (function() {
+        var CURRENT_MEMBER_TYPE = 'gold';
+        var currentExpireAt = new Date(2026, 9, 8, 14, 50, 0);
+        var currentMode = 'apply';
+        var lastPayableAmount = 0;
         var memberData = {
             silver: {
                 title: '银卡会员',
+                level: 1,
                 position: '进阶服务层',
                 audience: '企业数据专员、中小型机构数据负责人',
                 prices: [
@@ -717,6 +761,7 @@
             },
             gold: {
                 title: '金卡会员',
+                level: 2,
                 position: '企业服务层',
                 audience: '中大型企业数据部门、科研机构',
                 prices: [
@@ -733,6 +778,7 @@
             },
             platinum: {
                 title: '铂金会员',
+                level: 3,
                 position: '生态合作层',
                 audience: '龙头企业、政府部门、核心生态伙伴',
                 prices: [
@@ -749,12 +795,37 @@
             }
         };
 
+        var modeConfig = {
+            apply: {
+                title: '会员申请',
+                submit: '申请',
+                hint: '',
+                rule: '申请会员时，系统按所选会员类型、收费方式和购买数量计算应付金额与有效期。'
+            },
+            renew: {
+                title: '会员续费',
+                submit: '续费',
+                hint: '',
+                rule: '续费说明：本次购买的有效期会叠加到原到期时间之后。'
+            },
+            change: {
+                title: '会员变更',
+                submit: '提交变更',
+                hint: '当前会员：金卡会员，请选择变更的会员。',
+                rule: '变更说明：当前会员剩余有效期会先折算为可用余额，用于抵扣变更后会员费用；可覆盖则无需补差，余额继续折算有效期，覆盖不足时仅补差额。'
+            }
+        };
+
         var sel = document.getElementById('memberTypeSelect');
+        var memberTypeStatic = document.getElementById('memberTypeStatic');
+        var memberTypeHint = document.getElementById('memberTypeHint');
         var termSel = document.getElementById('memberTermSelect');
+        var modalTitle = document.getElementById('memberModalTitle');
         var titleEl = document.getElementById('memberInfoTitle');
         var posEl = document.getElementById('memberInfoPosition');
         var audEl = document.getElementById('memberInfoAudience');
         var listEl = document.getElementById('memberInfoList');
+        var ruleTipEl = document.getElementById('memberRuleTip');
         var selectedPriceEl = document.getElementById('memberSelectedPrice');
         var quantityInput = document.getElementById('memberQuantityInput');
         var voucherInput = document.getElementById('paymentVoucherInput');
@@ -763,7 +834,10 @@
         var voucherFileName = document.getElementById('paymentVoucherFileName');
         var voucherRemove = document.getElementById('paymentVoucherRemove');
         var voucherError = document.getElementById('paymentVoucherError');
+        var voucherRequiredMark = document.getElementById('voucherRequiredMark');
+        var voucherTip = document.getElementById('paymentVoucherTip');
         var applySubmit = document.getElementById('memberApplySubmit');
+        var submitText = document.getElementById('memberSubmitText');
         var termMonths = {
             month: 1,
             quarter: 3,
@@ -774,7 +848,7 @@
         var voucherMaxSize = 2 * 1024 * 1024;
 
         function formatPrice(price) {
-            return Number(price).toLocaleString('zh-CN');
+            return Number(Math.max(0, Math.round(price))).toLocaleString('zh-CN');
         }
 
         function getCurrentDate() {
@@ -788,32 +862,150 @@
             return result;
         }
 
+        function addDays(date, days) {
+            var result = new Date(date.getTime());
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
         function formatDate(date) {
             return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
         }
 
-        function getTermRange(method, months) {
+        function getTermRange(months) {
             var start = getCurrentDate();
-            var end = addMonths(start, months || termMonths[method] || 12);
+            var end = addMonths(start, months);
             end.setDate(end.getDate() - 1);
-            return formatDate(start) + ' / ' + formatDate(end);
+            return {
+                start: start,
+                end: end,
+                text: formatDate(start) + ' / ' + formatDate(end)
+            };
+        }
+
+        function getAnnualPrice(member) {
+            var annual = member.prices.find(function(item) { return item.method === 'year'; });
+            return annual ? annual.price : member.prices[0].price * 12;
+        }
+
+        function getDayPrice(member) {
+            return getAnnualPrice(member) / 365;
+        }
+
+        function getRemainingDays() {
+            var today = getCurrentDate();
+            var expireDate = new Date(currentExpireAt.getFullYear(), currentExpireAt.getMonth(), currentExpireAt.getDate());
+            var diff = expireDate.getTime() - today.getTime();
+            return Math.max(0, Math.ceil(diff / 86400000));
+        }
+
+        function getCurrentPriceItem(d) {
+            return d.prices.find(function(item) { return item.method === termSel.value; }) || d.prices[0];
+        }
+
+        function getQuantity() {
+            var quantity = Number(quantityInput.value);
+            return Number.isInteger(quantity) && quantity > 0 ? quantity : 0;
+        }
+
+        function setVoucherRequired(required) {
+            voucherRequiredMark.hidden = !required;
+            voucherTip.textContent = required
+                ? '上传单个文件，支持jpg、jpeg、png等格式，单个文件不超过2MB'
+                : '本次无需补缴时，缴费凭证可不上传；如有内部审批说明，可继续上传图片留存。';
+        }
+
+        function renderPreview(lines, payable, note) {
+            selectedPriceEl.innerHTML = lines.map(function(line) {
+                return '<div class="preview-line' + (line.payable ? ' payable' : '') + '">' + line.text + '</div>';
+            }).join('') + (note ? '<div class="preview-note">' + note + '</div>' : '');
+            lastPayableAmount = payable;
+            setVoucherRequired(payable > 0);
+        }
+
+        function renderApplyPreview(d, priceItem, quantity, totalMonths, totalPrice) {
+            var range = getTermRange(totalMonths);
+            renderPreview([
+                { text: '开通周期：<strong>' + priceItem.label + ' × ' + quantity + '</strong>，合计 ' + totalMonths + ' 个月' },
+                { text: '应付金额：<strong>' + formatPrice(totalPrice) + '元</strong>', payable: true },
+                { text: '有效期：' + range.text }
+            ], totalPrice, '申请通过后，将按所选会员类型开通对应权益。');
+            ruleTipEl.innerHTML = modeConfig.apply.rule;
+        }
+
+        function renderRenewPreview(d, priceItem, quantity, totalMonths, totalPrice) {
+            var afterExpire = addMonths(currentExpireAt, totalMonths);
+            var remainingDays = getRemainingDays();
+            renderPreview([
+                { text: '当前会员：<strong>' + d.title + '</strong>，剩余有效期 ' + remainingDays + ' 天' },
+                { text: '续费周期：<strong>' + priceItem.label + ' × ' + quantity + '</strong>，新增 ' + totalMonths + ' 个月' },
+                { text: '应付金额：<strong>' + formatPrice(totalPrice) + '元</strong>', payable: true },
+                { text: '叠加后到期：' + formatDate(currentExpireAt) + ' → <strong>' + formatDate(afterExpire) + '</strong>' }
+            ], totalPrice, '本次购买的有效期会顺延到原有效期之后。');
+            ruleTipEl.innerHTML = modeConfig.renew.rule;
+        }
+
+        function renderChangePreview(d, priceItem, quantity, totalMonths, totalPrice) {
+            var currentMember = memberData[CURRENT_MEMBER_TYPE];
+            var remainingDays = getRemainingDays();
+            var currentDayPrice = getDayPrice(currentMember);
+            var targetDayPrice = getDayPrice(d);
+            var oldRemainValue = remainingDays * currentDayPrice;
+            var direction = d.level > currentMember.level ? '升档' : '降档';
+            var baseRange = getTermRange(totalMonths);
+            var balanceDiff = oldRemainValue - totalPrice;
+            var payable = Math.max(0, -balanceDiff);
+            var extraDays = balanceDiff > 0 ? Math.floor(balanceDiff / targetDayPrice) : 0;
+            var endDate = balanceDiff > 0 ? addDays(baseRange.end, extraDays) : baseRange.end;
+            var lines = [
+                { text: '变更类型：<strong>' + direction + '</strong>（' + currentMember.title + ' → ' + d.title + '）' },
+                { text: '目标周期：<strong>' + priceItem.label + ' × ' + quantity + '</strong>，费用 ' + formatPrice(totalPrice) + '元' },
+                { text: '旧有效期换算：剩余 ' + remainingDays + ' 天，可抵扣约 <strong>' + formatPrice(oldRemainValue) + '元</strong>' }
+            ];
+
+            if (payable > 0) {
+                lines.push(
+                    { text: '应付金额：<strong>' + formatPrice(payable) + '元</strong>', payable: true },
+                    { text: '变更后有效期：' + baseRange.text }
+                );
+                renderPreview(lines, payable, '旧有效期余额不足以覆盖本次' + d.title + '费用，需要补足差额后完成变更。');
+            } else {
+                lines.push(
+                    { text: '应付金额：<strong>0元</strong>', payable: true },
+                    { text: '变更后有效期：本次周期 ' + totalMonths + ' 个月，结余折算约 ' + extraDays + ' 天，到期至 <strong>' + formatDate(endDate) + '</strong>' }
+                );
+                renderPreview(lines, payable, '旧有效期余额已覆盖本次' + d.title + '费用，原则不退款，结余部分继续折算为' + d.title + '有效期。');
+            }
+
+            ruleTipEl.innerHTML = modeConfig.change.rule;
         }
 
         function renderTermPreview(d) {
-            var currentMethod = termSel.value;
-            var current = d.prices.find(function(item) { return item.method === currentMethod; }) || d.prices[0];
-            if (!current) {
-                selectedPriceEl.innerHTML = '开通周期：<strong>--</strong><br>应付金额：<strong>--</strong>';
+            var priceItem = getCurrentPriceItem(d);
+            if (!priceItem) {
+                renderPreview([
+                    { text: '开通周期：<strong>--</strong>' },
+                    { text: '应付金额：<strong>--</strong>' }
+                ], 0, '');
                 return;
             }
-            var quantity = Number(quantityInput.value);
-            if (!Number.isInteger(quantity) || quantity < 1) {
-                selectedPriceEl.innerHTML = '请填写大于 0 的整数购买数量，系统将自动计算开通周期和应付金额';
+            var quantity = getQuantity();
+            if (!quantity) {
+                selectedPriceEl.innerHTML = '请填写大于 0 的整数购买数量，系统将自动计算有效期和应付金额。';
+                lastPayableAmount = 0;
+                setVoucherRequired(false);
                 return;
             }
-            var totalMonths = (termMonths[current.method] || 12) * quantity;
-            var totalPrice = current.price * quantity;
-            selectedPriceEl.innerHTML = '开通周期：<strong>' + current.label + ' × ' + quantity + '</strong>，合计 ' + totalMonths + ' 个月<br>应付金额：<strong>' + formatPrice(totalPrice) + '元</strong><br>有效期：' + getTermRange(current.method, totalMonths);
+            var totalMonths = (termMonths[priceItem.method] || 12) * quantity;
+            var totalPrice = priceItem.price * quantity;
+
+            if (currentMode === 'renew') {
+                renderRenewPreview(d, priceItem, quantity, totalMonths, totalPrice);
+            } else if (currentMode === 'change') {
+                renderChangePreview(d, priceItem, quantity, totalMonths, totalPrice);
+            } else {
+                renderApplyPreview(d, priceItem, quantity, totalMonths, totalPrice);
+            }
         }
 
         function renderTerms(d) {
@@ -831,6 +1023,25 @@
             audEl.textContent = d.audience;
             listEl.innerHTML = d.items.map(function(t) { return '<li>' + t + '</li>'; }).join('');
             renderTerms(d);
+        }
+
+        function renderMemberOptions(mode) {
+            var values = Object.keys(memberData);
+            if (mode === 'change') {
+                values = values.filter(function(key) { return key !== CURRENT_MEMBER_TYPE; });
+            }
+            sel.innerHTML = values.map(function(key) {
+                return '<option value="' + key + '">' + memberData[key].title + '</option>';
+            }).join('');
+            sel.hidden = mode === 'renew';
+            memberTypeStatic.hidden = mode !== 'renew';
+            memberTypeStatic.textContent = memberData[CURRENT_MEMBER_TYPE].title;
+
+            if (mode === 'renew') {
+                sel.value = CURRENT_MEMBER_TYPE;
+            } else {
+                sel.value = values[0];
+            }
         }
 
         function setVoucherError(message) {
@@ -854,6 +1065,22 @@
             }
             return '';
         }
+
+        function setMemberMode(mode) {
+            currentMode = modeConfig[mode] ? mode : 'apply';
+            modalTitle.textContent = modeConfig[currentMode].title;
+            submitText.textContent = modeConfig[currentMode].submit;
+            memberTypeHint.textContent = modeConfig[currentMode].hint;
+            quantityInput.value = 1;
+            resetVoucher();
+            renderMemberOptions(currentMode);
+            renderMember(sel.value);
+        }
+
+        window.openMemberModal = function(mode) {
+            setMemberMode(mode);
+            document.getElementById('applyChangeModal').classList.add('show');
+        };
 
         sel.addEventListener('change', function() {
             renderMember(this.value);
@@ -893,14 +1120,18 @@
         voucherRemove.addEventListener('click', resetVoucher);
 
         applySubmit.addEventListener('click', function() {
-            if (!voucherInput.files || !voucherInput.files.length) {
+            if (!getQuantity()) {
+                selectedPriceEl.innerHTML = '请填写大于 0 的整数购买数量，系统将自动计算有效期和应付金额。';
+                return;
+            }
+            if (lastPayableAmount > 0 && (!voucherInput.files || !voucherInput.files.length)) {
                 setVoucherError('请上传缴费凭证。');
                 return;
             }
             this.closest('.modal-mask').classList.remove('show');
         });
 
-        renderMember(sel.value);
+        setMemberMode('apply');
     })();
     </script>
     <script src="js/user-center-layout.js"></script>
