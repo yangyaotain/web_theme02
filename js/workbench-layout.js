@@ -1063,7 +1063,8 @@
             eye: '<svg viewBox="0 0 24 24"><path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg>',
             check: '<svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/></svg>',
             upload: '<svg viewBox="0 0 24 24"><path d="M11 16h2V8l3.2 3.2 1.4-1.4L12 4.2 6.4 9.8l1.4 1.4L11 8v8zm-5 2h12v2H6v-2z"/></svg>',
-            trash: '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg>'
+            trash: '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg>',
+            drag: '<svg viewBox="0 0 24 24"><path d="M10 4h4v2h-4V4zm0 7h4v2h-4v-2zm0 7h4v2h-4v-2zM5 4h3v2H5V4zm0 7h3v2H5v-2zm0 7h3v2H5v-2zm11-14h3v2h-3V4zm0 7h3v2h-3v-2zm0 7h3v2h-3v-2z"/></svg>'
         };
 
         function cloneServiceData(item) {
@@ -1072,9 +1073,13 @@
 
         function splitCardLine(line) {
             var text = String(line || '').trim();
-            var match = text.match(/^(?:\d{2}\s*)?([^：:]+)[：:](.+)$/);
+            var match = text.match(/^\d{1,2}(?:[\s.、]+)([^：:]+)[：:](.+)$/);
             if (!match) return null;
             return { title: match[1].trim(), desc: match[2].trim() };
+        }
+
+        function canAutoSplitSectionCards(sectionTitle) {
+            return String(sectionTitle || '').indexOf('流程') > -1;
         }
 
         function getDefaultCardType(sectionTitle) {
@@ -1090,13 +1095,25 @@
             return '图标卡片';
         }
 
+        function hasServiceCardContent(card) {
+            return !!(card && (String(card.title || '').trim() || String(card.desc || '').trim() || String(card.icon || '').trim()));
+        }
+
+        function pruneEmptyServiceCards(data) {
+            data.sections = (data.sections || []).map(function (section) {
+                section.cards = (section.cards || section.features || []).filter(hasServiceCardContent);
+                return section;
+            });
+            return data;
+        }
+
         function normalizeSection(section) {
             var next = {
                 title: section && section.title || '',
                 content: section && section.content || '',
                 cards: section && (section.cards || section.features) || []
             };
-            if (!next.cards.length && next.content) {
+            if (!next.cards.length && next.content && canAutoSplitSectionCards(next.title)) {
                 var lines = next.content.split('\n').map(function (line) { return line.trim(); }).filter(Boolean);
                 var cards = lines.map(splitCardLine).filter(Boolean);
                 if (cards.length === lines.length && cards.length > 1) {
@@ -1178,6 +1195,44 @@
 
         function renderTextarea(value, attrs) {
             return '<textarea ' + attrs + '>' + escapeHtml(value || '') + '</textarea>';
+        }
+
+        function renderDragHandle() {
+            return '<span class="service-drag-handle">' + icons.drag + '<span>拖动排序</span></span>';
+        }
+
+        function getEditorScrollTop() {
+            var scroll = panel.querySelector('.service-editor-scroll');
+            return scroll ? scroll.scrollTop : 0;
+        }
+
+        function restoreEditorScrollTop(scrollTop) {
+            if (typeof scrollTop !== 'number') return;
+            var scroll = panel.querySelector('.service-editor-scroll');
+            if (scroll) scroll.scrollTop = scrollTop;
+        }
+
+        function getEditorActionPosition(button) {
+            var sectionBlock = button.closest('[data-section-block]');
+            var sectionBlocks = Array.prototype.slice.call(panel.querySelectorAll('[data-section-block]'));
+            var sectionIndex = sectionBlock ? sectionBlocks.indexOf(sectionBlock) : -1;
+            var cardBlock = button.closest('.service-card-editor[data-card-index]');
+            var cardIndex = -1;
+            if (sectionBlock && cardBlock) {
+                cardIndex = Array.prototype.slice.call(sectionBlock.querySelectorAll('.service-card-editor[data-card-index]')).indexOf(cardBlock);
+            }
+            return {
+                sectionIndex: sectionIndex,
+                cardIndex: cardIndex
+            };
+        }
+
+        function sectionSelector(index) {
+            return '[data-section-block="' + index + '"]';
+        }
+
+        function cardSelector(sectionIndex, cardIndex) {
+            return sectionSelector(sectionIndex) + ' [data-card-index="' + cardIndex + '"]';
         }
 
         function getStatusCount(status) {
@@ -1354,6 +1409,153 @@
                 + '</div>';
         }
 
+        function getServiceDropReference(container, selector, x, y) {
+            var items = Array.prototype.slice.call(container.querySelectorAll(selector + ':not(.service-dragging)'));
+            var isGrid = selector !== '.service-section-editor';
+
+            if (!isGrid) {
+                for (var listIndex = 0; listIndex < items.length; listIndex += 1) {
+                    var listBox = items[listIndex].getBoundingClientRect();
+                    if (y < listBox.top + listBox.height / 2) return items[listIndex];
+                }
+                return null;
+            }
+
+            var rowItems = [];
+            items.forEach(function (child) {
+                var box = child.getBoundingClientRect();
+                if (y >= box.top && y <= box.bottom) {
+                    rowItems.push({ element: child, box: box });
+                }
+            });
+
+            if (rowItems.length) {
+                rowItems.sort(function (a, b) { return a.box.left - b.box.left; });
+                for (var rowIndex = 0; rowIndex < rowItems.length; rowIndex += 1) {
+                    if (x < rowItems[rowIndex].box.left + rowItems[rowIndex].box.width / 2) {
+                        return rowItems[rowIndex].element;
+                    }
+                }
+
+                var rowBottom = Math.max.apply(null, rowItems.map(function (item) { return item.box.bottom; }));
+                for (var nextIndex = 0; nextIndex < items.length; nextIndex += 1) {
+                    var nextBox = items[nextIndex].getBoundingClientRect();
+                    if (nextBox.top > rowBottom - 1) return items[nextIndex];
+                }
+                return null;
+            }
+
+            for (var fallbackIndex = 0; fallbackIndex < items.length; fallbackIndex += 1) {
+                var fallbackBox = items[fallbackIndex].getBoundingClientRect();
+                if (y < fallbackBox.top + fallbackBox.height / 2) return items[fallbackIndex];
+            }
+            return null;
+        }
+
+        function createServiceDropPlaceholder(item, selector) {
+            var placeholder = document.createElement('div');
+            placeholder.className = 'service-drop-placeholder' + (selector === '.service-section-editor' ? ' section' : '');
+            placeholder.style.minHeight = Math.max(56, item.offsetHeight) + 'px';
+            return placeholder;
+        }
+
+        function createServiceDragGhost(item) {
+            var rect = item.getBoundingClientRect();
+            var ghost = item.cloneNode(true);
+            ghost.classList.add('service-drag-ghost');
+            ghost.style.width = rect.width + 'px';
+            ghost.style.height = rect.height + 'px';
+            document.body.appendChild(ghost);
+            return ghost;
+        }
+
+        function positionServiceDragGhost(ghost, x, y, offsetX, offsetY) {
+            ghost.style.left = (x - offsetX) + 'px';
+            ghost.style.top = (y - offsetY) + 'px';
+        }
+
+        function moveServicePlaceholder(container, selector, placeholder, x, y) {
+            var reference = getServiceDropReference(container, selector, x, y);
+            if (reference == null) {
+                container.appendChild(placeholder);
+            } else if (reference !== placeholder) {
+                container.insertBefore(placeholder, reference);
+            }
+        }
+
+        function bindServiceSortable(container, selector, afterSort) {
+            if (!container || container.dataset.serviceSortableBound === 'true') return;
+            container.dataset.serviceSortableBound = 'true';
+            container.addEventListener('mousedown', function (event) {
+                if (event.button !== 0) return;
+
+                var item = event.target.closest(selector);
+                if (!item || !container.contains(item)) return;
+
+                var nearestSortable = event.target.closest('.service-section-editor, .service-card-editor');
+                if (nearestSortable !== item || !event.target.closest('.service-drag-handle')) return;
+
+                event.preventDefault();
+
+                var rect = item.getBoundingClientRect();
+                var offsetX = event.clientX - rect.left;
+                var offsetY = event.clientY - rect.top;
+                var placeholder = createServiceDropPlaceholder(item, selector);
+                var ghost = createServiceDragGhost(item);
+
+                item.parentNode.insertBefore(placeholder, item.nextSibling);
+                item.classList.add('service-dragging');
+                item.style.display = 'none';
+                container.classList.add('service-sort-active');
+                document.body.classList.add('service-is-sorting');
+                positionServiceDragGhost(ghost, event.clientX, event.clientY, offsetX, offsetY);
+
+                function onMouseMove(moveEvent) {
+                    moveEvent.preventDefault();
+                    positionServiceDragGhost(ghost, moveEvent.clientX, moveEvent.clientY, offsetX, offsetY);
+                    moveServicePlaceholder(container, selector, placeholder, moveEvent.clientX, moveEvent.clientY);
+                }
+
+                function cleanup(shouldCommit) {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    document.body.classList.remove('service-is-sorting');
+                    container.classList.remove('service-sort-active');
+
+                    if (shouldCommit && placeholder.parentNode) {
+                        placeholder.parentNode.insertBefore(item, placeholder);
+                    }
+
+                    item.style.display = '';
+                    item.classList.remove('service-dragging');
+
+                    if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+                    if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+                    if (shouldCommit && typeof afterSort === 'function') afterSort();
+                }
+
+                function onMouseUp() {
+                    cleanup(true);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        }
+
+        function syncEditorSortOrder() {
+            var scrollTop = getEditorScrollTop();
+            collectEditorData();
+            noticeText = '';
+            renderServiceEditor(scrollTop);
+        }
+
+        function bindServiceCardSortables(scope) {
+            (scope || panel).querySelectorAll('.service-card-editor-grid').forEach(function (grid) {
+                bindServiceSortable(grid, '.service-card-editor', syncEditorSortOrder);
+            });
+        }
+
         function renderCardEditors(cards, sectionIndex) {
             cards = cards || [];
             if (!cards.length) {
@@ -1362,26 +1564,28 @@
             return cards.map(function (card, cardIndex) {
                 var type = card.type || getDefaultCardType((editorData.sections[sectionIndex] || {}).title);
                 var iconHtml = type === 'icon' ? ''
-                    + '<label>图标</label>'
-                    + '<div class="service-card-icon-upload">'
-                    +   '<span class="service-card-icon-preview">' + (card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="卡片图标">' : '上传图标') + '</span>'
-                    +   '<label class="service-secondary-btn">' + icons.upload + '<span>上传图标</span><input type="file" accept="image/*" data-card-icon-upload="' + sectionIndex + '-' + cardIndex + '"></label>'
-                    +   '<input type="hidden" data-card-icon="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.icon || '') + '">'
-                    + '</div>'
+                    + '<label class="service-card-image-upload">'
+                    +   '<span class="service-card-image-preview">' + (card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="卡片图标">' : '<span class="service-card-image-empty">' + icons.upload + '<span>上传图片</span></span>') + '</span>'
+                    +   '<input type="file" accept="image/*" data-card-icon-upload="' + sectionIndex + '-' + cardIndex + '">'
+                    + '</label>'
+                    + '<input type="hidden" data-card-icon="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.icon || '') + '">'
                     : '<input type="hidden" data-card-icon="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.icon || '') + '">';
-                return ''
-                    + '<div class="service-card-editor type-' + escapeHtml(type) + '" data-card-index="' + cardIndex + '" data-card-type="' + escapeHtml(type) + '">'
-                    +   '<div class="service-card-editor-head">'
-                    +       '<span>卡片 ' + (cardIndex + 1) + '</span>'
-                    +       '<em>' + getCardTypeLabel(type) + '</em>'
-                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-card" data-section-index="' + sectionIndex + '" data-card-index="' + cardIndex + '">' + icons.trash + '<span>删除</span></button>'
-                    +   '</div>'
-                    +   '<input type="hidden" data-card-type-input="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(type) + '">'
-                    +   iconHtml
+                var fieldHtml = ''
+                    + '<div class="service-card-fields">'
                     +   '<label>标题</label>'
                     +   '<input class="service-editor-input" data-card-title="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.title || '') + '">'
                     +   '<label>描述</label>'
                     +   '<textarea class="service-editor-textarea" data-card-desc="' + sectionIndex + '-' + cardIndex + '">' + escapeHtml(card.desc || '') + '</textarea>'
+                    + '</div>';
+                return ''
+                    + '<div class="service-card-editor type-' + escapeHtml(type) + '" data-card-index="' + cardIndex + '" data-card-type="' + escapeHtml(type) + '">'
+                    +   '<div class="service-card-editor-head">'
+                    +       renderDragHandle()
+                    +       (type === 'icon' ? '' : '<em>' + getCardTypeLabel(type) + '</em>')
+                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-card">' + icons.trash + '<span>删除</span></button>'
+                    +   '</div>'
+                    +   '<input type="hidden" data-card-type-input="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(type) + '">'
+                    +   (type === 'icon' ? '<div class="service-card-feature-row">' + iconHtml + fieldHtml + '</div>' : iconHtml + fieldHtml)
                     + '</div>';
             }).join('');
         }
@@ -1393,8 +1597,9 @@
                     + '<div class="service-section-editor" data-section-block="' + index + '">'
                     +   '<div class="service-section-editor-head">'
                     +       '<span class="service-section-num">' + (index + 1) + '</span>'
+                    +       renderDragHandle()
                     +       '<input class="service-editor-input" data-section-title="' + index + '" value="' + escapeHtml(section.title) + '">'
-                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-section" data-section-index="' + index + '">' + icons.trash + '<span>删除章节</span></button>'
+                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-section">' + icons.trash + '<span>删除章节</span></button>'
                     +   '</div>'
                     +   '<div class="service-section-editor-body">'
                     +       '<label>正文内容</label>'
@@ -1404,9 +1609,9 @@
                 +       '<div class="service-card-editor-title">'
                 +           '<span>相关卡片</span>'
                 +           '<div class="service-card-add-actions">'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-sequence-card" data-section-index="' + index + '">' + icons.add + '<span>新增序号卡片</span></button>'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-icon-card" data-section-index="' + index + '">' + icons.add + '<span>新增图标卡片</span></button>'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-integrated-card" data-section-index="' + index + '">' + icons.add + '<span>新增整行卡片</span></button>'
+                +               '<button class="service-secondary-btn" type="button" data-section-action="add-sequence-card">' + icons.add + '<span>新增序号卡片</span></button>'
+                +               '<button class="service-secondary-btn" type="button" data-section-action="add-icon-card">' + icons.add + '<span>新增图标卡片</span></button>'
+                +               '<button class="service-secondary-btn" type="button" data-section-action="add-integrated-card">' + icons.add + '<span>新增整行卡片</span></button>'
                 +           '</div>'
                 +       '</div>'
                     +       '<div class="service-card-editor-grid">' + renderCardEditors(cards, index) + '</div>'
@@ -1525,7 +1730,12 @@
                 + '</div>';
         }
 
-        function renderServiceEditor() {
+        function renderServiceEditor(renderOptions) {
+            if (typeof renderOptions === 'number') {
+                renderOptions = { scrollTop: renderOptions };
+            } else {
+                renderOptions = renderOptions || {};
+            }
             var title = editorMode === 'create' ? '新建咨询服务' : '编辑咨询服务';
             panel.innerHTML = ''
                 + '<div class="service-editor-page">'
@@ -1547,6 +1757,13 @@
                 +   '</div>'
                 + '</div>';
             bindEditorEvents();
+            restoreEditorScrollTop(renderOptions.scrollTop);
+            if (renderOptions.scrollTo) {
+                var target = panel.querySelector(renderOptions.scrollTo);
+                if (target && target.scrollIntoView) {
+                    target.scrollIntoView({ block: 'nearest' });
+                }
+            }
         }
 
         function collectEditorData() {
@@ -1572,7 +1789,7 @@
                     var index = block.dataset.sectionBlock;
                     var title = block.querySelector('[data-section-title="' + index + '"]');
                     var content = block.querySelector('[data-section-content="' + index + '"]');
-                    var cards = Array.prototype.map.call(block.querySelectorAll('[data-card-index]'), function (card) {
+                    var cards = Array.prototype.map.call(block.querySelectorAll('.service-card-editor[data-card-index]'), function (card) {
                         var cardIndex = card.dataset.cardIndex;
                         var cardTitle = card.querySelector('[data-card-title="' + index + '-' + cardIndex + '"]');
                         var cardDesc = card.querySelector('[data-card-desc="' + index + '-' + cardIndex + '"]');
@@ -1588,7 +1805,7 @@
                     return {
                         title: title ? title.value.trim() : '',
                         content: content ? content.value.trim() : '',
-                        cards: cards.filter(function (card) { return card.title || card.desc || card.icon; })
+                        cards: cards
                     };
                 });
             }
@@ -1612,11 +1829,11 @@
 
         function buildServicePreviewData() {
             collectEditorData();
-            return cloneServiceData(Object.assign({}, editorData, {
+            return pruneEmptyServiceCards(cloneServiceData(Object.assign({}, editorData, {
                 title: editorData.tabTitle || editorData.name,
                 desc: editorData.tabDesc,
                 price: getReferencePrice(editorData)
-            }));
+            })));
         }
 
         function openServicePreview() {
@@ -1627,7 +1844,7 @@
 
         function persistEditorData() {
             collectEditorData();
-            var saved = cloneServiceData(editorData);
+            var saved = pruneEmptyServiceCards(cloneServiceData(editorData));
             saved.name = saved.tabTitle || saved.name || saved.serviceType;
             saved.tabTitle = saved.tabTitle || saved.name;
             saved.heroTitle = saved.heroTitle || saved.tabTitle;
@@ -1671,6 +1888,7 @@
                     var field = this.dataset.imageUpload;
                     var reader = new FileReader();
                     reader.onload = function (event) {
+                        var scrollTop = getEditorScrollTop();
                         collectEditorData();
                         if (field === 'thumb') editorData.thumb = event.target.result;
                         if (field === 'heroImg') {
@@ -1678,7 +1896,7 @@
                             editorData.cover = event.target.result;
                         }
                         noticeText = '';
-                        renderServiceEditor();
+                        renderServiceEditor(scrollTop);
                     };
                     reader.readAsDataURL(this.files[0]);
                 });
@@ -1692,13 +1910,14 @@
                     var cardIndex = Number(parts[1]);
                     var reader = new FileReader();
                     reader.onload = function (event) {
+                        var scrollTop = getEditorScrollTop();
                         collectEditorData();
                         var section = editorData.sections[sectionIndex];
                         if (section && section.cards && section.cards[cardIndex]) {
                             section.cards[cardIndex].icon = event.target.result;
                         }
                         noticeText = '';
-                        renderServiceEditor();
+                        renderServiceEditor(scrollTop);
                     };
                     reader.readAsDataURL(this.files[0]);
                 });
@@ -1707,15 +1926,24 @@
             panel.querySelectorAll('[data-section-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var action = this.dataset.sectionAction;
+                    var scrollTop = getEditorScrollTop();
+                    var position = getEditorActionPosition(this);
+                    var renderOptions = { scrollTop: scrollTop };
                     collectEditorData();
                     if (action === 'add-section') {
                         editorData.sections.push({ title: '新增内容章节', content: '', cards: [] });
+                        renderOptions.scrollTo = sectionSelector(editorData.sections.length - 1);
                     }
                     if (action === 'delete-section') {
-                        editorData.sections.splice(Number(this.dataset.sectionIndex), 1);
+                        if (position.sectionIndex > -1) {
+                            editorData.sections.splice(position.sectionIndex, 1);
+                            if (editorData.sections.length) {
+                                renderOptions.scrollTo = sectionSelector(Math.min(position.sectionIndex, editorData.sections.length - 1));
+                            }
+                        }
                     }
                     if (action === 'add-sequence-card' || action === 'add-icon-card' || action === 'add-integrated-card') {
-                        var section = editorData.sections[Number(this.dataset.sectionIndex)];
+                        var section = editorData.sections[position.sectionIndex];
                         if (section) {
                             section.cards = section.cards || [];
                             var typeMap = {
@@ -1724,16 +1952,22 @@
                                 'add-integrated-card': 'integrated'
                             };
                             section.cards.push({ type: typeMap[action], title: '', desc: '', icon: '' });
+                            renderOptions.scrollTo = cardSelector(position.sectionIndex, section.cards.length - 1);
                         }
                     }
                     if (action === 'delete-card') {
-                        var targetSection = editorData.sections[Number(this.dataset.sectionIndex)];
-                        if (targetSection && targetSection.cards) {
-                            targetSection.cards.splice(Number(this.dataset.cardIndex), 1);
+                        var targetSection = editorData.sections[position.sectionIndex];
+                        if (targetSection && targetSection.cards && position.cardIndex > -1) {
+                            targetSection.cards.splice(position.cardIndex, 1);
+                            if (targetSection.cards.length) {
+                                renderOptions.scrollTo = cardSelector(position.sectionIndex, Math.min(position.cardIndex, targetSection.cards.length - 1));
+                            } else {
+                                renderOptions.scrollTo = sectionSelector(position.sectionIndex);
+                            }
                         }
                     }
                     noticeText = '';
-                    renderServiceEditor();
+                    renderServiceEditor(renderOptions);
                 });
             });
 
@@ -1768,6 +2002,10 @@
             if (saveButton) saveButton.addEventListener('click', persistEditorData);
             var previewButton = panel.querySelector('[data-editor-open-preview]');
             if (previewButton) previewButton.addEventListener('click', openServicePreview);
+
+            var sectionList = panel.querySelector('[data-section-list]');
+            bindServiceSortable(sectionList, '.service-section-editor', syncEditorSortOrder);
+            bindServiceCardSortables(panel);
         }
 
         function renderPanel() {

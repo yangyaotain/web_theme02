@@ -36,7 +36,8 @@
         }
         .preview-bar svg,
         .preview-close svg,
-        .preview-action svg {
+        .preview-action svg,
+        .preview-outline-action svg {
             width: 16px;
             height: 16px;
             fill: currentColor;
@@ -72,45 +73,9 @@
             background: rgba(255, 255, 255, 0.22);
         }
         .preview-shell {
-            max-width: var(--content-max-width);
+            max-width: calc(var(--content-max-width) - 360px);
             margin: 0 auto;
             padding: 40px 32px 56px;
-            display: grid;
-            grid-template-columns: 320px minmax(0, 1fr);
-            gap: 40px;
-        }
-        .preview-sidebar {
-            position: sticky;
-            top: 86px;
-            height: fit-content;
-        }
-        .preview-tab-card {
-            display: grid;
-            gap: 12px;
-            padding: 14px;
-            border: 2px solid var(--forest-green);
-            border-radius: var(--radius-xl);
-            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.08) 100%);
-            box-shadow: var(--shadow-glow);
-        }
-        .preview-tab-card img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            display: block;
-            border-radius: var(--radius-lg);
-            object-fit: cover;
-            background: #edf1ef;
-        }
-        .preview-tab-card strong {
-            color: var(--forest-green-700);
-            font-size: 15px;
-            line-height: 1.45;
-            font-weight: 800;
-        }
-        .preview-tab-card p {
-            color: var(--text-tertiary);
-            font-size: 13px;
-            line-height: 1.6;
         }
         .preview-article {
             min-width: 0;
@@ -178,6 +143,7 @@
             gap: 24px;
             padding: 30px 28px;
             background: #fff;
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
         }
         .preview-price-label {
             margin-bottom: 8px;
@@ -211,18 +177,42 @@
             font-weight: 700;
             text-align: right;
         }
-        .preview-action {
+        .preview-action-buttons {
+            display: grid;
+            gap: 12px;
+        }
+        .preview-action,
+        .preview-outline-action {
+            width: 100%;
             min-height: 44px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            border: 0;
             border-radius: var(--radius-lg);
-            color: #fff;
-            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            font-family: inherit;
             font-size: 15px;
             font-weight: 800;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .preview-action {
+            border: 0;
+            color: #fff;
+            background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%);
+            box-shadow: var(--shadow-sm);
+        }
+        .preview-action:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
+        }
+        .preview-outline-action {
+            color: var(--forest-green);
+            background: #fff;
+            border: 1.5px solid var(--forest-green);
+        }
+        .preview-outline-action:hover {
+            background: var(--forest-green-50);
         }
         .preview-body {
             padding: 42px;
@@ -273,18 +263,6 @@
         }
         .preview-rich p + p {
             margin-top: 12px;
-        }
-        .preview-process,
-        .preview-advantages {
-            margin-left: 56px;
-            display: grid;
-            gap: 16px;
-        }
-        .preview-process {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-        .preview-advantages {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         .preview-process-card,
         .preview-advantage-card {
@@ -344,10 +322,20 @@
             display: block;
             object-fit: cover;
         }
-        .preview-cases {
+        .preview-card-flow {
             margin-left: 56px;
             display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 16px;
+        }
+        .preview-card-flow .preview-process-card {
+            grid-column: span 2;
+        }
+        .preview-card-flow .preview-advantage-card {
+            grid-column: span 3;
+        }
+        .preview-card-flow .preview-case-card {
+            grid-column: 1 / -1;
         }
         .preview-case-card {
             display: grid;
@@ -362,14 +350,12 @@
             .preview-hero { grid-template-columns: 1fr; }
             .preview-action-card {
                 display: grid;
-                grid-template-columns: 240px minmax(0, 1fr) 220px;
+                grid-template-columns: 240px minmax(0, 1fr) 240px;
                 align-items: center;
             }
-            .preview-process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .preview-card-flow .preview-process-card { grid-column: span 3; }
         }
         @media (max-width: 1024px) {
-            .preview-shell { grid-template-columns: 1fr; }
-            .preview-sidebar { position: static; }
             .preview-action-card { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
@@ -378,13 +364,13 @@
             .preview-hero-content,
             .preview-body { padding: 28px; }
             .preview-title { font-size: 30px; }
-            .preview-process,
-            .preview-advantages,
+            .preview-card-flow,
             .preview-case-card { grid-template-columns: 1fr; }
+            .preview-card-flow .preview-process-card,
+            .preview-card-flow .preview-advantage-card,
+            .preview-card-flow .preview-case-card { grid-column: 1 / -1; }
             .preview-rich,
-            .preview-process,
-            .preview-advantages,
-            .preview-cases { margin-left: 0; }
+            .preview-card-flow { margin-left: 0; }
             .preview-close span { display: none; }
         }
     </style>
@@ -401,14 +387,6 @@
     </div>
 
     <main class="preview-shell">
-        <aside class="preview-sidebar">
-            <div class="preview-tab-card">
-                <img id="pvThumb" src="images/consult-governance.jpg" alt="服务缩略图">
-                <strong id="pvTabTitle">企业数据治理与合规咨询服务</strong>
-                <p id="pvTabDesc">治理合规、风险识别、整改落地</p>
-            </div>
-        </aside>
-
         <article class="preview-article">
             <div class="preview-hero">
                 <div class="preview-hero-main" id="pvHero" style="background-image: url('images/consult-governance.jpg');">
@@ -428,10 +406,16 @@
                         <div class="preview-fact"><span>计量方式</span><span id="pvMeasures">按次数 / 按时长 / 面议</span></div>
                         <div class="preview-fact"><span>交付方式</span><span id="pvDelivery">线下交付</span></div>
                     </div>
-                    <button class="preview-action" type="button">
-                        <svg viewBox="0 0 24 24"><path d="M6 7h15l-2 9H8L6 7zM6 7 5 4H2v2h1.6l2.4 12h13v-2H7.6l-.4-2H19l2.4-9H6zm3 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm9 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-                        <span>立即购买</span>
-                    </button>
+                    <div class="preview-action-buttons">
+                        <button class="preview-action" type="button">
+                            <svg viewBox="0 0 24 24"><path d="M6 7h15l-2 9H8L6 7zM6 7 5 4H2v2h1.6l2.4 12h13v-2H7.6l-.4-2H19l2.4-9H6zm3 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm9 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+                            <span>立即购买</span>
+                        </button>
+                        <button class="preview-outline-action" type="button">
+                            <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z"/></svg>
+                            <span>服务咨询</span>
+                        </button>
+                    </div>
                 </aside>
             </div>
             <div class="preview-body">
@@ -444,7 +428,6 @@
     <script>
     (function () {
         var fallback = {
-            thumb: 'images/consult-governance.jpg',
             heroImg: 'images/consult-governance.jpg',
             tabTitle: '企业数据治理与合规咨询服务',
             tabDesc: '治理合规、风险识别、整改落地',
@@ -463,6 +446,12 @@
             });
         }
 
+        function renderRichText(text) {
+            return String(text || '').split('\n').filter(Boolean).map(function (line) {
+                return '<p>' + escapeHtml(line) + '</p>';
+            }).join('');
+        }
+
         function getReferencePrice(data) {
             var pricing = data.pricing || {};
             if (pricing.countPrice) return pricing.countPrice + (pricing.countUnit || '');
@@ -471,28 +460,21 @@
             return pricing.referencePrice || data.price || '面议';
         }
 
-        function renderRichText(text) {
-            return String(text || '').split('\n').filter(Boolean).map(function (line) {
-                return '<p>' + escapeHtml(line) + '</p>';
-            }).join('');
-        }
-
-        function renderProcess(cards) {
-            return '<div class="preview-process">' + cards.map(function (card, index) {
-                return '<div class="preview-process-card"><div class="preview-process-index">' + String(index + 1).padStart(2, '0') + '</div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
-            }).join('') + '</div>';
-        }
-
-        function renderAdvantages(cards) {
-            return '<div class="preview-advantages">' + cards.map(function (card, index) {
-                var icon = card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="' + escapeHtml(card.title) + '">' : (index + 1);
+        function renderCardFlow(cards) {
+            var sequenceIndex = 0;
+            var iconIndex = 0;
+            return '<div class="preview-card-flow">' + cards.map(function (card) {
+                var type = card.type || 'icon';
+                if (type === 'sequence') {
+                    sequenceIndex += 1;
+                    return '<div class="preview-process-card"><div class="preview-process-index">' + String(sequenceIndex).padStart(2, '0') + '</div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
+                }
+                if (type === 'integrated') {
+                    return '<div class="preview-case-card"><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
+                }
+                iconIndex += 1;
+                var icon = card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="' + escapeHtml(card.title) + '">' : iconIndex;
                 return '<div class="preview-advantage-card"><div class="preview-advantage-icon">' + icon + '</div><div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div></div>';
-            }).join('') + '</div>';
-        }
-
-        function renderCases(cards) {
-            return '<div class="preview-cases">' + cards.map(function (card) {
-                return '<div class="preview-case-card"><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
             }).join('') + '</div>';
         }
 
@@ -500,15 +482,11 @@
             var defaultType = section.title.indexOf('流程') > -1 ? 'sequence' : (section.title.indexOf('案例') > -1 ? 'integrated' : 'icon');
             var cards = (section.cards || section.features || []).map(function (card) {
                 return Object.assign({ type: defaultType }, card);
+            }).filter(function (card) {
+                return card.title || card.desc || card.icon;
             });
             if (!cards.length) return '';
-            var sequenceCards = cards.filter(function (card) { return card.type === 'sequence'; });
-            var iconCards = cards.filter(function (card) { return card.type === 'icon'; });
-            var integratedCards = cards.filter(function (card) { return card.type === 'integrated'; });
-            return ''
-                + (sequenceCards.length ? renderProcess(sequenceCards) : '')
-                + (iconCards.length ? renderAdvantages(iconCards) : '')
-                + (integratedCards.length ? renderCases(integratedCards) : '');
+            return renderCardFlow(cards);
         }
 
         function renderSections(sections) {
@@ -532,9 +510,6 @@
         }
 
         document.title = (data.heroTitle || data.tabTitle || '咨询服务') + ' - 咨询服务预览';
-        document.getElementById('pvThumb').src = data.thumb || data.cover || data.heroImg || fallback.thumb;
-        document.getElementById('pvTabTitle').textContent = data.tabTitle || data.name || data.serviceType || fallback.tabTitle;
-        document.getElementById('pvTabDesc').textContent = data.tabDesc || fallback.tabDesc;
         document.getElementById('pvHero').style.backgroundImage = "url('" + (data.heroImg || data.cover || fallback.heroImg) + "')";
         document.getElementById('pvBadge').textContent = data.badge || fallback.badge;
         document.getElementById('pvTitle').textContent = data.heroTitle || data.tabTitle || fallback.heroTitle;
