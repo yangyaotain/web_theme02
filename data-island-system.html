@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供方交付任务 - 数据岛系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { min-height: 100%; }
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #243430;
+            background: #fff;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+        .island-shell {
+            min-width: 1280px;
+            min-height: 100vh;
+            display: flex;
+            padding-top: 64px;
+            background: #fff;
+        }
+        .island-sidebar {
+            width: 218px;
+            flex: 0 0 218px;
+            min-height: calc(100vh - 64px);
+            padding: 24px 12px;
+            background: #f5f8f7;
+            color: #64736f;
+        }
+        .island-brand {
+            padding: 0 12px 26px;
+            color: #17231f;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+        .island-nav { display: grid; gap: 8px; }
+        .island-group { display: grid; gap: 6px; }
+        .island-group-head,
+        .island-menu-item {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+            border-radius: 4px;
+            color: #5f6f6a;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .island-group-head {
+            color: #62736d;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .island-group-head:hover,
+        .island-menu-item:hover {
+            color: var(--forest-green);
+            background: #f0faf4;
+        }
+        .island-group-head.active {
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+        .island-group-head svg,
+        .island-menu-item svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .island-group-head .arrow {
+            width: 12px;
+            height: 12px;
+            margin-left: auto;
+            color: #87938f;
+            transition: transform 0.18s ease;
+        }
+        .island-group.open .arrow { transform: rotate(180deg); }
+        .island-subnav {
+            display: grid;
+            gap: 2px;
+            padding: 0 0 2px 28px;
+        }
+        .island-subnav .island-menu-item {
+            min-height: 38px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #667670;
+        }
+        .island-menu-item.active {
+            color: var(--forest-green);
+            background: #ecfbf3;
+            font-weight: 700;
+        }
+        .island-main {
+            flex: 1;
+            min-width: 0;
+            padding: 22px 24px 42px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .page-title {
+            margin-bottom: 24px;
+            color: #14211d;
+            font-size: 22px;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+        .task-tabs {
+            height: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            border-bottom: 1px solid #dce5e1;
+        }
+        .task-tab {
+            position: relative;
+            height: 32px;
+            display: inline-flex;
+            align-items: flex-start;
+            justify-content: center;
+            border: 0;
+            color: #60706b;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .task-tab:hover,
+        .task-tab.active {
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+        .task-tab.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 2px;
+            background: var(--forest-green);
+        }
+        .toolbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 20px 0;
+        }
+        .filter-panel {
+            flex: 1;
+            min-width: 0;
+            display: grid;
+            gap: 14px;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+        .search-box {
+            position: relative;
+            width: 316px;
+            height: 32px;
+            flex: 0 0 auto;
+        }
+        .search-box input,
+        .filter-field,
+        .date-range {
+            width: 100%;
+            height: 32px;
+            border: 1px solid #e6ece9;
+            border-radius: 5px;
+            color: #30423c;
+            background: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .search-box input {
+            padding: 0 36px 0 12px;
+        }
+        .search-box input::placeholder,
+        .filter-field.placeholder,
+        .date-range span {
+            color: #a7b1ad;
+        }
+        .search-box input:focus,
+        .filter-field:focus,
+        .date-range:focus-within {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.08);
+        }
+        .search-box svg {
+            position: absolute;
+            top: 50%;
+            right: 11px;
+            width: 15px;
+            height: 15px;
+            color: #9aa6a2;
+            fill: currentColor;
+            transform: translateY(-50%);
+        }
+        .filter-toggle {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e6ece9;
+            border-radius: 5px;
+            color: #5d6d68;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .filter-toggle svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .filter-toggle:hover,
+        .filter-toggle.active {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+            background: #fff;
+        }
+        .advanced-filters {
+            display: none;
+            grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) minmax(220px, 1fr);
+            gap: 12px;
+        }
+        .advanced-filters.show { display: grid; }
+        .filter-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 12px;
+            color: #64736f;
+            cursor: pointer;
+        }
+        .filter-field .label,
+        .date-range .label {
+            color: #6a7975;
+            margin-right: 8px;
+        }
+        .filter-field svg,
+        .date-range svg,
+        .page-select svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            color: #9aa6a2;
+            flex-shrink: 0;
+        }
+        .date-line {
+            display: none;
+            grid-template-columns: minmax(360px, 572px) auto;
+            gap: 14px;
+            align-items: center;
+        }
+        .date-line.show { display: grid; }
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+        }
+        .date-range .dash {
+            flex: 1;
+            color: #aeb8b4;
+            text-align: center;
+        }
+        .date-range svg { margin-left: auto; }
+        .reset-link {
+            border: 0;
+            color: var(--forest-green);
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .sync-btn {
+            height: 32px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 14px;
+            border: 1px solid var(--forest-green);
+            border-radius: 5px;
+            color: #fff;
+            background: var(--forest-green);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .sync-btn:hover {
+            border-color: var(--forest-green-600);
+            background: var(--forest-green-600);
+        }
+        .sync-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-color: #d0d6db transparent;
+            scrollbar-width: thin;
+        }
+        .table-wrap::-webkit-scrollbar { height: 10px; }
+        .table-wrap::-webkit-scrollbar-track { background: transparent; }
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: #d0d6db;
+            border-radius: 999px;
+        }
+        .task-table {
+            width: 100%;
+            min-width: 1680px;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #5d6d68;
+            font-size: 14px;
+            table-layout: fixed;
+        }
+        .task-table th {
+            height: 48px;
+            padding: 0 12px;
+            color: #52615d;
+            background: #f4f8f6;
+            border-bottom: 1px solid #dce5e1;
+            font-weight: 700;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .task-table th:first-child { border-radius: 6px 0 0 6px; }
+        .task-table th:last-child { border-radius: 0 6px 6px 0; text-align: right; }
+        .task-table td {
+            height: 52px;
+            padding: 0 12px;
+            border-bottom: 1px solid #dce5e1;
+            color: #60706b;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .task-table tr:hover td,
+        .task-table tr.selected td {
+            background: #f2fbf5;
+        }
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #52615d;
+        }
+        .status-dot::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border: 2px solid #22b977;
+            border-radius: 50%;
+            flex: 0 0 auto;
+        }
+        .op-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .op-links button {
+            border: 0;
+            color: var(--forest-green);
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 0 0;
+            color: #63726e;
+            font-size: 14px;
+        }
+        .page-arrow {
+            width: 20px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            color: #c2cbc7;
+            background: transparent;
+            cursor: pointer;
+        }
+        .page-arrow svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .page-current {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--forest-green);
+            font-weight: 700;
+        }
+        .page-select {
+            height: 32px;
+            min-width: 108px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 10px;
+            border: 1px solid #e4ebe8;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .page-jump {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e4ebe8;
+            border-radius: 5px;
+            outline: none;
+            text-align: center;
+        }
+        @media (max-width: 1440px) {
+            .advanced-filters { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+            .island-main { padding-right: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div data-admin-topbar data-active="island"></div>
+
+    <div class="island-shell">
+        <aside class="island-sidebar">
+            <div class="island-brand">数据岛系统</div>
+            <nav class="island-nav">
+                <section class="island-group open" data-menu-group>
+                    <div class="island-group-head">
+                        <svg viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.57 4 6.5v11C4 19.43 7.58 21 12 21s8-1.57 8-3.5v-11C20 4.57 16.42 3 12 3zm0 2c3.31 0 5.5.92 5.96 1.5C17.5 7.08 15.31 8 12 8s-5.5-.92-5.96-1.5C6.5 5.92 8.69 5 12 5zm0 14c-3.31 0-5.5-.92-6-1.5v-2.62C7.45 15.57 9.56 16 12 16s4.55-.43 6-1.12v2.62c-.5.58-2.69 1.5-6 1.5zm0-5c-3.31 0-5.5-.92-6-1.5V9.88C7.45 10.57 9.56 11 12 11s4.55-.43 6-1.12v2.62c-.5.58-2.69 1.5-6 1.5z"/></svg>
+                        <span>数据管理</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    <div class="island-subnav">
+                        <a class="island-menu-item" href="#">数据连接</a>
+                        <a class="island-menu-item" href="#">元数据目录</a>
+                    </div>
+                </section>
+                <section class="island-group open" data-menu-group>
+                    <div class="island-group-head">
+                        <svg viewBox="0 0 24 24"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h3v2H7V9zm5 0h5v2h-5V9zm-5 4h10v2H7v-2z"/></svg>
+                        <span>连接器可信身份</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    <div class="island-subnav">
+                        <a class="island-menu-item" href="#">连接器申领及注册</a>
+                        <a class="island-menu-item" href="#">我的连接器</a>
+                    </div>
+                </section>
+                <section class="island-group open" data-menu-group>
+                    <div class="island-group-head active">
+                        <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 0v9l6.3 6.3 1.4-1.4-5.7-5.7V3h-2z"/></svg>
+                        <span>交付任务管理</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    <div class="island-subnav">
+                        <a class="island-menu-item active" href="#">供方交付任务</a>
+                    </div>
+                </section>
+            </nav>
+        </aside>
+
+        <main class="island-main">
+            <h1 class="page-title">交付任务管理</h1>
+            <div class="task-tabs" role="tablist" aria-label="交付任务状态">
+                <button class="task-tab active" type="button" data-tab="all">全部(6)</button>
+                <button class="task-tab" type="button" data-tab="pending">未开始交付 (1)</button>
+                <button class="task-tab" type="button" data-tab="doing">交付中(3)</button>
+                <button class="task-tab" type="button" data-tab="done">交付完成(2)</button>
+            </div>
+
+            <section class="toolbar">
+                <div class="filter-panel">
+                    <div class="filter-row">
+                        <label class="search-box">
+                            <input type="text" placeholder="请输入产品名称/资源名称/交付任务编号" data-search>
+                            <svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.15 10.46l4.45 4.44-1.2 1.2-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>
+                        </label>
+                        <button class="filter-toggle" type="button" data-filter-toggle title="筛选">
+                            <svg viewBox="0 0 24 24"><path d="M4 5h16l-6 7v5l-4 2v-7L4 5zm4.3 2 3.7 4.32V16l.5-.25v-4.43L16.2 7H8.3z"/></svg>
+                        </button>
+                    </div>
+                    <div class="advanced-filters" data-advanced-filters>
+                        <button class="filter-field placeholder" type="button"><span><span class="label">申请来源</span>请选择</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></button>
+                        <button class="filter-field placeholder" type="button"><span><span class="label">交付方式</span>请选择</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></button>
+                        <button class="filter-field placeholder" type="button"><span><span class="label">交付状态</span>请选择</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></button>
+                    </div>
+                    <div class="date-line" data-date-line>
+                        <div class="date-range">
+                            <span><span class="label">创建时间</span>开始日期</span>
+                            <span class="dash">-</span>
+                            <span>结束日期</span>
+                            <svg viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm11 8H6v10h12V10zM6 8h12V6H6v2z"/></svg>
+                        </div>
+                        <button class="reset-link" type="button" data-reset>重置</button>
+                    </div>
+                </div>
+                <button class="sync-btn" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.96-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.96.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                    手动同步任务
+                </button>
+            </section>
+
+            <div class="table-wrap">
+                <table class="task-table">
+                    <colgroup>
+                        <col style="width: 220px">
+                        <col style="width: 220px">
+                        <col style="width: 140px">
+                        <col style="width: 120px">
+                        <col style="width: 120px">
+                        <col style="width: 180px">
+                        <col style="width: 150px">
+                        <col style="width: 150px">
+                        <col style="width: 110px">
+                        <col style="width: 180px">
+                        <col style="width: 120px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>交付任务编号</th>
+                            <th>合约编号</th>
+                            <th>产品/资源</th>
+                            <th>申请来源</th>
+                            <th>交付方式</th>
+                            <th>数据使用方连接器</th>
+                            <th>更新时间</th>
+                            <th>创建时间</th>
+                            <th>交付阶段</th>
+                            <th>任务状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-status="doing">
+                            <td>02026061710450581800000...</td>
+                            <td>02026061710445939900000...</td>
+                            <td>龙岗数据开发资...</td>
+                            <td>数据资源</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-06-23 11:36</td>
+                            <td>2026-06-17 10:45</td>
+                            <td>交付中</td>
+                            <td><span class="status-dot">交付待协商</span></td>
+                            <td><span class="op-links"><button type="button">详情</button></span></td>
+                        </tr>
+                        <tr data-status="doing">
+                            <td>02026061710420026400000...</td>
+                            <td>02026061710414717600000...</td>
+                            <td>龙岗数据开发资...</td>
+                            <td>数据资源</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-06-23 11:36</td>
+                            <td>2026-06-17 10:42</td>
+                            <td>交付中</td>
+                            <td><span class="status-dot">交付待协商</span></td>
+                            <td><span class="op-links"><button type="button">详情</button></span></td>
+                        </tr>
+                        <tr data-status="pending">
+                            <td>02026061710300281000000...</td>
+                            <td>02026061710092718100000...</td>
+                            <td>龙岗数据开发资...</td>
+                            <td>数据资源</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-06-23 11:36</td>
+                            <td>2026-06-17 10:30</td>
+                            <td>未开始交付</td>
+                            <td><span class="status-dot">等待供方确认交付物</span></td>
+                            <td><span class="op-links"><button type="button">确认</button><button type="button">详情</button></span></td>
+                        </tr>
+                        <tr class="selected" data-status="done">
+                            <td>02026060414490333500000...</td>
+                            <td>02026060414485676600000...</td>
+                            <td>龙岗区中小微企...</td>
+                            <td>数据产品</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-06-04 14:52</td>
+                            <td>2026-06-04 14:49</td>
+                            <td>交付完成</td>
+                            <td><span class="status-dot">交付完结</span></td>
+                            <td><span class="op-links"><button type="button">详情</button></span></td>
+                        </tr>
+                        <tr data-status="doing">
+                            <td>02026052909112409400000...</td>
+                            <td>02026052909110861400000...</td>
+                            <td>龙岗企业经营画...</td>
+                            <td>数据产品</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-06-23 11:36</td>
+                            <td>2026-05-29 09:11</td>
+                            <td>交付中</td>
+                            <td><span class="status-dot">交付待协商</span></td>
+                            <td><span class="op-links"><button type="button">详情</button></span></td>
+                        </tr>
+                        <tr data-status="done">
+                            <td>02026052615243093000000...</td>
+                            <td>02026052615122936600000...</td>
+                            <td>龙岗企业经营画...</td>
+                            <td>数据产品</td>
+                            <td>API传输</td>
+                            <td>测试需方机构</td>
+                            <td>2026-05-26 15:40</td>
+                            <td>2026-05-26 15:24</td>
+                            <td>交付完成</td>
+                            <td><span class="status-dot">交付完结</span></td>
+                            <td><span class="op-links"><button type="button">详情</button></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <span>共 6 条</span>
+                <button class="page-arrow" type="button" aria-label="上一页"><svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg></button>
+                <span class="page-current">1</span>
+                <button class="page-arrow" type="button" aria-label="下一页"><svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg></button>
+                <span class="page-select">10 条/页 <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></span>
+                <span>前往</span>
+                <input class="page-jump" type="text" aria-label="前往页码">
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin-topbar.js"></script>
+    <script>
+        (function () {
+            var filterToggle = document.querySelector('[data-filter-toggle]');
+            var advancedFilters = document.querySelector('[data-advanced-filters]');
+            var dateLine = document.querySelector('[data-date-line]');
+            var resetButton = document.querySelector('[data-reset]');
+            var searchInput = document.querySelector('[data-search]');
+            var tabs = Array.prototype.slice.call(document.querySelectorAll('.task-tab'));
+            var rows = Array.prototype.slice.call(document.querySelectorAll('.task-table tbody tr'));
+            var activeStatus = 'all';
+
+            function setFilters(open) {
+                filterToggle.classList.toggle('active', open);
+                advancedFilters.classList.toggle('show', open);
+                dateLine.classList.toggle('show', open);
+            }
+
+            function applyFilter() {
+                var keyword = (searchInput.value || '').trim();
+                rows.forEach(function (row) {
+                    var matchStatus = activeStatus === 'all' || row.dataset.status === activeStatus;
+                    var matchKeyword = !keyword || row.textContent.indexOf(keyword) >= 0;
+                    row.style.display = matchStatus && matchKeyword ? '' : 'none';
+                });
+            }
+
+            filterToggle.addEventListener('click', function () {
+                setFilters(!filterToggle.classList.contains('active'));
+            });
+
+            resetButton.addEventListener('click', function () {
+                searchInput.value = '';
+                applyFilter();
+            });
+
+            searchInput.addEventListener('input', applyFilter);
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(function (item) { item.classList.remove('active'); });
+                    tab.classList.add('active');
+                    activeStatus = tab.dataset.tab === 'pending' ? 'pending' : tab.dataset.tab === 'doing' ? 'doing' : tab.dataset.tab === 'done' ? 'done' : 'all';
+                    applyFilter();
+                });
+            });
+
+            document.querySelectorAll('[data-menu-group] .island-group-head').forEach(function (head) {
+                head.addEventListener('click', function () {
+                    head.parentElement.classList.toggle('open');
+                    var subnav = head.nextElementSibling;
+                    if (subnav) subnav.style.display = head.parentElement.classList.contains('open') ? 'grid' : 'none';
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

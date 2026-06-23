@@ -16,17 +16,8 @@
     <link rel="stylesheet" href="css/monitor-pages.css">
 </head>
 <body>
-    <header class="admin-topbar">
-        <div class="topbar-left">
-            <a href="index.html" class="topbar-logo"><img src="images/logo.png" alt="龙岗数据">龙岗数据聚合服务平台</a>
-            <nav class="topbar-nav">
-                <a href="operation-center.html" class="topbar-nav-item active">运营中心</a>
-                <a href="maintenance-center.html" class="topbar-nav-item">运维中心</a>
-                <a href="smart-report.html" class="topbar-nav-item" target="_blank">智能报告</a>
-            </nav>
-        </div>
-        <div id="adminUserArea" class="topbar-right"></div>
-    </header>
+
+    <div data-admin-topbar data-active="operation"></div>
     <div class="admin-layout">
         <aside class="admin-sidebar" data-operation-sidebar></aside>
         <main class="admin-content"><div class="monitor-data-page" data-monitor-page="productCatalog"></div></main>

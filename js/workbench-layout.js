@@ -15,13 +15,6 @@
         contract: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-5 4h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>'
     };
 
-    var topNav = [
-        { key: 'workbench', label: '工作台', href: 'workbench.html' },
-        { key: 'buyer', label: '需方中心', href: 'buyer-center.html' },
-        { key: 'supplier', label: '供方中心', href: 'supplier-center.html' },
-        { key: 'island', label: '数据岛系统' }
-    ];
-
     var sidebarMenus = {
         user: {
             title: '用户中心',
@@ -929,22 +922,10 @@
         var container = document.querySelector('[data-workbench-topbar]');
         if (!container) return;
 
-        var active = container.dataset.active || 'workbench';
-        var navHtml = topNav.map(function (item) {
-            var cls = item.key === active ? 'topbar-nav-item active' : 'topbar-nav-item';
-            if (!item.href) return '<span class="' + cls + '">' + item.label + '</span>';
-            var target = item.key === 'island' ? ' target="_blank"' : '';
-            return '<a class="' + cls + '" href="' + item.href + '"' + target + '>' + item.label + '</a>';
-        }).join('');
-
-        container.innerHTML = ''
-            + '<header class="admin-topbar">'
-            +   '<div class="topbar-left">'
-            +       '<a class="topbar-logo" href="index.html"><img src="images/logo.png" alt="龙岗数据">龙岗数据聚合服务平台</a>'
-            +       '<nav class="topbar-nav">' + navHtml + '</nav>'
-            +   '</div>'
-            +   '<div id="adminUserArea" class="topbar-right"></div>'
-            + '</header>';
+        container.setAttribute('data-admin-topbar', '');
+        if (window.AdminTopbar) {
+            window.AdminTopbar.render(container);
+        }
     }
 
     function renderSidebar() {
