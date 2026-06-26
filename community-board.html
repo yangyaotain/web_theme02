@@ -112,11 +112,20 @@
     font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 3px;
     background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa;
 }
+.post-mark {
+    font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 3px;
+    white-space: nowrap; line-height: 1.4;
+}
+.post-mark.pin { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
+.post-mark.featured { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+.post-mark.recommend { background: #dbeafe; color: #2563eb; border: 1px solid #bfdbfe; }
 .post-title-text {
     font-size: 15px; font-weight: 600; color: #1a1a2e;
     cursor: pointer; transition: .15s;
 }
 .post-title-text:hover { color: var(--forest-green); }
+.post-title-text.is-highlighted { color: #B45309; font-weight: 700; }
+.post-title-text.is-highlighted:hover { color: #92400E; }
 .tag-new { font-size: 11px; font-weight: 600; color: #f97316; }
 .tag-img { width: 16px; height: 16px; color: #bbb; }
 .tag-badge {
@@ -230,7 +239,7 @@
                 </div>
 
                 <!-- 帖子列表 -->
-                <div class="post-list">
+                <div class="post-list" id="boardPostList">
                     <div class="post-item">
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=L&background=10b981&color=fff&size=40" alt=""></div>
                         <div class="post-body">
@@ -289,7 +298,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=Q&background=0ea5e9&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">登录提示内部错误，大神给看看这是哪里出问题了</span>
+                                <span class="post-title-text">公共数据授权运营项目落地经验分享</span>
                                 <span class="tag-new">New</span>
                                 <svg class="tag-img" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                                 <span class="tag-badge best">精华</span>
@@ -308,7 +317,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=技&background=8b5cf6&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">注册验证回答，回答正确或错误时，√和×不能正常显示</span>
+                                <span class="post-title-text">低空经济场景数据需求清单征集</span>
                                 <span class="tag-new">New</span>
                                 <svg class="tag-img" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                                 <span class="tag-badge recommend">推荐</span>
@@ -327,7 +336,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=C&background=f97316&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解？</span>
+                                <span class="post-title-text">AI机器人训练语料数据合作对接</span>
                                 <span class="tag-new">New</span>
                             </div>
                             <div class="post-meta-row">
@@ -344,7 +353,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=微&background=6366f1&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">图片背景是黑色怎么改？</span>
+                                <span class="post-title-text">企业画像数据产品定价与交付边界怎么设计？</span>
                             </div>
                             <div class="post-meta-row">
                                 <span class="author">微资源共享平台</span>
@@ -360,7 +369,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=科&background=ec4899&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">滑动验证码插件分享</span>
+                                <span class="post-title-text">API接口鉴权失败的排查步骤整理</span>
                             </div>
                             <div class="post-meta-row">
                                 <span class="author">科站网</span>
@@ -376,7 +385,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=F&background=ef4444&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">关于 Tag列表页中的数据，怎么把时间排序调换过来，需要在哪里修改？</span>
+                                <span class="post-title-text">可信数据空间接入前需要准备哪些合规材料？</span>
                             </div>
                             <div class="post-meta-row">
                                 <span class="author">Fengyecn</span>
@@ -392,7 +401,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=A&background=a855f7&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">触屏版主题列表里的图片</span>
+                                <span class="post-title-text">城市治理指标看板的数据口径如何保持一致？</span>
                                 <span class="tag-new">New</span>
                             </div>
                             <div class="post-meta-row">
@@ -409,7 +418,7 @@
                         <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=韩&background=14b8a6&color=fff&size=40" alt=""></div>
                         <div class="post-body">
                             <div class="post-title-row">
-                                <span class="post-title-text">请问分类信息 模版怎么调用</span>
+                                <span class="post-title-text">数据服务采购需求发布后多久能收到响应？</span>
                                 <span class="tag-new">New</span>
                                 <svg class="tag-img" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                             </div>
@@ -528,11 +537,80 @@
         }
     }
 
+    var BOARD_POSTS = [
+        { title: '龙岗数据资源申请流程与材料清单（2026版）', tags: ['置顶', '推荐'], author: '官方管理员', time: '今天 09:20', category: '数据资源申请专区', views: '12,486', replies: '328', avatar: '官', hot: true },
+        { title: '数据产品上架审核规范与常见驳回原因', tags: ['置顶', '精华'], author: '产品运营', time: '昨天 16:40', category: '数据产品专区', views: '8,932', replies: '214', avatar: '产', hot: true },
+        { title: '公共数据授权运营项目落地经验分享', tags: ['精华', '推荐'], author: '龙岗数商', time: '今天 10:12', category: '个人分享', views: '3,426', replies: '86', avatar: '商', hot: true },
+        { title: '低空经济场景数据需求清单征集', tags: ['推荐', '高亮'], author: '场景联络员', time: '2小时前', category: '应用场景专区', views: '2,178', replies: '64', avatar: '场', hot: true },
+        { title: 'AI 机器人训练语料数据合作对接', tags: ['高亮'], author: '具身智能小组', time: '3小时前', category: '数据提供方专区', views: '1,946', replies: '52', avatar: '智' },
+        { title: '企业画像数据产品定价与交付边界怎么设计？', tags: ['推荐'], author: '数据产品经理', time: '昨天 11:18', category: '数据产品专区', views: '1,382', replies: '37', avatar: '产' },
+        { title: 'API 接口鉴权失败的排查步骤整理', tags: ['精华'], author: '龙岗开发者', time: '昨天 09:45', category: '数据服务专区', views: '1,126', replies: '28', avatar: '龙' },
+        { title: '可信数据空间接入前需要准备哪些合规材料？', tags: [], author: '合规专员', time: '前天 16:22', category: '政策学习专区', views: '856', replies: '19', avatar: '合' },
+        { title: '城市治理指标看板的数据口径如何保持一致？', tags: ['高亮'], author: '治理分析师', time: '前天 10:06', category: '应用场景专区', views: '694', replies: '16', avatar: '治' },
+        { title: '数据服务采购需求发布后多久能收到响应？', tags: [], author: '采购代表', time: '2026-03-08 14:30', category: '数据需求方专区', views: '512', replies: '11', avatar: '采' }
+    ];
+    var BOARD_MARK_CLASS = { '置顶': 'pin', '精华': 'featured', '推荐': 'recommend' };
+    var BOARD_AVATAR_COLORS = ['10b981', '3b82f6', '0ea5e9', '8b5cf6', 'f97316', '6366f1', 'ec4899', 'ef4444', 'a855f7', '14b8a6'];
+    var BOARD_VIEW_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+    var BOARD_REPLY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>';
+
+    function boardText(value) {
+        return String(value || '').replace(/[&<>"']/g, function(ch) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+        });
+    }
+
+    function boardNumber(value) {
+        return Number(String(value || '0').replace(/,/g, '')) || 0;
+    }
+
+    function renderBoardMarks(tags) {
+        return (tags || []).filter(function(tag) {
+            return tag !== '高亮';
+        }).map(function(tag) {
+            return '<span class="post-mark ' + (BOARD_MARK_CLASS[tag] || '') + '">' + boardText(tag) + '</span>';
+        }).join('');
+    }
+
+    function renderBoardPost(post, index) {
+        var color = BOARD_AVATAR_COLORS[index % BOARD_AVATAR_COLORS.length];
+        var avatar = '<img src="https://ui-avatars.com/api/?name=' + encodeURIComponent(post.avatar || post.author.charAt(0)) + '&background=' + color + '&color=fff&size=40" alt="">';
+        var titleClass = 'post-title-text' + (post.tags.indexOf('高亮') !== -1 ? ' is-highlighted' : '');
+        return '<div class="post-item">' +
+            '<div class="post-avatar">' + avatar + '</div>' +
+            '<div class="post-body">' +
+                '<div class="post-title-row">' + renderBoardMarks(post.tags) + '<span class="' + titleClass + '">' + boardText(post.title) + '</span>' + (index < 4 ? '<span class="tag-new">New</span>' : '') + '</div>' +
+                '<div class="post-meta-row"><span class="author">' + boardText(post.author) + '</span><span>' + boardText(post.time) + '</span><span class="category">' + boardText(post.category) + '</span></div>' +
+            '</div>' +
+            '<div class="post-right"><span class="stat">' + BOARD_VIEW_ICON + ' ' + boardText(post.views) + '</span><span class="stat">' + BOARD_REPLY_ICON + ' ' + boardText(post.replies) + '</span></div>' +
+        '</div>';
+    }
+
+    function filterBoardPosts(name) {
+        if (name === '最新') return BOARD_POSTS.slice(0, 6);
+        if (name === '热门') return BOARD_POSTS.filter(function(post) { return boardNumber(post.views) >= 1800; });
+        if (name === '热帖') return BOARD_POSTS.filter(function(post) { return boardNumber(post.replies) >= 50; });
+        if (name === '精华') return BOARD_POSTS.filter(function(post) { return post.tags.indexOf('精华') !== -1; });
+        return BOARD_POSTS;
+    }
+
+    function renderBoardPosts(filterName) {
+        var list = document.getElementById('boardPostList');
+        if (!list) return;
+        var data = filterBoardPosts(filterName || '全部');
+        list.innerHTML = data.map(renderBoardPost).join('');
+        var pageInfo = document.querySelector('.page-info');
+        if (pageInfo) pageInfo.textContent = '共 ' + data.length + ' 条';
+    }
+
+    renderBoardPosts('全部');
+
     // 子tab切换
     document.querySelectorAll('.sub-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.sub-tab').forEach(function(t) { t.classList.remove('active'); });
             tab.classList.add('active');
+            renderBoardPosts(tab.textContent.trim());
         });
     });
 
@@ -544,16 +622,12 @@
         });
     });
 
-    // 帖子标题点击跳转详情（根据标题内容判断类型，带来源参数）
-    document.querySelectorAll('.post-title-text').forEach(function(title) {
-        title.addEventListener('click', function() {
-            var text = title.textContent.trim();
-            var type = 'post';
-            if (text.indexOf('数据交易市场还要多少年') !== -1) type = 'vote';
-            else if (text.indexOf('数商招募活动') !== -1) type = 'activity';
-            var from = window.location.href.split('/').pop();
-            window.location.href = 'community-detail.html?type=' + type + '&from=' + encodeURIComponent(from);
-        });
+    // 帖子标题点击跳转详情（带来源参数）
+    document.getElementById('boardPostList').addEventListener('click', function(e) {
+        var title = e.target.closest('.post-title-text');
+        if (!title) return;
+        var from = window.location.href.split('/').pop();
+        window.location.href = 'community-detail.html?type=post&from=' + encodeURIComponent(from);
     });
     </script>
 </body>

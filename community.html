@@ -139,6 +139,8 @@
     cursor: pointer; transition: color .15s;
 }
 .post-title:hover { color: var(--forest-green); }
+.post-title.is-highlighted { color: #B45309; font-weight: 700; }
+.post-title.is-highlighted:hover { color: #92400E; }
 .post-title .tag-new {
     font-size: 11px; font-weight: 600; color: #f97316; background: none; padding: 0;
 }
@@ -154,6 +156,13 @@
     color: var(--forest-green); background: #f0fdf4; border: 1px solid #d1fae5;
 }
 .post-tag.orange { color: #ea580c; background: #fff7ed; border-color: #fed7aa; }
+.post-mark {
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 3px;
+    white-space: nowrap; line-height: 1.2;
+}
+.post-mark.pin { color: #ea580c; background: #fff7ed; border: 1px solid #fed7aa; }
+.post-mark.featured { color: #16a34a; background: #dcfce7; border: 1px solid #bbf7d0; }
+.post-mark.recommend { color: #2563eb; background: #dbeafe; border: 1px solid #bfdbfe; }
 .post-stat {
     font-size: 12px; color: #bbb; display: flex; align-items: center; gap: 3px;
 }
@@ -352,8 +361,8 @@
                             <div class="post-avatar"><div class="avatar-text">Y</div></div>
                             <div class="post-content">
                                 <div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">2分钟前</span></div>
-                                <div class="post-title">🔥 数据交易市场还要多少年进入成熟阶段？ <span class="tag-new">New</span></div>
-                                <div class="post-excerpt">数据交易市场还要多少年进入成熟阶段？;</div>
+                                <div class="post-title">龙岗数据资源申请流程与材料清单（2026版） <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">汇总资源申请入口、材料模板、授权范围说明和审批节点，适合首次申请公共数据资源的用户查阅。</div>
                                 <div class="post-footer"><span class="post-tag">站长杂谈</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 1</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div>
                             </div>
                         </div>
@@ -361,8 +370,8 @@
                             <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=Q&background=0ea5e9&color=fff&size=44" alt=""></div>
                             <div class="post-content">
                                 <div class="post-user-row"><span class="post-username">q18341427</span><span class="post-time">昨天 14:52</span></div>
-                                <div class="post-title">登录提示内部错误，大神给看看这是哪里出问题了 <span class="tag-new">New</span></div>
-                                <div class="post-excerpt">安全提问和密码输入后，提示内部错误，无法显示此内容。</div>
+                                <div class="post-title">公共数据授权运营项目落地经验分享 <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">从需求确认、数据目录梳理、样例验证到服务交付，复盘一个授权运营项目的关键节点。</div>
                                 <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 97</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 3</span></div>
                             </div>
                         </div>
@@ -370,8 +379,8 @@
                             <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=C&background=f97316&color=fff&size=44" alt=""></div>
                             <div class="post-content">
                                 <div class="post-user-row"><span class="post-username">cwzlk</span><span class="post-time">28分钟前</span></div>
-                                <div class="post-title">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解？ <span class="tag-new">New</span></div>
-                                <div class="post-excerpt">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解。试了各种代码，也无法解决，不知道是否有同样问题的人。;调用论坛类模块显示的png图片是正常的，如图1。;调用展示类分类信息，用的是后台编辑的模版...</div>
+                                <div class="post-title">低空经济场景数据需求清单征集 <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">面向无人机物流、空域监管、应急巡检等场景征集数据项、更新频率和服务方式建议。</div>
                                 <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 13</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div>
                             </div>
                         </div>
@@ -379,8 +388,8 @@
                             <div class="post-avatar"><img src="https://ui-avatars.com/api/?name=技&background=8b5cf6&color=fff&size=44" alt=""></div>
                             <div class="post-content">
                                 <div class="post-user-row"><span class="post-username">技术控</span><span class="post-time">昨天 14:49</span></div>
-                                <div class="post-title">注册验证回答，回答正确或错误时，√和×不能正常显示 <span class="tag-new">New</span></div>
-                                <div class="post-excerpt">为了防止机器人注册，设置了注册验证回答，回答正确或错误时，√或×不能正常显示出来，请教一下是什么原因？;</div>
+                                <div class="post-title">AI机器人训练语料数据合作对接 <span class="tag-new">New</span></div>
+                                <div class="post-excerpt">征集机器人动作样本、场景语料、标注服务和质量评估需求，欢迎相关数商补充可供给能力。</div>
                                 <div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 85</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 2</span></div>
                             </div>
                         </div>
@@ -419,7 +428,7 @@
                     </div>
                     <div class="post-list">
                         <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">2分钟前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="pending" data-status-msg="">数据资源申请提交后一直显示"处理中"，请问怎么解决？</div><div class="post-excerpt">各位大佬好，我在平台上申请了一批公共数据资源，提交申请后页面一直显示"处理中"状态，已经过了3天了还是没有变化……</div><div class="post-footer"><span class="post-tag">问题求助专区</span><span class="status-tag pending">待审核</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 156</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div></div></div>
-                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">1小时前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="rejected" data-status-msg="内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条">🔥 数据交易市场还要多少年进入成熟阶段？</div><div class="post-excerpt">数据交易市场还要多少年进入成熟阶段？</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag rejected">审核不通过</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 328</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div><div class="post-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条</div></div></div>
+                        <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">1小时前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="rejected" data-status-msg="内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条">数据产品交易案例复盘材料补充</div><div class="post-excerpt">整理数据产品交易案例时，需要补充数据来源授权说明和脱敏处理过程，便于后续重新提交审核。</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag rejected">审核不通过</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 328</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div><div class="post-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>内容涉及敏感信息，包含未经授权的第三方数据截图，不符合社区发帖规范第5.2条</div></div></div>
                         <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">3小时前</span><span class="post-actions"><button class="btn-sm btn-post-delete">删除</button></span></div><div class="post-title" data-status="published" data-status-msg="">活动：数商招募活动</div><div class="post-excerpt">本次数商招募活动以培育壮大数字经济生态下的数据要素市场主体为核心，面向全社会招引具备数据服务能力、数字创新思维的企业与个人数商，共同挖掘数据要素价值，助力数字经济与实体经济深度融合。</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag published">已发布</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 1205</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 1</span></div></div></div>
                         <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">昨天 16:20</span><span class="post-actions"><button class="btn-sm">编辑</button><button class="btn-sm danger btn-post-delete">删除</button></span></div><div class="post-title" data-status="deleted" data-status-msg="该帖子因多次被用户举报，经管理员核实，内容含有恶意引导外部链接及虚假数据产品推广信息，违反《社区管理条例》第8条，已做删除处理">数据交易市场分析</div><div class="post-excerpt">中国数据交易市场正处于政策驱动、规模扩容、生态升级的关键期，2024 年交易规模约 2115.4 亿元，2025 年预计达 2840.9 亿元，呈现"场内场外并行、合规与创新双驱"的格局。</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag deleted">违规删除</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 89</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 3</span></div><div class="post-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>该帖子因多次被用户举报，经管理员核实，内容含有恶意引导外部链接及虚假数据产品推广信息，违反《社区管理条例》第8条，已做删除处理</div></div></div>
                         <div class="post-item"><div class="post-avatar"><div class="avatar-text">Y</div></div><div class="post-content"><div class="post-user-row"><span class="post-username">yangy</span><span class="post-time">前天 10:30</span><span class="post-actions"><button class="btn-sm">编辑</button><button class="btn-sm danger btn-post-delete">删除</button></span></div><div class="post-title" data-status="draft" data-status-msg="">龙岗区数据要素产业发展报告（草稿）</div><div class="post-excerpt">龙岗区数据要素产业发展报告，涵盖政策环境、市场规模、产业生态、典型案例等维度的深度分析……</div><div class="post-footer"><span class="post-tag">站长杂谈</span><span class="status-tag draft">草稿</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 0</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div></div></div>
@@ -429,8 +438,8 @@
                 <!-- ====== 我的收藏 ====== -->
                 <div class="cm-panel" id="panel-fav">
                     <div class="post-list">
-                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=C&background=f97316&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">cwzlk</span><span class="post-time">28分钟前</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解？ <span class="tag-new">New</span></div><div class="post-excerpt">论坛首页DIY，调用论坛分类信息模版，上传png图片不透明问题求解。试了各种代码，也无法解决，不知道是否有同样问题的人。;调用论坛类模块显示的png图片是正常的...</div><div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 13</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 0</span></div></div></div>
-                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=技&background=8b5cf6&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">技术控</span><span class="post-time">昨天 14:49</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">注册验证回答，回答正确或错误时，√和×不能正常显示 <span class="tag-new">New</span></div><div class="post-excerpt">为了防止机器人注册，设置了注册验证回答，回答正确或错误时，√或×不能正常显示出来，请教一下是什么原因？;</div><div class="post-footer"><span class="post-tag orange">问题求助</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 85</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 2</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=产&background=f97316&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">产品运营</span><span class="post-time">昨天 16:40</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">数据产品上架审核规范与常见驳回原因 <span class="tag-new">New</span></div><div class="post-excerpt">包含材料准备、审核标准、常见驳回原因和修改建议，适合产品发布前收藏核对。</div><div class="post-footer"><span class="post-tag orange">数据产品专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 8,932</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 214</span></div></div></div>
+                        <div class="post-item"><div class="post-avatar"><img src="https://ui-avatars.com/api/?name=龙&background=8b5cf6&color=fff&size=44" alt=""></div><div class="post-content"><div class="post-user-row"><span class="post-username">龙岗开发者</span><span class="post-time">昨天 14:49</span><span class="post-actions"><button class="btn-sm">取消收藏</button></span></div><div class="post-title">API接口鉴权失败的排查步骤整理 <span class="tag-new">New</span></div><div class="post-excerpt">接口联调中遇到鉴权失败时，可以按 token、签名、白名单、时间戳四类问题逐项检查。</div><div class="post-footer"><span class="post-tag orange">数据服务专区</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> 128</span><span class="post-stat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg> 18</span></div></div></div>
                     </div>
                 </div>
 
@@ -474,6 +483,114 @@
     <site-footer></site-footer>
 
     <script>
+    var COMMUNITY_BOARD_SUMMARIES = {
+        '社区新闻': { topics: '36', posts: '1.2万', desc: '发布平台动态、数据要素活动和龙岗数字经济相关资讯。' },
+        '官方公告': { topics: '18', posts: '6,428', desc: '平台规则、系统更新、运营通知和重要事项集中发布。' },
+        '数据提供方专区': { topics: '128', posts: '2.1万', desc: '数据上架、质量评估、授权运营和供给能力交流。' },
+        '数据需求方专区': { topics: '96', posts: '1.8万', desc: '数据采购需求、场景对接、样例数据和需求澄清交流。' },
+        '数据资源专区': { topics: '142', posts: '2.4万', desc: '数据目录、资源申请、开放共享和接口调用问题讨论。' },
+        '数据产品专区': { topics: '88', posts: '1.6万', desc: '数据产品设计、定价、上架审核和交易转化经验。' },
+        '数据服务专区': { topics: '73', posts: '9,860', desc: 'API、数据报告、治理服务、交付流程和服务评价交流。' },
+        '政策学习专区': { topics: '52', posts: '7,216', desc: '数据要素政策、合规规则、申报解读和案例研读。' },
+        '数据资源申请专区': { topics: '64', posts: '8,742', desc: '资源申请材料、审批进度、授权范围和使用反馈求助。' },
+        '数据产品开发专区': { topics: '58', posts: '7,530', desc: '产品封装、指标口径、接口联调和开发工具实践。' },
+        '应用场景专区': { topics: '81', posts: '1.1万', desc: '低空经济、AI 机器人、智慧园区和城市治理场景共创。' },
+        '问题求助专区': { topics: '124', posts: '1.9万', desc: '平台使用、数据申请、服务调用等问题的集中答疑。' },
+        '开发者杂谈': { topics: '45', posts: '5,638', desc: '数据开发经验、工具选型、接口联调和行业观察交流。' },
+        '教程指导': { topics: '39', posts: '4,920', desc: '平台操作教程、数据处理指南和产品上架实操步骤。' },
+        '个人分享': { topics: '67', posts: '8,134', desc: '数商实践、项目复盘、学习笔记和优秀案例分享。' },
+        '热门点评': { topics: '49', posts: '6,702', desc: '围绕热门数据产品、政策事件和市场趋势发表观点。' }
+    };
+
+    var COMMUNITY_PANEL_POSTS = {
+        hot: [
+            { avatarText: '官', user: '官方管理员', time: '今天 09:20', title: '龙岗数据资源申请流程与材料清单（2026版）', excerpt: '汇总资源申请入口、材料模板、授权范围说明和审批节点，适合首次申请公共数据资源的用户查阅。', board: '数据资源申请专区', tags: ['置顶', '推荐'], views: '12,486', replies: '328', isNew: true },
+            { avatarText: '产', user: '产品运营', time: '昨天 16:40', title: '数据产品上架审核规范与常见驳回原因', excerpt: '整理产品上架前需要确认的合规材料、产品说明、样例数据和交付边界，减少重复提交。', board: '数据产品专区', tags: ['置顶', '精华'], views: '8,932', replies: '214' },
+            { avatarText: '场', user: '场景联络员', time: '2小时前', title: '低空经济场景数据需求清单征集', excerpt: '面向无人机物流、空域监管、应急巡检等场景征集数据项、更新频率和服务方式建议。', board: '应用场景专区', tags: ['推荐', '高亮'], views: '2,178', replies: '64', isNew: true },
+            { avatarText: '智', user: '具身智能小组', time: '3小时前', title: 'AI 机器人训练语料数据合作对接', excerpt: '征集机器人动作样本、场景语料、标注服务和质量评估需求，欢迎相关数商补充可供给能力。', board: '数据提供方专区', tags: ['高亮'], views: '1,946', replies: '52', isNew: true }
+        ],
+        "new": [
+            { avatarText: '数', user: '数据小白', time: '5分钟前', title: '如何快速申请水务监测数据资源？新手求教', excerpt: '刚注册平台，想申请一批水质与管网监测数据做分析，但不太清楚授权范围和材料要求。', board: '数据资源申请专区', tags: [], views: '35', replies: '4', isNew: true },
+            { avatarText: '龙', user: '龙岗开发者', time: '15分钟前', title: 'API 接口鉴权失败的排查步骤整理', excerpt: '把接口调用中遇到的 token 过期、IP 白名单、签名顺序等问题梳理成了排查清单。', board: '数据服务专区', tags: ['精华'], views: '128', replies: '18', isNew: true },
+            { avatarText: '王', user: '王数据', time: '1小时前', title: '城市治理指标看板的数据口径如何保持一致？', excerpt: '多个部门提供同类指标时，统计周期和去重规则不一致，想听听大家的治理经验。', board: '应用场景专区', tags: ['高亮'], views: '216', replies: '23' }
+        ],
+        reply: [
+            { avatarText: '张', user: '张三', time: '刚刚', title: '可信数据空间接入前需要准备哪些合规材料？', excerpt: '我们准备接入可信数据空间，想确认数据来源证明、授权链路和安全评估材料的准备顺序。', board: '政策学习专区', tags: ['推荐'], views: '356', replies: '42' }
+        ],
+        best: [
+            { avatarText: '商', user: '龙岗数商', time: '3天前', title: '公共数据授权运营项目落地经验分享', excerpt: '从需求确认、数据目录梳理、样例验证到服务交付，复盘一个授权运营项目的关键节点。', board: '个人分享', tags: ['精华', '推荐'], views: '2,341', replies: '89' }
+        ],
+        first: [
+            { avatarText: '新', user: '新手上路', time: '10分钟前', title: 'CIM 数据服务有哪些可复用应用案例？', excerpt: '想了解 CIM 数据服务在城市管理、园区运营和施工监管方面的典型应用，有没有案例资料可以参考？', board: '应用场景专区', tags: [], views: '18', replies: '0' }
+        ],
+        fav: [
+            { avatarText: '产', user: '产品运营', time: '昨天 16:40', title: '数据产品上架审核规范与常见驳回原因', excerpt: '包含材料准备、审核标准、常见驳回原因和修改建议，适合产品发布前收藏核对。', board: '数据产品专区', tags: ['置顶', '精华'], views: '8,932', replies: '214', action: '取消收藏' },
+            { avatarText: '龙', user: '龙岗开发者', time: '昨天 14:49', title: 'API 接口鉴权失败的排查步骤整理', excerpt: '接口联调中遇到鉴权失败时，可以按 token、签名、白名单、时间戳四类问题逐项检查。', board: '数据服务专区', tags: ['精华'], views: '128', replies: '18', action: '取消收藏' }
+        ]
+    };
+
+    var communityMarkClass = { '置顶': 'pin', '精华': 'featured', '推荐': 'recommend' };
+    var communityStatViewIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+    var communityStatReplyIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>';
+
+    function communityText(value) {
+        return String(value || '').replace(/[&<>"']/g, function(ch) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+        });
+    }
+
+    function renderCommunityMarks(tags) {
+        return (tags || []).filter(function(tag) {
+            return tag !== '高亮';
+        }).map(function(tag) {
+            return '<span class="post-mark ' + (communityMarkClass[tag] || '') + '">' + communityText(tag) + '</span>';
+        }).join('');
+    }
+
+    function renderCommunityPost(post) {
+        var avatar = post.avatar
+            ? '<img src="' + communityText(post.avatar) + '" alt="">'
+            : '<div class="avatar-text">' + communityText(post.avatarText || post.user.charAt(0)) + '</div>';
+        var action = post.action ? '<span class="post-actions"><button class="btn-sm">' + communityText(post.action) + '</button></span>' : '';
+        var marks = renderCommunityMarks(post.tags);
+        var newTag = post.isNew ? '<span class="tag-new">New</span>' : '';
+        var titleClass = 'post-title' + ((post.tags || []).indexOf('高亮') !== -1 ? ' is-highlighted' : '');
+        return '<div class="post-item">' +
+            '<div class="post-avatar">' + avatar + '</div>' +
+            '<div class="post-content">' +
+                '<div class="post-user-row"><span class="post-username">' + communityText(post.user) + '</span><span class="post-time">' + communityText(post.time) + '</span>' + action + '</div>' +
+                '<div class="' + titleClass + '">' + communityText(post.title) + marks + newTag + '</div>' +
+                '<div class="post-excerpt">' + communityText(post.excerpt) + '</div>' +
+                '<div class="post-footer"><span class="post-tag">' + communityText(post.board) + '</span><span class="post-stat">' + communityStatViewIcon + ' ' + communityText(post.views) + '</span><span class="post-stat">' + communityStatReplyIcon + ' ' + communityText(post.replies) + '</span></div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function applyCommunityBoardSummaries() {
+        document.querySelectorAll('.board-card').forEach(function(card) {
+            var nameEl = card.querySelector('.board-name');
+            if (!nameEl) return;
+            var info = COMMUNITY_BOARD_SUMMARIES[nameEl.textContent.trim()];
+            if (!info) return;
+            var meta = card.querySelector('.board-meta');
+            var desc = card.querySelector('.board-desc');
+            if (meta) meta.innerHTML = '<span>主题 ' + communityText(info.topics) + '</span><span>帖数 ' + communityText(info.posts) + '</span>';
+            if (desc) desc.textContent = info.desc;
+        });
+    }
+
+    function renderCommunityPanels() {
+        Object.keys(COMMUNITY_PANEL_POSTS).forEach(function(key) {
+            var panel = document.getElementById('panel-' + key);
+            var list = panel ? panel.querySelector('.post-list') : null;
+            if (!list) return;
+            list.innerHTML = COMMUNITY_PANEL_POSTS[key].map(renderCommunityPost).join('');
+        });
+    }
+
+    applyCommunityBoardSummaries();
+    renderCommunityPanels();
+
     // Tab切换
     var tabs = document.querySelectorAll('#cmTabs .cm-tab');
     var panelMap = { boards: 'panel-boards', hot: 'panel-hot', new: 'panel-new', reply: 'panel-reply', best: 'panel-best', first: 'panel-first', mine: 'panel-mine', fav: 'panel-fav' };
