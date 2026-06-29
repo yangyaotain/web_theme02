@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>告警项配置 - 运维中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+        .alert-form-page {
+            min-width: 980px;
+            color: #303133;
+        }
+        .form-card {
+            background: #fff;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .form-card-head {
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 18px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .form-title {
+            color: #303133;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 24px;
+        }
+        .back-link {
+            margin-bottom: 16px;
+        }
+        .alert-form {
+            padding: 26px 28px 8px;
+        }
+        .form-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            width: 118px;
+            flex: 0 0 auto;
+            padding-right: 14px;
+            color: #606266;
+            font-size: 13px;
+            line-height: 34px;
+            text-align: right;
+            white-space: nowrap;
+        }
+        .form-label.required::before {
+            content: "*";
+            margin-right: 4px;
+            color: #f56c6c;
+        }
+        .form-field {
+            width: min(680px, 100%);
+            min-width: 0;
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            color: #303133;
+            background: #fff;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .form-input,
+        .form-select {
+            height: 34px;
+            padding: 0 10px;
+        }
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23909399' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E") right 10px center no-repeat;
+            padding-right: 30px;
+        }
+        .form-textarea {
+            min-height: 112px;
+            padding: 8px 10px;
+            line-height: 1.7;
+            resize: vertical;
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--forest-green);
+        }
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #c0c4cc;
+        }
+        .form-tip {
+            margin-top: 6px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 18px;
+        }
+        .form-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 28px 24px 146px;
+            border-top: 1px solid #ebeef5;
+        }
+        .form-btn {
+            height: 34px;
+            min-width: 86px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 18px;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            background: #fff;
+            color: #606266;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .form-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+            background: #f0f9f4;
+        }
+        .form-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+        .form-btn.primary:hover {
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+        .form-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div data-admin-topbar data-active="maintenance"></div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar maintenance-sidebar" data-maintenance-sidebar></aside>
+
+        <main class="admin-content">
+            <div class="alert-form-page">
+                <a class="back-link" href="maintenance-alert-management.html">
+                    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/></svg>
+                    返回告警管理
+                </a>
+
+                <section class="form-card">
+                    <div class="form-card-head">
+                        <div class="form-title" id="formTitle">新建告警项</div>
+                    </div>
+
+                    <form class="alert-form" id="alertForm">
+                        <div class="form-row">
+                            <label class="form-label required" for="fieldName">告警项名称</label>
+                            <div class="form-field">
+                                <input class="form-input" type="text" id="fieldName" placeholder="请输入告警项名称">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label required" for="fieldLevel">等级</label>
+                            <div class="form-field">
+                                <select class="form-select" id="fieldLevel">
+                                    <option value="高">高</option>
+                                    <option value="中">中</option>
+                                    <option value="低">低</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label" for="fieldDesc">描述</label>
+                            <div class="form-field">
+                                <textarea class="form-textarea" id="fieldDesc" placeholder="请输入告警项描述"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label required" for="fieldRule">监控规则</label>
+                            <div class="form-field">
+                                <textarea class="form-textarea" id="fieldRule" placeholder="请输入监控规则"></textarea>
+                                <div class="form-tip">示例：10 分钟内失败率超过 20%，并且调用总量不少于 30 次。</div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="form-footer">
+                        <button class="form-btn primary" type="button" id="btnSave">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            保存
+                        </button>
+                        <a class="form-btn" href="maintenance-alert-management.html">
+                            <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            取消
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/maintenance-sidebar.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script>
+    const alertSamples = {
+        1: { name: '业务处理超时告警', level: '中', desc: '业务流程节点超过处理时限后触发提醒。', rule: '资源、产品、服务交易流程超过 24 小时未处理，后续每 12 小时重复提醒。' },
+        2: { name: '审核超时告警', level: '中', desc: '运营审核任务长时间未完成时提醒。', rule: '资源登记、产品上架、服务上架审核超过 12 小时未处理。' },
+        3: { name: '调用失败次数过高', level: '高', desc: '同一接口在短时间内失败次数超过阈值。', rule: '5 分钟内失败次数达到 10 次，通知供方、需求方和运营方。' }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('mode') === 'edit' ? 'edit' : 'create';
+    const id = params.get('id') || '1';
+    const sample = alertSamples[id] || alertSamples[1];
+
+    function initForm() {
+        document.getElementById('formTitle').textContent = mode === 'edit' ? '编辑告警项' : '新建告警项';
+        if (mode === 'edit') {
+            document.getElementById('fieldName').value = sample.name;
+            document.getElementById('fieldLevel').value = sample.level;
+            document.getElementById('fieldDesc').value = sample.desc;
+            document.getElementById('fieldRule').value = sample.rule;
+        }
+    }
+
+    document.getElementById('btnSave').addEventListener('click', function () {
+        const name = document.getElementById('fieldName').value.trim();
+        const rule = document.getElementById('fieldRule').value.trim();
+        if (!name || !rule) {
+            GlobalDialog.warning({ title: '请完善必填项', desc: '告警项名称和监控规则不能为空。' });
+            return;
+        }
+        GlobalDialog.success({
+            title: '保存成功',
+            desc: '告警项配置已保存。',
+            onClose: function () {
+                window.location.href = 'maintenance-alert-management.html';
+            }
+        });
+    });
+
+    initForm();
+    </script>
+</body>
+</html>

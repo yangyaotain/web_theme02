@@ -2357,7 +2357,8 @@
 
         function renderInfoGrid(rows) {
             return rows.map(function (row) {
-                return '<div class="consult-info-item"><span>' + escapeHtml(row[0]) + '</span><strong>' + escapeHtml(row[1]) + '</strong></div>';
+                var extraClass = row[2] ? ' ' + row[2] : '';
+                return '<div class="consult-info-item' + extraClass + '"><span>' + escapeHtml(row[0]) + '</span><strong>' + escapeHtml(row[1]) + '</strong></div>';
             }).join('');
         }
 
@@ -2365,6 +2366,17 @@
             return (item.objectInfo || []).map(function (row) {
                 return '<div class="consult-detail-row"><span>' + escapeHtml(row[0]) + '</span><strong>' + escapeHtml(row[1]) + '</strong></div>';
             }).join('');
+        }
+
+        function getObjectIntro(item) {
+            var introMap = {
+                '需求咨询': '围绕业务场景、实施范围、预算周期和对接条件进行前期沟通，便于后续形成可响应的需求方案。',
+                '资源咨询': '用于了解数据资源覆盖范围、更新频率、授权方式和使用边界，支撑后续申请或采购判断。',
+                '产品咨询': '用于了解数据产品功能、适用场景、交付方式和使用限制，支撑后续购买决策。',
+                '服务咨询': '用于了解咨询服务范围、交付成果、实施周期和协作方式，支撑后续服务对接。',
+                '方案咨询': '用于了解行业方案能力、落地路径、交付边界和适配条件，支撑后续方案选型。'
+            };
+            return item.object + '主要' + (introMap[getConsultType(item)] || '用于明确咨询对象的背景、范围和对接要点，支撑后续业务沟通。');
         }
 
         function renderHistory(item) {
@@ -2392,11 +2404,11 @@
             var title = isHandle ? '处理咨询' : '查看咨询';
             var baseRows = [
                 ['咨询对象', item.object],
-                ['咨询类型', getConsultType(item)],
                 ['对接方', getCounterparty(item)],
-                ['联系人', item.person],
+                ['咨询类型', getConsultType(item)],
                 ['提交时间', item.createdAt],
-                ['状态', status]
+                ['状态', status],
+                ['对象简介', getObjectIntro(item), 'consult-info-item-summary']
             ];
             var contactRows = [
                 ['机构名称', item.submitInfo.org],
@@ -2431,23 +2443,17 @@
                 +       '</div>'
                 +       '<div class="consult-modal-body">'
                 +           '<section class="consult-modal-section">'
-                +               '<div class="consult-section-title">咨询基本信息</div>'
-                +               '<div class="consult-info-grid">' + renderInfoGrid(baseRows) + '</div>'
+                +               '<div class="consult-section-title">咨询对象信息</div>'
+                +               '<div class="consult-info-grid consult-object-info-grid">' + renderInfoGrid(baseRows) + '</div>'
                 +           '</section>'
                 +           '<section class="consult-modal-section">'
                 +               '<div class="consult-section-title">咨询内容</div>'
                 +               '<div class="consult-content-box">' + escapeHtml(getConsultContent(item)) + '</div>'
                 +               viewReplySection
                 +           '</section>'
-                +           '<section class="consult-modal-section consult-modal-split">'
-                +               '<div>'
-                +                   '<div class="consult-section-title">联系方式</div>'
-                +                   '<div class="consult-detail-list">' + renderInfoGrid(contactRows) + '</div>'
-                +               '</div>'
-                +               '<div>'
-                +                   '<div class="consult-section-title">咨询对象信息</div>'
-                +                   '<div class="consult-detail-list">' + renderObjectInfo(item) + '</div>'
-                +               '</div>'
+                +           '<section class="consult-modal-section">'
+                +               '<div class="consult-section-title">联系方式</div>'
+                +               '<div class="consult-contact-grid">' + renderInfoGrid(contactRows) + '</div>'
                 +           '</section>'
                 +           replySection
                 +       '</div>'

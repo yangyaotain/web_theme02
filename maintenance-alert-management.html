@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>告警管理 - 运维中心 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/global-dialog.js"></script>
+    <style>
+        .alert-page {
+            min-width: 1040px;
+            color: #303133;
+        }
+        .alert-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 16px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .alert-search {
+            position: relative;
+            width: 360px;
+            max-width: 100%;
+        }
+        .alert-search input {
+            width: 100%;
+            height: 40px;
+            padding: 0 42px 0 18px;
+            border: 1px solid var(--forest-green);
+            border-radius: 6px;
+            outline: none;
+            color: #303133;
+            font-size: 14px;
+            font-family: inherit;
+            transition: box-shadow 0.15s, border-color 0.15s;
+        }
+        .alert-search input::placeholder {
+            color: #aab5b0;
+        }
+        .alert-search input:focus {
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.12);
+        }
+        .alert-search-icon {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a9691;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .alert-search-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .alert-btn {
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0 14px;
+            border: 1px solid #dcdfe6;
+            border-radius: 3px;
+            background: #fff;
+            color: #606266;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .alert-btn:hover {
+            color: var(--forest-green);
+            border-color: var(--forest-green);
+            background: #f0f9f4;
+        }
+        .alert-btn.primary {
+            color: #fff;
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+        }
+        .alert-btn.primary:hover {
+            background: var(--forest-green-600);
+            border-color: var(--forest-green-600);
+        }
+        .alert-btn svg,
+        .alert-action svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .alert-card {
+            background: #fff;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .alert-table .col-name { width: 190px; }
+        .alert-table .col-level { width: 88px; }
+        .alert-table .col-desc { width: 260px; }
+        .alert-table .col-rule { width: 310px; }
+        .alert-table .col-time { width: 150px; }
+        .alert-table .col-op { width: 150px; }
+        .alert-name {
+            color: #303133;
+            font-weight: 600;
+            line-height: 20px;
+        }
+        .alert-desc,
+        .alert-rule {
+            color: #606266;
+            line-height: 20px;
+        }
+        .level-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 24px;
+            padding: 0 9px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .level-high {
+            color: #f56c6c;
+            background: #fef0f0;
+            border: 1px solid #fde2e2;
+        }
+        .level-middle {
+            color: #e6a23c;
+            background: #fdf6ec;
+            border: 1px solid #faecd8;
+        }
+        .level-low {
+            color: var(--forest-green);
+            background: #e8f5e9;
+            border: 1px solid #c8ead2;
+        }
+        .alert-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--forest-green);
+            font-size: 13px;
+            cursor: pointer;
+            vertical-align: middle;
+            transition: color 0.15s;
+        }
+        .alert-action:hover {
+            color: var(--forest-green-700);
+            text-decoration: underline;
+        }
+        .alert-action.danger {
+            color: #f56c6c;
+        }
+        .alert-action.danger:hover {
+            color: #dd4b4b;
+        }
+        .table-empty {
+            display: none;
+            padding: 34px 16px;
+            color: #909399;
+            text-align: center;
+            font-size: 13px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .table-empty.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div data-admin-topbar data-active="maintenance"></div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar maintenance-sidebar" data-maintenance-sidebar></aside>
+
+        <main class="admin-content">
+            <div class="alert-page">
+                <section class="alert-card">
+                    <div class="alert-toolbar">
+                        <div class="alert-search">
+                            <input type="text" id="alertNameInput" placeholder="请输入告警项名称搜索">
+                            <span class="alert-search-icon">
+                                <svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.18 10.43l4.45 4.44-1.42 1.42-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>
+                            </span>
+                        </div>
+                        <div>
+                            <a class="alert-btn primary" href="maintenance-alert-form.html?mode=create">
+                                <svg viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
+                                新建
+                            </a>
+                        </div>
+                    </div>
+
+                    <table class="data-table alert-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">告警项名称</th>
+                                <th class="col-level">等级</th>
+                                <th class="col-desc">描述</th>
+                                <th class="col-rule">监控规则</th>
+                                <th class="col-time">修改时间</th>
+                                <th class="col-op">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertTableBody"></tbody>
+                    </table>
+                    <div class="table-empty" id="tableEmpty">暂无符合条件的告警项</div>
+
+                    <div class="pagination-bar">
+                        <span class="pagination-info" id="pageInfo">共 0 条记录，每页显示 <select><option>10</option><option>20</option><option>50</option></select> 条记录</span>
+                        <button class="page-btn disabled" type="button">上一页</button>
+                        <button class="page-btn active" type="button">1</button>
+                        <button class="page-btn disabled" type="button">下一页</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/maintenance-sidebar.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script>
+    const ICON_EDIT = '<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41L18.2 3.29a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 2-1.66z"/></svg>';
+    const ICON_DELETE = '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></svg>';
+
+    let alertRows = [
+        { id: 1, name: '业务处理超时告警', level: '中', desc: '业务流程节点超过处理时限后触发提醒。', rule: '资源、产品、服务交易流程超过 24 小时未处理，后续每 12 小时重复提醒。', updated: '2026-06-26 15:20' },
+        { id: 2, name: '审核超时告警', level: '中', desc: '运营审核任务长时间未完成时提醒。', rule: '资源登记、产品上架、服务上架审核超过 12 小时未处理。', updated: '2026-06-25 11:08' },
+        { id: 3, name: '调用失败次数过高', level: '高', desc: '同一接口在短时间内失败次数超过阈值。', rule: '5 分钟内失败次数达到 10 次，通知供方、需求方和运营方。', updated: '2026-06-24 18:35' },
+        { id: 4, name: '连续调用失败', level: '高', desc: '同一买方连续调用同一资源失败。', rule: '10 分钟内连续失败 3 次，触发站内消息告警。', updated: '2026-06-23 09:42' },
+        { id: 5, name: '调用失败率异常', level: '高', desc: '统计窗口内失败率超过配置比例。', rule: '10 分钟内失败率超过 20%，并且调用总量不少于 30 次。', updated: '2026-06-20 16:12' },
+        { id: 6, name: '响应超时异常', level: '中', desc: '接口响应时间超过服务承诺阈值。', rule: '5 分钟内 P95 响应时间超过 3000ms。', updated: '2026-06-18 14:26' },
+        { id: 7, name: '用量接近额度', level: '低', desc: '订单约定调用额度即将耗尽时提醒。', rule: '订单调用额度使用率达到 80% 时触发一次提醒。', updated: '2026-06-16 10:50' },
+        { id: 8, name: '长时间无调用', level: '低', desc: '交付开通后持续未产生调用记录。', rule: '资源或产品交付开通 7 天后累计调用次数为 0。', updated: '2026-06-12 17:05' }
+    ];
+
+    function escapeHtml(text) {
+        return String(text).replace(/[&<>"']/g, function (ch) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+    }
+
+    function levelClass(level) {
+        if (level === '高') return 'level-high';
+        if (level === '中') return 'level-middle';
+        return 'level-low';
+    }
+
+    function currentRows() {
+        const keyword = document.getElementById('alertNameInput').value.trim();
+        if (!keyword) return alertRows.slice();
+        return alertRows.filter(function (item) {
+            return item.name.indexOf(keyword) >= 0;
+        });
+    }
+
+    function renderTable() {
+        const rows = currentRows();
+        const body = document.getElementById('alertTableBody');
+        body.innerHTML = rows.map(function (item) {
+            return ''
+                + '<tr data-id="' + item.id + '">'
+                + '<td><div class="alert-name">' + escapeHtml(item.name) + '</div></td>'
+                + '<td><span class="level-tag ' + levelClass(item.level) + '">' + escapeHtml(item.level) + '</span></td>'
+                + '<td><div class="alert-desc">' + escapeHtml(item.desc) + '</div></td>'
+                + '<td><div class="alert-rule">' + escapeHtml(item.rule) + '</div></td>'
+                + '<td>' + escapeHtml(item.updated) + '</td>'
+                + '<td>'
+                + '<span class="alert-action" data-action="edit" data-id="' + item.id + '">' + ICON_EDIT + '编辑</span>'
+                + '<span class="op-divider">|</span>'
+                + '<span class="alert-action danger" data-action="delete" data-id="' + item.id + '">' + ICON_DELETE + '删除</span>'
+                + '</td>'
+                + '</tr>';
+        }).join('');
+        document.getElementById('tableEmpty').classList.toggle('show', rows.length === 0);
+        document.getElementById('pageInfo').innerHTML = '共 ' + rows.length + ' 条记录，每页显示 <select><option>10</option><option>20</option><option>50</option></select> 条记录';
+    }
+
+    function findAlertName(id) {
+        const item = alertRows.find(function (row) { return row.id === id; });
+        return item ? item.name : '该告警项';
+    }
+
+    document.getElementById('alertNameInput').addEventListener('input', renderTable);
+    document.getElementById('alertNameInput').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') renderTable();
+    });
+    document.getElementById('alertTableBody').addEventListener('click', function (event) {
+        const action = event.target.closest('[data-action]');
+        if (!action) return;
+        const id = Number(action.getAttribute('data-id'));
+        const name = findAlertName(id);
+        if (action.getAttribute('data-action') === 'edit') {
+            window.location.href = 'maintenance-alert-form.html?mode=edit&id=' + encodeURIComponent(id);
+            return;
+        }
+        GlobalDialog.danger({
+            title: '删除确认',
+            desc: '您确定要删除【' + escapeHtml(name) + '】吗？删除后该告警项将无法恢复。',
+            confirmText: '确认删除',
+            cancelText: '取 消',
+            onConfirm: function () {
+                alertRows = alertRows.filter(function (row) { return row.id !== id; });
+                renderTable();
+                GlobalDialog.success({ title: '删除成功', desc: '告警项【' + escapeHtml(name) + '】已删除。' });
+            }
+        });
+    });
+
+    renderTable();
+    </script>
+</body>
+</html>
