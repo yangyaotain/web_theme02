@@ -16,7 +16,7 @@
     <script src="js/global-dialog.js"></script>
     <style>
         .alert-form-page {
-            min-width: 980px;
+            min-width: 1080px;
             color: #303133;
         }
         .form-card {
@@ -44,12 +44,37 @@
             margin-bottom: 16px;
         }
         .alert-form {
-            padding: 26px 28px 8px;
+            padding: 22px 28px 8px;
+        }
+        .form-section {
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 16px;
+            color: #303133;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .section-title::before {
+            content: "";
+            width: 3px;
+            height: 14px;
+            border-radius: 2px;
+            background: var(--forest-green);
         }
         .form-row {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         .form-label {
             width: 118px;
@@ -67,12 +92,18 @@
             color: #f56c6c;
         }
         .form-field {
-            width: min(680px, 100%);
+            flex: 1;
             min-width: 0;
+            max-width: 900px;
+        }
+        .form-field.short {
+            max-width: 320px;
         }
         .form-input,
         .form-select,
-        .form-textarea {
+        .form-textarea,
+        .rule-select,
+        .rule-input {
             width: 100%;
             border: 1px solid #dcdfe6;
             border-radius: 3px;
@@ -81,14 +112,17 @@
             font-size: 13px;
             font-family: inherit;
             outline: none;
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         .form-input,
-        .form-select {
+        .form-select,
+        .rule-select,
+        .rule-input {
             height: 34px;
             padding: 0 10px;
         }
-        .form-select {
+        .form-select,
+        .rule-select {
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
@@ -96,19 +130,177 @@
             padding-right: 30px;
         }
         .form-textarea {
-            min-height: 112px;
+            min-height: 96px;
             padding: 8px 10px;
             line-height: 1.7;
             resize: vertical;
         }
         .form-input:focus,
         .form-select:focus,
-        .form-textarea:focus {
+        .form-textarea:focus,
+        .rule-select:focus,
+        .rule-input:focus {
             border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.08);
         }
         .form-input::placeholder,
         .form-textarea::placeholder {
             color: #c0c4cc;
+        }
+        .rule-builder {
+            padding: 12px;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            background: #fbfcfc;
+        }
+        .rule-row {
+            display: grid;
+            grid-template-columns: minmax(230px, 1.1fr) 150px minmax(360px, 1.6fr) 72px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .rule-row:last-child {
+            margin-bottom: 0;
+        }
+        .value-editor {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .value-editor .rule-input {
+            width: 92px;
+            flex: 0 0 92px;
+        }
+        .value-editor .rule-select {
+            flex: 1;
+            min-width: 160px;
+        }
+        .value-unit,
+        .value-text {
+            color: #606266;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .condition-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .condition-btn {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .condition-btn:hover {
+            opacity: 0.86;
+            transform: translateY(-1px);
+        }
+        .condition-btn.remove {
+            background: #f56c6c;
+        }
+        .condition-btn.add {
+            background: var(--forest-green);
+        }
+        .condition-btn svg {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+        .variable-panel {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .variable-label {
+            color: #909399;
+            font-size: 12px;
+            line-height: 24px;
+            white-space: nowrap;
+        }
+        .variable-list {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+        .variable-chip {
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 9px;
+            border: 1px solid #d7eee0;
+            border-radius: 3px;
+            color: var(--forest-green);
+            background: #f0f9f4;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .variable-chip:hover {
+            border-color: var(--forest-green);
+            background: #e8f5e9;
+        }
+        .preview-box {
+            min-height: 76px;
+            padding: 12px 14px;
+            border: 1px solid #d7eee0;
+            border-radius: 4px;
+            background: #f8fcfa;
+            color: #303133;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .preview-placeholder {
+            color: #c0c4cc;
+        }
+        .preview-var {
+            color: var(--forest-green);
+            font-weight: 600;
+        }
+        .channel-options {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 34px;
+        }
+        .channel-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 28px;
+            padding: 0 10px;
+            border: 1px solid #d7eee0;
+            border-radius: 3px;
+            color: var(--forest-green);
+            background: #f0f9f4;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .channel-check.is-fixed {
+            cursor: default;
+            pointer-events: none;
+        }
+        .channel-check input {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            accent-color: var(--forest-green);
+        }
+        .channel-check.is-fixed input {
+            pointer-events: none;
         }
         .form-tip {
             margin-top: 6px;
@@ -183,33 +375,75 @@
                     </div>
 
                     <form class="alert-form" id="alertForm">
-                        <div class="form-row">
-                            <label class="form-label required" for="fieldName">告警项名称</label>
-                            <div class="form-field">
-                                <input class="form-input" type="text" id="fieldName" placeholder="请输入告警项名称">
+                        <div class="form-section">
+                            <div class="section-title">基础信息</div>
+                            <div class="form-row">
+                                <label class="form-label required" for="fieldName">告警项名称</label>
+                                <div class="form-field">
+                                    <input class="form-input" type="text" id="fieldName" placeholder="请输入告警项名称">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label required" for="fieldLevel">等级</label>
+                                <div class="form-field short">
+                                    <select class="form-select" id="fieldLevel">
+                                        <option value="高">高</option>
+                                        <option value="中">中</option>
+                                        <option value="低">低</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label" for="fieldDesc">描述</label>
+                                <div class="form-field">
+                                    <textarea class="form-textarea" id="fieldDesc" placeholder="请输入告警项描述"></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label class="form-label required" for="fieldLevel">等级</label>
-                            <div class="form-field">
-                                <select class="form-select" id="fieldLevel">
-                                    <option value="高">高</option>
-                                    <option value="中">中</option>
-                                    <option value="低">低</option>
-                                </select>
+
+                        <div class="form-section">
+                            <div class="section-title">监控规则</div>
+                            <div class="form-row">
+                                <label class="form-label required">规则条件</label>
+                                <div class="form-field">
+                                    <div class="rule-builder" id="ruleRows"></div>
+                                    <div class="form-tip">可配置多条条件，任一条件触发即告警。</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label class="form-label" for="fieldDesc">描述</label>
-                            <div class="form-field">
-                                <textarea class="form-textarea" id="fieldDesc" placeholder="请输入告警项描述"></textarea>
+
+                        <div class="form-section">
+                            <div class="section-title">监控消息</div>
+                            <div class="form-row">
+                                <label class="form-label required" for="messageTemplate">消息模板</label>
+                                <div class="form-field">
+                                    <div class="variable-panel">
+                                        <div class="variable-list" id="variableList"></div>
+                                    </div>
+                                    <textarea class="form-textarea" id="messageTemplate" placeholder="请输入监控消息内容"></textarea>
+                                    <div class="form-tip">监控消息由固定文字和变量组成，点击上方变量可插入到光标位置；变量仅代表触发告警时的实际监控值，格式为 {变量名}，阈值条件请在消息正文中按需填写。</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">消息预览</label>
+                                <div class="form-field">
+                                    <div class="preview-box" id="messagePreview"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label class="form-label required" for="fieldRule">监控规则</label>
-                            <div class="form-field">
-                                <textarea class="form-textarea" id="fieldRule" placeholder="请输入监控规则"></textarea>
-                                <div class="form-tip">示例：10 分钟内失败率超过 20%，并且调用总量不少于 30 次。</div>
+
+                        <div class="form-section">
+                            <div class="section-title">通知渠道</div>
+                            <div class="form-row">
+                                <label class="form-label required">通知渠道</label>
+                                <div class="form-field">
+                                    <div class="channel-options">
+                                        <label class="channel-check is-fixed">
+                                            <input type="checkbox" id="channelSiteMessage" checked aria-disabled="true" tabindex="-1">
+                                            <span>站内消息</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -232,32 +466,325 @@
     <script src="js/maintenance-sidebar.js"></script>
     <script src="js/admin-topbar.js"></script>
     <script>
-    const alertSamples = {
-        1: { name: '业务处理超时告警', level: '中', desc: '业务流程节点超过处理时限后触发提醒。', rule: '资源、产品、服务交易流程超过 24 小时未处理，后续每 12 小时重复提醒。' },
-        2: { name: '审核超时告警', level: '中', desc: '运营审核任务长时间未完成时提醒。', rule: '资源登记、产品上架、服务上架审核超过 12 小时未处理。' },
-        3: { name: '调用失败次数过高', level: '高', desc: '同一接口在短时间内失败次数超过阈值。', rule: '5 分钟内失败次数达到 10 次，通知供方、需求方和运营方。' }
+    const metricDefs = [
+        { key: 'demandResponseTime', label: '需求响应时间', type: 'simple', unit: '小时', defaultRelation: 'gt', defaultValue: '24' },
+        { key: 'approvalTimeout', label: '审批超时时间', type: 'simple', unit: '小时', defaultRelation: 'gt', defaultValue: '12' },
+        { key: 'dataCallStatus', label: '数据调用（文件/接口）', type: 'status', defaultRelation: 'eq', defaultValue: '异常', options: ['异常', '正常'] },
+        { key: 'disputeRate', label: '交易纠纷率', type: 'simple', unit: '%', defaultRelation: 'gt', defaultValue: '8' },
+        { key: 'apiFailureCount', label: '接口调用失败次数', type: 'window', windowUnit: '分钟', valueUnit: '次', defaultRelation: 'gt', defaultWindow: '5', defaultValue: '10' },
+        { key: 'apiContinuousFailure', label: '接口连续调用失败', type: 'window', windowUnit: '分钟', valueUnit: '次', defaultRelation: 'gt', defaultWindow: '10', defaultValue: '3' },
+        { key: 'apiFailureRate', label: '接口调用失败率', type: 'window', windowUnit: '分钟', valueUnit: '%', defaultRelation: 'gt', defaultWindow: '10', defaultValue: '20' },
+        { key: 'apiResponseTime', label: '接口响应时间', type: 'window', windowUnit: '分钟', valueUnit: 'ms', defaultRelation: 'gt', defaultWindow: '5', defaultValue: '3000' },
+        { key: 'apiUsage', label: '接口调用用量', type: 'window', windowUnit: '小时', valueUnit: '倍', defaultRelation: 'gt', defaultWindow: '1', defaultValue: '3' },
+        { key: 'apiLowFrequency', label: '接口调用', type: 'window', windowUnit: '天', valueUnit: '次', defaultRelation: 'lte', defaultWindow: '7', defaultValue: '0' }
+    ];
+
+    const relationDefs = [
+        { key: 'gt', label: '大于' },
+        { key: 'gte', label: '大于等于' },
+        { key: 'eq', label: '等于' },
+        { key: 'lt', label: '小于' },
+        { key: 'lte', label: '小于等于' }
+    ];
+
+    const baseVariables = ['供方名称', '需方名称', '需求名称', '订单名称', '订单编号', '接口名称', '告警时间'];
+    const metricVariables = metricDefs.map(function (item) { return item.label; });
+    const sampleValues = {
+        '供方名称': '深圳市龙岗数据服务有限公司',
+        '需方名称': '龙岗智慧园区运营中心',
+        '需求名称': '园区企业画像数据服务需求',
+        '订单名称': '企业画像接口服务',
+        '订单编号': 'DD-20260630-0098',
+        '接口名称': '企业画像查询接口',
+        '告警时间': '2026-06-30 10:30',
+        '需求响应时间': '25',
+        '审批超时时间': '13',
+        '数据调用（文件/接口）': '异常',
+        '交易纠纷率': '9.2',
+        '接口调用失败次数': '12',
+        '接口连续调用失败': '4',
+        '接口调用失败率': '23',
+        '接口响应时间': '3250',
+        '接口调用用量': '3.6',
+        '接口调用': '0'
     };
 
+    const alertSamples = {
+        1: {
+            name: '需求响应超时告警',
+            level: '中',
+            desc: '需求发布后供方响应不及时提醒。',
+            conditions: [{ metric: 'demandResponseTime', relation: 'gt', value: '24' }],
+            message: '需方【{需方名称}】的需求【{需求名称}】响应超时，当前需求已经发布{需求响应时间}小时，没有供方响应，大于24小时，请及时处理。'
+        },
+        2: {
+            name: '审批超时告警',
+            level: '中',
+            desc: '运营审批任务超过配置时限提醒。',
+            conditions: [{ metric: 'approvalTimeout', relation: 'gt', value: '12' }],
+            message: '订单【{订单编号}】审批已超过配置时限，当前审批超时时间为：{审批超时时间}小时，大于12小时，告警时间：{告警时间}。'
+        },
+        3: {
+            name: '数据调用异常告警',
+            level: '高',
+            desc: '文件或接口调用状态异常时提醒。',
+            conditions: [{ metric: 'dataCallStatus', relation: 'eq', value: '异常' }],
+            message: '接口【{接口名称}】数据调用状态为：{数据调用（文件/接口）}，等于异常，供方【{供方名称}】请尽快排查。'
+        },
+        4: {
+            name: '交易纠纷率超标告警',
+            level: '高',
+            desc: '订单纠纷比例超过阈值时提醒。',
+            conditions: [{ metric: 'disputeRate', relation: 'gt', value: '8' }],
+            message: '供方【{供方名称}】近期交易纠纷率为：{交易纠纷率}%，大于8%，请运营人员关注订单【{订单编号}】。'
+        },
+        5: {
+            name: '接口调用失败次数过高告警',
+            level: '高',
+            desc: '短时间接口调用失败次数过高提醒。',
+            conditions: [{ metric: 'apiFailureCount', relation: 'gt', window: '5', value: '10' }],
+            message: '接口【{接口名称}】在{告警时间}触发告警，5分钟内接口调用失败次数为：{接口调用失败次数}次，大于10次，请供方【{供方名称}】处理。'
+        },
+        6: {
+            name: '接口连续调用失败告警',
+            level: '高',
+            desc: '同一接口连续调用失败提醒。',
+            conditions: [{ metric: 'apiContinuousFailure', relation: 'gt', window: '10', value: '3' }],
+            message: '接口【{接口名称}】连续调用失败，10分钟内接口连续调用失败为：{接口连续调用失败}次，大于3次，订单【{订单编号}】请尽快排查。'
+        },
+        7: {
+            name: '接口调用失败率异常告警',
+            level: '高',
+            desc: '统计窗口内接口调用失败率异常提醒。',
+            conditions: [{ metric: 'apiFailureRate', relation: 'gt', window: '10', value: '20' }],
+            message: '接口【{接口名称}】触发失败率告警，10分钟内接口调用失败率为：{接口调用失败率}%，大于20%，需方【{需方名称}】可能受影响。'
+        },
+        8: {
+            name: '接口响应超时异常告警',
+            level: '中',
+            desc: '接口响应时间超过服务承诺阈值提醒。',
+            conditions: [{ metric: 'apiResponseTime', relation: 'gt', window: '5', value: '3000' }],
+            message: '接口【{接口名称}】响应时间异常，5分钟内接口响应时间为：{接口响应时间}ms，大于3000ms，告警时间：{告警时间}。'
+        },
+        9: {
+            name: '接口调用用量突增告警',
+            level: '中',
+            desc: '接口调用量明显高于历史均值时提醒。',
+            conditions: [{ metric: 'apiUsage', relation: 'gt', window: '1', value: '3' }],
+            message: '接口【{接口名称}】调用用量突增，1小时内接口调用用量为历史均值的{接口调用用量}倍，大于3倍，订单【{订单名称}】请关注。'
+        },
+        10: {
+            name: '接口长时间无调用或低频调用告警',
+            level: '低',
+            desc: '接口长时间调用次数过低提醒。',
+            conditions: [{ metric: 'apiLowFrequency', relation: 'lte', window: '7', value: '0' }],
+            message: '订单【{订单名称}】的接口【{接口名称}】调用偏低，7天内接口调用次数为：{接口调用}次，小于等于0次，请跟进需方【{需方名称}】。'
+        }
+    };
+
+    let conditions = [];
     const params = new URLSearchParams(window.location.search);
     const mode = params.get('mode') === 'edit' ? 'edit' : 'create';
     const id = params.get('id') || '1';
     const sample = alertSamples[id] || alertSamples[1];
 
+    function escapeHtml(text) {
+        return String(text).replace(/[&<>"']/g, function (ch) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+    }
+
+    function getMetric(key) {
+        return metricDefs.find(function (item) { return item.key === key; }) || metricDefs[0];
+    }
+
+    function getRelationLabel(key) {
+        const item = relationDefs.find(function (rel) { return rel.key === key; });
+        return item ? item.label : key;
+    }
+
+    function defaultCondition(metricKey) {
+        const metric = getMetric(metricKey || metricDefs[0].key);
+        const condition = {
+            metric: metric.key,
+            relation: metric.defaultRelation,
+            value: metric.defaultValue
+        };
+        if (metric.type === 'window') condition.window = metric.defaultWindow;
+        return condition;
+    }
+
+    function metricOptions(selectedKey) {
+        return metricDefs.map(function (item) {
+            return '<option value="' + item.key + '"' + (item.key === selectedKey ? ' selected' : '') + '>' + item.label + '</option>';
+        }).join('');
+    }
+
+    function relationOptions(metric, selectedKey) {
+        const options = metric.type === 'status' ? relationDefs.filter(function (item) { return item.key === 'eq'; }) : relationDefs;
+        return options.map(function (item) {
+            return '<option value="' + item.key + '"' + (item.key === selectedKey ? ' selected' : '') + '>' + item.label + '</option>';
+        }).join('');
+    }
+
+    function renderValueEditor(condition, metric, index) {
+        if (metric.type === 'status') {
+            const options = metric.options.map(function (option) {
+                return '<option value="' + option + '"' + (option === condition.value ? ' selected' : '') + '>' + option + '</option>';
+            }).join('');
+            return '<select class="rule-select" data-index="' + index + '" data-field="value">' + options + '</select>';
+        }
+        if (metric.type === 'window') {
+            return ''
+                + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="window" value="' + escapeHtml(condition.window || metric.defaultWindow) + '">'
+                + '<span class="value-unit">' + metric.windowUnit + '内</span>'
+                + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="value" value="' + escapeHtml(condition.value || metric.defaultValue) + '">'
+                + '<span class="value-unit">' + metric.valueUnit + '</span>';
+        }
+        return ''
+            + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="value" value="' + escapeHtml(condition.value || metric.defaultValue) + '">'
+            + '<span class="value-unit">' + metric.unit + '</span>';
+    }
+
+    function renderRules() {
+        const rows = conditions.map(function (condition, index) {
+            const metric = getMetric(condition.metric);
+            return ''
+                + '<div class="rule-row" data-index="' + index + '">'
+                + '<select class="rule-select" data-index="' + index + '" data-field="metric">' + metricOptions(metric.key) + '</select>'
+                + '<select class="rule-select" data-index="' + index + '" data-field="relation">' + relationOptions(metric, condition.relation) + '</select>'
+                + '<div class="value-editor">' + renderValueEditor(condition, metric, index) + '</div>'
+                + '<div class="condition-actions">'
+                + '<button class="condition-btn remove" type="button" title="删除条件" data-action="remove" data-index="' + index + '"><svg viewBox="0 0 24 24"><path d="M5 11h14v2H5z"/></svg></button>'
+                + '<button class="condition-btn add" type="button" title="新增条件" data-action="add" data-index="' + index + '"><svg viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg></button>'
+                + '</div>'
+                + '</div>';
+        }).join('');
+        document.getElementById('ruleRows').innerHTML = rows;
+        updatePreview();
+    }
+
+    function conditionText(condition) {
+        const metric = getMetric(condition.metric);
+        const relation = getRelationLabel(condition.relation);
+        if (metric.type === 'status') return metric.label + relation + condition.value;
+        if (metric.type === 'window') return metric.label + (condition.window || metric.defaultWindow) + metric.windowUnit + '内' + relation + (condition.value || metric.defaultValue) + metric.valueUnit;
+        return metric.label + relation + (condition.value || metric.defaultValue) + metric.unit;
+    }
+
+    function variableValue(name) {
+        return sampleValues[name] || '{' + name + '}';
+    }
+
+    function renderVariables() {
+        const html = baseVariables.concat(metricVariables).map(function (name) {
+            return '<button class="variable-chip" type="button" data-variable="' + escapeHtml(name) + '">' + escapeHtml(name) + '</button>';
+        }).join('');
+        document.getElementById('variableList').innerHTML = html;
+    }
+
+    function renderPreviewHtml(template) {
+        if (!template.trim()) return '<span class="preview-placeholder">配置监控消息后，将在这里预览最终消息内容。</span>';
+        let html = '';
+        let lastIndex = 0;
+        const reg = /\{([^}]+)\}/g;
+        let match;
+        while ((match = reg.exec(template)) !== null) {
+            html += escapeHtml(template.slice(lastIndex, match.index));
+            html += '<span class="preview-var">' + escapeHtml(variableValue(match[1])) + '</span>';
+            lastIndex = match.index + match[0].length;
+        }
+        html += escapeHtml(template.slice(lastIndex));
+        return html.replace(/\n/g, '<br>');
+    }
+
+    function updatePreview() {
+        const template = document.getElementById('messageTemplate').value;
+        document.getElementById('messagePreview').innerHTML = renderPreviewHtml(template);
+    }
+
+    function insertVariable(name) {
+        const textarea = document.getElementById('messageTemplate');
+        const token = '{' + name + '}';
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.slice(0, start) + token + textarea.value.slice(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + token.length;
+        updatePreview();
+    }
+
     function initForm() {
         document.getElementById('formTitle').textContent = mode === 'edit' ? '编辑告警项' : '新建告警项';
+        renderVariables();
         if (mode === 'edit') {
             document.getElementById('fieldName').value = sample.name;
             document.getElementById('fieldLevel').value = sample.level;
             document.getElementById('fieldDesc').value = sample.desc;
-            document.getElementById('fieldRule').value = sample.rule;
+            document.getElementById('messageTemplate').value = sample.message;
+            conditions = sample.conditions.map(function (item) { return Object.assign({}, item); });
+        } else {
+            document.getElementById('messageTemplate').value = '供方【{供方名称}】向需方【{需方名称}】提供的订单【{订单名称}】在{告警时间}触发告警：接口【{接口名称}】5分钟内接口调用失败次数为：{接口调用失败次数}次，大于10次，请及时处理。';
+            conditions = [defaultCondition('apiFailureCount')];
         }
+        renderRules();
     }
+
+    document.getElementById('ruleRows').addEventListener('change', function (event) {
+        const target = event.target;
+        const index = Number(target.getAttribute('data-index'));
+        const field = target.getAttribute('data-field');
+        if (!field || Number.isNaN(index)) return;
+        if (field === 'metric') {
+            conditions[index] = defaultCondition(target.value);
+            renderRules();
+            return;
+        }
+        conditions[index][field] = target.value;
+        if (field === 'relation' && getMetric(conditions[index].metric).type === 'status') conditions[index].relation = 'eq';
+        renderRules();
+    });
+
+    document.getElementById('ruleRows').addEventListener('input', function (event) {
+        const target = event.target;
+        const index = Number(target.getAttribute('data-index'));
+        const field = target.getAttribute('data-field');
+        if (!field || Number.isNaN(index)) return;
+        conditions[index][field] = target.value;
+        updatePreview();
+    });
+
+    document.getElementById('ruleRows').addEventListener('click', function (event) {
+        const button = event.target.closest('[data-action]');
+        if (!button) return;
+        const index = Number(button.getAttribute('data-index'));
+        const action = button.getAttribute('data-action');
+        if (action === 'add') {
+            conditions.splice(index + 1, 0, defaultCondition());
+            renderRules();
+            return;
+        }
+        if (conditions.length === 1) {
+            GlobalDialog.warning({ title: '至少保留一条条件', desc: '监控规则需要至少配置一条触发条件。' });
+            return;
+        }
+        conditions.splice(index, 1);
+        renderRules();
+    });
+
+    document.getElementById('variableList').addEventListener('click', function (event) {
+        const chip = event.target.closest('[data-variable]');
+        if (!chip) return;
+        insertVariable(chip.getAttribute('data-variable'));
+    });
+
+    document.getElementById('messageTemplate').addEventListener('input', updatePreview);
 
     document.getElementById('btnSave').addEventListener('click', function () {
         const name = document.getElementById('fieldName').value.trim();
-        const rule = document.getElementById('fieldRule').value.trim();
-        if (!name || !rule) {
-            GlobalDialog.warning({ title: '请完善必填项', desc: '告警项名称和监控规则不能为空。' });
+        const message = document.getElementById('messageTemplate').value.trim();
+        if (!name || !conditions.length || !message) {
+            GlobalDialog.warning({ title: '请完善必填项', desc: '告警项名称、监控规则和监控消息不能为空。' });
             return;
         }
         GlobalDialog.success({

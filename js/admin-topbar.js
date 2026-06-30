@@ -13,7 +13,7 @@
         { key: 'buyer', label: '需方中心', href: 'buyer-center.html' },
         { key: 'supplier', label: '供方中心', href: 'supplier-center.html' },
         { key: 'operation', label: '运营中心', href: 'operation-center.html' },
-        { key: 'maintenance', label: '运维中心', href: 'maintenance-center.html' },
+        { key: 'maintenance', label: '运维中心', href: 'maintenance-alert-management.html' },
         { key: 'island', label: '数据岛系统', href: 'data-island-system.html' }
     ];
 
@@ -52,7 +52,12 @@
         if (label === '需方中心' || href.indexOf('buyer-center.html') >= 0) return 'buyer';
         if (label === '供方中心' || href.indexOf('supplier-center.html') >= 0) return 'supplier';
         if (label === '运营中心' || href.indexOf('operation-center.html') >= 0) return 'operation';
-        if (label === '运维中心' || href.indexOf('maintenance-center.html') >= 0 || label === '智能报告') return 'maintenance';
+        if (
+            label === '运维中心'
+            || href.indexOf('maintenance-center.html') >= 0
+            || href.indexOf('maintenance-alert-management.html') >= 0
+            || label === '智能报告'
+        ) return 'maintenance';
         if (label === '数据岛系统' || href.indexOf('data-island-system.html') >= 0 || href.indexOf('all-elements-dashboard') >= 0) return 'island';
         return '';
     }

@@ -9,7 +9,7 @@
     { id: 'solutions', label: '行业方案', icon: 'fa-sitemap', href: 'industry-solutions.html' },
     { id: 'demand', label: '需求大厅', icon: 'fa-tasks', href: 'demand-hall.html' },
     { id: 'smart-query', label: '智能问数', icon: 'fa-question-circle', href: SMART_QUERY_URL, target: '_blank' },
-    { id: 'monitor-warning', label: '监测预警', icon: 'fa-bell', reserved: true }
+    { id: 'monitor-warning', label: '监测预警', icon: 'fa-bell', href: 'monitor-warning.html' }
   ];
 
   const baseItemClass = 'px-3 2xl:px-5 py-2 rounded-md border border-transparent flex items-center gap-2 font-medium text-sm 2xl:text-base whitespace-nowrap transition-all duration-300';
@@ -23,26 +23,8 @@
     if (path.includes('consulting-services')) return 'consulting';
     if (path.includes('industry-solutions')) return 'solutions';
     if (path.includes('demand-hall')) return 'demand';
+    if (path.includes('monitor-warning')) return 'monitor-warning';
     return 'overview';
-  }
-
-  function showReservedToast() {
-    let toast = document.getElementById('dashboardNavToast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'dashboardNavToast';
-      toast.className = 'fixed top-20 right-8 z-50 rounded-lg border border-primary/40 bg-dark-card px-4 py-3 text-sm text-white shadow-2xl transition-all duration-300 opacity-0 translate-y-2';
-      toast.innerHTML = '<i class="fa fa-info-circle text-primary mr-2"></i><span>监测预警功能建设中</span>';
-      document.body.appendChild(toast);
-    }
-
-    window.clearTimeout(toast._hideTimer);
-    requestAnimationFrame(function () {
-      toast.classList.remove('opacity-0', 'translate-y-2');
-    });
-    toast._hideTimer = window.setTimeout(function () {
-      toast.classList.add('opacity-0', 'translate-y-2');
-    }, 1800);
   }
 
   function renderNav(root) {
@@ -77,16 +59,44 @@
     ].join('');
   }
 
+  function ensureDashboardFitStyle() {
+    if (document.getElementById('dashboard-screen-fit-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'dashboard-screen-fit-style';
+    style.textContent = [
+      '.dashboard-screen-main { height: calc(100vh - 4rem) !important; padding: 16px !important; overflow: hidden !important; }',
+      '@media (min-width: 1600px) { .dashboard-screen-main { padding: 18px !important; } }',
+      '.dashboard-screen-main .gap-6 { gap: 16px !important; }',
+      '.dashboard-screen-main .mb-6 { margin-bottom: 16px !important; }',
+      '.dashboard-screen-main .p-6 { padding: 16px !important; }',
+      '.dashboard-screen-main .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 8px !important; }',
+      '.dashboard-screen-main .h-\\[380px\\] { height: clamp(280px, 31.5vh, 340px) !important; }',
+      '.dashboard-screen-main .h-\\[338px\\] { height: clamp(286px, 31.5vh, 340px) !important; }',
+      '.dashboard-screen-main .h-\\[320px\\] { height: clamp(260px, 32vh, 350px) !important; }',
+      '.dashboard-screen-main .h-\\[300px\\] { height: clamp(260px, 30vh, 324px) !important; }',
+      '.dashboard-screen-main .h-\\[280px\\] { height: clamp(250px, 30vh, 326px) !important; }',
+      '.dashboard-screen-main .h-\\[260px\\] { height: clamp(230px, 26vh, 280px) !important; }',
+      '.dashboard-screen-main .text-3xl { font-size: 1.6rem !important; line-height: 1.95rem !important; }',
+      '.dashboard-screen-main .text-2xl { font-size: 1.35rem !important; line-height: 1.75rem !important; }'
+    ].join('\n');
+
+    document.head.appendChild(style);
+  }
+
+  function applyDashboardFit() {
+    ensureDashboardFitStyle();
+    document.querySelectorAll('main').forEach(function (main) {
+      main.classList.add('dashboard-screen-main');
+      main.setAttribute('data-dashboard-fit', '1920x1080');
+    });
+  }
+
   function init() {
     document.querySelectorAll('[data-dashboard-nav]').forEach(function (root) {
       renderNav(root);
     });
-
-    document.addEventListener('click', function (event) {
-      if (event.target.closest('[data-dashboard-reserved="monitor-warning"]')) {
-        showReservedToast();
-      }
-    });
+    applyDashboardFit();
   }
 
   if (document.readyState === 'loading') {

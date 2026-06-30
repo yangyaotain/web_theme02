@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱 - 监测预警</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script src="dashboard-nav.js" defer></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#20A565',
+            secondary: '#F7AF1D',
+            accent: '#2DD4BF',
+            dark: '#10231C',
+            darker: '#07130F',
+            'dark-card': '#142B23',
+            'dark-border': '#2A493D',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(32, 165, 101, 0.28);
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  </style>
+
+  <style>
+    .warning-ticker {
+      height: 338px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .warning-ticker::before,
+    .warning-ticker::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      height: 26px;
+      pointer-events: none;
+    }
+
+    .warning-ticker::before {
+      top: 0;
+      background: linear-gradient(180deg, #142B23 0%, rgba(20, 43, 35, 0) 100%);
+    }
+
+    .warning-ticker::after {
+      bottom: 0;
+      background: linear-gradient(0deg, #142B23 0%, rgba(20, 43, 35, 0) 100%);
+    }
+
+    .warning-ticker-track {
+      animation: warningTicker 34s linear infinite;
+    }
+
+    .warning-ticker:hover .warning-ticker-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes warningTicker {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+  </style>
+</head>
+<body class="bg-darker font-inter text-gray-200 min-h-screen overflow-hidden">
+  <div data-dashboard-nav data-active="monitor-warning"></div>
+
+  <main class="p-6 h-[calc(100vh-4rem)] overflow-auto scrollbar-hide">
+    <div class="grid grid-cols-6 gap-6 mb-6">
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">今日告警数</p>
+            <h3 class="text-3xl font-bold text-white">86</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-arrow-up"></i>
+              <span>12.4% 较昨日</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-bell-o text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">高等级告警数</p>
+            <h3 class="text-3xl font-bold text-white">29</h3>
+            <p class="text-red-400 text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span>占比 33.7%</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+            <i class="fa fa-warning text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">监控规则数</p>
+            <h3 class="text-3xl font-bold text-white">10</h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-check-circle"></i>
+              <span>规则在线</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+            <i class="fa fa-sliders text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">触发指标数</p>
+            <h3 class="text-3xl font-bold text-white">10</h3>
+            <p class="text-accent text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-line-chart"></i>
+              <span>覆盖全部指标</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fa fa-bar-chart text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">接口健康率</p>
+            <h3 class="text-3xl font-bold text-white">97.8%</h3>
+            <p class="text-primary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-shield"></i>
+              <span>运行稳定</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-heartbeat text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow glow flex flex-col justify-between transition-transform duration-300 hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">平均响应耗时</p>
+            <h3 class="text-3xl font-bold text-white">1,286<span class="text-lg font-normal"> ms</span></h3>
+            <p class="text-secondary text-sm mt-2 flex items-center gap-1">
+              <i class="fa fa-clock-o"></i>
+              <span>近 1 小时均值</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <i class="fa fa-tachometer text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-6 mb-6">
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow col-span-2 transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-line-chart text-primary"></i>
+            <span>告警趋势分析</span>
+          </h3>
+          <div class="flex gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-red-500/10 text-red-400">高等级</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary">中等级</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent">低等级</span>
+          </div>
+        </div>
+        <div class="h-[338px]">
+          <canvas id="alertTrendChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-rss text-secondary"></i>
+            <span>监控告警滚动消息</span>
+          </h3>
+          <span class="text-xs px-3 py-1 rounded-full bg-dark border border-dark-border text-gray-300">最新告警</span>
+        </div>
+        <div class="warning-ticker">
+          <div class="warning-ticker-track space-y-3" id="alertTicker"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-6">
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bar-chart text-primary"></i>
+            <span>告警指标分布</span>
+          </h3>
+        </div>
+        <div class="h-[300px]">
+          <canvas id="indicatorChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-pie-chart text-secondary"></i>
+            <span>告警等级分布</span>
+          </h3>
+        </div>
+        <div class="h-[300px] flex items-center justify-center">
+          <canvas id="levelChart"></canvas>
+        </div>
+      </div>
+
+      <section class="bg-dark-card rounded-xl p-6 border border-dark-border card-shadow transition-all duration-300 hover:glow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa fa-bullseye text-secondary"></i>
+            <span>高频触发告警对象 TOP10</span>
+          </h3>
+        </div>
+        <div class="space-y-2 h-[300px] overflow-y-auto scrollbar-hide pr-1" id="alertObjectRank"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const chartTextColor = '#CBD5E1';
+    const chartGridColor = 'rgba(42, 73, 61, 0.65)';
+
+    const baseChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: chartTextColor,
+            boxWidth: 10,
+            boxHeight: 10,
+            usePointStyle: true
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(7, 19, 15, 0.95)',
+          titleColor: '#fff',
+          bodyColor: '#CBD5E1',
+          borderColor: '#2A493D',
+          borderWidth: 1,
+          padding: 12
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: chartTextColor },
+          grid: { color: chartGridColor }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: chartTextColor },
+          grid: { color: chartGridColor }
+        }
+      }
+    };
+
+    const alertMessages = [
+      { level: '高', time: '2026-06-30 10:30', text: '需方【龙岗智慧园区运营中心】的需求【园区企业画像数据服务需求】响应超时，当前需求已经发布25小时，没有供方响应，大于24小时，请及时处理。' },
+      { level: '中', time: '2026-06-30 10:25', text: '订单【DD-20260630-0098】审批已超过配置时限，当前审批超时时间为：13小时，大于12小时。' },
+      { level: '高', time: '2026-06-30 10:20', text: '接口【企业画像查询接口】数据调用状态为：异常，等于异常，供方【深圳市龙岗数据服务有限公司】请尽快排查。' },
+      { level: '高', time: '2026-06-30 10:15', text: '供方【深圳市龙岗数据服务有限公司】近期交易纠纷率为：9.2%，大于8%，请运营人员关注订单【DD-20260630-0098】。' },
+      { level: '高', time: '2026-06-30 10:10', text: '接口【企业画像查询接口】5分钟内接口调用失败次数为：12次，大于10次，请供方【深圳市龙岗数据服务有限公司】处理。' },
+      { level: '高', time: '2026-06-30 10:05', text: '接口【企业画像查询接口】连续调用失败，10分钟内接口连续调用失败为：4次，大于3次，订单【DD-20260630-0098】请尽快排查。' },
+      { level: '高', time: '2026-06-30 10:00', text: '接口【企业画像查询接口】触发失败率告警，10分钟内接口调用失败率为：23%，大于20%，需方【龙岗智慧园区运营中心】可能受影响。' },
+      { level: '中', time: '2026-06-30 09:55', text: '接口【企业画像查询接口】响应时间异常，5分钟内接口响应时间为：3250ms，大于3000ms。' },
+      { level: '中', time: '2026-06-30 09:50', text: '接口【企业画像查询接口】调用用量突增，1小时内接口调用用量为历史均值的3.6倍，大于3倍，订单【企业画像接口服务】请关注。' },
+      { level: '低', time: '2026-06-30 09:45', text: '订单【企业画像接口服务】的接口【企业画像查询接口】调用偏低，7天内接口调用次数为：0次，小于等于0次，请跟进需方【龙岗智慧园区运营中心】。' }
+    ];
+
+    function alertLevelClass(level) {
+      if (level === '高') return 'text-red-400';
+      if (level === '中') return 'text-secondary';
+      return 'text-emerald-300';
+    }
+
+    function renderAlertTicker() {
+      const rows = alertMessages.concat(alertMessages).map(function (item) {
+        return [
+          '<div class="rounded-lg bg-dark/70 border border-dark-border p-3">',
+          '  <p class="text-sm text-gray-200 leading-6">',
+          '    <span class="font-semibold ' + alertLevelClass(item.level) + '">【' + item.level + '】</span>',
+          '    <span>' + item.text + '</span>',
+          '    <span class="text-gray-400">告警时间：' + item.time + '</span>',
+          '  </p>',
+          '</div>'
+        ].join('');
+      }).join('');
+      document.getElementById('alertTicker').innerHTML = rows;
+    }
+
+    function renderRankList(id, items, colorClass) {
+      const max = Math.max.apply(null, items.map(function (item) { return item.value; }));
+      document.getElementById(id).innerHTML = items.map(function (item, index) {
+        const width = Math.max(8, Math.round(item.value / max * 100));
+        return [
+          '<div class="rounded-lg bg-dark/70 border border-dark-border p-2">',
+          '  <div class="flex items-center justify-between gap-3 mb-1">',
+          '    <div class="flex items-center gap-3 min-w-0">',
+          '      <span class="w-6 h-6 rounded-full ' + (index === 0 ? 'bg-primary text-white' : 'bg-dark-border text-gray-300') + ' flex items-center justify-center text-xs">' + (index + 1) + '</span>',
+          '      <span class="text-sm text-gray-200 truncate">' + item.name + '</span>',
+          '    </div>',
+          '    <span class="text-sm ' + colorClass + '">' + item.value + '</span>',
+          '  </div>',
+          '  <div class="h-1.5 rounded-full bg-darker overflow-hidden">',
+          '    <div class="h-full rounded-full bg-primary" style="width:' + width + '%"></div>',
+          '  </div>',
+          '</div>'
+        ].join('');
+      }).join('');
+    }
+
+    renderAlertTicker();
+
+    new Chart(document.getElementById('alertTrendChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['06-21', '06-22', '06-23', '06-24', '06-25', '06-26', '06-27', '06-28', '06-29', '06-30'],
+        datasets: [
+          { label: '高等级', data: [12, 14, 15, 16, 18, 21, 22, 25, 27, 29], backgroundColor: 'rgba(248, 113, 113, 0.9)', borderColor: 'rgba(248, 113, 113, 1)', borderWidth: 1, borderRadius: 6, borderSkipped: false, barPercentage: 0.58, categoryPercentage: 0.72 },
+          { label: '中等级', data: [23, 24, 26, 28, 31, 34, 32, 35, 37, 38], backgroundColor: 'rgba(247, 175, 29, 0.86)', borderColor: 'rgba(247, 175, 29, 1)', borderWidth: 1, borderRadius: 6, borderSkipped: false, barPercentage: 0.58, categoryPercentage: 0.72 },
+          { label: '低等级', data: [10, 12, 13, 14, 15, 17, 15, 16, 17, 19], backgroundColor: 'rgba(45, 212, 191, 0.72)', borderColor: 'rgba(45, 212, 191, 0.95)', borderWidth: 1, borderRadius: 6, borderSkipped: false, barPercentage: 0.58, categoryPercentage: 0.72 }
+        ]
+      },
+      options: {
+        ...baseChartOptions,
+        plugins: { ...baseChartOptions.plugins, legend: { display: false } },
+        scales: {
+          x: { stacked: true, ticks: { color: chartTextColor }, grid: { color: 'rgba(42, 73, 61, 0.25)' } },
+          y: { stacked: true, beginAtZero: true, ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('indicatorChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['接口调用失败次数过高告警', '接口调用失败率异常告警', '接口响应超时异常告警', '接口连续调用失败告警', '数据调用异常告警', '需求响应超时告警', '审批超时告警', '交易纠纷率超标告警', '接口调用用量突增告警', '接口长时间无调用或低频调用告警'],
+        datasets: [{
+          label: '触发次数',
+          data: [16, 13, 11, 10, 9, 8, 7, 6, 4, 2],
+          backgroundColor: ['#EF6F6C', '#F97316', '#F7AF1D', '#A3B82E', '#65A30D', '#22C55E', '#10B981', '#2DD4BF', '#6EE7B7', '#A7F3D0'],
+          borderColor: ['#FCA5A5', '#FDBA74', '#FDE68A', '#D9F99D', '#BEF264', '#86EFAC', '#6EE7B7', '#5EEAD4', '#99F6E4', '#D1FAE5'],
+          borderWidth: 1,
+          borderRadius: 7
+        }]
+      },
+      options: {
+        ...baseChartOptions,
+        indexAxis: 'y',
+        plugins: { ...baseChartOptions.plugins, legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+          y: { ticks: { color: chartTextColor, font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('levelChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['高等级', '中等级', '低等级'],
+        datasets: [{
+          data: [29, 38, 19],
+          backgroundColor: ['#EF6F6C', '#F7AF1D', '#2DD4BF'],
+          borderColor: '#142B23',
+          borderWidth: 4,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: baseChartOptions.plugins
+      }
+    });
+
+    renderRankList('alertObjectRank', [
+      { name: '【接口】企业画像查询接口', value: 18 },
+      { name: '【供方】深圳市产业数据运营有限公司', value: 16 },
+      { name: '【接口】企业信用评分接口', value: 14 },
+      { name: '【供方】深圳市龙岗数据服务有限公司', value: 13 },
+      { name: '【接口】园区能耗统计接口', value: 11 },
+      { name: '【供方】龙岗区智慧园区服务有限公司', value: 10 },
+      { name: '【接口】交通运行监测接口', value: 9 },
+      { name: '【供方】深数企业服务有限公司', value: 8 },
+      { name: '【接口】产业供需匹配接口', value: 7 },
+      { name: '【供方】湾区数据应用服务有限公司', value: 6 }
+    ], 'text-secondary');
+  </script>
+</body>
+</html>

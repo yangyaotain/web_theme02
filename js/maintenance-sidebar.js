@@ -23,7 +23,7 @@
             icon: 'message',
             open: true,
             children: [
-                { key: 'message-template', label: '消息模板', href: 'maintenance-center.html' },
+                { key: 'message-template', label: '消息模板' },
                 { key: 'channel-config', label: '渠道配置' },
                 { key: 'message-base-config', label: '基础配置' },
                 { key: 'alert-management', label: '告警管理', href: 'maintenance-alert-management.html' }
@@ -33,7 +33,7 @@
     ];
 
     const ACTIVE_BY_PAGE = {
-        'maintenance-center.html': 'message-template',
+        'maintenance-center.html': 'alert-management',
         'maintenance-data-board.html': 'data-board',
         'maintenance-dashboard.html': 'dashboard',
         'maintenance-query-control.html': 'query-control',
@@ -45,7 +45,7 @@
 
     function getPageName() {
         const pathname = window.location.pathname || '';
-        return pathname.substring(pathname.lastIndexOf('/') + 1) || 'maintenance-center.html';
+        return pathname.substring(pathname.lastIndexOf('/') + 1) || 'maintenance-alert-management.html';
     }
 
     function getActiveKey(container) {
