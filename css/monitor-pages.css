@@ -2034,6 +2034,61 @@
     font-weight: 700;
 }
 
+/* Monitoring pages: match the shared 13px/32px center-page rhythm. */
+.monitor-data-page { gap: 14px; }
+.monitor-btn {
+    height: 32px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.monitor-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+.monitor-resource-advanced,
+.monitor-log-filter {
+    padding: 16px;
+    border-radius: 6px;
+}
+.monitor-filter-tabs {
+    height: 32px;
+    border-radius: 4px;
+}
+.monitor-filter-tab {
+    height: 30px;
+    font-size: 13px;
+}
+.monitor-tab {
+    height: 40px;
+    font-size: 13px;
+}
+.monitor-table-action {
+    font-size: 13px;
+}
+.monitor-log-control,
+.monitor-log-date,
+.monitor-log-actions .monitor-btn,
+.monitor-log-pagination {
+    font-size: 13px;
+}
+.monitor-log-table th,
+.monitor-log-table td {
+    height: 46px;
+    font-size: 13px;
+}
+.monitor-log-pagination .page-btn {
+    min-width: 30px;
+    height: 30px;
+    border-radius: 4px;
+}
+.listing-price-table th,
+.listing-price-table td,
+.contract-modal-section .monitor-detail-table th,
+.contract-modal-section .monitor-detail-table td {
+    font-size: 13px;
+}
+
 @media (max-width: 1280px) {
     .monitor-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));

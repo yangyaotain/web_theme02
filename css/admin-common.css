@@ -261,3 +261,29 @@ a { text-decoration: none; color: inherit; }
 }
 .back-link:hover { color: var(--forest-green); }
 .back-link svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* Cross-center rhythm: align operation/user sidebars with buyer/supplier pages. */
+.admin-sidebar {
+    width: 200px;
+}
+.admin-content {
+    margin-left: 200px;
+    padding: 20px;
+}
+.sidebar-title {
+    padding: 16px 18px 10px;
+    font-size: 15px;
+}
+.sidebar-nav {
+    padding: 4px 10px 24px;
+}
+.sidebar-item,
+.sidebar-group-title {
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.sidebar-sub .sidebar-item {
+    padding-left: 32px;
+}

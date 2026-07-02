@@ -716,7 +716,7 @@ button, input, select { font: inherit; }
     background-repeat: no-repeat;
 }
 .service-date-range {
-    min-width: 430px;
+    min-width: 452px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -726,13 +726,15 @@ button, input, select { font: inherit; }
     background: #fff;
 }
 .service-date-range input {
-    width: 104px;
+    width: 132px;
     min-width: 0;
     border: 0;
     outline: none;
     color: #2d3f38;
     background: transparent;
+    font-family: inherit;
     font-size: 14px;
+    color-scheme: light;
 }
 .service-date-range input::placeholder {
     color: #a8b2ad;
@@ -770,7 +772,7 @@ button, input, select { font: inherit; }
 }
 .service-table {
     width: 100%;
-    min-width: 1280px;
+    min-width: 1080px;
     border-collapse: separate;
     border-spacing: 0;
     color: #2d3f38;
@@ -805,35 +807,30 @@ button, input, select { font: inherit; }
 }
 .service-table th:nth-child(1),
 .service-table td:nth-child(1) {
-    min-width: 280px;
+    min-width: 360px;
 }
 .service-table th:nth-child(2),
 .service-table td:nth-child(2) {
-    min-width: 170px;
+    min-width: 150px;
 }
 .service-table th:nth-child(3),
 .service-table td:nth-child(3) {
-    min-width: 260px;
+    min-width: 120px;
 }
 .service-table th:nth-child(4),
 .service-table td:nth-child(4) {
-    min-width: 260px;
+    min-width: 120px;
 }
 .service-table th:nth-child(5),
 .service-table td:nth-child(5) {
-    min-width: 240px;
+    min-width: 100px;
 }
 .service-table th:nth-child(6),
 .service-table td:nth-child(6) {
-    min-width: 84px;
-}
-.service-table th:nth-child(7),
-.service-table td:nth-child(7) {
-    min-width: 148px;
+    min-width: 150px;
 }
 .service-name-link {
     color: #1fb272;
-    font-weight: 700;
 }
 .service-name-link:hover {
     color: var(--forest-green-600);
@@ -884,7 +881,7 @@ button, input, select { font: inherit; }
     font-size: 14px;
 }
 .service-page-arrow,
-.service-page-current {
+.service-page-number {
     width: 36px;
     height: 36px;
     display: inline-flex;
@@ -901,10 +898,18 @@ button, input, select { font: inherit; }
 .service-page-arrow.disabled {
     cursor: not-allowed;
 }
-.service-page-current {
+.service-page-number {
+    color: #50605a;
+    background: #fff;
+}
+.service-page-number.active {
     color: #fff;
     background: var(--forest-green);
     font-weight: 700;
+}
+.service-page-number:not(.active):hover {
+    color: var(--forest-green);
+    background: #f0fbf5;
 }
 .service-page-size,
 .service-page-jump {
@@ -925,6 +930,12 @@ button, input, select { font: inherit; }
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%237d8a84' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-position: right 12px center;
     background-repeat: no-repeat;
+}
+.service-page-size:disabled {
+    color: #50605a;
+    background-color: #f7faf8;
+    cursor: default;
+    opacity: 1;
 }
 .service-page-jump {
     width: 38px;
@@ -2779,6 +2790,173 @@ body.service-is-sorting * {
 .org-card .info-row {
     grid-template-columns: 138px minmax(0, 1fr);
 }
+
+/* Center pages: keep buyer/supplier rhythm close to operation pages. */
+.wb-sidebar {
+    width: 200px;
+    background: #fff;
+    border-right-color: #e4e7ed;
+}
+.wb-sidebar-title {
+    padding: 16px 18px 10px;
+    font-size: 15px;
+    color: #303133;
+}
+.wb-side-nav { padding: 4px 10px 24px; }
+.wb-side-section { margin-bottom: 4px; }
+.wb-side-group {
+    min-height: 38px;
+    gap: 8px;
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #303133;
+}
+.wb-side-group svg,
+.wb-side-item svg {
+    width: 15px;
+    height: 15px;
+}
+.wb-side-arrow {
+    width: 12px;
+    height: 12px;
+    color: #909399;
+}
+.wb-side-sub { padding: 4px 0 8px 28px; }
+.wb-side-item {
+    min-height: 34px;
+    padding: 0 10px;
+    color: #606266;
+    font-size: 13px;
+}
+.wb-center-content {
+    margin-left: 200px;
+    padding: 20px;
+}
+.wb-page-title,
+.service-page-title {
+    font-size: 20px;
+    color: #303133;
+    margin-bottom: 16px;
+}
+.service-page-title { margin-bottom: 0; }
+.service-board { gap: 14px; }
+.service-page-head { min-height: 34px; }
+.service-create-btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.service-create-btn svg,
+.service-icon-btn svg,
+.service-search-wrap svg,
+.service-date-range svg,
+.service-page-arrow svg {
+    width: 15px;
+    height: 15px;
+}
+.service-notice {
+    min-height: 32px;
+    border-radius: 4px;
+}
+.service-tabs {
+    min-height: 44px;
+    gap: 22px;
+}
+.service-tab {
+    height: 44px;
+    padding-bottom: 9px;
+    font-size: 13px;
+}
+.service-toolbar { gap: 14px; }
+.service-search-wrap input,
+.service-select,
+.service-date-range,
+.service-reset-btn {
+    height: 32px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.service-date-range input { font-size: 13px; }
+.service-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+.service-table {
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.service-table thead th {
+    height: 44px;
+    padding: 0 14px;
+    color: #606266;
+    background: #fafafa;
+}
+.service-table thead th:first-child,
+.service-table thead th:last-child {
+    border-radius: 0;
+}
+.service-table tbody td {
+    height: 46px;
+    padding: 0 14px;
+    color: #606266;
+}
+.service-actions button { font-size: 13px; }
+.service-pagination {
+    min-height: 52px;
+    gap: 8px;
+    font-size: 13px;
+}
+.service-page-arrow,
+.service-page-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.service-page-size,
+.service-page-jump {
+    height: 30px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.service-page-size {
+    min-width: 100px;
+    padding-left: 10px;
+}
+.wb-consult-shell.is-placeholder,
+.consult-tabs,
+.consult-filter-card,
+.consult-table-card,
+.consult-list-pane,
+.consult-chat-pane,
+.consult-info-pane,
+.info-card {
+    border-radius: 4px;
+}
+.wb-module-empty h2 { font-size: 16px; }
+.wb-module-empty p { font-size: 13px; }
+.consult-tabs {
+    min-height: 42px;
+    padding: 0 12px;
+}
+.consult-tab {
+    height: 42px;
+    padding: 0 18px;
+    font-size: 13px;
+}
+.consult-filter-card { padding: 12px 14px; }
+.consult-filter-input,
+.consult-filter-select,
+.consult-filter-btn {
+    height: 32px;
+    border-radius: 4px;
+}
+.consult-table thead th { padding: 10px 14px; }
+.consult-table tbody td { padding: 12px 14px; }
 
 @media (max-width: 1180px) {
     .wb-dashboard-grid { grid-template-columns: 1fr; }
