@@ -3186,10 +3186,6 @@
                 +                   '<select class="service-editor-select" data-pricing-field="durationUnit">' + unitOptions(['元/月', '元/天'], pricing.durationUnit || '元/月') + '</select>'
                 +               '</div>'
                 +           '</div>'
-                +           '<div class="service-editor-row compact">'
-                +               '<div class="service-editor-label">门户价格展示</div>'
-                +               '<div class="service-editor-field"><div class="service-price-preview"><span>参考价</span><strong>' + escapeHtml(getReferencePrice(editorData)) + '</strong></div></div>'
-                +           '</div>'
                 +       '</section>'
                 +   '</div>'
                 + '</div>';
