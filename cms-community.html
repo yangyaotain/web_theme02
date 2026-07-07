@@ -88,10 +88,14 @@
     }
     .board-group-actions { margin-left: auto; display: flex; gap: 8px; }
     .btn-add-sm {
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         padding: 4px 12px; font-size: 12px; color: var(--forest-green); background: #e8f5e9;
         border: 1px solid #a5d6b8; border-radius: 4px; cursor: pointer; transition: .15s;
     }
+    .btn-add-sm svg { width: 12px; height: 12px; flex-shrink: 0; fill: currentColor; }
     .btn-add-sm:hover { background: var(--forest-green); color: #fff; }
+    .btn-add-sm.danger { color: #f56c6c; background: #fef0f0; border-color: #fbc4c4; }
+    .btn-add-sm.danger:hover { background: #f56c6c; border-color: #f56c6c; color: #fff; }
     .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .board-card {
         display: flex; gap: 14px; padding: 16px; background: #fff;
@@ -461,7 +465,7 @@
                 <div class="board-group-header">
                     <span class="board-group-name">社区公共区</span>
                     <button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
-                    <div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div>
+                    <div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm danger btn-delete-group"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg><span>删除分组</span></button><button class="btn-add-sm">添加板块</button></div>
                 </div>
                 <div class="board-grid">
                     <div class="board-card"><div class="board-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">社区新闻</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
@@ -469,7 +473,7 @@
                 </div>
             </div>
             <div class="board-group">
-                <div class="board-group-header"><span class="board-group-name">社区交流与讨论</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-group-header"><span class="board-group-name">社区交流与讨论</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm danger btn-delete-group"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg><span>删除分组</span></button><button class="btn-add-sm">添加板块</button></div></div>
                 <div class="board-grid">
                     <div class="board-card"><div class="board-card-icon" style="background:#20A565"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据提供方专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
                     <div class="board-card"><div class="board-card-icon" style="background:#e6a23c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据需求方专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
@@ -480,7 +484,7 @@
                 </div>
             </div>
             <div class="board-group">
-                <div class="board-group-header"><span class="board-group-name">社区开发者</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-group-header"><span class="board-group-name">社区开发者</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm danger btn-delete-group"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg><span>删除分组</span></button><button class="btn-add-sm">添加板块</button></div></div>
                 <div class="board-grid">
                     <div class="board-card"><div class="board-card-icon" style="background:#73d13d"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据资源申请专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
                     <div class="board-card"><div class="board-card-icon" style="background:#ff7a45"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">数据产品开发专区</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
@@ -489,7 +493,7 @@
                 </div>
             </div>
             <div class="board-group">
-                <div class="board-group-header"><span class="board-group-name">其他交流区</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm">添加板块</button></div></div>
+                <div class="board-group-header"><span class="board-group-name">其他交流区</span><button class="board-group-edit" title="编辑分组名称"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button><div class="board-group-actions"><button class="btn-add-sm">添加分组</button><button class="btn-add-sm danger btn-delete-group"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg><span>删除分组</span></button><button class="btn-add-sm">添加板块</button></div></div>
                 <div class="board-grid">
                     <div class="board-card"><div class="board-card-icon" style="background:#722ed1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">开发者杂谈</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
                     <div class="board-card"><div class="board-card-icon" style="background:#13c2c2"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></div><div class="board-card-body"><div class="board-card-top"><span class="board-card-name">教程指导</span><div class="board-card-ops"><span class="op-edit">编辑</span><span class="op-del">删除</span></div></div><div class="board-card-stats"><span>主题 27</span><span>帖数 1万</span><span>人气 1.7万</span></div><div class="board-card-desc">龙岗区委统战部传达学习贯彻党的二十届四中全会精神</div></div></div>
@@ -1431,6 +1435,38 @@
                 openBoardModal('create', { groupName: getBoardGroupName(btn) });
             });
         }
+    });
+
+    // ====== 分组删除确认 ======
+    document.querySelectorAll('.btn-delete-group').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var group = btn.closest('.board-group');
+            var nameEl = group ? group.querySelector('.board-group-name') : null;
+            var groupName = nameEl ? nameEl.textContent.trim() : '当前分组';
+            var boardCount = group ? group.querySelectorAll('.board-card').length : 0;
+            GlobalDialog.danger({
+                title: '删除分组',
+                desc: '确定删除分组【<span style="display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom">' + groupName + '</span>】吗？<br>分组下' + boardCount + '个板块将一并移除，删除后无法恢复。',
+                confirmText: '确定删除',
+                cancelText: '取消',
+                onConfirm: function() {
+                    if (!group) return;
+                    group.style.maxHeight = group.scrollHeight + 'px';
+                    group.style.overflow = 'hidden';
+                    group.style.transition = 'opacity .25s ease, transform .25s ease, max-height .25s ease, margin-bottom .25s ease';
+                    requestAnimationFrame(function() {
+                        group.style.opacity = '0';
+                        group.style.transform = 'translateY(-6px)';
+                        group.style.maxHeight = '0';
+                        group.style.marginBottom = '0';
+                    });
+                    setTimeout(function() {
+                        group.remove();
+                        GlobalDialog.success({ title: '删除成功', desc: '分组已从当前原型列表中移除。' });
+                    }, 260);
+                }
+            });
+        });
     });
 
     // ====== 板块编辑弹窗 ======
