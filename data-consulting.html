@@ -549,20 +549,19 @@
         }
 
         .advantage-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-md);
-            background: var(--forest-green-100);
-            color: var(--forest-green);
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
 
-        .advantage-icon svg {
-            width: 22px;
-            height: 22px;
+        .advantage-icon img {
+            width: 48px;
+            height: 48px;
+            display: block;
+            object-fit: contain;
         }
 
         .advantage-title {
@@ -1222,6 +1221,13 @@
             bars: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg>'
         };
 
+        var ADVANTAGE_ICON_IMAGES = {
+            design: 'images/consult-advantage-design.png',
+            delivery: 'images/consult-advantage-delivery.png',
+            scenario: 'images/consult-advantage-scenario.png',
+            operation: 'images/consult-advantage-operation.png'
+        };
+
         var sidebar = document.querySelector('.service-sidebar');
         var contentArea = document.querySelector('.content-area');
         var consultOverlay = document.getElementById('consultOverlay');
@@ -1294,22 +1300,22 @@
             var labels = groupLabels[group.id];
             return [
                 {
-                    icon: getIcon(group.icon),
+                    image: ADVANTAGE_ICON_IMAGES.design,
                     title: labels[0],
                     desc: '围绕' + service.focus + '开展设计，避免咨询成果与实际业务、数据基础和平台能力脱节。'
                 },
                 {
-                    icon: ICONS.check,
+                    image: ADVANTAGE_ICON_IMAGES.delivery,
                     title: labels[1],
                     desc: '以' + service.output + '为核心交付物，便于客户内部评审、跨部门协同和后续实施。'
                 },
                 {
-                    icon: ICONS.chart,
+                    image: ADVANTAGE_ICON_IMAGES.scenario,
                     title: '贴合数据要素场景',
                     desc: '兼顾数据治理、资产管理、合规流通和运营转化要求，支撑数据价值持续释放。'
                 },
                 {
-                    icon: ICONS.bars,
+                    image: ADVANTAGE_ICON_IMAGES.operation,
                     title: '便于持续运营优化',
                     desc: '通过指标、台账、流程和复盘机制沉淀管理能力，让服务成果进入长期运营。'
                 }
@@ -1342,7 +1348,7 @@
         function renderAdvantages(advantages) {
             return advantages.map(function (item) {
                 return '<div class="advantage-card">'
-                    + '<div class="advantage-icon" aria-hidden="true">' + item.icon + '</div>'
+                    + '<div class="advantage-icon" aria-hidden="true"><img src="' + escapeHtml(item.image) + '" alt=""></div>'
                     + '<div><div class="advantage-title">' + escapeHtml(item.title) + '</div>'
                     + '<p class="advantage-desc">' + escapeHtml(item.desc) + '</p></div>'
                     + '</div>';
