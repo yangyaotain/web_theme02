@@ -559,9 +559,6 @@
                                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></svg>删除
                                     </button>
                                     <div class="faq-footer-actions">
-                                        <button class="kb-btn" id="faqCancelBtn" type="button">
-                                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 13.59L14.59 17 12 14.41 9.41 17 8 15.59 10.59 13 8 10.41 9.41 9 12 11.59 14.59 9 16 10.41 13.41 13 16 15.59z"/></svg>取消
-                                        </button>
                                         <button class="kb-btn primary" id="faqSaveBtn" type="button">
                                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zM12 19c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zM6 8V5h9v3H6z"/></svg>保存
                                         </button>
@@ -643,10 +640,13 @@
     document.querySelectorAll('.ai-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
             var target = tab.getAttribute('data-ai-tab');
-            document.querySelectorAll('.ai-tab').forEach(function(item) { item.classList.remove('active'); });
-            document.querySelectorAll('.ai-tab-panel').forEach(function(panel) { panel.classList.remove('active'); });
-            tab.classList.add('active');
-            document.querySelector('[data-ai-panel="' + target + '"]').classList.add('active');
+            if (tab.classList.contains('active')) return;
+            confirmFaqSaveBeforeSwitch(function() {
+                switchAiTab(target);
+            }, {
+                desc: '当前常见问题内容已新增或修改，是否保存后再切换模块？',
+                confirmText: '保存并切换'
+            });
         });
     });
 
@@ -708,6 +708,14 @@
     var faqEditorSub = document.getElementById('faqEditorSub');
     var faqHeaderStatus = document.getElementById('faqHeaderStatus');
     var faqDragIndex = null;
+    var faqSnapshot = null;
+
+    function switchAiTab(target) {
+        document.querySelectorAll('.ai-tab').forEach(function(item) { item.classList.remove('active'); });
+        document.querySelectorAll('.ai-tab-panel').forEach(function(panel) { panel.classList.remove('active'); });
+        document.querySelector('[data-ai-tab="' + target + '"]').classList.add('active');
+        document.querySelector('[data-ai-panel="' + target + '"]').classList.add('active');
+    }
 
     function nowText() {
         var d = new Date();
@@ -743,6 +751,88 @@
         faqHeaderStatus.textContent = statusText(status);
     }
 
+    function getFaqFormValue() {
+        return {
+            question: faqQuestionInput.value.trim(),
+            status: faqStatusSelect.value,
+            answer: faqAnswerEditor.innerHTML.trim()
+        };
+    }
+
+    function getFaqItemValue(item) {
+        return {
+            question: item.question || '',
+            status: item.status || 'off',
+            answer: (item.answer || '').trim()
+        };
+    }
+
+    function refreshFaqSnapshot(item) {
+        faqSnapshot = item ? getFaqItemValue(item) : null;
+    }
+
+    function hasFaqUnsavedChanges() {
+        var item = faqData[faqActiveIndex];
+        if (!item || !faqSnapshot) return false;
+        if (item._isNew) return true;
+        var current = getFaqFormValue();
+        return current.question !== faqSnapshot.question ||
+            current.status !== faqSnapshot.status ||
+            current.answer !== faqSnapshot.answer;
+    }
+
+    function saveCurrentFaq(silent) {
+        var title = faqQuestionInput.value.trim();
+        if (!title) {
+            GlobalDialog.info({ title: '请填写问题标题', desc: '问题标题会展示在门户右下角智能客服弹窗的常见问题列表中。' });
+            faqQuestionInput.focus();
+            return false;
+        }
+        var item = faqData[faqActiveIndex];
+        item.question = title;
+        item.status = faqStatusSelect.value;
+        item.answer = faqAnswerEditor.innerHTML.trim() || '<p>暂无回答内容</p>';
+        item.updated = nowText();
+        delete item._isNew;
+        renderFaqEditor(faqActiveIndex);
+        if (!silent) GlobalDialog.success({ title: '保存成功', desc: '常见问题及回答内容已更新。' });
+        return true;
+    }
+
+    function discardCurrentFaqChanges() {
+        var item = faqData[faqActiveIndex];
+        if (item && item._isNew) {
+            faqData.splice(faqActiveIndex, 1);
+            if (!faqData.length) {
+                faqData.push({ question: '新建常见问题', status: 'off', updated: nowText(), answer: '<p>请输入回答内容。</p>' });
+            }
+            renderFaqEditor(Math.min(faqActiveIndex, faqData.length - 1));
+        } else {
+            renderFaqEditor(faqActiveIndex);
+        }
+    }
+
+    function confirmFaqSaveBeforeSwitch(next, opts) {
+        if (!hasFaqUnsavedChanges()) {
+            next();
+            return;
+        }
+        opts = opts || {};
+        GlobalDialog.warning({
+            title: opts.title || '内容尚未保存',
+            desc: opts.desc || '当前常见问题内容已新增或修改，是否保存后再切换？',
+            confirmText: opts.confirmText || '保存并切换',
+            cancelText: opts.cancelText || '不保存',
+            onConfirm: function() {
+                if (saveCurrentFaq(true)) next();
+            },
+            onCancel: function() {
+                discardCurrentFaqChanges();
+                next();
+            }
+        });
+    }
+
     function renderFaqEditor(index) {
         if (!faqData.length) return;
         faqActiveIndex = Math.max(0, Math.min(index, faqData.length - 1));
@@ -753,6 +843,7 @@
         faqStatusSelect.value = item.status;
         faqAnswerEditor.innerHTML = item.answer;
         setHeaderStatus(item.status);
+        refreshFaqSnapshot(item);
         renderFaqList();
     }
 
@@ -767,7 +858,13 @@
         var itemEl = e.target.closest('.faq-item');
         if (!itemEl) return;
         var index = Number(itemEl.getAttribute('data-index'));
-        renderFaqEditor(index);
+        if (index === faqActiveIndex) return;
+        var targetItem = faqData[index];
+        confirmFaqSaveBeforeSwitch(function() {
+            var nextIndex = faqData.indexOf(targetItem);
+            if (nextIndex === -1) nextIndex = Math.min(index, faqData.length - 1);
+            renderFaqEditor(nextIndex);
+        });
     });
 
     faqList.addEventListener('dragstart', function(e) {
@@ -799,8 +896,16 @@
         if (!itemEl) return;
         e.preventDefault();
         var targetIndex = Number(itemEl.getAttribute('data-index'));
+        var dragItem = faqData[faqDragIndex];
+        var targetItem = faqData[targetIndex];
         faqList.querySelectorAll('.faq-item').forEach(function(item) { item.classList.remove('drag-over', 'dragging'); });
-        if (faqDragIndex !== null && faqDragIndex !== targetIndex) moveFaq(faqDragIndex, targetIndex);
+        if (faqDragIndex !== null && faqDragIndex !== targetIndex) {
+            confirmFaqSaveBeforeSwitch(function() {
+                var from = faqData.indexOf(dragItem);
+                var to = faqData.indexOf(targetItem);
+                if (from !== -1 && to !== -1 && from !== to) moveFaq(from, to);
+            });
+        }
         faqDragIndex = null;
     });
 
@@ -811,17 +916,25 @@
 
     faqSearchInput.addEventListener('input', renderFaqList);
 
-    document.getElementById('faqAddBtn').addEventListener('click', function() {
+    function addFaqDraft() {
         faqData.unshift({
             question: '新建常见问题',
             status: 'off',
             updated: nowText(),
-            answer: '<p>请输入该问题在机器人弹窗中的回答内容。</p>'
+            answer: '<p>请输入该问题在机器人弹窗中的回答内容。</p>',
+            _isNew: true
         });
         faqSearchInput.value = '';
         renderFaqEditor(0);
         faqQuestionInput.focus();
         faqQuestionInput.select();
+    }
+
+    document.getElementById('faqAddBtn').addEventListener('click', function() {
+        confirmFaqSaveBeforeSwitch(addFaqDraft, {
+            desc: '当前常见问题内容已新增或修改，是否保存后再新建？',
+            confirmText: '保存并新建'
+        });
     });
 
     document.querySelectorAll('[data-faq-cmd]').forEach(function(btn) {
@@ -864,9 +977,6 @@
     faqStatusSelect.addEventListener('change', function() {
         setHeaderStatus(faqStatusSelect.value);
     });
-    document.getElementById('faqCancelBtn').addEventListener('click', function() {
-        renderFaqEditor(faqActiveIndex);
-    });
     document.getElementById('faqDeleteBtn').addEventListener('click', function() {
         var item = faqData[faqActiveIndex];
         GlobalDialog.danger({
@@ -884,18 +994,31 @@
         });
     });
     document.getElementById('faqSaveBtn').addEventListener('click', function() {
-        var title = faqQuestionInput.value.trim();
-        if (!title) {
-            GlobalDialog.info({ title: '请填写问题标题', desc: '问题标题会展示在门户右下角智能客服弹窗的常见问题列表中。' });
-            faqQuestionInput.focus();
-            return;
-        }
-        faqData[faqActiveIndex].question = title;
-        faqData[faqActiveIndex].status = faqStatusSelect.value;
-        faqData[faqActiveIndex].answer = faqAnswerEditor.innerHTML.trim() || '<p>暂无回答内容</p>';
-        faqData[faqActiveIndex].updated = nowText();
-        renderFaqEditor(faqActiveIndex);
-        GlobalDialog.success({ title: '保存成功', desc: '常见问题及回答内容已更新。' });
+        saveCurrentFaq(false);
+    });
+
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('a[href]');
+        if (!link || e.defaultPrevented) return;
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (link.target && link.target !== '_self') return;
+        var href = link.getAttribute('href');
+        if (!href || href.charAt(0) === '#' || href.indexOf('javascript:') === 0) return;
+        if (!hasFaqUnsavedChanges()) return;
+        e.preventDefault();
+        confirmFaqSaveBeforeSwitch(function() {
+            window.location.href = link.href;
+        }, {
+            title: '离开当前页面？',
+            desc: '当前常见问题内容已新增或修改，是否保存后离开？',
+            confirmText: '保存并离开'
+        });
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+        if (!hasFaqUnsavedChanges()) return;
+        e.preventDefault();
+        e.returnValue = '';
     });
 
     renderFaqEditor(0);
