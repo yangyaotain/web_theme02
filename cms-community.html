@@ -175,9 +175,11 @@
     }
     .filter-btn-group { display: flex; gap: 0; }
     .filter-btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         padding: 5px 12px; font-size: 12px; border: 1px solid #dcdfe6; background: #fff;
-        color: #606266; cursor: pointer; transition: .15s;
+        color: #606266; cursor: pointer; transition: .15s; line-height: 1.4;
     }
+    .filter-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
     .filter-btn:first-child { border-radius: 4px 0 0 4px; }
     .filter-btn:last-child { border-radius: 0 4px 4px 0; }
     .filter-btn + .filter-btn { margin-left: -1px; }
@@ -593,7 +595,7 @@
         <div class="content-main">
             <div class="content-filter">
                 <div class="filter-btn-group">
-                    <button class="filter-btn btn-op-orange" data-act="mark" data-label="置顶">置顶</button><button class="filter-btn btn-op-green" data-act="mark" data-label="精华">精华</button><button class="filter-btn btn-op-blue" data-act="mark" data-label="推荐">推荐</button><button class="filter-btn btn-op-purple" data-act="mark" data-label="高亮">高亮</button><button class="filter-btn" data-act="close">关闭</button><button class="filter-btn" data-act="open">打开</button><button class="filter-btn" data-act="move">移动</button><button class="filter-btn danger" data-act="delete">删除</button>
+                    <button class="filter-btn btn-op-orange" data-act="mark" data-label="置顶">置顶</button><button class="filter-btn btn-op-green" data-act="mark" data-label="精华">精华</button><button class="filter-btn btn-op-blue" data-act="mark" data-label="推荐">推荐</button><button class="filter-btn btn-op-purple" data-act="mark" data-label="高亮">高亮</button><button class="filter-btn" data-act="cancel-label" title="取消标注" aria-label="取消标注"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6l-4-4V6a2 2 0 0 1 2-2h8"/><path d="M15 5l6 6"/><path d="M21 5l-6 6"/></svg><span>取消标注</span></button><button class="filter-btn" data-act="close">关闭</button><button class="filter-btn" data-act="open">打开</button><button class="filter-btn" data-act="move">移动</button><button class="filter-btn danger" data-act="delete">删除</button>
                 </div>
                 <div class="filter-sep"></div>
                 <span class="filter-label">标注：</span>
@@ -1627,9 +1629,36 @@
     });
 
     // ====== 内容管理操作按钮弹窗 ======
+    var markLabels = ['置顶', '精华', '推荐', '高亮'];
+
+    function getCheckedRows() {
+        return Array.from(document.querySelectorAll('#contentTbody input[type="checkbox"]:checked')).map(function(cb) {
+            return cb.closest('tr');
+        }).filter(Boolean);
+    }
+
     function getCheckedCount() {
-        var cbs = document.querySelectorAll('#contentTbody input[type="checkbox"]:checked');
-        return cbs.length || 'XX';
+        var rows = getCheckedRows();
+        return rows.length || 'XX';
+    }
+
+    function createContentTag(label) {
+        var tag = document.createElement('span');
+        tag.className = 'tag-sm tag-' + (tagColors[label] || 'gray');
+        tag.textContent = label;
+        return tag;
+    }
+
+    function applyCancelAllLabels(rows) {
+        rows.forEach(function(row) {
+            var labelCell = row.children[2];
+            Array.from(labelCell.querySelectorAll('.tag-sm')).forEach(function(tag) {
+                if (markLabels.indexOf(tag.textContent.trim()) !== -1) tag.remove();
+            });
+            if (!labelCell.querySelector('.tag-sm')) {
+                labelCell.appendChild(createContentTag('普通'));
+            }
+        });
     }
 
     // 置顶/精华/推荐/高亮
@@ -1643,6 +1672,28 @@
                 confirmText: '确定',
                 cancelText: '取消'
             });
+        });
+    });
+
+    // 取消已有标注
+    document.querySelector('[data-act="cancel-label"]').addEventListener('click', function() {
+        var rows = getCheckedRows();
+        if (!rows.length) {
+            GlobalDialog.info({
+                title: '请选择内容',
+                desc: '请先勾选需要取消标注的记录。'
+            });
+            return;
+        }
+
+        GlobalDialog.confirm({
+            title: '操作确认',
+            desc: '您确定选择的' + rows.length + '条记录，取消所有的标注吗？',
+            confirmText: '确定',
+            cancelText: '取消',
+            onConfirm: function() {
+                applyCancelAllLabels(rows);
+            }
         });
     });
 
