@@ -177,6 +177,24 @@
             flex: 1;
             min-width: 160px;
         }
+        .value-editor .unit-select {
+            width: 84px;
+            flex: 0 0 84px;
+            min-width: 0;
+        }
+        .rule-row.is-window .value-editor {
+            grid-column: 2 / 4;
+            grid-row: 1;
+        }
+        .rule-row.is-window .condition-actions {
+            grid-column: 4;
+            grid-row: 1;
+        }
+        .value-editor .relation-select {
+            width: 150px;
+            flex: 0 0 150px;
+            min-width: 0;
+        }
         .value-unit,
         .value-text {
             color: #606266;
@@ -467,10 +485,10 @@
     <script src="js/admin-topbar.js"></script>
     <script>
     const metricDefs = [
-        { key: 'demandResponseTime', label: '需求响应时间', type: 'simple', unit: '小时', defaultRelation: 'gt', defaultValue: '24' },
-        { key: 'approvalTimeout', label: '审批超时时间', type: 'simple', unit: '小时', defaultRelation: 'gt', defaultValue: '12' },
+        { key: 'demandResponseTime', label: '需求响应时间', type: 'duration', units: ['小时', '天'], defaultUnit: '天', defaultRelation: 'gt', defaultValue: '1' },
+        { key: 'approvalTimeout', label: '审批超时时间', type: 'duration', units: ['小时', '天'], defaultUnit: '小时', defaultRelation: 'gt', defaultValue: '12' },
         { key: 'dataCallStatus', label: '数据调用（文件/接口）', type: 'status', defaultRelation: 'eq', defaultValue: '异常', options: ['异常', '正常'] },
-        { key: 'disputeRate', label: '交易纠纷率', type: 'simple', unit: '%', defaultRelation: 'gt', defaultValue: '8' },
+        { key: 'disputeRate', label: '交易纠纷率', type: 'window', windowUnit: '天', valueUnit: '%', defaultRelation: 'gt', defaultWindow: '30', defaultValue: '8' },
         { key: 'apiFailureCount', label: '接口调用失败次数', type: 'window', windowUnit: '分钟', valueUnit: '次', defaultRelation: 'gt', defaultWindow: '5', defaultValue: '10' },
         { key: 'apiContinuousFailure', label: '接口连续调用失败', type: 'window', windowUnit: '分钟', valueUnit: '次', defaultRelation: 'gt', defaultWindow: '10', defaultValue: '3' },
         { key: 'apiFailureRate', label: '接口调用失败率', type: 'window', windowUnit: '分钟', valueUnit: '%', defaultRelation: 'gt', defaultWindow: '10', defaultValue: '20' },
@@ -497,7 +515,7 @@
         '订单编号': 'DD-20260630-0098',
         '接口名称': '企业画像查询接口',
         '告警时间': '2026-06-30 10:30',
-        '需求响应时间': '25',
+        '需求响应时间': '1.1',
         '审批超时时间': '13',
         '数据调用（文件/接口）': '异常',
         '交易纠纷率': '9.2',
@@ -514,14 +532,14 @@
             name: '需求响应超时告警',
             level: '中',
             desc: '需求发布后供方响应不及时提醒。',
-            conditions: [{ metric: 'demandResponseTime', relation: 'gt', value: '24' }],
-            message: '需方【{需方名称}】的需求【{需求名称}】响应超时，当前需求已经发布{需求响应时间}小时，没有供方响应，大于24小时，请及时处理。'
+            conditions: [{ metric: 'demandResponseTime', relation: 'gt', value: '1', unit: '天' }],
+            message: '需方【{需方名称}】的需求【{需求名称}】响应超时，当前需求已经发布{需求响应时间}天，没有供方响应，大于1天，请及时处理。'
         },
         2: {
             name: '审批超时告警',
             level: '中',
             desc: '运营审批任务超过配置时限提醒。',
-            conditions: [{ metric: 'approvalTimeout', relation: 'gt', value: '12' }],
+            conditions: [{ metric: 'approvalTimeout', relation: 'gt', value: '12', unit: '小时' }],
             message: '订单【{订单编号}】审批已超过配置时限，当前审批超时时间为：{审批超时时间}小时，大于12小时，告警时间：{告警时间}。'
         },
         3: {
@@ -535,8 +553,8 @@
             name: '交易纠纷率超标告警',
             level: '高',
             desc: '订单纠纷比例超过阈值时提醒。',
-            conditions: [{ metric: 'disputeRate', relation: 'gt', value: '8' }],
-            message: '供方【{供方名称}】近期交易纠纷率为：{交易纠纷率}%，大于8%，请运营人员关注订单【{订单编号}】。'
+            conditions: [{ metric: 'disputeRate', relation: 'gt', window: '30', value: '8' }],
+            message: '供方【{供方名称}】近30天交易纠纷率为：{交易纠纷率}%，大于8%，请运营人员关注订单【{订单编号}】。'
         },
         5: {
             name: '接口调用失败次数过高告警',
@@ -611,6 +629,7 @@
             value: metric.defaultValue
         };
         if (metric.type === 'window') condition.window = metric.defaultWindow;
+        if (metric.type === 'duration') condition.unit = metric.defaultUnit;
         return condition;
     }
 
@@ -638,8 +657,18 @@
             return ''
                 + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="window" value="' + escapeHtml(condition.window || metric.defaultWindow) + '">'
                 + '<span class="value-unit">' + metric.windowUnit + '内</span>'
+                + '<select class="rule-select relation-select" aria-label="' + metric.label + '比较关系" data-index="' + index + '" data-field="relation">' + relationOptions(metric, condition.relation) + '</select>'
                 + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="value" value="' + escapeHtml(condition.value || metric.defaultValue) + '">'
                 + '<span class="value-unit">' + metric.valueUnit + '</span>';
+        }
+        if (metric.type === 'duration') {
+            const selectedUnit = condition.unit || metric.defaultUnit;
+            const unitOptions = metric.units.map(function (unit) {
+                return '<option value="' + unit + '"' + (unit === selectedUnit ? ' selected' : '') + '>' + unit + '</option>';
+            }).join('');
+            return ''
+                + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="value" value="' + escapeHtml(condition.value || metric.defaultValue) + '">'
+                + '<select class="rule-select unit-select" aria-label="' + metric.label + '单位" data-index="' + index + '" data-field="unit">' + unitOptions + '</select>';
         }
         return ''
             + '<input class="rule-input" type="number" min="0" data-index="' + index + '" data-field="value" value="' + escapeHtml(condition.value || metric.defaultValue) + '">'
@@ -649,10 +678,13 @@
     function renderRules() {
         const rows = conditions.map(function (condition, index) {
             const metric = getMetric(condition.metric);
+            const relationEditor = metric.type === 'window'
+                ? ''
+                : '<select class="rule-select" data-index="' + index + '" data-field="relation">' + relationOptions(metric, condition.relation) + '</select>';
             return ''
-                + '<div class="rule-row" data-index="' + index + '">'
+                + '<div class="rule-row' + (metric.type === 'window' ? ' is-window' : '') + '" data-index="' + index + '">'
                 + '<select class="rule-select" data-index="' + index + '" data-field="metric">' + metricOptions(metric.key) + '</select>'
-                + '<select class="rule-select" data-index="' + index + '" data-field="relation">' + relationOptions(metric, condition.relation) + '</select>'
+                + relationEditor
                 + '<div class="value-editor">' + renderValueEditor(condition, metric, index) + '</div>'
                 + '<div class="condition-actions">'
                 + '<button class="condition-btn remove" type="button" title="删除条件" data-action="remove" data-index="' + index + '"><svg viewBox="0 0 24 24"><path d="M5 11h14v2H5z"/></svg></button>'
@@ -669,6 +701,7 @@
         const relation = getRelationLabel(condition.relation);
         if (metric.type === 'status') return metric.label + relation + condition.value;
         if (metric.type === 'window') return metric.label + (condition.window || metric.defaultWindow) + metric.windowUnit + '内' + relation + (condition.value || metric.defaultValue) + metric.valueUnit;
+        if (metric.type === 'duration') return metric.label + relation + (condition.value || metric.defaultValue) + (condition.unit || metric.defaultUnit);
         return metric.label + relation + (condition.value || metric.defaultValue) + metric.unit;
     }
 

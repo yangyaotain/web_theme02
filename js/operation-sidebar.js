@@ -104,8 +104,7 @@
                 { key: 'policy-news', label: '政策资讯', disabled: true },
                 { key: 'cms-community', label: '数据社区', href: 'cms-community.html' },
                 { key: 'cms-dashboard', label: '大屏管理', href: 'cms-dashboard.html' },
-                { key: 'cms-ai-service', label: '智能客服', href: 'cms-ai-service.html' },
-                { key: 'cms-alert-management', label: '告警管理', href: 'cms-alert-management.html' }
+                { key: 'cms-ai-service', label: '智能客服', href: 'cms-ai-service.html' }
             ]
         }
     ];
@@ -141,8 +140,7 @@
         'cms-community-audit-view.html': 'cms-community',
         'cms-community-detail.html': 'cms-community',
         'cms-dashboard.html': 'cms-dashboard',
-        'cms-ai-service.html': 'cms-ai-service',
-        'cms-alert-management.html': 'cms-alert-management'
+        'cms-ai-service.html': 'cms-ai-service'
     };
 
     function getPageName() {
