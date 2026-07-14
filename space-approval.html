@@ -30,6 +30,8 @@
             table-layout: fixed;
         }
 
+        .space-table[data-table="approved"] { min-width: 1740px; }
+
         .space-table th,
         .space-table td {
             white-space: nowrap;
@@ -47,7 +49,12 @@
         .space-table .col-applicant { width: 100px; }
         .space-table .col-time { width: 165px; }
         .space-table .col-remark { width: 275px; }
+        .space-table .col-result { width: 100px; }
+        .space-table .col-opinion { width: 240px; }
         .space-table .col-op { width: 90px; }
+
+        .status-pass { color: var(--forest-green); }
+        .status-reject { color: #f56c6c; }
 
         .text-ellipsis {
             display: block;
@@ -199,6 +206,11 @@
                         <option>可信数据空间</option>
                         <option>数据开发工具</option>
                     </select>
+                    <select class="filter-select" data-filter="result">
+                        <option value="">处理结果</option>
+                        <option>通过</option>
+                        <option>不通过</option>
+                    </select>
                     <span class="filter-icon" title="搜索" onclick="applyFilter('approved')">
                         <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
                     </span>
@@ -219,11 +231,13 @@
                                     <th class="col-applicant">申请人</th>
                                     <th class="col-time">申请时间</th>
                                     <th class="col-remark">备注说明</th>
+                                    <th class="col-result">处理结果</th>
+                                    <th class="col-opinion">审核意见</th>
                                     <th class="col-op">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-subject="深圳市龙岗数据运营有限公司" data-service="可信数据空间主空间" data-service-type="可信数据空间">
+                                <tr data-subject="深圳市龙岗数据运营有限公司" data-service="可信数据空间主空间" data-service-type="可信数据空间" data-result="通过">
                                     <td title="深圳市龙岗数据运营有限公司">深圳市龙岗数据运营有限公司</td>
                                     <td><a href="space-approval-detail-done.html" class="link-blue">可信数据空间主空间</a></td>
                                     <td>可信数据空间</td>
@@ -231,9 +245,11 @@
                                     <td>黄磊</td>
                                     <td>2026-05-26 11:08:20</td>
                                     <td><span class="text-ellipsis" title="开展数据产品发布和跨主体可信协同服务。">开展数据产品发布和跨主体可信协同服务。</span></td>
+                                    <td><span class="status-pass">通过</span></td>
+                                    <td><span class="text-ellipsis" title="同意接入，材料完整。">同意接入，材料完整。</span></td>
                                     <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
                                 </tr>
-                                <tr data-subject="深圳市智造机器人科技有限公司" data-service="具身智能可信数据空间" data-service-type="可信数据空间">
+                                <tr data-subject="深圳市智造机器人科技有限公司" data-service="具身智能可信数据空间" data-service-type="可信数据空间" data-result="通过">
                                     <td title="深圳市智造机器人科技有限公司">深圳市智造机器人科技有限公司</td>
                                     <td><a href="space-approval-detail-done.html" class="link-blue">具身智能可信数据空间</a></td>
                                     <td>可信数据空间</td>
@@ -241,9 +257,11 @@
                                     <td>许文博</td>
                                     <td>2026-05-24 16:31:45</td>
                                     <td><span class="text-ellipsis" title="用于机器人训练数据生产、标注与质量评估。">用于机器人训练数据生产、标注与质量评估。</span></td>
+                                    <td><span class="status-pass">通过</span></td>
+                                    <td><span class="text-ellipsis" title="申请材料齐全，服务用途符合开通要求。">申请材料齐全，服务用途符合开通要求。</span></td>
                                     <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
                                 </tr>
-                                <tr data-subject="深圳市云数创新服务有限公司" data-service="数据开发平台" data-service-type="数据开发工具">
+                                <tr data-subject="深圳市云数创新服务有限公司" data-service="数据开发平台" data-service-type="数据开发工具" data-result="通过">
                                     <td title="深圳市云数创新服务有限公司">深圳市云数创新服务有限公司</td>
                                     <td><a href="space-approval-detail-done.html" class="link-blue">数据开发平台</a></td>
                                     <td>数据开发工具</td>
@@ -251,6 +269,44 @@
                                     <td>赵一航</td>
                                     <td>2026-05-21 09:12:06</td>
                                     <td><span class="text-ellipsis" title="用于企业数据集成、开发调度和任务运维。">用于企业数据集成、开发调度和任务运维。</span></td>
+                                    <td><span class="status-pass">通过</span></td>
+                                    <td><span class="text-ellipsis" title="审核通过，按申请期限开通服务。">审核通过，按申请期限开通服务。</span></td>
+                                    <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
+                                </tr>
+                                <tr data-subject="深圳市龙岗工业互联网有限公司" data-service="工业制造可信数据空间" data-service-type="可信数据空间" data-result="不通过">
+                                    <td title="深圳市龙岗工业互联网有限公司">深圳市龙岗工业互联网有限公司</td>
+                                    <td><a href="space-approval-detail-done.html" class="link-blue">工业制造可信数据空间</a></td>
+                                    <td>可信数据空间</td>
+                                    <td>2026-05-20 至 2027-05-19</td>
+                                    <td>郑凯</td>
+                                    <td>2026-05-18 14:26:53</td>
+                                    <td><span class="text-ellipsis" title="用于工业设备运行数据汇聚和供应链协同分析。">用于工业设备运行数据汇聚和供应链协同分析。</span></td>
+                                    <td><span class="status-reject">不通过</span></td>
+                                    <td><span class="text-ellipsis status-reject" title="主体授权委托书缺少有效盖章，请补充后重新提交。">主体授权委托书缺少有效盖章，请补充后重新提交。</span></td>
+                                    <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
+                                </tr>
+                                <tr data-subject="深圳市龙岗城市数治科技有限公司" data-service="时空数据开发平台" data-service-type="数据开发工具" data-result="不通过">
+                                    <td title="深圳市龙岗城市数治科技有限公司">深圳市龙岗城市数治科技有限公司</td>
+                                    <td><a href="space-approval-detail-done.html" class="link-blue">时空数据开发平台</a></td>
+                                    <td>数据开发工具</td>
+                                    <td>2026-05-18 至 2026-11-17</td>
+                                    <td>郭子涵</td>
+                                    <td>2026-05-16 10:05:31</td>
+                                    <td><span class="text-ellipsis" title="用于城市治理专题数据开发与空间分析。">用于城市治理专题数据开发与空间分析。</span></td>
+                                    <td><span class="status-reject">不通过</span></td>
+                                    <td><span class="text-ellipsis status-reject" title="接入网络环境说明不完整，暂不满足服务开通条件。">接入网络环境说明不完整，暂不满足服务开通条件。</span></td>
+                                    <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
+                                </tr>
+                                <tr data-subject="深圳市普惠金融服务有限公司" data-service="金融服务可信数据空间" data-service-type="可信数据空间" data-result="不通过">
+                                    <td title="深圳市普惠金融服务有限公司">深圳市普惠金融服务有限公司</td>
+                                    <td><a href="space-approval-detail-done.html" class="link-blue">金融服务可信数据空间</a></td>
+                                    <td>可信数据空间</td>
+                                    <td>2026-05-15 至 2027-05-14</td>
+                                    <td>唐雨晴</td>
+                                    <td>2026-05-13 17:42:19</td>
+                                    <td><span class="text-ellipsis" title="用于普惠金融企业画像与风险评估场景验证。">用于普惠金融企业画像与风险评估场景验证。</span></td>
+                                    <td><span class="status-reject">不通过</span></td>
+                                    <td><span class="text-ellipsis status-reject" title="申请场景的数据授权边界不清晰，请完善合规说明。">申请场景的数据授权边界不清晰，请完善合规说明。</span></td>
                                     <td><a href="space-approval-detail-done.html" class="op-link"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>查看</a></td>
                                 </tr>
                             </tbody>
@@ -258,7 +314,7 @@
                     </div>
                     <div class="table-empty" data-empty="approved">暂无匹配的已审批申请</div>
                     <div class="pagination-bar">
-                        <span class="pagination-info">第1-3条记录，共3条记录，每页显示 <select><option>10</option><option>20</option><option>50</option></select> 条 记录</span>
+                        <span class="pagination-info">第1-6条记录，共6条记录，每页显示 <select><option>10</option><option>20</option><option>50</option></select> 条 记录</span>
                         <button class="page-btn disabled">上一页</button>
                         <button class="page-btn active">1</button>
                         <button class="page-btn disabled">下一页</button>
@@ -281,10 +337,12 @@
 
     function getFilterValues(type) {
         var panel = document.querySelector('[data-filter-panel="' + type + '"]');
+        var resultFilter = panel.querySelector('[data-filter="result"]');
         return {
             subject: (panel.querySelector('[data-filter="subject"]').value || '').trim(),
             service: (panel.querySelector('[data-filter="service"]').value || '').trim(),
-            serviceType: panel.querySelector('[data-filter="serviceType"]').value
+            serviceType: panel.querySelector('[data-filter="serviceType"]').value,
+            result: resultFilter ? resultFilter.value : ''
         };
     }
 
@@ -296,6 +354,7 @@
             if (values.subject && row.dataset.subject.indexOf(values.subject) === -1) matched = false;
             if (values.service && row.dataset.service.indexOf(values.service) === -1) matched = false;
             if (values.serviceType && row.dataset.serviceType !== values.serviceType) matched = false;
+            if (values.result && row.dataset.result !== values.result) matched = false;
             row.style.display = matched ? '' : 'none';
             if (matched) visibleCount += 1;
         });
