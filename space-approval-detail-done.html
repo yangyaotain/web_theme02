@@ -6,7 +6,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>空间审批查看 - 运营中心 - 龙岗数据聚合服务平台</title>
+    <title>服务开通审批查看 - 运营中心 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,6 +49,28 @@
         .field-row .lbl { color: #909399; white-space: nowrap; min-width: 150px; flex-shrink: 0; }
         .field-row .val { color: #303133; word-break: break-all; min-width: 0; }
         .code-text { font-family: Consolas, Monaco, monospace; font-size: 12px; }
+        .id-images { display: flex; flex-direction: column; gap: 10px; }
+        .id-image-label { font-size: 13px; color: #909399; margin-bottom: 6px; }
+        .id-image-box {
+            width: 140px;
+            height: 90px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f5f7fa;
+            border: 1px solid #ebeef5;
+        }
+        .id-image-placeholder,
+        .cert-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .id-front { background: linear-gradient(135deg, #e8d4b8 0%, #d4b896 100%); color: #8b6914; }
+        .id-back { background: linear-gradient(135deg, #b8d4e8 0%, #96b8d4 100%); color: #14508b; }
         .status-pass { color: var(--forest-green); font-weight: 600; }
         .audit-panel {
             background: #fff;
@@ -158,47 +180,78 @@
             <div class="page-wrap">
                 <a class="back-link" href="space-approval.html?tab=approved">
                     <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                    空间审批查看
+                    服务开通审批查看
                 </a>
 
                 <div class="detail-layout">
                     <div class="detail-left">
                         <div class="info-card">
-                            <h3 class="section-title">空间申请信息</h3>
+                            <h3 class="section-title">基本信息</h3>
                             <div class="section-body">
-                                <div class="space-summary-name">公共数据授权可信数据空间</div>
-                                <div class="space-summary-desc">承载公共数据授权运营、数据产品发布和跨部门协同服务，已完成可信数据空间接入审批。</div>
+                                <div class="field-grid">
+                                    <div class="field-left">
+                                        <div class="field-row"><span class="lbl">申请服务：</span><span class="val">可信数据空间主空间</span></div>
+                                        <div class="field-row"><span class="lbl">服务类型：</span><span class="val">可信数据空间</span></div>
+                                        <div class="field-row"><span class="lbl">申请时间：</span><span class="val">2026-05-26 11:08:20</span></div>
+                                    </div>
+                                    <div class="field-right">
+                                        <div class="field-row"><span class="lbl">服务简介：</span><span class="val">提供数据资源接入、可信流通、服务发布与跨主体协同能力。</span></div>
+                                        <div class="field-row"><span class="lbl">有效期：</span><span class="val">2026-06-01 至 2027-05-31</span></div>
+                                        <div class="field-row"><span class="lbl">备注说明：</span><span class="val">开展数据产品发布和跨主体可信协同服务。</span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="info-card">
-                            <h3 class="section-title">接入信息详情</h3>
+                            <h3 class="section-title">申请主体信息</h3>
                             <div class="section-body">
-                                <div class="detail-subtitle">运营主体信息</div>
+                                <div class="detail-subtitle">机构基本信息</div>
                                 <div class="field-grid">
                                     <div class="field-left">
-                                        <div class="field-row"><span class="lbl">平台名称：</span><span class="val">公共数据授权可信数据空间</span></div>
-                                        <div class="field-row"><span class="lbl">运营主体名称：</span><span class="val">深圳市龙岗区政务服务和数据管理局</span></div>
-                                        <div class="field-row"><span class="lbl">统一社会信用代码：</span><span class="val code-text">11440307MB2C98561L</span></div>
-                                        <div class="field-row"><span class="lbl">申请时间：</span><span class="val">2026-05-26 11:08:20</span></div>
+                                        <div class="field-row"><span class="lbl">法人或其他组织类型：</span><span class="val">企业法人</span></div>
+                                        <div class="field-row"><span class="lbl">法人或其他组织名称：</span><span class="val">深圳市龙岗数据运营有限公司</span></div>
+                                        <div class="field-row"><span class="lbl">统一社会信用代码：</span><span class="val code-text">91440300MA5H8P6T3Q</span></div>
+                                        <div class="field-row"><span class="lbl">营业期限或有效期：</span><span class="val">2021-08-12 至 长期</span></div>
+                                        <div class="field-row"><span class="lbl">所属行业类型：</span><span class="val">信息传输、软件和信息技术服务业</span></div>
+                                        <div class="field-row"><span class="lbl">注册金额：</span><span class="val">10000万元人民币</span></div>
+                                        <div class="field-row"><span class="lbl">注册日期：</span><span class="val">2021-08-12</span></div>
+                                        <div class="field-row"><span class="lbl">注册地：</span><span class="val">广东省深圳市龙岗区</span></div>
+                                        <div class="field-row"><span class="lbl">注册详细地址：</span><span class="val">深圳市龙岗区龙城街道清林中路数据运营服务中心</span></div>
+                                        <div class="field-row"><span class="lbl">核准机构：</span><span class="val">深圳市市场监督管理局</span></div>
+                                        <div class="field-row"><span class="lbl">经营范围或业务范围：</span><span class="val">数据运营、数据技术服务、信息系统集成及数据产品开发。</span></div>
+                                        <div class="field-row"><span class="lbl">机构简介：</span><span class="val">面向数据要素流通提供资源运营、技术支撑和场景服务。</span></div>
                                     </div>
                                     <div class="field-right">
-                                        <div class="field-row"><span class="lbl">联系人：</span><span class="val">黄磊</span></div>
-                                        <div class="field-row"><span class="lbl">联系电话：</span><span class="val">136****8092</span></div>
-                                        <div class="field-row"><span class="lbl">联系邮箱：</span><span class="val">public-data@lg.gov.cn</span></div>
-                                        <div class="field-row"><span class="lbl">主体地址：</span><span class="val">深圳市龙岗区龙城街道清林中路政务服务中心</span></div>
+                                        <div>
+                                            <div class="id-image-label">法人或其他组织的证件图片：</div>
+                                            <div class="id-image-box" style="width:160px;height:110px;">
+                                                <div class="cert-image-placeholder" style="background:linear-gradient(135deg,#fce8e8,#f5d0d0);color:#c05050;">营业执照</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="id-image-label">法人或其他组织的LOGO：</div>
+                                            <span style="font-size:13px;color:#909399;">--</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="detail-subtitle">网关与安全信息</div>
+                                <div class="detail-subtitle">申请人信息</div>
                                 <div class="field-grid">
                                     <div class="field-left">
-                                        <div class="field-row"><span class="lbl">网关地址：</span><span class="val code-text">https://gateway.public.lgdata.cn</span></div>
-                                        <div class="field-row"><span class="lbl">IP 白名单：</span><span class="val code-text">10.18.9.12, 10.18.9.13</span></div>
+                                        <div class="field-row"><span class="lbl">申请人类型：</span><span class="val">法定代表人</span></div>
+                                        <div class="field-row"><span class="lbl">法定代表人或负责人证件类型：</span><span class="val">居民身份证</span></div>
+                                        <div class="field-row"><span class="lbl">法定代表人或负责人姓名：</span><span class="val">黄磊</span></div>
+                                        <div class="field-row"><span class="lbl">法定代表人或负责人证件号码：</span><span class="val">440307198312082038</span></div>
+                                        <div class="field-row"><span class="lbl">法定代表人或负责人手机号：</span><span class="val">136****8092</span></div>
+                                        <div class="field-row"><span class="lbl">法定代表人或负责人邮箱：</span><span class="val">huang.lei@lgdata.cn</span></div>
                                     </div>
                                     <div class="field-right">
-                                        <div class="field-row"><span class="lbl">公钥：</span><span class="val code-text">MIIBCgKCAQEA3n9yJ4dpUe0JvV6h4sD8r7kGk9w...</span></div>
-                                        <div class="field-row"><span class="lbl">接入环境：</span><span class="val">生产环境</span></div>
+                                        <div class="id-images">
+                                            <div class="id-image-label">法定代表人或负责人证件图片：</div>
+                                            <div class="id-image-box"><div class="id-image-placeholder id-front">身份证正面</div></div>
+                                            <div class="id-image-box"><div class="id-image-placeholder id-back">身份证背面</div></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -256,7 +309,7 @@
                     <div class="flow-modal-hd">
                         <div class="flow-modal-title">
                             <span class="icon"><svg viewBox="0 0 24 24"><path d="M14 4l2.29 2.29-2.88 2.88 1.42 1.42 2.88-2.88L20 10V4zm-4 0H4v6l2.29-2.29 4.71 4.7V20h2v-8.41l-5.29-5.3z"/></svg></span>
-                            可信数据空间接入审批
+                            服务开通审批
                             <span class="ver">V1</span>
                         </div>
                         <button class="flow-modal-close" onclick="document.getElementById('flowchartModal').classList.remove('show')">
