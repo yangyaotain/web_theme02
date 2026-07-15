@@ -220,7 +220,6 @@
                         <div class="board-header-stats">
                             今日：<b id="bhToday">7</b>
                             <span>主题：<b id="bhTopic">12,882</b></span>
-                            <span>排名：<b id="bhRank">1</b></span>
                         </div>
                     </div>
                     <div class="board-header-actions">
@@ -485,22 +484,22 @@
     <script>
     // 板块数据映射
     var BOARD_DATA = {
-        '社区新闻':       { icon: 'bh-icon-blue',    badge: '62人已收藏', desc: '发布龙岗数据要素运营服务平台相关的社区新闻、活动通知和资讯动态。', today: 3, topic: '8,421', rank: 2 },
-        '官方公告':       { icon: 'bh-icon-red',     badge: '120人已收藏', desc: '平台官方公告、政策解读、系统更新通知等重要信息发布专区。', today: 1, topic: '2,156', rank: 3 },
-        '数据提供方专区': { icon: 'bh-icon-green',   badge: '45人已收藏', desc: '面向数据提供方的交流区域，分享数据上架经验、数据质量优化方法等。', today: 5, topic: '6,732', rank: 4 },
-        '数据需求方专区': { icon: 'bh-icon-purple',  badge: '58人已收藏', desc: '面向数据需求方的讨论区，发布数据需求、交流数据应用场景等。', today: 8, topic: '9,213', rank: 5 },
-        '数据资源专区':   { icon: 'bh-icon-teal',    badge: '73人已收藏', desc: '讨论数据资源开放、共享、目录编制及数据标准化相关话题。', today: 4, topic: '5,847', rank: 6 },
-        '数据产品专区':   { icon: 'bh-icon-indigo',  badge: '36人已收藏', desc: '围绕数据产品设计、上架、运营等环节进行经验分享和讨论。', today: 6, topic: '4,561', rank: 7 },
-        '数据服务专区':   { icon: 'bh-icon-blue',    badge: '41人已收藏', desc: '讨论数据服务能力建设、API 接口对接、数据清洗加工等技术话题。', today: 2, topic: '3,982', rank: 8 },
-        '政策学习专区':   { icon: 'bh-icon-red',     badge: '92人已收藏', desc: '学习和讨论数据要素相关政策法规，包括国家、省、市各级数据政策。', today: 1, topic: '2,773', rank: 9 },
-        '数据资源申请专区':{ icon: 'bh-icon-green',  badge: '28人已收藏', desc: '交流数据资源申请流程、审批经验及相关问题解决方案。', today: 3, topic: '3,214', rank: 10 },
-        '数据产品开发专区':{ icon: 'bh-icon-purple', badge: '33人已收藏', desc: '面向开发者的数据产品开发交流区，分享开发工具、技术方案等。', today: 4, topic: '2,891', rank: 11 },
-        '应用场景专区':   { icon: 'bh-icon-teal',    badge: '55人已收藏', desc: '展示和讨论数据在各行业的应用场景案例，促进数据价值实现。', today: 2, topic: '1,956', rank: 12 },
-        '问题求助专区':   { icon: 'bh-icon-orange',  badge: '84人已收藏', desc: '本版主要解决大家在使用 龙岗数据要素运营服务平台 的过程中所遇到的操作上的问题，我们会在第一时间给大家答复……', today: 7, topic: '12,882', rank: 1 },
-        '开发者杂谈':     { icon: 'bh-icon-indigo',  badge: '47人已收藏', desc: '开发者轻松交流区，技术闲聊、职业发展、行业趣闻均可。', today: 9, topic: '7,654', rank: 13 },
-        '教程指导':       { icon: 'bh-icon-blue',    badge: '68人已收藏', desc: '发布平台使用教程、数据处理指南及开发实践经验分享。', today: 2, topic: '4,321', rank: 14 },
-        '个人分享':       { icon: 'bh-icon-pink',    badge: '31人已收藏', desc: '分享个人的数据项目经验、学习心得和实践成果。', today: 5, topic: '5,432', rank: 15 },
-        '热门点评':       { icon: 'bh-icon-orange',  badge: '52人已收藏', desc: '对热门话题、数据产品和行业事件进行点评讨论。', today: 6, topic: '3,876', rank: 16 }
+        '社区新闻':       { icon: 'bh-icon-blue',    badge: '62人已收藏', desc: '发布龙岗数据要素运营服务平台相关的社区新闻、活动通知和资讯动态。', today: 3, topic: '8,421' },
+        '官方公告':       { icon: 'bh-icon-red',     badge: '120人已收藏', desc: '平台官方公告、政策解读、系统更新通知等重要信息发布专区。', today: 1, topic: '2,156' },
+        '数据提供方专区': { icon: 'bh-icon-green',   badge: '45人已收藏', desc: '面向数据提供方的交流区域，分享数据上架经验、数据质量优化方法等。', today: 5, topic: '6,732' },
+        '数据需求方专区': { icon: 'bh-icon-purple',  badge: '58人已收藏', desc: '面向数据需求方的讨论区，发布数据需求、交流数据应用场景等。', today: 8, topic: '9,213' },
+        '数据资源专区':   { icon: 'bh-icon-teal',    badge: '73人已收藏', desc: '讨论数据资源开放、共享、目录编制及数据标准化相关话题。', today: 4, topic: '5,847' },
+        '数据产品专区':   { icon: 'bh-icon-indigo',  badge: '36人已收藏', desc: '围绕数据产品设计、上架、运营等环节进行经验分享和讨论。', today: 6, topic: '4,561' },
+        '数据服务专区':   { icon: 'bh-icon-blue',    badge: '41人已收藏', desc: '讨论数据服务能力建设、API 接口对接、数据清洗加工等技术话题。', today: 2, topic: '3,982' },
+        '政策学习专区':   { icon: 'bh-icon-red',     badge: '92人已收藏', desc: '学习和讨论数据要素相关政策法规，包括国家、省、市各级数据政策。', today: 1, topic: '2,773' },
+        '数据资源申请专区':{ icon: 'bh-icon-green',  badge: '28人已收藏', desc: '交流数据资源申请流程、审批经验及相关问题解决方案。', today: 3, topic: '3,214' },
+        '数据产品开发专区':{ icon: 'bh-icon-purple', badge: '33人已收藏', desc: '面向开发者的数据产品开发交流区，分享开发工具、技术方案等。', today: 4, topic: '2,891' },
+        '应用场景专区':   { icon: 'bh-icon-teal',    badge: '55人已收藏', desc: '展示和讨论数据在各行业的应用场景案例，促进数据价值实现。', today: 2, topic: '1,956' },
+        '问题求助专区':   { icon: 'bh-icon-orange',  badge: '84人已收藏', desc: '本版主要解决大家在使用 龙岗数据要素运营服务平台 的过程中所遇到的操作上的问题，我们会在第一时间给大家答复……', today: 7, topic: '12,882' },
+        '开发者杂谈':     { icon: 'bh-icon-indigo',  badge: '47人已收藏', desc: '开发者轻松交流区，技术闲聊、职业发展、行业趣闻均可。', today: 9, topic: '7,654' },
+        '教程指导':       { icon: 'bh-icon-blue',    badge: '68人已收藏', desc: '发布平台使用教程、数据处理指南及开发实践经验分享。', today: 2, topic: '4,321' },
+        '个人分享':       { icon: 'bh-icon-pink',    badge: '31人已收藏', desc: '分享个人的数据项目经验、学习心得和实践成果。', today: 5, topic: '5,432' },
+        '热门点评':       { icon: 'bh-icon-orange',  badge: '52人已收藏', desc: '对热门话题、数据产品和行业事件进行点评讨论。', today: 6, topic: '3,876' }
     };
 
     // SVG图标映射
@@ -526,7 +525,6 @@
         document.getElementById('bhDesc').textContent = data.desc;
         document.getElementById('bhToday').textContent = data.today;
         document.getElementById('bhTopic').textContent = data.topic;
-        document.getElementById('bhRank').textContent = data.rank;
 
         var iconEl = document.getElementById('bhIcon');
         iconEl.className = 'board-header-icon ' + data.icon;

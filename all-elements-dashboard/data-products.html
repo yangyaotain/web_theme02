@@ -362,7 +362,6 @@
 
     // 1. 数据产品类型分布饼图（修改为标准饼图，显示数量和比例）
     const productDistributionData = [89780, 125640, 45890, 18950, 9308];
-    const productDistributionTotal = productDistributionData.reduce((a, b) => a + b, 0);
     const productDistributionCtx = document.getElementById('productDistributionChart').getContext('2d');
     new Chart(productDistributionCtx, {
       type: 'pie', // 修改为标准饼图
@@ -398,7 +397,8 @@
               label: function(context) {
                 const label = context.label || '';
                 const value = context.raw || 0;
-                const percentage = calculatePercentage(value, productDistributionTotal);
+                const currentTotal = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = calculatePercentage(value, currentTotal);
                 return `${label}: ${value.toLocaleString()} (${percentage})`;
               }
             }
@@ -409,7 +409,6 @@
 
     // 2. 交付方式分布环形图（显示数量和比例，移除XY轴）
     const deliveryMethodData = [65400, 89200, 105600, 18900, 10468];
-    const deliveryMethodTotal = deliveryMethodData.reduce((a, b) => a + b, 0);
     const deliveryMethodCtx = document.getElementById('deliveryMethodChart').getContext('2d');
     new Chart(deliveryMethodCtx, {
       type: 'doughnut',
@@ -446,7 +445,8 @@
               label: function(context) {
                 const label = context.label || '';
                 const value = context.raw || 0;
-                const percentage = calculatePercentage(value, deliveryMethodTotal);
+                const currentTotal = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = calculatePercentage(value, currentTotal);
                 return `${label}: ${value.toLocaleString()} (${percentage})`;
               }
             }
