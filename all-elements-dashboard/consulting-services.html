@@ -489,74 +489,101 @@
       }
     });
 
-    // 4. 数据咨询成交趋势（季度堆积柱状图-咨询量/成交量）
+    // 4. 数据咨询成交趋势（双Y轴-咨询量/成交率）
     const consultationDealTrendCtx = document.getElementById('consultationDealTrendChart').getContext('2d');
+    const consultationTrendServices = [
+      {
+        id: 'strategy-governance',
+        name: '数据战略规划与治理咨询服务类',
+        color: '15, 198, 194',
+        consultationVolume: [1500, 1800, 2000, 2200],
+        dealVolume: [800, 1000, 1200, 1500]
+      },
+      {
+        id: 'asset-management',
+        name: '数据资产管理与价值评估咨询服务类',
+        color: '79, 110, 247',
+        consultationVolume: [2900, 3300, 3700, 4300],
+        dealVolume: [1350, 1900, 2200, 2650]
+      },
+      {
+        id: 'compliance-circulation',
+        name: '数据合规运营与流通交易咨询服务类',
+        color: '34, 197, 94',
+        consultationVolume: [1000, 1100, 1300, 1500],
+        dealVolume: [500, 700, 800, 900]
+      },
+      {
+        id: 'industry-ai',
+        name: '行业场景化AI数据服务咨询服务类',
+        color: '234, 179, 8',
+        consultationVolume: [850, 950, 1100, 1300],
+        dealVolume: [400, 550, 700, 850]
+      }
+    ];
+    const consultationTrendQuarters = ['第一季度', '第二季度', '第三季度', '第四季度'];
+    const consultationTrendPoints = [];
+    consultationTrendQuarters.forEach((quarter, quarterIndex) => {
+      consultationTrendServices.forEach((service, serviceIndex) => {
+        consultationTrendPoints.push({
+          quarter,
+          serviceId: service.id,
+          serviceName: service.name,
+          color: service.color,
+          consultationVolume: service.consultationVolume[quarterIndex],
+          dealRate: Number((service.dealVolume[quarterIndex] / service.consultationVolume[quarterIndex] * 100).toFixed(1)),
+          showQuarterLabel: serviceIndex === 1
+        });
+      });
+
+      if (quarterIndex < consultationTrendQuarters.length - 1) {
+        consultationTrendPoints.push(null);
+      }
+    });
+    const hiddenConsultationTrendServices = new Set();
+    const getConsultationTrendData = metric => consultationTrendPoints.map(point => {
+      if (!point || hiddenConsultationTrendServices.has(point.serviceId)) return null;
+      return point[metric];
+    });
+    const consultationTrendDatasets = [
+      {
+        type: 'bar',
+        label: '咨询量',
+        data: getConsultationTrendData('consultationVolume'),
+        backgroundColor: consultationTrendPoints.map(point => point ? `rgba(${point.color}, 0.55)` : 'transparent'),
+        borderColor: consultationTrendPoints.map(point => point ? `rgba(${point.color}, 0.95)` : 'transparent'),
+        borderWidth: 1,
+        borderRadius: 4,
+        barPercentage: 0.72,
+        categoryPercentage: 0.82,
+        yAxisID: 'yConsultation',
+        order: 2
+      },
+      {
+        type: 'line',
+        label: '成交率',
+        data: getConsultationTrendData('dealRate'),
+        borderColor: 'rgba(248, 250, 252, 0.9)',
+        backgroundColor: 'rgba(248, 250, 252, 0.15)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#20A565',
+        pointBorderColor: '#F8FAFC',
+        pointBorderWidth: 1,
+        tension: 0.3,
+        spanGaps: true,
+        fill: false,
+        yAxisID: 'yRate',
+        order: 1
+      }
+    ];
+
     new Chart(consultationDealTrendCtx, {
       type: 'bar',
       data: {
-        labels: ['第一季度', '第二季度', '第三季度', '第四季度'],
-        datasets: [
-          // 数据战略规划与治理咨询服务类
-          {
-            label: '数据战略规划与治理咨询服务类-咨询量',
-            data: [1500, 1800, 2000, 2200],
-            backgroundColor: 'rgba(15, 198, 194, 0.6)',
-            borderRadius: 4,
-            stack: 'stack1'
-          },
-          {
-            label: '数据战略规划与治理咨询服务类-成交量',
-            data: [800, 1000, 1200, 1500],
-            backgroundColor: 'rgba(15, 198, 194, 0.9)',
-            borderRadius: 4,
-            stack: 'stack1'
-          },
-          // 数据资产管理与价值评估咨询服务类
-          {
-            label: '数据资产管理与价值评估咨询服务类-咨询量',
-            data: [2900, 3300, 3700, 4300],
-            backgroundColor: 'rgba(79, 110, 247, 0.6)',
-            borderRadius: 4,
-            stack: 'stack2'
-          },
-          {
-            label: '数据资产管理与价值评估咨询服务类-成交量',
-            data: [1350, 1900, 2200, 2650],
-            backgroundColor: 'rgba(79, 110, 247, 0.9)',
-            borderRadius: 4,
-            stack: 'stack2'
-          },
-          // 数据合规运营与流通交易咨询服务类
-          {
-            label: '数据合规运营与流通交易咨询服务类-咨询量',
-            data: [1000, 1100, 1300, 1500],
-            backgroundColor: 'rgba(34, 197, 94, 0.6)',
-            borderRadius: 4,
-            stack: 'stack3'
-          },
-          {
-            label: '数据合规运营与流通交易咨询服务类-成交量',
-            data: [500, 700, 800, 900],
-            backgroundColor: 'rgba(34, 197, 94, 0.9)',
-            borderRadius: 4,
-            stack: 'stack3'
-          },
-          // 行业场景化AI数据服务咨询服务类
-          {
-            label: '行业场景化AI数据服务咨询服务类-咨询量',
-            data: [850, 950, 1100, 1300],
-            backgroundColor: 'rgba(234, 179, 8, 0.6)',
-            borderRadius: 4,
-            stack: 'stack4'
-          },
-          {
-            label: '行业场景化AI数据服务咨询服务类-成交量',
-            data: [400, 550, 700, 850],
-            backgroundColor: 'rgba(234, 179, 8, 0.9)',
-            borderRadius: 4,
-            stack: 'stack4'
-          }
-        ]
+        labels: consultationTrendPoints.map((point, index) => point ? `${point.quarter}-${point.serviceId}` : `gap-${index}`),
+        datasets: consultationTrendDatasets
       },
       options: {
         ...chartOptions,
@@ -568,83 +595,99 @@
               color: 'rgba(255, 255, 255, 0.7)',
               font: { size: 9 },
               padding: 8,
-              generateLabels: (chart) => {
-                const defaultItems = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                const renderedStacks = new Set();
-
-                return defaultItems.filter(item => {
-                  const stack = chart.data.datasets[item.datasetIndex].stack;
-                  if (renderedStacks.has(stack)) return false;
-                  renderedStacks.add(stack);
-                  return true;
-                }).map(item => {
-                  const dataset = chart.data.datasets[item.datasetIndex];
-                  const stackDatasetIndexes = chart.data.datasets
-                    .map((currentDataset, index) => currentDataset.stack === dataset.stack ? index : -1)
-                    .filter(index => index >= 0);
-
-                  return {
-                    ...item,
-                    text: dataset.label.replace(/-(咨询量|成交量)$/, ''),
-                    hidden: stackDatasetIndexes.every(index => !chart.isDatasetVisible(index))
-                  };
-                });
-              }
+              generateLabels: () => consultationTrendServices.map(service => ({
+                text: service.name,
+                fontColor: 'rgba(226, 232, 240, 0.88)',
+                fillStyle: `rgba(${service.color}, 0.65)`,
+                strokeStyle: `rgba(${service.color}, 1)`,
+                lineWidth: 1,
+                hidden: hiddenConsultationTrendServices.has(service.id),
+                serviceId: service.id,
+                datasetIndex: 0
+              }))
             },
             onClick: (event, legendItem, legend) => {
               const chart = legend.chart;
-              const currentStack = chart.data.datasets[legendItem.datasetIndex].stack;
-              const stackDatasetIndexes = chart.data.datasets
-                .map((dataset, index) => dataset.stack === currentStack ? index : -1)
-                .filter(index => index >= 0);
-              const shouldShow = stackDatasetIndexes.every(index => !chart.isDatasetVisible(index));
+              if (hiddenConsultationTrendServices.has(legendItem.serviceId)) {
+                hiddenConsultationTrendServices.delete(legendItem.serviceId);
+              } else {
+                hiddenConsultationTrendServices.add(legendItem.serviceId);
+              }
 
-              stackDatasetIndexes.forEach(index => chart.setDatasetVisibility(index, shouldShow));
+              chart.data.datasets[0].data = getConsultationTrendData('consultationVolume');
+              chart.data.datasets[1].data = getConsultationTrendData('dealRate');
               chart.update();
             }
           },
           tooltip: {
             ...chartOptions.plugins.tooltip,
             callbacks: {
-              afterTitle: (items) => {
-                const datasetLabel = items[0]?.dataset.label || '';
-                return datasetLabel.replace(/-(咨询量|成交量)$/, '');
-              },
+              title: items => consultationTrendPoints[items[0]?.dataIndex]?.quarter || '',
+              afterTitle: items => consultationTrendPoints[items[0]?.dataIndex]?.serviceName || '',
               label: (context) => {
-                const currentStack = context.dataset.stack;
-                const currentIndex = context.dataIndex;
-                const stackDatasets = context.chart.data.datasets.filter(dataset => dataset.stack === currentStack);
-                const getValue = (metric) => {
-                  const dataset = stackDatasets.find(item => item.label.endsWith(`-${metric}`));
-                  const value = dataset?.data[currentIndex];
-                  return typeof value === 'number' ? value.toLocaleString('zh-CN') : '-';
-                };
+                const point = consultationTrendPoints[context.dataIndex];
+                if (!point) return [];
 
                 return [
-                  `咨询量：${getValue('咨询量')}`,
-                  `成交量：${getValue('成交量')}`
+                  `咨询量：${point.consultationVolume.toLocaleString('zh-CN')}`,
+                  `成交率：${point.dealRate.toFixed(1)}%`
                 ];
               }
             }
           }
         },
         scales: {
-          ...chartOptions.scales,
           x: {
             ...chartOptions.scales.x,
-            stacked: true,
+            offset: true,
+            grid: {
+              color: context => consultationTrendPoints[context.index]?.showQuarterLabel
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'transparent',
+              drawBorder: false
+            },
             ticks: {
               color: 'rgba(255, 255, 255, 0.6)',
-              font: { size: 10 }
+              font: { size: 10 },
+              autoSkip: false,
+              maxRotation: 0,
+              callback: value => {
+                const point = consultationTrendPoints[value];
+                return point?.showQuarterLabel ? point.quarter : '';
+              }
             }
           },
-          y: {
+          yConsultation: {
             ...chartOptions.scales.y,
-            stacked: true,
+            position: 'left',
+            beginAtZero: true,
             title: {
               display: true,
-              text: '记录数',
+              text: '咨询量',
               color: 'rgba(255, 255, 255, 0.7)'
+            },
+            ticks: {
+              ...chartOptions.scales.y.ticks,
+              callback: value => Number(value).toLocaleString('zh-CN')
+            }
+          },
+          yRate: {
+            ...chartOptions.scales.y,
+            position: 'right',
+            min: 0,
+            max: 100,
+            title: {
+              display: true,
+              text: '成交率',
+              color: 'rgba(255, 255, 255, 0.7)'
+            },
+            grid: {
+              drawOnChartArea: false,
+              drawBorder: false
+            },
+            ticks: {
+              ...chartOptions.scales.y.ticks,
+              callback: value => `${value}%`
             }
           }
         }
