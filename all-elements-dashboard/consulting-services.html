@@ -567,7 +567,64 @@
             labels: {
               color: 'rgba(255, 255, 255, 0.7)',
               font: { size: 9 },
-              padding: 8
+              padding: 8,
+              generateLabels: (chart) => {
+                const defaultItems = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                const renderedStacks = new Set();
+
+                return defaultItems.filter(item => {
+                  const stack = chart.data.datasets[item.datasetIndex].stack;
+                  if (renderedStacks.has(stack)) return false;
+                  renderedStacks.add(stack);
+                  return true;
+                }).map(item => {
+                  const dataset = chart.data.datasets[item.datasetIndex];
+                  const stackDatasetIndexes = chart.data.datasets
+                    .map((currentDataset, index) => currentDataset.stack === dataset.stack ? index : -1)
+                    .filter(index => index >= 0);
+
+                  return {
+                    ...item,
+                    text: dataset.label.replace(/-(咨询量|成交量)$/, ''),
+                    hidden: stackDatasetIndexes.every(index => !chart.isDatasetVisible(index))
+                  };
+                });
+              }
+            },
+            onClick: (event, legendItem, legend) => {
+              const chart = legend.chart;
+              const currentStack = chart.data.datasets[legendItem.datasetIndex].stack;
+              const stackDatasetIndexes = chart.data.datasets
+                .map((dataset, index) => dataset.stack === currentStack ? index : -1)
+                .filter(index => index >= 0);
+              const shouldShow = stackDatasetIndexes.every(index => !chart.isDatasetVisible(index));
+
+              stackDatasetIndexes.forEach(index => chart.setDatasetVisibility(index, shouldShow));
+              chart.update();
+            }
+          },
+          tooltip: {
+            ...chartOptions.plugins.tooltip,
+            callbacks: {
+              afterTitle: (items) => {
+                const datasetLabel = items[0]?.dataset.label || '';
+                return datasetLabel.replace(/-(咨询量|成交量)$/, '');
+              },
+              label: (context) => {
+                const currentStack = context.dataset.stack;
+                const currentIndex = context.dataIndex;
+                const stackDatasets = context.chart.data.datasets.filter(dataset => dataset.stack === currentStack);
+                const getValue = (metric) => {
+                  const dataset = stackDatasets.find(item => item.label.endsWith(`-${metric}`));
+                  const value = dataset?.data[currentIndex];
+                  return typeof value === 'number' ? value.toLocaleString('zh-CN') : '-';
+                };
+
+                return [
+                  `咨询量：${getValue('咨询量')}`,
+                  `成交量：${getValue('成交量')}`
+                ];
+              }
             }
           }
         },
