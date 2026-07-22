@@ -16,6 +16,14 @@
     var REGISTER_STATUS_OPTIONS = ['全部', '待登记', '登记审核中', '已登记', '已退回', '变更审核中', '注销审核中', '已注销', '登记公示中', '异议复核中', '区域节点审批', '注销区域审批中', '变更区域审批中'];
     var INDUSTRY_OPTIONS = ['全部', '农、林、牧、渔业', '采矿业', '制造业', '电力、热力、燃气及水生产和供应业', '建筑业', '批发和零售业', '交通运输、仓储和邮政业', '住宿和餐饮业', '信息传输、软件和信息技术服务业', '金融业', '房地产业', '租赁和商务服务业', '科学研究和技术服务业', '水利、环境和公共设施管理业', '居民服务、修理和其他服务业', '教育', '卫生和社会工作', '文化、体育和娱乐业', '公共管理、社会保障和社会组织', '国际组织'];
     var DATA_SOURCE_OPTIONS = ['全部', '原始取得', '收集取得', '交易取得', '其他'];
+    var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
+    var PLATFORM_OPERATOR_MERCHANT_ID = 'MER-PLATFORM-202607-0001';
+
+    function getOperationType(row) {
+        if (!row) return '第三方供方';
+        if (row.providerMerchantId) return row.providerMerchantId === PLATFORM_OPERATOR_MERCHANT_ID ? '自营' : '第三方供方';
+        return row.provider === PLATFORM_OPERATOR_NAME ? '自营' : '第三方供方';
+    }
 
     var PAGES = {
         resourceCatalog: {
@@ -151,6 +159,7 @@
                 { key: 'code', label: '数据产品标识' },
                 { key: 'type', label: '产品类型' },
                 { key: 'provider', label: '提供方' },
+                { key: 'operationType', label: '经营属性' },
                 { key: 'space', label: '所属空间' },
                 { key: 'applyAt', label: '申请时间' },
                 { key: 'updatedAt', label: '更新时间' },
@@ -189,6 +198,7 @@
                 { key: 'code', label: '数据服务标识' },
                 { key: 'type', label: '服务类型' },
                 { key: 'provider', label: '提供方' },
+                { key: 'operationType', label: '经营属性' },
                 { key: 'space', label: '所属空间' },
                 { key: 'applyAt', label: '申请时间' },
                 { key: 'updatedAt', label: '更新时间' },
@@ -1109,6 +1119,11 @@
 
     function renderBillDetail(row) {
         var paidAt = row.paidAt || '2026-06-01 16:11:13';
+        var paidAmount = Number(String(row.amount || '0').replace(/,/g, '')) || 0;
+        var selfOperated = row.seller === PLATFORM_OPERATOR_NAME;
+        var serviceFeeRate = selfOperated ? 0 : Number(row.serviceFeeRate || 3);
+        var serviceFee = paidAmount * serviceFeeRate / 100;
+        var providerAmount = paidAmount - serviceFee;
         return {
             title: '账单详情',
             size: 'narrow',
@@ -1132,7 +1147,15 @@
                     { label: '账期', value: row.period },
                     { label: '付款时间', value: paidAt }
                 ]))
-                + billDrawerSection('支付信息', '<table class="data-table bill-detail-table"><thead><tr><th>支付编号</th><th>支付时间</th><th>支付状态</th></tr></thead><tbody><tr><td>202606011611310500000101148233</td><td>' + escapeHTML(paidAt) + '</td><td><span class="monitor-flow-status success"><i></i>已通过</span></td></tr></tbody></table>')
+                + billDrawerSection('支付信息', '<table class="data-table bill-detail-table"><thead><tr><th>支付编号</th><th>收款商户</th><th>支付时间</th><th>支付状态</th></tr></thead><tbody><tr><td>202606011611310500000101148233</td><td>' + PLATFORM_OPERATOR_NAME + '</td><td>' + escapeHTML(paidAt) + '</td><td><span class="monitor-flow-status success"><i></i>已通过</span></td></tr></tbody></table>')
+                + billDrawerSection('资金分配', billDrawerFields([
+                    { label: '经营属性', value: selfOperated ? '自营' : '第三方供方' },
+                    { label: '需方实付金额', value: '¥' + paidAmount.toFixed(2) },
+                    { label: '平台服务费', value: selfOperated ? '不适用' : '¥' + serviceFee.toFixed(2) + '（' + serviceFeeRate.toFixed(2) + '%）' },
+                    { label: '供方分账金额', value: selfOperated ? '不发起对外分账' : '¥' + providerAmount.toFixed(2) },
+                    { label: '分账接收方', value: selfOperated ? '--' : row.seller || '--' },
+                    { label: '分账状态', html: selfOperated ? '<span class="monitor-flow-status"><i></i>无需分账</span>' : '<span class="monitor-flow-status success"><i></i>分账成功</span>' }
+                ]))
                 + billDrawerSection('流程动态', '<table class="data-table bill-detail-table"><thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead><tbody>'
                     + '<tr><td>系统自动</td><td>生成账单</td><td>成功</td><td>--</td><td>' + escapeHTML(row.createdAt) + '</td></tr>'
                     + '<tr><td>' + escapeHTML(row.buyer || '--') + '</td><td>支付账单</td><td>成功</td><td>--</td><td>' + escapeHTML(paidAt) + '</td></tr>'
@@ -1211,6 +1234,10 @@
             }).join('');
         }
 
+        if (column.key === 'operationType') {
+            var operationType = getOperationType(row);
+            return '<span class="monitor-status ' + (operationType === '自营' ? 'success' : 'info') + '">' + operationType + '</span>';
+        }
         var value = row[column.key] || '--';
         if (column.status) {
             if (page.statusMode === 'dot') {

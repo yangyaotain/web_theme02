@@ -1,0 +1,301 @@
+.wb-consult-shell.is-supplier-bill-management {
+    overflow: hidden;
+    background: #fff;
+}
+
+.supplier-bill-board {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.supplier-bill-toolbar {
+    min-height: 66px;
+}
+
+.supplier-bill-search {
+    width: 360px;
+}
+
+.supplier-bill-export {
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-left: auto;
+    padding: 0 13px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: #fff;
+    color: #606266;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.supplier-bill-export:hover {
+    color: var(--forest-green);
+    border-color: #b9e1ca;
+    background: #f6fbf8;
+}
+
+.supplier-bill-export svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+}
+
+.supplier-bill-filter-panel {
+    flex-wrap: wrap;
+}
+
+.supplier-bill-date {
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: #fff;
+    color: #606266;
+    font-size: 13px;
+}
+
+.supplier-bill-date input {
+    width: 132px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #606266;
+    font: inherit;
+}
+
+.supplier-bill-table-card {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.supplier-bill-table-scroll {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: auto;
+    border: 1px solid #ebeef5;
+    border-radius: 6px 6px 0 0;
+    scrollbar-color: #abb7b1 #eef1f0;
+    scrollbar-width: auto;
+}
+
+.supplier-bill-table-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.supplier-bill-table-scroll::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: #eef1f0;
+}
+
+.supplier-bill-table-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid #eef1f0;
+    border-radius: 999px;
+    background: #abb7b1;
+}
+
+.supplier-bill-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: #8f9e97;
+}
+
+.supplier-bill-table {
+    width: 3040px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    color: #303133;
+    font-size: 13px;
+}
+
+.supplier-bill-table th,
+.supplier-bill-table td {
+    height: 48px;
+    padding: 0 14px;
+    border-bottom: 1px solid #ebeef5;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.supplier-bill-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 46px;
+    background: #f5f7f7;
+    color: #606266;
+    font-weight: 600;
+}
+
+.supplier-bill-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.supplier-bill-table tbody tr:hover td {
+    background: #f6fbf8;
+}
+
+.supplier-bill-table .col-bill-no { width: 260px; }
+.supplier-bill-table .col-order-no { width: 260px; }
+.supplier-bill-table .col-target { width: 280px; }
+.supplier-bill-table .col-business { width: 100px; }
+.supplier-bill-table .col-target-type { width: 200px; }
+.supplier-bill-table .col-buyer { width: 240px; }
+.supplier-bill-table .col-pay-mode { width: 90px; }
+.supplier-bill-table .col-measure { width: 120px; }
+.supplier-bill-table .col-price { width: 110px; }
+.supplier-bill-table .col-quantity { width: 90px; }
+.supplier-bill-table .col-amount { width: 130px; }
+.supplier-bill-table .col-created { width: 180px; }
+.supplier-bill-table .col-period { width: 200px; }
+.supplier-bill-table .col-repayment { width: 170px; }
+.supplier-bill-table .col-paid { width: 170px; }
+.supplier-bill-table .col-status { width: 140px; }
+.supplier-bill-table .col-actions { width: 300px; }
+
+.supplier-bill-table .supplier-bill-status-cell {
+    position: sticky;
+    right: 300px;
+    z-index: 2;
+    background: #fff;
+    box-shadow: -8px 0 14px -14px rgba(40, 55, 49, 0.75);
+}
+
+.supplier-bill-table .supplier-bill-action-cell {
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    background: #fff;
+}
+
+.supplier-bill-table th.supplier-bill-status-cell,
+.supplier-bill-table th.supplier-bill-action-cell {
+    z-index: 3;
+    background: #f5f7f7;
+}
+
+.supplier-bill-table tbody tr:hover .supplier-bill-status-cell,
+.supplier-bill-table tbody tr:hover .supplier-bill-action-cell {
+    background: #f6fbf8;
+}
+
+.supplier-bill-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.supplier-bill-split-detail {
+    display: block;
+    margin-top: 4px;
+    overflow: hidden;
+    color: #278052;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.supplier-bill-order-link {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--forest-green);
+    font: inherit;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.supplier-bill-order-link:hover {
+    text-decoration: underline;
+}
+
+.supplier-bill-amount {
+    font-variant-numeric: tabular-nums;
+}
+
+.supplier-bill-empty {
+    height: 180px !important;
+    color: #909399;
+    text-align: center !important;
+}
+
+@media (max-width: 1180px) {
+    .supplier-bill-search {
+        width: 320px;
+    }
+}
+.supplier-split-modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1180;
+    background: rgba(20, 34, 27, 0.38);
+}
+
+.supplier-split-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1181;
+    width: min(620px, 92vw);
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    box-shadow: -12px 0 36px rgba(24, 48, 36, 0.16);
+}
+
+.supplier-split-modal > header,
+.supplier-split-modal > footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e7ece9;
+}
+
+.supplier-split-modal > header h2 { margin: 0; color: #33443a; font-size: 17px; }
+.supplier-split-modal > header p { margin: 5px 0 0; color: #8b9690; font-size: 11px; }
+.supplier-split-modal > header button { border: 0; color: #748078; background: transparent; cursor: pointer; font-size: 24px; }
+.supplier-split-modal-body { flex: 1; padding: 18px 20px; overflow-y: auto; }
+.supplier-split-modal-body section { padding: 15px; border: 1px solid #e5ebe7; border-radius: 6px; }
+.supplier-split-modal-body section + section { margin-top: 12px; }
+.supplier-split-modal-body h3 { margin: 0 0 12px; color: #46544c; font-size: 13px; }
+.supplier-split-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.supplier-split-detail-grid span, .supplier-split-detail-grid strong, .supplier-split-money-grid span, .supplier-split-money-grid strong, .supplier-split-money-grid small { display: block; }
+.supplier-split-detail-grid span, .supplier-split-money-grid span { color: #8b9590; font-size: 10px; }
+.supplier-split-detail-grid strong { margin-top: 5px; color: #4b5750; font-size: 11px; font-weight: 600; word-break: break-all; }
+.supplier-split-money-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.supplier-split-money-grid > div { padding: 12px; border-radius: 5px; background: #f6f8f7; }
+.supplier-split-money-grid > div.is-net { background: #edf8f1; }
+.supplier-split-money-grid strong { margin-top: 6px; color: #3d4c44; font-size: 17px; }
+.supplier-split-money-grid .is-net strong { color: #24764c; }
+.supplier-split-money-grid small { margin-top: 4px; color: #9aa39f; font-size: 9px; }
+.supplier-split-status { color: #26764d !important; }
+.supplier-split-modal > footer { justify-content: flex-end; border-top: 1px solid #e7ece9; border-bottom: 0; }
+.supplier-split-modal > footer button { min-width: 76px; height: 32px; border: 1px solid #cbd7d0; border-radius: 4px; color: #3d594a; background: #fff; cursor: pointer; }
+
+@media (max-width: 720px) {
+    .supplier-split-detail-grid,
+    .supplier-split-money-grid { grid-template-columns: 1fr; }
+}

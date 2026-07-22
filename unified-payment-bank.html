@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网银支付 - 统一支付平台</title>
+    <link rel="stylesheet" href="css/unified-payment-bank.css">
+    <script src="js/unified-payment-bank.js" defer></script>
+</head>
+<body>
+    <header class="gateway-header">
+        <div class="gateway-header-inner">
+            <div class="gateway-brand">
+                <span class="gateway-brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V5l-8-3zm0 2.2 6 2.2V11c0 4-2.5 7.7-6 8.8C8.5 18.7 6 15 6 11V6.4l6-2.2zm-1 4.3h2v3h3v2h-5v-5z"/></svg>
+                </span>
+                <div>
+                    <strong>统一支付平台</strong>
+                    <span>网上银行安全支付</span>
+                </div>
+            </div>
+            <div class="gateway-secure">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9h14v-9a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7zm7 11H7v-7h10v7z"/></svg>
+                <span>安全连接 · 信息加密传输</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="gateway-main">
+        <nav class="gateway-steps" aria-label="支付进度">
+            <div class="gateway-step active" data-step="1"><span>1</span><strong>确认订单</strong></div>
+            <i></i>
+            <div class="gateway-step" data-step="2"><span>2</span><strong>银行处理</strong></div>
+            <i></i>
+            <div class="gateway-step" data-step="3"><span>3</span><strong>支付结果</strong></div>
+        </nav>
+
+        <section class="gateway-card">
+            <header class="gateway-order-head">
+                <div>
+                    <span>收款商户</span>
+                    <strong data-merchant-name>--</strong>
+                </div>
+                <div class="gateway-amount">
+                    <span>应付金额</span>
+                    <strong data-payment-amount>0.00元</strong>
+                </div>
+            </header>
+
+            <div class="gateway-order-grid">
+                <div><span>商品名称</span><strong data-product-name>--</strong></div>
+                <div><span>商户订单号</span><strong data-order-no>--</strong></div>
+                <div><span>支付银行</span><strong data-bank-name>--</strong></div>
+                <div><span>卡类型</span><strong data-card-type>--</strong></div>
+            </div>
+
+            <section class="gateway-view gateway-confirm-view" data-gateway-view="confirm">
+                <div class="gateway-bank-choice">
+                    <span class="gateway-bank-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M3 10h18V8L12 3 3 8v2zm3-1 6-3 6 3H6zm-2 9h16v2H4v-2zm2-7h2v6H6v-6zm5 0h2v6h-2v-6zm5 0h2v6h-2v-6z"/></svg>
+                    </span>
+                    <div>
+                        <strong data-choice-bank>--</strong>
+                        <span>支付过程中将由银行完成身份校验，本平台不会获取您的密码、U盾或验证码。</span>
+                    </div>
+                </div>
+                <div class="gateway-notice">
+                    请确认订单与金额无误。点击确认支付即表示您同意向所选银行提交本次付款请求。
+                </div>
+                <div class="gateway-actions">
+                    <button class="gateway-btn" type="button" data-return-merchant>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20v-2z"/></svg>
+                        <span>返回商户</span>
+                    </button>
+                    <button class="gateway-btn primary" type="button" data-confirm-payment>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9h14v-9a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7zm7 11H7v-7h10v7z"/></svg>
+                        <span>确认支付</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="gateway-view gateway-processing-view" data-gateway-view="processing" hidden>
+                <div class="gateway-spinner" aria-hidden="true"></div>
+                <h2>银行正在处理支付请求</h2>
+                <p>请勿关闭页面或重复提交，支付结果即将返回。</p>
+            </section>
+
+            <section class="gateway-view gateway-result-view" data-gateway-view="result" hidden>
+                <div class="gateway-result-icon" aria-hidden="true">
+                    <svg class="icon-success" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-4-4 1.4-1.4 2.6 2.6 6.6-6.6L18 9l-8 8z"/></svg>
+                    <svg class="icon-failed" viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5z"/></svg>
+                </div>
+                <h2 data-result-title>支付成功</h2>
+                <strong class="gateway-result-amount" data-result-amount>0.00元</strong>
+                <p data-result-description>支付结果已同步至商户订单。</p>
+                <p class="gateway-countdown" data-result-countdown></p>
+                <div class="gateway-actions centered">
+                    <button class="gateway-btn" type="button" data-retry-payment hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 7l5 5V7a5 5 0 1 1-4.6 7.1l-1.8.8A7 7 0 1 0 12 5z"/></svg>
+                        <span>重新支付</span>
+                    </button>
+                    <button class="gateway-btn primary" type="button" data-return-merchant>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20v-2z"/></svg>
+                        <span>返回商户</span>
+                    </button>
+                </div>
+            </section>
+        </section>
+
+        <footer class="gateway-footer">
+            <span>本页面由统一支付平台提供支付服务</span>
+            <span>如有疑问，请联系收款商户</span>
+        </footer>
+    </main>
+</body>
+</html>

@@ -33,16 +33,48 @@
                 {
                     label: '订单合同',
                     icon: 'order',
+                    defaultOpen: true,
                     children: [
                         { key: 'resource-apply', label: '资源申请管理', href: 'buyer-center.html?menu=resource-apply' },
                         { key: 'product-order', label: '产品订单管理', href: 'buyer-center.html?menu=product-order' },
-                        { key: 'product-contract', label: '产品合同管理', href: 'buyer-center.html?menu=product-contract' }
+                        { key: 'service-order', label: '服务订单管理', href: 'buyer-center.html?menu=service-order' },
+                        { key: 'product-contract', label: '产品合同管理', href: 'buyer-center.html?menu=product-contract' },
+                        { key: 'service-contract', label: '服务合同管理', href: 'buyer-center.html?menu=service-contract' }
                     ]
                 },
-                { key: 'fee', label: '费用管理', icon: 'money', href: 'buyer-center.html?menu=fee' },
-                { key: 'invoice', label: '发票管理', icon: 'invoice', href: 'buyer-center.html?menu=invoice' },
-                { key: 'dispute', label: '争议仲裁', icon: 'dispute', href: 'buyer-center.html?menu=dispute' },
-                { key: 'contract', label: '合约管理', icon: 'contract', href: 'buyer-center.html?menu=contract' }
+                {
+                    label: '费用管理',
+                    icon: 'money',
+                    defaultOpen: true,
+                    children: [
+                        { key: 'transaction-bill', label: '交易账单管理', href: 'buyer-center.html?menu=transaction-bill' },
+                        { key: 'offline-voucher', label: '线下支付凭证', href: 'buyer-center.html?menu=offline-voucher' }
+                    ]
+                },
+                {
+                    label: '发票管理',
+                    icon: 'invoice',
+                    defaultOpen: true,
+                    children: [
+                        { key: 'invoice-info', label: '产品开票信息', href: 'buyer-center.html?menu=invoice-info' },
+                        { key: 'invoice-apply', label: '产品开票申请', href: 'buyer-center.html?menu=invoice-apply' }
+                    ]
+                },
+                { key: 'my-demand', label: '我的需求', icon: 'demand', href: 'buyer-center.html?menu=my-demand' },
+                {
+                    label: '争议仲裁',
+                    icon: 'dispute',
+                    children: [
+                        { key: 'dispute', label: '争议仲裁', href: 'buyer-center.html?menu=dispute' }
+                    ]
+                },
+                {
+                    label: '合约管理',
+                    icon: 'contract',
+                    children: [
+                        { key: 'contract', label: '合约管理', href: 'buyer-center.html?menu=contract' }
+                    ]
+                }
             ]
         },
         supplier: {
@@ -84,7 +116,8 @@
                     defaultOpen: true,
                     children: [
                         { key: 'transaction-bill', label: '交易账单管理', href: 'supplier-center.html?menu=transaction-bill' },
-                        { key: 'offline-voucher', label: '线下支付凭证', href: 'supplier-center.html?menu=offline-voucher' }
+                        { key: 'offline-voucher', label: '线下支付凭证', href: 'supplier-center.html?menu=offline-voucher' },
+                        { key: 'settlement-account', label: '收款结算账户', href: 'supplier-center.html?menu=settlement-account' }
                     ]
                 },
                 {
@@ -128,7 +161,10 @@
         'fee': { title: '费用管理', desc: '查看交易费用、应收应付、结算记录和费用确认事项。' },
         'transaction-bill': { title: '交易账单管理', desc: '查看交易账单、结算周期、应收应付与确认记录。' },
         'offline-voucher': { title: '线下支付凭证', desc: '管理线下转账凭证、到账确认和付款记录。' },
+        'settlement-account': { title: '收款结算账户', desc: '维护线上收款商户资料、结算账户和进件审核状态。' },
         'invoice': { title: '发票管理', desc: '处理发票申请、开票记录和发票状态跟踪。' },
+        'invoice-info': { title: '产品开票信息', desc: '维护产品交易开票抬头、税号和收票信息。' },
+        'invoice-apply': { title: '产品开票申请', desc: '查看产品订单的开票申请和处理状态。' },
         'profile': { title: '账号中心', desc: '查看账号信息、会员权益和业务开通情况。' },
         'message': { title: '我的消息', desc: '查看系统通知、业务提醒和站内消息。' },
         'subscribe': { title: '我的订阅', desc: '查看已订阅的数据资源、产品和服务动态。' },

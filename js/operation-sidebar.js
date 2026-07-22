@@ -68,7 +68,10 @@
             label: '交易费用监测',
             icon: 'money',
             children: [
-                { key: 'bill-monitor', label: '交易账单监测', href: 'operation-bill-monitor.html' }
+                { key: 'bill-monitor', label: '交易账单监测', href: 'operation-bill-monitor.html' },
+                { key: 'profitsharing-config', label: '分账基础配置', href: 'operation-profitsharing-config.html' },
+                { key: 'profitsharing-merchants', label: '分账接收方管理', href: 'operation-profitsharing-merchants.html' },
+                { key: 'profitsharing-rules', label: '平台服务费规则', href: 'operation-profitsharing-rules.html' }
             ]
         },
         { type: 'item', key: 'supply-demand', label: '供需管理', icon: 'supply', disabled: true },
@@ -126,6 +129,9 @@
         'operation-delivery-task-detail.html': 'delivery-log-monitor',
         'operation-delivery-log.html': 'delivery-log-monitor',
         'operation-bill-monitor.html': 'bill-monitor',
+        'operation-profitsharing-config.html': 'profitsharing-config',
+        'operation-profitsharing-rules.html': 'profitsharing-rules',
+        'operation-profitsharing-merchants.html': 'profitsharing-merchants',
         'operation-usage-detail-monitor.html': 'bill-monitor',
         'space-approval.html': 'space-approval',
         'space-approval-detail.html': 'space-approval',

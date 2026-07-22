@@ -32,6 +32,8 @@
                     <div class="listing-detail-grid">
                         <div class="listing-detail-field"><span class="label">数据产品名称：</span><span class="value" data-detail-field="name">龙岗企业经营画像数据集晨星园区分析精选版</span></div>
                         <div class="listing-detail-field"><span class="label">数据产品标识：</span><span class="value" data-detail-field="code">602026060418470066100000101382892ABC5GKX3O3NM</span></div>
+                        <div class="listing-detail-field"><span class="label">产品提供方：</span><span class="value" data-detail-field="provider">深圳市龙岗区数据要素交易服务有限公司</span></div>
+                        <div class="listing-detail-field"><span class="label">经营属性：</span><span class="value" data-detail-field="operationType">自营</span></div>
                         <div class="listing-detail-field"><span class="label">上架业务节点：</span><span class="value" data-detail-field="space">流通利用平台</span></div>
                         <div class="listing-detail-field"><span class="label">上架业务节点ID：</span><span class="value">41234567899876543210018XXKTB1KZE</span></div>
                         <div class="listing-detail-field"><span class="label">上架业务节点位置：</span><span class="value">https://10.32.123.24/#/platformportal/trade-portal/product/detail...</span></div>
@@ -72,11 +74,15 @@
     <script>
         (function () {
             var params = new URLSearchParams(window.location.search || '');
-            ['name', 'code', 'space'].forEach(function (key) {
+            ['name', 'code', 'provider', 'space'].forEach(function (key) {
                 var value = params.get(key);
                 var target = document.querySelector('[data-detail-field="' + key + '"]');
                 if (value && target) target.textContent = value;
             });
+            var providerField = document.querySelector('[data-detail-field="provider"]');
+            var provider = params.get('provider') || (providerField ? providerField.textContent.trim() : '');
+            var operationType = document.querySelector('[data-detail-field="operationType"]');
+            if (operationType) operationType.textContent = provider === '深圳市龙岗区数据要素交易服务有限公司' ? '自营' : '第三方供方';
         })();
     </script>
 </body>
