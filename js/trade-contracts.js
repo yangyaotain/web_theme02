@@ -74,6 +74,12 @@
         return role === 'supplier' ? item.supplierStatus : item.buyerStatus;
     }
 
+    function getStageOutTradeNo(item, stage, index) {
+        if (stage.state === '未到付款节点') return '--';
+        if (stage.outTradeNo) return stage.outTradeNo;
+        return 'PAY' + String(item.orderNo).replace(/\D/g, '').slice(-20) + 'P' + String(index + 1).padStart(2, '0');
+    }
+
     function records() {
         var lower = keyword.trim().toLowerCase();
         return CONTRACTS.filter(function (item) {
@@ -92,16 +98,17 @@
         var feeRate = selfOperated ? 0 : item.serviceFeeRate;
         var stageRows = item.stages.map(function (stage, index) {
             var fee = stage.amount * feeRate / 100;
+            var outTradeNo = getStageOutTradeNo(item, stage, index);
             return selfOperated
-                ? '<tr><td>第' + (index + 1) + '期</td><td>' + stage.name + '</td><td>' + stage.percent.toFixed(2) + '%</td><td>¥' + stage.amount.toFixed(2) + '</td><td>' + statusTag(stage.state) + '</td></tr>'
-                : '<tr><td>第' + (index + 1) + '期</td><td>' + stage.name + '</td><td>' + stage.percent.toFixed(2) + '%</td><td>¥' + stage.amount.toFixed(2) + '</td><td>¥' + fee.toFixed(2) + '</td><td>¥' + (stage.amount - fee).toFixed(2) + '</td><td>' + statusTag(stage.state) + '</td></tr>';
+                ? '<tr><td>第' + (index + 1) + '期</td><td>' + stage.name + '</td><td>' + stage.percent.toFixed(2) + '%</td><td>¥' + stage.amount.toFixed(2) + '</td><td><code>' + outTradeNo + '</code></td><td>' + statusTag(stage.state) + '</td></tr>'
+                : '<tr><td>第' + (index + 1) + '期</td><td>' + stage.name + '</td><td>' + stage.percent.toFixed(2) + '%</td><td>¥' + stage.amount.toFixed(2) + '</td><td>¥' + fee.toFixed(2) + '</td><td>¥' + (stage.amount - fee).toFixed(2) + '</td><td><code>' + outTradeNo + '</code></td><td>' + statusTag(stage.state) + '</td></tr>';
         }).join('');
         var stageHead = selfOperated
-            ? '<tr><th>期次</th><th>阶段名称</th><th>比例</th><th>本期金额</th><th>状态</th></tr>'
-            : '<tr><th>期次</th><th>阶段名称</th><th>比例</th><th>本期金额</th><th>平台服务费</th><th>提供方实收</th><th>状态</th></tr>';
+            ? '<tr><th>期次</th><th>阶段名称</th><th>比例</th><th>本期金额</th><th>支付流水号</th><th>状态</th></tr>'
+            : '<tr><th>期次</th><th>阶段名称</th><th>比例</th><th>本期金额</th><th>平台服务费</th><th>提供方实收</th><th>支付流水号</th><th>状态</th></tr>';
         var stageFoot = selfOperated
-            ? '<tr><td colspan="2">合计</td><td>100.00%</td><td>¥' + item.amount.toFixed(2) + '</td><td></td></tr>'
-            : '<tr><td colspan="2">合计</td><td>100.00%</td><td>¥' + item.amount.toFixed(2) + '</td><td>¥' + (item.amount * feeRate / 100).toFixed(2) + '</td><td>¥' + (item.amount * (100 - feeRate) / 100).toFixed(2) + '</td><td></td></tr>';
+            ? '<tr><td colspan="2">合计</td><td>100.00%</td><td>¥' + item.amount.toFixed(2) + '</td><td></td><td></td></tr>'
+            : '<tr><td colspan="2">合计</td><td>100.00%</td><td>¥' + item.amount.toFixed(2) + '</td><td>¥' + (item.amount * feeRate / 100).toFixed(2) + '</td><td>¥' + (item.amount * (100 - feeRate) / 100).toFixed(2) + '</td><td></td><td></td></tr>';
         var signPanel = drawerMode === 'sign' ? '<section class="trade-contract-sign-panel"><label><input type="checkbox" data-contract-agree><span>我已核对合同主体、金额、付款计划' + (selfOperated ? '' : '及平台服务费条款') + '，同意签署本合同。</span></label><p>签署后付款计划' + (selfOperated ? '' : '和服务费比例') + '将冻结，后续调整不追溯本合同。</p></section>' : '';
         return ''
             + '<div class="trade-contract-drawer-mask" data-contract-drawer-close></div><aside class="trade-contract-drawer" role="dialog" aria-modal="true" aria-labelledby="tradeContractDrawerTitle">'

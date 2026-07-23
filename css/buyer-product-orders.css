@@ -588,7 +588,7 @@
 
 .checkout-stage-card {
     display: grid;
-    grid-template-columns: minmax(116px, .85fr) minmax(120px, 1fr) minmax(90px, .72fr) minmax(130px, 1.05fr);
+    grid-template-columns: minmax(108px, .8fr) minmax(110px, .95fr) minmax(84px, .68fr) minmax(116px, .95fr) minmax(98px, .78fr);
     align-items: center;
     column-gap: 0;
     margin-top: 18px;
@@ -596,6 +596,43 @@
     border: 1px solid #d9eadf;
     border-radius: 6px;
     background: #f5faf7;
+}
+
+.checkout-trace-card {
+    margin-top: 14px;
+    padding: 13px 14px;
+    border: 1px solid #e4ebe7;
+    border-radius: 6px;
+    background: #fbfcfb;
+}
+
+.checkout-trace-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.checkout-trace-head > span {
+    color: #4c5a53;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.checkout-trace-head > strong {
+    color: #8b9590;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.checkout-trace-head > strong.is-paying,
+.checkout-trace-head > strong.is-querying { color: #b77822; }
+.checkout-trace-head > strong.is-success { color: #278052; }
+.checkout-trace-head > strong.is-failed { color: #bf5a52; }
+
+.checkout-trace-card .checkout-info-grid {
+    gap: 10px 22px;
 }
 
 .checkout-stage-card > div:not(.checkout-stage-badge) {

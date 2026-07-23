@@ -4,7 +4,7 @@
     var BILL_RECORDS = [
         { billNo: '2026071810352168900000101148674', orderNo: '2026071810324437100000101148221', target: '龙岗企业经营画像数据集', businessType: '产品交易', targetType: '数据集', provider: '深圳市龙岗区数据服务中心', payMode: '预付费', measureMode: '按次数', price: '100元/次', quantity: '1次', amount: '100', createdAt: '2026-07-18 10:35:21', period: '--', paidAt: '--', status: '待支付' },
         { billNo: '2026071714481279100000101148551', orderNo: '2026071714454903500000101148179', target: '重点企业运行监测数据产品', businessType: '产品交易', targetType: '数据产品', provider: '龙岗数科产业运营有限公司', payMode: '预付费', measureMode: '按周期', price: '50元/天', quantity: '30天', amount: '1,500', createdAt: '2026-07-17 14:48:12', period: '--', paidAt: '--', status: '待支付' },
-        { billNo: '2026071611291846400000101148420', orderNo: '2026071611262062500000101148121', target: '企业数据治理与合规评估服务', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '合同分期', price: '首期30%', quantity: '第1/3期', amount: '3,600', createdAt: '2026-07-16 11:29:18', period: '首期款', paidAt: '--', status: '待支付', paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, contractAmount: 12000, serviceFeeRate: 3 } },
+        { billNo: '2026071611291846400000101148420', orderNo: '2026071611262062500000101148121', target: '企业数据治理与合规评估服务', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '合同分期', price: '首期30%', quantity: '第1/3期', amount: '3,600', createdAt: '2026-07-16 11:29:18', period: '首期款', paidAt: '--', status: '待支付', paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, contractAmount: 12000, serviceFeeRate: 3, payStatus: '待支付', outTradeNo: 'PAY20260716112918464000P01' } },
         { billNo: '2026071517183952000000101148245', orderNo: '2026071517152436900000101148980', target: '园区能耗监测指标服务', businessType: '产品交易', targetType: '数据产品', provider: '深圳市智碳数据服务有限公司', payMode: '后付费', measureMode: '按周期', price: '20元/天', quantity: '31天', amount: '620', createdAt: '2026-07-15 17:18:39', period: '2026-06-01 至 2026-06-30', paidAt: '--', status: '待需方确认' },
         { billNo: '2026071413555498600000101148220', orderNo: '2026071413522854500000101148928', target: '低空巡检影像数据治理服务', businessType: '服务交易', targetType: '数据治理服务', provider: '龙岗数智集成服务有限公司', payMode: '后付费', measureMode: '按服务次数计费', price: '3000元/次', quantity: '1次', amount: '3,000', createdAt: '2026-07-14 13:55:54', period: '2026-07-01 至 2026-07-14', paidAt: '--', status: '待供方确认' },
         { billNo: '2026071310282446800000101148103', orderNo: '2026071310254673400000101148870', target: '产业链企业关联数据产品', businessType: '产品交易', targetType: '数据产品', provider: '龙岗区产业发展研究中心', payMode: '预付费', measureMode: '按周期', price: '300元/月', quantity: '1月', amount: '300', createdAt: '2026-07-13 10:28:24', period: '--', paidAt: '--', status: '待支付确认' },
@@ -35,6 +35,7 @@
         detail: '<path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/>',
         usage: '<path d="M4 19h16v2H4v-2zm1-3h3V8H5v8zm5 0h3V3h-3v13zm5 0h3v-6h-3v6z"/>',
         confirm: '<path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/>',
+        close: '<path d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.29 1.42 1.41z"/>',
         success: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-4-4 1.4-1.4 2.6 2.6 6.6-6.6L18 9l-8 8z"/>'
     };
 
@@ -76,10 +77,12 @@
             createdDate: '',
             page: 1,
             pageSize: 10,
-            filterOpen: false
+            filterOpen: false,
+            activeBillNo: ''
         };
         var toastTimer = null;
         var checkout = window.BuyerPaymentCheckout ? window.BuyerPaymentCheckout.create() : null;
+        var buyerName = '深圳市龙岗智慧产业有限公司';
 
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management');
         panel.classList.add('is-bill-management');
@@ -202,6 +205,132 @@
                 + '</div>';
         }
 
+        function renderDetailFields(fields) {
+            return '<div class="buyer-bill-detail-grid">' + fields.map(function (field) {
+                return '<div class="buyer-bill-detail-field">'
+                    + '<span class="buyer-bill-detail-label">' + escapeHtml(field.label) + '：</span>'
+                    + '<span class="buyer-bill-detail-value">' + (field.html || escapeHtml(field.value || '--')) + '</span>'
+                    + '</div>';
+            }).join('') + '</div>';
+        }
+
+        function renderDetailSection(titleText, content) {
+            return '<section class="buyer-bill-detail-section">'
+                + '<h3>' + escapeHtml(titleText) + '</h3>'
+                + content
+                + '</section>';
+        }
+
+        function getPaymentNo(item) {
+            if (item.paymentStage && item.paymentStage.outTradeNo) return item.paymentStage.outTradeNo;
+            var digits = String(item.billNo || '').replace(/\D/g, '');
+            return 'ZF' + (digits.slice(-26) || '20260723000000000000000001');
+        }
+
+        function detailStatus(text, tone) {
+            return '<span class="buyer-bill-detail-status' + (tone ? ' ' + tone : '') + '"><i></i>' + escapeHtml(text) + '</span>';
+        }
+
+        function renderPaymentDetail(item) {
+            var hasPaid = item.paidAt && item.paidAt !== '--';
+            var awaitingConfirmation = item.status === '待支付确认';
+            if (!hasPaid && !awaitingConfirmation) {
+                return '<div class="buyer-bill-detail-empty">暂无支付记录</div>';
+            }
+            return '<div class="buyer-bill-detail-table-scroll">'
+                + '<table class="buyer-bill-detail-table">'
+                + '<thead><tr><th>支付编号</th><th>支付时间</th><th>支付状态</th></tr></thead>'
+                + '<tbody><tr><td>' + escapeHtml(getPaymentNo(item)) + '</td><td>' + escapeHtml(hasPaid ? item.paidAt : '--') + '</td><td>'
+                + detailStatus(hasPaid ? '已通过' : '待确认', hasPaid ? 'success' : 'waiting')
+                + '</td></tr></tbody></table></div>';
+        }
+
+        function renderFlowDetail(item) {
+            var hasPaid = item.paidAt && item.paidAt !== '--';
+            var rows = [
+                { operator: '系统自动', type: '生成账单', result: '成功', content: '--', time: item.createdAt }
+            ];
+
+            if (hasPaid) {
+                rows.push({ operator: buyerName, type: '支付账单', result: '成功', content: '--', time: item.paidAt });
+                rows.push({ operator: item.provider, type: '确认支付账单', result: '通过', content: '--', time: item.paidAt });
+            } else if (item.status === '待支付确认') {
+                rows.push({ operator: buyerName, type: '提交支付凭证', result: '成功', content: '等待提供方确认', time: item.createdAt });
+            } else if (item.status === '待供方确认') {
+                rows.push({ operator: buyerName, type: '提交账单确认', result: '成功', content: '等待提供方确认', time: item.createdAt });
+            } else if (item.status === '待需方确认') {
+                rows.push({ operator: item.provider, type: '提交账单确认', result: '成功', content: '等待需方确认', time: item.createdAt });
+            }
+
+            return '<div class="buyer-bill-detail-table-scroll is-flow">'
+                + '<table class="buyer-bill-detail-table">'
+                + '<thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead>'
+                + '<tbody>' + rows.map(function (row) {
+                    return '<tr><td>' + escapeHtml(row.operator) + '</td><td>' + escapeHtml(row.type) + '</td><td>' + escapeHtml(row.result) + '</td><td>' + escapeHtml(row.content) + '</td><td>' + escapeHtml(row.time) + '</td></tr>';
+                }).join('') + '</tbody></table></div>';
+        }
+
+        function renderBillDetail(item) {
+            return ''
+                + '<div class="buyer-bill-detail-mask" data-buyer-bill-detail-layer data-buyer-bill-detail-close></div>'
+                + '<aside class="buyer-bill-detail-drawer" role="dialog" aria-modal="true" aria-labelledby="buyerBillDetailTitle" data-buyer-bill-detail-layer>'
+                +   '<header class="buyer-bill-detail-head">'
+                +       '<button type="button" aria-label="关闭账单详情" data-buyer-bill-detail-close data-buyer-bill-detail-close-button>' + icon('close') + '</button>'
+                +       '<h2 id="buyerBillDetailTitle">账单详情</h2>'
+                +   '</header>'
+                +   '<div class="buyer-bill-detail-body">'
+                +       renderDetailSection('订单信息', renderDetailFields([
+                            { label: '订单编号', value: item.orderNo },
+                            { label: '交易标的', value: item.target },
+                            { label: '业务类型', value: item.businessType },
+                            { label: '标的类型', value: item.targetType },
+                            { label: '提供方', value: item.provider },
+                            { label: '付费方式', value: item.payMode },
+                            { label: '计量方式', value: item.measureMode },
+                            { label: '价格', value: item.price },
+                            { label: '订单金额', value: '¥' + formatAmount(item.amount) },
+                            { label: '购买数量', value: item.quantity }
+                        ]))
+                +       renderDetailSection('账单信息', renderDetailFields([
+                            { label: '账单编号', value: item.billNo },
+                            { label: '账单状态', html: '<span class="buyer-order-status">' + escapeHtml(item.status) + '</span>' },
+                            { label: '账单金额', value: '¥' + formatAmount(item.amount) },
+                            { label: '账单生成时间', value: item.createdAt },
+                            { label: '账期', value: item.period },
+                            { label: '付款时间', value: item.paidAt }
+                        ]))
+                +       renderDetailSection('支付信息', renderPaymentDetail(item))
+                +       renderDetailSection('流程动态', renderFlowDetail(item))
+                +   '</div>'
+                + '</aside>';
+        }
+
+        function closeBillDetail() {
+            var billNo = state.activeBillNo;
+            panel.querySelectorAll('[data-buyer-bill-detail-layer]').forEach(function (layer) { layer.remove(); });
+            state.activeBillNo = '';
+            document.body.classList.remove('buyer-bill-detail-open');
+            panel.querySelectorAll('[data-bill-action="账单详情"]').forEach(function (button) {
+                if (button.dataset.billNo === billNo) button.focus();
+            });
+        }
+
+        function bindBillDetailEvents() {
+            panel.querySelectorAll('[data-buyer-bill-detail-close]').forEach(function (control) {
+                control.addEventListener('click', closeBillDetail);
+            });
+        }
+
+        function openBillDetail(item) {
+            closeBillDetail();
+            state.activeBillNo = item.billNo;
+            panel.insertAdjacentHTML('beforeend', renderBillDetail(item));
+            document.body.classList.add('buyer-bill-detail-open');
+            bindBillDetailEvents();
+            var closeButton = panel.querySelector('[data-buyer-bill-detail-close-button]');
+            if (closeButton) closeButton.focus();
+        }
+
         function render() {
             panel.innerHTML = ''
                 + '<div class="buyer-bill-board">'
@@ -236,13 +365,14 @@
             }
             checkout.open({
                 feeType: '交易价款',
+                merchantId: 'MER-PLATFORM-202607-0001',
                 orderNo: item.orderNo,
                 billNo: item.billNo,
                 objectLabel: '交易标的',
                 objectName: item.target,
                 objectTypeLabel: '标的类型',
                 objectType: item.targetType,
-                payerName: '深圳市龙岗智慧产业有限公司',
+                payerName: buyerName,
                 providerName: item.provider,
                 merchantName: item.provider,
                 amount: item.amount,
@@ -252,6 +382,8 @@
                 stagePercent: item.paymentStage ? item.paymentStage.percent : '',
                 contractAmount: item.paymentStage ? item.paymentStage.contractAmount : '',
                 serviceFeeRate: item.paymentStage ? item.paymentStage.serviceFeeRate : 3,
+                stageStatus: item.paymentStage ? item.paymentStage.payStatus : '待支付',
+                outTradeNo: item.paymentStage ? item.paymentStage.outTradeNo : '',
                 successText: '账单已结清，付款结果已同步。',
                 failureText: '账单仍保留在“待支付”状态，不会重复扣款。'
             }, {
@@ -262,6 +394,7 @@
                     showToast('线下支付凭证已提交，等待支付确认。');
                 },
                 onOnlineSuccess: function () {
+                    if (item.paymentStage) item.paymentStage.payStatus = '已支付';
                     item.status = '已结清';
                     item.paidAt = formatNow();
                     render();
@@ -360,12 +493,20 @@
                         openCheckout(item);
                         return;
                     }
+                    if (button.dataset.billAction === '账单详情') {
+                        openBillDetail(item);
+                        return;
+                    }
                     showToast(button.dataset.billAction + '：已触发账单 ' + item.billNo);
                 });
             });
         }
 
         render();
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            if (state.activeBillNo) closeBillDetail();
+        });
     }
 
     if (document.readyState === 'loading') {

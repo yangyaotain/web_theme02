@@ -242,9 +242,10 @@
 .trade-contract-frozen svg { width: 13px; height: 13px; }
 
 .trade-contract-stage-scroll { margin-top: 12px; overflow-x: auto; border: 1px solid #e5eae7; border-radius: 6px; }
-.trade-contract-stage-scroll table { width: 100%; min-width: 760px; border-collapse: collapse; }
+.trade-contract-stage-scroll table { width: 100%; min-width: 900px; border-collapse: collapse; }
 .trade-contract-stage-scroll th { height: 36px; padding: 0 10px; background: #f4f6f5; color: #68736d; font-size: 11px; font-weight: 600; text-align: left; }
 .trade-contract-stage-scroll td { height: 43px; padding: 7px 10px; border-top: 1px solid #edf0ee; color: #4c5751; font-size: 11px; }
+.trade-contract-stage-scroll code { color: #536159; font-family: Inter, Consolas, monospace; font-size: 10px; white-space: nowrap; }
 .trade-contract-stage-scroll tfoot td { color: #2b6847; background: #f6faf8; font-weight: 600; }
 
 .trade-contract-file { min-height: 58px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e5eae7; border-radius: 6px; background: #fbfcfb; }

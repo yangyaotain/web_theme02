@@ -1,9 +1,9 @@
 (function () {
     var ONLINE_CHANNELS = [
-        { key: 'wechat', label: '微信支付', mode: 'scan', tip: '请使用微信扫一扫完成支付' },
-        { key: 'alipay', label: '支付宝', mode: 'scan', tip: '请使用支付宝扫一扫完成支付' },
-        { key: 'unionpay', label: '云闪付', mode: 'scan', tip: '请使用云闪付扫一扫完成支付' },
-        { key: 'bank', label: '网银支付', mode: 'web', tip: '将前往银行支付页面完成付款' }
+        { key: 'wechat', label: '微信支付', mode: 'scan', tradeType: 'SCAN', appType: 'WECHATCSB', tip: '请使用微信扫一扫完成支付' },
+        { key: 'alipay', label: '支付宝', mode: 'scan', tradeType: 'SCAN', appType: 'ALIPAYCSB', tip: '请使用支付宝扫一扫完成支付' },
+        { key: 'unionpay', label: '云闪付', mode: 'scan', tradeType: 'SCAN', appType: 'CUPCSB', tip: '请使用云闪付扫一扫完成支付' },
+        { key: 'bank', label: '网银支付', mode: 'web', tradeType: 'WEB', appType: '由支付平台匹配', tip: '将前往银行支付页面完成付款' }
     ];
 
     var ONLINE_BANKS = [
@@ -53,7 +53,11 @@
             cardType: '001',
             voucherName: '',
             error: '',
-            successNotified: false
+            successNotified: false,
+            outTradeNo: '',
+            channelOrderNo: '',
+            paidAt: '',
+            retryCount: 0
         };
         var paymentQueryTimer = null;
         var paymentResultTimer = null;
@@ -72,6 +76,27 @@
             return bank ? bank.label : '';
         }
 
+        function buildOutTradeNo(item, retryCount) {
+            var source = String(item.billNo || item.orderNo || Date.now()).replace(/\D/g, '');
+            var stage = item.stageNo ? 'P' + String(item.stageNo).padStart(2, '0') : 'P00';
+            var retry = retryCount ? 'R' + retryCount : '';
+            return 'PAY' + source.slice(-22) + stage + retry;
+        }
+
+        function getPaymentStatusLabel() {
+            if (state.onlineStage === 'paying') return '等待支付';
+            if (state.onlineStage === 'querying') return '结果查询中';
+            if (state.onlineStage === 'success') return '支付成功';
+            if (state.onlineStage === 'failed') return '支付失败';
+            return '待发起';
+        }
+
+        function formatDateTime(date) {
+            var pad = function (value) { return String(value).padStart(2, '0'); };
+            return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate())
+                + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+        }
+
         function renderInfo(label, value, className) {
             return ''
                 + '<div class="checkout-info-item' + (className ? ' ' + className : '') + '">'
@@ -88,6 +113,25 @@
                 +   '<div><span>本期名称</span><strong>' + escapeHtml(item.stageName) + '</strong></div>'
                 +   '<div><span>本期比例</span><strong>' + escapeHtml(item.stagePercent) + '%</strong></div>'
                 +   '<div><span>合同总金额</span><strong>' + formatAmount(item.contractAmount) + '</strong></div>'
+                +   '<div><span>本期付款状态</span><strong>' + escapeHtml(item.stageStatus || '待支付') + '</strong></div>'
+                + '</div>';
+        }
+
+        function renderPaymentTrace(item) {
+            if (state.paymentMethod !== 'online') return '';
+            var channel = getOnlineChannel();
+            var channelLabel = channel ? channel.label + '（' + channel.tradeType + '）' : '待选择支付渠道';
+            return ''
+                + '<div class="checkout-trace-card">'
+                +   '<div class="checkout-trace-head"><span>本次支付流水</span><strong class="is-' + escapeHtml(state.onlineStage || 'select') + '">' + getPaymentStatusLabel() + '</strong></div>'
+                +   '<div class="checkout-info-grid">'
+                +       renderInfo('支付流水号', state.outTradeNo)
+                +       renderInfo('收款商户编号', item.merchantId || 'MER-PLATFORM-202607-0001')
+                +       renderInfo('支付金额', formatAmount(item.amount))
+                +       renderInfo('支付渠道', channelLabel)
+                +       renderInfo('渠道应用类型', channel ? channel.appType : '--')
+                +       renderInfo('渠道支付单号', state.channelOrderNo || '支付成功后生成')
+                +   '</div>'
                 + '</div>';
         }
 
@@ -163,7 +207,7 @@
         function getDemoQrUrl(item) {
             var payload = [
                 'upp://pay',
-                'order=' + item.orderNo,
+                'outTradeNo=' + state.outTradeNo,
                 'channel=' + state.onlineChannel,
                 'amount=' + formatAmount(item.amount)
             ].join('&');
@@ -182,6 +226,7 @@
                     +       '<strong class="checkout-progress-amount">' + formatAmount(item.amount) + '</strong>'
                     +       '<h3>' + channel.tip + '</h3>'
                     +       '<p>支付状态：<em>等待支付</em></p>'
+                    +       '<p>支付流水号：' + escapeHtml(state.outTradeNo) + '</p>'
                     +       '<p>扫码完成后系统将自动确认并返回支付结果，无需手动操作。</p>'
                     +       '<button class="checkout-text-action" type="button" data-online-change>' + icon('redo') + '<span>更换支付方式</span></button>'
                     +   '</div>'
@@ -192,6 +237,7 @@
                 +   '<div class="checkout-progress-icon is-waiting">' + icon('online') + '</div>'
                 +   '<h3>等待网银支付结果</h3>'
                 +   '<p>已选择' + getOnlineBankLabel() + ' · ' + (state.cardType === '002' ? '信用卡' : '借记卡') + '</p>'
+                +   '<p>支付流水号：' + escapeHtml(state.outTradeNo) + '</p>'
                 +   '<p>请在银行支付页面完成付款，返回后系统将自动确认支付结果。</p>'
                 +   '<button class="checkout-text-action" type="button" data-online-change>' + icon('redo') + '<span>更换支付方式</span></button>'
                 + '</section>';
@@ -212,7 +258,9 @@
                     +   '<div class="checkout-progress-icon">' + icon('success') + '</div>'
                     +   '<h3>支付成功</h3>'
                     +   '<strong class="checkout-progress-amount">' + formatAmount(item.amount) + '</strong>'
-                    +   '<p>订单编号：' + escapeHtml(item.orderNo) + '</p>'
+                    +   '<p>支付流水号：' + escapeHtml(state.outTradeNo) + '</p>'
+                    +   '<p>渠道支付单号：' + escapeHtml(state.channelOrderNo) + '</p>'
+                    +   '<p>支付时间：' + escapeHtml(state.paidAt) + '</p>'
                     +   '<p>' + escapeHtml(item.successText || '支付结果已同步。') + '</p>'
                     + '</section>';
             }
@@ -221,6 +269,7 @@
                     + '<section class="checkout-online-progress checkout-result-panel is-failed">'
                     +   '<div class="checkout-progress-icon is-failed">' + icon('cancel') + '</div>'
                     +   '<h3>支付未完成</h3>'
+                    +   '<p>支付流水号：' + escapeHtml(state.outTradeNo) + '</p>'
                     +   '<p>本次支付失败，请重新选择支付方式后发起支付。</p>'
                     +   '<p>' + escapeHtml(item.failureText || '本次交易仍保留在“待支付”状态，不会重复扣款。') + '</p>'
                     + '</section>';
@@ -289,6 +338,7 @@
                 +                   renderInfo('收款方名称', item.receiverName || '深圳市龙岗区数据要素交易服务有限公司')
                 +               '</div>'
                 +               renderPaymentStage(item)
+                +               renderPaymentTrace(item)
                 +               '<div class="checkout-payable"><span>应付金额：</span><strong>' + formatAmount(item.amount) + '</strong></div>'
                 +           '</section>'
                 +           '<section class="checkout-payment-section">'
@@ -321,6 +371,10 @@
             state.voucherName = '';
             state.error = '';
             state.successNotified = false;
+            state.outTradeNo = '';
+            state.channelOrderNo = '';
+            state.paidAt = '';
+            state.retryCount = 0;
         }
 
         function close(reason) {
@@ -336,9 +390,13 @@
         function openBankPaymentPage(item) {
             var params = new URLSearchParams({
                 orderNo: item.orderNo,
+                outTradeNo: state.outTradeNo,
+                merchantId: item.merchantId || 'MER-PLATFORM-202607-0001',
                 productName: item.objectName,
                 merchantName: item.merchantName || item.providerName || '',
                 amount: formatAmount(item.amount),
+                tradeType: 'WEB',
+                appType: '由支付平台匹配',
                 bankCode: state.bankCode,
                 bankName: getOnlineBankLabel(),
                 cardType: state.cardType
@@ -394,6 +452,10 @@
             var success = status === 'PAY_SUCCESS';
             state.onlineStage = success ? 'success' : 'failed';
             state.onlineStatus = status;
+            if (success) {
+                state.channelOrderNo = 'UPP' + state.outTradeNo.replace(/\D/g, '').slice(-18);
+                state.paidAt = formatDateTime(new Date());
+            }
             if (success && !state.successNotified) {
                 state.successNotified = true;
                 if (state.callbacks.onOnlineSuccess) state.callbacks.onOnlineSuccess(item);
@@ -423,7 +485,7 @@
 
         function receiveBankPaymentResult(payload) {
             var item = state.item;
-            if (!item || !payload || payload.orderNo !== item.orderNo) return;
+            if (!item || !payload || (payload.outTradeNo || payload.orderNo) !== state.outTradeNo) return;
             if (payload.status !== 'PAY_SUCCESS' && payload.status !== 'PAY_FAIL') return;
             if (state.onlineStage === 'success') return;
             if (state.onlineStage === 'failed' && payload.status === 'PAY_FAIL') return;
@@ -440,7 +502,7 @@
         function readStoredBankPaymentResult() {
             var item = state.item;
             if (!item) return;
-            var key = 'upp-payment-result:' + item.orderNo;
+            var key = 'upp-payment-result:' + state.outTradeNo;
             try {
                 if (!window.localStorage) return;
                 var stored = window.localStorage.getItem(key);
@@ -455,6 +517,10 @@
         function retryOnlinePayment() {
             window.clearTimeout(paymentQueryTimer);
             var channel = getOnlineChannel();
+            state.retryCount += 1;
+            state.outTradeNo = buildOutTradeNo(state.item, state.retryCount);
+            state.channelOrderNo = '';
+            state.paidAt = '';
             state.onlineStage = channel && channel.mode === 'scan' ? 'paying' : 'select';
             state.onlineStatus = '';
             state.error = '';
@@ -587,6 +653,10 @@
                 state.voucherName = '';
                 state.error = '';
                 state.successNotified = false;
+                state.retryCount = 0;
+                state.outTradeNo = item.outTradeNo || buildOutTradeNo(item, 0);
+                state.channelOrderNo = item.channelOrderNo || '';
+                state.paidAt = item.paidAt || '';
                 render();
             },
             close: close

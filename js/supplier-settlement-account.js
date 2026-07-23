@@ -39,7 +39,38 @@
     var applicationData = {
         outApplyNo: 'LGDJ20260721000128',
         changeApplyNo: 'BG20260722000036',
-        merchantId: 'MER2026072100986'
+        merchantId: 'MER2026072100986',
+        notifyUrl: '由平台系统配置并接收审核结果'
+    };
+    var merchantSubjectData = {
+        merchantType: '0（企业）',
+        merchantName: '龙岗数智科技',
+        merIdentity: 'SME（中小微企业）',
+        mcc: '7399（其他商业服务）',
+        businessRegno: '91440300MA5F8K6N2P',
+        businessDate: '2021-06-18 至长期',
+        legalName: '李明远',
+        legalMobile: '13809523501',
+        legalIdCard: '440307197905122418',
+        legalIdDate: '2020-05-12 至 2040-05-12',
+        idCardAddress: '广东省深圳市龙岗区坂田街道居民身份证登记地址',
+        province: '广东省（4400）',
+        city: '深圳市（4403）',
+        county: '龙岗区（4403）',
+        address: '广东省深圳市龙岗区坂田街道天安云谷产业园'
+    };
+    var storeInfoData = {
+        name: '龙岗数智科技经营场所',
+        region: '广东省（4400）／深圳市（4403）／龙岗区（4403）',
+        address: '深圳市龙岗区坂田街道雪岗路2018号天安云谷3栋',
+        scene: '固定经营场所',
+        material: '经营场所照片已同步（文件编号已生成）'
+    };
+    var productOpenData = {
+        product: '聚合支付／线上收款',
+        channel: '不指定渠道，由统一支付平台匹配',
+        settlement: 'T+1 结算',
+        agreement: '电子协议签署'
     };
     var currentAccountData = {
         settleType: '0',
@@ -48,8 +79,8 @@
         bankName: '中国农业银行',
         bankBranch: '中国农业银行深圳龙岗支行',
         alliedBankCode: '103584000015',
-        province: '广东省',
-        city: '深圳市',
+        province: '4400',
+        city: '4403',
         settleMode: '2'
     };
     var formData = {
@@ -59,8 +90,8 @@
         bankName: '中国农业银行',
         bankBranch: '中国农业银行深圳龙岗支行',
         alliedBankCode: '103584000015',
-        province: '广东省',
-        city: '深圳市',
+        province: '4400',
+        city: '4403',
         settleMode: '2',
         bankMobilePhone: '13809523501',
         settleLegalName: '王晓梅',
@@ -77,6 +108,13 @@
         idFace: '结算授权人身份证人像面.jpg',
         idNational: '结算授权人身份证国徽面.jpg',
         authorization: '结算账户授权书.pdf'
+    };
+    var uploadedFileIds = {
+        licence: 'FSS20260721000136',
+        bankCard: 'FSS20260721000137',
+        idFace: 'FSS20260721000138',
+        idNational: 'FSS20260721000139',
+        authorization: 'FSS20260721000140'
     };
 
     function escapeHtml(value) {
@@ -181,30 +219,48 @@
 
     function renderStepBar() {
         var steps = applicationMode === 'change'
-            ? ['核对当前账户', '填写变更资料', '确认提交']
-            : ['主体资料', '结算账户', '材料确认'];
-        return ''
-            + '<div class="settlement-stepbar">'
-            +   '<div class="active"><span>1</span><strong>' + steps[0] + '</strong></div><i></i>'
-            +   '<div class="active"><span>2</span><strong>' + steps[1] + '</strong></div><i></i>'
-            +   '<div class="active"><span>3</span><strong>' + steps[2] + '</strong></div>'
-            + '</div>';
+            ? ['核对主体', '经营信息', '变更账户', '材料确认']
+            : ['主体资料', '经营信息', '结算账户', '材料确认'];
+        return '<div class="settlement-stepbar">' + steps.map(function (step, index) {
+            return '<div class="active"><span>' + (index + 1) + '</span><strong>' + step + '</strong></div>' + (index < steps.length - 1 ? '<i></i>' : '');
+        }).join('') + '</div>';
     }
 
     function renderReadOnlyInfo() {
         var rows = [
-            ['商户主体类型', '企业'],
+            ['商户主体类型', merchantSubjectData.merchantType],
             ['企业名称', '深圳市龙岗数智科技有限公司'],
-            ['统一社会信用代码', '91440300MA5F8K6N2P'],
-            ['营业执照有效期', '2021-06-18 至长期'],
-            ['法定代表人', '李明远'],
+            ['商户简称', merchantSubjectData.merchantName],
+            ['商户身份', merchantSubjectData.merIdentity],
+            ['商户类别编码', merchantSubjectData.mcc],
+            ['统一社会信用代码', merchantSubjectData.businessRegno],
+            ['营业执照有效期', merchantSubjectData.businessDate],
+            ['法定代表人', merchantSubjectData.legalName],
+            ['法人手机号', '138****3501'],
             ['法人身份证号', '4403**********2418'],
-            ['法人证件有效期', '2020-05-12 至 2040-05-12'],
-            ['注册地区', '广东省／深圳市'],
-            ['注册地址', '广东省深圳市龙岗区坂田街道天安云谷产业园'],
-            ['经营范围', '数据产品开发、数据治理、数据技术服务及信息咨询'],
-            ['主体证明材料', '<span class="settlement-verified">' + icon('check') + ' 已同步营业执照及法人证件</span>'],
+            ['法人证件有效期', merchantSubjectData.legalIdDate],
+            ['法人证件地址', merchantSubjectData.idCardAddress],
+            ['注册地区编码', merchantSubjectData.province + '／' + merchantSubjectData.city + '／' + merchantSubjectData.county],
+            ['注册地址', merchantSubjectData.address],
+            ['主体证明材料', '<span class="settlement-verified">' + icon('check') + ' 营业执照、法人证件文件编号已生成</span>'],
             ['企业认证状态', '<span class="settlement-verified">' + icon('check') + ' 已认证</span>']
+        ];
+        return rows.map(function (row) {
+            return '<div class="settlement-readonly-item"><span>' + row[0] + '</span><strong>' + row[1] + '</strong></div>';
+        }).join('');
+    }
+
+    function renderStoreAndProductInfo() {
+        var rows = [
+            ['经营场所名称', storeInfoData.name],
+            ['经营场所地区编码', storeInfoData.region],
+            ['经营场所地址', storeInfoData.address],
+            ['经营场景', storeInfoData.scene],
+            ['场所证明材料', storeInfoData.material],
+            ['开通产品', productOpenData.product],
+            ['支付渠道', productOpenData.channel],
+            ['结算周期', productOpenData.settlement],
+            ['签约方式', productOpenData.agreement]
         ];
         return rows.map(function (row) {
             return '<div class="settlement-readonly-item"><span>' + row[0] + '</span><strong>' + row[1] + '</strong></div>';
@@ -217,12 +273,14 @@
                 + '<div class="settlement-application-info">'
                 +   '<div><span>商户编号</span><strong>' + escapeHtml(applicationData.merchantId) + '</strong><small>用于识别当前收款商户</small></div>'
                 +   '<div><span>' + (applicationMode === 'change' ? '变更申请编号' : '原申请编号') + '</span><strong>' + escapeHtml(applicationMode === 'change' ? applicationData.changeApplyNo : applicationData.outApplyNo) + '</strong><small>用于查询本次申请进度</small></div>'
+                +   '<div><span>审核结果通知</span><strong>' + escapeHtml(applicationData.notifyUrl) + '</strong><small>回调地址由系统统一维护</small></div>'
                 + '</div>';
         }
         return ''
             + '<div class="settlement-application-info">'
             +   '<div><span>申请编号</span><strong>' + applicationData.outApplyNo + '</strong><small>提交后可通过该编号查询进度</small></div>'
             +   '<div><span>申请业务</span><strong>开通线上收款</strong><small>审核通过后可接收订单款项</small></div>'
+            +   '<div><span>审核结果通知</span><strong>' + escapeHtml(applicationData.notifyUrl) + '</strong><small>回调地址由系统统一维护</small></div>'
             + '</div>';
     }
 
@@ -269,6 +327,7 @@
 
     function renderUpload(key, title, hint, required) {
         var fileName = uploadedFiles[key];
+        var fileId = uploadedFileIds[key];
         var errorKey = 'file:' + key;
         var error = fieldErrors[errorKey] || '';
         return ''
@@ -276,7 +335,7 @@
             +   '<div class="settlement-upload-copy"><strong>' + (required ? '<em>*</em>' : '') + title + '</strong><p>' + hint + '</p></div>'
             +   '<div class="settlement-upload-action">'
             +   (fileName
-                ? '<div class="settlement-uploaded-file">' + icon('file') + '<span title="' + escapeHtml(fileName) + '">' + escapeHtml(fileName) + '</span><button type="button" data-remove-file="' + key + '" aria-label="移除文件">' + icon('close') + '<span>移除</span></button></div>'
+                ? '<div class="settlement-uploaded-file">' + icon('file') + '<span title="' + escapeHtml(fileName) + '">' + escapeHtml(fileName) + '</span><button type="button" data-remove-file="' + key + '" aria-label="移除文件">' + icon('close') + '<span>移除</span></button></div><small class="settlement-upload-fss">文件编号：' + escapeHtml(fileId || '上传后生成') + '</small>'
                 : '<label class="settlement-upload-control">' + icon('upload') + '<span>上传材料</span><input type="file" accept=".jpg,.jpeg,.png,.pdf" data-upload-file="' + key + '"></label>')
             +   (error ? '<small class="settlement-field-error upload-error" data-error-for="' + errorKey + '">' + escapeHtml(error) + '</small>' : '')
             +   '</div>'
@@ -299,8 +358,8 @@
             +   renderField('开户银行', 'bankName', '例如：中国农业银行', true)
             +   renderField('开户支行', 'bankBranch', '请输入完整支行名称', !privateAccount)
             +   renderField('联行号', 'alliedBankCode', '请输入 12 位联行号', !privateAccount, 'text', 'inputmode="numeric" maxlength="12"')
-            +   renderSelect('开户省份', 'province', !privateAccount, [['广东省', '广东省'], ['北京市', '北京市'], ['上海市', '上海市'], ['浙江省', '浙江省']])
-            +   renderSelect('开户城市', 'city', !privateAccount, [['深圳市', '深圳市'], ['广州市', '广州市'], ['东莞市', '东莞市'], ['佛山市', '佛山市']])
+            +   renderSelect('开户省份编码', 'province', !privateAccount, [['4400', '广东省（4400）'], ['1100', '北京市（1100）'], ['3100', '上海市（3100）'], ['3300', '浙江省（3300）']])
+            +   renderSelect('开户城市编码', 'city', !privateAccount, [['4403', '深圳市（4403）'], ['4401', '广州市（4401）'], ['4419', '东莞市（4419）'], ['4406', '佛山市（4406）']])
             +   renderSelect('结算方式', 'settleMode', false, [['2', 'T+1 结算'], ['0', 'D+1 结算']])
             +   (privateAccount ? renderField('银行预留手机号', 'bankMobilePhone', '请输入银行预留手机号', true, 'tel', 'maxlength="11"') : '')
             + '</div>'
@@ -373,11 +432,15 @@
             +           '</div>'
             +       '</section>'
             +       '<section class="settlement-card settlement-form-card">'
-            +           '<div class="settlement-section-head"><div><h3><span>2</span>' + (changeMode ? '新结算账户信息' : '结算账户信息') + '</h3><p>请根据账户类型填写完整、准确的银行结算信息。</p></div></div>'
+            +           '<div class="settlement-section-head"><div><h3><span>2</span>经营场所与开通信息</h3><p>经营场所信息作为进件必填资料同步，开通产品和渠道策略由平台统一配置。</p></div></div>'
+            +           '<div class="settlement-readonly-grid">' + renderStoreAndProductInfo() + '</div>'
+            +       '</section>'
+            +       '<section class="settlement-card settlement-form-card">'
+            +           '<div class="settlement-section-head"><div><h3><span>3</span>' + (changeMode ? '新结算账户信息' : '结算账户信息') + '</h3><p>请根据账户类型填写完整、准确的银行结算信息。</p></div></div>'
             +           renderAccountFields()
             +       '</section>'
             +       '<section class="settlement-card settlement-form-card">'
-            +           '<div class="settlement-section-head"><div><h3><span>3</span>证明材料</h3><p>材料仅用于商户进件审核和结算账户核验。</p></div></div>'
+            +           '<div class="settlement-section-head"><div><h3><span>4</span>证明材料</h3><p>页面显示文件名称和上传后生成的文件编号，用于商户进件审核和结算账户核验。</p></div></div>'
             +           '<div class="settlement-upload-list">' + renderMaterials() + '</div>'
             +       '</section>'
             +   '</div>'
@@ -455,23 +518,37 @@
             renderDetailItem('提交时间', '2026-07-21 10:26:18'),
             renderDetailItem('当前状态', getApplicationStatusText()),
             renderDetailItem('申请业务', applicationMode === 'change' ? '结算账户变更' : '线上收款商户进件'),
+            renderDetailItem('审核结果通知', applicationData.notifyUrl),
             renderDetailItem('业务联系人', formData.contactName),
             renderDetailItem('联系电话', '', { key: 'contactPhone', full: formData.contactPhone, masked: maskMobile(formData.contactPhone) }),
             renderDetailItem('联系邮箱', formData.contactEmail)
         ];
         var subjectItems = [
-            renderDetailItem('商户主体类型', '企业'),
+            renderDetailItem('商户主体类型', merchantSubjectData.merchantType),
             renderDetailItem('企业名称', '深圳市龙岗数智科技有限公司'),
-            renderDetailItem('统一社会信用代码', '91440300MA5F8K6N2P'),
-            renderDetailItem('营业执照有效期', '2021-06-18 至长期'),
-            renderDetailItem('法定代表人', '李明远'),
-            renderDetailItem('法人身份证号', '', { key: 'legalIdCard', full: '440307197905122418', masked: maskIdentity('440307197905122418') }),
-            renderDetailItem('法人证件有效期', '2020-05-12 至 2040-05-12'),
-            renderDetailItem('注册地区', '广东省／深圳市'),
-            renderDetailItem('注册地址', '广东省深圳市龙岗区坂田街道天安云谷产业园'),
-            renderDetailItem('经营范围', '数据产品开发、数据治理、数据技术服务及信息咨询'),
-            renderDetailItem('主体证明材料', '营业执照及法人证件已同步'),
+            renderDetailItem('商户简称', merchantSubjectData.merchantName),
+            renderDetailItem('商户身份', merchantSubjectData.merIdentity),
+            renderDetailItem('商户类别编码', merchantSubjectData.mcc),
+            renderDetailItem('统一社会信用代码', merchantSubjectData.businessRegno),
+            renderDetailItem('营业执照有效期', merchantSubjectData.businessDate),
+            renderDetailItem('法定代表人', merchantSubjectData.legalName),
+            renderDetailItem('法人身份证号', '', { key: 'legalIdCard', full: merchantSubjectData.legalIdCard, masked: maskIdentity(merchantSubjectData.legalIdCard) }),
+            renderDetailItem('法人证件有效期', merchantSubjectData.legalIdDate),
+            renderDetailItem('法人证件地址', merchantSubjectData.idCardAddress),
+            renderDetailItem('注册地区编码', merchantSubjectData.province + '／' + merchantSubjectData.city + '／' + merchantSubjectData.county),
+            renderDetailItem('注册地址', merchantSubjectData.address),
+            renderDetailItem('主体证明材料', '营业执照及法人证件文件编号已生成'),
             renderDetailItem('企业认证状态', '已认证')
+        ];
+        var storeItems = [
+            renderDetailItem('经营场所名称', storeInfoData.name),
+            renderDetailItem('经营场所地区编码', storeInfoData.region),
+            renderDetailItem('经营场所地址', storeInfoData.address),
+            renderDetailItem('经营场景', storeInfoData.scene),
+            renderDetailItem('场所证明材料', storeInfoData.material),
+            renderDetailItem('开通产品', productOpenData.product),
+            renderDetailItem('支付渠道', productOpenData.channel),
+            renderDetailItem('签约方式', productOpenData.agreement)
         ];
         var settlementItems = [
             renderDetailItem('结算账户类型', settlementTypeLabels[formData.settleType] || '对公同名账户'),
@@ -486,9 +563,9 @@
             renderDetailItem('账户核验', '银行账户证明已提交')
         ];
         var materialItems = [
-            renderDetailItem('企业主体材料', '营业执照及法人证件已同步'),
-            renderDetailItem(privateAccount ? '银行卡正面' : '银行账户证明', (privateAccount ? uploadedFiles.bankCard : uploadedFiles.licence) || '未提交'),
-            renderDetailItem('其他结算材料', authorizedAccount ? (uploadedFiles.authorization || '未提交结算授权书') : '当前账户类型无需补充授权材料')
+            renderDetailItem('企业主体材料', '营业执照及法人证件文件编号已生成'),
+            renderDetailItem(privateAccount ? '银行卡正面' : '银行账户证明', (privateAccount ? uploadedFiles.bankCard : uploadedFiles.licence) + '／' + (privateAccount ? uploadedFileIds.bankCard : uploadedFileIds.licence)),
+            renderDetailItem('其他结算材料', authorizedAccount ? ((uploadedFiles.authorization || '未提交结算授权书') + '／' + (uploadedFileIds.authorization || '未生成文件编号')) : '当前账户类型无需补充授权材料')
         ];
         return ''
             + '<section class="settlement-card settlement-detail-card">'
@@ -496,6 +573,7 @@
             +   '<div class="settlement-detail-groups">'
             +       renderDetailGroup('申请信息', '申请流水与经办联系方式', applicationItems)
             +       renderDetailGroup('商户主体', '企业认证和业务联系人信息', subjectItems)
+            +       renderDetailGroup('经营及开通信息', '经营场所、开通产品和渠道策略', storeItems)
             +       renderDetailGroup('结算账户', '银行账户和结算信息', settlementItems)
             +       renderDetailGroup('提交材料', '本次申请已提交的审核材料', materialItems)
             +   '</div>'
@@ -595,7 +673,7 @@
             +   '<section class="settlement-status-hero approved">'
             +       '<div class="settlement-status-icon">' + icon('check') + '</div>'
             +       '<div><div class="settlement-eyebrow">' + (changeMode ? '结算账户变更' : '线上收款能力') + '</div><h2>' + (changeMode ? '结算账户变更已完成' : '收款结算账户已开通') + '</h2><p>' + (changeMode ? '新结算账户已完成审核和渠道报备，后续订单款项将结算至新账户。' : '商户进件与支付渠道报备均已完成，产品订单可正常发起线上支付。') + '</p>' + renderStatusTag('正常使用', 'success') + '</div>'
-            +       '<div class="settlement-status-action">' + renderButton('申请变更', 'secondary', 'request-change', 'edit') + '</div>'
+            +       '<div class="settlement-status-action">' + renderButton('申请变更', 'secondary', 'request-change', 'edit', ' disabled title="当前统一支付接口文档未提供结算账户变更能力"') + '</div>'
             +   '</section>'
             +   '<section class="settlement-card settlement-progress-card">'
             +       '<div class="settlement-section-head"><div><h3>' + (changeMode ? '变更进度' : '开通进度') + '</h3><p>' + (changeMode ? '结算账户变更审核、渠道报备及账户切换均已完成。' : '商户进件、支付渠道报备及线上收款能力均已完成。') + '</p></div></div>'
@@ -739,8 +817,8 @@
         formData.bankName = '中国农业银行';
         formData.bankBranch = '深圳龙岗支行';
         formData.alliedBankCode = '103584000015';
-        formData.province = '广东省';
-        formData.city = '深圳市';
+        formData.province = '4400';
+        formData.city = '4403';
         formData.settleMode = '2';
         uploadedFiles.licence = '银行账户证明_补充材料.pdf';
     }
@@ -870,6 +948,7 @@
                     return;
                 }
                 uploadedFiles[this.dataset.uploadFile] = file.name;
+                uploadedFileIds[this.dataset.uploadFile] = 'FSS' + String(Date.now()).slice(-14);
                 delete fieldErrors['file:' + this.dataset.uploadFile];
                 collectFormData();
                 render();
@@ -879,6 +958,7 @@
         panel.querySelectorAll('[data-remove-file]').forEach(function (button) {
             button.addEventListener('click', function () {
                 uploadedFiles[this.dataset.removeFile] = '';
+                uploadedFileIds[this.dataset.removeFile] = '';
                 collectFormData();
                 render();
             });

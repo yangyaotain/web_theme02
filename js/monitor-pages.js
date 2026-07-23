@@ -1124,6 +1124,9 @@
         var serviceFeeRate = selfOperated ? 0 : Number(row.serviceFeeRate || 3);
         var serviceFee = paidAmount * serviceFeeRate / 100;
         var providerAmount = paidAmount - serviceFee;
+        var payTraceNo = row.payTraceNo || 'PAY' + String(row.billNo || row.orderNo || '').replace(/\D/g, '').slice(-20) + 'P00';
+        var splitTraceNo = row.outTraceNo || 'PS' + String(row.billNo || row.orderNo || '').replace(/\D/g, '').slice(-17);
+        var splitReceiverId = row.receiverId || 'RCV-202607-00986';
         return {
             title: '账单详情',
             size: 'narrow',
@@ -1147,19 +1150,23 @@
                     { label: '账期', value: row.period },
                     { label: '付款时间', value: paidAt }
                 ]))
-                + billDrawerSection('支付信息', '<table class="data-table bill-detail-table"><thead><tr><th>支付编号</th><th>收款商户</th><th>支付时间</th><th>支付状态</th></tr></thead><tbody><tr><td>202606011611310500000101148233</td><td>' + PLATFORM_OPERATOR_NAME + '</td><td>' + escapeHTML(paidAt) + '</td><td><span class="monitor-flow-status success"><i></i>已通过</span></td></tr></tbody></table>')
+                + billDrawerSection('支付信息', '<table class="data-table bill-detail-table"><thead><tr><th>支付流水号</th><th>收款商户编号</th><th>支付方式</th><th>支付金额</th><th>支付时间</th><th>支付状态</th></tr></thead><tbody><tr><td>' + escapeHTML(payTraceNo) + '</td><td>MER-PLATFORM-202607-0001</td><td>统一支付平台</td><td>¥' + paidAmount.toFixed(2) + '</td><td>' + escapeHTML(paidAt) + '</td><td><span class="monitor-flow-status success"><i></i>支付成功</span></td></tr></tbody></table>')
                 + billDrawerSection('资金分配', billDrawerFields([
                     { label: '经营属性', value: selfOperated ? '自营' : '第三方供方' },
                     { label: '需方实付金额', value: '¥' + paidAmount.toFixed(2) },
                     { label: '平台服务费', value: selfOperated ? '不适用' : '¥' + serviceFee.toFixed(2) + '（' + serviceFeeRate.toFixed(2) + '%）' },
                     { label: '供方分账金额', value: selfOperated ? '不发起对外分账' : '¥' + providerAmount.toFixed(2) },
                     { label: '分账接收方', value: selfOperated ? '--' : row.seller || '--' },
+                    { label: '分账接收方编号', value: selfOperated ? '--' : splitReceiverId },
+                    { label: '外部分账流水号', value: selfOperated ? '--' : splitTraceNo },
+                    { label: '分账日期', value: selfOperated ? '--' : String(paidAt).slice(0, 10).replace(/-/g, '') },
                     { label: '分账状态', html: selfOperated ? '<span class="monitor-flow-status"><i></i>无需分账</span>' : '<span class="monitor-flow-status success"><i></i>分账成功</span>' }
                 ]))
                 + billDrawerSection('流程动态', '<table class="data-table bill-detail-table"><thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead><tbody>'
                     + '<tr><td>系统自动</td><td>生成账单</td><td>成功</td><td>--</td><td>' + escapeHTML(row.createdAt) + '</td></tr>'
                     + '<tr><td>' + escapeHTML(row.buyer || '--') + '</td><td>支付账单</td><td>成功</td><td>--</td><td>' + escapeHTML(paidAt) + '</td></tr>'
-                    + '<tr><td>' + escapeHTML(row.seller || '--') + '</td><td>确认支付账单</td><td>通过</td><td>--</td><td>' + escapeHTML(paidAt) + '</td></tr>'
+                    + '<tr><td>系统自动</td><td>查询支付结果</td><td>支付成功</td><td>' + escapeHTML(payTraceNo) + '</td><td>' + escapeHTML(paidAt) + '</td></tr>'
+                    + (selfOperated ? '' : '<tr><td>系统自动</td><td>发起订单分账</td><td>分账成功</td><td>' + escapeHTML(splitTraceNo) + '</td><td>' + escapeHTML(paidAt) + '</td></tr>')
                     + '</tbody></table>')
                 + '</div>'
         };

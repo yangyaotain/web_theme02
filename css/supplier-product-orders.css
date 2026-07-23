@@ -975,7 +975,7 @@ body.supplier-contract-drawer-open {
 .supplier-contract-stage-row {
     min-width: 0;
     display: grid;
-    grid-template-columns: 38px minmax(108px, 1fr) minmax(76px, .68fr) minmax(94px, .82fr) minmax(82px, .72fr) minmax(92px, .78fr);
+    grid-template-columns: 38px minmax(96px, 1fr) minmax(70px, .62fr) minmax(88px, .76fr) minmax(76px, .66fr) minmax(86px, .72fr) minmax(68px, .6fr);
     align-items: center;
     gap: 6px;
     padding: 0 8px;
@@ -983,17 +983,17 @@ body.supplier-contract-drawer-open {
 
 .supplier-contract-stage-table.has-stage-actions .supplier-contract-stage-head,
 .supplier-contract-stage-table.has-stage-actions .supplier-contract-stage-row {
-    grid-template-columns: 38px minmax(108px, 1fr) minmax(76px, .68fr) minmax(94px, .82fr) minmax(82px, .72fr) minmax(92px, .78fr) 30px;
+    grid-template-columns: 38px minmax(96px, 1fr) minmax(70px, .62fr) minmax(88px, .76fr) minmax(76px, .66fr) minmax(86px, .72fr) minmax(68px, .6fr) 30px;
 }
 
 .supplier-contract-stage-table.is-self-operated .supplier-contract-stage-head,
 .supplier-contract-stage-table.is-self-operated .supplier-contract-stage-row {
-    grid-template-columns: 38px minmax(128px, 1fr) minmax(82px, .72fr) minmax(106px, .9fr);
+    grid-template-columns: 38px minmax(118px, 1fr) minmax(78px, .7fr) minmax(100px, .86fr) minmax(72px, .64fr);
 }
 
 .supplier-contract-stage-table.is-self-operated.has-stage-actions .supplier-contract-stage-head,
 .supplier-contract-stage-table.is-self-operated.has-stage-actions .supplier-contract-stage-row {
-    grid-template-columns: 38px minmax(128px, 1fr) minmax(82px, .72fr) minmax(106px, .9fr) 30px;
+    grid-template-columns: 38px minmax(118px, 1fr) minmax(78px, .7fr) minmax(100px, .86fr) minmax(72px, .64fr) 30px;
 }
 
 .supplier-contract-stage-head {
@@ -1031,6 +1031,13 @@ body.supplier-contract-drawer-open {
 .supplier-contract-stage-money.is-net {
     color: #27774f;
     font-weight: 600;
+}
+
+.supplier-contract-stage-status {
+    color: #8d7b56;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .supplier-contract-stage-value,

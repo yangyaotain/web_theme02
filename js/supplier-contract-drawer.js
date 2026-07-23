@@ -69,7 +69,7 @@
 
     function createStage(name, percent) {
         paymentStageSeed += 1;
-        return { id: paymentStageSeed, name: name, percent: percent, amount: 0 };
+        return { id: paymentStageSeed, name: name, percent: percent, amount: 0, payStatus: '待发起', outTradeNo: '' };
     }
 
     function recalculateStageAmounts() {
@@ -124,6 +124,7 @@
                 +   stagePercent
                 +   '<strong class="supplier-contract-stage-calculated" data-stage-amount>' + formatMoney(stage.amount) + '</strong>'
                 +   (selfOperated ? '' : '<strong class="supplier-contract-stage-money" data-stage-fee>' + formatMoney(stageFee) + '</strong><strong class="supplier-contract-stage-money is-net" data-stage-net>' + formatMoney(providerNet) + '</strong>')
+                +   '<strong class="supplier-contract-stage-status">' + stage.payStatus + '</strong>'
                 +   (hasStageActions ? (paymentStages.length > 2 ? '<button type="button" data-stage-remove="' + stage.id + '" aria-label="删除第' + (index + 1) + '期"><span class="material-symbols-outlined" aria-hidden="true">delete</span></button>' : '<span></span>') : '')
                 + '</div>';
         }).join('');
@@ -147,11 +148,11 @@
                 +   (paymentMode === 'installment' ? '<button type="button" data-stage-add' + (existing ? ' disabled' : '') + '><span class="material-symbols-outlined" aria-hidden="true">add</span>增加阶段</button>' : '')
             + '</div>' : '')
             + '<div class="supplier-contract-stage-table' + (selfOperated ? ' is-self-operated' : '') + (hasStageActions ? ' has-stage-actions' : '') + (displayOnlyPlan ? ' is-display-only' : '') + '">'
-            +   '<div class="supplier-contract-stage-head"><span>期次</span><span>阶段名称</span><span>付款比例</span><span>付款金额</span>' + (selfOperated ? '' : '<span>平台服务费</span><span>提供方实收</span>') + (hasStageActions ? '<span>操作</span>' : '') + '</div>'
+            +   '<div class="supplier-contract-stage-head"><span>期次</span><span>阶段名称</span><span>付款比例</span><span>付款金额</span>' + (selfOperated ? '' : '<span>平台服务费</span><span>提供方实收</span>') + '<span>支付状态</span>' + (hasStageActions ? '<span>操作</span>' : '') + '</div>'
             +   rows
             + '</div>'
             + '<div class="supplier-contract-payment-foot">'
-            +   '<span><span class="material-symbols-outlined" aria-hidden="true">info</span>付款金额根据合同金额和各期付款比例自动换算，提交时校验比例合计。</span>'
+            +   '<span><span class="material-symbols-outlined" aria-hidden="true">info</span>每一期在到达付款节点后独立生成支付流水号并发起支付，未到付款节点不生成流水。</span>'
             +   '<strong>合计：<b data-payment-percent-total>' + paymentStages.reduce(function (sum, item) { return sum + Number(item.percent || 0); }, 0).toFixed(2) + '%</b> / <b data-payment-amount-total>' + formatMoney(paymentStages.reduce(function (sum, item) { return sum + Number(item.amount || 0); }, 0)) + '</b></strong>'
             + '</div>';
         paymentTerms.classList.toggle('is-readonly', existing);
@@ -369,7 +370,9 @@
                     periodNo: index + 1,
                     periodName: stage.name,
                     percent: Number(stage.percent),
-                    amount: Number(stage.amount)
+                    amount: Number(stage.amount),
+                    payStatus: stage.payStatus,
+                    outTradeNo: stage.outTradeNo
                 };
             }),
             files: selectedFiles.map(function (file) { return file.name; }),

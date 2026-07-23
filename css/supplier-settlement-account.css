@@ -245,6 +245,14 @@
     background: transparent;
 }
 
+.settlement-btn:disabled,
+.settlement-btn:disabled:hover {
+    border-color: #dce2df;
+    color: #a5aea9;
+    background: #f5f7f6;
+    cursor: not-allowed;
+}
+
 .settlement-eyebrow {
     margin-bottom: 8px;
     color: var(--forest-green);
@@ -477,9 +485,9 @@
 }
 
 .settlement-stepbar > i {
-    width: 96px;
+    width: 64px;
     height: 1px;
-    margin: 0 16px;
+    margin: 0 12px;
     background: #bfe4d0;
 }
 
@@ -913,6 +921,13 @@
     align-items: flex-end;
     flex-direction: column;
     flex: 0 0 auto;
+}
+
+.settlement-upload-fss {
+    margin-top: 5px;
+    color: #8d9892;
+    font-family: Inter, Consolas, monospace;
+    font-size: 10px;
 }
 
 .settlement-upload-item.has-error .settlement-upload-control,

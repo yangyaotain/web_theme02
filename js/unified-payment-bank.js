@@ -1,6 +1,7 @@
 (function () {
     var params = new URLSearchParams(window.location.search || '');
     var orderNo = params.get('orderNo') || '2026070111185071000000101148100';
+    var outTradeNo = params.get('outTradeNo') || 'PAY20260701111850710000P00';
     var productName = params.get('productName') || '龙岗企业经营画像数据集';
     var merchantName = params.get('merchantName') || '深圳市龙岗区数据服务中心';
     var amount = params.get('amount') || '100.00元';
@@ -28,7 +29,7 @@
 
     function getAttemptCount() {
         try {
-            return Number(window.sessionStorage.getItem('upp-bank-attempt:' + orderNo)) || 0;
+            return Number(window.sessionStorage.getItem('upp-bank-attempt:' + outTradeNo)) || 0;
         } catch (error) {
             return 0;
         }
@@ -36,7 +37,7 @@
 
     function setAttemptCount(value) {
         try {
-            window.sessionStorage.setItem('upp-bank-attempt:' + orderNo, String(value));
+            window.sessionStorage.setItem('upp-bank-attempt:' + outTradeNo, String(value));
         } catch (error) {
             return;
         }
@@ -47,10 +48,11 @@
             type: 'upp-payment-result',
             status: status,
             orderNo: orderNo,
+            outTradeNo: outTradeNo,
             timestamp: Date.now()
         };
         try {
-            window.localStorage.setItem('upp-payment-result:' + orderNo, JSON.stringify(payload));
+            window.localStorage.setItem('upp-payment-result:' + outTradeNo, JSON.stringify(payload));
         } catch (error) {
             // 跨页消息仍可在本地存储不可用时传递结果。
         }
@@ -115,6 +117,7 @@
     setText('[data-payment-amount]', amount);
     setText('[data-product-name]', productName);
     setText('[data-order-no]', orderNo);
+    setText('[data-out-trade-no]', outTradeNo);
     setText('[data-bank-name]', bankName);
     setText('[data-card-type]', cardType);
     setText('[data-choice-bank]', bankName + ' · ' + cardType);

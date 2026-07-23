@@ -1,5 +1,5 @@
 (function () {
-    var BILL_STATUS_OPTIONS = ['全部账单状态', '待出账', '待支付', '待支付确认', '已结清', '待供方确认', '待需方确认', '待分账', '分账处理中', '分账成功', '分账失败'];
+    var BILL_STATUS_OPTIONS = ['全部账单状态', '待出账', '待支付', '待支付（首次）', '待支付（阶段）', '待支付（最后）', '待支付确认', '已结清', '待供方确认', '待需方确认'];
 
     function mapRows(rows) {
         return rows.map(function (row) {
@@ -26,31 +26,88 @@
     }
 
     var RECEIVABLE_RECORDS = mapRows([
-        ['2026072117251806100000101149601', '2026072116142806100000101149401', '龙岗企业经营画像数据集', '产品交易', '数据集', '深圳市星途科技发展有限公司', '预付费', '按次数', '300元/次', '1次', '300', '2026-07-21 17:25:18', '--', '--', '2026-07-21 17:26:02', '已结清', true],
-        ['2026072015183402800000101149617', '2026072015074302800000101149417', '园区数据治理体系规划咨询服务', '服务交易', '企业数据治理与合规咨询服务', '龙岗区园区运营管理有限公司', '预付费', '面议', '5000元/次', '1次', '5,000', '2026-07-20 15:18:34', '--', '--', '2026-07-20 15:19:08', '已结清'],
-        ['2026071911482608500000101149633', '2026071911360908500000101149433', '企业信用画像合规查询服务', '服务交易', '企业数据资源托管运营服务', '深圳市清澜企业服务有限公司', '预付费', '按服务次数计费', '500元/次', '3次', '1,500', '2026-07-19 11:48:26', '--', '--', '--', '待支付'],
-        ['2026071817364204300000101149649', '2026071817245104300000101149449', '数字化转型顶层规划咨询服务', '服务交易', '企业数字化转型咨询服务', '龙岗数智产业研究院有限公司', '后付费', '面议', '8000元/次', '1次', '8,000', '2026-07-18 17:36:42', '2026-07-01 至 2026-07-18', '2026-07-31 23:59:59', '--', '待出账'],
-        ['2026071714211907600000101149665', '2026071714092607600000101149465', '企业信用风险监测数据集', '产品交易', '数据集', '深圳市龙岗产业投资服务有限公司', '预付费', '按次数', '100元/次', '5次', '500', '2026-07-17 14:21:19', '--', '--', '--', '待支付确认'],
-        ['2026071611032801900000101149681', '2026071610513701900000101149481', '公共数据授权运营合规评估', '服务交易', '数据交易合规评估服务', '深圳市数治咨询服务有限公司', '后付费', '按服务次数计费', '4500元/次', '1次', '4,500', '2026-07-16 11:03:28', '2026-07-01 至 2026-07-15', '2026-07-31 23:59:59', '--', '待供方确认'],
-        ['2026071518440705400000101149697', '2026071518321405400000101149497', '企业数据资源托管运营服务', '服务交易', '企业数据资源托管运营服务', '龙岗区企业服务集团有限公司', '后付费', '按周期', '1200元/月', '6月', '7,200', '2026-07-15 18:44:07', '2026-01-01 至 2026-06-30', '2026-07-31 23:59:59', '--', '待需方确认'],
-        ['2026071414365509200000101149713', '2026071414250309200000101149513', '园区企业能耗趋势分析报告', '产品交易', '数据产品', '龙岗区绿色产业运营有限公司', '预付费', '按次数', '800元/份', '1份', '800', '2026-07-14 14:36:55', '--', '--', '2026-07-14 14:37:19', '已结清', true],
-        ['2026071216413103700000101149729', '2026071216294803700000101149529', '数据产品市场化运营策划服务', '服务交易', '数据产品运营策划服务', '深圳市龙岗招商服务有限公司', '预付费', '面议', '6800元/次', '1次', '6,800', '2026-07-12 16:41:31', '--', '--', '--', '待支付'],
-        ['2026071011301806400000101149745', '2026071011182506400000101149545', '行业数据空间建设咨询服务', '服务交易', '行业数据空间建设咨询服务', '龙岗区产业发展研究中心', '预付费', '面议', '12000元/次', '1次', '12,000', '2026-07-10 11:30:18', '--', '--', '2026-07-10 11:31:06', '已结清'],
-        ['2026070817375102200000101149761', '2026070817260802200000101149561', '重点企业运行监测数据产品', '产品交易', '数据产品', '龙岗区产业运营服务有限公司', '预付费', '按周期', '500元/月', '2月', '1,000', '2026-07-08 17:37:51', '--', '--', '2026-07-08 17:38:24', '已结清', true],
-        ['2026070714184307500000101149777', '2026070714070007500000101149577', '交通运行分析解决方案', '服务交易', '企业数字化转型咨询服务', '龙岗智慧交通科技有限公司', '预付费', '面议', '3500元/次', '1次', '3,500', '2026-07-07 14:18:43', '--', '--', '2026-07-07 14:19:12', '已结清'],
-        ['2026070615251604900000101149793', '2026070615133304900000101149593', '产业园区空间信息数据集', '产品交易', '数据集', '龙岗区产业空间服务有限公司', '后付费', '按周期', '200元/月', '3月', '600', '2026-07-06 15:25:16', '2026-04-01 至 2026-06-30', '2026-07-20 23:59:59', '--', '待供方确认'],
-        ['2026070512093803100000101149809', '2026070511575503100000101149609', '企业经营风险预警数据服务', '产品交易', '数据产品', '深圳市企业征信服务有限公司', '预付费', '按次数', '90元/次', '5次', '450', '2026-07-05 12:09:38', '--', '--', '2026-07-05 12:10:07', '已结清', true],
-        ['2026070419522706800000101149825', '2026070419404406800000101149625', '企业数据资产融资咨询服务', '服务交易', '企业数据资产融资咨询服务', '深圳市龙岗科创金融服务有限公司', '预付费', '面议', '6000元/次', '1次', '6,000', '2026-07-04 19:52:27', '--', '--', '2026-07-04 19:53:01', '已结清'],
-        ['2026070314381102400000101149841', '2026070314262802400000101149641', '龙岗区从业人员结构分析数据', '产品交易', '数据产品', '深圳市人力资源数据服务中心', '预付费', '按次数', '200元/份', '1份', '200', '2026-07-03 14:38:11', '--', '--', '--', '待支付确认'],
-        ['2026070211213009100000101149857', '2026070211094709100000101149657', '产业用房供需监测数据产品', '产品交易', '数据产品', '龙岗区产业空间服务有限公司', '后付费', '按周期', '200元/天', '7天', '1,400', '2026-07-02 11:21:30', '2026-06-25 至 2026-07-01', '2026-07-15 23:59:59', '--', '待需方确认'],
-        ['2026070110303605600000101149873', '2026070110185305600000101149673', '园区企业基础登记信息数据产品', '产品交易', '数据集', '龙岗区企业服务集团有限公司', '预付费', '按次数', '100元/次', '1次', '100', '2026-07-01 10:30:36', '--', '--', '2026-07-01 10:31:02', '已结清', true],
-        ['2026063016491803300000101149889', '2026063016373503300000101149689', '区域商业活力监测数据集', '产品交易', '数据集', '深圳市龙岗商业发展有限公司', '预付费', '按次数', '150元/次', '2次', '300', '2026-06-30 16:49:18', '--', '--', '2026-06-30 16:49:51', '已结清', true],
-        ['2026062914065108800000101149905', '2026062913551808800000101149705', '企业数据安全风险评估服务', '服务交易', '数据安全风险评估服务', '深圳市数治咨询服务有限公司', '后付费', '按服务次数计费', '5000元/次', '1次', '5,000', '2026-06-29 14:06:51', '2026-06-01 至 2026-06-28', '2026-07-10 23:59:59', '2026-06-29 14:07:26', '已结清'],
-        ['2026062811183701200000101149921', '2026062811065401200000101149721', '产业经济月度分析数据产品', '产品交易', '数据产品', '龙岗数智产业研究院有限公司', '预付费', '按周期', '600元/月', '1月', '600', '2026-06-28 11:18:37', '--', '--', '2026-06-28 11:19:09', '已结清', true],
-        ['2026062710211208400000101149937', '2026062710092908400000101149737', '区域交通出行特征数据集', '产品交易', '数据集', '深圳市龙岗智慧交通有限公司', '预付费', '按次数', '220元/次', '1次', '220', '2026-06-27 10:21:12', '--', '--', '--', '待支付'],
-        ['2026062615475005500000101149953', '2026062615361705500000101149753', '智慧园区运营咨询服务', '服务交易', '智慧园区运营咨询服务', '龙岗区绿色产业运营有限公司', '后付费', '面议', '10000元/次', '1次', '10,000', '2026-06-26 15:47:50', '2026-06-01 至 2026-06-25', '2026-07-10 23:59:59', '--', '待出账'],
-        ['2026062514332602700000101149969', '2026062514214302700000101149769', '惠企政策智能匹配数据服务', '产品交易', '数据产品', '深圳市龙岗企业服务集团有限公司', '预付费', '按次数', '60元/次', '10次', '600', '2026-06-25 14:33:26', '--', '--', '2026-06-25 14:33:58', '已结清', true]
+        ['2026072210521604200000101149064', '2026071613195704200000101149064', '企业信用风险监测数据集', '产品交易', '数据集', '深圳市龙岗产业投资服务有限公司', '一次性付款', '按次数', '100元/次', '5次', '500', '2026-07-22 10:52:16', '一次性付款', '--', '--', '待支付', true],
+        ['2026072114290605700000101149113', '2026071214075305700000101149113', '公共信用评价数据产品', '产品交易', '数据产品', '深圳市数治咨询服务有限公司', '一次性付款', '按份数', '500元/份', '1份', '500', '2026-07-12 14:09:06', '一次性付款', '--', '2026-07-12 14:12:18', '已结清', true],
+        ['2026072016382203300000101149129', '2026071016243803300000101149129', '重点项目运行监测数据产品', '产品交易', '数据产品', '龙岗区重点项目服务中心', '一次性付款', '按周期', '300元/月', '2月', '600', '2026-07-10 16:26:22', '一次性付款', '--', '2026-07-10 16:29:11', '已结清', true],
+        ['2026071817264102700000101149145', '2026070817135202700000101149145', '产业招商线索分析数据集', '产品交易', '数据集', '深圳市龙岗招商服务有限公司', '一次性付款', '按份数', '1000元/份', '1份', '1,000', '2026-07-08 17:15:41', '一次性付款', '--', '2026-07-08 17:16:21', '已结清', true],
+        ['2026071715131905100000101149161', '2026070715011305100000101149161', '园区企业经营趋势分析报告', '产品交易', '数据产品', '龙岗数智产业研究院有限公司', '一次性付款', '按份数', '600元/份', '1份', '600', '2026-07-07 15:03:19', '一次性付款', '--', '2026-07-07 15:04:08', '已结清', true],
+        ['2026071419522401500000101149209', '2026070419400401500000101149209', '企业诉求热点分析数据集', '产品交易', '数据集', '深圳市政务服务数据中心', '一次性付款', '按次数', '80元/次', '2次', '160', '2026-07-04 19:42:24', '一次性付款', '--', '--', '待支付', true],
+        ['2026072310111807600000101149465', '2026071714092607600000101149465', '数据资产融资可行性评估服务', '服务交易', '企业数据资产融资咨询服务', '深圳市龙岗科创金融服务有限公司', '分期付款', '按服务次数计费', '6000元/次', '1次', '1,800', '2026-07-23 10:11:18', '首期款（第1/3期）', '--', '--', '待支付（首次）'],
+        ['2026072213374207500000101149593', '2026070613102407500000101149593', '数据治理成熟度阶段评估服务', '服务交易', '企业数据治理与合规咨询服务', '龙岗区数据应用创新中心', '分期付款', '按服务次数计费', '12000元/次', '1次', '4,800', '2026-07-22 13:37:42', '阶段款（第2/3期）', '--', '--', '待支付（阶段）'],
+        ['2026072210311907500000101149609', '2026070510294107500000101149609', '公共数据授权运营咨询服务', '服务交易', '数据交易合规评估服务', '龙岗数智产业研究院有限公司', '分期付款', '按服务次数计费', '20000元/次', '1次', '6,000', '2026-07-22 10:31:19', '尾款（第3/3期）', '--', '--', '待支付（最后）'],
+        ['2026071011301806400000101149545', '2026071011182506400000101149545', '行业数据空间建设咨询服务', '服务交易', '行业数据空间建设咨询服务', '龙岗区产业发展研究中心', '分期付款', '按服务次数计费', '12000元/次', '1次', '3,600', '2026-07-10 11:30:18', '尾款（第3/3期）', '--', '2026-07-10 11:31:06', '已结清']
     ]);
+
+    function createPayment(paymentNo, amount, paidAt, split) {
+        return {
+            paymentNo: paymentNo,
+            amount: amount,
+            channel: '统一支付平台',
+            paidAt: paidAt,
+            status: '支付成功',
+            split: split
+        };
+    }
+
+    function createSplit(fee, netAmount, outTraceNo, appliedAt, status) {
+        return {
+            fee: fee,
+            netAmount: netAmount,
+            outTraceNo: outTraceNo,
+            receiverId: 'RCV-202607-00986',
+            appliedAt: appliedAt,
+            queriedAt: appliedAt,
+            status: status || '分账成功'
+        };
+    }
+
+    var PAYMENT_PLANS = {
+        '2026071613195704200000101149064': { orderAmount: '500', stages: [
+            { name: '一次性付款', percent: '100%', amount: '500', node: '订单提交并完成合同签署后', status: '待支付', current: true }
+        ] },
+        '2026071214075305700000101149113': { orderAmount: '500', stages: [
+            { name: '一次性付款', percent: '100%', amount: '500', node: '订单提交并完成合同签署后', status: '已支付', current: true, payment: createPayment('PAY20260712140753057000P00', '500', '2026-07-12 14:12:18', createSplit('15.00', '485.00', 'PS20260712141218001', '2026-07-12 14:12:32')) }
+        ] },
+        '2026071016243803300000101149129': { orderAmount: '600', stages: [
+            { name: '一次性付款', percent: '100%', amount: '600', node: '订单提交并完成合同签署后', status: '已支付', current: true, payment: createPayment('PAY20260710162438033000P00', '600', '2026-07-10 16:29:11', createSplit('18.00', '582.00', 'PS20260710162911002', '2026-07-10 16:29:25')) }
+        ] },
+        '2026070817135202700000101149145': { orderAmount: '1,000', stages: [
+            { name: '一次性付款', percent: '100%', amount: '1,000', node: '订单提交并完成合同签署后', status: '已支付', current: true, payment: createPayment('PAY20260708171352027000P00', '1,000', '2026-07-08 17:16:21', createSplit('30.00', '970.00', 'PS20260708171621003', '2026-07-08 17:16:36')) }
+        ] },
+        '2026070715011305100000101149161': { orderAmount: '600', stages: [
+            { name: '一次性付款', percent: '100%', amount: '600', node: '订单提交并完成合同签署后', status: '已支付', current: true, payment: createPayment('PAY20260707150113051000P00', '600', '2026-07-07 15:04:08', createSplit('18.00', '582.00', 'PS20260707150408004', '2026-07-07 15:04:21')) }
+        ] },
+        '2026070419400401500000101149209': { orderAmount: '160', stages: [
+            { name: '一次性付款', percent: '100%', amount: '160', node: '订单提交并完成合同签署后', status: '待支付', current: true }
+        ] },
+        '2026071714092607600000101149465': { orderAmount: '6,000', stages: [
+            { name: '首期款', percent: '30%', amount: '1,800', node: '合同签署后', status: '待支付（首次）', current: true },
+            { name: '阶段款', percent: '40%', amount: '2,400', node: '阶段成果确认后', status: '未到付款节点' },
+            { name: '尾款', percent: '30%', amount: '1,800', node: '服务验收通过后', status: '未到付款节点' }
+        ] },
+        '2026070613102407500000101149593': { orderAmount: '12,000', stages: [
+            { name: '首期款', percent: '30%', amount: '3,600', node: '合同签署后', status: '已支付', payment: createPayment('PAY20260706131024075000P01', '3,600', '2026-07-06 13:18:05', createSplit('108.00', '3,492.00', 'PS20260706131805005', '2026-07-06 13:18:20')) },
+            { name: '阶段款', percent: '40%', amount: '4,800', node: '阶段成果确认后', status: '待支付（阶段）', current: true },
+            { name: '尾款', percent: '30%', amount: '3,600', node: '服务验收通过后', status: '未到付款节点' }
+        ] },
+        '2026070510294107500000101149609': { orderAmount: '20,000', stages: [
+            { name: '首期款', percent: '30%', amount: '6,000', node: '合同签署后', status: '已支付', payment: createPayment('PAY20260705102941075000P01', '6,000', '2026-07-05 10:38:12', createSplit('180.00', '5,820.00', 'PS20260705103812006', '2026-07-05 10:38:28')) },
+            { name: '阶段款', percent: '40%', amount: '8,000', node: '阶段成果确认后', status: '已支付', payment: createPayment('PAY20260705102941075000P02', '8,000', '2026-07-18 16:22:41', createSplit('240.00', '7,760.00', 'PS20260718162241007', '2026-07-18 16:22:56')) },
+            { name: '尾款', percent: '30%', amount: '6,000', node: '服务验收通过后', status: '待支付（最后）', current: true }
+        ] },
+        '2026071011182506400000101149545': { orderAmount: '12,000', stages: [
+            { name: '首期款', percent: '30%', amount: '3,600', node: '合同签署后', status: '已支付', payment: createPayment('PAY20260710111825064000P01', '3,600', '2026-07-10 11:23:18', createSplit('108.00', '3,492.00', 'PS20260710112318008', '2026-07-10 11:23:34')) },
+            { name: '阶段款', percent: '40%', amount: '4,800', node: '阶段成果确认后', status: '已支付', payment: createPayment('PAY20260710111825064000P02', '4,800', '2026-07-10 11:26:09', createSplit('144.00', '4,656.00', 'PS20260710112609009', '2026-07-10 11:26:23')) },
+            { name: '尾款', percent: '30%', amount: '3,600', node: '服务验收通过后', status: '已支付', current: true, payment: createPayment('PAY20260710111825064000P03', '3,600', '2026-07-10 11:31:06', createSplit('108.00', '3,492.00', 'PS20260710113106010', '2026-07-10 11:31:20')) }
+        ] }
+    };
+
+    RECEIVABLE_RECORDS.forEach(function (item) {
+        var plan = PAYMENT_PLANS[item.orderNo];
+        if (!plan) return;
+        item.orderAmount = plan.orderAmount;
+        item.paymentStages = plan.stages;
+    });
 
     var PAYABLE_RECORDS = mapRows([
         ['FY20260721173018061000001011401', '2026072116142806100000101149401', '龙岗企业经营画像数据集交易服务费', '平台服务', '交易服务费', '龙岗数据聚合服务平台', '后付费', '按交易金额比例', '3%', '1笔', '9', '2026-07-21 17:30:18', '2026-07-01 至 2026-07-21', '2026-07-31 23:59:59', '--', '待支付'],
@@ -77,13 +134,6 @@
         return AUTO_SPLIT_ORDER_NOS.indexOf(item.orderNo) === -1;
     });
 
-    var SPLIT_RECORDS = [
-        { billNo: 'FZ202607221018360000001', orderNo: '2026071714092607600000101149465', target: '数据资产融资可行性评估服务', businessType: '服务交易', targetType: '企业数据资产融资咨询服务', counterparty: '深圳市龙岗科创金融服务有限公司', payMode: '自动分账', measureMode: '按本期实付金额比例', price: '平台服务费3%', quantity: '第1/3期', amount: '1,800', createdAt: '2026-07-22 10:18:36', period: '首期款', repaymentAt: '--', paidAt: '2026-07-22 10:18:22', status: '分账成功', splitFee: '54.00', netAmount: '1,746.00', outTraceNo: 'PS20260722101836001' },
-        { billNo: 'FZ202607211516200000002', orderNo: '2026071518321405400000101149497', target: '企业数据资源托管运营服务', businessType: '服务交易', targetType: '企业数据资源托管运营服务', counterparty: '龙岗区企业服务集团有限公司', payMode: '自动分账', measureMode: '按本期实付金额比例', price: '平台服务费2%', quantity: '第2/3期', amount: '2,880', createdAt: '2026-07-21 15:16:20', period: '阶段款', repaymentAt: '--', paidAt: '2026-07-21 15:16:05', status: '分账成功', splitFee: '57.60', netAmount: '2,822.40', outTraceNo: 'PS20260721151620002' },
-        { billNo: 'FZ202607201108420000003', orderNo: '2026072015074302800000101149417', target: '园区数据治理体系规划咨询服务', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', counterparty: '龙岗区园区运营管理有限公司', payMode: '自动分账', measureMode: '按本期实付金额比例', price: '平台服务费3%', quantity: '第3/3期', amount: '1,500', createdAt: '2026-07-20 11:08:42', period: '尾款', repaymentAt: '--', paidAt: '2026-07-20 11:08:28', status: '分账处理中', splitFee: '45.00', netAmount: '1,455.00', outTraceNo: 'PS20260720110842003' },
-        { billNo: 'FZ202607191426020000004', orderNo: '2026072116142806100000101149401', target: '龙岗企业经营画像数据集', businessType: '产品交易', targetType: '数据集', counterparty: '深圳市星途科技发展有限公司', payMode: '自动分账', measureMode: '按订单实付金额比例', price: '平台服务费3%', quantity: '一次性付款', amount: '300', createdAt: '2026-07-19 14:26:02', period: '一次性付款', repaymentAt: '--', paidAt: '2026-07-19 14:25:48', status: '分账成功', splitFee: '9.00', netAmount: '291.00', outTraceNo: 'PS20260719142602004' }
-    ];
-
     var ICON_PATHS = {
         search: '<path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l4.45 4.44-1.42 1.42-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>',
         filter: '<path d="M3 5h18l-7 8v5l-4 2v-7L3 5zm4.4 2 4.6 5.25V17l1-.5v-4.25L17.6 7H7.4z"/>',
@@ -93,6 +143,7 @@
         detail: '<path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/>',
         usage: '<path d="M4 19h16v2H4v-2zm1-3h3V8H5v8zm5 0h3V3h-3v13zm5 0h3v-6h-3v6z"/>',
         confirm: '<path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/>',
+        close: '<path d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.29 1.42 1.41z"/>',
         success: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-4-4 1.4-1.4 2.6 2.6 6.6-6.6L18 9l-8 8z"/>'
     };
 
@@ -124,9 +175,10 @@
             page: 1,
             pageSize: 10,
             filterOpen: false,
-            activeSplitBillNo: ''
+            activeBillNo: ''
         };
         var toastTimer = null;
+        var supplierName = '深圳市龙岗数智科技有限公司';
 
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management');
         panel.classList.add('is-supplier-bill-management');
@@ -135,7 +187,6 @@
 
         function getCurrentRecords() {
             if (state.tab === 'payable') return PAYABLE_RECORDS;
-            if (state.tab === 'split') return SPLIT_RECORDS;
             return RECEIVABLE_RECORDS;
         }
 
@@ -166,23 +217,33 @@
         function renderTabs() {
             return ''
                 + '<button class="supplier-order-tab' + (state.tab === 'receivable' ? ' active' : '') + '" type="button" role="tab" aria-selected="' + (state.tab === 'receivable') + '" data-supplier-bill-tab="receivable">应收账单</button>'
-                + '<button class="supplier-order-tab' + (state.tab === 'payable' ? ' active' : '') + '" type="button" role="tab" aria-selected="' + (state.tab === 'payable') + '" data-supplier-bill-tab="payable">应付账单</button>'
-                + '<button class="supplier-order-tab' + (state.tab === 'split' ? ' active' : '') + '" type="button" role="tab" aria-selected="' + (state.tab === 'split') + '" data-supplier-bill-tab="split">分账结算</button>';
+                + '<button class="supplier-order-tab' + (state.tab === 'payable' ? ' active' : '') + '" type="button" role="tab" aria-selected="' + (state.tab === 'payable') + '" data-supplier-bill-tab="payable">应付账单</button>';
+        }
+
+        function getPayModeOptions() {
+            return state.tab === 'payable'
+                ? ['全部付费方式', '预付费', '后付费']
+                : ['全部付费方式', '一次性付款', '分期付款'];
+        }
+
+        function getStatusOptions() {
+            return state.tab === 'payable'
+                ? ['全部账单状态', '待出账', '待支付', '待支付确认', '已结清']
+                : BILL_STATUS_OPTIONS;
         }
 
         function renderFilterPanel() {
             return ''
                 + '<div class="supplier-order-filter-panel supplier-bill-filter-panel' + (state.filterOpen ? ' show' : '') + '">'
                 +   '<select data-supplier-bill-business aria-label="业务类型">' + renderOptions(getBusinessTypes(), state.businessType) + '</select>'
-                +   '<select data-supplier-bill-pay-mode aria-label="付费方式">' + renderOptions(['全部付费方式', '预付费', '后付费', '自动分账'], state.payMode) + '</select>'
-                +   '<select data-supplier-bill-status aria-label="账单状态">' + renderOptions(BILL_STATUS_OPTIONS, state.status) + '</select>'
+                +   '<select data-supplier-bill-pay-mode aria-label="付费方式">' + renderOptions(getPayModeOptions(), state.payMode) + '</select>'
+                +   '<select data-supplier-bill-status aria-label="账单状态">' + renderOptions(getStatusOptions(), state.status) + '</select>'
                 +   '<label class="supplier-bill-date"><span>账单生成时间</span><input type="date" value="' + escapeHtml(state.createdDate) + '" data-supplier-bill-date></label>'
                 +   '<button class="supplier-order-filter-reset" type="button" data-supplier-bill-reset>' + icon('reset') + '<span>重置</span></button>'
                 + '</div>';
         }
 
         function getActions(item) {
-            if (state.tab === 'split') return [['分账详情', 'detail']];
             if (state.tab === 'payable' && item.status === '待支付') return [['去支付', 'pay'], ['账单详情', 'detail']];
             if (state.tab === 'receivable' && item.status === '待供方确认') return [['确认账单', 'confirm'], ['账单详情', 'detail']];
             if (item.status === '已结清' && item.showUsage) return [['用量明细', 'usage'], ['账单详情', 'detail']];
@@ -202,7 +263,7 @@
                     + '<tr>'
                     +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.billNo) + '">' + escapeHtml(item.billNo) + '</td>'
                     +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.orderNo) + '"><button class="supplier-bill-order-link" type="button" data-supplier-bill-order="' + escapeHtml(item.orderNo) + '">' + escapeHtml(item.orderNo) + '</button></td>'
-                    +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.target) + '">' + escapeHtml(item.target) + (item.splitFee ? '<span class="supplier-bill-split-detail">' + escapeHtml(item.quantity) + ' · 平台费¥' + escapeHtml(item.splitFee) + ' · 供方到账¥' + escapeHtml(item.netAmount) + '</span>' : '') + '</td>'
+                    +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.target) + '">' + escapeHtml(item.target) + '</td>'
                     +   '<td>' + escapeHtml(item.businessType) + '</td>'
                     +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.targetType) + '">' + escapeHtml(item.targetType) + '</td>'
                     +   '<td class="supplier-bill-ellipsis" title="' + escapeHtml(item.counterparty) + '">' + escapeHtml(item.counterparty) + '</td>'
@@ -248,6 +309,7 @@
             var start = (state.page - 1) * state.pageSize;
             var records = filtered.slice(start, start + state.pageSize);
             var counterpartyLabel = state.tab === 'payable' ? '收款方' : '需求方';
+            var periodLabel = state.tab === 'payable' ? '账期' : '付款期次';
             return ''
                 + '<div class="supplier-bill-table-card">'
                 +   '<div class="supplier-bill-table-scroll" aria-label="交易账单列表，可横向滚动">'
@@ -259,7 +321,7 @@
                 +           '</colgroup>'
                 +           '<thead><tr>'
                 +               '<th>账单编号</th><th>订单编号</th><th>交易标的</th><th>业务类型</th><th>标的类型</th><th>' + counterpartyLabel + '</th><th>付费方式</th><th>计量方式</th>'
-                +               '<th>价格</th><th>购买数量</th><th class="supplier-bill-amount">账单金额(元)</th><th>账单生成时间</th><th>账期</th><th>还款时间</th><th>付款时间</th>'
+                +               '<th>价格</th><th>购买数量</th><th class="supplier-bill-amount">账单金额(元)</th><th>账单生成时间</th><th>' + periodLabel + '</th><th>还款时间</th><th>付款时间</th>'
                 +               '<th class="supplier-bill-status-cell">账单状态</th><th class="supplier-bill-action-cell">操作</th>'
                 +           '</tr></thead>'
                 +           '<tbody>' + renderRows(records) + '</tbody>'
@@ -269,22 +331,197 @@
                 + '</div>';
         }
 
-        function renderSplitDetail() {
-            if (!state.activeSplitBillNo) return '';
-            var item = SPLIT_RECORDS.find(function (record) { return record.billNo === state.activeSplitBillNo; });
-            if (!item) return '';
-            var feeRate = String(item.price || '').match(/[\d.]+%/);
+        function renderDetailFields(fields) {
+            return '<div class="supplier-bill-detail-grid">' + fields.map(function (field) {
+                return '<div class="supplier-bill-detail-field">'
+                    + '<span class="supplier-bill-detail-label">' + escapeHtml(field.label) + '：</span>'
+                    + '<span class="supplier-bill-detail-value">' + (field.html || escapeHtml(field.value || '--')) + '</span>'
+                    + '</div>';
+            }).join('') + '</div>';
+        }
+
+        function renderDetailSection(title, content) {
+            return '<section class="supplier-bill-detail-section">'
+                + '<h3>' + escapeHtml(title) + '</h3>'
+                + content
+                + '</section>';
+        }
+
+        function detailStatus(text, tone) {
+            return '<span class="supplier-bill-detail-status' + (tone ? ' ' + tone : '') + '"><i></i>' + escapeHtml(text) + '</span>';
+        }
+
+        function getStageTone(status) {
+            if (status === '已支付' || status === '支付成功' || status === '分账成功') return 'success';
+            if (String(status || '').indexOf('待支付') === 0 || status === '分账处理中') return 'waiting';
+            return '';
+        }
+
+        function renderStagePayment(stage) {
+            if (!stage.payment) {
+                return '<div class="supplier-bill-stage-empty">尚未发起支付</div>';
+            }
+            return '<div class="supplier-bill-stage-grid">'
+                + '<div><span>支付流水号</span><strong>' + escapeHtml(stage.payment.paymentNo) + '</strong></div>'
+                + '<div><span>实付金额</span><strong>¥' + escapeHtml(stage.payment.amount) + '</strong></div>'
+                + '<div><span>支付渠道</span><strong>' + escapeHtml(stage.payment.channel) + '</strong></div>'
+                + '<div><span>支付时间</span><strong>' + escapeHtml(stage.payment.paidAt) + '</strong></div>'
+                + '<div><span>支付状态</span><strong>' + detailStatus(stage.payment.status, getStageTone(stage.payment.status)) + '</strong></div>'
+                + '</div>';
+        }
+
+        function renderStageSplit(stage) {
+            var split = stage.payment && stage.payment.split;
+            if (!split) {
+                return '<div class="supplier-bill-stage-empty">当前期次尚未支付，暂未触发分账</div>';
+            }
+            return '<div class="supplier-bill-stage-grid is-split">'
+                + '<div><span>平台服务费</span><strong>¥' + escapeHtml(split.fee) + '</strong></div>'
+                + '<div><span>供方分账金额</span><strong class="is-money">¥' + escapeHtml(split.netAmount) + '</strong></div>'
+                + '<div><span>外部分账流水号</span><strong>' + escapeHtml(split.outTraceNo) + '</strong></div>'
+                + '<div><span>分账接收方编号</span><strong>' + escapeHtml(split.receiverId) + '</strong></div>'
+                + '<div><span>分账状态</span><strong>' + detailStatus(split.status, getStageTone(split.status)) + '</strong></div>'
+                + '<div><span>最近查询时间</span><strong>' + escapeHtml(split.queriedAt) + '</strong></div>'
+                + '</div>';
+        }
+
+        function renderPaymentStage(stage, index, total, includeSplit) {
+            var stageLabel = total === 1 ? '一次性付款' : '第' + (index + 1) + '/' + total + '期';
+            return '<article class="supplier-bill-payment-stage' + (stage.current ? ' is-current' : '') + '">'
+                + '<header class="supplier-bill-payment-stage-head">'
+                +   '<div><span>' + escapeHtml(stageLabel) + '</span><strong>' + escapeHtml(stage.name) + '</strong></div>'
+                +   '<div class="supplier-bill-payment-stage-tags">' + (stage.current ? '<em>当前账单</em>' : '') + detailStatus(stage.status, getStageTone(stage.status)) + '</div>'
+                + '</header>'
+                + '<div class="supplier-bill-stage-summary">'
+                +   '<div><span>付款比例</span><strong>' + escapeHtml(stage.percent || '--') + '</strong></div>'
+                +   '<div><span>应付金额</span><strong>¥' + escapeHtml(stage.amount) + '</strong></div>'
+                +   '<div><span>付款节点</span><strong>' + escapeHtml(stage.node || '--') + '</strong></div>'
+                + '</div>'
+                + '<div class="supplier-bill-stage-block"><h4>支付记录</h4>' + renderStagePayment(stage) + '</div>'
+                + (includeSplit ? '<div class="supplier-bill-stage-block is-split"><h4>分账信息</h4>' + renderStageSplit(stage) + '</div>' : '')
+                + '</article>';
+        }
+
+        function getFallbackPaymentStages(item) {
+            var hasPaid = item.paidAt && item.paidAt !== '--';
+            var digits = String(item.billNo || '').replace(/\D/g, '');
+            return [{
+                name: '账单支付',
+                percent: '100%',
+                amount: item.amount,
+                node: '账单生成后',
+                status: hasPaid ? '已支付' : item.status,
+                current: true,
+                payment: hasPaid ? {
+                    paymentNo: 'PAY' + (digits.slice(-24) || '202607230000000000000001'),
+                    amount: item.amount,
+                    channel: '统一支付平台',
+                    paidAt: item.paidAt,
+                    status: '支付成功'
+                } : null
+            }];
+        }
+
+        function renderPaymentDetail(item) {
+            var stages = item.paymentStages || getFallbackPaymentStages(item);
+            return '<div class="supplier-bill-payment-groups">' + stages.map(function (stage, index) {
+                return renderPaymentStage(stage, index, stages.length, state.tab === 'receivable');
+            }).join('') + '</div>';
+        }
+
+        function renderFlowDetail(item) {
+            var hasPaid = item.paidAt && item.paidAt !== '--';
+            var payer = state.tab === 'payable' ? supplierName : item.counterparty;
+            var receiver = state.tab === 'payable' ? item.counterparty : supplierName;
+            var currentStage = (item.paymentStages || []).find(function (stage) { return stage.current; });
+            var currentSplit = currentStage && currentStage.payment && currentStage.payment.split;
+            var rows = [
+                { operator: '系统自动', type: '生成账单', result: '成功', content: '--', time: item.createdAt }
+            ];
+
+            if (hasPaid) {
+                rows.push({ operator: payer, type: '支付账单', result: '成功', content: '--', time: item.paidAt });
+                rows.push({ operator: receiver, type: '确认支付账单', result: '通过', content: '--', time: item.paidAt });
+                if (currentSplit) rows.push({ operator: '统一支付平台', type: '执行分账', result: currentSplit.status, content: '供方到账 ¥' + currentSplit.netAmount, time: currentSplit.appliedAt });
+            } else if (item.status === '待支付确认') {
+                rows.push({ operator: payer, type: '提交支付凭证', result: '成功', content: '等待收款方确认', time: item.createdAt });
+            } else if (item.status === '待供方确认') {
+                rows.push({ operator: item.counterparty, type: '提交账单确认', result: '成功', content: '等待供方确认', time: item.createdAt });
+            } else if (item.status === '待需方确认') {
+                rows.push({ operator: supplierName, type: '提交账单确认', result: '成功', content: '等待需方确认', time: item.createdAt });
+            }
+
+            return '<div class="supplier-bill-detail-table-scroll is-flow">'
+                + '<table class="supplier-bill-detail-table">'
+                + '<thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead>'
+                + '<tbody>' + rows.map(function (row) {
+                    return '<tr><td>' + escapeHtml(row.operator) + '</td><td>' + escapeHtml(row.type) + '</td><td>' + escapeHtml(row.result) + '</td><td>' + escapeHtml(row.content) + '</td><td>' + escapeHtml(row.time) + '</td></tr>';
+                }).join('') + '</tbody></table></div>';
+        }
+
+        function renderBillDetail(item) {
+            var counterpartyLabel = state.tab === 'payable' ? '收款方' : '需求方';
             return ''
-                + '<div class="supplier-split-modal-mask" data-split-detail-close></div>'
-                + '<aside class="supplier-split-modal" role="dialog" aria-modal="true" aria-labelledby="supplierSplitDetailTitle">'
-                +   '<header><div><h2 id="supplierSplitDetailTitle">分账结算详情</h2><p>' + escapeHtml(item.outTraceNo) + '</p></div><button type="button" aria-label="关闭" data-split-detail-close>×</button></header>'
-                +   '<div class="supplier-split-modal-body">'
-                +       '<section><h3>关联交易</h3><div class="supplier-split-detail-grid"><div><span>订单编号</span><strong>' + escapeHtml(item.orderNo) + '</strong></div><div><span>交易标的</span><strong>' + escapeHtml(item.target) + '</strong></div><div><span>付款期次</span><strong>' + escapeHtml(item.quantity + ' · ' + item.period) + '</strong></div><div><span>需方付款时间</span><strong>' + escapeHtml(item.paidAt) + '</strong></div></div></section>'
-                +       '<section><h3>资金分配</h3><div class="supplier-split-money-grid"><div><span>需方实付金额</span><strong>¥' + escapeHtml(item.amount) + '</strong></div><div><span>平台服务费</span><strong>¥' + escapeHtml(item.splitFee) + '</strong><small>' + escapeHtml(feeRate ? feeRate[0] : item.price) + '</small></div><div class="is-net"><span>供方实际分账金额</span><strong>¥' + escapeHtml(item.netAmount) + '</strong></div></div></section>'
-                +       '<section><h3>分账结果</h3><div class="supplier-split-detail-grid"><div><span>分账接收方</span><strong>深圳市龙岗数智科技有限公司</strong></div><div><span>接收方编号</span><strong>RCV-202607-00986</strong></div><div><span>分账单号</span><strong>' + escapeHtml(item.outTraceNo) + '</strong></div><div><span>分账状态</span><strong class="supplier-split-status">' + escapeHtml(item.status) + '</strong></div><div><span>分账时间</span><strong>' + escapeHtml(item.createdAt) + '</strong></div><div><span>结算账户</span><strong>中国农业银行 · 4405 **** 12345</strong></div></div></section>'
+                + '<div class="supplier-bill-detail-mask" data-supplier-bill-detail-layer data-supplier-bill-detail-close></div>'
+                + '<aside class="supplier-bill-detail-drawer" role="dialog" aria-modal="true" aria-labelledby="supplierBillDetailTitle" data-supplier-bill-detail-layer>'
+                +   '<header class="supplier-bill-detail-head">'
+                +       '<button type="button" aria-label="关闭账单详情" data-supplier-bill-detail-close data-supplier-bill-detail-close-button>' + icon('close') + '</button>'
+                +       '<h2 id="supplierBillDetailTitle">账单详情</h2>'
+                +   '</header>'
+                +   '<div class="supplier-bill-detail-body">'
+                +       renderDetailSection('订单信息', renderDetailFields([
+                            { label: '订单编号', value: item.orderNo },
+                            { label: '交易标的', value: item.target },
+                            { label: '业务类型', value: item.businessType },
+                            { label: '标的类型', value: item.targetType },
+                            { label: counterpartyLabel, value: item.counterparty },
+                            { label: '付费方式', value: item.payMode },
+                            { label: '计量方式', value: item.measureMode },
+                            { label: '价格', value: item.price },
+                            { label: '订单金额', value: '¥' + (item.orderAmount || item.amount) },
+                            { label: '购买数量', value: item.quantity }
+                        ]))
+                +       renderDetailSection('账单信息', renderDetailFields([
+                            { label: '账单编号', value: item.billNo },
+                            { label: '账单状态', html: '<span class="supplier-order-status">' + escapeHtml(item.status) + '</span>' },
+                            { label: '账单金额', value: '¥' + item.amount },
+                            { label: '账单生成时间', value: item.createdAt },
+                            { label: state.tab === 'payable' ? '账期' : '付款期次', value: item.period },
+                            { label: '还款时间', value: item.repaymentAt },
+                            { label: '付款时间', value: item.paidAt }
+                        ]))
+                +       renderDetailSection('支付信息', renderPaymentDetail(item))
+                +       renderDetailSection('流程动态', renderFlowDetail(item))
                 +   '</div>'
-                +   '<footer><button type="button" data-split-detail-close>关闭</button></footer>'
                 + '</aside>';
+        }
+
+        function closeBillDetail() {
+            var billNo = state.activeBillNo;
+            panel.querySelectorAll('[data-supplier-bill-detail-layer]').forEach(function (layer) { layer.remove(); });
+            state.activeBillNo = '';
+            document.body.classList.remove('supplier-bill-detail-open');
+            panel.querySelectorAll('[data-supplier-bill-action="账单详情"]').forEach(function (button) {
+                if (button.dataset.supplierBillNo === billNo) button.focus();
+            });
+        }
+
+        function bindBillDetailEvents() {
+            panel.querySelectorAll('[data-supplier-bill-detail-close]').forEach(function (control) {
+                control.addEventListener('click', closeBillDetail);
+            });
+        }
+
+        function openBillDetail(billNo) {
+            var item = getCurrentRecords().find(function (record) { return record.billNo === billNo; });
+            if (!item) return;
+            closeBillDetail();
+            state.activeBillNo = billNo;
+            panel.insertAdjacentHTML('beforeend', renderBillDetail(item));
+            document.body.classList.add('supplier-bill-detail-open');
+            bindBillDetailEvents();
+            var closeButton = panel.querySelector('[data-supplier-bill-detail-close-button]');
+            if (closeButton) closeButton.focus();
         }
 
         function render() {
@@ -302,7 +539,6 @@
                 +   renderFilterPanel()
                 +   renderTable()
                 + '</div>'
-                + renderSplitDetail()
                 + '<div class="supplier-order-toast" role="status" aria-live="polite" data-supplier-bill-toast>' + icon('success') + '<span></span></div>';
             bindEvents();
         }
@@ -382,7 +618,7 @@
 
             var exportButton = panel.querySelector('[data-supplier-bill-export]');
             if (exportButton) exportButton.addEventListener('click', function () {
-                showToast((state.tab === 'payable' ? '应付账单' : (state.tab === 'split' ? '分账结算记录' : '应收账单')) + '导出功能将在后续设计，本页仅展示操作入口。');
+                showToast((state.tab === 'payable' ? '应付账单' : '应收账单') + '导出功能将在后续设计，本页仅展示操作入口。');
             });
 
             panel.querySelectorAll('[data-supplier-bill-order]').forEach(function (button) {
@@ -420,24 +656,21 @@
 
             panel.querySelectorAll('[data-supplier-bill-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    if (state.tab === 'split' && this.dataset.supplierBillAction === '分账详情') {
-                        state.activeSplitBillNo = this.dataset.supplierBillNo;
-                        render();
+                    if (this.dataset.supplierBillAction === '账单详情') {
+                        openBillDetail(this.dataset.supplierBillNo);
                         return;
                     }
                     showToast(this.dataset.supplierBillAction + '功能将在后续设计，本页仅展示操作入口。');
                 });
             });
 
-            panel.querySelectorAll('[data-split-detail-close]').forEach(function (control) {
-                control.addEventListener('click', function () {
-                    state.activeSplitBillNo = '';
-                    render();
-                });
-            });
         }
 
         render();
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            if (state.activeBillNo) closeBillDetail();
+        });
     }
 
     if (document.readyState === 'loading') {
