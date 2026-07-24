@@ -111,6 +111,26 @@
 
 /* ====== 帖子列表（热门/发布/回复/精华/抢沙发） ====== */
 .post-list { display: flex; flex-direction: column; gap: 0; }
+.community-pagination {
+    display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+    padding-top: 18px;
+}
+.community-page-info { margin-right: 8px; font-size: 13px; color: #999; }
+.community-page-btn {
+    min-width: 32px; height: 32px; padding: 0 10px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    border: 1px solid #e5e7eb; border-radius: 6px;
+    background: #fff; color: #666; font-size: 13px; cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+}
+.community-page-btn:hover:not(:disabled):not(.active) {
+    color: var(--forest-green); border-color: var(--forest-green);
+}
+.community-page-btn.active {
+    color: #fff; border-color: var(--forest-green); background: var(--forest-green);
+}
+.community-page-btn:disabled { color: #c9cdd4; background: #f7f8fa; cursor: not-allowed; }
+.community-page-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 .post-item {
     display: flex; gap: 14px; padding: 20px 0;
     border-bottom: 1px solid #f3f4f6;
@@ -512,22 +532,36 @@
         "new": [
             { avatarText: '数', user: '数据小白', time: '5分钟前', title: '如何快速申请水务监测数据资源？新手求教', excerpt: '刚注册平台，想申请一批水质与管网监测数据做分析，但不太清楚授权范围和材料要求。', board: '数据资源申请专区', tags: [], views: '35', replies: '4', isNew: true },
             { avatarText: '龙', user: '龙岗开发者', time: '15分钟前', title: 'API 接口鉴权失败的排查步骤整理', excerpt: '把接口调用中遇到的 token 过期、IP 白名单、签名顺序等问题梳理成了排查清单。', board: '数据服务专区', tags: ['精华'], views: '128', replies: '18', isNew: true },
-            { avatarText: '王', user: '王数据', time: '1小时前', title: '城市治理指标看板的数据口径如何保持一致？', excerpt: '多个部门提供同类指标时，统计周期和去重规则不一致，想听听大家的治理经验。', board: '应用场景专区', tags: ['高亮'], views: '216', replies: '23' }
+            { avatarText: '王', user: '王数据', time: '1小时前', title: '城市治理指标看板的数据口径如何保持一致？', excerpt: '多个部门提供同类指标时，统计周期和去重规则不一致，想听听大家的治理经验。', board: '应用场景专区', tags: ['高亮'], views: '216', replies: '23' },
+            { avatarText: '企', user: '企业数据官', time: '2小时前', title: '企业数据资源入表前需要完成哪些准备工作？', excerpt: '正在梳理企业数据资产，想了解权属确认、质量评价和成本归集的先后顺序。', board: '数据提供方专区', tags: [], views: '94', replies: '7' }
         ],
         reply: [
-            { avatarText: '张', user: '张三', time: '刚刚', title: '可信数据空间接入前需要准备哪些合规材料？', excerpt: '我们准备接入可信数据空间，想确认数据来源证明、授权链路和安全评估材料的准备顺序。', board: '政策学习专区', tags: ['推荐'], views: '356', replies: '42' }
+            { avatarText: '张', user: '张三', time: '刚刚', title: '可信数据空间接入前需要准备哪些合规材料？', excerpt: '我们准备接入可信数据空间，想确认数据来源证明、授权链路和安全评估材料的准备顺序。', board: '政策学习专区', tags: ['推荐'], views: '356', replies: '42' },
+            { avatarText: '申', user: '资源申请人', time: '3分钟前', title: '公共数据申请中的授权范围应该如何填写？', excerpt: '管理员刚刚补充了授权对象、使用期限和成果范围的填写说明，供申请单位参考。', board: '数据资源申请专区', tags: [], views: '186', replies: '16' },
+            { avatarText: '接', user: '接口工程师', time: '8分钟前', title: '数据接口调用频率限制与扩容申请说明', excerpt: '平台技术人员回复了默认频率、峰值保护及扩容申请需要提交的材料。', board: '数据服务专区', tags: ['推荐'], views: '428', replies: '31' },
+            { avatarText: '数', user: '数商服务专员', time: '20分钟前', title: '数商入驻材料审核不通过后如何重新提交？', excerpt: '针对常见驳回原因补充了修改入口、材料版本和重新审核时效说明。', board: '数据提供方专区', tags: [], views: '275', replies: '22' }
         ],
         best: [
-            { avatarText: '商', user: '龙岗数商', time: '3天前', title: '公共数据授权运营项目落地经验分享', excerpt: '从需求确认、数据目录梳理、样例验证到服务交付，复盘一个授权运营项目的关键节点。', board: '个人分享', tags: ['精华', '推荐'], views: '2,341', replies: '89' }
+            { avatarText: '商', user: '龙岗数商', time: '3天前', title: '公共数据授权运营项目落地经验分享', excerpt: '从需求确认、数据目录梳理、样例验证到服务交付，复盘一个授权运营项目的关键节点。', board: '个人分享', tags: ['精华', '推荐'], views: '2,341', replies: '89' },
+            { avatarText: '空', user: '空间运营团队', time: '4天前', title: '可信数据空间供需对接实操手册', excerpt: '整理资源接入、身份认证、使用控制和成果交付的完整实操路径。', board: '教程指导', tags: ['精华'], views: '1,862', replies: '76' },
+            { avatarText: '质', user: '数据质量组', time: '5天前', title: '数据产品质量评价指标设计实践', excerpt: '围绕完整性、准确性、及时性和一致性给出可落地的评价方法。', board: '数据产品专区', tags: ['精华', '推荐'], views: '1,539', replies: '63' },
+            { avatarText: '政', user: '政策研究员', time: '1周前', title: '数据流通交易合规审查要点解读', excerpt: '结合典型场景说明数据来源、授权边界和安全责任的审查重点。', board: '政策学习专区', tags: ['精华'], views: '1,274', replies: '48' }
         ],
         first: [
-            { avatarText: '新', user: '新手上路', time: '10分钟前', title: 'CIM 数据服务有哪些可复用应用案例？', excerpt: '想了解 CIM 数据服务在城市管理、园区运营和施工监管方面的典型应用，有没有案例资料可以参考？', board: '应用场景专区', tags: [], views: '18', replies: '0' }
+            { avatarText: '新', user: '新手上路', time: '10分钟前', title: 'CIM 数据服务有哪些可复用应用案例？', excerpt: '想了解 CIM 数据服务在城市管理、园区运营和施工监管方面的典型应用，有没有案例资料可以参考？', board: '应用场景专区', tags: [], views: '18', replies: '0' },
+            { avatarText: '园', user: '园区运营', time: '18分钟前', title: '园区企业画像需要整合哪些基础数据？', excerpt: '准备建设企业画像，希望了解工商、税务、用能等数据的常见组合方式。', board: '数据需求方专区', tags: [], views: '12', replies: '0' },
+            { avatarText: '低', user: '低空观察员', time: '25分钟前', title: '低空航线分析可以申请哪些公共数据？', excerpt: '计划开展低空航线可行性分析，想了解气象、地理和人口数据的申请渠道。', board: '数据资源申请专区', tags: [], views: '9', replies: '0' },
+            { avatarText: '报', user: '报表新手', time: '40分钟前', title: '数据分析报告服务支持自定义指标吗？', excerpt: '希望按项目口径调整报告指标，想确认下单前是否可以先沟通计算规则。', board: '数据服务专区', tags: [], views: '7', replies: '0' }
         ],
         fav: [
             { avatarText: '产', user: '产品运营', time: '昨天 16:40', title: '数据产品上架审核规范与常见驳回原因', excerpt: '包含材料准备、审核标准、常见驳回原因和修改建议，适合产品发布前收藏核对。', board: '数据产品专区', tags: ['置顶', '精华'], views: '8,932', replies: '214', action: '取消收藏' },
-            { avatarText: '龙', user: '龙岗开发者', time: '昨天 14:49', title: 'API 接口鉴权失败的排查步骤整理', excerpt: '接口联调中遇到鉴权失败时，可以按 token、签名、白名单、时间戳四类问题逐项检查。', board: '数据服务专区', tags: ['精华'], views: '128', replies: '18', action: '取消收藏' }
+            { avatarText: '龙', user: '龙岗开发者', time: '昨天 14:49', title: 'API 接口鉴权失败的排查步骤整理', excerpt: '接口联调中遇到鉴权失败时，可以按 token、签名、白名单、时间戳四类问题逐项检查。', board: '数据服务专区', tags: ['精华'], views: '128', replies: '18', action: '取消收藏' },
+            { avatarText: '商', user: '龙岗数商', time: '3天前', title: '公共数据授权运营项目落地经验分享', excerpt: '从需求确认到服务交付的关键节点清晰，适合作为项目推进检查清单。', board: '个人分享', tags: ['精华', '推荐'], views: '2,341', replies: '89', action: '取消收藏' },
+            { avatarText: '空', user: '空间运营团队', time: '4天前', title: '可信数据空间供需对接实操手册', excerpt: '覆盖资源接入、身份认证、使用控制和成果交付，便于后续对照执行。', board: '教程指导', tags: ['精华'], views: '1,862', replies: '76', action: '取消收藏' }
         ]
     };
+    var COMMUNITY_PAGE_SIZE = 10;
+    var communityPageState = { hot: 1, "new": 1, reply: 1, best: 1, first: 1, mine: 1, fav: 1 };
 
     var communityMarkClass = { '置顶': 'pin', '精华': 'featured', '推荐': 'recommend' };
     var communityStatViewIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
@@ -579,17 +613,77 @@
         });
     }
 
-    function renderCommunityPanels() {
-        Object.keys(COMMUNITY_PANEL_POSTS).forEach(function(key) {
-            var panel = document.getElementById('panel-' + key);
-            var list = panel ? panel.querySelector('.post-list') : null;
-            if (!list) return;
-            list.innerHTML = COMMUNITY_PANEL_POSTS[key].map(renderCommunityPost).join('');
+    function normalizeCommunityPage(key, total) {
+        var totalPages = Math.max(1, Math.ceil(total / COMMUNITY_PAGE_SIZE));
+        var current = Math.min(Math.max(communityPageState[key] || 1, 1), totalPages);
+        communityPageState[key] = current;
+        return { current: current, totalPages: totalPages };
+    }
+
+    function renderCommunityPagination(panel, key, total) {
+        var page = normalizeCommunityPage(key, total);
+        var pager = panel.querySelector('.community-pagination');
+        if (!pager) {
+            pager = document.createElement('div');
+            pager.className = 'community-pagination';
+            panel.appendChild(pager);
+        }
+        pager.dataset.pageKey = key;
+        var prevIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>';
+        var nextIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
+        var html = '<span class="community-page-info">共 ' + total + ' 条</span>';
+        html += '<button type="button" class="community-page-btn" data-page="' + (page.current - 1) + '" aria-label="上一页"' + (page.current === 1 ? ' disabled' : '') + '>' + prevIcon + '<span>上一页</span></button>';
+        for (var i = 1; i <= page.totalPages; i++) {
+            html += '<button type="button" class="community-page-btn' + (i === page.current ? ' active' : '') + '" data-page="' + i + '" aria-label="第' + i + '页">' + i + '</button>';
+        }
+        html += '<button type="button" class="community-page-btn" data-page="' + (page.current + 1) + '" aria-label="下一页"' + (page.current === page.totalPages ? ' disabled' : '') + '><span>下一页</span>' + nextIcon + '</button>';
+        pager.innerHTML = html;
+    }
+
+    function renderCommunityPanel(key) {
+        var panel = document.getElementById('panel-' + key);
+        var list = panel ? panel.querySelector('.post-list') : null;
+        var posts = COMMUNITY_PANEL_POSTS[key] || [];
+        if (!list) return;
+        var page = normalizeCommunityPage(key, posts.length);
+        var start = (page.current - 1) * COMMUNITY_PAGE_SIZE;
+        list.innerHTML = posts.slice(start, start + COMMUNITY_PAGE_SIZE).map(renderCommunityPost).join('');
+        renderCommunityPagination(panel, key, posts.length);
+        bindCommunityPostTitles(list);
+    }
+
+    function renderMinePage() {
+        var panel = document.getElementById('panel-mine');
+        var list = panel ? panel.querySelector('.post-list') : null;
+        if (!list) return;
+        var items = Array.from(list.children).filter(function(item) {
+            return item.classList.contains('post-item');
         });
+        var page = normalizeCommunityPage('mine', items.length);
+        var start = (page.current - 1) * COMMUNITY_PAGE_SIZE;
+        items.forEach(function(item, index) {
+            item.style.display = index >= start && index < start + COMMUNITY_PAGE_SIZE ? 'flex' : 'none';
+        });
+        renderCommunityPagination(panel, 'mine', items.length);
+    }
+
+    function renderCommunityPanels() {
+        Object.keys(COMMUNITY_PANEL_POSTS).forEach(renderCommunityPanel);
     }
 
     applyCommunityBoardSummaries();
     renderCommunityPanels();
+
+    document.querySelector('.cm-main').addEventListener('click', function(e) {
+        var pageButton = e.target.closest('.community-page-btn[data-page]');
+        if (!pageButton || pageButton.disabled) return;
+        var pager = pageButton.closest('.community-pagination');
+        var key = pager ? pager.dataset.pageKey : '';
+        if (!key) return;
+        communityPageState[key] = Number(pageButton.dataset.page);
+        if (key === 'mine') renderMinePage();
+        else renderCommunityPanel(key);
+    });
 
     // Tab切换
     var tabs = document.querySelectorAll('#cmTabs .cm-tab');
@@ -650,6 +744,7 @@
         html += buildMyPostAction('del', '删除');
         actions.innerHTML = html;
     });
+    renderMinePage();
 
     document.querySelectorAll('.btn-post-edit').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
@@ -669,24 +764,29 @@
         });
     });
 
-    // 帖子标题点击跳转详情（根据标题内容判断类型，带来源参数和状态参数）
-    document.querySelectorAll('.post-title').forEach(function(title) {
-        title.addEventListener('click', function() {
-            var text = title.textContent.trim();
-            var type = 'post';
-            if (text.indexOf('数据交易市场还要多少年') !== -1) type = 'vote';
-            else if (text.indexOf('数商招募活动') !== -1) type = 'activity';
-            var activeTab = document.querySelector('.cm-tab.active');
-            var hash = activeTab ? (activeTab.dataset.tab || '') : '';
-            var from = 'community.html' + (hash ? '#' + hash : '');
-            var url = 'community-detail.html?type=' + type + '&from=' + encodeURIComponent(from);
-            var status = title.getAttribute('data-status');
-            var statusMsg = title.getAttribute('data-status-msg');
-            if (status) url += '&status=' + encodeURIComponent(status);
-            if (statusMsg) url += '&statusMsg=' + encodeURIComponent(statusMsg);
-            window.location.href = url;
+    // 帖子标题点击跳转详情（分页渲染后重新绑定，保留来源和状态参数）
+    function bindCommunityPostTitles(scope) {
+        scope.querySelectorAll('.post-title').forEach(function(title) {
+            if (title.dataset.communityLinkBound === 'true') return;
+            title.dataset.communityLinkBound = 'true';
+            title.addEventListener('click', function() {
+                var text = title.textContent.trim();
+                var type = 'post';
+                if (text.indexOf('数据交易市场还要多少年') !== -1) type = 'vote';
+                else if (text.indexOf('数商招募活动') !== -1) type = 'activity';
+                var activeTab = document.querySelector('.cm-tab.active');
+                var hash = activeTab ? (activeTab.dataset.tab || '') : '';
+                var from = 'community.html' + (hash ? '#' + hash : '');
+                var url = 'community-detail.html?type=' + type + '&from=' + encodeURIComponent(from);
+                var status = title.getAttribute('data-status');
+                var statusMsg = title.getAttribute('data-status-msg');
+                if (status) url += '&status=' + encodeURIComponent(status);
+                if (statusMsg) url += '&statusMsg=' + encodeURIComponent(statusMsg);
+                window.location.href = url;
+            });
         });
-    });
+    }
+    bindCommunityPostTitles(document.getElementById('panel-mine'));
 
     // 我的帖子 — 删除按钮确认提示
     document.querySelectorAll('.btn-post-delete').forEach(function(btn) {
@@ -704,11 +804,8 @@
                     postItem.style.transition = 'opacity .3s, max-height .3s';
                     postItem.style.opacity = '0';
                     setTimeout(function() {
-                        postItem.style.maxHeight = '0';
-                        postItem.style.overflow = 'hidden';
-                        postItem.style.padding = '0';
-                        postItem.style.margin = '0';
-                        postItem.style.borderBottom = 'none';
+                        postItem.remove();
+                        renderMinePage();
                     }, 300);
                     setTimeout(function() {
                         GlobalDialog.success({ title: '删除成功', desc: '帖子已成功删除' });

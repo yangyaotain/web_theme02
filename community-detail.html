@@ -111,7 +111,7 @@
     margin-right: 8px;
 }
 
-/* 收藏/赞 */
+/* 收藏/赞/举报 */
 .action-bar {
     display: flex; align-items: center; justify-content: center;
     gap: 40px; padding: 20px 0; margin-bottom: 4px;
@@ -119,8 +119,10 @@
 .action-item {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     cursor: pointer; color: #bbb; transition: .15s;
+    padding: 0; border: none; background: transparent; font: inherit;
 }
 .action-item:hover { color: var(--forest-green); }
+.action-item.btn-topic-report:hover { color: #f97316; }
 .action-item svg { width: 28px; height: 28px; }
 .action-item span { font-size: 12px; }
 
@@ -532,6 +534,10 @@
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
                             <span>赞</span>
                         </div>
+                        <button type="button" class="action-item btn-topic-report">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4"/><path d="M5 4h11l-1.5 4L16 12H5"/></svg>
+                            <span>举报</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1526,13 +1532,13 @@
     <div class="report-mask" id="reportModal">
         <div class="report-modal">
             <div class="report-header">
-                <span class="report-title">举报</span>
+                <span class="report-title" id="reportTitle">举报回复</span>
                 <button class="report-close" id="reportClose">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="report-body">
-                <div class="report-subtitle">请点击举报理由</div>
+                <div class="report-subtitle" id="reportSubtitle">请选择举报理由</div>
                 <div class="report-options" id="reportOptions">
                     <label class="report-option"><input type="radio" name="reportReason" value="广告垃圾"> 广告垃圾</label>
                     <label class="report-option"><input type="radio" name="reportReason" value="违规内容"> 违规内容</label>
@@ -1750,10 +1756,14 @@
         var textarea = document.getElementById('reportTextarea');
         var otherRadio = document.getElementById('reportOther');
         var radios = document.querySelectorAll('input[name="reportReason"]');
-        var currentReportFloor = null;
+        var reportTitle = document.getElementById('reportTitle');
+        var reportSubtitle = document.getElementById('reportSubtitle');
+        var currentReportType = 'reply';
 
-        function openReport(floorEl) {
-            currentReportFloor = floorEl;
+        function openReport(type) {
+            currentReportType = type;
+            reportTitle.textContent = type === 'topic' ? '举报主题' : '举报回复';
+            reportSubtitle.textContent = type === 'topic' ? '请选择举报该主题的理由' : '请选择举报该回复的理由';
             radios.forEach(function(r) { r.checked = false; });
             textarea.value = '';
             textarea.classList.remove('show');
@@ -1761,7 +1771,6 @@
         }
         function closeReport() {
             modal.classList.remove('show');
-            currentReportFloor = null;
         }
 
         radios.forEach(function(r) {
@@ -1787,13 +1796,19 @@
                 return;
             }
             closeReport();
-            GlobalDialog.success({ title: '举报已提交', desc: '感谢您的反馈，我们将尽快处理' });
+            GlobalDialog.success({
+                title: '举报已提交',
+                desc: currentReportType === 'topic' ? '主题举报已提交，我们将尽快处理' : '回复举报已提交，我们将尽快处理'
+            });
+        });
+
+        document.querySelector('.btn-topic-report').addEventListener('click', function() {
+            openReport('topic');
         });
 
         document.querySelectorAll('.btn-floor-report').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                var floor = btn.closest('.post-floor');
-                openReport(floor);
+                openReport('reply');
             });
         });
     })();
