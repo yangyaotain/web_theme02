@@ -649,7 +649,8 @@
                             demander: record ? record.user : '',
                             itemName: record ? record.name : '',
                             amount: record ? record.amount : '',
-                            serviceFeeRate: 3,
+                            serviceFeeMode: 'G',
+                            serviceFeeValue: 50,
                             appliedAt: record ? record.appliedAt : '',
                             businessType: 'product',
                             onConfirm: function () {

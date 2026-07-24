@@ -19,6 +19,20 @@
     var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
     var PLATFORM_OPERATOR_MERCHANT_ID = 'MER-PLATFORM-202607-0001';
 
+    function getPlatformBillRows() {
+        var billData = window.TransactionBillDemoData;
+        if (!billData) return [];
+        return billData.getPlatformBills().map(function (item) {
+            item.repayAt = item.repaymentAt || '--';
+            item.actions = item.status === '已结清' && item.showUsage
+                ? ['用量明细', '账单详情']
+                : ['账单详情'];
+            return item;
+        });
+    }
+
+    var PLATFORM_BILL_ROWS = getPlatformBillRows();
+
     function getOperationType(row) {
         if (!row) return '第三方供方';
         if (row.providerMerchantId) return row.providerMerchantId === PLATFORM_OPERATOR_MERCHANT_ID ? '自营' : '第三方供方';
@@ -385,27 +399,25 @@
             activeTitle: '交易账单监测',
             layout: 'billMonitor',
             statusMode: 'dot',
-            total: 102,
+            total: PLATFORM_BILL_ROWS.length,
             selectable: true,
             filters: [
-                { type: 'search', placeholder: '请输入账单编号/订单编号/交易标的/提供方/需求方' },
-                { type: 'select', key: 'space', label: '所属空间', options: ['全部', '流通利用平台'] },
+                { type: 'search', placeholder: '请输入账单编号/订单编号/交易标的/提供方' },
                 { type: 'select', key: 'businessType', label: '业务类型', options: ['全部', '产品交易', '服务交易'] },
                 { type: 'select', key: 'payMode', label: '付费方式', options: ['全部', '预付费', '后付费'] },
-                { type: 'select', key: 'status', label: '账单状态', options: ['全部', '待出账', '待支付', '待支付确认', '已结清', '待供方确认', '待需方确认'] },
-                { type: 'date', placeholder: '账单生成时间：开始时间 - 结束时间' }
+                { type: 'select', key: 'status', label: '账单状态', options: ['全部', '待出账', '待支付', '待支付（首次）', '待支付（阶段）', '待支付（最后）', '待支付确认', '已结清', '待供方确认', '待需方确认'] },
+                { type: 'date', key: 'createdAt', label: '账单生成时间', placeholder: '账单生成时间    开始日期      -      结束日期' }
             ],
             columns: [
-                { key: 'billNo', label: '账单编号' },
-                { key: 'orderNo', label: '订单编号' },
-                { key: 'space', label: '所属空间' },
+                { key: 'billNo', label: '账单编号', ellipsis: true },
+                { key: 'orderNo', label: '订单编号', ellipsis: true },
                 { key: 'target', label: '交易标的', primary: true },
                 { key: 'businessType', label: '业务类型' },
-                { key: 'targetType', label: '标的类型' },
-                { key: 'buyer', label: '需求方' },
-                { key: 'seller', label: '提供方' },
+                { key: 'targetType', label: '标的类型', ellipsis: true },
+                { key: 'buyer', label: '需求方', ellipsis: true },
+                { key: 'seller', label: '提供方', ellipsis: true },
                 { key: 'payMode', label: '付费方式' },
-                { key: 'measureMode', label: '计量方式' },
+                { key: 'measureMode', label: '计量方式', ellipsis: true },
                 { key: 'price', label: '价格' },
                 { key: 'quantity', label: '购买数量' },
                 { key: 'amount', label: '账单金额(元)' },
@@ -416,18 +428,7 @@
                 { key: 'status', label: '账单状态', status: true },
                 { key: '__actions', label: '操作' }
             ],
-            rows: [
-                { billNo: '2026060419485168900000101148674', orderNo: '2026060419400437100000101148221', space: '流通利用平台', target: '坪山区智能制造产业生态图谱', businessType: '产品交易', targetType: '数据集', buyer: '深圳市星途科技发展有限公司', seller: '深圳市龙岗区政务数据运营有限公司', payMode: '预付费', measureMode: '按周期', price: '20元/天', quantity: '10天', amount: '200', createdAt: '2026-06-04 19:48:51', period: '--', repayAt: '--', paidAt: '2026-06-04 19:49:20', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060419214779100000101148551', orderNo: '2026060419184903500000101148173', space: '流通利用平台', target: '罗湖区商业数据咨询服务260604MUZ', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', buyer: '营销机构测试', seller: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '按服务次数计费', price: '100元/次', quantity: '1', amount: '100', createdAt: '2026-06-04 19:21:47', period: '--', repayAt: '--', paidAt: '2026-06-04 19:22:10', status: '已结清', actions: ['账单详情'] },
-                { billNo: '2026060418590146400000101148420', orderNo: '2026060418542062500000101148121', space: '流通利用平台', target: '龙岗企业经营画像数据集晨星园区分析精选版', businessType: '产品交易', targetType: '数据集', buyer: '营销机构测试', seller: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '按次数', price: '100元/次', quantity: '1次', amount: '100', createdAt: '2026-06-04 18:59:01', period: '--', repayAt: '--', paidAt: '2026-06-04 18:59:30', status: '已结清', actions: ['账单详情'] },
-                { billNo: '2026060414483952000000101148245', orderNo: '2026060414472436900000101148980', space: '流通利用平台', target: '龙岗区中小微企业扶持政策匹配数据集', businessType: '产品交易', targetType: '数据集', buyer: '测试需方机构', seller: '测试供方机构', payMode: '预付费', measureMode: '按次数', price: '50元/次', quantity: '5次', amount: '250', createdAt: '2026-06-04 14:48:39', period: '--', repayAt: '--', paidAt: '2026-06-04 14:49:02', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060310295498600000101148220', orderNo: '2026060310262854500000101148928', space: '流通利用平台', target: '龙岗企业经营画像数据集云岭营商研判共享版', businessType: '产品交易', targetType: '数据集', buyer: '营销机构测试', seller: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '按次数', price: '100元/次', quantity: '1次', amount: '100', createdAt: '2026-06-03 10:29:54', period: '--', repayAt: '--', paidAt: '2026-06-03 10:30:08', status: '已结清', actions: ['账单详情'] },
-                { billNo: '2026060117232446800000101148103', orderNo: '2026060117224673400000101148870', space: '流通利用平台', target: '本平台数据产品列表', businessType: '产品交易', targetType: '数据产品', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', payMode: '预付费', measureMode: '按次数', price: '10元/次', quantity: '100次', amount: '1,000', createdAt: '2026-06-01 17:23:24', period: '--', repayAt: '--', paidAt: '2026-06-01 17:24:00', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060116110648700000101148228', orderNo: '2026060116103245300000101148835', space: '流通利用平台', target: '本平台数据产品列表', businessType: '产品交易', targetType: '数据产品', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', payMode: '预付费', measureMode: '按次数', price: '10元/次', quantity: '10次', amount: '100', createdAt: '2026-06-01 16:11:06', period: '--', repayAt: '--', paidAt: '2026-06-01 16:11:13', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060116073189900000101148214', orderNo: '2026060116064067700000101148821', space: '流通利用平台', target: '本平台数据产品列表', businessType: '产品交易', targetType: '数据产品', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', payMode: '预付费', measureMode: '按次数', price: '10元/次', quantity: '100次', amount: '1,000', createdAt: '2026-06-01 16:07:31', period: '--', repayAt: '--', paidAt: '2026-06-01 16:07:40', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060115303659200000101148198', orderNo: '2026060115295448400000101148796', space: '流通利用平台', target: '本平台数据产品列表', businessType: '产品交易', targetType: '数据产品', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', payMode: '预付费', measureMode: '按次数', price: '10元/次', quantity: '100次', amount: '1,000', createdAt: '2026-06-01 15:30:36', period: '--', repayAt: '--', paidAt: '2026-06-01 15:30:45', status: '已结清', actions: ['用量明细', '账单详情'] },
-                { billNo: '2026060115162000000000101148187', orderNo: '2026060115154074400000101148788', space: '流通利用平台', target: '本平台数据产品列表', businessType: '产品交易', targetType: '数据产品', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', payMode: '预付费', measureMode: '按次数', price: '10元/次', quantity: '100次', amount: '1,000', createdAt: '2026-06-01 15:16:20', period: '--', repayAt: '--', paidAt: '2026-06-01 15:16:31', status: '已结清', actions: ['用量明细', '账单详情'] }
-            ]
+            rows: PLATFORM_BILL_ROWS
         },
         usageDetail: {
             title: '用量明细',
@@ -513,7 +514,9 @@
                     }).join('')
                     + '</select>';
             }
-            return '<input class="filter-date" type="text" placeholder="' + escapeHTML(filter.placeholder) + '">';
+            return '<input class="filter-date" type="text" data-monitor-date'
+                + (filter.key ? ' data-monitor-date-key="' + escapeHTML(filter.key) + '"' : '')
+                + ' placeholder="' + escapeHTML(filter.placeholder) + '">';
         }).join('')
             + '<button class="monitor-btn primary" type="button" data-monitor-search-btn>' + ICONS.search + '搜索</button>'
             + '<button class="monitor-btn" type="button" data-monitor-reset-btn>' + ICONS.reset + '重置</button>';
@@ -530,7 +533,16 @@
                 }).join('')
                 + '</select>';
         }
-        return '<div class="monitor-date-wrap"><input class="filter-date" type="text" placeholder="' + escapeHTML(filter.placeholder) + '"><span>' + ICONS.calendar + '</span></div>';
+        if (filter.key) {
+            return '<div class="monitor-date-range" data-monitor-date-key="' + escapeHTML(filter.key) + '">'
+                + '<span class="monitor-date-range-label">' + escapeHTML(filter.label || '查询时间') + '</span>'
+                + '<input class="monitor-date-input" type="datetime-local" step="1" data-monitor-date data-monitor-date-start aria-label="' + escapeHTML((filter.label || '查询时间') + '开始时间') + '">'
+                + '<i>至</i>'
+                + '<input class="monitor-date-input" type="datetime-local" step="1" data-monitor-date data-monitor-date-end aria-label="' + escapeHTML((filter.label || '查询时间') + '结束时间') + '">'
+                + '</div>';
+        }
+        return '<div class="monitor-date-wrap"><input class="filter-date" type="text" data-monitor-date'
+            + ' placeholder="' + escapeHTML(filter.placeholder) + '"><span>' + ICONS.calendar + '</span></div>';
     }
 
     function renderResourceCatalogFilters(page) {
@@ -675,6 +687,37 @@
             + '</div>';
     }
 
+    function normalizeMonitorDateTime(value, isEnd) {
+        var normalized = String(value || '').trim().replace('T', ' ');
+        if (!normalized) return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
+            return normalized + (isEnd ? ' 23:59:59' : ' 00:00:00');
+        }
+        if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(normalized)) {
+            return normalized + ':00';
+        }
+        return normalized;
+    }
+
+    function toMonitorDateTimeLocal(value) {
+        var normalized = normalizeMonitorDateTime(value, false);
+        return normalized ? normalized.replace(' ', 'T') : '';
+    }
+
+    function getMonitorDateRange(control) {
+        if (!control) return null;
+        var startInput = control.querySelector('[data-monitor-date-start]');
+        var endInput = control.querySelector('[data-monitor-date-end]');
+        var startAt = normalizeMonitorDateTime(startInput ? startInput.value : '', false);
+        var endAt = normalizeMonitorDateTime(endInput ? endInput.value : '', true);
+        if (!startAt && !endAt) return null;
+        return {
+            startAt: startAt,
+            endAt: endAt,
+            invalid: Boolean(startAt && endAt && startAt > endAt)
+        };
+    }
+
     function getRows(page, state, root) {
         var keywordInput = root.querySelector('[data-monitor-search]');
         var keyword = keywordInput ? keywordInput.value.trim().toLowerCase() : '';
@@ -694,6 +737,18 @@
                     return String(row[key] || '') === value;
                 });
             }
+        });
+
+        root.querySelectorAll('[data-monitor-date-key]').forEach(function (input) {
+            var key = input.getAttribute('data-monitor-date-key');
+            var range = getMonitorDateRange(input);
+            if (!key || !range || range.invalid) return;
+            rows = rows.filter(function (row) {
+                var value = String(row[key] || '');
+                return value
+                    && (!range.startAt || value >= range.startAt)
+                    && (!range.endAt || value <= range.endAt);
+            });
         });
 
         if (keyword) {
@@ -1101,74 +1156,190 @@
         };
     }
 
-    function billDrawerFields(fields) {
-        return '<div class="bill-detail-grid">' + fields.map(function (item) {
-            return '<div class="bill-detail-field">'
-                + '<span class="label">' + escapeHTML(item.label) + '：</span>'
-                + '<span class="value">' + (item.html || escapeHTML(item.value || '--')) + '</span>'
+    function renderBillDetailFields(fields) {
+        return '<div class="supplier-bill-detail-grid">' + fields.map(function (field) {
+            return '<div class="supplier-bill-detail-field">'
+                + '<span class="supplier-bill-detail-label">' + escapeHTML(field.label) + '：</span>'
+                + '<span class="supplier-bill-detail-value">' + (field.html || escapeHTML(field.value || '--')) + '</span>'
                 + '</div>';
         }).join('') + '</div>';
     }
 
-    function billDrawerSection(title, html) {
-        return '<section class="bill-detail-section">'
+    function renderBillDetailSection(title, content) {
+        return '<section class="supplier-bill-detail-section">'
             + '<h3>' + escapeHTML(title) + '</h3>'
-            + html
+            + content
             + '</section>';
     }
 
-    function renderBillDetail(row) {
-        var paidAt = row.paidAt || '2026-06-01 16:11:13';
-        var paidAmount = Number(String(row.amount || '0').replace(/,/g, '')) || 0;
+    function renderBillDetailStatus(text, tone) {
+        return '<span class="supplier-bill-detail-status' + (tone ? ' ' + tone : '') + '"><i></i>' + escapeHTML(text) + '</span>';
+    }
+
+    function getBillStageTone(status) {
+        if (status === '已支付' || status === '支付成功' || status === '分账成功') return 'success';
+        if (String(status || '').indexOf('待支付') === 0 || status === '分账处理中') return 'waiting';
+        return '';
+    }
+
+    function renderBillStagePayment(stage) {
+        if (!stage.payment) {
+            return '<div class="supplier-bill-stage-empty">尚未发起支付</div>';
+        }
+        return '<div class="supplier-bill-stage-grid">'
+            + '<div><span>支付流水号</span><strong>' + escapeHTML(stage.payment.paymentNo) + '</strong></div>'
+            + '<div><span>实付金额</span><strong>¥' + escapeHTML(stage.payment.amount) + '</strong></div>'
+            + '<div><span>支付渠道</span><strong>' + escapeHTML(stage.payment.channel) + '</strong></div>'
+            + '<div><span>支付时间</span><strong>' + escapeHTML(stage.payment.paidAt) + '</strong></div>'
+            + '<div><span>支付状态</span><strong>' + renderBillDetailStatus(stage.payment.status, getBillStageTone(stage.payment.status)) + '</strong></div>'
+            + '</div>';
+    }
+
+    function renderBillStageSplit(stage) {
+        var split = stage.payment && stage.payment.split;
+        if (!split) {
+            return '<div class="supplier-bill-stage-empty">当前期次尚未支付，暂未触发分账</div>';
+        }
+        return '<div class="supplier-bill-stage-grid is-split">'
+            + '<div><span>平台服务费</span><strong>¥' + escapeHTML(split.fee) + '</strong></div>'
+            + '<div><span>供方分账金额</span><strong class="is-money">¥' + escapeHTML(split.netAmount) + '</strong></div>'
+            + '<div><span>外部分账流水号</span><strong>' + escapeHTML(split.outTraceNo) + '</strong></div>'
+            + '<div><span>分账接收方编号</span><strong>' + escapeHTML(split.receiverId) + '</strong></div>'
+            + '<div><span>分账状态</span><strong>' + renderBillDetailStatus(split.status, getBillStageTone(split.status)) + '</strong></div>'
+            + '<div><span>最近查询时间</span><strong>' + escapeHTML(split.queriedAt) + '</strong></div>'
+            + '</div>';
+    }
+
+    function renderBillPaymentStage(stage, index, total, includeSplit) {
+        var stageLabel = total === 1 ? '一次性付款' : '第' + (index + 1) + '/' + total + '期';
+        return '<article class="supplier-bill-payment-stage' + (stage.current ? ' is-current' : '') + '">'
+            + '<header class="supplier-bill-payment-stage-head">'
+            +   '<div><span>' + escapeHTML(stageLabel) + '</span><strong>' + escapeHTML(stage.name) + '</strong></div>'
+            +   '<div class="supplier-bill-payment-stage-tags">' + (stage.current ? '<em>当前账单</em>' : '') + renderBillDetailStatus(stage.status, getBillStageTone(stage.status)) + '</div>'
+            + '</header>'
+            + '<div class="supplier-bill-stage-summary">'
+            +   '<div><span>付款比例</span><strong>' + escapeHTML(stage.percent || '--') + '</strong></div>'
+            +   '<div><span>应付金额</span><strong>¥' + escapeHTML(stage.amount) + '</strong></div>'
+            +   '<div><span>付款节点</span><strong>' + escapeHTML(stage.node || '--') + '</strong></div>'
+            + '</div>'
+            + '<div class="supplier-bill-stage-block"><h4>支付记录</h4>' + renderBillStagePayment(stage) + '</div>'
+            + (includeSplit ? '<div class="supplier-bill-stage-block is-split"><h4>分账信息</h4>' + renderBillStageSplit(stage) + '</div>' : '')
+            + '</article>';
+    }
+
+    function getFallbackBillPaymentStages(row) {
+        var hasPaid = row.paidAt && row.paidAt !== '--';
+        var amount = Number(String(row.amount || '0').replace(/,/g, '')) || 0;
         var selfOperated = row.seller === PLATFORM_OPERATOR_NAME;
-        var serviceFeeRate = selfOperated ? 0 : Number(row.serviceFeeRate || 3);
-        var serviceFee = paidAmount * serviceFeeRate / 100;
-        var providerAmount = paidAmount - serviceFee;
-        var payTraceNo = row.payTraceNo || 'PAY' + String(row.billNo || row.orderNo || '').replace(/\D/g, '').slice(-20) + 'P00';
-        var splitTraceNo = row.outTraceNo || 'PS' + String(row.billNo || row.orderNo || '').replace(/\D/g, '').slice(-17);
-        var splitReceiverId = row.receiverId || 'RCV-202607-00986';
+        var serviceFeeMode = row.serviceFeeMode === 'G' ? 'G' : 'P';
+        var configuredServiceFeeValue = Number(row.serviceFeeValue);
+        var legacyServiceFeeRate = Number(row.serviceFeeRate);
+        var serviceFeeValue = selfOperated
+            ? 0
+            : (Number.isFinite(configuredServiceFeeValue) ? configuredServiceFeeValue : (Number.isFinite(legacyServiceFeeRate) ? legacyServiceFeeRate : 3));
+        var serviceFee = serviceFeeMode === 'G' ? serviceFeeValue : amount * serviceFeeValue / 100;
+        var digits = String(row.billNo || row.orderNo || '').replace(/\D/g, '');
+        var payment = null;
+
+        if (hasPaid) {
+            payment = {
+                paymentNo: 'PAY' + (digits.slice(-20) || '20260723000000000001') + 'P00',
+                amount: amount.toFixed(2),
+                channel: '统一支付平台',
+                paidAt: row.paidAt,
+                status: '支付成功'
+            };
+            if (!selfOperated) {
+                payment.split = {
+                    fee: serviceFee.toFixed(2),
+                    netAmount: Math.max(0, amount - serviceFee).toFixed(2),
+                    outTraceNo: 'PS' + (digits.slice(-17) || '20260723000000001'),
+                    receiverId: row.receiverId || 'RCV-202607-00986',
+                    appliedAt: row.paidAt,
+                    queriedAt: row.paidAt,
+                    status: '分账成功'
+                };
+            }
+        }
+
+        return [{
+            name: '一次性付款',
+            percent: '100%',
+            amount: row.amount,
+            node: '订单提交并完成合同签署后',
+            status: hasPaid ? '已支付' : row.status,
+            current: true,
+            payment: payment
+        }];
+    }
+
+    function renderBillPaymentDetail(row) {
+        var stages = row.paymentStages || getFallbackBillPaymentStages(row);
+        var includeSplit = row.seller !== PLATFORM_OPERATOR_NAME;
+        return '<div class="supplier-bill-payment-groups">' + stages.map(function (stage, index) {
+            return renderBillPaymentStage(stage, index, stages.length, includeSplit);
+        }).join('') + '</div>';
+    }
+
+    function renderBillFlowDetail(row) {
+        var stages = row.paymentStages || getFallbackBillPaymentStages(row);
+        var rows = [
+            { operator: '系统自动', type: '生成账单', result: '成功', content: '--', time: row.createdAt }
+        ];
+
+        stages.forEach(function (stage) {
+            if (!stage.payment) return;
+            rows.push({ operator: row.buyer || '--', type: '支付账单', result: '成功', content: stage.name, time: stage.payment.paidAt });
+            rows.push({ operator: '统一支付平台', type: '查询支付结果', result: stage.payment.status, content: stage.payment.paymentNo, time: stage.payment.paidAt });
+            if (stage.payment.split) {
+                rows.push({ operator: '统一支付平台', type: '执行分账', result: stage.payment.split.status, content: '供方到账 ¥' + stage.payment.split.netAmount, time: stage.payment.split.appliedAt });
+            }
+        });
+
+        if (rows.length === 1 && row.status === '待支付确认') {
+            rows.push({ operator: row.buyer || '--', type: '提交支付凭证', result: '成功', content: '等待收款方确认', time: row.createdAt });
+        } else if (rows.length === 1 && row.status === '待供方确认') {
+            rows.push({ operator: row.buyer || '--', type: '提交账单确认', result: '成功', content: '等待供方确认', time: row.createdAt });
+        } else if (rows.length === 1 && row.status === '待需方确认') {
+            rows.push({ operator: row.seller || '--', type: '提交账单确认', result: '成功', content: '等待需方确认', time: row.createdAt });
+        }
+
+        return '<div class="supplier-bill-detail-table-scroll is-flow">'
+            + '<table class="supplier-bill-detail-table">'
+            + '<thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead>'
+            + '<tbody>' + rows.map(function (item) {
+                return '<tr><td>' + escapeHTML(item.operator) + '</td><td>' + escapeHTML(item.type) + '</td><td>' + escapeHTML(item.result) + '</td><td>' + escapeHTML(item.content) + '</td><td>' + escapeHTML(item.time) + '</td></tr>';
+            }).join('') + '</tbody></table></div>';
+    }
+
+    function renderBillDetail(row) {
         return {
             title: '账单详情',
-            size: 'narrow',
-            body: '<div class="bill-detail-drawer">'
-                + billDrawerSection('订单信息', billDrawerFields([
-                    { label: '订单编号', value: row.orderNo },
-                    { label: '交易标的', value: row.target },
-                    { label: '业务类型', value: row.businessType },
-                    { label: '标的类型', value: row.targetType },
-                    { label: '付费方式', value: row.payMode },
-                    { label: '计量方式', value: row.measureMode },
-                    { label: '价格', value: row.price },
-                    { label: '订单金额', value: '¥' + row.amount },
-                    { label: '购买数量', value: row.quantity }
-                ]))
-                + billDrawerSection('账单信息', billDrawerFields([
-                    { label: '账单编号', value: row.billNo },
-                    { label: '账单状态', html: '<span class="monitor-flow-status success"><i></i>' + escapeHTML(row.status) + '</span>' },
-                    { label: '账单金额', value: '¥' + row.amount },
-                    { label: '账单生成时间', value: row.createdAt },
-                    { label: '账期', value: row.period },
-                    { label: '付款时间', value: paidAt }
-                ]))
-                + billDrawerSection('支付信息', '<table class="data-table bill-detail-table"><thead><tr><th>支付流水号</th><th>收款商户编号</th><th>支付方式</th><th>支付金额</th><th>支付时间</th><th>支付状态</th></tr></thead><tbody><tr><td>' + escapeHTML(payTraceNo) + '</td><td>MER-PLATFORM-202607-0001</td><td>统一支付平台</td><td>¥' + paidAmount.toFixed(2) + '</td><td>' + escapeHTML(paidAt) + '</td><td><span class="monitor-flow-status success"><i></i>支付成功</span></td></tr></tbody></table>')
-                + billDrawerSection('资金分配', billDrawerFields([
-                    { label: '经营属性', value: selfOperated ? '自营' : '第三方供方' },
-                    { label: '需方实付金额', value: '¥' + paidAmount.toFixed(2) },
-                    { label: '平台服务费', value: selfOperated ? '不适用' : '¥' + serviceFee.toFixed(2) + '（' + serviceFeeRate.toFixed(2) + '%）' },
-                    { label: '供方分账金额', value: selfOperated ? '不发起对外分账' : '¥' + providerAmount.toFixed(2) },
-                    { label: '分账接收方', value: selfOperated ? '--' : row.seller || '--' },
-                    { label: '分账接收方编号', value: selfOperated ? '--' : splitReceiverId },
-                    { label: '外部分账流水号', value: selfOperated ? '--' : splitTraceNo },
-                    { label: '分账日期', value: selfOperated ? '--' : String(paidAt).slice(0, 10).replace(/-/g, '') },
-                    { label: '分账状态', html: selfOperated ? '<span class="monitor-flow-status"><i></i>无需分账</span>' : '<span class="monitor-flow-status success"><i></i>分账成功</span>' }
-                ]))
-                + billDrawerSection('流程动态', '<table class="data-table bill-detail-table"><thead><tr><th>操作者</th><th>操作类型</th><th>操作结果</th><th>内容</th><th>操作时间</th></tr></thead><tbody>'
-                    + '<tr><td>系统自动</td><td>生成账单</td><td>成功</td><td>--</td><td>' + escapeHTML(row.createdAt) + '</td></tr>'
-                    + '<tr><td>' + escapeHTML(row.buyer || '--') + '</td><td>支付账单</td><td>成功</td><td>--</td><td>' + escapeHTML(paidAt) + '</td></tr>'
-                    + '<tr><td>系统自动</td><td>查询支付结果</td><td>支付成功</td><td>' + escapeHTML(payTraceNo) + '</td><td>' + escapeHTML(paidAt) + '</td></tr>'
-                    + (selfOperated ? '' : '<tr><td>系统自动</td><td>发起订单分账</td><td>分账成功</td><td>' + escapeHTML(splitTraceNo) + '</td><td>' + escapeHTML(paidAt) + '</td></tr>')
-                    + '</tbody></table>')
-                + '</div>'
+            drawerClass: 'bill-detail-reference',
+            body: renderBillDetailSection('订单信息', renderBillDetailFields([
+                { label: '订单编号', value: row.orderNo },
+                { label: '交易标的', value: row.target },
+                { label: '业务类型', value: row.businessType },
+                { label: '标的类型', value: row.targetType },
+                { label: '需求方', value: row.buyer },
+                { label: '提供方', value: row.seller },
+                { label: '付费方式', value: row.payMode },
+                { label: '计量方式', value: row.measureMode },
+                { label: '价格', value: row.price },
+                { label: '订单金额', value: '¥' + (row.orderAmount || row.amount) },
+                { label: '购买数量', value: row.quantity }
+            ]))
+            + renderBillDetailSection('账单信息', renderBillDetailFields([
+                { label: '账单编号', value: row.billNo },
+                { label: '账单状态', html: '<span class="supplier-order-status">' + escapeHTML(row.status) + '</span>' },
+                { label: '账单金额', value: '¥' + row.amount },
+                { label: '账单生成时间', value: row.createdAt },
+                { label: '付款期次', value: row.period },
+                { label: '还款时间', value: row.repayAt || row.repaymentAt },
+                { label: '付款时间', value: row.paidAt }
+            ]))
+            + renderBillDetailSection('支付信息', renderBillPaymentDetail(row))
+            + renderBillDetailSection('流程动态', renderBillFlowDetail(row))
         };
     }
 
@@ -1196,8 +1367,9 @@
         var drawerMask = root.querySelector('[data-monitor-drawer]');
         root.querySelector('[data-drawer-title]').textContent = payload.title;
         root.querySelector('[data-drawer-body]').innerHTML = payload.body;
-        drawerMask.classList.remove('narrow', 'wide');
+        drawerMask.classList.remove('narrow', 'wide', 'bill-detail-reference');
         if (payload.size) drawerMask.classList.add(payload.size);
+        if (payload.drawerClass) drawerMask.classList.add(payload.drawerClass);
         drawerMask.classList.add('show');
     }
 
@@ -1247,6 +1419,9 @@
         }
         var value = row[column.key] || '--';
         if (column.status) {
+            if (page.layout === 'billMonitor') {
+                return '<span class="supplier-order-status">' + escapeHTML(value) + '</span>';
+            }
             if (page.statusMode === 'dot') {
                 return '<span class="monitor-flow-status ' + statusDotTone(page, value) + '"><i></i>' + escapeHTML(value) + '</span>';
             }
@@ -1267,13 +1442,68 @@
         return escapeHTML(value);
     }
 
+    function getBillTableCellClass(page, column) {
+        if (page.layout !== 'billMonitor') return '';
+        if (column.key === 'status') return 'monitor-bill-status-cell';
+        if (column.key === '__actions') return 'monitor-bill-action-cell';
+        return 'monitor-bill-col-' + column.key.replace(/^_+/, '').replace(/[A-Z]/g, function (char) {
+            return '-' + char.toLowerCase();
+        });
+    }
+
+    function getBillPaginationItems(currentPage, pageCount) {
+        var items = [];
+        var start;
+        var end;
+        var page;
+        if (pageCount <= 7) {
+            for (page = 1; page <= pageCount; page += 1) items.push(page);
+            return items;
+        }
+
+        items.push(1);
+        start = Math.max(2, currentPage - 1);
+        end = Math.min(pageCount - 1, currentPage + 1);
+        if (start > 2) items.push('left-ellipsis');
+        for (page = start; page <= end; page += 1) items.push(page);
+        if (end < pageCount - 1) items.push('right-ellipsis');
+        items.push(pageCount);
+        return items;
+    }
+
+    function updateBillPagination(root, total, state) {
+        var pageCount = Math.max(1, Math.ceil(total / state.pageSize));
+        state.pageNumber = Math.max(1, Math.min(state.pageNumber, pageCount));
+        var totalNode = root.querySelector('[data-monitor-pagination-total]');
+        var pagesNode = root.querySelector('[data-monitor-pagination-pages]');
+        var prevButton = root.querySelector('[data-monitor-pagination-prev]');
+        var nextButton = root.querySelector('[data-monitor-pagination-next]');
+        if (totalNode) totalNode.textContent = '共 ' + total + ' 条';
+        if (pagesNode) {
+            pagesNode.innerHTML = getBillPaginationItems(state.pageNumber, pageCount).map(function (item) {
+                if (typeof item === 'string') return '<span class="monitor-pagination-ellipsis">•••</span>';
+                return '<button class="page-btn' + (item === state.pageNumber ? ' active' : '') + '" type="button" data-monitor-pagination-page="' + item + '">' + item + '</button>';
+            }).join('');
+        }
+        if (prevButton) prevButton.disabled = state.pageNumber <= 1;
+        if (nextButton) nextButton.disabled = state.pageNumber >= pageCount;
+    }
+
     function renderTable(root, page, state) {
-        var rows = getRows(page, state, root);
+        var filteredRows = getRows(page, state, root);
+        var rows = filteredRows;
         var body = root.querySelector('[data-monitor-table-body]');
         var meta = root.querySelector('[data-monitor-table-meta]');
         var checkAll = root.querySelector('[data-monitor-check-all]');
         var columnCount = page.columns.length + (page.selectable ? 1 : 0);
         var html = '';
+
+        if (page.layout === 'billMonitor') {
+            var pageCount = Math.max(1, Math.ceil(filteredRows.length / state.pageSize));
+            state.pageNumber = Math.max(1, Math.min(state.pageNumber, pageCount));
+            var start = (state.pageNumber - 1) * state.pageSize;
+            rows = filteredRows.slice(start, start + state.pageSize);
+        }
 
         if (checkAll) checkAll.checked = false;
 
@@ -1281,7 +1511,8 @@
             html = rows.map(function (row) {
                 var rowIndex = page.rows.indexOf(row);
                 return '<tr>' + (page.selectable ? '<td class="monitor-selection-col"><input class="monitor-check" type="checkbox" data-monitor-row-check></td>' : '') + page.columns.map(function (column) {
-                    return '<td>' + renderCell(page, column, row, rowIndex) + '</td>';
+                    var cellClass = getBillTableCellClass(page, column);
+                    return '<td' + (cellClass ? ' class="' + cellClass + '"' : '') + '>' + renderCell(page, column, row, rowIndex) + '</td>';
                 }).join('') + '</tr>';
             }).join('');
         } else {
@@ -1289,11 +1520,21 @@
         }
 
         body.innerHTML = html;
-        meta.textContent = '共 ' + rows.length + ' 条';
+        meta.textContent = '共 ' + filteredRows.length + ' 条';
+        if (page.layout === 'billMonitor') updateBillPagination(root, filteredRows.length, state);
     }
 
     function renderPagination(page) {
         var total = Number(page.total || page.rows.length);
+        if (page.layout === 'billMonitor') {
+            return '<div class="pagination-bar" data-monitor-pagination>'
+                + '<span class="pagination-info" data-monitor-pagination-total>共 ' + escapeHTML(total) + ' 条</span>'
+                + '<button class="page-btn ghost" type="button" data-monitor-pagination-prev aria-label="上一页">‹</button>'
+                + '<span class="monitor-pagination-pages" data-monitor-pagination-pages></span>'
+                + '<button class="page-btn ghost" type="button" data-monitor-pagination-next aria-label="下一页">›</button>'
+                + '<select class="page-size-select" data-monitor-page-size aria-label="每页条数"><option value="10">10 条/页</option><option value="20">20 条/页</option><option value="30">30 条/页</option><option value="40">40 条/页</option><option value="50">50 条/页</option></select>'
+                + '<span class="pagination-info">前往</span><input class="page-jumper" type="number" min="1" data-monitor-page-jumper aria-label="跳转页码"></div>';
+        }
         var pageCount = Math.max(1, Math.ceil(total / 10));
         var visibleCount = Math.min(pageCount, 9);
         var pages = [];
@@ -1313,7 +1554,11 @@
         var page = PAGES[pageKey];
         if (!page) return;
         var params = new URLSearchParams(window.location.search || '');
-        var state = { tabValue: page.tabs && page.tabs.length ? page.tabs[0].value : 'all' };
+        var state = {
+            tabValue: page.tabs && page.tabs.length ? page.tabs[0].value : 'all',
+            pageNumber: 1,
+            pageSize: 10
+        };
         var tabParam = page.tabKey ? params.get(page.tabKey) : '';
         if (page.tabs && page.tabs.length && tabParam) {
             var matchedTab = page.tabs.find(function (tab) {
@@ -1347,9 +1592,12 @@
                     + renderStats(page.stats))
             + (page.layout === 'listingMonitor' ? '' : renderTabs(page))
             + filterHtml
-            + '<div class="monitor-table-card"><div class="monitor-table-meta" data-monitor-table-meta style="display:none;">共 0 条</div><div class="monitor-table-scroll"><table class="data-table monitor-table"><thead><tr>'
+            + '<div class="monitor-table-card"><div class="monitor-table-meta" data-monitor-table-meta style="display:none;">共 0 条</div><div class="monitor-table-scroll"' + (page.layout === 'billMonitor' ? ' aria-label="交易账单列表，可横向滚动"' : '') + '><table class="data-table monitor-table"><thead><tr>'
             + (page.selectable ? '<th class="monitor-selection-col"><input class="monitor-check" type="checkbox" data-monitor-check-all></th>' : '')
-            + page.columns.map(function (column) { return '<th>' + escapeHTML(column.label) + '</th>'; }).join('')
+            + page.columns.map(function (column) {
+                var cellClass = getBillTableCellClass(page, column);
+                return '<th' + (cellClass ? ' class="' + cellClass + '"' : '') + '>' + escapeHTML(column.label) + '</th>';
+            }).join('')
             + '</tr></thead><tbody data-monitor-table-body></tbody></table></div>'
             + renderPagination(page) + '</div>'
             + '<div class="monitor-drawer-mask" data-monitor-drawer><div class="monitor-drawer" role="dialog" aria-modal="true"><div class="monitor-drawer-head"><div class="monitor-drawer-title" data-drawer-title>详情</div><button class="monitor-drawer-close" type="button" data-drawer-close aria-label="关闭">' + ICONS.close + '</button></div><div class="monitor-drawer-body" data-drawer-body></div></div></div>'
@@ -1382,6 +1630,16 @@
             select.value = value;
         });
 
+        var startAt = params.get('startAt');
+        var endAt = params.get('endAt');
+        var dateControl = root.querySelector('[data-monitor-date-key="createdAt"]');
+        if (dateControl) {
+            var startInput = dateControl.querySelector('[data-monitor-date-start]');
+            var endInput = dateControl.querySelector('[data-monitor-date-end]');
+            if (startInput && startAt) startInput.value = toMonitorDateTimeLocal(startAt);
+            if (endInput && endAt) endInput.value = toMonitorDateTimeLocal(endAt);
+        }
+
         renderTable(root, page, state);
 
         root.querySelectorAll('[data-tab-value]').forEach(function (tab) {
@@ -1398,6 +1656,18 @@
         var searchBtn = root.querySelector('[data-monitor-search-btn]');
         if (searchBtn) {
             searchBtn.addEventListener('click', function () {
+                var range = getMonitorDateRange(root.querySelector('[data-monitor-date-key="createdAt"]'));
+                if (range && range.invalid) {
+                    if (window.GlobalDialog) {
+                        window.GlobalDialog.info({
+                            title: '时间范围有误',
+                            desc: '开始时间不能晚于结束时间，请重新选择。',
+                            duration: 1800
+                        });
+                    }
+                    return;
+                }
+                state.pageNumber = 1;
                 renderTable(root, page, state);
             });
         }
@@ -1405,12 +1675,16 @@
         var keywordInput = root.querySelector('[data-monitor-search]');
         if (keywordInput) {
             keywordInput.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter') renderTable(root, page, state);
+                if (event.key === 'Enter') {
+                    state.pageNumber = 1;
+                    renderTable(root, page, state);
+                }
             });
         }
 
         root.querySelectorAll('[data-monitor-filter]').forEach(function (select) {
             select.addEventListener('change', function () {
+                state.pageNumber = 1;
                 renderTable(root, page, state);
             });
         });
@@ -1423,6 +1697,61 @@
                 root.querySelectorAll('[data-monitor-filter]').forEach(function (select) {
                     select.selectedIndex = 0;
                 });
+                root.querySelectorAll('[data-monitor-date]').forEach(function (input) {
+                    input.value = '';
+                });
+                state.pageNumber = 1;
+                renderTable(root, page, state);
+            });
+        }
+
+        var pageSizeSelect = root.querySelector('[data-monitor-page-size]');
+        if (pageSizeSelect) {
+            pageSizeSelect.addEventListener('change', function () {
+                state.pageSize = Number(pageSizeSelect.value) || 10;
+                state.pageNumber = 1;
+                renderTable(root, page, state);
+            });
+        }
+
+        var paginationPages = root.querySelector('[data-monitor-pagination-pages]');
+        if (paginationPages) {
+            paginationPages.addEventListener('click', function (event) {
+                var button = event.target.closest('[data-monitor-pagination-page]');
+                if (!button) return;
+                state.pageNumber = Number(button.getAttribute('data-monitor-pagination-page')) || 1;
+                renderTable(root, page, state);
+            });
+        }
+
+        var paginationPrev = root.querySelector('[data-monitor-pagination-prev]');
+        if (paginationPrev) {
+            paginationPrev.addEventListener('click', function () {
+                if (state.pageNumber <= 1) return;
+                state.pageNumber -= 1;
+                renderTable(root, page, state);
+            });
+        }
+
+        var paginationNext = root.querySelector('[data-monitor-pagination-next]');
+        if (paginationNext) {
+            paginationNext.addEventListener('click', function () {
+                var total = getRows(page, state, root).length;
+                var pageCount = Math.max(1, Math.ceil(total / state.pageSize));
+                if (state.pageNumber >= pageCount) return;
+                state.pageNumber += 1;
+                renderTable(root, page, state);
+            });
+        }
+
+        var pageJumper = root.querySelector('[data-monitor-page-jumper]');
+        if (pageJumper) {
+            pageJumper.addEventListener('keydown', function (event) {
+                if (event.key !== 'Enter') return;
+                var total = getRows(page, state, root).length;
+                var pageCount = Math.max(1, Math.ceil(total / state.pageSize));
+                state.pageNumber = Math.max(1, Math.min(Number(pageJumper.value) || 1, pageCount));
+                pageJumper.value = '';
                 renderTable(root, page, state);
             });
         }

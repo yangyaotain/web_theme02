@@ -353,7 +353,8 @@
                             demander: record ? record.user : '',
                             itemName: record ? record.name : '',
                             amount: record ? record.amount : '',
-                            serviceFeeRate: 3,
+                            serviceFeeMode: 'P',
+                            serviceFeeValue: 2.5,
                             appliedAt: record ? record.appliedAt : '',
                             businessType: 'service',
                             onConfirm: function () {

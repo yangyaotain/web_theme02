@@ -23,7 +23,8 @@
     var paymentMode = 'installment';
     var paymentStages = [];
     var paymentStageSeed = 0;
-    var orderServiceFeeRate = 3;
+    var orderServiceFeeMode = 'P';
+    var orderServiceFeeValue = 3;
     var selectedFiles = [];
     var activeOptions = {};
     var lastFocusedElement;
@@ -67,6 +68,20 @@
         return '¥' + Number(value || 0).toFixed(2);
     }
 
+    function getStageServiceFee(stageAmount) {
+        if (isSelfOperated()) return 0;
+        var feeValue = Number.isFinite(orderServiceFeeValue) ? orderServiceFeeValue : 0;
+        return orderServiceFeeMode === 'G'
+            ? feeValue
+            : Number(stageAmount || 0) * feeValue / 100;
+    }
+
+    function getTotalServiceFee() {
+        return paymentStages.reduce(function (sum, stage) {
+            return sum + getStageServiceFee(stage.amount);
+        }, 0);
+    }
+
     function createStage(name, percent) {
         paymentStageSeed += 1;
         return { id: paymentStageSeed, name: name, percent: percent, amount: 0, payStatus: '待发起', outTradeNo: '' };
@@ -104,12 +119,11 @@
         var isService = activeOptions.businessType === 'service';
         var selfOperated = isSelfOperated();
         var totalAmount = parseMoney(activeOptions.amount);
-        var serviceFee = selfOperated ? 0 : orderServiceFeeRate;
-        var calculatedServiceFee = Number.isFinite(serviceFee) ? serviceFee : 0;
+        var serviceFeeValue = selfOperated ? 0 : orderServiceFeeValue;
         var displayOnlyPlan = existing || paymentMode === 'once';
         var hasStageActions = paymentMode === 'installment' && !existing;
         var rows = paymentStages.map(function (stage, index) {
-            var stageFee = Number(stage.amount || 0) * calculatedServiceFee / 100;
+            var stageFee = getStageServiceFee(stage.amount);
             var providerNet = Number(stage.amount || 0) - stageFee;
             var stageName = displayOnlyPlan
                 ? '<span class="supplier-contract-stage-value">' + stage.name + '</span>'
@@ -136,9 +150,9 @@
             + '</div>'
             + '<div class="supplier-contract-payment-summary' + (selfOperated ? ' is-self-operated' : '') + '">'
             +   '<div><span>合同金额</span><strong>' + formatMoney(totalAmount) + '</strong></div>'
-            +   (selfOperated ? '' : '<div><span>平台服务费比例</span><div class="supplier-contract-fee-rate-field"><input type="number" min="0" max="100" step="0.01" value="' + (Number.isFinite(serviceFee) ? serviceFee.toFixed(2) : '') + '" data-contract-service-fee' + (existing ? ' disabled' : '') + ' aria-label="平台服务费比例"><i>%</i></div><small>' + (existing ? '合同已冻结，按合同约定比例执行' : '默认由运营中心服务费规则带入，本订单可调整') + '</small></div>')
+            +   (selfOperated ? '' : '<div><div class="supplier-contract-fee-heading"><span>平台服务费</span><select data-contract-service-fee-mode' + (existing ? ' disabled' : '') + ' aria-label="平台服务费计费方式"><option value="P"' + (orderServiceFeeMode === 'P' ? ' selected' : '') + '>金额比例</option><option value="G"' + (orderServiceFeeMode === 'G' ? ' selected' : '') + '>固定金额</option></select></div><div class="supplier-contract-fee-rate-field"><input type="number" min="0"' + (orderServiceFeeMode === 'P' ? ' max="100"' : '') + ' step="0.01" value="' + (Number.isFinite(serviceFeeValue) ? serviceFeeValue.toFixed(2) : '') + '" data-contract-service-fee' + (existing ? ' disabled' : '') + ' aria-label="平台服务费计费标准"><i>' + (orderServiceFeeMode === 'P' ? '%' : '元/笔') + '</i></div><small>' + (existing ? '合同已冻结，按合同约定规则执行' : '规则带入，本订单可调整') + '</small></div>')
             +   '<div><span>结算方式</span><strong>' + (isService ? '按合同付款计划支付' : '订单一次性支付') + '</strong><small>' + (selfOperated ? '运营方统一收款，不发起对外分账' : '支付成功后按订单发起分账') + '</small></div>'
-            +   (selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong><small>提供方与收款方均为运营方</small></div>' : '<div><span>提供方预计实收</span><strong data-contract-provider-net>' + formatMoney(totalAmount * (100 - calculatedServiceFee) / 100) + '</strong><small>合同金额扣除平台服务费</small></div>')
+            +   (selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong><small>提供方与收款方均为运营方</small></div>' : '<div><span>提供方预计实收</span><strong data-contract-provider-net>' + formatMoney(totalAmount - getTotalServiceFee()) + '</strong><small>合同金额扣除各笔平台服务费</small></div>')
             + '</div>'
             + (isService ? ''
                 + '<div class="supplier-contract-payment-mode">'
@@ -167,12 +181,10 @@
                 if (stage && amountTarget) amountTarget.textContent = formatMoney(stage.amount);
             });
         }
-        var serviceFee = isSelfOperated() ? 0 : orderServiceFeeRate;
-        var calculatedServiceFee = Number.isFinite(serviceFee) ? serviceFee : 0;
         paymentTerms.querySelectorAll('[data-stage-id]').forEach(function (row) {
             var stage = paymentStages.find(function (item) { return String(item.id) === String(row.dataset.stageId); });
             if (!stage) return;
-            var fee = Number(stage.amount || 0) * calculatedServiceFee / 100;
+            var fee = getStageServiceFee(stage.amount);
             var feeTarget = row.querySelector('[data-stage-fee]');
             var netTarget = row.querySelector('[data-stage-net]');
             if (feeTarget) feeTarget.textContent = formatMoney(fee);
@@ -185,7 +197,7 @@
         var providerNetCell = paymentTerms.querySelector('[data-contract-provider-net]');
         if (percentCell) percentCell.textContent = percentTotal.toFixed(2) + '%';
         if (amountCell) amountCell.textContent = formatMoney(amountTotal);
-        if (providerNetCell) providerNetCell.textContent = formatMoney(parseMoney(activeOptions.amount) * (100 - calculatedServiceFee) / 100);
+        if (providerNetCell) providerNetCell.textContent = formatMoney(parseMoney(activeOptions.amount) - getTotalServiceFee());
         paymentTerms.classList.remove('is-invalid');
         setFeedback('');
     }
@@ -325,11 +337,11 @@
             endsAtInput.parentElement.classList.add('is-invalid');
             invalidElement = endsAtInput;
             message = '合同结束时间不能早于合同生效时间。';
-        } else if (!isSelfOperated() && (!Number.isFinite(orderServiceFeeRate) || orderServiceFeeRate < 0 || orderServiceFeeRate > 100)) {
+        } else if (!isSelfOperated() && (!Number.isFinite(orderServiceFeeValue) || orderServiceFeeValue < 0 || (orderServiceFeeMode === 'P' && orderServiceFeeValue > 100))) {
             var serviceFeeInput = paymentTerms.querySelector('[data-contract-service-fee]');
             if (serviceFeeInput) serviceFeeInput.classList.add('is-invalid');
             invalidElement = serviceFeeInput;
-            message = '平台服务费比例应在0%至100%之间。';
+            message = orderServiceFeeMode === 'P' ? '平台服务费比例应在0%至100%之间。' : '平台服务费固定金额不能小于0元。';
         } else if (Math.abs(paymentStages.reduce(function (sum, stage) { return sum + Number(stage.percent || 0); }, 0) - 100) > 0.001) {
             paymentTerms.classList.add('is-invalid');
             invalidElement = paymentTerms.querySelector('[data-stage-percent]');
@@ -338,6 +350,11 @@
             paymentTerms.classList.add('is-invalid');
             invalidElement = paymentTerms.querySelector('[data-stage-amount]');
             message = '各期付款金额合计必须等于合同金额。';
+        } else if (!isSelfOperated() && orderServiceFeeMode === 'G' && paymentStages.some(function (stage) { return orderServiceFeeValue > Number(stage.amount || 0); })) {
+            var fixedFeeInput = paymentTerms.querySelector('[data-contract-service-fee]');
+            if (fixedFeeInput) fixedFeeInput.classList.add('is-invalid');
+            invalidElement = fixedFeeInput;
+            message = '平台服务费固定金额不能大于任一期付款金额。';
         } else if (relation === 'new' && !selectedFiles.length) {
             uploadButton.classList.add('is-invalid');
             invalidElement = uploadButton;
@@ -363,7 +380,8 @@
             startsAt: startsAtInput.value,
             endsAt: endsAtInput.value,
             contractAmount: parseMoney(activeOptions.amount),
-            serviceFeeRate: orderServiceFeeRate,
+            serviceFeeMode: orderServiceFeeMode,
+            serviceFeeValue: orderServiceFeeValue,
             paymentMode: paymentMode,
             paymentStages: paymentStages.map(function (stage, index) {
                 return {
@@ -538,6 +556,11 @@
                 renderPaymentTerms();
                 return;
             }
+            if (target.matches('[data-contract-service-fee-mode]')) {
+                orderServiceFeeMode = target.value === 'G' ? 'G' : 'P';
+                renderPaymentTerms();
+                return;
+            }
             var row = target.closest('[data-stage-id]');
             if (!row) return;
             var stage = paymentStages.find(function (item) { return String(item.id) === String(row.dataset.stageId); });
@@ -551,7 +574,7 @@
         paymentTerms.addEventListener('input', function (event) {
             var target = event.target;
             if (target.matches('[data-contract-service-fee]')) {
-                orderServiceFeeRate = target.value === '' ? NaN : Number(target.value);
+                orderServiceFeeValue = target.value === '' ? NaN : Number(target.value);
                 target.classList.remove('is-invalid');
                 refreshPaymentTotals(false);
                 return;
@@ -640,8 +663,12 @@
         if (!drawer) createDrawer();
         options = options || {};
         activeOptions = options;
-        var defaultServiceFeeRate = Number(options.serviceFeeRate);
-        orderServiceFeeRate = Number.isFinite(defaultServiceFeeRate) ? defaultServiceFeeRate : 3;
+        orderServiceFeeMode = options.serviceFeeMode === 'G' ? 'G' : 'P';
+        var defaultServiceFeeValue = Number(options.serviceFeeValue);
+        var legacyServiceFeeRate = Number(options.serviceFeeRate);
+        orderServiceFeeValue = Number.isFinite(defaultServiceFeeValue)
+            ? defaultServiceFeeValue
+            : (Number.isFinite(legacyServiceFeeRate) ? legacyServiceFeeRate : 3);
         lastFocusedElement = document.activeElement;
         form.reset();
         orderInput.value = options.orderNo || '';

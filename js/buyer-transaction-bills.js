@@ -4,7 +4,7 @@
     var BILL_RECORDS = [
         { billNo: '2026071810352168900000101148674', orderNo: '2026071810324437100000101148221', target: '龙岗企业经营画像数据集', businessType: '产品交易', targetType: '数据集', provider: '深圳市龙岗区数据服务中心', payMode: '预付费', measureMode: '按次数', price: '100元/次', quantity: '1次', amount: '100', createdAt: '2026-07-18 10:35:21', period: '--', paidAt: '--', status: '待支付' },
         { billNo: '2026071714481279100000101148551', orderNo: '2026071714454903500000101148179', target: '重点企业运行监测数据产品', businessType: '产品交易', targetType: '数据产品', provider: '龙岗数科产业运营有限公司', payMode: '预付费', measureMode: '按周期', price: '50元/天', quantity: '30天', amount: '1,500', createdAt: '2026-07-17 14:48:12', period: '--', paidAt: '--', status: '待支付' },
-        { billNo: '2026071611291846400000101148420', orderNo: '2026071611262062500000101148121', target: '企业数据治理与合规评估服务', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '合同分期', price: '首期30%', quantity: '第1/3期', amount: '3,600', createdAt: '2026-07-16 11:29:18', period: '首期款', paidAt: '--', status: '待支付', paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, contractAmount: 12000, serviceFeeRate: 3, payStatus: '待支付', outTradeNo: 'PAY20260716112918464000P01' } },
+        { billNo: '2026071611291846400000101148420', orderNo: '2026071611262062500000101148121', target: '企业数据治理与合规评估服务', businessType: '服务交易', targetType: '企业数据治理与合规咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', payMode: '预付费', measureMode: '合同分期', price: '首期30%', quantity: '第1/3期', amount: '3,600', createdAt: '2026-07-16 11:29:18', period: '首期款', paidAt: '--', status: '待支付', paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, contractAmount: 12000, serviceFeeMode: 'P', serviceFeeValue: 2.5, payStatus: '待支付', outTradeNo: 'PAY20260716112918464000P01' } },
         { billNo: '2026071517183952000000101148245', orderNo: '2026071517152436900000101148980', target: '园区能耗监测指标服务', businessType: '产品交易', targetType: '数据产品', provider: '深圳市智碳数据服务有限公司', payMode: '后付费', measureMode: '按周期', price: '20元/天', quantity: '31天', amount: '620', createdAt: '2026-07-15 17:18:39', period: '2026-06-01 至 2026-06-30', paidAt: '--', status: '待需方确认' },
         { billNo: '2026071413555498600000101148220', orderNo: '2026071413522854500000101148928', target: '低空巡检影像数据治理服务', businessType: '服务交易', targetType: '数据治理服务', provider: '龙岗数智集成服务有限公司', payMode: '后付费', measureMode: '按服务次数计费', price: '3000元/次', quantity: '1次', amount: '3,000', createdAt: '2026-07-14 13:55:54', period: '2026-07-01 至 2026-07-14', paidAt: '--', status: '待供方确认' },
         { billNo: '2026071310282446800000101148103', orderNo: '2026071310254673400000101148870', target: '产业链企业关联数据产品', businessType: '产品交易', targetType: '数据产品', provider: '龙岗区产业发展研究中心', payMode: '预付费', measureMode: '按周期', price: '300元/月', quantity: '1月', amount: '300', createdAt: '2026-07-13 10:28:24', period: '--', paidAt: '--', status: '待支付确认' },
@@ -381,7 +381,8 @@
                 stageName: item.paymentStage ? item.paymentStage.name : '',
                 stagePercent: item.paymentStage ? item.paymentStage.percent : '',
                 contractAmount: item.paymentStage ? item.paymentStage.contractAmount : '',
-                serviceFeeRate: item.paymentStage ? item.paymentStage.serviceFeeRate : 3,
+                serviceFeeMode: item.paymentStage ? item.paymentStage.serviceFeeMode : 'P',
+                serviceFeeValue: item.paymentStage ? item.paymentStage.serviceFeeValue : 3,
                 stageStatus: item.paymentStage ? item.paymentStage.payStatus : '待支付',
                 outTradeNo: item.paymentStage ? item.paymentStage.outTradeNo : '',
                 successText: '账单已结清，付款结果已同步。',

@@ -69,6 +69,7 @@
             icon: 'money',
             children: [
                 { key: 'bill-monitor', label: '交易账单监测', href: 'operation-bill-monitor.html' },
+                { key: 'fee-report', label: '统计报表', href: 'operation-fee-report.html' },
                 { key: 'profitsharing-config', label: '分账基础配置', href: 'operation-profitsharing-config.html' },
                 { key: 'profitsharing-merchants', label: '分账接收方管理', href: 'operation-profitsharing-merchants.html' },
                 { key: 'profitsharing-rules', label: '平台服务费规则', href: 'operation-profitsharing-rules.html' }
@@ -129,6 +130,7 @@
         'operation-delivery-task-detail.html': 'delivery-log-monitor',
         'operation-delivery-log.html': 'delivery-log-monitor',
         'operation-bill-monitor.html': 'bill-monitor',
+        'operation-fee-report.html': 'fee-report',
         'operation-profitsharing-config.html': 'profitsharing-config',
         'operation-profitsharing-rules.html': 'profitsharing-rules',
         'operation-profitsharing-merchants.html': 'profitsharing-merchants',

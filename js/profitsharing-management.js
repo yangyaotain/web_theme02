@@ -89,9 +89,9 @@
 
     var RULES = [
         { id: 'PSR-202607-001', name: '数据资源订单-平台服务费', businessType: '数据资源', mode: 'P', value: 3, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:18:36' },
-        { id: 'PSR-202607-002', name: '数据产品订单-平台服务费', businessType: '数据产品', mode: 'P', value: 3, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:26:15' },
-        { id: 'PSR-202607-003', name: '数据咨询服务订单-平台服务费', businessType: '数据咨询服务', mode: 'P', value: 3, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:34:48' },
-        { id: 'PSR-202607-004', name: '行业解决方案订单-平台服务费', businessType: '行业解决方案', mode: 'P', value: 3, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:41:27' }
+        { id: 'PSR-202607-002', name: '数据产品订单-平台服务费', businessType: '数据产品', mode: 'G', value: 50, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:26:15' },
+        { id: 'PSR-202607-003', name: '数据咨询服务订单-平台服务费', businessType: '数据咨询服务', mode: 'P', value: 2.5, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:34:48' },
+        { id: 'PSR-202607-004', name: '行业解决方案订单-平台服务费', businessType: '行业解决方案', mode: 'G', value: 500, effectiveAt: '2026-07-22', updatedAt: '2026-07-22 10:41:27' }
     ];
 
     var RECEIVERS = [
@@ -329,6 +329,16 @@
         return rule.mode === 'P' ? rule.value.toFixed(2) + '%' : '¥' + rule.value.toFixed(2) + '/笔';
     }
 
+    function ruleModeLabel(rule) {
+        return rule.mode === 'P' ? '金额比例' : '固定金额';
+    }
+
+    function ruleDescription(rule) {
+        return rule.mode === 'P'
+            ? '按每期实付金额比例收取'
+            : '按每笔付款流水固定收取';
+    }
+
     function filteredRules() {
         var keyword = query.trim().toLowerCase();
         return RULES.filter(function (rule) {
@@ -340,12 +350,12 @@
     function renderRules() {
         var records = filteredRules();
         page.innerHTML = renderHead('平台服务费规则', '维护四类订单的全局平台服务费配置，合同签订时自动带入并冻结。')
-            + renderSummary([['配置总数', String(RULES.length), '覆盖四类交易订单'], ['配置方式', '全局', '按订单业务类型匹配'], ['默认服务费', '3.00%', '从供方应收款中扣除'], ['经营属性', '第三方', '自营订单不收取']])
-            + '<section class="profit-api-banner">' + icon('info') + '<div><strong>配置说明</strong><p>每类订单使用对应的全局服务费配置；需方按合同金额付款，运营方保留平台服务费，剩余金额分账给供方。</p></div></section>'
+            + renderSummary([['配置总数', String(RULES.length), '覆盖四类交易订单'], ['配置方式', '全局', '按订单业务类型匹配'], ['计费方式', '2种', '金额比例 / 固定金额'], ['经营属性', '第三方', '自营订单不收取']])
+            + '<section class="profit-api-banner">' + icon('info') + '<div><strong>配置说明</strong><p>金额比例按每期实付金额计算，固定金额按每笔付款流水收取；合同签订时带入对应配置并冻结为订单级快照。</p></div></section>'
             + renderFilters()
-            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 项配置</span><span>固定配置仅支持编辑维护</span></div><div class="profit-table-scroll"><table><thead><tr><th>配置编号 / 名称</th><th>业务类型</th><th>平台服务费</th><th>生效日期</th><th>操作</th></tr></thead><tbody>'
+            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 项配置</span><span>固定配置仅支持编辑维护</span></div><div class="profit-table-scroll"><table><thead><tr><th>配置编号 / 名称</th><th>业务类型</th><th>计费方式 / 标准</th><th>生效日期</th><th>操作</th></tr></thead><tbody>'
             + (records.length ? records.map(function (rule) {
-                return '<tr><td><strong>' + escapeHtml(rule.name) + '</strong><small>' + rule.id + '</small></td><td>' + rule.businessType + '</td><td><strong class="profit-money">' + ruleAmount(rule) + '</strong><small>' + (rule.mode === 'P' ? '按每期实付金额比例' : '按笔固定收取') + '</small></td><td>' + rule.effectiveAt + '<small>更新：' + rule.updatedAt + '</small></td><td><div class="profit-row-actions">' + button('编辑', 'text', 'edit-rule', 'edit', 'data-rule-id="' + rule.id + '"') + '</div></td></tr>';
+                return '<tr><td><strong>' + escapeHtml(rule.name) + '</strong><small>' + rule.id + '</small></td><td>' + rule.businessType + '</td><td><strong class="profit-money">' + ruleAmount(rule) + '</strong><small>' + ruleModeLabel(rule) + ' · ' + ruleDescription(rule) + '</small></td><td>' + rule.effectiveAt + '<small>更新：' + rule.updatedAt + '</small></td><td><div class="profit-row-actions">' + button('编辑', 'text', 'edit-rule', 'edit', 'data-rule-id="' + rule.id + '"') + '</div></td></tr>';
             }).join('') : '<tr><td colspan="5"><div class="profit-empty">未找到符合条件的平台服务费配置</div></td></tr>')
             + '</tbody></table></div></section>' + renderRuleModal() + renderToast();
         bindEvents();
@@ -360,10 +370,10 @@
             + '<label><span>配置编号</span><input value="' + escapeHtml(rule.id) + '" readonly></label>'
             + '<label><span>配置名称</span><input value="' + escapeHtml(rule.name) + '" readonly></label>'
             + '<label><span>业务类型</span><input value="' + escapeHtml(rule.businessType) + '" readonly></label>'
-            + '<label><span>计费方式 <b>*</b></span><select name="mode"><option value="P"' + (rule.mode === 'P' ? ' selected' : '') + '>按实付金额比例</option><option value="G"' + (rule.mode === 'G' ? ' selected' : '') + '>按笔固定金额</option></select></label>'
-            + '<label><span>服务费数值 <b>*</b></span><div class="profit-field-suffix"><input name="ruleValue" type="number" min="0.01" step="0.01" value="' + rule.value + '" required><i data-rule-unit>' + (rule.mode === 'P' ? '%' : '元') + '</i></div><small>平台从供方本期应收款中保留该费用</small></label>'
+            + '<label><span>计费方式 <b>*</b></span><select name="mode"><option value="P"' + (rule.mode === 'P' ? ' selected' : '') + '>金额比例</option><option value="G"' + (rule.mode === 'G' ? ' selected' : '') + '>固定金额</option></select></label>'
+            + '<label><span>计费标准 <b>*</b></span><div class="profit-field-suffix"><input name="ruleValue" type="number" min="0.01" step="0.01" value="' + rule.value + '"' + (rule.mode === 'P' ? ' max="100"' : '') + ' required><i data-rule-unit>' + (rule.mode === 'P' ? '%' : '元') + '</i></div><small data-rule-value-help>' + (rule.mode === 'P' ? '按每期实付金额比例计算' : '每笔付款流水收取一次固定金额') + '</small></label>'
             + '<label><span>生效日期 <b>*</b></span><input name="effectiveAt" type="date" value="' + rule.effectiveAt + '" required></label>'
-            + '<label class="is-wide"><span>规则说明</span><textarea maxlength="200">运营方从每一期实付金额中保留平台服务费，剩余金额自动分账给供方。</textarea></label>'
+            + '<label class="is-wide"><span>规则说明</span><textarea maxlength="200" data-rule-description>' + (rule.mode === 'P' ? '运营方按每一期实付金额比例保留平台服务费，剩余金额自动分账给供方。' : '运营方从每一笔付款流水中保留固定金额的平台服务费，剩余金额自动分账给供方。') + '</textarea></label>'
             + '</div><div class="profit-form-note">' + icon('info') + '<p>规则只适用于其他商户上架的第三方产品和服务，运营方自行上架的自营产品不匹配本规则。</p></div></div>'
             + '<footer>' + button('取消', '', 'close-modal', 'close') + '<button class="profit-btn primary" type="submit">' + icon('check') + '<span>保存规则</span></button></footer></form></div>';
     }
@@ -673,7 +683,18 @@
         if (ruleForm) {
             ruleForm.elements.mode.addEventListener('change', function () {
                 var unit = ruleForm.querySelector('[data-rule-unit]');
+                var valueInput = ruleForm.elements.ruleValue;
+                var valueHelp = ruleForm.querySelector('[data-rule-value-help]');
+                var description = ruleForm.querySelector('[data-rule-description]');
                 if (unit) unit.textContent = this.value === 'P' ? '%' : '元';
+                if (valueInput) {
+                    if (this.value === 'P') valueInput.setAttribute('max', '100');
+                    else valueInput.removeAttribute('max');
+                }
+                if (valueHelp) valueHelp.textContent = this.value === 'P' ? '按每期实付金额比例计算' : '每笔付款流水收取一次固定金额';
+                if (description) description.value = this.value === 'P'
+                    ? '运营方按每一期实付金额比例保留平台服务费，剩余金额自动分账给供方。'
+                    : '运营方从每一笔付款流水中保留固定金额的平台服务费，剩余金额自动分账给供方。';
             });
             ruleForm.addEventListener('submit', function (event) {
                 event.preventDefault();

@@ -300,7 +300,7 @@
             amount: '¥9800',
             appliedAt: '2026-07-18 10:26:08',
             status: '待支付（首次）',
-            paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, amount: 2940, contractAmount: 9800, serviceFeeRate: 3, payStatus: '待支付', outTradeNo: 'PAY20260718102608056000P01' }
+            paymentStage: { periodNo: 1, periodTotal: 3, name: '首期款', percent: 30, amount: 2940, contractAmount: 9800, serviceFeeMode: 'P', serviceFeeValue: 2.5, payStatus: '待支付', outTradeNo: 'PAY20260718102608056000P01' }
         },
         {
             orderNo: '2026071614070705400000101148401',
@@ -314,7 +314,7 @@
             amount: '¥12000',
             appliedAt: '2026-07-16 14:07:07',
             status: '待支付（阶段）',
-            paymentStage: { periodNo: 2, periodTotal: 4, name: '方案确认款', percent: 25, amount: 3000, contractAmount: 12000, serviceFeeRate: 3, payStatus: '待支付', outTradeNo: 'PAY20260716140707054000P02' }
+            paymentStage: { periodNo: 2, periodTotal: 4, name: '方案确认款', percent: 25, amount: 3000, contractAmount: 12000, serviceFeeMode: 'G', serviceFeeValue: 50, payStatus: '待支付', outTradeNo: 'PAY20260716140707054000P02' }
         },
         {
             orderNo: '2026071414015101700000101148363',
@@ -380,7 +380,7 @@
             amount: '¥5000',
             appliedAt: '2026-05-27 10:37:12',
             status: '待支付（最后）',
-            paymentStage: { periodNo: 3, periodTotal: 3, name: '尾款', percent: 30, amount: 1500, contractAmount: 5000, serviceFeeRate: 3, payStatus: '待支付', outTradeNo: 'PAY20260527103712058000P03' }
+            paymentStage: { periodNo: 3, periodTotal: 3, name: '尾款', percent: 30, amount: 1500, contractAmount: 5000, serviceFeeMode: 'P', serviceFeeValue: 3, payStatus: '待支付', outTradeNo: 'PAY20260527103712058000P03' }
         },
         {
             orderNo: '2026052710303702400000101148518',
@@ -1253,7 +1253,8 @@
                                 stageName: item.paymentStage ? item.paymentStage.name : '',
                                 stagePercent: item.paymentStage ? item.paymentStage.percent : '',
                                 contractAmount: item.paymentStage ? item.paymentStage.contractAmount : '',
-                                serviceFeeRate: item.paymentStage ? item.paymentStage.serviceFeeRate : 3,
+                                serviceFeeMode: item.paymentStage ? item.paymentStage.serviceFeeMode : 'P',
+                                serviceFeeValue: item.paymentStage ? item.paymentStage.serviceFeeValue : 3,
                                 stageStatus: item.paymentStage ? item.paymentStage.payStatus : '待支付',
                                 outTradeNo: item.paymentStage ? item.paymentStage.outTradeNo : '',
                                 successText: (serviceMode ? '服务订单' : '订单') + '已进入待交付状态。',
