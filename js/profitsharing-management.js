@@ -12,9 +12,6 @@
     var configOpen = false;
     var splitApplyAuditStatus = null;
     var drawerReceiverId = '';
-    var receiverAddOpen = false;
-    var receiverAddTargetId = '';
-    var selectedReceiverCandidateId = 'MER2026071500411';
     var toastText = '';
     var configUploadError = '';
 
@@ -101,16 +98,6 @@
         { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', status: '3', createdAt: '2026-07-17 14:08:29' }
     ];
 
-    var RECEIVER_CANDIDATES = [
-        { receiverId: 'RCV-202607-00411', merchantId: 'MER2026071500411', name: '龙岗区数据应用创新中心', creditCode: '12440307MB2LG0411X', receiverType: '标准商户', account: '中国工商银行 · 6222 **** 0411', channelCode: '系统匹配', settleType: '0', settleName: '龙岗区数据应用创新中心', settleCardNo: '6222020200000411', bankName: '中国工商银行', bankBranch: '中国工商银行深圳龙岗支行', bankProvince: '4400', bankCity: '4403', alliedBankCode: '102584000041', legalName: '陈志远', legalMobile: '138****0411' },
-        { receiverId: 'RCV-202607-00426', merchantId: 'MER2026071500426', name: '深圳市龙岗区产业数字化促进中心', creditCode: '12440307MB2LG0426P', receiverType: '标准商户', account: '中国建设银行 · 6217 **** 0426' },
-        { receiverId: 'RCV-202607-00438', merchantId: 'MER2026071500438', name: '龙岗智慧园区运营有限公司', creditCode: '91440300MA5F8LG438', receiverType: '标准商户', account: '中国农业银行 · 6228 **** 0438' },
-        { receiverId: 'RCV-202607-00452', merchantId: 'MER2026071500452', name: '深圳市数链科技有限公司', creditCode: '91440300MA5F8LG452', receiverType: '标准商户', account: '招商银行 · 7559 **** 0452' },
-        { receiverId: 'RCV-202607-00467', merchantId: 'MER2026071500467', name: '龙岗区企业服务集团有限公司', creditCode: '91440307MA5LG0467Q', receiverType: '标准商户', account: '平安银行 · 1101 **** 0467' },
-        { receiverId: 'RCV-202607-00483', merchantId: 'MER2026071500483', name: '深圳市星图数据技术有限公司', creditCode: '91440300MA5F8LG483', receiverType: '标准商户', account: '中国银行 · 6013 **** 0483' },
-        { receiverId: 'RCV-202607-00495', merchantId: 'MER2026071500495', name: '深圳市龙岗科创服务有限公司', creditCode: '91440307MA5LG0495M', receiverType: '标准商户', account: '交通银行 · 6222 **** 0495' }
-    ];
-
     var RECEIVER_AUDIT_LABELS = {
         '0': '正在审核',
         '1': '审核成功',
@@ -126,12 +113,10 @@
 
     function icon(name) {
         var paths = {
-            add: '<path d="M12 5v14M5 12h14"/>',
             edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/>',
             eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
             refresh: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
             search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
-            chevronDown: '<path d="m7 10 5 5 5-5"/>',
             close: '<path d="M6 6l12 12M18 6 6 18"/>',
             check: '<path d="m5 12 4 4L19 6"/>',
             info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
@@ -388,21 +373,15 @@
 
     function renderReceivers() {
         var records = filteredReceivers();
-        var addDisabled = RECEIVER_CANDIDATES.length ? '' : 'disabled';
-        page.innerHTML = renderHead('分账接收方管理', '从供方中心选择已有第三方供方商户，添加为运营方的分账接收方。', button('添加分账接收方', 'primary', 'add-receiver', 'add', addDisabled))
-            + renderSummary([['已发起添加', String(RECEIVERS.length) + ' 个', '均为标准商户'], ['正在审核', String(RECEIVERS.filter(function (item) { return item.status === '0'; }).length) + ' 个', '等待审核结果'], ['审核成功', String(RECEIVERS.filter(function (item) { return item.status === '1'; }).length) + ' 个', '可参与订单分账'], ['需重新添加', String(RECEIVERS.filter(function (item) { return item.status === '2' || item.status === '3'; }).length) + ' 个', '审核驳回或拒绝']])
-            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>接收方说明</strong><p>列表展示已经发起添加的接收方及其审核状态；只有审核成功的接收方可以参与订单分账。</p></div></section>'
+        page.innerHTML = renderHead('分账接收方管理', '供方收款结算账号开通后，系统后台自动发起分账接收方添加，并同步展示审核状态。')
+            + renderSummary([['已自动发起', String(RECEIVERS.length) + ' 个', '由结算账号开通触发'], ['正在审核', String(RECEIVERS.filter(function (item) { return item.status === '0'; }).length) + ' 个', '等待审核结果'], ['审核成功', String(RECEIVERS.filter(function (item) { return item.status === '1'; }).length) + ' 个', '可参与订单分账'], ['审核未通过', String(RECEIVERS.filter(function (item) { return item.status === '2' || item.status === '3'; }).length) + ' 个', '审核驳回或拒绝']])
+            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>供方在供方中心完成收款结算账号开通后，系统后台自动发起分账接收方添加；本页仅用于查看自动添加结果和审核状态，无需人工操作。</p></div></section>'
             + '<section class="profit-filter-card is-simple"><label class="profit-search">' + icon('search') + '<input type="search" placeholder="搜索供方名称、接收方编号或商户编号" value="' + escapeHtml(query) + '" data-profit-search></label><select data-profit-status aria-label="审核状态"><option value="全部状态">全部状态</option><option value="0">正在审核</option><option value="1">审核成功</option><option value="2">审核驳回</option><option value="3">审核拒绝</option></select>' + button('查询', 'primary', 'search', 'search') + button('重置', '', 'reset', 'refresh') + '</section>'
-            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>审核驳回或拒绝后可重新添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>审核状态</th><th>申请时间</th><th>操作</th></tr></thead><tbody>'
+            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>接收方由系统后台自动添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>审核状态</th><th>自动发起时间</th><th>操作</th></tr></thead><tbody>'
             + records.map(function (item) {
-                var retry = item.status === '2' || item.status === '3' ? button('重新添加', 'text', 'retry-receiver', 'refresh', 'data-receiver-id="' + item.receiverId + '"') : '';
-                return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + retry + '</div></td></tr>';
-            }).join('') + '</tbody></table></div></section>' + renderReceiverAddModal() + renderReceiverDrawer() + renderToast();
+                return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + '</div></td></tr>';
+            }).join('') + '</tbody></table></div></section>' + renderReceiverDrawer() + renderToast();
         bindEvents();
-    }
-
-    function getSelectedReceiverCandidate() {
-        return RECEIVER_CANDIDATES.find(function (item) { return item.merchantId === selectedReceiverCandidateId; }) || RECEIVER_CANDIDATES[0];
     }
 
     function getReceiverProfile(item) {
@@ -422,66 +401,6 @@
         }, item);
     }
 
-    function renderReceiverCandidateCombobox(candidate) {
-        var selectedLabel = candidate.name + '（' + candidate.merchantId + '）';
-        return ''
-            + '<div class="profit-merchant-combobox is-wide" data-receiver-combobox>'
-            +   '<span class="profit-merchant-combobox-label">选择供方商户 <b>*</b></span>'
-            +   '<input type="hidden" name="merchantId" value="' + escapeHtml(candidate.merchantId) + '">'
-            +   '<div class="profit-merchant-combobox-control">'
-            +       icon('search')
-            +       '<input type="search" value="' + escapeHtml(selectedLabel) + '" placeholder="搜索供方名称或商户编号" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="receiverCandidateList" aria-autocomplete="list" data-receiver-candidate-search>'
-            +       '<button type="button" aria-label="展开供方商户列表" data-receiver-candidate-toggle>' + icon('chevronDown') + '</button>'
-            +   '</div>'
-            +   '<div class="profit-merchant-options" id="receiverCandidateList" role="listbox">'
-            +       RECEIVER_CANDIDATES.map(function (item) {
-                        var selected = item.merchantId === candidate.merchantId;
-                        var searchable = [item.name, item.merchantId, item.creditCode].join(' ').toLowerCase();
-                        return '<button class="profit-merchant-option' + (selected ? ' selected' : '') + '" type="button" role="option" aria-selected="' + selected + '" data-receiver-candidate-option="' + escapeHtml(item.merchantId) + '" data-receiver-candidate-search-text="' + escapeHtml(searchable) + '">'
-                            + '<span><strong>' + escapeHtml(item.name) + '</strong><small>' + escapeHtml(item.merchantId) + '</small></span>'
-                            + '<em>' + escapeHtml(item.account) + '</em>'
-                            + (selected ? icon('check') : '')
-                            + '</button>';
-                    }).join('')
-            +       '<div class="profit-merchant-empty" data-receiver-candidate-empty hidden>未找到匹配的供方商户</div>'
-            +   '</div>'
-            +   '<small class="profit-merchant-combobox-hint">支持按供方名称、商户编号或统一社会信用代码搜索</small>'
-            + '</div>';
-    }
-
-    function renderReceiverAddModal() {
-        if (!receiverAddOpen) return '';
-        var retryItem = receiverAddTargetId ? RECEIVERS.find(function (item) { return item.receiverId === receiverAddTargetId; }) : null;
-        var isRetry = !!retryItem;
-        var candidate = getReceiverProfile(retryItem || getSelectedReceiverCandidate());
-        if (!candidate) {
-            return '<div class="profit-modal-mask" data-profit-modal-close><div class="profit-modal"><header><div><h2>添加分账接收方</h2><p>当前没有符合条件的第三方供方商户。</p></div><button type="button" data-profit-action="close-receiver-add" aria-label="关闭">' + icon('close') + '</button></header><div class="profit-modal-body"><div class="profit-empty">供方中心暂无结算账户已确认且尚未添加的第三方供方</div></div><footer>' + button('关闭', '', 'close-receiver-add', 'close') + '</footer></div></div>';
-        }
-        var merchantField = isRetry
-            ? '<label class="is-wide"><span>供方商户</span><input value="' + escapeHtml(candidate.name + '（' + candidate.merchantId + '）') + '" readonly></label>'
-            : renderReceiverCandidateCombobox(candidate);
-        return '<div class="profit-modal-mask" data-profit-modal-close><form class="profit-modal" data-receiver-add-form>'
-            + '<header><div><h2>' + (isRetry ? '重新添加分账接收方' : '添加分账接收方') + '</h2><p>' + (isRetry ? '确认供方商户和结算信息后重新提交。' : '从供方中心选择尚未发起添加的第三方供方商户。') + '</p></div><button type="button" data-profit-action="close-receiver-add" aria-label="关闭">' + icon('close') + '</button></header>'
-            + '<div class="profit-modal-body"><div class="profit-form-grid">'
-            + merchantField
-            + '<label><span>供方名称</span><input value="' + escapeHtml(candidate.name) + '" readonly></label>'
-            + '<label><span>统一社会信用代码</span><input value="' + escapeHtml(candidate.creditCode) + '" readonly></label>'
-            + '<label><span>接收方类型</span><input value="' + escapeHtml(candidate.receiverType) + '" readonly></label>'
-            + '<label><span>分账收款账户</span><input value="' + escapeHtml(candidate.account) + '" readonly></label>'
-            + '<label><span>渠道编码</span><input value="' + escapeHtml(candidate.channelCode) + '" readonly><small>由支付渠道配置同步</small></label>'
-            + '<label><span>账户类型</span><input value="' + (candidate.settleType === '0' ? '对公账户' : '对私账户') + '" readonly></label>'
-            + '<label><span>结算户名</span><input value="' + escapeHtml(candidate.settleName) + '" readonly></label>'
-            + '<label><span>结算账号</span><input value="' + escapeHtml(candidate.settleCardNo) + '" readonly></label>'
-            + '<label><span>开户银行</span><input value="' + escapeHtml(candidate.bankName) + '" readonly></label>'
-            + '<label><span>开户支行</span><input value="' + escapeHtml(candidate.bankBranch) + '" readonly></label>'
-            + '<label><span>开户地区编码</span><input value="' + escapeHtml(candidate.bankProvince + '／' + candidate.bankCity) + '" readonly></label>'
-            + '<label><span>联行号</span><input value="' + escapeHtml(candidate.alliedBankCode) + '" readonly></label>'
-            + '<label><span>法人姓名</span><input value="' + escapeHtml(candidate.legalName) + '" readonly></label>'
-            + '<label><span>法人手机号</span><input value="' + escapeHtml(candidate.legalMobile) + '" readonly></label>'
-            + '</div><div class="profit-form-note">' + icon('info') + '<p>' + (isRetry ? '重新提交后，审核状态将更新为正在审核。' : '仅可选择供方中心已有、结算账户已确认且从未发起添加的第三方供方商户；接收方类型固定为标准商户。') + '</p></div></div>'
-            + '<footer>' + button('取消', '', 'close-receiver-add', 'close') + '<button class="profit-btn primary" type="submit">' + icon('check') + '<span>' + (isRetry ? '确认重新添加' : '确认添加') + '</span></button></footer></form></div>';
-    }
-
     function getActiveReceiver() {
         return RECEIVERS.find(function (item) { return item.receiverId === drawerReceiverId || item.merchantId === drawerReceiverId; });
     }
@@ -493,10 +412,10 @@
             + '<header><div><h2 id="receiverDrawerTitle">分账接收方详情</h2><p>' + item.name + '</p></div><button type="button" data-profit-action="close-drawer" aria-label="关闭">' + icon('close') + '</button></header>'
             + '<div class="profit-drawer-body"><section><h3>接收方信息</h3><div class="profit-detail-grid">'
             + '<div><span>供方商户编号</span><strong>' + item.merchantId + '</strong></div><div><span>接收方编号</span><strong>' + item.receiverId + '</strong></div>'
-            + '<div><span>接收方类型</span><strong>' + item.receiverType + '</strong></div><div><span>申请时间</span><strong>' + item.createdAt + '</strong></div>'
+            + '<div><span>接收方类型</span><strong>' + item.receiverType + '</strong></div><div><span>自动发起时间</span><strong>' + item.createdAt + '</strong></div>'
             + '<div><span>统一社会信用代码</span><strong>' + item.creditCode + '</strong></div><div><span>审核状态</span>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</div>'
             + '<div><span>渠道编码</span><strong>' + item.channelCode + '</strong></div><div><span>账户类型</span><strong>' + (item.settleType === '0' ? '对公账户' : '对私账户') + '</strong></div></div></section>'
-            + '<section><h3>结算信息</h3><div class="profit-detail-grid"><div><span>结算户名</span><strong>' + item.settleName + '</strong></div><div><span>结算账号</span><strong>' + item.settleCardNo + '</strong></div><div><span>开户银行</span><strong>' + item.bankName + '</strong></div><div><span>开户支行</span><strong>' + item.bankBranch + '</strong></div><div><span>开户地区编码</span><strong>' + item.bankProvince + '／' + item.bankCity + '</strong></div><div><span>联行号</span><strong>' + item.alliedBankCode + '</strong></div><div><span>法人姓名</span><strong>' + item.legalName + '</strong></div><div><span>法人手机号</span><strong>' + item.legalMobile + '</strong></div></div><div class="profit-receiver-card"><span>供方分账收款账户</span><strong>' + item.account + '</strong><p>接收方资料由已审核的供方商户和结算账户同步，页面仅核对，不重复录入。</p></div></section>'
+            + '<section><h3>结算信息</h3><div class="profit-detail-grid"><div><span>结算户名</span><strong>' + item.settleName + '</strong></div><div><span>结算账号</span><strong>' + item.settleCardNo + '</strong></div><div><span>开户银行</span><strong>' + item.bankName + '</strong></div><div><span>开户支行</span><strong>' + item.bankBranch + '</strong></div><div><span>开户地区编码</span><strong>' + item.bankProvince + '／' + item.bankCity + '</strong></div><div><span>联行号</span><strong>' + item.alliedBankCode + '</strong></div><div><span>法人姓名</span><strong>' + item.legalName + '</strong></div><div><span>法人手机号</span><strong>' + item.legalMobile + '</strong></div></div><div class="profit-receiver-card"><span>供方分账收款账户</span><strong>' + item.account + '</strong><p>接收方资料由供方已开通的收款结算账号同步，系统后台自动发起添加，页面仅用于核对。</p></div></section>'
             + '</div><footer>' + button('关闭', '', 'close-drawer', 'close') + '</footer></aside>';
     }
 
@@ -521,112 +440,9 @@
                 else if (action === 'set-audit-status') { splitApplyAuditStatus = this.dataset.auditStatus; configOpen = false; render(); }
                 else if (action === 'edit-rule') { modalState = { mode: 'edit', rule: RULES.find(function (rule) { return rule.id === control.dataset.ruleId; }) }; render(); }
                 else if (action === 'close-modal') { modalState = null; render(); }
-                else if (action === 'add-receiver') { receiverAddTargetId = ''; receiverAddOpen = true; selectedReceiverCandidateId = RECEIVER_CANDIDATES.length ? RECEIVER_CANDIDATES[0].merchantId : ''; render(); }
-                else if (action === 'retry-receiver') { receiverAddTargetId = this.dataset.receiverId; receiverAddOpen = true; render(); }
-                else if (action === 'close-receiver-add') { receiverAddOpen = false; receiverAddTargetId = ''; render(); }
                 else if (action === 'receiver-detail') { drawerReceiverId = this.dataset.receiverId; render(); }
                 else if (action === 'close-drawer') { drawerReceiverId = ''; render(); }
             });
-        });
-
-        var receiverCombobox = page.querySelector('[data-receiver-combobox]');
-        var receiverCandidateSearch = page.querySelector('[data-receiver-candidate-search]');
-        var receiverCandidateToggle = page.querySelector('[data-receiver-candidate-toggle]');
-        var receiverCandidateOptions = Array.prototype.slice.call(page.querySelectorAll('[data-receiver-candidate-option]'));
-
-        function setReceiverComboboxOpen(open) {
-            if (!receiverCombobox || !receiverCandidateSearch) return;
-            receiverCombobox.classList.toggle('is-open', open);
-            receiverCandidateSearch.setAttribute('aria-expanded', String(open));
-            if (!open) {
-                receiverCandidateOptions.forEach(function (option) { option.classList.remove('is-keyboard-active'); });
-            }
-        }
-
-        function filterReceiverCandidates(value) {
-            var keyword = String(value || '').trim().toLowerCase();
-            var visibleCount = 0;
-            receiverCandidateOptions.forEach(function (option) {
-                var visible = !keyword || String(option.dataset.receiverCandidateSearchText || '').indexOf(keyword) >= 0;
-                option.hidden = !visible;
-                option.classList.remove('is-keyboard-active');
-                if (visible) visibleCount += 1;
-            });
-            var empty = page.querySelector('[data-receiver-candidate-empty]');
-            if (empty) empty.hidden = visibleCount > 0;
-        }
-
-        if (receiverCandidateSearch) {
-            receiverCandidateSearch.addEventListener('focus', function () {
-                setReceiverComboboxOpen(true);
-                filterReceiverCandidates('');
-                this.select();
-            });
-            receiverCandidateSearch.addEventListener('input', function () {
-                setReceiverComboboxOpen(true);
-                filterReceiverCandidates(this.value);
-            });
-            receiverCandidateSearch.addEventListener('keydown', function (event) {
-                var visibleOptions = receiverCandidateOptions.filter(function (option) { return !option.hidden; });
-                var activeIndex = visibleOptions.findIndex(function (option) { return option.classList.contains('is-keyboard-active'); });
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                    event.preventDefault();
-                    setReceiverComboboxOpen(true);
-                    if (!visibleOptions.length) return;
-                    activeIndex = event.key === 'ArrowDown'
-                        ? (activeIndex + 1) % visibleOptions.length
-                        : (activeIndex <= 0 ? visibleOptions.length - 1 : activeIndex - 1);
-                    visibleOptions.forEach(function (option) { option.classList.remove('is-keyboard-active'); });
-                    visibleOptions[activeIndex].classList.add('is-keyboard-active');
-                    visibleOptions[activeIndex].scrollIntoView({ block: 'nearest' });
-                } else if (event.key === 'Enter' && visibleOptions.length) {
-                    event.preventDefault();
-                    (activeIndex >= 0 ? visibleOptions[activeIndex] : visibleOptions[0]).click();
-                } else if (event.key === 'Escape') {
-                    event.preventDefault();
-                    setReceiverComboboxOpen(false);
-                }
-            });
-        }
-        if (receiverCandidateToggle) receiverCandidateToggle.addEventListener('click', function () {
-            var open = !receiverCombobox.classList.contains('is-open');
-            setReceiverComboboxOpen(open);
-            if (open) {
-                filterReceiverCandidates('');
-                receiverCandidateSearch.focus();
-            }
-        });
-        receiverCandidateOptions.forEach(function (option) {
-            option.addEventListener('click', function () {
-                selectedReceiverCandidateId = this.dataset.receiverCandidateOption;
-                render();
-            });
-        });
-
-        var receiverAddForm = page.querySelector('[data-receiver-add-form]');
-        if (receiverAddForm) receiverAddForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            if (receiverAddTargetId) {
-                var retryItem = RECEIVERS.find(function (item) { return item.receiverId === receiverAddTargetId; });
-                if (!retryItem || (retryItem.status !== '2' && retryItem.status !== '3')) return;
-                retryItem.status = '0';
-                retryItem.createdAt = '2026-07-22 14:26:18';
-                receiverAddOpen = false;
-                receiverAddTargetId = '';
-                showToast('分账接收方已重新提交，当前审核状态为正在审核。');
-                return;
-            }
-            var candidateIndex = RECEIVER_CANDIDATES.findIndex(function (item) { return item.merchantId === selectedReceiverCandidateId; });
-            if (candidateIndex < 0) return;
-            var candidate = RECEIVER_CANDIDATES[candidateIndex];
-            RECEIVERS.unshift(Object.assign({}, candidate, {
-                status: '0',
-                createdAt: '2026-07-22 14:26:18'
-            }));
-            RECEIVER_CANDIDATES.splice(candidateIndex, 1);
-            selectedReceiverCandidateId = RECEIVER_CANDIDATES.length ? RECEIVER_CANDIDATES[0].merchantId : '';
-            receiverAddOpen = false;
-            showToast('分账接收方已提交，当前审核状态为正在审核。');
         });
 
         var configForm = page.querySelector('[data-profit-config-form]');
@@ -718,10 +534,9 @@
 
         var modalMask = page.querySelector('[data-profit-modal-close]');
         var modal = page.querySelector('.profit-modal');
-        if (modalMask) modalMask.addEventListener('click', function () { modalState = null; configOpen = false; receiverAddOpen = false; receiverAddTargetId = ''; render(); });
+        if (modalMask) modalMask.addEventListener('click', function () { modalState = null; configOpen = false; render(); });
         if (modal) modal.addEventListener('click', function (event) {
             event.stopPropagation();
-            if (receiverCombobox && !event.target.closest('[data-receiver-combobox]')) setReceiverComboboxOpen(false);
         });
         var drawerMask = page.querySelector('[data-profit-drawer-close]');
         if (drawerMask) drawerMask.addEventListener('click', function () { drawerReceiverId = ''; render(); });
