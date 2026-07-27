@@ -6,7 +6,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可信数据空间 - 龙岗数据聚合服务平台</title>
+    <title>空间互联 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -17,96 +17,9 @@
     <style>
         /* Main Layout */
         .main-content {
-            max-width: var(--content-max-width);
+            max-width: 1600px;
             margin: 0 auto;
             padding: 96px 32px 48px;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 40px;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 96px;
-            height: fit-content;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .space-card {
-            background: var(--surface-elevated);
-            border: 2px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 16px;
-            cursor: pointer;
-            transition: all var(--transition-base);
-            display: flex;
-            gap: 14px;
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .space-card:hover {
-            border-color: var(--forest-green-200);
-            transform: translateX(4px);
-        }
-
-        .space-card.active {
-            border-color: var(--forest-green);
-            background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.08) 100%);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .space-card.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 20%;
-            bottom: 20%;
-            width: 4px;
-            background: var(--forest-green);
-            border-radius: 0 2px 2px 0;
-        }
-
-        .space-card-image {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .space-card-image svg {
-            width: 28px;
-            height: 28px;
-            fill: var(--forest-green);
-        }
-
-        .space-card-content { flex: 1; min-width: 0; }
-
-        .space-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .space-card.active .space-card-title { color: var(--forest-green-700); }
-
-        .space-card-desc {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         /* ==================== Article Content ==================== */
@@ -1583,9 +1496,6 @@
         }
 
         @media (max-width: 1024px) {
-            .main-content { grid-template-columns: 1fr; }
-            .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
-            .space-card { flex: 1; min-width: 250px; }
             .space-main-content { grid-template-columns: 1fr; }
             .space-sidebar { position: static; }
             .space-filter-card { display: flex; flex-wrap: wrap; gap: 16px; }
@@ -1621,9 +1531,7 @@
         }
 
         @media (max-width: 1024px) {
-            .main-content { grid-template-columns: 1fr; }
-            .sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
-            .space-card { flex: 1; min-width: 250px; }
+            .main-content { padding-left: 24px; padding-right: 24px; }
         }
 
         @media (max-width: 768px) {
@@ -1641,73 +1549,10 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav-bar active="data-space"></nav-bar>
+    <nav-bar active="data-ecosystem"></nav-bar>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="space-card active" data-panel="overview">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">龙岗可信数据空间</h3>
-                    <p class="space-card-desc">数据要素改革试点，构建可信流通基础设施</p>
-                </div>
-            </div>
-
-            <div class="space-card" data-panel="public">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 3L2 8v2h20V8L12 3zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-3v-7h-4v7H7v-7H5zm7-5.8L16.5 8h-9L12 6.2z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">公共数据可信数据空间</h3>
-                    <p class="space-card-desc">公共数据授权运营与可信流通应用</p>
-                </div>
-            </div>
-
-            <div class="space-card" data-panel="0">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">低空经济可信数据空间</h3>
-                    <p class="space-card-desc">支撑低空经济全产业链运行的核心基础设施</p>
-                </div>
-            </div>
-
-            <div class="space-card" data-panel="1">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">具身智能可信数据空间</h3>
-                    <p class="space-card-desc">机器人训练数据生产与智能模型训练</p>
-                </div>
-            </div>
-
-            <div class="space-card" data-panel="2">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">医药健康可信数据空间</h3>
-                    <p class="space-card-desc">医疗大数据与健康产业数字化转型</p>
-                </div>
-            </div>
-
-            <div class="space-card" data-panel="3">
-                <div class="space-card-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-                </div>
-                <div class="space-card-content">
-                    <h3 class="space-card-title">文化艺术可信数据空间</h3>
-                    <p class="space-card-desc">文化创意产业数据资源整合与共享</p>
-                </div>
-            </div>
-        </aside>
-
         <!-- ========== Panel 0: 龙岗可信数据空间概览 ========== -->
         <div class="article-panel active" data-panel="overview">
         <article class="article">
@@ -1770,7 +1615,7 @@
                         <p class="section-content">龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。通过举办数据应用创新大赛、建设数据要素集聚园区等举措，持续吸引优质数商资源集聚，推动数据要素市场健康发展。</p>
                     </section>
                     <div class="cta-section">
-                        <div class="cta-content"><h3>探索龙岗可信数据空间</h3><p>点击左侧导航，探索各行业数据空间详情</p></div>
+                        <div class="cta-content"><h3>探索龙岗可信数据空间</h3><p>通过顶部“空间互联”导航，直接进入各数据空间详情</p></div>
                         <a href="https://lgdata.lggov.cn/index" target="_blank" class="cta-button">进入空间</a>
                     </div>
                 </div>
@@ -4161,19 +4006,27 @@
 
         renderSpaceMarketTabs();
 
-        var cards = document.querySelectorAll('.space-card');
         var panels = document.querySelectorAll('.article-panel');
+        var spaceRouteMap = {
+            overview: 'overview',
+            public: 'public',
+            'low-altitude': '0',
+            embodied: '1',
+            health: '2',
+            culture: '3'
+        };
+        var requestedSpace = new URLSearchParams(window.location.search).get('space') || 'overview';
+        var selectedPanel = spaceRouteMap[requestedSpace] || spaceRouteMap.overview;
 
-        // 左侧卡片切换
-        cards.forEach(function(card, idx) {
-            card.addEventListener('click', function() {
-                cards.forEach(function(c) { c.classList.remove('active'); });
-                panels.forEach(function(p) { p.classList.remove('active'); });
-                card.classList.add('active');
-                panels[idx].classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+        panels.forEach(function(panel) {
+            panel.classList.toggle('active', panel.dataset.panel === selectedPanel);
         });
+
+        var activePanel = document.querySelector('.article-panel.active');
+        var activeTitle = activePanel ? activePanel.querySelector('.article-title') : null;
+        if (activeTitle) {
+            document.title = activeTitle.textContent.trim() + ' - 龙岗数据聚合服务平台';
+        }
 
         // 龙岗可信数据空间的内部Tab切换
         var spaceTabs = document.querySelectorAll('[data-panel="overview"] .space-tab');

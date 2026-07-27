@@ -6,7 +6,7 @@
  *   <nav-bar active="home"></nav-bar>
  *
  * active 可选值：
- *   home | data-resources | data-store | demand | data-space | consulting | solutions | community | policy | help | my-space
+ *   home | data-trade | data-services | data-ecosystem | demand | policy | help
  *
  * 登录状态通过 localStorage('lgk_logged_in') 驱动，登录后自动切换右侧 UI。
  */
@@ -68,65 +68,143 @@ class NavBar extends HTMLElement {
         catch (e) { return false; }
     }
 
-    _detectActive() {
+    _detectRoute() {
         const path = window.location.pathname;
-        if (path.includes('data-resources')) return 'data-resources';
-        if (path.includes('data-detail'))    return 'data-resources';
-        if (path.includes('data-apply'))     return 'data-resources';
-        if (path.includes('data-production-line')) return 'data-store';
-        if (path.includes('data-scenario'))  return 'data-store';
-        if (path.includes('data-factory'))   return 'data-store';
-        if (path.includes('data-products'))  return 'data-store';
-        if (path.includes('product-detail')) return 'data-store';
-        if (path.includes('product-buy'))    return 'data-store';
-        if (path.includes('data-dev-platform')) return 'data-store';
-        if (path.includes('demand-hall'))    return 'demand';
-        if (path.includes('demand-detail'))  return 'demand';
-        if (path.includes('data-consulting')) return 'consulting';
-        if (path.includes('consulting-detail')) return 'consulting';
-        if (path.includes('industry-solutions')) return 'solutions';
-        if (path.includes('solution-detail'))  return 'solutions';
-        if (path.includes('data-space'))     return 'data-space';
-        if (path.includes('community'))      return 'community';
-        if (path.includes('policy'))         return 'policy';
-        if (path.includes('help'))           return 'help';
-        if (path.includes('my-space'))       return 'my-space';
-        if (path.includes('site-message'))   return '';
-        return 'home';
+        const params = new URLSearchParams(window.location.search);
+        const placeholder = params.get('page') || '';
+
+        if (path.includes('portal-placeholder')) {
+            const placeholderRoutes = {
+                'corpus-data-zone': ['data-trade', 'special-zones', 'corpus-data-zone'],
+                'city-governance-zone': ['data-trade', 'special-zones', 'city-governance-zone'],
+                'medical-health-zone': ['data-trade', 'special-zones', 'medical-health-zone'],
+                'embodied-intelligence-zone': ['data-trade', 'special-zones', 'embodied-intelligence-zone'],
+                'merchant-onboarding': ['data-ecosystem', 'merchant-onboarding', ''],
+                'ecosystem-cooperation': ['data-ecosystem', 'ecosystem-cooperation', ''],
+                'industry-education': ['data-ecosystem', 'industry-education', '']
+            };
+            const target = placeholderRoutes[placeholder] || ['home', '', ''];
+            return { primary: target[0], secondary: target[1], tertiary: target[2] };
+        }
+
+        if (path.includes('data-resources') || path.includes('data-detail') || path.includes('data-apply')) {
+            return { primary: 'data-trade', secondary: 'data-resources', tertiary: '' };
+        }
+        if (path.includes('data-products') || path.includes('product-detail') || path.includes('product-buy')) {
+            return { primary: 'data-trade', secondary: 'data-products', tertiary: '' };
+        }
+        if (path.includes('data-production-line')) {
+            return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'factory-production-line' };
+        }
+        if (path.includes('data-factory')) {
+            return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'annotation-platform' };
+        }
+        if (path.includes('data-scenario')) {
+            return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'operation-platform' };
+        }
+        if (path.includes('data-dev-platform')) {
+            return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'development-tools' };
+        }
+        if (path.includes('data-consulting') || path.includes('consulting-')) {
+            return { primary: 'data-services', secondary: 'data-consulting', tertiary: '' };
+        }
+        if (path.includes('industry-solutions') || path.includes('solution-')) {
+            return { primary: 'data-services', secondary: 'industry-solutions', tertiary: '' };
+        }
+        if (path.includes('data-space')) {
+            const requestedSpace = params.get('space') || 'overview';
+            const supportedSpaces = ['overview', 'public', 'low-altitude', 'embodied', 'health', 'culture'];
+            const space = supportedSpaces.includes(requestedSpace) ? requestedSpace : 'overview';
+            return { primary: 'data-ecosystem', secondary: 'space-connect', tertiary: 'space-' + space };
+        }
+        if (path.includes('community')) {
+            return { primary: 'data-ecosystem', secondary: 'data-science-community', tertiary: '' };
+        }
+        if (path.includes('demand-')) return { primary: 'demand', secondary: '', tertiary: '' };
+        if (path.includes('policy')) return { primary: 'policy', secondary: '', tertiary: '' };
+        if (path.includes('help')) return { primary: 'help', secondary: '', tertiary: '' };
+        if (path.includes('site-message')) return { primary: '', secondary: '', tertiary: '' };
+        return { primary: 'home', secondary: '', tertiary: '' };
     }
 
     _render() {
-        const active = this.getAttribute('active') || this._detectActive();
+        const route = this._detectRoute();
+        const declaredActive = this.getAttribute('active');
+        const supportedActive = ['home', 'data-trade', 'data-services', 'data-ecosystem', 'demand', 'policy', 'help'];
+        const active = supportedActive.includes(declaredActive) ? declaredActive : route.primary;
         const loggedIn = this._isLoggedIn();
 
         const NAV_ITEMS = [
-            { id: 'home',           label: '首页',         href: 'index.html' },
-            { id: 'data-resources', label: '数据资源',     href: 'data-resources.html' },
-            { id: 'data-store',     label: '数据商店',     dropdown: true },
-            { id: 'demand',         label: '需求大厅',     href: 'demand-hall.html' },
-            { id: 'data-space',     label: '可信数据空间', href: 'data-space.html' },
-            { id: 'consulting',     label: '数据咨询服务', href: 'data-consulting.html' },
-            { id: 'solutions',      label: '行业解决方案', href: 'industry-solutions.html' },
-            { id: 'community',      label: '数据社区',     href: 'community.html' },
-            { id: 'policy',         label: '政策资讯',     href: 'policy-news.html' },
-            { id: 'help',           label: '帮助中心',     href: 'help-center.html' },
+            { id: 'home', label: '首页', href: 'index.html' },
+            {
+                id: 'data-trade',
+                label: '数据交易',
+                children: [
+                    { id: 'data-resources', label: '数据资源', href: 'data-resources.html' },
+                    { id: 'data-products', label: '数据产品', href: 'data-products.html' },
+                    {
+                        id: 'special-zones',
+                        label: '特色专区',
+                        children: [
+                            { id: 'corpus-data-zone', label: '语料数据专区', href: 'portal-placeholder.html?page=corpus-data-zone' },
+                            { id: 'city-governance-zone', label: '城市治理专区', href: 'portal-placeholder.html?page=city-governance-zone' },
+                            { id: 'medical-health-zone', label: '医疗健康专区', href: 'portal-placeholder.html?page=medical-health-zone' },
+                            { id: 'embodied-intelligence-zone', label: '具身智能专区', href: 'portal-placeholder.html?page=embodied-intelligence-zone' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'data-services',
+                label: '数据服务',
+                children: [
+                    { id: 'industry-solutions', label: '行业解决方案', href: 'industry-solutions.html' },
+                    { id: 'data-consulting', label: '数据咨询服务', href: 'data-consulting.html' },
+                    {
+                        id: 'creative-workshop',
+                        label: '创意工坊',
+                        children: [
+                            { id: 'factory-production-line', label: '数据工厂生产线', href: 'data-production-line.html' },
+                            { id: 'annotation-platform', label: '自有数据标注平台', href: 'data-factory.html' },
+                            { id: 'operation-platform', label: '数据运营平台', href: 'data-scenario.html' },
+                            { id: 'development-tools', label: '开发工具', href: 'data-dev-platform.html' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'data-ecosystem',
+                label: '数据生态',
+                children: [
+                    {
+                        id: 'space-connect',
+                        label: '空间互联',
+                        children: [
+                            { id: 'space-overview', label: '龙岗可信数据空间', href: 'data-space.html?space=overview' },
+                            { id: 'space-public', label: '公共数据可信数据空间', href: 'data-space.html?space=public' },
+                            { id: 'space-low-altitude', label: '低空经济可信数据空间', href: 'data-space.html?space=low-altitude' },
+                            { id: 'space-embodied', label: '具身智能可信数据空间', href: 'data-space.html?space=embodied' },
+                            { id: 'space-health', label: '医药健康可信数据空间', href: 'data-space.html?space=health' },
+                            { id: 'space-culture', label: '文化艺术可信数据空间', href: 'data-space.html?space=culture' }
+                        ]
+                    },
+                    { id: 'merchant-onboarding', label: '数商入驻', href: 'portal-placeholder.html?page=merchant-onboarding' },
+                    { id: 'ecosystem-cooperation', label: '生态合作', href: 'portal-placeholder.html?page=ecosystem-cooperation' },
+                    { id: 'data-science-community', label: '数据科学社区', href: 'community.html' },
+                    { id: 'industry-education', label: '产教融合', href: 'portal-placeholder.html?page=industry-education' }
+                ]
+            },
+            { id: 'demand', label: '需求大厅', href: 'demand-hall.html' },
+            { id: 'policy', label: '政策资讯', href: 'policy-news.html' },
+            { id: 'help', label: '帮助中心', href: 'help-center.html' }
         ];
 
-        const DROPDOWNS = {
-            'data-store': [
-                { label: '数据工厂',     disabled: false, href: 'data-factory.html' },
-                { label: '数据生产线',   disabled: false, href: 'data-production-line.html' },
-                { label: '数据场景',     disabled: false, href: 'data-scenario.html' },
-                { label: '数据开发平台', disabled: false, href: 'data-dev-platform.html' },
-                { label: '数据产品',     disabled: false, href: 'data-products.html' },
-            ],
-            'my-space': [
-                { label: '低空经济可信数据空间', disabled: false, href: '#' },
-                { label: '具身智能可信数据空间', disabled: false, href: '#' },
-                { label: '医药健康可信数据空间', disabled: false, href: '#' },
-                { label: '文化艺术可信数据空间', disabled: false, href: '#' },
-            ],
-        };
+        const MY_SPACE_ITEMS = [
+            { label: '低空经济可信数据空间', href: 'data-space.html?space=low-altitude' },
+            { label: '具身智能可信数据空间', href: 'data-space.html?space=embodied' },
+            { label: '医药健康可信数据空间', href: 'data-space.html?space=health' },
+            { label: '文化艺术可信数据空间', href: 'data-space.html?space=culture' }
+        ];
 
         const menuConfig = window.LG_USER_MENU_CONFIG || {};
         const USER = menuConfig.user || {
@@ -138,26 +216,65 @@ class NavBar extends HTMLElement {
         const USER_MENU = menuConfig.items || [];
 
         const chevronSVG = `<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+        const arrowSVG = `<svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
-        const currentPath = window.location.pathname;
         function buildDropdown(items) {
             return items.map(item => {
-                if (item.disabled) return `<span class="dropdown-item disabled">${item.label}</span>`;
-                const isActive = item.href && currentPath.includes(item.href.replace('.html', ''));
-                const cls = isActive ? 'dropdown-item active' : 'dropdown-item';
+                const cls = item.href && window.location.href.includes(item.href) ? 'dropdown-item active' : 'dropdown-item';
                 return `<a href="${item.href}" class="${cls}">${item.label}</a>`;
             }).join('');
         }
 
-        const linksHTML = NAV_ITEMS.map(item => {
-            if (item.dropdown && DROPDOWNS[item.id]) {
-                const triggerCls = item.id === active ? 'nav-dropdown-trigger active' : 'nav-dropdown-trigger';
-                return `
-                <div class="nav-dropdown">
-                    <span class="${triggerCls}">${item.label}${chevronSVG}</span>
-                    <div class="nav-dropdown-menu">${buildDropdown(DROPDOWNS[item.id])}</div>
+        function buildMegaMenu(item) {
+            const currentSecondItem = item.id === route.primary
+                ? item.children.find(child => child.id === route.secondary)
+                : null;
+            const initialSecondItem = currentSecondItem || item.children[0];
+            const initialHasThird = Boolean(initialSecondItem.children);
+            const secondLevelHTML = item.children.map(child => {
+                const isActive = child.id === initialSecondItem.id;
+                if (child.children) {
+                    return `<button type="button" class="mega-second-item mega-second-group${isActive ? ' active' : ''}" data-mega-target="${child.id}" aria-haspopup="true">
+                        <span>${child.label}</span>${arrowSVG}
+                    </button>`;
+                }
+                return `<a href="${child.href}" class="mega-second-item${isActive ? ' active' : ''}" data-mega-target="${child.id}">
+                    <span>${child.label}</span>
+                </a>`;
+            }).join('');
+            const thirdLevelHTML = item.children.filter(child => child.children).map(group => {
+                const thirdItems = group.children.map(child => {
+                    const isActive = child.id === route.tertiary;
+                    return `<a href="${child.href}" class="mega-third-item${isActive ? ' active' : ''}">
+                        <span class="mega-third-dot"></span>
+                        <span>${child.label}</span>
+                    </a>`;
+                }).join('');
+                return `<div class="mega-third-panel${group.id === initialSecondItem.id ? ' active' : ''}" data-mega-panel="${group.id}">
+                    <div class="mega-menu-heading">${group.label}</div>
+                    ${thirdItems}
                 </div>`;
-            }
+            }).join('');
+            const triggerCls = item.id === active ? 'nav-dropdown-trigger active' : 'nav-dropdown-trigger';
+            return `
+                <div class="nav-dropdown nav-mega-dropdown" data-initial-target="${initialSecondItem.id}">
+                    <button type="button" class="${triggerCls}" aria-haspopup="true">
+                        ${item.label}${chevronSVG}
+                    </button>
+                    <div class="nav-mega-menu${initialHasThird ? ' has-third' : ''}" data-mega-menu>
+                        <div class="mega-second-column">
+                            <div class="mega-menu-heading">${item.label}</div>
+                            ${secondLevelHTML}
+                        </div>
+                        <div class="mega-third-column">
+                            ${thirdLevelHTML}
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        const linksHTML = NAV_ITEMS.map(item => {
+            if (item.children) return buildMegaMenu(item);
             const cls = item.id === active ? 'nav-link active' : 'nav-link';
             return `<a href="${item.href}" class="${cls}">${item.label}</a>`;
         }).join('');
@@ -173,7 +290,7 @@ class NavBar extends HTMLElement {
             actionsHTML = `
             <div class="nav-dropdown nav-dropdown-right">
                 <span class="nav-dropdown-trigger">我的空间${chevronSVG}</span>
-                <div class="nav-dropdown-menu nav-dropdown-menu-right">${buildDropdown(DROPDOWNS['my-space'])}</div>
+                <div class="nav-dropdown-menu nav-dropdown-menu-right">${buildDropdown(MY_SPACE_ITEMS)}</div>
             </div>
             <span class="notify-bell" title="通知">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -211,7 +328,7 @@ class NavBar extends HTMLElement {
             actionsHTML = `
             <div class="nav-dropdown nav-dropdown-right">
                 <span class="nav-dropdown-trigger">我的空间${chevronSVG}</span>
-                <div class="nav-dropdown-menu nav-dropdown-menu-right">${buildDropdown(DROPDOWNS['my-space'])}</div>
+                <div class="nav-dropdown-menu nav-dropdown-menu-right">${buildDropdown(MY_SPACE_ITEMS)}</div>
             </div>
             <a href="register.html" class="btn btn-outline">注册</a>
             <a href="login.html" class="btn btn-primary">登录</a>`;
@@ -260,11 +377,84 @@ class NavBar extends HTMLElement {
     transition: all 150ms ease; height: 64px;
     display: flex; align-items: center; gap: 5px;
     cursor: default; user-select: none; white-space: nowrap;
+    border: 0; background: transparent; font-family: inherit;
 }
 .nav-dropdown:hover .nav-dropdown-trigger { color: #1F2B28; background: #f4f4f5; }
 .nav-dropdown-trigger.active { color: #20A565; background: #f0fdf6; }
 .chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.25s ease; color: #919B96; }
 .nav-dropdown:hover .chevron { transform: rotate(180deg); color: #1F2B28; }
+
+/* ── Three-level mega menu ── */
+.nav-mega-menu {
+    position: absolute; top: calc(100% - 2px); left: 0;
+    width: 234px;
+    display: block;
+    transform: translateY(-6px);
+    background: #FFF; border: 1px solid #E8EDEB; border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(22, 39, 33, 0.14), 0 3px 10px rgba(22, 39, 33, 0.06);
+    opacity: 0; visibility: hidden; overflow: hidden;
+    transition: width 0.18s ease, opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
+    z-index: 220;
+}
+.nav-mega-menu.has-third {
+    width: 540px; min-height: 232px;
+    display: grid; grid-template-columns: 210px minmax(0, 1fr);
+}
+.nav-mega-dropdown:hover .nav-mega-menu,
+.nav-mega-dropdown:focus-within .nav-mega-menu {
+    opacity: 1; visibility: visible; transform: translateY(0);
+}
+.mega-second-column {
+    padding: 16px 12px;
+    background: #F8FAF9;
+}
+.nav-mega-menu.has-third .mega-second-column { border-right: 1px solid #E8EDEB; }
+.mega-menu-heading {
+    padding: 0 10px 10px;
+    font-size: 12px; font-weight: 600; color: #919B96;
+    letter-spacing: 0.04em;
+}
+.mega-second-item {
+    width: 100%; border: 0; background: transparent; font-family: inherit;
+    min-height: 42px; padding: 0 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    color: #4F5C57; border-radius: 8px;
+    font-size: 14px; font-weight: 500; text-decoration: none;
+    transition: color 150ms ease, background 150ms ease;
+}
+a.mega-second-item:hover,
+.mega-second-group:hover,
+.mega-second-item.active {
+    color: #168C55; background: #EAF8F0;
+}
+.mega-second-group { cursor: pointer; }
+.menu-arrow { width: 15px; height: 15px; flex-shrink: 0; color: #A4AEA9; }
+.mega-second-item.active .menu-arrow { color: #20A565; }
+.mega-third-column {
+    display: none;
+    padding: 16px 14px 18px;
+}
+.nav-mega-menu.has-third .mega-third-column { display: block; }
+.mega-third-panel { display: none; }
+.mega-third-panel.active {
+    display: flex; flex-direction: column; gap: 4px;
+}
+.mega-third-item {
+    min-height: 42px; padding: 8px 10px;
+    display: flex; align-items: flex-start; gap: 9px;
+    color: #4F5C57; border-radius: 8px;
+    font-size: 13px; font-weight: 500; line-height: 1.45;
+    text-decoration: none;
+    transition: color 150ms ease, background 150ms ease;
+}
+.mega-third-item:hover,
+.mega-third-item.active { color: #168C55; background: #F0FDF4; }
+.mega-third-dot {
+    width: 6px; height: 6px; margin-top: 6px;
+    flex-shrink: 0; border-radius: 50%; background: #B8C3BE;
+}
+.mega-third-item:hover .mega-third-dot,
+.mega-third-item.active .mega-third-dot { background: #20A565; }
 
 .nav-dropdown-menu {
     position: absolute; top: calc(100% - 2px); left: 50%;
@@ -417,6 +607,13 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
 .logout-btn:hover { color: #EF4444; border-color: #FECACA; background: #FEF2F2; }
 
 /* ── Responsive ── */
+@media (max-width: 1180px) {
+    .nav-container { padding: 0 20px; }
+    .nav-brand-name { display: none; }
+    .nav-links { gap: 0; }
+    .nav-link, .nav-dropdown-trigger { padding-left: 10px; padding-right: 10px; }
+    .nav-actions { gap: 6px; }
+}
 @media (max-width: 768px) {
     .nav-links { display: none; }
 }
@@ -440,6 +637,7 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
         const panel = shadow.getElementById('userPanel');
         const logoutBtn = shadow.getElementById('logoutBtn');
 
+        this._bindMegaMenus();
         this._bindMessageDropdown();
 
         if (!trigger || !panel) return;
@@ -467,6 +665,51 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
                 self._bindEvents();
             });
         }
+    }
+
+    _bindMegaMenus() {
+        const shadow = this.shadowRoot;
+
+        shadow.querySelectorAll('.nav-mega-dropdown').forEach(function (dropdown) {
+            const menu = dropdown.querySelector('[data-mega-menu]');
+            const trigger = dropdown.querySelector('.nav-dropdown-trigger');
+            const secondItems = Array.from(dropdown.querySelectorAll('[data-mega-target]'));
+            const thirdPanels = Array.from(dropdown.querySelectorAll('[data-mega-panel]'));
+            const initialTarget = dropdown.dataset.initialTarget;
+
+            if (!menu || !initialTarget) return;
+
+            function activateSecondLevel(target) {
+                const targetPanel = thirdPanels.find(function (panel) {
+                    return panel.dataset.megaPanel === target;
+                });
+
+                secondItems.forEach(function (item) {
+                    item.classList.toggle('active', item.dataset.megaTarget === target);
+                });
+                thirdPanels.forEach(function (panel) {
+                    panel.classList.toggle('active', panel === targetPanel);
+                });
+                menu.classList.toggle('has-third', Boolean(targetPanel));
+            }
+
+            dropdown.addEventListener('mouseenter', function () {
+                activateSecondLevel(initialTarget);
+            });
+            if (trigger) {
+                trigger.addEventListener('focus', function () {
+                    activateSecondLevel(initialTarget);
+                });
+            }
+            secondItems.forEach(function (item) {
+                item.addEventListener('mouseenter', function () {
+                    activateSecondLevel(item.dataset.megaTarget);
+                });
+                item.addEventListener('focus', function () {
+                    activateSecondLevel(item.dataset.megaTarget);
+                });
+            });
+        });
     }
 
     _loadMessageCenter(callback) {

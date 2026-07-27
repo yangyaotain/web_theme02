@@ -13,9 +13,11 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/product-detail-samples.css">
     <script src="js/nav-bar.js"></script>
     <script src="js/site-footer.js" defer></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/product-detail-samples.js" defer></script>
     <style>
         .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
 
@@ -213,7 +215,7 @@
     </style>
 </head>
 <body>
-    <nav-bar active="data-store"></nav-bar>
+    <nav-bar active="data-trade"></nav-bar>
 
     <div class="detail-wrapper">
         <nav class="g-breadcrumb">
@@ -221,26 +223,26 @@
             <span class="sep">/</span>
             <a href="data-products.html">数据产品</a>
             <span class="sep">/</span>
-            <span class="current">慧企政策智能推荐</span>
+            <span class="current" data-product-detail-breadcrumb>慧企政策智能推荐</span>
         </nav>
 
         <section class="product-header">
             <div class="product-header-container">
                 <div class="product-gallery">
                     <div class="gallery-main">
-                        <img src="images/product-detail-hero.jpg" alt="慧企政策智能推荐">
+                        <img src="images/product-detail-hero.jpg" alt="慧企政策智能推荐" data-product-detail-image>
                     </div>
                     <div class="gallery-thumbs">
-                        <div class="gallery-thumb active"><img src="images/product-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb active"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
                     </div>
                 </div>
 
                 <div class="product-info">
                     <div class="product-title-row">
-                        <h1 class="product-title">慧企政策智能推荐</h1>
+                        <h1 class="product-title" data-product-detail-title>慧企政策智能推荐</h1>
                         <div class="product-stats">
                             <span class="product-stat">浏览量：<b>1,056</b></span>
                             <span class="product-stat">购买量：<b>56</b></span>
@@ -250,14 +252,14 @@
                             </button>
                         </div>
                     </div>
-                    <p class="product-desc">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，营造一流营商环境、郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下，"郑惠企"政策服务平台在"亲清在线"平台基础上进行改造升级，利用大数据、人工智能等技术，加强政策服务及管控两端……</p>
+                    <p class="product-desc" data-product-detail-description>为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，营造一流营商环境、郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下，"郑惠企"政策服务平台在"亲清在线"平台基础上进行改造升级，利用大数据、人工智能等技术，加强政策服务及管控两端……</p>
                     <div class="product-meta-row">
                         <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
                     </div>
-                    <div class="product-price">参考价：<span class="amount">0.1元/次</span></div>
+                    <div class="product-price">参考价：<span class="amount" data-product-detail-price>0.1元/次</span></div>
                     <div class="delivery-row">
                         <span class="delivery-label">交付方式：</span>
-                        <span class="delivery-tag">在线交付</span>
+                        <span class="delivery-tag" data-product-detail-delivery>在线交付</span>
                     </div>
                     <div class="delivery-row">
                         <span class="delivery-label">计量方式：</span>
@@ -298,6 +300,7 @@
                 <div class="g-tabs">
                     <button class="g-tab active" data-tab="intro">产品介绍</button>
                     <button class="g-tab" data-tab="delivery">交付要求</button>
+                    <button class="g-tab" data-tab="sample">样例数据</button>
                 </div>
 
                 <!-- Tab 1: 产品介绍 -->
@@ -306,15 +309,15 @@
                     <table class="info-table">
                         <tr>
                             <td class="label-cell">产品名称：</td>
-                            <td class="value-cell">慧企政策智能推荐</td>
+                            <td class="value-cell" data-product-detail-name>慧企政策智能推荐</td>
                             <td class="label-cell">产品供应：</td>
                             <td class="value-cell">广东****有限公司</td>
                         </tr>
                         <tr>
                             <td class="label-cell">产品类型：</td>
-                            <td class="value-cell">数据应用</td>
+                            <td class="value-cell" data-product-detail-type>数据应用</td>
                             <td class="label-cell">行业分类：</td>
-                            <td class="value-cell">公共管理、社会保障和社会组织</td>
+                            <td class="value-cell" data-product-detail-industry>公共管理、社会保障和社会组织</td>
                         </tr>
                         <tr>
                             <td class="label-cell">地域分类：</td>
@@ -348,7 +351,7 @@
                         </tr>
                         <tr>
                             <td class="label-cell">产品简介：</td>
-                            <td class="desc-cell" colspan="3">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下……</td>
+                            <td class="desc-cell" colspan="3" data-product-detail-introduction>为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下……</td>
                         </tr>
                     </table>
 
@@ -399,6 +402,9 @@
                         </tr>
                     </table>
                 </div>
+
+                <!-- Tab 3: 样例数据 -->
+                <div class="g-tab-panel" id="tabSample"></div>
             </div>
 
             <aside class="sidebar">
@@ -416,7 +422,7 @@
     (function () {
         var tabs = document.querySelectorAll('.g-tab');
         var panels = document.querySelectorAll('.g-tab-panel');
-        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery' };
+        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery', sample: 'tabSample' };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
@@ -441,7 +447,7 @@
             <form id="consultForm" autocomplete="off">
                 <div class="consult-row">
                     <div class="consult-label">咨询对象</div>
-                    <div class="consult-val consult-static">慧企政策智能推荐</div>
+                    <div class="consult-val consult-static" data-product-consult-target>慧企政策智能推荐</div>
                 </div>
                 <div class="consult-row">
                     <div class="consult-label">咨询内容</div>
