@@ -849,10 +849,8 @@
                     <div class="bm-label"><span class="req">*</span>发布权限</div>
                     <div class="bm-value">
                         <div class="bm-checkbox-group" id="boardPermissionGroup">
-                            <label><input type="checkbox" value="运营管理方" checked>运营管理方</label>
-                            <label><input type="checkbox" value="数据需求方" checked>数据需求方</label>
-                            <label><input type="checkbox" value="数据提供方" checked>数据提供方</label>
-                            <label><input type="checkbox" value="游客" checked>游客</label>
+                            <label><input type="checkbox" value="龙岗数据运营方" checked>龙岗数据运营方</label>
+                            <label><input type="checkbox" value="数商（供需方）" checked>数商（供需方）</label>
                         </div>
                     </div>
                 </div>
@@ -1377,7 +1375,7 @@
             boardTitleInput.value = boardName;
             boardDescInput.value = boardDesc;
             setBoardUploadFromCard(boardEditingCard);
-            setBoardCheckboxValues(boardPermissionGroup, ['运营管理方', '数据需求方', '数据提供方', '游客']);
+            setBoardCheckboxValues(boardPermissionGroup, ['龙岗数据运营方', '数商（供需方）']);
             setBoardCheckboxValues(boardAuditGroup, ['审核新主题']);
             boardModalSubmit.textContent = '保存';
         } else {
@@ -1387,7 +1385,7 @@
             boardTitleInput.value = '';
             boardDescInput.value = '';
             resetBoardUpload();
-            setBoardCheckboxValues(boardPermissionGroup, ['运营管理方', '数据需求方', '数据提供方', '游客']);
+            setBoardCheckboxValues(boardPermissionGroup, ['龙岗数据运营方', '数商（供需方）']);
             setBoardCheckboxValues(boardAuditGroup, ['审核新主题']);
             boardModalSubmit.textContent = '确定';
         }
