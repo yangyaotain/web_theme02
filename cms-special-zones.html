@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特色专区 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/cms-special-zones.css">
+</head>
+<body>
+    <div data-admin-topbar data-active="operation"></div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content">
+            <section class="special-zone-admin" data-special-zone-list>
+                <header class="zone-admin-header">
+                    <div>
+                        <div class="zone-admin-title-row">
+                            <h1>特色专区</h1>
+                            <span class="zone-admin-count" id="zoneAdminCount">0 个专区</span>
+                        </div>
+                        <p>维护门户“数据交易—特色专区”的展示内容、关联资源及数据产品。</p>
+                    </div>
+                    <button class="zone-admin-button primary" type="button" id="zoneAddButton">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>新增专区</span>
+                    </button>
+                </header>
+
+                <div class="zone-admin-filter">
+                    <label>
+                        <span>专区名称</span>
+                        <input type="search" id="zoneAdminKeyword" placeholder="请输入专区名称">
+                    </label>
+                    <label>
+                        <span>发布状态</span>
+                        <select id="zoneAdminStatus">
+                            <option value="">全部状态</option>
+                            <option value="draft">未发布</option>
+                            <option value="published">已发布</option>
+                            <option value="offline">已下架</option>
+                        </select>
+                    </label>
+                    <div class="zone-admin-filter-actions">
+                        <button class="zone-admin-button primary compact" type="button" id="zoneAdminSearch">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3a6.5 6.5 0 1 0 3.98 11.64L19.84 21 21 19.84l-6.36-6.36A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg>
+                            <span>查询</span>
+                        </button>
+                        <button class="zone-admin-button compact" type="button" id="zoneAdminReset">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.7 9H3.2A9 9 0 1 0 5 6.7V3H3v7h7V8H6.4A6.96 6.96 0 0 1 12 5z"/></svg>
+                            <span>重置</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="zone-admin-table-card">
+                    <div class="zone-admin-table-scroll">
+                        <table class="zone-admin-table">
+                            <thead>
+                                <tr>
+                                    <th class="zone-sequence-column">序号</th>
+                                    <th>专区名称 / 简介</th>
+                                    <th>数据资源</th>
+                                    <th>数据产品</th>
+                                    <th>发布状态</th>
+                                    <th>更新时间</th>
+                                    <th>更新人</th>
+                                    <th class="zone-action-column">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zoneAdminTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="zone-admin-empty" id="zoneAdminEmpty" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 3 3 3h-3V5zM8 13h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
+                        <strong>暂无符合条件的专区</strong>
+                        <span>可调整筛选条件，或新增一个特色专区。</span>
+                    </div>
+                    <div class="pagination-bar" id="zoneAdminPagination" aria-label="特色专区列表分页"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/special-zone-store.js"></script>
+    <script src="js/cms-special-zones.js"></script>
+</body>
+</html>

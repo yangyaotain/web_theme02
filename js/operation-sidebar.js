@@ -104,6 +104,7 @@
             icon: 'content',
             children: [
                 { key: 'cms-portal', label: '门户管理', href: 'cms-portal.html' },
+                { key: 'cms-special-zones', label: '特色专区', href: 'cms-special-zones.html' },
                 { key: 'help-center', label: '帮助中心', disabled: true },
                 { key: 'policy-news', label: '政策资讯', disabled: true },
                 { key: 'cms-community', label: '数据社区', href: 'cms-community.html' },
@@ -142,6 +143,8 @@
         'member-manage.html': 'member-manage',
         'member-system.html': 'member-system',
         'cms-portal.html': 'cms-portal',
+        'cms-special-zones.html': 'cms-special-zones',
+        'cms-special-zone-form.html': 'cms-special-zones',
         'cms-community.html': 'cms-community',
         'cms-community-audit.html': 'cms-community',
         'cms-community-audit-pending.html': 'cms-community',
@@ -177,8 +180,9 @@
         return item.children && item.children.some(child => child.key === activeKey);
     }
 
-    function renderItem(item, activeKey) {
+    function renderItem(item, activeKey, isRoot) {
         const classes = ['sidebar-item'];
+        if (isRoot) classes.push('is-root');
         if (item.key === activeKey) classes.push('active');
         if (item.disabled) classes.push('disabled');
         const icon = item.icon ? (ICONS[item.icon] || '') : '';
@@ -191,10 +195,11 @@
     }
 
     function renderGroup(item, activeKey) {
-        const open = isChildActive(item, activeKey);
-        const children = item.children.map(child => renderItem(child, activeKey)).join('');
+        const childActive = isChildActive(item, activeKey);
+        const open = childActive;
+        const children = item.children.map(child => renderItem(child, activeKey, false)).join('');
         return ''
-            + '<div class="sidebar-group-title' + (open ? ' open' : '') + '" data-sidebar-group>'
+            + '<div class="sidebar-group-title' + (open ? ' open active' : '') + '" data-sidebar-group>'
             + (ICONS[item.icon] || '')
             + '<span>' + item.label + '</span>'
             + ICONS.arrow
@@ -206,7 +211,7 @@
 
     function render(container) {
         const activeKey = getActiveKey(container);
-        const nav = MENU.map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey)).join('');
+        const nav = MENU.map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey, true)).join('');
         container.innerHTML = '<div class="sidebar-title">运营中心</div><nav class="sidebar-nav">' + nav + '</nav>';
     }
 

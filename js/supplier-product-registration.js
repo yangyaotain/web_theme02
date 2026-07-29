@@ -443,7 +443,9 @@
 
     function initSupplierProductRegistration() {
         var params = new URLSearchParams(window.location.search || '');
-        if (params.get('menu') !== 'product-register') return;
+        var sidebar = document.querySelector('[data-workbench-sidebar]');
+        var activeMenu = params.get('menu') || (sidebar && sidebar.dataset.active);
+        if (activeMenu !== 'product-register' && activeMenu !== 'resource-register2') return;
 
         var panel = document.querySelector('[data-consult-panel]');
         var title = document.querySelector('[data-center-title]');

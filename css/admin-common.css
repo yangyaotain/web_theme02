@@ -126,6 +126,7 @@ a { text-decoration: none; color: inherit; }
 }
 .sidebar-item:hover { background: #f5f7fa; color: var(--forest-green); }
 .sidebar-item.active { background: #e8f5e9; color: var(--forest-green); font-weight: 600; }
+.sidebar-item.is-root { color: #303133; font-weight: 600; }
 .sidebar-item.disabled { color: #303133; cursor: default; }
 .sidebar-item.disabled:hover { background: #f5f7fa; color: var(--forest-green); }
 .sidebar-item svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
@@ -135,7 +136,8 @@ a { text-decoration: none; color: inherit; }
     padding: 9px 16px; font-size: 13px; font-weight: 600; color: #303133;
     cursor: pointer; transition: all 0.12s;
 }
-.sidebar-group-title:hover { background: #f5f7fa; }
+.sidebar-group-title:hover { background: #f5f7fa; color: var(--forest-green); }
+.sidebar-group-title.active { background: #e8f5e9; color: var(--forest-green); }
 .sidebar-group-title svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
 .sidebar-group-title .arrow { width: 12px; height: 12px; fill: #909399; margin-left: auto; transition: transform 0.2s; }
 .sidebar-group-title.open .arrow { transform: rotate(90deg); }

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑特色专区 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/cms-special-zones.css">
+</head>
+<body>
+    <div data-admin-topbar data-active="operation"></div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content">
+            <section class="special-zone-admin zone-editor-page" data-special-zone-form>
+                <header class="zone-admin-header zone-editor-header">
+                    <div>
+                        <a class="zone-editor-back" href="cms-special-zones.html">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.4 7.4-1.4-1.4-6 6 6 6 1.4-1.4-4.6-4.6 4.6-4.6z"/></svg>
+                            <span>返回特色专区</span>
+                        </a>
+                        <div class="zone-admin-title-row">
+                            <h1 id="zoneEditorTitle">编辑特色专区</h1>
+                            <span class="zone-status-tag" id="zoneEditorStatus">未发布</span>
+                        </div>
+                        <p>配置专区基础介绍，并从已上架目录中选择门户展示的数据资源和数据产品。</p>
+                    </div>
+                    <button class="zone-admin-button" type="button" id="zonePreviewButton">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                        <span>门户预览</span>
+                    </button>
+                </header>
+
+                <form id="zoneEditorForm" novalidate>
+                    <section class="zone-editor-section">
+                        <div class="zone-editor-section-header">
+                            <div>
+                                <h2>基础信息</h2>
+                                <p>专区名称将同步展示在门户导航和专区页面。</p>
+                            </div>
+                        </div>
+                        <div class="zone-editor-form-grid">
+                            <label class="zone-editor-field full">
+                                <span><em>*</em> 专区名称</span>
+                                <input type="text" id="zoneEditorName" maxlength="20" placeholder="请输入专区名称">
+                                <small><b id="zoneNameLength">0</b>/20</small>
+                            </label>
+                            <label class="zone-editor-field full">
+                                <span><em>*</em> 简介说明</span>
+                                <textarea id="zoneEditorIntroduction" maxlength="220" rows="4" placeholder="说明专区定位、服务对象和主要内容"></textarea>
+                                <small><b id="zoneIntroductionLength">0</b>/220</small>
+                            </label>
+                            <div class="zone-editor-field full">
+                                <span><em>*</em> 专区封面</span>
+                                <div class="zone-cover-upload">
+                                    <div class="zone-cover-preview">
+                                        <img id="zoneCoverPreview" src="images/hero-ai-longgang.jpg" alt="专区封面预览">
+                                        <div>
+                                            <strong>专区横幅封面</strong>
+                                            <span>建议尺寸 1600×520，支持 JPG、PNG，大小不超过 2MB</span>
+                                        </div>
+                                    </div>
+                                    <button class="zone-admin-button compact" type="button" id="zoneCoverChoose">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5l3.5-4.5 2.5 3 3.5-4.5L19 19zM8.5 11A2.5 2.5 0 1 1 8.5 6a2.5 2.5 0 0 1 0 5z"/></svg>
+                                        <span>更换封面</span>
+                                    </button>
+                                    <input type="file" id="zoneCoverInput" accept="image/png,image/jpeg" hidden>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="zone-editor-section">
+                        <div class="zone-editor-section-header">
+                            <div>
+                                <div class="zone-editor-heading-row">
+                                    <h2>数据资源配置</h2>
+                                    <span id="zoneSelectedResourceCount">已选择 0 项</span>
+                                </div>
+                                <p>仅可选择已上架的数据资源，列表顺序即门户展示顺序。</p>
+                            </div>
+                            <button class="zone-admin-button" type="button" data-open-zone-picker="resource">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                <span>选择数据资源</span>
+                            </button>
+                        </div>
+                        <div class="zone-selected-table-wrap">
+                            <table class="zone-selected-table">
+                                <thead>
+                                    <tr>
+                                        <th class="zone-order-column">顺序</th>
+                                        <th>资源名称</th>
+                                        <th>提供方</th>
+                                        <th>分类</th>
+                                        <th>交付方式</th>
+                                        <th>状态</th>
+                                        <th class="zone-selected-actions-column">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="zoneSelectedResourceBody"></tbody>
+                            </table>
+                            <div class="zone-selected-empty" id="zoneSelectedResourceEmpty">
+                                <span>暂未选择数据资源</span>
+                                <button type="button" data-open-zone-picker="resource">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                    <span>选择数据资源</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="zone-editor-section">
+                        <div class="zone-editor-section-header">
+                            <div>
+                                <div class="zone-editor-heading-row">
+                                    <h2>数据产品配置</h2>
+                                    <span id="zoneSelectedProductCount">已选择 0 项</span>
+                                </div>
+                                <p>仅可选择已上架的数据产品，列表顺序即门户展示顺序。</p>
+                            </div>
+                            <button class="zone-admin-button" type="button" data-open-zone-picker="product">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                <span>选择数据产品</span>
+                            </button>
+                        </div>
+                        <div class="zone-selected-table-wrap">
+                            <table class="zone-selected-table">
+                                <thead>
+                                    <tr>
+                                        <th class="zone-order-column">顺序</th>
+                                        <th>产品名称</th>
+                                        <th>提供方</th>
+                                        <th>产品类型</th>
+                                        <th>交付方式</th>
+                                        <th>状态</th>
+                                        <th class="zone-selected-actions-column">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="zoneSelectedProductBody"></tbody>
+                            </table>
+                            <div class="zone-selected-empty" id="zoneSelectedProductEmpty">
+                                <span>暂未选择数据产品</span>
+                                <button type="button" data-open-zone-picker="product">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                    <span>选择数据产品</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <footer class="zone-editor-footer">
+        <div class="zone-editor-footer-inner">
+            <button class="zone-admin-button danger-text" type="button" id="zoneOfflineButton" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13H5v-2h14v2z"/></svg>
+                <span>下架专区</span>
+            </button>
+            <div class="zone-editor-footer-actions">
+                <a class="zone-admin-button" href="cms-special-zones.html">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.4 7.4-1.4-1.4-6 6 6 6 1.4-1.4-4.6-4.6 4.6-4.6z"/></svg>
+                    <span>返回</span>
+                </a>
+                <button class="zone-admin-button" type="button" id="zoneSaveButton">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm0 16H5V5h11.2L17 5.8V19zm-5-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 6h8v3H6V6z"/></svg>
+                    <span>保存</span>
+                </button>
+                <button class="zone-admin-button primary" type="button" id="zonePublishButton">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 16.2-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                    <span>保存并发布</span>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <div class="zone-picker-mask" id="zonePickerModal" aria-hidden="true">
+        <section class="zone-picker-modal" role="dialog" aria-modal="true" aria-labelledby="zonePickerTitle">
+            <header>
+                <div>
+                    <h2 id="zonePickerTitle">选择数据资源</h2>
+                    <p id="zonePickerSubtitle">从已上架目录中选择专区展示内容</p>
+                </div>
+                <button type="button" class="zone-picker-close" id="zonePickerClose" aria-label="关闭">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18.3 5.7-1.4-1.4-4.9 4.9-4.9-4.9-1.4 1.4 4.9 4.9-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9 4.9-4.9z"/></svg>
+                </button>
+            </header>
+            <div class="zone-picker-filter">
+                <input type="search" id="zonePickerKeyword" placeholder="搜索名称或编号">
+                <select id="zonePickerCategory">
+                    <option value="">全部分类</option>
+                </select>
+                <select id="zonePickerProvider">
+                    <option value="">全部提供方</option>
+                </select>
+                <button class="zone-admin-button primary compact" type="button" id="zonePickerSearch">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3a6.5 6.5 0 1 0 3.98 11.64L19.84 21 21 19.84l-6.36-6.36A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg>
+                    <span>查询</span>
+                </button>
+                <button class="zone-admin-button compact" type="button" id="zonePickerReset">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.7 9H3.2A9 9 0 1 0 5 6.7V3H3v7h7V8H6.4A6.96 6.96 0 0 1 12 5z"/></svg>
+                    <span>重置</span>
+                </button>
+            </div>
+            <div class="zone-picker-table-wrap">
+                <table class="zone-picker-table">
+                    <thead>
+                        <tr>
+                            <th class="zone-check-column"></th>
+                            <th>名称 / 编号</th>
+                            <th>提供方</th>
+                            <th>分类</th>
+                            <th>交付方式</th>
+                            <th>上架状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="zonePickerTableBody"></tbody>
+                </table>
+                <div class="zone-picker-empty" id="zonePickerEmpty" hidden>暂无符合条件的内容</div>
+            </div>
+            <footer>
+                <span>已选择 <strong id="zonePickerSelectedCount">0</strong> 项</span>
+                <div>
+                    <button class="zone-admin-button" type="button" id="zonePickerCancel">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18.3 5.7-1.4-1.4-4.9 4.9-4.9-4.9-1.4 1.4 4.9 4.9-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9 4.9-4.9z"/></svg>
+                        <span>取消</span>
+                    </button>
+                    <button class="zone-admin-button primary" type="button" id="zonePickerConfirm">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 16.2-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                        <span>确认选择</span>
+                    </button>
+                </div>
+            </footer>
+        </section>
+    </div>
+
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/special-zone-store.js"></script>
+    <script src="js/cms-special-zones.js"></script>
+</body>
+</html>

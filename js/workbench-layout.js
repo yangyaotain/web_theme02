@@ -85,13 +85,13 @@
                     icon: 'register',
                     children: [
                         { key: 'resource-register', label: '资源登记管理', href: 'supplier-center.html?menu=resource-register' },
+                        { key: 'resource-register2', label: '资源登记管理2', href: 'supplier-center.html?menu=resource-register2' },
                         { key: 'product-register', label: '产品登记管理', href: 'supplier-center.html?menu=product-register' }
                     ]
                 },
                 {
                     label: '数据上架',
                     icon: 'listing',
-                    defaultOpen: true,
                     children: [
                         { key: 'resource-shelf', label: '资源上下架管理', href: 'supplier-center.html?menu=resource-shelf' },
                         { key: 'product-shelf', label: '产品上下架管理', href: 'supplier-center.html?menu=product-shelf' },
@@ -101,7 +101,6 @@
                 {
                     label: '订单合同',
                     icon: 'order',
-                    defaultOpen: true,
                     children: [
                         { key: 'resource-order', label: '资源申请审批', href: 'supplier-center.html?menu=resource-order' },
                         { key: 'product-order', label: '产品订单管理', href: 'supplier-center.html?menu=product-order' },
@@ -113,7 +112,6 @@
                 {
                     label: '费用管理',
                     icon: 'money',
-                    defaultOpen: true,
                     children: [
                         { key: 'transaction-bill', label: '交易账单管理', href: 'supplier-center.html?menu=transaction-bill' },
                         { key: 'offline-voucher', label: '线下支付凭证', href: 'supplier-center.html?menu=offline-voucher' },
@@ -154,6 +152,7 @@
         'product-contract': { title: '产品合同管理', desc: '管理产品交易合同、合同签署、确认和履约相关事项。' },
         'service-contract': { title: '服务合同管理', desc: '管理服务交易合同、签署确认和履约相关事项。' },
         'resource-register': { title: '资源登记管理', desc: '维护资源登记信息、资源目录资料和基础交付说明。' },
+        'resource-register2': { title: '产品登记管理', desc: '维护数据产品登记信息、产品介绍、计费方式和交付资料。' },
         'product-register': { title: '产品登记管理', desc: '维护数据产品登记信息、产品介绍、计费方式和交付资料。' },
         'resource-shelf': { title: '资源上下架管理', desc: '管理数据资源的展示状态、上架申请和下架处理。' },
         'product-shelf': { title: '产品上下架管理', desc: '管理数据产品上架、下架、展示状态和可售配置。' },
@@ -2436,8 +2435,8 @@
         var config = sidebarMenus[center];
         if (!config) return;
 
-        function itemHtml(item) {
-            var cls = item.key === active ? 'wb-side-item active' : 'wb-side-item';
+        function itemHtml(item, isRoot) {
+            var cls = 'wb-side-item' + (isRoot ? ' is-root' : '') + (item.key === active ? ' active' : '');
             var icon = item.icon ? ICONS[item.icon] : '';
             var content = icon + '<span>' + item.label + '</span>';
             if (item.href) return '<a class="' + cls + '" href="' + item.href + '">' + content + '</a>';
@@ -2452,9 +2451,11 @@
             if (section.children) group += ICONS.arrow;
             group += '</div>';
 
-            if (!section.children) return '<div class="wb-side-section">' + itemHtml(section) + '</div>';
+            if (!section.children) return '<div class="wb-side-section">' + itemHtml(section, true) + '</div>';
 
-            var children = section.children.map(itemHtml).join('');
+            var children = section.children.map(function (child) {
+                return itemHtml(child, false);
+            }).join('');
             var subStyle = isOpen ? '' : ' style="display:none"';
             return '<div class="wb-side-section">' + group + '<div class="wb-side-sub"' + subStyle + '>' + children + '</div></div>';
         }).join('');

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱2 - 运营人员驾驶舱</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="dashboard-v2.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script src="dashboard-v2-data.js" defer></script>
+  <script src="dashboard-v2.js" defer></script>
+</head>
+<body data-screen="operations">
+  <div data-dashboard-header></div>
+
+  <main class="dashboard-main operation-dashboard">
+    <section class="operation-metric-belt" data-metric-grid aria-label="运营人员驾驶舱核心指标"></section>
+
+    <section class="operation-command-grid" aria-label="运营核心态势">
+      <article class="operation-panel operation-gap-panel">
+        <header class="operation-panel__head">
+          <div>
+            <h3><i class="fa fa-balance-scale" aria-hidden="true"></i>供需缺口诊断</h3>
+            <p>对比重点场景供给与需求，识别优先补充方向</p>
+          </div>
+          <div class="chart-legend-inline" aria-label="供需缺口图例">
+            <span><i class="legend-dot legend-dot--green"></i>供给</span>
+            <span><i class="legend-dot legend-dot--amber"></i>需求</span>
+          </div>
+        </header>
+        <div class="operation-gap-chart">
+          <canvas id="operationSupplyDemandChart" aria-label="供需缺口双向对比图"></canvas>
+        </div>
+        <div class="operation-gap-alerts" data-operation-gap-alerts></div>
+      </article>
+
+      <article class="operation-panel operation-loop-panel">
+        <header class="operation-panel__head operation-panel__head--hero">
+          <div>
+            <h3><i class="fa fa-random" aria-hidden="true"></i>需求响应闭环</h3>
+            <p>从需求进入到响应成功，定位每个环节的转化与流失</p>
+          </div>
+          <span class="operation-live-status"><i aria-hidden="true"></i>闭环监测中</span>
+        </header>
+        <div class="operation-response-loop" data-operation-response-loop></div>
+        <div class="operation-loop-losses" data-operation-loop-losses></div>
+      </article>
+
+      <article class="operation-panel operation-structure-panel">
+        <header class="operation-panel__head">
+          <div>
+            <h3><i class="fa fa-pie-chart" aria-hidden="true"></i>需求结构监测</h3>
+            <p>识别需求优先级构成与当前承接状态</p>
+          </div>
+          <span class="operation-panel__tag">结构诊断</span>
+        </header>
+        <div class="operation-structure-body">
+          <div class="operation-polar-wrap">
+            <canvas id="operationPriorityPolarChart" aria-label="需求优先级极坐标图"></canvas>
+          </div>
+          <section class="operation-status-block">
+            <div class="operation-status-block__head">
+              <span>需求状态</span>
+              <strong data-operation-status-total></strong>
+            </div>
+            <div class="structure-bar-list" data-operation-status-list></div>
+          </section>
+        </div>
+      </article>
+    </section>
+
+    <section class="operation-analysis-grid" aria-label="运营综合分析">
+      <article class="operation-panel operation-heatmap-panel">
+        <header class="operation-panel__head">
+          <div>
+            <h3><i class="fa fa-th" aria-hidden="true"></i>五要素运营热力矩阵</h3>
+            <p>直接比较累计规模、同比、热门对象和运营结果</p>
+          </div>
+          <span class="operation-panel__tag">颜色越亮表现越强</span>
+        </header>
+        <div class="operation-heatmap" data-operation-heatmap></div>
+      </article>
+
+      <article class="operation-panel operation-trend-panel">
+        <header class="operation-panel__head">
+          <div>
+            <h3><i class="fa fa-line-chart" aria-hidden="true"></i>月度需求响应趋势</h3>
+            <p>同步观察新增需求、响应数量和月度响应率</p>
+          </div>
+          <div class="chart-legend-inline" aria-label="需求响应趋势图例">
+            <span><i class="legend-dot legend-dot--amber"></i>新增</span>
+            <span><i class="legend-dot legend-dot--blue"></i>响应</span>
+            <span><i class="legend-line legend-line--green"></i>响应率</span>
+          </div>
+        </header>
+        <div class="operation-trend-chart">
+          <canvas id="operationDemandTrendChart" aria-label="月度需求响应趋势图"></canvas>
+        </div>
+      </article>
+
+      <article class="operation-panel operation-ranking-panel" data-ranking="operations">
+        <header class="operation-panel__head operation-panel__head--ranking">
+          <div>
+            <h3><i class="fa fa-list-ol" aria-hidden="true"></i>重点运营榜</h3>
+            <p>快速定位当前最受关注的运营对象</p>
+          </div>
+          <div class="panel-tabs" role="tablist" aria-label="重点运营榜分类" data-ranking-tabs></div>
+        </header>
+        <div class="ranking-list" data-ranking-list></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

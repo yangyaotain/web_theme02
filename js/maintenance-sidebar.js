@@ -56,8 +56,9 @@
         return item.children && item.children.some(child => child.key === activeKey);
     }
 
-    function renderItem(item, activeKey) {
+    function renderItem(item, activeKey, isRoot) {
         const classes = ['sidebar-item'];
+        if (isRoot) classes.push('is-root');
         if (item.key === activeKey) classes.push('active');
         if (item.disabled) classes.push('disabled');
         const icon = item.icon ? (ICONS[item.icon] || '') : '';
@@ -74,7 +75,7 @@
         const classes = ['sidebar-group-title'];
         if (open) classes.push('open');
         if (childActive || item.key === activeKey) classes.push('active');
-        const children = (item.children || []).map(child => renderItem(child, activeKey)).join('');
+        const children = (item.children || []).map(child => renderItem(child, activeKey, false)).join('');
         return ''
             + '<div class="' + classes.join(' ') + '" data-maintenance-group>'
             + (ICONS[item.icon] || '')
@@ -90,7 +91,9 @@
         const activeKey = getActiveKey(container);
         const nav = MENU
             .filter(item => !item.hidden)
-            .map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey))
+            .map(item => item.type === 'group' && item.children && item.children.length
+                ? renderGroup(item, activeKey)
+                : renderItem(item, activeKey, true))
             .join('');
         container.innerHTML = ''
             + '<div class="sidebar-title">'

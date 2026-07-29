@@ -2829,6 +2829,14 @@ body.service-is-sorting * {
     color: #606266;
     font-size: 13px;
 }
+.wb-side-item.is-root {
+    min-height: 38px;
+    color: #303133;
+    font-weight: 600;
+}
+.wb-side-item.is-root.active {
+    background: #e9efed;
+}
 .wb-center-content {
     margin-left: 200px;
     padding: 20px;

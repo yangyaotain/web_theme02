@@ -33,31 +33,35 @@
         { key: 'objection', label: '公示异议', icon: 'objection' }
     ];
 
-    function renderItem(item, activeKey, includeIcon) {
+    function renderItem(item, activeKey, includeIcon, isRoot) {
         var active = item.key === activeKey ? ' active' : '';
         var href = item.href ? ' href="' + item.href + '"' : '';
         var disabled = item.href ? '' : ' disabled';
         var icon = includeIcon ? icons[item.icon] : '';
-        return '<a' + href + ' class="sidebar-item' + disabled + active + '">' + icon + '<span>' + item.label + '</span></a>';
+        var root = isRoot ? ' is-root' : '';
+        return '<a' + href + ' class="sidebar-item' + root + disabled + active + '">' + icon + '<span>' + item.label + '</span></a>';
     }
 
     function renderSidebar(sidebar) {
         var activeKey = sidebar.dataset.active || 'member';
         var topHtml = topItems.map(function (item) {
-            return renderItem(item, activeKey, true);
+            return renderItem(item, activeKey, true, true);
         }).join('');
         var accountHtml = accountItems.map(function (item) {
-            return renderItem(item, activeKey, false);
+            return renderItem(item, activeKey, false, false);
         }).join('');
         var bottomHtml = bottomItems.map(function (item) {
-            return renderItem(item, activeKey, true);
+            return renderItem(item, activeKey, true, true);
         }).join('');
+        var accountActive = accountItems.some(function (item) {
+            return item.key === activeKey;
+        });
 
         sidebar.innerHTML = ''
             + '<div class="sidebar-title">用户中心</div>'
             + '<nav class="sidebar-nav">'
             + topHtml
-            + '<div class="sidebar-group-title open" data-user-menu-group>'
+            + '<div class="sidebar-group-title open' + (accountActive ? ' active' : '') + '" data-user-menu-group>'
             + icons.account
             + '<span>账号中心</span>'
             + icons.arrow

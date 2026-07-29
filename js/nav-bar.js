@@ -68,6 +68,70 @@ class NavBar extends HTMLElement {
         catch (e) { return false; }
     }
 
+    _getSpecialZoneItems() {
+        const fallback = [
+            {
+                id: 'corpus-data-zone',
+                label: '语料数据专区',
+                href: 'special-zone.html?zone=corpus-data-zone',
+                sort: 1
+            },
+            {
+                id: 'city-governance-zone',
+                label: '城市治理专区',
+                href: 'special-zone.html?zone=city-governance-zone',
+                sort: 2
+            },
+            {
+                id: 'medical-health-zone',
+                label: '医疗健康专区',
+                href: 'special-zone.html?zone=medical-health-zone',
+                sort: 3
+            },
+            {
+                id: 'embodied-intelligence-zone',
+                label: '具身智能专区',
+                href: 'special-zone.html?zone=embodied-intelligence-zone',
+                sort: 4
+            }
+        ];
+        try {
+            const raw = localStorage.getItem('lgk_special_zones_v1');
+            if (!raw) return fallback;
+            const state = JSON.parse(raw);
+            if (!state || !Array.isArray(state.zones)) return fallback;
+            const zones = state.zones
+                .filter(zone => zone && zone.status === 'published' && zone.id && zone.name);
+            if (Number(state.version || 1) < 2) {
+                fallback.forEach(item => {
+                    if (!zones.some(zone => zone.id === item.id)) {
+                        zones.push({
+                            id: item.id,
+                            name: item.label,
+                            status: 'published',
+                            sort: item.sort
+                        });
+                    }
+                });
+            }
+            return zones
+                .sort((a, b) => Number(a.sort || 0) - Number(b.sort || 0))
+                .map(zone => ({
+                    id: zone.id,
+                    label: String(zone.name).replace(/[&<>"']/g, char => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#039;'
+                    }[char])),
+                    href: 'special-zone.html?zone=' + encodeURIComponent(zone.id)
+                }));
+        } catch (e) {
+            return fallback;
+        }
+    }
+
     _detectRoute() {
         const path = window.location.pathname;
         const params = new URLSearchParams(window.location.search);
@@ -87,6 +151,13 @@ class NavBar extends HTMLElement {
             return { primary: target[0], secondary: target[1], tertiary: target[2] };
         }
 
+        if (path.includes('special-zone')) {
+            return {
+                primary: 'data-trade',
+                secondary: 'special-zones',
+                tertiary: params.get('zone') || 'corpus-data-zone'
+            };
+        }
         if (path.includes('data-resources') || path.includes('data-detail') || path.includes('data-apply')) {
             return { primary: 'data-trade', secondary: 'data-resources', tertiary: '' };
         }
@@ -133,26 +204,25 @@ class NavBar extends HTMLElement {
         const supportedActive = ['home', 'data-trade', 'data-services', 'data-ecosystem', 'demand', 'policy', 'help'];
         const active = supportedActive.includes(declaredActive) ? declaredActive : route.primary;
         const loggedIn = this._isLoggedIn();
+        const dataTradeChildren = [
+            { id: 'data-resources', label: '数据资源', href: 'data-resources.html' },
+            { id: 'data-products', label: '数据产品', href: 'data-products.html' }
+        ];
+        const specialZoneItems = this._getSpecialZoneItems();
+        if (specialZoneItems.length) {
+            dataTradeChildren.push({
+                id: 'special-zones',
+                label: '特色专区',
+                children: specialZoneItems
+            });
+        }
 
         const NAV_ITEMS = [
             { id: 'home', label: '首页', href: 'index.html' },
             {
                 id: 'data-trade',
                 label: '数据交易',
-                children: [
-                    { id: 'data-resources', label: '数据资源', href: 'data-resources.html' },
-                    { id: 'data-products', label: '数据产品', href: 'data-products.html' },
-                    {
-                        id: 'special-zones',
-                        label: '特色专区',
-                        children: [
-                            { id: 'corpus-data-zone', label: '语料数据专区', href: 'portal-placeholder.html?page=corpus-data-zone' },
-                            { id: 'city-governance-zone', label: '城市治理专区', href: 'portal-placeholder.html?page=city-governance-zone' },
-                            { id: 'medical-health-zone', label: '医疗健康专区', href: 'portal-placeholder.html?page=medical-health-zone' },
-                            { id: 'embodied-intelligence-zone', label: '具身智能专区', href: 'portal-placeholder.html?page=embodied-intelligence-zone' }
-                        ]
-                    }
-                ]
+                children: dataTradeChildren
             },
             {
                 id: 'data-services',
@@ -441,7 +511,7 @@ a.mega-second-item:hover,
 }
 .mega-third-item {
     min-height: 42px; padding: 8px 10px;
-    display: flex; align-items: flex-start; gap: 9px;
+    display: flex; align-items: center; gap: 9px;
     color: #4F5C57; border-radius: 8px;
     font-size: 13px; font-weight: 500; line-height: 1.45;
     text-decoration: none;
@@ -450,7 +520,7 @@ a.mega-second-item:hover,
 .mega-third-item:hover,
 .mega-third-item.active { color: #168C55; background: #F0FDF4; }
 .mega-third-dot {
-    width: 6px; height: 6px; margin-top: 6px;
+    width: 6px; height: 6px;
     flex-shrink: 0; border-radius: 50%; background: #B8C3BE;
 }
 .mega-third-item:hover .mega-third-dot,

@@ -19,6 +19,7 @@
             { label: '运营中心', href: 'operation-center.html' },
             { label: '运维中心', href: 'maintenance-alert-management.html' },
             { label: '全要素展示驾驶舱', href: 'all-elements-dashboard/index.html', target: '_blank' },
+            { label: '全要素展示驾驶舱2', href: 'all-elements-dashboard-v2/index.html', target: '_blank' },
             { label: '智能问数', href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' }
         ]
     };
