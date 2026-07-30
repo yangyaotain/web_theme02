@@ -273,16 +273,14 @@
     font-weight: 600;
 }
 
-.zone-table-status,
-.zone-selected-status {
+.zone-table-status {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     white-space: nowrap;
 }
 
-.zone-table-status::before,
-.zone-selected-status::before {
+.zone-table-status::before {
     content: '';
     width: 6px;
     height: 6px;
@@ -290,13 +288,11 @@
     background: #909399;
 }
 
-.zone-table-status.published,
-.zone-selected-status.listed {
+.zone-table-status.published {
     color: #2f9a61;
 }
 
-.zone-table-status.published::before,
-.zone-selected-status.listed::before {
+.zone-table-status.published::before {
     background: #2fbd72;
 }
 
@@ -551,7 +547,7 @@
 }
 
 .zone-selected-table {
-    min-width: 980px;
+    min-width: 900px;
 }
 
 .zone-order-column {
@@ -590,6 +586,47 @@
     margin-top: 2px;
     color: #909399;
     font-size: 10px;
+}
+
+.zone-selected-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid #ebeef5;
+    background: #fafbfa;
+}
+
+.zone-selected-toolbar label,
+.zone-selected-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.zone-selected-toolbar label > span {
+    color: #606266;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.zone-selected-toolbar input {
+    width: 240px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    outline: 0;
+    background: #fff;
+    color: #303133;
+    font-family: inherit;
+    font-size: 12px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.zone-selected-toolbar input:focus {
+    border-color: var(--forest-green);
+    box-shadow: 0 0 0 2px rgba(32, 165, 101, 0.1);
 }
 
 .zone-selected-empty {
@@ -741,13 +778,105 @@
     padding: 0 9px;
 }
 
+.zone-picker-search-select {
+    position: relative;
+    width: 200px;
+    flex: 0 0 200px;
+}
+
+.zone-picker-search-select > input[role='combobox'] {
+    width: 100%;
+    padding-right: 32px;
+}
+
+.zone-picker-search-select > button {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0 4px 4px 0;
+    background: transparent;
+    color: #909399;
+    cursor: pointer;
+}
+
+.zone-picker-search-select > button:hover {
+    color: var(--forest-green);
+}
+
+.zone-picker-search-select > button svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    transition: transform 0.15s;
+}
+
+.zone-picker-search-select.open > button svg {
+    transform: rotate(180deg);
+}
+
+.zone-picker-search-menu {
+    position: absolute;
+    z-index: 520;
+    top: calc(100% + 4px);
+    right: 0;
+    left: 0;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid #dcdfe6;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.zone-picker-search-menu[hidden] {
+    display: none;
+}
+
+.zone-picker-search-option {
+    display: block;
+    width: 100%;
+    padding: 7px 9px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: #606266;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.zone-picker-search-option:hover,
+.zone-picker-search-option.active {
+    background: #f0f9f4;
+    color: var(--forest-green);
+}
+
+.zone-picker-search-empty {
+    padding: 16px 8px;
+    color: #909399;
+    font-size: 12px;
+    text-align: center;
+}
+
 .zone-picker-table-wrap {
     min-height: 300px;
     flex: 1;
 }
 
 .zone-picker-table {
-    min-width: 900px;
+    min-width: 780px;
 }
 
 .zone-check-column {
@@ -767,6 +896,18 @@
     color: #909399;
     font-size: 12px;
     text-align: center;
+}
+
+.zone-form-pagination {
+    justify-content: flex-end;
+    min-height: 60px;
+    border-top: 1px solid #ebeef5;
+    background: #fff;
+}
+
+.zone-picker-pagination {
+    flex: 0 0 auto;
+    padding-right: 20px;
 }
 
 .zone-picker-modal > footer {
@@ -801,6 +942,15 @@
     }
 
     .zone-picker-filter {
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    .zone-picker-search-select {
+        flex: 1 1 200px;
+    }
+
+    .zone-selected-toolbar {
         align-items: stretch;
         flex-wrap: wrap;
     }

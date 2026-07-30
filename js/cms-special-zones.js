@@ -308,7 +308,13 @@
 
         var picker = {
             type: 'resource',
-            selected: new Set()
+            selected: new Set(),
+            page: 1,
+            pageSize: 10
+        };
+        var selectedStates = {
+            resource: { page: 1, pageSize: 10 },
+            product: { page: 1, pageSize: 10 }
         };
 
         var nameInput = document.getElementById('zoneEditorName');
@@ -319,7 +325,16 @@
         var pickerKeyword = document.getElementById('zonePickerKeyword');
         var pickerCategory = document.getElementById('zonePickerCategory');
         var pickerProvider = document.getElementById('zonePickerProvider');
+        var pickerCategorySearch = document.getElementById('zonePickerCategorySearch');
+        var pickerProviderSearch = document.getElementById('zonePickerProviderSearch');
+        var pickerCategoryMenu = document.getElementById('zonePickerCategoryMenu');
+        var pickerProviderMenu = document.getElementById('zonePickerProviderMenu');
         var pickerTableBody = document.getElementById('zonePickerTableBody');
+        var pickerPagination = document.getElementById('zonePickerPagination');
+        var pickerFilterOptions = {
+            category: [],
+            provider: []
+        };
 
         function updateLengths() {
             document.getElementById('zoneNameLength').textContent = nameInput.value.length;
@@ -356,6 +371,55 @@
             return document.getElementById(type === 'resource' ? 'zoneSelectedResourceCount' : 'zoneSelectedProductCount');
         }
 
+        function selectedKeyword(type) {
+            return document.getElementById(type === 'resource' ? 'zoneSelectedResourceKeyword' : 'zoneSelectedProductKeyword');
+        }
+
+        function selectedPagination(type) {
+            return document.getElementById(type === 'resource'
+                ? 'zoneSelectedResourcePagination'
+                : 'zoneSelectedProductPagination');
+        }
+
+        function formPaginationItems(page, pageCount) {
+            var pages = [];
+            for (var index = 1; index <= pageCount; index += 1) {
+                if (index === 1 || index === pageCount || Math.abs(index - page) <= 2) pages.push(index);
+            }
+            return pages.reduce(function (items, current, index) {
+                if (index && current - pages[index - 1] > 1) items.push('ellipsis-' + current);
+                items.push(current);
+                return items;
+            }, []);
+        }
+
+        function renderFormPagination(container, state, total) {
+            var pageCount = Math.max(1, Math.ceil(total / state.pageSize));
+            if (state.page > pageCount) state.page = pageCount;
+            if (state.page < 1) state.page = 1;
+            var start = total ? (state.page - 1) * state.pageSize + 1 : 0;
+            var end = Math.min(state.page * state.pageSize, total);
+            var pageButtons = formPaginationItems(state.page, pageCount).map(function (item) {
+                if (typeof item === 'string') return '<span class="page-ellipsis">…</span>';
+                return '<button class="page-btn' + (item === state.page ? ' active' : '')
+                    + '" type="button" data-zone-form-page="' + item + '">' + item + '</button>';
+            }).join('');
+            container.innerHTML = ''
+                + '<span class="pagination-info">第' + start + '-' + end + '条记录，共' + total + '条记录，每页显示 '
+                + '<select data-zone-form-page-size aria-label="每页显示条数">'
+                + '<option value="10"' + (state.pageSize === 10 ? ' selected' : '') + '>10</option>'
+                + '<option value="20"' + (state.pageSize === 20 ? ' selected' : '') + '>20</option>'
+                + '<option value="50"' + (state.pageSize === 50 ? ' selected' : '') + '>50</option>'
+                + '</select> 条记录</span>'
+                + '<button class="page-btn' + (state.page === 1 ? ' disabled' : '')
+                + '" type="button" data-zone-form-page="' + (state.page - 1) + '"'
+                + (state.page === 1 ? ' disabled' : '') + '>上一页</button>'
+                + pageButtons
+                + '<button class="page-btn' + (state.page === pageCount ? ' disabled' : '')
+                + '" type="button" data-zone-form-page="' + (state.page + 1) + '"'
+                + (state.page === pageCount ? ' disabled' : '') + '>下一页</button>';
+        }
+
         function selectedRow(item, type, index, total) {
             var typeValue = type === 'resource' ? item.category : (item.productType || item.category);
             return '<tr>'
@@ -365,8 +429,6 @@
                 + '<td>' + escapeHtml(item.provider) + '</td>'
                 + '<td>' + escapeHtml(typeValue) + '</td>'
                 + '<td>' + escapeHtml(item.delivery) + '</td>'
-                + '<td><span class="zone-selected-status ' + escapeHtml(item.status) + '">'
-                + (item.status === 'listed' ? '已上架' : '已下架') + '</span></td>'
                 + '<td><div class="zone-table-actions">'
                 + '<button class="zone-selected-action" type="button" data-selected-action="up" data-selected-type="' + type
                 + '" data-selected-index="' + index + '"' + (index === 0 ? ' disabled' : '') + '>'
@@ -380,18 +442,36 @@
                 + '</tr>';
         }
 
-        function renderSelected(type) {
-            var ids = selectedIds(type);
+        function getSelectedItems(type) {
             var catalog = getCatalog(type);
-            var items = ids.map(function (id) {
+            return selectedIds(type).map(function (id) {
                 return catalog.find(function (item) { return item.id === id; });
             }).filter(Boolean);
-            selectedBody(type).innerHTML = items.map(function (item, index) {
-                return selectedRow(item, type, index, items.length);
+        }
+
+        function renderSelected(type) {
+            var ids = selectedIds(type);
+            var state = selectedStates[type];
+            var keyword = selectedKeyword(type).value.trim().toLowerCase();
+            var allItems = getSelectedItems(type);
+            var items = allItems.filter(function (item) {
+                return !keyword || String(item.name || '').toLowerCase().indexOf(keyword) !== -1;
+            });
+            var pageCount = Math.max(1, Math.ceil(items.length / state.pageSize));
+            if (state.page > pageCount) state.page = pageCount;
+            var start = (state.page - 1) * state.pageSize;
+            var pageItems = items.slice(start, start + state.pageSize);
+            selectedBody(type).innerHTML = pageItems.map(function (item) {
+                var itemIndex = ids.indexOf(item.id);
+                return selectedRow(item, type, itemIndex, allItems.length);
             }).join('');
-            selectedBody(type).closest('table').hidden = items.length === 0;
-            selectedEmpty(type).hidden = items.length !== 0;
-            selectedCount(type).textContent = '已选择 ' + items.length + ' 项';
+            selectedBody(type).closest('table').hidden = pageItems.length === 0;
+            selectedEmpty(type).hidden = pageItems.length !== 0;
+            selectedEmpty(type).querySelector('span').textContent = allItems.length && keyword
+                ? '已选列表中未找到该名称'
+                : '暂未选择数据' + (type === 'resource' ? '资源' : '产品');
+            selectedCount(type).textContent = '已选择 ' + allItems.length + ' 项';
+            renderFormPagination(selectedPagination(type), state, items.length);
         }
 
         function renderAllSelected() {
@@ -436,24 +516,167 @@
             });
         }
 
+        function bindPagination(container, state, render) {
+            container.addEventListener('click', function (event) {
+                var button = event.target.closest('[data-zone-form-page]');
+                if (!button || button.disabled) return;
+                state.page = Number(button.dataset.zoneFormPage || 1);
+                render();
+            });
+            container.addEventListener('change', function (event) {
+                var select = event.target.closest('[data-zone-form-page-size]');
+                if (!select) return;
+                state.pageSize = Number(select.value || 10);
+                state.page = 1;
+                render();
+            });
+        }
+
+        function bindSelectedFilters() {
+            ['resource', 'product'].forEach(function (type) {
+                var input = selectedKeyword(type);
+                document.querySelector('[data-selected-search="' + type + '"]').addEventListener('click', function () {
+                    selectedStates[type].page = 1;
+                    renderSelected(type);
+                });
+                document.querySelector('[data-selected-reset="' + type + '"]').addEventListener('click', function () {
+                    input.value = '';
+                    selectedStates[type].page = 1;
+                    renderSelected(type);
+                });
+                input.addEventListener('keydown', function (event) {
+                    if (event.key !== 'Enter') return;
+                    event.preventDefault();
+                    selectedStates[type].page = 1;
+                    renderSelected(type);
+                });
+                bindPagination(selectedPagination(type), selectedStates[type], function () {
+                    renderSelected(type);
+                });
+            });
+        }
+
         function uniqueValues(items, key) {
             return Array.from(new Set(items.map(function (item) { return item[key]; }).filter(Boolean))).sort();
         }
 
+        function pickerSearchSelect(type) {
+            var isCategory = type === 'category';
+            var input = isCategory ? pickerCategorySearch : pickerProviderSearch;
+            return {
+                root: input.closest('[data-zone-picker-search-select]'),
+                input: input,
+                value: isCategory ? pickerCategory : pickerProvider,
+                menu: isCategory ? pickerCategoryMenu : pickerProviderMenu,
+                allLabel: isCategory ? '全部分类' : '全部提供方'
+            };
+        }
+
+        function closePickerSearchSelect(type) {
+            var select = pickerSearchSelect(type);
+            select.root.classList.remove('open');
+            select.input.setAttribute('aria-expanded', 'false');
+            select.menu.hidden = true;
+        }
+
+        function closeAllPickerSearchSelects(exceptType) {
+            ['category', 'provider'].forEach(function (type) {
+                if (type !== exceptType) closePickerSearchSelect(type);
+            });
+        }
+
+        function renderPickerSearchOptions(type, keyword) {
+            var select = pickerSearchSelect(type);
+            var normalizedKeyword = String(keyword || '').trim().toLowerCase();
+            var options = pickerFilterOptions[type].filter(function (value) {
+                return !normalizedKeyword || value.toLowerCase().indexOf(normalizedKeyword) !== -1;
+            });
+            var allOption = !normalizedKeyword
+                ? '<button class="zone-picker-search-option' + (!select.value.value ? ' active' : '')
+                    + '" type="button" role="option" data-zone-picker-select-option="' + type
+                    + '" data-zone-picker-option-value="">' + select.allLabel + '</button>'
+                : '';
+            select.menu.innerHTML = allOption + options.map(function (value) {
+                return '<button class="zone-picker-search-option' + (select.value.value === value ? ' active' : '')
+                    + '" type="button" role="option" data-zone-picker-select-option="' + type
+                    + '" data-zone-picker-option-value="' + escapeHtml(value) + '">' + escapeHtml(value) + '</button>';
+            }).join('');
+            if (!allOption && !options.length) {
+                select.menu.innerHTML = '<div class="zone-picker-search-empty">暂无匹配选项</div>';
+            }
+        }
+
+        function openPickerSearchSelect(type, keyword) {
+            var select = pickerSearchSelect(type);
+            closeAllPickerSearchSelects(type);
+            renderPickerSearchOptions(type, keyword);
+            select.root.classList.add('open');
+            select.input.setAttribute('aria-expanded', 'true');
+            select.menu.hidden = false;
+        }
+
+        function setPickerSearchSelectValue(type, value) {
+            var select = pickerSearchSelect(type);
+            select.value.value = value || '';
+            select.input.value = value || '';
+        }
+
+        function bindPickerSearchSelects() {
+            ['category', 'provider'].forEach(function (type) {
+                var select = pickerSearchSelect(type);
+                select.input.addEventListener('focus', function () {
+                    openPickerSearchSelect(type, select.input.value);
+                });
+                select.input.addEventListener('input', function () {
+                    select.value.value = '';
+                    openPickerSearchSelect(type, select.input.value);
+                });
+                select.input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        closePickerSearchSelect(type);
+                        return;
+                    }
+                    if (event.key !== 'Enter' || select.menu.hidden) return;
+                    var firstOption = select.menu.querySelector('[data-zone-picker-select-option]');
+                    if (!firstOption) return;
+                    event.preventDefault();
+                    firstOption.click();
+                });
+                select.root.querySelector('[data-zone-picker-select-toggle]').addEventListener('click', function () {
+                    if (select.menu.hidden) {
+                        select.input.focus();
+                        openPickerSearchSelect(type, '');
+                    } else {
+                        closePickerSearchSelect(type);
+                    }
+                });
+                select.menu.addEventListener('click', function (event) {
+                    var option = event.target.closest('[data-zone-picker-select-option]');
+                    if (!option) return;
+                    setPickerSearchSelectValue(type, option.dataset.zonePickerOptionValue || '');
+                    picker.page = 1;
+                    closePickerSearchSelect(type);
+                });
+            });
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('[data-zone-picker-search-select]')) return;
+                closeAllPickerSearchSelects();
+            });
+        }
+
         function fillPickerFilters() {
             var items = availablePickerItems();
-            pickerCategory.innerHTML = '<option value="">全部分类</option>' + uniqueValues(items, 'category').map(function (value) {
-                return '<option value="' + escapeHtml(value) + '">' + escapeHtml(value) + '</option>';
-            }).join('');
-            pickerProvider.innerHTML = '<option value="">全部提供方</option>' + uniqueValues(items, 'provider').map(function (value) {
-                return '<option value="' + escapeHtml(value) + '">' + escapeHtml(value) + '</option>';
-            }).join('');
+            pickerFilterOptions.category = uniqueValues(items, 'category');
+            pickerFilterOptions.provider = uniqueValues(items, 'provider');
+            setPickerSearchSelectValue('category', '');
+            setPickerSearchSelectValue('provider', '');
+            closeAllPickerSearchSelects();
         }
 
         function availablePickerItems() {
             var existingIds = selectedIds(picker.type);
             return getCatalog(picker.type).filter(function (item) {
-                return existingIds.indexOf(item.id) === -1;
+                return item.status === 'listed' && existingIds.indexOf(item.id) === -1;
             });
         }
 
@@ -470,31 +693,35 @@
 
         function renderPicker() {
             var items = filteredPickerItems();
-            pickerTableBody.innerHTML = items.map(function (item) {
+            var pageCount = Math.max(1, Math.ceil(items.length / picker.pageSize));
+            if (picker.page > pageCount) picker.page = pageCount;
+            var start = (picker.page - 1) * picker.pageSize;
+            var pageItems = items.slice(start, start + picker.pageSize);
+            pickerTableBody.innerHTML = pageItems.map(function (item) {
                 var checked = picker.selected.has(item.id);
                 var typeValue = picker.type === 'resource' ? item.category : (item.productType || item.category);
                 return '<tr>'
                     + '<td class="zone-check-column"><input type="checkbox" data-picker-id="' + escapeHtml(item.id) + '"'
-                    + (checked ? ' checked' : '') + (item.status !== 'listed' ? ' disabled' : '') + '></td>'
+                    + (checked ? ' checked' : '') + '></td>'
                     + '<td><strong class="zone-selected-name">' + escapeHtml(item.name) + '</strong>'
                     + '<span class="zone-selected-code">' + escapeHtml(item.code) + '</span></td>'
                     + '<td>' + escapeHtml(item.provider) + '</td>'
                     + '<td>' + escapeHtml(typeValue) + '</td>'
                     + '<td>' + escapeHtml(item.delivery) + '</td>'
-                    + '<td><span class="zone-selected-status ' + escapeHtml(item.status) + '">'
-                    + (item.status === 'listed' ? '已上架' : '已下架') + '</span></td>'
                     + '</tr>';
             }).join('');
-            document.getElementById('zonePickerEmpty').hidden = items.length !== 0;
+            document.getElementById('zonePickerEmpty').hidden = pageItems.length !== 0;
             document.getElementById('zonePickerEmpty').textContent =
                 availablePickerItems().length ? '暂无符合条件的内容' : '暂无可添加内容，已添加内容不会重复展示';
-            pickerTableBody.closest('table').hidden = items.length === 0;
+            pickerTableBody.closest('table').hidden = pageItems.length === 0;
             document.getElementById('zonePickerSelectedCount').textContent = picker.selected.size;
+            renderFormPagination(pickerPagination, picker, items.length);
         }
 
         function openPicker(type) {
             picker.type = type;
             picker.selected = new Set();
+            picker.page = 1;
             pickerKeyword.value = '';
             document.getElementById('zonePickerTitle').textContent = type === 'resource' ? '选择数据资源' : '选择数据产品';
             document.getElementById('zonePickerSubtitle').textContent =
@@ -506,11 +733,13 @@
         }
 
         function closePicker() {
+            closeAllPickerSearchSelects();
             pickerModal.classList.remove('show');
             pickerModal.setAttribute('aria-hidden', 'true');
         }
 
         function bindPicker() {
+            bindPickerSearchSelects();
             document.querySelectorAll('[data-open-zone-picker]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     openPicker(button.dataset.openZonePicker);
@@ -523,16 +752,25 @@
                 else picker.selected.delete(checkbox.dataset.pickerId);
                 document.getElementById('zonePickerSelectedCount').textContent = picker.selected.size;
             });
-            document.getElementById('zonePickerSearch').addEventListener('click', renderPicker);
+            document.getElementById('zonePickerSearch').addEventListener('click', function () {
+                picker.page = 1;
+                renderPicker();
+            });
             document.getElementById('zonePickerReset').addEventListener('click', function () {
                 pickerKeyword.value = '';
-                pickerCategory.value = '';
-                pickerProvider.value = '';
+                setPickerSearchSelectValue('category', '');
+                setPickerSearchSelectValue('provider', '');
+                closeAllPickerSearchSelects();
+                picker.page = 1;
                 renderPicker();
             });
             pickerKeyword.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter') renderPicker();
+                if (event.key !== 'Enter') return;
+                event.preventDefault();
+                picker.page = 1;
+                renderPicker();
             });
+            bindPagination(pickerPagination, picker, renderPicker);
             document.getElementById('zonePickerClose').addEventListener('click', closePicker);
             document.getElementById('zonePickerCancel').addEventListener('click', closePicker);
             document.getElementById('zonePickerConfirm').addEventListener('click', function () {
@@ -644,6 +882,7 @@
 
         fillBasic();
         bindSelectedActions();
+        bindSelectedFilters();
         bindPicker();
         bindFormActions();
     }
