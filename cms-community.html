@@ -607,7 +607,7 @@
                 <table class="cm-table">
                     <thead><tr>
                         <th class="col-ck"><input type="checkbox"></th>
-                        <th>标题</th><th>标注</th><th>作者</th><th>发布时间</th><th>查看</th><th>回复</th><th>最后发表时间</th>
+                        <th>标题</th><th>标注</th><th>内容形态</th><th>作者</th><th>发布时间</th><th>查看</th><th>回复</th><th>最后发表时间</th>
                     </tr></thead>
                     <tbody id="contentTbody"></tbody>
                 </table>
@@ -641,7 +641,7 @@
                 <div class="content-filter">
                     <button class="filter-btn primary">审批</button>
                     <div class="filter-sep"></div>
-                    <span class="filter-label">类型：</span>
+                    <span class="filter-label">审核对象：</span>
                     <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
                     <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
                     <button class="btn-query">查询</button>
@@ -650,7 +650,7 @@
                     <table class="cm-table">
                         <thead><tr>
                             <th class="col-ck"><input type="checkbox"></th>
-                            <th>主题/回复内容</th><th>类型</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
+                            <th>主题/回复内容</th><th>审核对象</th><th>内容形态</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
                         </tr></thead>
                         <tbody id="auditPendingTbody"></tbody>
                     </table>
@@ -673,7 +673,7 @@
                 <div class="content-filter">
                     <span class="filter-label">状态：</span>
                     <select class="filter-select"><option>全部</option><option>通过</option><option>不通过</option></select>
-                    <span class="filter-label">类型：</span>
+                    <span class="filter-label">审核对象：</span>
                     <select class="filter-select"><option>全部</option><option>主题</option><option>回复</option></select>
                     <input type="text" class="filter-input" placeholder="标题/作者 关键查询">
                     <button class="btn-query">查询</button>
@@ -681,7 +681,7 @@
                 <div class="content-table-wrap">
                     <table class="cm-table">
                         <thead><tr>
-                            <th>主题/回复内容</th><th>类型</th><th>状态</th><th>审核意见</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
+                            <th>主题/回复内容</th><th>审核对象</th><th>内容形态</th><th>状态</th><th>审核意见</th><th>作者</th><th>发布时间</th><th class="col-op">操作</th>
                         </tr></thead>
                         <tbody id="auditDoneTbody"></tbody>
                     </table>
@@ -1188,20 +1188,55 @@
         { t: '城市治理指标看板的数据口径如何保持一致？', tags: ['高亮'], author: 'governance', time: '2026-3-5', views: 694, reply: 16, last: '2026-3-7' },
         { t: '数据服务采购需求发布后多久能收到响应？', tags: ['已关闭'], author: 'buyer01', time: '2026-3-4', views: 512, reply: 11, last: '2026-3-6' },
     ];
+    var contentPosts = [
+        Object.assign({}, posts[0], { type: 'post', contentType: '帖子' }),
+        { t: '数据交易市场还要多少年进入成熟阶段？', tags: ['推荐'], author: 'yangy', time: '2026-3-12', views: 328, reply: 3, last: '2026-3-12', type: 'vote', contentType: '投票' },
+        { t: '活动：数商招募活动', tags: ['精华'], author: 'yangy', time: '2026-3-11', views: 1205, reply: 4, last: '2026-3-12', type: 'activity', contentType: '活动' }
+    ].concat(posts.slice(1, 8).map(function(p) {
+        return Object.assign({}, p, { type: 'post', contentType: '帖子' });
+    }));
+    var auditPendingPosts = [
+        { t: '水务监测数据资源申请范围咨询', tags: ['普通'], author: 'waterdata', time: '2026-3-13', views: 0, reply: 0, last: '2026-3-13', type: 'post', contentType: '帖子', objectType: '主题' },
+        { t: '龙岗数据要素市场发展优先方向投票', tags: ['普通'], author: 'marketlab', time: '2026-3-13', views: 0, reply: 0, last: '2026-3-13', type: 'vote', contentType: '投票', objectType: '主题' },
+        { t: '活动：数据要素应用创新交流会', tags: ['普通'], author: 'eventops', time: '2026-3-13', views: 0, reply: 0, last: '2026-3-13', type: 'activity', contentType: '活动', objectType: '主题' }
+    ].concat(posts.slice(3, 10).map(function(p, index) {
+        return Object.assign({}, p, {
+            type: 'post',
+            contentType: '帖子',
+            objectType: index < 2 ? '主题' : '回复'
+        });
+    }));
     var tagColors = { '置顶': 'orange', '精华': 'green', '推荐': 'blue', '高亮': 'purple', '普通': 'gray', '已关闭': 'red' };
+    var contentTypeColors = { '帖子': 'gray', '投票': 'orange', '活动': 'green' };
+
+    function renderContentTypeTag(post) {
+        var label = post.contentType || '帖子';
+        return '<span class="tag-sm tag-' + (contentTypeColors[label] || 'gray') + '">' + label + '</span>';
+    }
+
+    function renderAuditObjectTag(objectType) {
+        return '<span class="tag-sm tag-' + (objectType === '主题' ? 'orange' : 'blue') + '">' + objectType + '</span>';
+    }
+
+    function buildCommunityDetailUrl(page, from, post, extra) {
+        var url = page + '?from=' + encodeURIComponent(from) +
+            '&type=' + encodeURIComponent(post.type || 'post') +
+            '&title=' + encodeURIComponent(post.t);
+        return url + (extra || '');
+    }
+
     var tbody = document.getElementById('contentTbody');
-    posts.forEach(function(p) {
+    contentPosts.forEach(function(p) {
         var tagHtml = p.tags.map(function(t) { return '<span class="tag-sm tag-' + (tagColors[t]||'gray') + '">' + t + '</span>'; }).join('');
-        tbody.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-detail.html?from=content" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tagHtml + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td>' + p.views + '</td><td>' + p.reply + '</td><td>' + p.last + '</td></tr>';
+        var detailUrl = buildCommunityDetailUrl('cms-community-detail.html', 'content', p);
+        tbody.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="' + detailUrl + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tagHtml + '</td><td>' + renderContentTypeTag(p) + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td>' + p.views + '</td><td>' + p.reply + '</td><td>' + p.last + '</td></tr>';
     });
 
     // 审核-待审核
     var auditPending = document.getElementById('auditPendingTbody');
-    var types1 = ['主题','主题','主题','主题','主题','回复','回复','回复','回复','回复'];
-    posts.forEach(function(p,i) {
-        var ty = types1[i] || '主题';
-        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
-        auditPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-pending.html?from=audit" style="color:var(--forest-green);cursor:pointer">审批</a></td></tr>';
+    auditPendingPosts.forEach(function(p) {
+        var detailUrl = buildCommunityDetailUrl('cms-community-audit-pending.html', 'audit', p);
+        auditPending.innerHTML += '<tr><td class="col-ck"><input type="checkbox"></td><td><a href="' + detailUrl + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + renderAuditObjectTag(p.objectType) + '</td><td>' + renderContentTypeTag(p) + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="' + detailUrl + '" style="color:var(--forest-green);cursor:pointer">审批</a></td></tr>';
     });
 
     // ====== 审核处理弹窗逻辑 ======
@@ -1243,8 +1278,8 @@
     var auditDone = document.getElementById('auditDoneTbody');
     var auditDoneData = [
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
-        { st:'不通过', opinion:'内容具有敏感，不合规内容，不允许发布' },
+        { st:'通过', opinion:'投票主题与选项设置完整，内容符合社区规范' },
+        { st:'通过', opinion:'活动信息完整，报名范围与时间安排清晰' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
         { st:'不通过', opinion:'内容含有不实信息，不能发布' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
@@ -1253,14 +1288,16 @@
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' },
         { st:'通过', opinion:'内容正常，合法合规，可以发布主题' }
     ];
-    posts.forEach(function(p,i) {
+    var auditDonePosts = contentPosts.map(function(p, index) {
+        return Object.assign({}, p, { objectType: index < 5 ? '主题' : '回复' });
+    });
+    auditDonePosts.forEach(function(p,i) {
         var d = auditDoneData[i];
-        var ty = types1[i] || '主题';
-        var tyTag = '<span class="tag-sm tag-' + (ty==='主题'?'orange':'blue') + '">' + ty + '</span>';
         var stClass = d.st==='通过' ? 'tag-green' : 'tag-red';
         var stTag = '<span class="tag-sm ' + stClass + '">' + d.st + '</span>';
         var viewParam = d.st==='通过' ? 'pass' : 'reject';
-        auditDone.innerHTML += '<tr><td><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + tyTag + '</td><td>' + stTag + '</td><td>' + d.opinion + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="cms-community-audit-view.html?from=audit-done&result=' + viewParam + '" style="color:var(--forest-green);cursor:pointer">查看</a></td></tr>';
+        var detailUrl = buildCommunityDetailUrl('cms-community-audit-view.html', 'audit-done', p, '&result=' + viewParam);
+        auditDone.innerHTML += '<tr><td><a href="' + detailUrl + '" style="color:var(--forest-green);cursor:pointer">' + p.t + '</a></td><td>' + renderAuditObjectTag(p.objectType) + '</td><td>' + renderContentTypeTag(p) + '</td><td>' + stTag + '</td><td>' + d.opinion + '</td><td>' + p.author + '</td><td>' + p.time + '</td><td class="col-op"><a href="' + detailUrl + '" style="color:var(--forest-green);cursor:pointer">查看</a></td></tr>';
     });
 
     // 违规-待处理

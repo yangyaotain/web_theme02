@@ -1,0 +1,331 @@
+.community-content-detail .post-screenshot {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 12px 0;
+    background: #fafbfc;
+    padding: 16px 20px;
+}
+
+.community-content-detail .vote-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+}
+
+.community-content-detail .vote-header {
+    margin-bottom: 14px;
+}
+
+.community-content-detail .vote-type {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f97316;
+}
+
+.community-content-detail .vote-type-sub {
+    font-size: 12px;
+    color: #999;
+    margin-left: 8px;
+}
+
+.community-content-detail .vote-countdown {
+    font-size: 12px;
+    color: #999;
+}
+
+.community-content-detail .vote-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 14px;
+}
+
+.community-content-detail .vote-option input[type="radio"] {
+    accent-color: var(--forest-green);
+    width: 16px;
+    height: 16px;
+}
+
+.community-content-detail .vote-option-label {
+    min-width: 60px;
+    color: #333;
+}
+
+.community-content-detail .vote-bar-wrap {
+    flex: 1;
+    height: 14px;
+    background: #f0f2f5;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+}
+
+.community-content-detail .vote-bar {
+    height: 100%;
+    border-radius: 7px;
+    min-width: 6px;
+}
+
+.community-content-detail .vote-bar.c1,
+.community-content-detail .result-bar-fill.r1 {
+    background: #ef4444;
+}
+
+.community-content-detail .vote-bar.c2,
+.community-content-detail .result-bar-fill.r2 {
+    background: #f97316;
+}
+
+.community-content-detail .vote-bar.c3,
+.community-content-detail .result-bar-fill.r3 {
+    background: #fbbf24;
+}
+
+.community-content-detail .vote-pct {
+    font-size: 12px;
+    color: #999;
+    min-width: 70px;
+    text-align: right;
+}
+
+.community-content-detail .vote-pct b {
+    color: #f97316;
+}
+
+.community-content-detail .btn-vote-submit {
+    padding: 7px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--forest-green);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.community-content-detail .vote-result {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f2f5;
+}
+
+.community-content-detail .vote-result-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.community-content-detail .vote-result-stats {
+    display: flex;
+    gap: 28px;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.community-content-detail .vote-result-stats b {
+    color: #333;
+}
+
+.community-content-detail .vote-status {
+    color: var(--forest-green);
+    font-weight: 500;
+}
+
+.community-content-detail .vote-status svg {
+    width: 14px;
+    height: 14px;
+    vertical-align: -2px;
+}
+
+.community-content-detail .result-bar-row {
+    margin-bottom: 10px;
+}
+
+.community-content-detail .result-bar-label {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.community-content-detail .result-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.community-content-detail .result-bar-track {
+    flex: 1;
+    height: 18px;
+    background: #f0f2f5;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.community-content-detail .result-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.community-content-detail .result-bar-val {
+    font-size: 12px;
+    color: #888;
+    min-width: 90px;
+}
+
+.community-content-detail .activity-content {
+    line-height: 2;
+    font-size: 14px;
+    color: #444;
+}
+
+.community-content-detail .activity-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    margin: 18px 0 8px;
+}
+
+.community-content-detail .btn-signup {
+    display: inline-block;
+    padding: 10px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--forest-green);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: .15s;
+}
+
+.community-content-detail .btn-signup:hover {
+    background: var(--forest-green-600);
+}
+
+.community-content-detail .signup-section {
+    margin-top: 16px;
+    overflow-x: auto;
+}
+
+.community-content-detail .signup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.community-content-detail .signup-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #666;
+}
+
+.community-content-detail .signup-header-left b {
+    color: var(--forest-green);
+}
+
+.community-content-detail .signup-search {
+    display: flex;
+    gap: 8px;
+}
+
+.community-content-detail .signup-search input {
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    outline: none;
+    width: 160px;
+}
+
+.community-content-detail .signup-search .btn-search,
+.community-content-detail .signup-search .btn-export {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.community-content-detail .signup-search .btn-search {
+    background: var(--forest-green);
+    color: #fff;
+    border: none;
+}
+
+.community-content-detail .signup-search .btn-export {
+    background: #fff;
+    color: var(--forest-green);
+    border: 1px solid var(--forest-green);
+}
+
+.community-content-detail .signup-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.community-content-detail .signup-table th {
+    background: var(--forest-green);
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.community-content-detail .signup-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f2f5;
+    color: #444;
+    white-space: nowrap;
+}
+
+.community-content-detail .signup-table tr:hover td {
+    background: #f9fafb;
+}
+
+.community-content-detail .signup-pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.community-content-detail .signup-page-btn {
+    min-width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #fff;
+    color: #555;
+    cursor: pointer;
+    font-size: 13px;
+    transition: .15s;
+}
+
+.community-content-detail .signup-page-btn.active {
+    background: var(--forest-green);
+    color: #fff;
+    border-color: var(--forest-green);
+}
+
+.community-content-detail .signup-page-btn:hover {
+    border-color: var(--forest-green);
+}

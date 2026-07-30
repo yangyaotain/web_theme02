@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/community-content-types.css">
     <style>
     .detail-toolbar {
         display: flex; align-items: center; justify-content: space-between;
@@ -154,8 +155,8 @@
                     <span>回复: <b>3</b></span>
                 </div>
                 <div class="post-title">
-                    <span class="tag-label tl-help">[求助]</span>
-                    登录提示内部错误，大神给看看这是哪里出问题了
+                    <span class="tag-label tl-help" id="contentTypeLabel">[帖子]</span>
+                    <span id="detailTitle">登录提示内部错误，大神给看看这是哪里出问题了</span>
                 </div>
 
                 <div class="post-main">
@@ -173,7 +174,7 @@
                                 </div>
                                 <span class="floor-badge owner">楼主</span>
                             </div>
-                            <div class="floor-body">
+                            <div class="floor-body" id="detailMainContent">
                                 <p>各位大佬好，我在平台上申请了一批公共数据资源，提交申请后页面一直显示<b style="color:#f97316">"处理中"</b>状态，已经过了3天了还是没有变化。</p>
                                 <p style="margin-top:12px">具体操作步骤如下：</p>
                                 <p>1、进入数据资源列表页面，选择了"龙岗区城市管理数据集"；</p>
@@ -300,6 +301,7 @@
         }
     })();
     </script>
+    <script src="js/community-content-detail.js"></script>
     <script src="js/operation-sidebar.js"></script>
     <script src="js/admin-topbar.js"></script>
 </body>
