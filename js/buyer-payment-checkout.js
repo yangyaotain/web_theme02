@@ -11,9 +11,23 @@
         { code: 'CCB', label: '中国建设银行' }
     ];
 
+    var ONLINE_DEMO_TIMINGS = {
+        scanWaiting: 5000,
+        resultQuerying: 3000
+    };
+
+    var ONLINE_DEMO_STAGES = [
+        { key: 'select', label: '待发起', icon: 'pay' },
+        { key: 'paying', label: '等待支付', icon: 'online' },
+        { key: 'querying', label: '查询中', icon: 'redo' },
+        { key: 'success', label: '支付成功', icon: 'success' },
+        { key: 'failed', label: '支付失败', icon: 'cancel' }
+    ];
+
     var ICON_PATHS = {
         cancel: '<path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5z"/>',
         redo: '<path d="M12 5V2L7 7l5 5V7a5 5 0 1 1-4.55 7.06l-1.82.83A7 7 0 1 0 12 5z"/>',
+        play: '<path d="M8 5v14l11-7z"/>',
         pay: '<path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4H4V6h16v2zm-8 8H5v-2h7v2z"/>',
         online: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-3a15.7 15.7 0 0 0-1.4-3.2A8 8 0 0 1 18.9 8zM12 4c.8 1 1.5 2.3 1.8 4h-3.6c.3-1.7 1-3 1.8-4zM4.3 14a7.7 7.7 0 0 1 0-4h3.5a16.5 16.5 0 0 0 0 4H4.3zm.8 2h3a15.7 15.7 0 0 0 1.4 3.2A8 8 0 0 1 5.1 16zm3-8h-3a8 8 0 0 1 4.4-3.2A15.7 15.7 0 0 0 8.1 8zm3.9 12c-.8-1-1.5-2.3-1.8-4h3.6c-.3 1.7-1 3-1.8 4zm2.2-6H9.8a14.8 14.8 0 0 1 0-4h4.4a14.8 14.8 0 0 1 0 4zm.3 5.2a15.7 15.7 0 0 0 1.4-3.2h3a8 8 0 0 1-4.4 3.2zm1.7-5.2a16.5 16.5 0 0 0 0-4h3.5a7.7 7.7 0 0 1 0 4h-3.5z"/>',
         upload: '<path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>',
@@ -57,11 +71,19 @@
             outTradeNo: '',
             channelOrderNo: '',
             paidAt: '',
-            retryCount: 0
+            retryCount: 0,
+            demoMode: 'auto'
         };
         var paymentQueryTimer = null;
         var paymentResultTimer = null;
         var bankPaymentWindow = null;
+
+        function clearPaymentTimers() {
+            window.clearTimeout(paymentQueryTimer);
+            window.clearTimeout(paymentResultTimer);
+            paymentQueryTimer = null;
+            paymentResultTimer = null;
+        }
 
         function getOnlineChannel() {
             return ONLINE_CHANNELS.find(function (channel) {
@@ -284,11 +306,37 @@
                 + '</div>';
         }
 
+        function renderOnlineDemoToolbar() {
+            if (state.paymentMethod !== 'online') return '';
+            var channel = getOnlineChannel();
+            var demoReady = Boolean(channel);
+            return ''
+                + '<div class="checkout-demo-toolbar" aria-label="线上支付状态演示">'
+                +   '<button class="checkout-demo-auto' + (state.demoMode === 'auto' && demoReady && state.onlineStage !== 'select' ? ' active' : '') + '" type="button" data-online-demo-auto' + (demoReady ? '' : ' disabled') + '>'
+                +       icon('play') + '<span>自动演示</span>'
+                +   '</button>'
+                +   '<div class="checkout-demo-tabs" role="tablist" aria-label="支付状态">'
+                +       ONLINE_DEMO_STAGES.map(function (stage) {
+                            var active = state.onlineStage === stage.key;
+                            var disabled = stage.key !== 'select' && !demoReady;
+                            return ''
+                                + '<button class="checkout-demo-stage stage-' + stage.key + (active ? ' active' : '') + '" type="button" role="tab"'
+                                +   ' aria-selected="' + (active ? 'true' : 'false') + '" data-online-demo-stage="' + stage.key + '"' + (disabled ? ' disabled' : '') + '>'
+                                +   icon(stage.icon) + '<span>' + stage.label + '</span>'
+                                + '</button>';
+                        }).join('')
+                +   '</div>'
+                + '</div>';
+        }
+
         function renderFooter() {
             if (state.paymentMethod !== 'online') {
                 return ''
                     + '<button class="checkout-footer-btn" type="button" data-checkout-close>' + icon('cancel') + '<span>取消</span></button>'
                     + '<button class="checkout-footer-btn primary" type="button" data-checkout-confirm>' + icon('confirm') + '<span>确定</span></button>';
+            }
+            if (state.demoMode === 'manual' && state.onlineStage !== 'select') {
+                return '<button class="checkout-footer-btn" type="button" data-checkout-close>' + icon('cancel') + '<span>关闭演示</span></button>';
             }
             if (state.onlineStage === 'success') {
                 return '<button class="checkout-footer-btn primary" type="button" data-checkout-done>' + icon('confirm') + '<span>完成</span></button>';
@@ -311,6 +359,8 @@
         }
 
         function render() {
+            var currentBody = host.querySelector('.checkout-modal-body');
+            var currentScrollTop = currentBody ? currentBody.scrollTop : 0;
             var item = state.item;
             if (!item) {
                 host.innerHTML = '';
@@ -323,7 +373,9 @@
                 +   '<section class="checkout-modal' + (offlineActive ? ' is-offline' : '') + (onlineActive ? ' is-online' : '') + '" role="dialog" aria-modal="true" aria-labelledby="shared-checkout-title">'
                 +       '<header class="checkout-modal-head">'
                 +           '<h2 id="shared-checkout-title">收银台</h2>'
-                +           '<button type="button" aria-label="关闭收银台" data-checkout-close>' + icon('cancel') + '</button>'
+                +           '<div class="checkout-modal-head-actions">'
+                +               '<button class="checkout-modal-close" type="button" aria-label="关闭收银台" data-checkout-close>' + icon('cancel') + '</button>'
+                +           '</div>'
                 +       '</header>'
                 +       '<div class="checkout-modal-body">'
                 +           '<section class="checkout-order-section">'
@@ -352,10 +404,15 @@
                 +               (state.error ? '<div class="checkout-error">' + escapeHtml(state.error) + '</div>' : '')
                 +           '</section>'
                 +       '</div>'
-                +       '<footer class="checkout-modal-footer">' + renderFooter() + '</footer>'
+                +       '<footer class="checkout-modal-footer">'
+                +           renderOnlineDemoToolbar()
+                +           '<div class="checkout-modal-footer-actions">' + renderFooter() + '</div>'
+                +       '</footer>'
                 +   '</section>'
                 + '</div>';
             bindEvents();
+            var nextBody = host.querySelector('.checkout-modal-body');
+            if (nextBody) nextBody.scrollTop = currentScrollTop;
         }
 
         function resetState() {
@@ -375,13 +432,13 @@
             state.channelOrderNo = '';
             state.paidAt = '';
             state.retryCount = 0;
+            state.demoMode = 'auto';
         }
 
         function close(reason) {
             var callbacks = state.callbacks;
             var item = state.item;
-            window.clearTimeout(paymentQueryTimer);
-            window.clearTimeout(paymentResultTimer);
+            clearPaymentTimers();
             resetState();
             render();
             if (callbacks.onClose) callbacks.onClose(reason || 'close', item);
@@ -456,7 +513,7 @@
                 state.channelOrderNo = 'UPP' + state.outTradeNo.replace(/\D/g, '').slice(-18);
                 state.paidAt = formatDateTime(new Date());
             }
-            if (success && !state.successNotified) {
+            if (success && state.demoMode === 'auto' && !state.successNotified) {
                 state.successNotified = true;
                 if (state.callbacks.onOnlineSuccess) state.callbacks.onOnlineSuccess(item);
             }
@@ -471,16 +528,15 @@
             state.onlineQueryCount += 1;
             render();
             paymentResultTimer = window.setTimeout(function () {
-                var failedSample = item.orderNo.slice(-1) === '9' && state.onlineQueryCount === 1;
-                completeOnlinePayment(failedSample ? 'PAY_FAIL' : 'PAY_SUCCESS', item);
-            }, 3000);
+                completeOnlinePayment('PAY_SUCCESS', item);
+            }, ONLINE_DEMO_TIMINGS.resultQuerying);
         }
 
         function scheduleOnlineQuery() {
             window.clearTimeout(paymentQueryTimer);
             paymentQueryTimer = window.setTimeout(function () {
                 if (state.item && state.onlineStage === 'paying') queryOnlinePayment();
-            }, 12000);
+            }, ONLINE_DEMO_TIMINGS.scanWaiting);
         }
 
         function receiveBankPaymentResult(payload) {
@@ -491,6 +547,7 @@
             if (state.onlineStage === 'failed' && payload.status === 'PAY_FAIL') return;
             window.clearTimeout(paymentQueryTimer);
             window.clearTimeout(paymentResultTimer);
+            state.demoMode = 'auto';
             state.onlineStage = 'querying';
             state.onlineStatus = 'PAYING';
             render();
@@ -515,7 +572,7 @@
         }
 
         function retryOnlinePayment() {
-            window.clearTimeout(paymentQueryTimer);
+            clearPaymentTimers();
             var channel = getOnlineChannel();
             state.retryCount += 1;
             state.outTradeNo = buildOutTradeNo(state.item, state.retryCount);
@@ -524,17 +581,55 @@
             state.onlineStage = channel && channel.mode === 'scan' ? 'paying' : 'select';
             state.onlineStatus = '';
             state.error = '';
+            state.demoMode = 'auto';
             render();
             if (state.onlineStage === 'paying') scheduleOnlineQuery();
         }
 
         function changeOnlinePayment() {
-            window.clearTimeout(paymentQueryTimer);
+            clearPaymentTimers();
             state.onlineChannel = '';
             state.onlineStage = 'select';
             state.onlineStatus = '';
             state.error = '';
+            state.demoMode = 'auto';
             render();
+        }
+
+        function prepareDemoSuccessDetails() {
+            if (!state.channelOrderNo) {
+                state.channelOrderNo = 'UPP' + state.outTradeNo.replace(/\D/g, '').slice(-18);
+            }
+            if (!state.paidAt) state.paidAt = formatDateTime(new Date());
+        }
+
+        function switchOnlineDemoStage(stage) {
+            var channel = getOnlineChannel();
+            if (stage !== 'select' && !channel) return;
+            clearPaymentTimers();
+            state.demoMode = 'manual';
+            state.onlineStage = stage;
+            state.onlineStatus = stage === 'success'
+                ? 'PAY_SUCCESS'
+                : (stage === 'failed' ? 'PAY_FAIL' : (stage === 'select' ? '' : 'PAYING'));
+            state.error = '';
+            if (stage === 'success') prepareDemoSuccessDetails();
+            render();
+        }
+
+        function startOnlineAutoDemo() {
+            var channel = getOnlineChannel();
+            if (!channel) return;
+            clearPaymentTimers();
+            state.demoMode = 'auto';
+            state.onlineStage = 'paying';
+            state.onlineStatus = 'PAYING';
+            state.onlineQueryCount = 0;
+            state.channelOrderNo = '';
+            state.paidAt = '';
+            state.error = '';
+            render();
+            scheduleOnlineQuery();
         }
 
         function finishCheckout() {
@@ -558,24 +653,29 @@
 
             host.querySelectorAll('[data-checkout-method]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    window.clearTimeout(paymentQueryTimer);
+                    clearPaymentTimers();
                     state.paymentMethod = this.dataset.checkoutMethod;
                     state.onlineStage = 'select';
                     state.onlineStatus = '';
                     state.onlineQueryCount = 0;
                     state.error = '';
+                    state.demoMode = 'auto';
                     render();
                 });
             });
 
             host.querySelectorAll('[data-online-channel]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    window.clearTimeout(paymentQueryTimer);
+                    clearPaymentTimers();
                     state.onlineChannel = this.dataset.onlineChannel;
                     var channel = getOnlineChannel();
                     state.onlineStage = channel && channel.mode === 'scan' ? 'paying' : 'select';
                     state.onlineStatus = '';
+                    state.onlineQueryCount = 0;
+                    state.channelOrderNo = '';
+                    state.paidAt = '';
                     state.error = '';
+                    state.demoMode = 'auto';
                     render();
                     if (state.onlineStage === 'paying') scheduleOnlineQuery();
                 });
@@ -593,6 +693,15 @@
 
             host.querySelectorAll('[data-online-retry]').forEach(function (button) {
                 button.addEventListener('click', retryOnlinePayment);
+            });
+
+            var autoDemo = host.querySelector('[data-online-demo-auto]');
+            if (autoDemo) autoDemo.addEventListener('click', startOnlineAutoDemo);
+
+            host.querySelectorAll('[data-online-demo-stage]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    switchOnlineDemoStage(this.dataset.onlineDemoStage);
+                });
             });
 
             var done = host.querySelector('[data-checkout-done]');
@@ -657,6 +766,7 @@
                 state.outTradeNo = item.outTradeNo || buildOutTradeNo(item, 0);
                 state.channelOrderNo = item.channelOrderNo || '';
                 state.paidAt = item.paidAt || '';
+                state.demoMode = 'auto';
                 render();
             },
             close: close

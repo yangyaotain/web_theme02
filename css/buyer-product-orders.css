@@ -490,12 +490,22 @@
 }
 
 .checkout-modal-head h2 {
+    flex: 0 0 auto;
     color: #303133;
     font-size: 17px;
     font-weight: 600;
 }
 
-.checkout-modal-head button {
+.checkout-modal-head-actions {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.checkout-modal-close {
+    flex: 0 0 auto;
     width: 30px;
     height: 30px;
     display: inline-flex;
@@ -508,21 +518,104 @@
     cursor: pointer;
 }
 
-.checkout-modal-head button:hover {
+.checkout-modal-close:hover {
     color: #5f6a66;
     background: #f4f6f5;
 }
 
-.checkout-modal-head svg {
+.checkout-modal-close svg {
     width: 16px;
     height: 16px;
     fill: currentColor;
+}
+
+.checkout-demo-toolbar,
+.checkout-demo-tabs {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.checkout-demo-toolbar {
+    gap: 7px;
+}
+
+.checkout-demo-tabs {
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid #e1e8e4;
+    border-radius: 7px;
+    background: #f5f8f6;
+}
+
+.checkout-demo-auto,
+.checkout-demo-stage {
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: #69736f;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.checkout-demo-auto {
+    border-color: #d9e5df;
+    background: #fff;
+    color: var(--forest-green);
+}
+
+.checkout-demo-auto:hover:not(:disabled),
+.checkout-demo-stage:hover:not(:disabled) {
+    border-color: rgba(17, 161, 91, 0.3);
+    background: #edf8f2;
+    color: var(--forest-green);
+}
+
+.checkout-demo-auto.active {
+    border-color: var(--forest-green);
+    background: var(--forest-green);
+    color: #fff;
+}
+
+.checkout-demo-stage.active {
+    border-color: #dce7e1;
+    background: #fff;
+    color: var(--forest-green);
+    box-shadow: 0 1px 4px rgba(45, 75, 61, 0.08);
+}
+
+.checkout-demo-auto:disabled,
+.checkout-demo-stage:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+.checkout-demo-auto svg,
+.checkout-demo-stage svg {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 auto;
+    fill: currentColor;
+}
+
+.checkout-demo-stage.stage-querying.active svg {
+    animation: checkout-query-spin 1s linear infinite;
 }
 
 .checkout-modal-body {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    scrollbar-gutter: stable;
     padding: 26px 24px 30px;
     scrollbar-color: #aab6b1 #f3f5f4;
     scrollbar-width: thin;
@@ -1125,11 +1218,20 @@
     min-height: 64px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 16px;
     padding: 0 24px;
     border-top: 1px solid #ebeef5;
     background: #fff;
+}
+
+.checkout-modal-footer-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: auto;
 }
 
 .checkout-footer-btn {
