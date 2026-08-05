@@ -2,181 +2,326 @@
     min-height: 0;
     padding: 0;
     border: 0;
-    background: transparent;
+    background: #fff;
     box-shadow: none;
+    overflow: hidden;
 }
 
 .trade-contract-page {
+    min-height: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+    overflow: auto;
     color: #303133;
-    font-size: 13px;
+    font-size: 14px;
 }
 
-.trade-contract-summary {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+.trade-contract-query {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
 }
 
-.trade-contract-summary > div {
-    min-height: 98px;
+.trade-contract-query-primary,
+.trade-contract-query-advanced {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 15px 17px;
-    border: 1px solid #e7ece9;
-    border-radius: 7px;
-    background: #fff;
-}
-
-.trade-contract-summary span,
-.trade-contract-summary small {
-    color: #89938e;
-    font-size: 11px;
-}
-
-.trade-contract-summary strong {
-    margin: 5px 0 3px;
-    color: #2f4238;
-    font-family: Inter, sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.trade-contract-toolbar {
-    display: grid;
-    grid-template-columns: minmax(280px, 1fr) 180px auto auto;
     align-items: center;
     gap: 10px;
-    padding: 13px;
-    border: 1px solid #e7ece9;
-    border-radius: 7px;
-    background: #fff;
 }
 
-.trade-contract-toolbar > label {
+.trade-contract-search {
     position: relative;
+    width: min(390px, calc(100% - 90px));
     display: flex;
     align-items: center;
 }
 
-.trade-contract-toolbar > label svg {
+.trade-contract-search .material-symbols-outlined {
     position: absolute;
-    left: 10px;
-    color: #8d9792;
+    right: 12px;
+    z-index: 1;
+    color: #7f8b86;
+    pointer-events: none;
 }
 
-.trade-contract-toolbar input,
-.trade-contract-toolbar select {
-    width: 100%;
-    height: 32px;
-    padding: 0 10px;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
+.trade-contract-search input,
+.trade-contract-query-advanced select,
+.trade-contract-date-range,
+.trade-contract-date-range input,
+.trade-contract-page-size,
+.trade-contract-page-jump input {
+    height: 34px;
+    border: 1px solid #d8e0dc;
+    border-radius: 5px;
     outline: none;
     background: #fff;
-    color: #46504b;
+    color: #45524c;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-.trade-contract-toolbar input { padding-left: 32px; }
-.trade-contract-toolbar input:focus,
-.trade-contract-toolbar select:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.08); }
+.trade-contract-search input {
+    width: 100%;
+    padding: 0 40px 0 12px;
+}
 
-.trade-contract-btn {
+.trade-contract-query-advanced select {
+    width: 148px;
+    padding: 0 30px 0 12px;
+}
+
+.trade-contract-search input:focus,
+.trade-contract-query-advanced select:focus,
+.trade-contract-date-range:focus-within,
+.trade-contract-page-size:focus,
+.trade-contract-page-jump input:focus {
+    border-color: var(--forest-green);
+    box-shadow: 0 0 0 2px rgba(32, 165, 101, .08);
+}
+
+.trade-contract-date-range {
+    width: 390px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.trade-contract-date-range > span {
+    flex: 0 0 auto;
+    padding-left: 12px;
+    color: #56635d;
+}
+
+.trade-contract-date-range input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    border-radius: 0;
+    padding: 0 8px;
+    color: #66736d;
+}
+
+.trade-contract-date-range input:focus { box-shadow: none; }
+.trade-contract-date-range b { color: #a2aca7; font-weight: 400; }
+
+.trade-contract-action {
     min-height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 0 11px;
-    border: 1px solid #dcdfe6;
+    gap: 4px;
+    padding: 0 5px;
+    border: 0;
     border-radius: 4px;
-    background: #fff;
-    color: #606266;
+    background: transparent;
+    color: var(--forest-green);
     font-family: inherit;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
     white-space: nowrap;
 }
 
-.trade-contract-btn:hover { border-color: #91d2af; color: var(--forest-green); }
-.trade-contract-btn.primary { border-color: var(--forest-green); background: var(--forest-green); color: #fff; }
-.trade-contract-btn.primary:hover { border-color: var(--forest-green-600); background: var(--forest-green-600); }
-.trade-contract-btn.text { min-height: 26px; padding: 0 3px; border-color: transparent; background: transparent; color: var(--forest-green); }
+.trade-contract-action:hover { background: #eef9f3; }
+.trade-contract-action.query { height: 34px; padding: 0 13px; border: 1px solid var(--forest-green); background: #fff; }
+.trade-contract-action.query:hover { background: #f0faf5; }
+.trade-contract-action.reset { padding: 0 4px; }
+.trade-contract-action.danger { color: #d85d57; }
+.trade-contract-action.danger:hover { background: #fff2f1; }
+.trade-contract-action.secondary { height: 34px; padding: 0 14px; border: 1px solid #d8e0dc; color: #606b66; }
+.trade-contract-action.primary { height: 34px; padding: 0 14px; border: 1px solid var(--forest-green); background: var(--forest-green); color: #fff; }
+.trade-contract-action.primary:hover { background: var(--forest-green-600); }
 
-.trade-contract-btn svg,
-.trade-contract-toolbar svg,
-.trade-contract-drawer header button svg,
-.trade-contract-frozen svg,
-.trade-contract-file > svg,
-.trade-contract-toast svg {
-    width: 14px;
-    height: 14px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+.wb-consult-shell.is-trade-contracts .material-symbols-outlined {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
 }
 
 .trade-contract-table-card {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    border: 1px solid #e7ece9;
-    border-radius: 7px;
+    border: 1px solid #edf1ef;
+    border-radius: 8px;
     background: #fff;
 }
 
-.trade-contract-table-meta {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 0 14px;
-    border-bottom: 1px solid #edf0ee;
-    color: #8a948f;
-    font-size: 11px;
+.trade-contract-table-scroll {
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
 }
 
-.trade-contract-table-meta strong { color: var(--forest-green); }
-.trade-contract-table-scroll { overflow-x: auto; }
-.trade-contract-table-card table { width: 100%; min-width: 1300px; border-collapse: collapse; }
-.trade-contract-table-card th { height: 40px; padding: 0 12px; background: #f5f7f6; color: #68736d; font-size: 11px; font-weight: 600; text-align: left; white-space: nowrap; }
-.trade-contract-table-card td { height: 66px; padding: 9px 12px; border-top: 1px solid #edf0ee; color: #4d5852; font-size: 11px; }
-.trade-contract-table-card tbody tr:hover { background: #fbfdfc; }
-.trade-contract-table-card td > strong,
-.trade-contract-table-card td > small { display: block; }
-.trade-contract-table-card td > strong { max-width: 245px; overflow: hidden; color: #354139; font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.trade-contract-table-card td > small { margin-top: 4px; color: #939d98; font-size: 10px; }
-.trade-contract-table-card td > code { color: #67736c; font-family: Inter, sans-serif; font-size: 10px; }
-.trade-contract-money { color: #df7626 !important; }
-.trade-contract-actions { display: flex; align-items: center; gap: 7px; }
+.trade-contract-table {
+    width: 100%;
+    min-width: 1850px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.trade-contract-table .col-name { width: 230px; }
+.trade-contract-table .col-id { width: 190px; }
+.trade-contract-table .col-method { width: 105px; }
+.trade-contract-table .col-party { width: 230px; }
+.trade-contract-table .col-order { width: 100px; }
+.trade-contract-table .col-status { width: 120px; }
+.trade-contract-table .col-progress { width: 210px; }
+.trade-contract-table .col-archive { width: 130px; }
+.trade-contract-table .col-updated { width: 165px; }
+.trade-contract-table .col-actions { width: 200px; }
+
+.trade-contract-table th {
+    height: 46px;
+    padding: 0 12px;
+    border-bottom: 1px solid #e9eeeb;
+    background: #f4f7f5;
+    color: #5e6a64;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.trade-contract-table th:first-child { padding-left: 16px; border-radius: 7px 0 0 7px; }
+.trade-contract-table th:last-child { border-radius: 0 7px 7px 0; }
+
+.trade-contract-table td {
+    height: 54px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #edf1ef;
+    background: #fff;
+    color: #35413b;
+    font-size: 13px;
+    line-height: 1.45;
+    vertical-align: middle;
+}
+
+.trade-contract-table td:first-child { padding-left: 16px; }
+.trade-contract-table tbody tr:hover td { background: #fbfdfc; }
+.trade-contract-table tbody tr:last-child td { border-bottom: 0; }
+.contract-name-cell,
+.contract-counterparty-cell,
+.trade-contract-table td:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.contract-actions-cell {
+    position: sticky;
+    z-index: 2;
+    width: 200px;
+    min-width: 200px;
+    overflow: hidden;
+    background: #fff !important;
+}
+
+th.contract-actions-cell { z-index: 3; background: #f4f7f5 !important; }
+.contract-actions-cell { right: 0; text-align: right !important; box-shadow: -8px 0 14px -14px rgba(35, 58, 47, .5); }
+.trade-contract-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; white-space: nowrap; }
+.trade-contract-actions .trade-contract-action { flex: 0 0 auto; }
+
+.trade-contract-order-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--forest-green);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.trade-contract-order-link:hover { color: var(--forest-green-600); }
+.trade-contract-order-link .material-symbols-outlined { font-size: 15px; }
 
 .trade-contract-status {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 10px;
+    gap: 6px;
+    color: #4f5b55;
+    font-size: 13px;
     white-space: nowrap;
 }
 
-.trade-contract-status i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-.trade-contract-status.success { color: #24784b; background: #e8f7ef; }
-.trade-contract-status.warning { color: #b16f18; background: #fff4dd; }
-.trade-contract-status.info { color: #40749b; background: #eaf3fa; }
-.trade-contract-status.neutral { color: #7d8782; background: #f0f2f1; }
+.trade-contract-status i {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 auto;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.trade-contract-status.signed { color: #219764; }
+.trade-contract-status.pending { color: #d28a2d; }
+.trade-contract-status.voided { color: #9aa39f; }
+.trade-contract-status.danger { color: #d45d57; }
+
+.trade-contract-progress,
+.trade-contract-archive {
+    min-width: 0;
+}
+
+.trade-contract-progress strong,
+.trade-contract-progress small,
+.trade-contract-archive span,
+.trade-contract-archive small { display: block; }
+.trade-contract-progress strong { color: #2d7e52; font-size: 13px; }
+.trade-contract-progress small,
+.trade-contract-archive small { margin-top: 3px; overflow: hidden; color: #89948e; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-archive span { color: #4e5b54; font-size: 12px; }
+
+.trade-contract-empty {
+    height: 220px !important;
+    color: #909a95 !important;
+    text-align: center;
+}
+
+.trade-contract-pagination {
+    min-height: 52px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 14px;
+    border-top: 1px solid #edf1ef;
+    background: #fff;
+    color: #59655f;
+    font-size: 13px;
+}
+
+.trade-contract-page-btn {
+    min-width: 30px;
+    height: 30px;
+    padding: 0 7px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: #4c5852;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.trade-contract-page-btn:hover:not(:disabled) { color: var(--forest-green); background: #eef8f3; }
+.trade-contract-page-btn.active { background: var(--forest-green); color: #fff; }
+.trade-contract-page-btn:disabled { color: #c7ceca; cursor: not-allowed; }
+.trade-contract-page-btn.arrow { font-size: 20px; }
+.trade-contract-page-size { width: 106px; padding: 0 8px; }
+.trade-contract-page-jump { display: inline-flex; align-items: center; gap: 7px; }
+.trade-contract-page-jump input { width: 42px; padding: 0 5px; text-align: center; }
 
 .trade-contract-drawer-mask {
     position: fixed;
     inset: 0;
     z-index: 920;
-    background: rgba(35, 48, 42, 0.48);
+    background: rgba(45, 58, 52, .22);
 }
 
 .trade-contract-drawer {
@@ -185,94 +330,570 @@
     right: 8px;
     bottom: 8px;
     z-index: 921;
-    width: min(820px, calc(100vw - 56px));
+    width: clamp(720px, 42vw, 1060px);
+    min-width: 720px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #fff;
-    box-shadow: 0 14px 44px rgba(22, 45, 34, 0.2);
+    box-shadow: 0 18px 48px rgba(31, 48, 40, .16);
 }
 
-.trade-contract-drawer > header,
-.trade-contract-drawer > footer {
+.trade-contract-drawer > header {
+    min-height: 56px;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e7ece9;
+    gap: 8px;
+    padding: 0 20px;
+    border-bottom: 1px solid #e8ecea;
 }
 
-.trade-contract-drawer header h2 { margin: 0; color: #303a35; font-size: 16px; }
-.trade-contract-drawer header p { margin: 4px 0 0; color: #89938e; font-size: 11px; }
-.trade-contract-drawer header > button { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #7d8882; cursor: pointer; }
-.trade-contract-drawer-body { min-height: 0; flex: 1; overflow-y: auto; padding: 18px 20px 24px; }
-.trade-contract-drawer-body section + section { margin-top: 22px; }
-.trade-contract-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-.trade-contract-section-head h3 { margin: 0; color: #3a463f; font-size: 14px; }
+.trade-contract-drawer > header button {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #8a9590;
+    cursor: pointer;
+}
 
-.trade-contract-detail-grid,
-.trade-contract-rule-summary {
+.trade-contract-drawer > header button:hover { color: #44514b; }
+.trade-contract-drawer > header h2 { margin: 0; color: #202c27; font-size: 16px; font-weight: 700; }
+
+.trade-contract-drawer-body {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 26px 32px;
+}
+
+.trade-contract-detail-section + .trade-contract-detail-section { margin-top: 28px; }
+.trade-contract-section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.trade-contract-section-title h3 { margin: 0; color: #26312c; font-size: 15px; font-weight: 700; }
+
+.trade-contract-payment-section {
+    padding: 16px;
+    border: 1px solid #e3e9e6;
+    border-radius: 7px;
+    background: #fbfcfb;
+}
+
+.trade-contract-payment-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.trade-contract-payment-head h3 {
+    margin: 0;
+    color: #26312c;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.trade-contract-payment-head p {
+    margin: 5px 0 0;
+    color: #89938e;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.trade-contract-payment-head > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #2a7d50;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.trade-contract-payment-head > span .material-symbols-outlined { font-size: 15px; }
+
+.trade-contract-payment-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 14px;
+}
+
+.trade-contract-payment-summary.self-operated { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.trade-contract-payment-summary > div {
+    min-width: 0;
+    min-height: 80px;
+    padding: 11px 12px;
+    border: 1px solid #e6ebe8;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.trade-contract-payment-summary span,
+.trade-contract-payment-summary strong,
+.trade-contract-payment-summary small { display: block; }
+.trade-contract-payment-summary span { color: #87918c; font-size: 12px; }
+.trade-contract-payment-summary strong { margin-top: 6px; overflow: hidden; color: #33423a; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-payment-summary small { margin-top: 5px; color: #939d98; font-size: 12px; line-height: 1.45; }
+
+.trade-contract-payment-mode {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    color: #65716a;
+    font-size: 13px;
+}
+
+.trade-contract-payment-mode > span { color: #87918c; }
+.trade-contract-payment-mode > strong { color: #33423a; font-weight: 600; }
+.trade-contract-payment-mode > small { color: #89938e; }
+
+.trade-contract-payment-table {
+    margin-top: 12px;
+    overflow-x: auto;
+    border: 1px solid #e5eae7;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.trade-contract-payment-table table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.trade-contract-payment-table th {
+    height: 38px;
+    padding: 0 9px;
+    background: #f4f7f5;
+    color: #68736d;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.trade-contract-payment-table td {
+    height: 42px;
+    padding: 7px 9px;
+    border-top: 1px solid #edf0ee;
+    color: #4c5751;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.trade-contract-payment-table .provider-net { color: #21804e; font-weight: 600; }
+.trade-contract-payment-status { color: #b57523; }
+
+.trade-contract-payment-foot {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 11px;
+    color: #7e8983;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.trade-contract-payment-foot > span { display: inline-flex; align-items: flex-start; gap: 4px; }
+.trade-contract-payment-foot > span .material-symbols-outlined { margin-top: 2px; font-size: 15px; }
+.trade-contract-payment-foot > strong { flex: 0 0 auto; color: #56625b; font-weight: 500; }
+.trade-contract-payment-foot b { color: #21804e; font-weight: 600; }
+
+.trade-contract-detail-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 38px;
+    row-gap: 14px;
+    margin: 0;
+}
+
+.trade-contract-detail-item {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    align-items: start;
+    margin: 0;
+    line-height: 1.55;
+}
+
+.trade-contract-detail-item.wide { grid-column: 1 / -1; }
+.trade-contract-detail-item dt { color: #8a9590; white-space: nowrap; }
+.trade-contract-detail-item dd { min-width: 0; margin: 0; overflow: hidden; color: #55615b; text-overflow: ellipsis; }
+
+.trade-contract-file-row {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.trade-contract-file-row > span {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     overflow: hidden;
-    border: 1px solid #e5eae7;
+    color: #5c6862;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trade-contract-file-row > span > .material-symbols-outlined { color: var(--forest-green); }
+.trade-contract-file-row b { color: #34413a; font-size: 12px; }
+.trade-contract-file-row small { color: #9aa39f; }
+.trade-contract-file-row > div { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+
+.trade-contract-file-list {
+    overflow: hidden;
+    border: 1px solid #e7ece9;
     border-radius: 6px;
 }
 
-.trade-contract-detail-grid > div,
-.trade-contract-rule-summary > div { min-width: 0; min-height: 70px; padding: 12px; border-right: 1px solid #edf0ee; border-bottom: 1px solid #edf0ee; }
-.trade-contract-detail-grid > div:nth-child(even) { border-right: 0; }
-.trade-contract-detail-grid span,
-.trade-contract-detail-grid strong,
-.trade-contract-rule-summary span,
-.trade-contract-rule-summary strong,
-.trade-contract-rule-summary small { display: block; }
-.trade-contract-detail-grid span,
-.trade-contract-rule-summary span { color: #88938d; font-size: 11px; }
-.trade-contract-detail-grid strong,
-.trade-contract-rule-summary strong { margin-top: 6px; color: #3e4a43; font-size: 12px; font-weight: 600; }
-.trade-contract-rule-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.trade-contract-rule-summary > div:last-child { border-right: 0; }
-.trade-contract-rule-summary small { margin-top: 5px; overflow: hidden; color: #949e99; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-file-list .trade-contract-file-row { padding: 8px 12px; }
+.trade-contract-file-list .trade-contract-file-row + .trade-contract-file-row { border-top: 1px solid #edf1ef; }
+.trade-contract-file-pending { padding: 14px 12px; border-top: 1px solid #edf1ef; color: #929b97; font-size: 12px; text-align: center; background: #fafbfa; }
 
-.trade-contract-frozen { display: inline-flex; align-items: center; gap: 4px; color: #247b4e; font-size: 11px; }
-.trade-contract-frozen svg { width: 13px; height: 13px; }
-
-.trade-contract-stage-scroll { margin-top: 12px; overflow-x: auto; border: 1px solid #e5eae7; border-radius: 6px; }
-.trade-contract-stage-scroll table { width: 100%; min-width: 900px; border-collapse: collapse; }
-.trade-contract-stage-scroll th { height: 36px; padding: 0 10px; background: #f4f6f5; color: #68736d; font-size: 11px; font-weight: 600; text-align: left; }
-.trade-contract-stage-scroll td { height: 43px; padding: 7px 10px; border-top: 1px solid #edf0ee; color: #4c5751; font-size: 11px; }
-.trade-contract-stage-scroll code { color: #536159; font-family: Inter, Consolas, monospace; font-size: 10px; white-space: nowrap; }
-.trade-contract-stage-scroll tfoot td { color: #2b6847; background: #f6faf8; font-weight: 600; }
-
-.trade-contract-file { min-height: 58px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e5eae7; border-radius: 6px; background: #fbfcfb; }
-.trade-contract-file > svg { width: 22px; height: 22px; color: var(--forest-green); }
-.trade-contract-file > div { min-width: 0; flex: 1; }
-.trade-contract-file strong,
-.trade-contract-file span { display: block; }
-.trade-contract-file strong { overflow: hidden; color: #414c46; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.trade-contract-file span { margin-top: 4px; color: #939d98; font-size: 10px; }
-
-.trade-contract-sign-panel { padding: 14px; border: 1px solid #d9eadf; border-radius: 6px; background: #f5faf7; }
-.trade-contract-sign-panel label { display: flex; align-items: flex-start; gap: 8px; color: #405048; font-size: 12px; line-height: 1.6; cursor: pointer; }
-.trade-contract-sign-panel input { margin-top: 3px; accent-color: var(--forest-green); }
-.trade-contract-sign-panel p { margin: 7px 0 0 22px; color: #87928c; font-size: 10px; }
-.trade-contract-drawer > footer { justify-content: flex-end; border-top: 1px solid #e7ece9; border-bottom: 0; }
-
-.trade-contract-toast { position: fixed; top: 72px; left: 50%; z-index: 950; min-width: 260px; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 15px; transform: translateX(-50%); border: 1px solid #c8e6d4; border-radius: 5px; background: #f0faf4; color: #24754a; box-shadow: 0 8px 24px rgba(26, 67, 47, .12); font-size: 12px; }
-
-@media (max-width: 1100px) {
-    .trade-contract-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.trade-contract-esign-card {
+    padding: 16px;
+    border: 1px solid #dfeae4;
+    border-radius: 7px;
+    background: #fafdfb;
 }
 
-@media (max-width: 820px) {
-    .trade-contract-summary,
-    .trade-contract-toolbar,
-    .trade-contract-detail-grid,
-    .trade-contract-rule-summary { grid-template-columns: 1fr; }
-    .trade-contract-detail-grid > div,
-    .trade-contract-rule-summary > div { border-right: 0; }
+.trade-contract-esign-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.trade-contract-esign-summary > div { min-width: 0; padding: 11px 12px; border: 1px solid #e6ece8; border-radius: 5px; background: #fff; }
+.trade-contract-esign-summary span,
+.trade-contract-esign-summary strong,
+.trade-contract-esign-summary small { display: block; }
+.trade-contract-esign-summary span { color: #89938e; font-size: 11px; }
+.trade-contract-esign-summary strong { margin-top: 6px; overflow: hidden; color: #334139; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-esign-summary small { margin-top: 5px; overflow: hidden; color: #929c97; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+
+.trade-contract-exception { display: flex; align-items: flex-start; gap: 6px; margin-top: 10px; padding: 9px 11px; border-radius: 4px; color: #b85650; background: #fff4f3; font-size: 12px; line-height: 1.5; }
+.trade-contract-exception .material-symbols-outlined { margin-top: 1px; font-size: 15px; }
+
+.trade-contract-detail-table {
+    overflow-x: auto;
+    border-radius: 7px;
+}
+
+.trade-contract-detail-table table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.trade-contract-detail-table.signers table { min-width: 940px; }
+.trade-contract-detail-table th {
+    height: 38px;
+    padding: 0 12px;
+    background: #f4f7f5;
+    color: #69756f;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.trade-contract-detail-table th:first-child { border-radius: 7px 0 0 7px; }
+.trade-contract-detail-table th:last-child { border-radius: 0 7px 7px 0; }
+.trade-contract-detail-table td {
+    height: 42px;
+    padding: 7px 12px;
+    border-bottom: 1px solid #edf1ef;
+    color: #4f5b55;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trade-contract-sign-panel {
+    margin-top: 26px;
+    padding: 14px 16px;
+    border: 1px solid #d8eade;
+    border-radius: 6px;
+    background: #f5faf7;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.trade-contract-sign-panel > .material-symbols-outlined { margin-top: 2px; color: var(--forest-green); font-size: 20px; }
+.trade-contract-sign-panel strong { color: #35443c; font-size: 13px; }
+.trade-contract-sign-panel p { margin: 5px 0 0; color: #76837c; font-size: 12px; line-height: 1.6; }
+
+.trade-contract-drawer > footer {
+    min-height: 58px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 22px;
+    border-top: 1px solid #e8ecea;
+}
+
+.trade-contract-flow-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 46px;
+    row-gap: 16px;
+    margin: 0;
+}
+
+.trade-contract-flow-info .trade-contract-detail-item { grid-template-columns: 112px minmax(0, 1fr); }
+.trade-contract-flow-info .trade-contract-detail-item.wide { grid-column: 1 / -1; }
+.trade-contract-flow-log-title { margin: 22px 0 12px; color: #4a5750; font-size: 13px; font-weight: 600; }
+
+.trade-contract-flow-log {
+    overflow-x: auto;
+    border-radius: 7px;
+}
+
+.trade-contract-flow-log table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.trade-contract-flow-log th {
+    height: 40px;
+    padding: 0 12px;
+    background: #f4f7f5;
+    color: #69756f;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.trade-contract-flow-log th:first-child { border-radius: 7px 0 0 7px; }
+.trade-contract-flow-log th:last-child { border-radius: 0 7px 7px 0; }
+.trade-contract-flow-log td { height: 42px; padding: 7px 12px; border-bottom: 1px solid #edf1ef; color: #4f5b55; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.trade-contract-toast {
+    position: fixed;
+    top: 72px;
+    left: 50%;
+    z-index: 950;
+    min-width: 250px;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 16px;
+    transform: translateX(-50%);
+    border: 1px solid #c9e6d4;
+    border-radius: 6px;
+    background: #f0faf4;
+    color: #24754a;
+    box-shadow: 0 8px 24px rgba(26, 67, 47, .12);
+    font-size: 13px;
+}
+
+.trade-contract-void-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 940;
+    background: rgba(38, 51, 45, .28);
+}
+
+.trade-contract-void-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 941;
+    width: min(620px, calc(100vw - 40px));
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 20px 54px rgba(31, 48, 40, .2);
+}
+
+.trade-contract-void-modal > header {
+    min-height: 68px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 17px 20px 15px;
+    border-bottom: 1px solid #e8ecea;
+}
+
+.trade-contract-void-modal > header h2 {
+    margin: 0;
+    color: #26312c;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.trade-contract-void-modal > header p {
+    margin: 5px 0 0;
+    color: #87918c;
+    font-size: 12px;
+}
+
+.trade-contract-void-modal > header > button {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #89948f;
+    cursor: pointer;
+}
+
+.trade-contract-void-modal > header > button:hover { color: #45524c; background: #f4f7f5; }
+.trade-contract-void-body { padding: 20px; }
+
+.trade-contract-void-contract {
+    min-width: 0;
+    padding: 13px 14px;
+    border: 1px solid #e4eae7;
+    border-radius: 6px;
+    background: #fafcfb;
+}
+
+.trade-contract-void-contract span,
+.trade-contract-void-contract strong,
+.trade-contract-void-contract small { display: block; }
+.trade-contract-void-contract span { color: #8a9590; font-size: 11px; }
+.trade-contract-void-contract strong { margin-top: 5px; overflow: hidden; color: #35423b; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-void-contract small { margin-top: 4px; color: #939d98; font-size: 11px; }
+
+.trade-contract-void-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid #f1dfbd;
+    border-radius: 5px;
+    background: #fffaf0;
+    color: #886528;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.trade-contract-void-notice .material-symbols-outlined { margin-top: 1px; color: #bd8425; font-size: 16px; }
+.trade-contract-void-feedback { margin-top: 12px; padding: 9px 11px; border-radius: 5px; background: #fff2f1; color: #c2524c; font-size: 12px; }
+
+.trade-contract-void-field {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    margin-top: 18px;
+    color: #4c5852;
+    font-size: 13px;
+}
+
+.trade-contract-void-field > span { padding-top: 9px; }
+.trade-contract-void-field.is-required > span::before { margin-right: 4px; color: #d95750; content: '*'; }
+.trade-contract-void-field > div { position: relative; min-width: 0; }
+
+.trade-contract-void-field textarea {
+    width: 100%;
+    min-height: 92px;
+    resize: vertical;
+    padding: 9px 12px 24px;
+    border: 1px solid #d8e0dc;
+    border-radius: 5px;
+    outline: none;
+    color: #44514b;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.55;
+    box-sizing: border-box;
+}
+
+.trade-contract-void-field textarea:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32, 165, 101, .08); }
+.trade-contract-void-field textarea + small { position: absolute; right: 10px; bottom: 8px; color: #9aa39f; font-size: 11px; }
+.trade-contract-void-field textarea + small b { color: #728079; font-weight: 500; }
+
+.trade-contract-void-file-state {
+    min-height: 66px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px dashed #cbd7d1;
+    border-radius: 6px;
+    background: #fbfdfc;
+}
+
+.trade-contract-void-file-state.is-selected { border-style: solid; border-color: #cce4d5; background: #f5fbf7; }
+.trade-contract-void-file-state > .material-symbols-outlined { color: var(--forest-green); font-size: 26px; }
+.trade-contract-void-file-state strong,
+.trade-contract-void-file-state small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trade-contract-void-file-state strong { color: #46534d; font-size: 12px; font-weight: 600; }
+.trade-contract-void-file-state small { margin-top: 4px; color: #929c97; font-size: 11px; }
+.trade-contract-void-file-state button { height: 30px; padding: 0 11px; border: 1px solid #bcd8c7; border-radius: 4px; background: #fff; color: var(--forest-green); font-family: inherit; font-size: 12px; cursor: pointer; }
+.trade-contract-void-file-state button:hover { background: #eef8f3; }
+
+.trade-contract-void-modal footer {
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 20px;
+    border-top: 1px solid #e8ecea;
+}
+
+.trade-contract-void-info { padding: 16px; border: 1px solid #eee3d2; border-radius: 7px; background: #fffcf7; }
+.trade-contract-void-file { margin-top: 14px; background: #fff; }
+
+@media (max-width: 1180px) {
+    .trade-contract-query-advanced { flex-wrap: wrap; }
+    .trade-contract-drawer { width: min(820px, calc(100vw - 80px)); min-width: 0; }
+    .trade-contract-payment-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .trade-contract-esign-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    .trade-contract-query-primary,
+    .trade-contract-query-advanced { align-items: stretch; flex-direction: column; }
+    .trade-contract-search,
+    .trade-contract-query-advanced select,
+    .trade-contract-date-range { width: 100%; }
+    .trade-contract-drawer { width: calc(100vw - 16px); }
+    .trade-contract-detail-grid { grid-template-columns: 1fr; }
+    .trade-contract-detail-item.wide { grid-column: auto; }
+    .trade-contract-flow-info,
+    .trade-contract-payment-summary,
+    .trade-contract-esign-summary { grid-template-columns: 1fr; }
+    .trade-contract-flow-info .trade-contract-detail-item.wide { grid-column: auto; }
+    .trade-contract-payment-foot { flex-direction: column; }
+    .trade-contract-pagination { justify-content: flex-start; overflow-x: auto; }
+    .trade-contract-void-field { grid-template-columns: 1fr; gap: 6px; }
+    .trade-contract-void-field > span { padding-top: 0; }
 }

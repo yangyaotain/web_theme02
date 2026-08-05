@@ -404,41 +404,43 @@
 
         /* ==================== Unified Homepage Footer ==================== */
         .home-unified-footer {
-            padding: 28px 32px;
-            color: #d4d4d8;
-            background: #18181b;
+            color: #66716d;
+            background: var(--surface-primary);
+        }
+        .home-footer-contact-panel {
+            background: #f6fbf8;
         }
         .home-unified-inner {
-            max-width: 1080px;
+            width: min(1088px, calc(100% - 64px));
+            min-height: 340px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: minmax(0, 1.65fr) 1px minmax(280px, 0.8fr);
-            grid-template-areas: "contact divider meta";
+            padding: 57px 0 65px;
+            display: flex;
             align-items: center;
-            gap: 28px;
+            box-sizing: border-box;
         }
         .home-footer-contact {
-            grid-area: contact;
+            width: 100%;
             min-width: 0;
             display: grid;
-            grid-template-columns: 118px 1px minmax(0, 1fr);
+            grid-template-columns: 175px 1px minmax(0, 1fr);
             align-items: center;
-            gap: 22px;
+            column-gap: 90px;
         }
         .home-contact-follow {
-            width: 118px;
+            width: 175px;
             flex-shrink: 0;
             text-align: center;
         }
         .home-contact-qr {
             position: relative;
-            width: 108px;
-            height: 108px;
+            width: 175px;
+            height: 175px;
             margin: 0 auto;
-            padding: 7px;
+            padding: 6px;
             background: #fff;
-            border: 1px solid rgba(32, 165, 101, 0.75);
-            border-radius: 7px;
+            border: 1px solid #a8e8c5;
+            border-radius: 10px;
         }
         .home-contact-qr svg {
             display: block;
@@ -449,70 +451,66 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 25px;
-            height: 25px;
-            padding: 3px;
+            width: 31px;
+            height: 31px;
+            padding: 4px;
             object-fit: contain;
             background: #fff;
             border-radius: 6px;
             transform: translate(-50%, -50%);
         }
         .home-contact-follow-title {
-            margin-top: 8px;
-            color: #3bc17d;
-            font-size: 14px;
+            margin-top: 12px;
+            color: #07833f;
+            font-size: 20px;
             font-weight: 700;
+            line-height: 1.4;
         }
         .home-contact-divider {
             width: 1px;
-            height: 118px;
+            height: 218px;
             flex-shrink: 0;
-            background: rgba(59, 193, 125, 0.32);
+            background: #b8efd0;
         }
         .home-contact-details {
             min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 13px;
+            gap: 22px;
         }
         .home-contact-row {
             display: grid;
-            grid-template-columns: 76px minmax(0, 1fr);
+            grid-template-columns: 100px minmax(0, 1fr);
             align-items: start;
-            gap: 10px;
-            font-size: 13px;
+            gap: 20px;
+            font-size: 20px;
             line-height: 1.55;
         }
         .home-contact-label {
-            color: #3bc17d;
+            color: #087f3d;
             font-weight: 700;
             white-space: nowrap;
         }
         .home-contact-value,
         .home-contact-value a {
-            color: #d4d4d8;
+            color: #66716d;
             text-decoration: none;
         }
-        .home-contact-value a:hover { color: #4bd48c; }
-        .home-footer-main-divider {
-            grid-area: divider;
-            width: 1px;
-            height: 118px;
-            background: rgba(255, 255, 255, 0.13);
-        }
+        .home-contact-value a:hover { color: var(--forest-green); }
         .home-footer-meta {
-            grid-area: meta;
-            color: #a1a1aa;
-            font-size: 12px;
-            line-height: 1.85;
+            min-height: 56px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+            color: #66716d;
+            background: var(--surface-primary);
+            border-top: 1px solid #e1eee8;
+            font-size: 17px;
+            line-height: 1.4;
+            box-sizing: border-box;
         }
-        .home-footer-meta-title {
-            margin-bottom: 8px;
-            color: #d4d4d8;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .home-footer-meta-line + .home-footer-meta-line { margin-top: 4px; }
 
         /* ==================== Responsive ==================== */
         @media (max-width: 1024px) {
@@ -522,10 +520,8 @@
             .hero-carousel-nav { justify-content: center; }
             .hero-visual { display: none; }
             .cards-grid, .news-grid { grid-template-columns: repeat(2, 1fr); }
-            .home-unified-inner { grid-template-columns: minmax(0, 1fr) 1px 260px; gap: 24px; }
-            .home-footer-contact { grid-template-columns: 104px 1px minmax(0, 1fr); gap: 20px; }
-            .home-contact-follow { width: 104px; }
-            .home-contact-qr { width: 96px; height: 96px; }
+            .home-footer-contact { column-gap: 48px; }
+            .home-contact-row { gap: 16px; font-size: 18px; }
         }
         @media (max-width: 768px) {
             .hero-title { font-size: 36px; }
@@ -533,19 +529,18 @@
             .search-inner { flex-wrap: wrap; }
             .search-type, .search-input, .search-btn { width: 100%; }
             .search-type { justify-content: center; }
-            .home-unified-footer { padding: 28px 20px; }
             .home-unified-inner {
-                grid-template-columns: 1fr;
-                grid-template-areas: "contact" "divider" "meta";
-                gap: 24px;
+                width: calc(100% - 40px);
+                min-height: 0;
+                padding: 40px 0;
             }
-            .home-footer-contact { grid-template-columns: 92px 1px minmax(0, 1fr); gap: 18px; }
-            .home-contact-follow { width: 92px; }
-            .home-contact-qr { width: 84px; height: 84px; }
-            .home-contact-divider { height: 100px; }
-            .home-contact-details { gap: 10px; }
-            .home-contact-row { grid-template-columns: 72px minmax(0, 1fr); gap: 8px; font-size: 12px; }
-            .home-footer-main-divider { width: 100%; height: 1px; }
+            .home-footer-contact { grid-template-columns: 1fr; row-gap: 28px; }
+            .home-contact-follow { width: 155px; margin: 0 auto; }
+            .home-contact-qr { width: 155px; height: 155px; padding: 5px; }
+            .home-contact-divider { width: 100%; height: 1px; }
+            .home-contact-details { width: min(100%, 560px); margin: 0 auto; gap: 16px; }
+            .home-contact-row { grid-template-columns: 90px minmax(0, 1fr); gap: 12px; font-size: 16px; }
+            .home-footer-meta { min-height: 64px; gap: 8px 24px; flex-wrap: wrap; font-size: 15px; }
         }
     </style>
 </head>
@@ -874,8 +869,9 @@
 
     <!-- Unified Homepage Footer -->
     <footer class="home-unified-footer" aria-label="网站底部信息">
-        <div class="home-unified-inner">
-        <div class="home-footer-contact">
+        <div class="home-footer-contact-panel">
+            <div class="home-unified-inner">
+                <div class="home-footer-contact">
             <div class="home-contact-follow">
                 <div class="home-contact-qr">
                     <svg viewBox="0 0 29 29" role="img" aria-label="关注我们二维码" shape-rendering="crispEdges">
@@ -920,17 +916,14 @@
                     <span class="home-contact-label">服务地址：</span>
                     <span class="home-contact-value">深圳市龙岗区龙城街道黄阁坑社区腾飞路9号龙岗创投大厦1号楼34F</span>
                 </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="home-footer-main-divider" aria-hidden="true"></div>
-
         <div class="home-footer-meta">
-            <div class="home-footer-meta-title">深圳市龙岗区数据有限公司主办</div>
-            <div class="home-footer-meta-line">备案：ICP备050xxxx03号-2</div>
-            <div class="home-footer-meta-line">公网安备3301xxxx20013897号</div>
-            <div class="home-footer-meta-line">网站标识码：3301xxxx05</div>
-        </div>
+            <span>© 龙岗数据聚合服务平台</span>
+            <span>粤ICP备2025461058号-1</span>
         </div>
     </footer>
 

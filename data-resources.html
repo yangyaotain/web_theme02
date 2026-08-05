@@ -520,7 +520,6 @@
         }
     </style>
     <script src="js/nav-bar.js"></script>
-    <script src="js/site-footer.js" defer></script>
     <script src="js/smart-service.js" defer></script>
 </head>
 <body>
@@ -691,58 +690,58 @@
             </div>
 
             <div class="data-grid">
-                <!-- Card 1 -->
-                <article class="data-card">
+                <!-- Card 1: 数据集样例 -->
+                <article class="data-card" data-sample-type="dataset">
                     <div class="data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
                         <div class="data-card-badges">
                             <span class="data-card-badge">原始数据</span>
-                            <span class="data-card-badge api">API</span>
+                            <span class="data-card-badge">数据集</span>
                         </div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">A股上市公司股吧数据集</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"</p>
+                        <h3 class="data-card-title">龙岗区企业经营活力基础数据集</h3>
+                        <p class="data-card-company">深圳市龙岗区政务数据运营有限公司</p>
+                        <p class="data-card-desc">汇聚企业登记、所属行业、所在街道和经营活跃度等基础信息，为产业分析和企业服务提供数据支撑</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-04</span>
-                            <span class="data-card-type">行业数据</span>
+                            <span class="data-card-meta">2026-07-18</span>
+                            <span class="data-card-type">企业数据</span>
                         </div>
                     </div>
                 </article>
 
-                <!-- Card 2 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/water-analysis.jpg') center/cover;">
+                <!-- Card 2: API样例 -->
+                <article class="data-card" data-sample-type="api">
+                    <div class="data-card-image" style="background: url('images/realtime-data.jpg') center/cover;">
                         <div class="data-card-badges">
-                            <span class="data-card-badge">原始数据</span>
+                            <span class="data-card-badge">加工数据</span>
                             <span class="data-card-badge api">API</span>
                         </div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">用户用水指标分析数据</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">企业用户的用水数据进行加工分析，得出针对各类用户的水用相关指标数据</p>
+                        <h3 class="data-card-title">龙岗企业登记信息查询 API 资源</h3>
+                        <p class="data-card-company">深圳市龙岗区政务数据运营有限公司</p>
+                        <p class="data-card-desc">提供企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统按企业编码调用</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-04</span>
-                            <span class="data-card-type">行业数据</span>
+                            <span class="data-card-meta">2026-07-17</span>
+                            <span class="data-card-type">企业数据</span>
                         </div>
                     </div>
                 </article>
 
-                <!-- Card 3 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/weather-service.jpg') center/cover;">
+                <!-- Card 3: 其他样例 -->
+                <article class="data-card" data-sample-type="other">
+                    <div class="data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
                         <div class="data-card-badges">
-                            <span class="data-card-badge">原始数据</span>
-                            <span class="data-card-badge api">API</span>
+                            <span class="data-card-badge">加工数据</span>
+                            <span class="data-card-badge">其他</span>
                         </div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">旅游安全气象服务</h3>
-                        <p class="data-card-company">广东****有限公司</p>
-                        <p class="data-card-desc">通过大数据技术对气象数据进行治理、分类，赋能深汕特别合作区旅游业的安全监管</p>
+                        <h3 class="data-card-title">龙岗区产业运行分析资料包</h3>
+                        <p class="data-card-company">深圳市龙岗区产业数据运营有限公司</p>
+                        <p class="data-card-desc">汇集重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究参考</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">2025-11-04</span>
+                            <span class="data-card-meta">2026-07-16</span>
                             <span class="data-card-type">行业数据</span>
                         </div>
                     </div>
@@ -881,7 +880,6 @@
     </main>
 
     <!-- Footer -->
-    <site-footer></site-footer>
 
     <script>
     (function() {
@@ -903,9 +901,9 @@
             '行业数据': {
                 count: 128,
                 cards: [
-                    { title: 'A股上市公司股吧数据集', company: '广东****有限公司', desc: '为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/stock-data.jpg' },
-                    { title: '用户用水指标分析数据', company: '广东****有限公司', desc: '企业用户的用水数据进行加工分析，得出针对各类用户的水用相关指标数据', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/water-analysis.jpg' },
-                    { title: '旅游安全气象服务', company: '广东****有限公司', desc: '通过大数据技术对气象数据进行治理、分类，赋能深汕特别合作区旅游业的安全监管', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/weather-service.jpg' },
+                    { title: '龙岗区企业经营活力基础数据集', company: '深圳市龙岗区政务数据运营有限公司', desc: '汇聚企业登记、所属行业、所在街道和经营活跃度等基础信息，为产业分析和企业服务提供数据支撑', date: '2026-07-18', type: '企业数据', badge: '原始数据', sampleType: 'dataset', sampleLabel: '数据集', img: 'images/stock-data.jpg' },
+                    { title: '龙岗企业登记信息查询 API 资源', company: '深圳市龙岗区政务数据运营有限公司', desc: '提供企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统按企业编码调用', date: '2026-07-17', type: '企业数据', badge: '加工数据', sampleType: 'api', sampleLabel: 'API', img: 'images/realtime-data.jpg' },
+                    { title: '龙岗区产业运行分析资料包', company: '深圳市龙岗区产业数据运营有限公司', desc: '汇集重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究参考', date: '2026-07-16', type: '行业数据', badge: '加工数据', sampleType: 'other', sampleLabel: '其他', img: 'images/data-screen.jpg' },
                     { title: '收费站出口小时流量', company: '广东****有限公司', desc: '通过日前查询云南交投路网下辖收费站出口小时流量统计，包括出口ETC/CPC车流量', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/traffic-flow.jpg' },
                     { title: '智联云通平台', company: '广东****有限公司', desc: '一站式物联网行业应用的解决方案实现，多元化智能设备的无缝接入与集中管理', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/iot-platform.jpg' },
                     { title: '公司夜灯光数据', company: '广东****有限公司', desc: '利用卫星遥感技术探测计算某制造业公司的夜灯光变量，用于衡量和预测其生产经营情况', date: '2025-11-04', type: '行业数据', badge: '原始数据', hasApi: true, img: 'images/night-light.jpg' },
@@ -943,11 +941,12 @@
             data.cards.forEach(function(c) {
                 var article = document.createElement('article');
                 article.className = 'data-card';
+                if (c.sampleType) article.setAttribute('data-sample-type', c.sampleType);
                 article.innerHTML =
                     '<div class="data-card-image" style="background:url(\'' + c.img + '\') center/cover;">' +
                         '<div class="data-card-badges">' +
                             '<span class="data-card-badge">' + c.badge + '</span>' +
-                            (c.hasApi ? '<span class="data-card-badge api">API</span>' : '') +
+                            (c.sampleLabel ? '<span class="data-card-badge' + (c.sampleType === 'api' ? ' api' : '') + '">' + c.sampleLabel + '</span>' : (c.hasApi ? '<span class="data-card-badge api">API</span>' : '')) +
                         '</div>' +
                     '</div>' +
                     '<div class="data-card-content">' +
@@ -966,7 +965,9 @@
                     });
                 } else {
                     article.addEventListener('click', function() {
-                        window.location.href = 'data-detail.html';
+                        window.location.href = c.sampleType
+                            ? 'data-detail.html?sampleType=' + encodeURIComponent(c.sampleType)
+                            : 'data-detail.html';
                     });
                 }
                 dataGrid.appendChild(article);

@@ -13,9 +13,10 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/product-detail-samples.css">
     <script src="js/nav-bar.js"></script>
-    <script src="js/site-footer.js" defer></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/product-detail-samples.js" defer></script>
     <style>
         .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
 
@@ -196,7 +197,7 @@
             <span class="sep">/</span>
             <a href="data-resources.html">数据资源</a>
             <span class="sep">/</span>
-            <span class="current">金融行业A股上市公司股吧数据集</span>
+            <span class="current" data-resource-detail-breadcrumb>金融行业A股上市公司股吧数据集</span>
         </nav>
 
         <!-- Product Header -->
@@ -204,19 +205,19 @@
             <div class="product-header-container">
                 <div class="product-gallery">
                     <div class="gallery-main">
-                        <img src="images/data-detail-hero.jpg" alt="金融行业A股上市公司股吧数据集">
+                        <img src="images/data-detail-hero.jpg" alt="金融行业A股上市公司股吧数据集" data-resource-detail-image>
                     </div>
                     <div class="gallery-thumbs">
-                        <div class="gallery-thumb active"><img src="images/data-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
-                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt=""></div>
+                        <div class="gallery-thumb active"><img src="images/data-detail-hero.jpg" alt="" data-resource-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt="" data-resource-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt="" data-resource-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/data-detail-hero.jpg" alt="" data-resource-detail-image></div>
                     </div>
                 </div>
 
                 <div class="product-info">
                     <div class="product-title-row">
-                        <h1 class="product-title">金融行业A股上市公司股吧数据集</h1>
+                        <h1 class="product-title" data-resource-detail-title>金融行业A股上市公司股吧数据集</h1>
                         <div class="product-stats">
                             <span class="product-stat">浏览量：<b>1,056</b></span>
                             <span class="product-stat">购买量：<b>56</b></span>
@@ -226,14 +227,14 @@
                             </button>
                         </div>
                     </div>
-                    <p class="product-desc">金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</p>
+                    <p class="product-desc" data-resource-detail-description>金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</p>
                     <div class="product-meta-row">
-                        <span>数据资源持有方：<span class="company">智云****公司</span></span>
-                        <span>上架时间：<span class="val">2025-11-4 15:00:00</span></span>
+                        <span>数据资源持有方：<span class="company" data-resource-detail-owner>智云****公司</span></span>
+                        <span>上架时间：<span class="val" data-resource-detail-published>2025-11-4 15:00:00</span></span>
                     </div>
                     <div class="delivery-row">
                         <span class="delivery-label">交付方式：</span>
-                        <span class="delivery-tag">在线交付</span>
+                        <span class="delivery-tag" data-resource-detail-delivery>在线交付</span>
                     </div>
                     <div class="action-row">
                         <a href="data-apply.html" class="apply-btn">立即申请</a>
@@ -250,6 +251,7 @@
                 <div class="g-tabs">
                     <button class="g-tab active" data-tab="intro">资源介绍</button>
                     <button class="g-tab" data-tab="delivery">交付要求</button>
+                    <button class="g-tab" data-tab="sample">样例数据</button>
                 </div>
 
                 <!-- Tab 1: 资源介绍 -->
@@ -258,31 +260,31 @@
                     <table class="info-table">
                         <tr>
                             <td class="label-cell">资源名称：</td>
-                            <td class="value-cell">金融行业A股上市公司股吧数据集</td>
+                            <td class="value-cell" data-resource-detail-name>金融行业A股上市公司股吧数据集</td>
                             <td class="label-cell">资源所属行业分类：</td>
-                            <td class="value-cell">金融业</td>
+                            <td class="value-cell" data-resource-detail-industry>金融业</td>
                         </tr>
                         <tr>
                             <td class="label-cell">联系人：</td>
                             <td class="value-cell">张**</td>
                             <td class="label-cell">资源所有方：</td>
-                            <td class="value-cell">智云****公司</td>
+                            <td class="value-cell" data-resource-detail-owner>智云****公司</td>
                         </tr>
                         <tr>
                             <td class="label-cell">联系方式：</td>
                             <td class="value-cell">158****6321</td>
                             <td class="label-cell">资源类型：</td>
-                            <td class="value-cell">行业数据</td>
+                            <td class="value-cell" data-resource-detail-type>行业数据</td>
                         </tr>
                         <tr>
                             <td class="label-cell">资源格式：</td>
-                            <td class="value-cell">html</td>
+                            <td class="value-cell" data-resource-detail-format>html</td>
                             <td class="label-cell">数据来源：</td>
-                            <td class="value-cell">原始所有</td>
+                            <td class="value-cell" data-resource-detail-source>原始所有</td>
                         </tr>
                         <tr>
                             <td class="label-cell">资源描述：</td>
-                            <td class="desc-cell" colspan="3">金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</td>
+                            <td class="desc-cell" colspan="3" data-resource-detail-introduction>金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</td>
                         </tr>
                         <tr>
                             <td class="label-cell"></td>
@@ -301,7 +303,7 @@
                                 <th>数据长度</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody data-resource-detail-fields>
                             <tr><td>1</td><td>处罚记录ID</td><td>penalty_id</td><td>字符串型C</td><td>32</td></tr>
                             <tr><td>2</td><td>企业ID</td><td>enterprise_id</td><td>字符串型C</td><td>32</td></tr>
                             <tr><td>3</td><td>企业名称</td><td>enterprise_name</td><td>字符串型C</td><td>255</td></tr>
@@ -337,12 +339,15 @@
                         </tr>
                         <tr>
                             <td class="label-cell">传输方式：</td>
-                            <td class="value-cell">API传输</td>
+                            <td class="value-cell" data-resource-detail-transfer>API传输</td>
                             <td class="label-cell"></td>
                             <td class="value-cell"></td>
                         </tr>
                     </table>
                 </div>
+
+                <!-- Tab 3: 样例数据 -->
+                <div class="g-tab-panel" id="tabSample" data-sample-context="resource"></div>
             </div>
 
             <!-- Sidebar -->
@@ -355,7 +360,6 @@
         </div>
     </div>
 
-    <site-footer></site-footer>
 
     <!-- ── 资源咨询弹窗 ── -->
     <div class="consult-overlay" id="consultOverlay">
@@ -368,7 +372,7 @@
             <form id="consultForm" autocomplete="off">
                 <div class="consult-row">
                     <div class="consult-label">咨询对象</div>
-                    <div class="consult-val consult-static">金融行业A股上市公司股吧数据集</div>
+                    <div class="consult-val consult-static" data-resource-consult-target>金融行业A股上市公司股吧数据集</div>
                 </div>
                 <div class="consult-row">
                     <div class="consult-label">咨询内容</div>
@@ -409,7 +413,7 @@
         /* ── Tab 切换 ── */
         var tabs = document.querySelectorAll('.g-tab');
         var panels = document.querySelectorAll('.g-tab-panel');
-        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery' };
+        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery', sample: 'tabSample' };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {

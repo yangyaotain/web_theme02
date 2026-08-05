@@ -85,7 +85,6 @@
                     icon: 'register',
                     children: [
                         { key: 'resource-register', label: '资源登记管理', href: 'supplier-center.html?menu=resource-register' },
-                        { key: 'resource-register2', label: '资源登记管理2', href: 'supplier-center.html?menu=resource-register2' },
                         { key: 'product-register', label: '产品登记管理', href: 'supplier-center.html?menu=product-register' }
                     ]
                 },
@@ -149,8 +148,8 @@
         'resource-order': { title: '资源申请审批', desc: '处理需求方提交的数据资源申请、授权审批与交付确认。' },
         'product-order': { title: '产品订单管理', desc: '查看产品订单、购买申请、审批状态与交易进度。' },
         'service-order': { title: '服务订单管理', desc: '查看服务订单、服务申请、审批状态与交付进度。' },
-        'product-contract': { title: '产品合同管理', desc: '管理产品交易合同、合同签署、确认和履约相关事项。' },
-        'service-contract': { title: '服务合同管理', desc: '管理服务交易合同、签署确认和履约相关事项。' },
+        'product-contract': { title: '产品合同管理', desc: '查看产品交易合同、签署结果、归档存证信息，并对已签署归档的有效合同进行作废处理。' },
+        'service-contract': { title: '服务合同管理', desc: '查看服务交易合同、签署结果、归档存证信息，并对已签署归档的有效合同进行作废处理。' },
         'resource-register': { title: '资源登记管理', desc: '维护资源登记信息、资源目录资料和基础交付说明。' },
         'resource-register2': { title: '产品登记管理', desc: '维护数据产品登记信息、产品介绍、计费方式和交付资料。' },
         'product-register': { title: '产品登记管理', desc: '维护数据产品登记信息、产品介绍、计费方式和交付资料。' },

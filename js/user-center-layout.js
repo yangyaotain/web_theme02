@@ -22,6 +22,7 @@
         { key: 'business', label: '业务开通' },
         { key: 'account-info', label: '账号信息' },
         { key: 'account-security', label: '账号安全' },
+        { key: 'esign-service', label: '电子签章', href: 'user-center.html?menu=esign-service' },
         { key: 'member', label: '会员中心', href: 'user-center.html' }
     ];
 
@@ -43,7 +44,8 @@
     }
 
     function renderSidebar(sidebar) {
-        var activeKey = sidebar.dataset.active || 'member';
+        var requestedMenu = new URLSearchParams(window.location.search).get('menu');
+        var activeKey = requestedMenu === 'esign-service' ? requestedMenu : (sidebar.dataset.active || 'member');
         var topHtml = topItems.map(function (item) {
             return renderItem(item, activeKey, true, true);
         }).join('');

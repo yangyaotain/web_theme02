@@ -275,16 +275,6 @@
     color: #d85353;
 }
 
-.other-file-note {
-    padding: 12px 14px;
-    border-left: 3px solid var(--forest-green);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    background: var(--forest-green-50);
-    color: var(--text-secondary);
-    font-size: 13px;
-    line-height: 1.7;
-}
-
 @media (max-width: 900px) {
     .sample-overview {
         flex-direction: column;

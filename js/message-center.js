@@ -12,6 +12,12 @@
     var MESSAGE_PAGE = 'site-message.html';
 
     var messages = [
+        { id: 30, type: '待办消息', category: 'todo', status: 'unread', title: '产品合同【龙岗区交通运行拥堵指数数据产品交易合同】【运营方审核并签署】待处理', content: '该合同已由提供方和需求方完成审核签署，当前进度为2/3。请以供方角色进入产品订单管理完成运营方审核，并在新打开的法大大页面使用平台电子印章完成签署。', time: '2026-07-20 10:22:16', actionUrl: 'supplier-center.html?menu=product-order' },
+        { id: 31, type: '待办消息', category: 'todo', status: 'unread', title: '服务合同【企业信用画像合规查询服务合同】【提供方审核并签署】待处理', content: '该合同已创建法大大签约任务，三方不设置签署先后顺序。请进入服务订单管理审核合同内容，并在法大大页面完成提供方电子签署。', time: '2026-07-20 09:56:38', actionUrl: 'supplier-center.html?menu=service-order' },
+        { id: 32, type: '待办消息', category: 'todo', status: 'unread', title: '产品合同【商事主体活跃度监测数据产品交易合同】【继续签署】待处理', content: '当前审核已通过，但法大大签署尚未完成。请从产品订单管理点击继续签署，完成意愿认证和企业盖章。', time: '2026-07-20 09:48:12', actionUrl: 'supplier-center.html?menu=product-order' },
+        { id: 33, type: '系统消息', category: 'system', status: 'unread', title: '产品合同【产业链企业图谱查询产品交易合同】已完成任务关闭、归档和区块链存证', content: '三方电子签署已完成，法大大签约任务已关闭，最终合同已下载校验并完成平台本地归档及区块链存证。存证编号：BC-LG-20260716114833。', time: '2026-07-19 17:08:42', actionUrl: 'supplier-center.html?menu=product-contract' },
+        { id: 34, type: '系统消息', category: 'system', status: 'read', title: '服务合同【数字化转型顶层规划咨询服务合同】法大大签约任务已创建', content: '签约任务FDD-20260718149449已创建，供方、需方和运营方可独立完成签署；平台根据各方签署成功回调更新三方进度。', time: '2026-07-19 16:34:25', actionUrl: 'supplier-center.html?menu=service-order' },
+        { id: 35, type: '告警消息', category: 'alert', status: 'unread', title: '产品合同【企业诉求热点分析数据集采购合同】签署回调验签失败', content: '法大大签署回调验签失败，系统正在自动重试。请从产品订单管理关注当前签约任务状态；如持续失败，请联系平台技术人员处理。', time: '2026-07-19 15:42:06', actionUrl: 'supplier-center.html?menu=product-order' },
         { id: 20, type: '告警消息', category: 'alert', status: 'unread', title: '需方【龙岗智慧园区运营中心】的需求【园区企业画像数据服务需求】响应超时，当前需求已经发布25小时，没有供方响应，大于24小时，请及时处理。', content: '需方【龙岗智慧园区运营中心】的需求【园区企业画像数据服务需求】响应超时，当前需求已经发布25小时，没有供方响应，大于24小时，请及时处理。', time: '2026-06-30 10:30:00' },
         { id: 21, type: '告警消息', category: 'alert', status: 'unread', title: '订单【DD-20260630-0098】审批已超过配置时限，当前审批超时时间为：13小时，大于12小时，告警时间：2026-06-30 10:30。', content: '订单【DD-20260630-0098】审批已超过配置时限，当前审批超时时间为：13小时，大于12小时，告警时间：2026-06-30 10:30。', time: '2026-06-30 10:25:00' },
         { id: 22, type: '告警消息', category: 'alert', status: 'unread', title: '接口【企业画像查询接口】数据调用状态为：异常，等于异常，供方【深圳市龙岗数据服务有限公司】请尽快排查。', content: '接口【企业画像查询接口】数据调用状态为：异常，等于异常，供方【深圳市龙岗数据服务有限公司】请尽快排查。', time: '2026-06-30 10:20:00' },
@@ -561,6 +567,12 @@
                 }
 
                 if (rowButton.matches('[data-mc-process]')) {
+                    var processItem = findMessage(messageId);
+                    if (processItem && processItem.actionUrl) {
+                        window.location.href = processItem.actionUrl;
+                    } else {
+                        openDrawer(messageId);
+                    }
                     return;
                 }
             }

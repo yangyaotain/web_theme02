@@ -9,6 +9,7 @@
         close: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
         grid: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>',
         checkCircle: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>',
+        warning: '<svg viewBox="0 0 24 24"><path d="M12 3L2.8 20h18.4L12 3z"/><path d="M12 9v5"/><path d="M12 17h.01"/></svg>',
         layers: '<svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/></svg>',
         connector: '<svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9.2 9.2l5.6 5.6"/><path d="M14 7h3v3"/><path d="M10 17H7v-3"/></svg>'
     };
@@ -270,35 +271,33 @@
             filters: [
                 { type: 'search', placeholder: '输入需方/供方/合同编号/合同名称' },
                 { type: 'select', key: 'space', label: '所属空间', emptyLabel: '所属空间  请选择空间', options: ['全部', '流通利用平台'] },
-                { type: 'select', key: 'signMode', label: '签署方式', emptyLabel: '签署方式', options: ['全部', '线下签署', '线上签署'] },
-                { type: 'select', key: 'status', label: '合同状态', emptyLabel: '合同状态', options: ['全部', '待签署', '签署失败', '已签署', '作废中', '已作废'] },
+                { type: 'select', key: 'signMode', label: '签署方式', emptyLabel: '签署方式', options: ['全部', '电子签章', '线下签署'] },
+                { type: 'select', key: 'status', label: '合同状态', emptyLabel: '合同状态', options: ['全部', '签署中', '已签署待归档', '已签署并归档', '签署异常', '作废中', '已撤销', '已作废'] },
+                { type: 'select', key: 'archiveStatus', label: '归档状态', emptyLabel: '归档状态', options: ['全部', '未归档', '归档中', '归档成功', '归档失败'] },
+                { type: 'select', key: 'evidenceStatus', label: '存证状态', emptyLabel: '存证状态', options: ['全部', '未存证', '存证中', '存证成功', '存证失败', '不适用'] },
                 { type: 'date', placeholder: '签署时间  开始日期      -      结束日期' }
             ],
             columns: [
                 { key: 'name', label: '合同名称', primary: true },
                 { key: 'contractNo', label: '合同编号' },
-                { key: 'space', label: '所属空间' },
+                { key: 'businessType', label: '业务类型' },
                 { key: 'signMode', label: '签署方式' },
                 { key: 'buyer', label: '需方', ellipsis: true },
                 { key: 'seller', label: '供方', ellipsis: true },
                 { key: 'orderCount', label: '关联订单' },
-                { key: 'signedAt', label: '合同签署时间' },
-                { key: 'effectiveAt', label: '合同生效时间' },
-                { key: 'endAt', label: '合同结束时间' },
+                { key: 'signProgress', label: '三方签约进度' },
                 { key: 'status', label: '合同状态', status: true },
+                { key: 'archiveEvidence', label: '归档/存证' },
+                { key: 'updatedAt', label: '更新时间' },
                 { key: '__actions', label: '操作' }
             ],
             rows: [
-                { name: '合同金银20260604', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '深圳市星途科技发展有限公司', seller: '深圳市龙岗区政务数据运营有限公司', orderCount: '1', signedAt: '2026-06-04', effectiveAt: '2026-06-19', endAt: '2027-06-30', status: '已签署', actions: ['查看详情'] },
-                { name: '企业扶持政策合同', contractNo: 'HJU-0001', space: '流通利用平台', signMode: '线下签署', buyer: '测试需方机构', seller: '测试供方机构', orderCount: '1', signedAt: '2026-06-04', effectiveAt: '2026-06-04', endAt: '2027-06-30', status: '已签署', actions: ['查看详情'] },
-                { name: '龙岗企业经营画像数据集采购合同', contractNo: 'LGQYJYHXHTA', space: '流通利用平台', signMode: '线下签署', buyer: '营销机构测试', seller: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-04', status: '已签署', actions: ['查看详情'] },
-                { name: '龙岗企业经营画像数据集采购合同', contractNo: 'LGQYJYHXHTA', space: '流通利用平台', signMode: '线下签署', buyer: '营销机构测试', seller: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-03', status: '已签署', actions: ['查看详情'] },
-                { name: '1', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-29', status: '已签署', actions: ['查看详情'] },
-                { name: '6', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-29', status: '已签署', actions: ['查看详情'] },
-                { name: '4', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-30', status: '已签署', actions: ['查看详情'] },
-                { name: '6', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-30', status: '已签署', actions: ['查看详情'] },
-                { name: '4', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-23', status: '已签署', actions: ['查看详情'] },
-                { name: '4', contractNo: '--', space: '流通利用平台', signMode: '线下签署', buyer: '中节能铁汉生态环境股份有限公司', seller: '深圳市龙岗远望软件技术有限公司', orderCount: '1', signedAt: '2026-06-01', effectiveAt: '2026-06-01', endAt: '2026-06-30', status: '已签署', actions: ['查看详情'] }
+                { name: '龙岗区交通运行拥堵指数数据产品交易合同', contractNo: 'LG-CP-20260718-119048', businessType: '产品合同', space: '流通利用平台', signMode: '电子签章', buyer: '龙岗智慧交通科技有限公司', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071717251106400000101149048', signedAt: '--', effectiveAt: '2026-07-18', endAt: '2027-07-17', status: '签署中', currentNode: '当前运营方待审核并签署', signProgress: '2/3 已签署', archiveStatus: '未归档', evidenceStatus: '未存证', archiveEvidence: '未归档｜未存证', updatedAt: '2026-07-20 10:22:16', initiatorRole: '提供方', source: '法大大模板生成', templateName: '数据产品三方交易合同（V3.2）', taskId: 'FDD-20260718119048', taskStatus: '签约任务进行中', deadline: '2026-07-31', providerStatus: '已审核并签署', buyerStatus: '已审核并签署', operatorStatus: '待审核并签署', latestException: '--', actions: ['查看详情'] },
+                { name: '数字化转型顶层规划咨询服务合同', contractNo: 'LG-FW-20260719-114949', businessType: '服务合同', space: '流通利用平台', signMode: '电子签章', buyer: '龙岗数智产业研究院有限公司', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071817245104300000101149449', signedAt: '--', effectiveAt: '2026-07-19', endAt: '2026-10-19', status: '签署中', currentNode: '当前需求方待审核并签署', signProgress: '1/3 已签署', archiveStatus: '未归档', evidenceStatus: '未存证', archiveEvidence: '未归档｜未存证', updatedAt: '2026-07-19 11:34:25', initiatorRole: '提供方', source: '上传待签PDF', templateName: '--', taskId: 'FDD-20260719114949', taskStatus: '签约任务进行中', deadline: '2026-07-29', providerStatus: '已签署', buyerStatus: '待审核并签署', operatorStatus: '待审核并签署', latestException: '--', actions: ['查看详情'] },
+                { name: '产业链企业图谱查询产品交易合同', contractNo: 'LG-CP-20260716-114833', businessType: '产品合同', space: '流通利用平台', signMode: '电子签章', buyer: '深圳龙岗科创金融服务有限公司', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071610053204300000101148331', signedAt: '2026-07-16', effectiveAt: '2026-07-16', endAt: '2027-07-15', status: '已签署并归档', currentNode: '签署完成', signProgress: '3/3 已签署', archiveStatus: '归档成功', evidenceStatus: '存证成功', archiveEvidence: '归档成功｜存证成功', updatedAt: '2026-07-17 09:08:42', initiatorRole: '需求方', source: '法大大模板生成', templateName: '数据产品三方交易合同（V3.2）', taskId: 'FDD-20260716114833', taskStatus: '签约任务已完成', deadline: '2026-07-26', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', evidenceNo: 'BC-LG-20260716114833', latestException: '--', actions: ['查看详情'] },
+                { name: '数据治理成熟度评估服务合同', contractNo: 'LG-FW-20260715-113908', businessType: '服务合同', space: '流通利用平台', signMode: '电子签章', buyer: '龙岗区数据应用创新中心', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071510364507600000101139088', signedAt: '2026-07-15', effectiveAt: '2026-07-15', endAt: '2026-11-15', status: '已签署待归档', currentNode: '三方签署完成，正在归档', signProgress: '3/3 已签署', archiveStatus: '归档中', evidenceStatus: '未存证', archiveEvidence: '归档中｜未存证', updatedAt: '2026-07-15 16:28:14', initiatorRole: '需求方', source: '法大大模板生成', templateName: '数据服务三方交易合同（V2.6）', taskId: 'FDD-20260715113908', taskStatus: '签约任务已完成', deadline: '2026-07-25', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', latestException: '--', actions: ['查看详情'] },
+                { name: '企业诉求热点分析数据集采购合同', contractNo: 'LG-CP-20260516-118209', businessType: '产品合同', space: '流通利用平台', signMode: '电子签章', buyer: '深圳市政务服务数据中心', seller: '龙岗区企业服务集团有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026051515534202500000101148209', signedAt: '--', effectiveAt: '2026-05-16', endAt: '2026-11-15', status: '签署异常', currentNode: '签署回调异常', signProgress: '2/3 已签署', archiveStatus: '未归档', evidenceStatus: '未存证', archiveEvidence: '未归档｜未存证', updatedAt: '2026-05-16 17:42:06', initiatorRole: '提供方', source: '上传待签PDF', templateName: '--', taskId: 'FDD-20260516118209', taskStatus: '回调验签失败', deadline: '2026-05-26', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '待审核并签署', latestException: '法大大签署回调验签失败，系统等待自动重试', actions: ['查看详情'] },
+                { name: '企业扶持政策合同', contractNo: 'HJU-0001', businessType: '产品合同', space: '流通利用平台', signMode: '线下签署', buyer: '测试需方机构', seller: '测试供方机构', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026060419400437100000101148221', signedAt: '2026-06-04', effectiveAt: '2026-06-04', endAt: '2027-06-30', status: '已签署并归档', currentNode: '签署完成', signProgress: '3/3 已签署', archiveStatus: '归档成功', evidenceStatus: '不适用', archiveEvidence: '归档成功｜不适用', updatedAt: '2026-06-04 19:48:50', initiatorRole: '提供方', source: '线下合同补录', templateName: '--', taskId: '--', taskStatus: '不适用', deadline: '--', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', latestException: '--', actions: ['查看详情'] }
             ]
         },
         deliveryTask: {
@@ -1047,37 +1046,71 @@
     }
 
     function renderContractDetail(row) {
-        var status = '<span class="monitor-flow-status success"><i></i>' + escapeHTML(row.status || '已签署') + '</span>';
-        var flowId = row.flowId || '6d4ccb6a5521459bb05f48ae4417b03a';
+        var status = '<span class="monitor-flow-status ' + statusTone(row.status) + '"><i></i>' + escapeHTML(row.status || '已签署') + '</span>';
+        var flowId = row.flowId || ('CF-' + String(row.contractNo || '').replace(/[^0-9]/g, '').slice(-14));
+        var isElectronic = row.signMode === '电子签章';
+        var allSigned = row.signProgress === '3/3 已签署';
+        var taskClosed = isElectronic && allSigned && row.status !== '签署异常';
+        var displayTaskStatus = taskClosed ? '签约任务已关闭' : (row.taskStatus || '--');
+        var finalFileReady = !isElectronic || taskClosed;
+        var fddEvidenceStatus = isElectronic ? (taskClosed ? '证据已固化' : '未生成') : '不适用';
+        var fddEvidenceNo = taskClosed ? ('FDD-EV-' + String(row.contractNo || '').replace(/[^0-9]/g, '').slice(-12)) : '--';
+        function signed(value) { return /已签署|已审核并签署/.test(String(value || '')); }
+        var auditRows = [
+            { '处理节点': '签约任务创建', '处理方': row.initiatorRole || '提供方', '处理结果': '已完成', '处理时间': row.signedAt === '--' ? row.updatedAt : row.signedAt + ' 09:18:26', '审批意见': '--' },
+            { '处理节点': '提供方审核并签署', '处理方': '提供方', '处理结果': row.providerStatus || '待处理', '处理时间': signed(row.providerStatus) ? row.updatedAt : '--', '审批意见': '--' },
+            { '处理节点': '需求方审核并签署', '处理方': '需求方', '处理结果': row.buyerStatus || '待处理', '处理时间': signed(row.buyerStatus) ? row.updatedAt : '--', '审批意见': '--' },
+            { '处理节点': '运营方审核并签署', '处理方': '平台运营方', '处理结果': row.operatorStatus || '待处理', '处理时间': signed(row.operatorStatus) ? row.updatedAt : '--', '审批意见': '--' }
+        ];
+        var signerRows = [
+            { '主体类型': '法人', '签署方角色': '提供方', '签署方名称': row.seller, '认证授权': '已认证·已授权', '审核/签署状态': row.providerStatus || '--', '签署时间': row.providerStatus === '已签署' || row.providerStatus === '已审核并签署' ? row.updatedAt : '--' },
+            { '主体类型': '法人', '签署方角色': '需求方', '签署方名称': row.buyer, '认证授权': '已认证·已授权', '审核/签署状态': row.buyerStatus || '--', '签署时间': row.buyerStatus === '已签署' || row.buyerStatus === '已审核并签署' ? row.updatedAt : '--' },
+            { '主体类型': '法人', '签署方角色': '平台运营方', '签署方名称': row.operator || '深圳市龙岗区数据要素交易服务有限公司', '认证授权': '已认证·印章可用', '审核/签署状态': row.operatorStatus || '--', '签署时间': signed(row.operatorStatus) ? row.updatedAt : '--' }
+        ];
         return {
             title: '合同详情',
-            size: 'narrow',
+            size: 'wide',
             body: '<section class="contract-detail-section">'
                 + '<h2 class="contract-detail-heading">合同基本信息 ' + status + '</h2>'
                 + '<div class="contract-info-grid">'
                 + detailField('合同名称', row.name)
                 + detailField('合同编号', row.contractNo)
+                + detailField('业务类型', row.businessType)
+                + detailField('关联订单', row.orderNo || '--')
                 + detailField('合同生效时间', row.effectiveAt)
                 + detailField('合同失效时间', row.endAt)
                 + detailField('合同签署方式', row.signMode)
                 + detailField('签署时间', row.signedAt)
-                + detailField('合同来源', row.source || '--')
-                + detailField('备注', row.remark || '--')
+                + detailField('关联发起方', row.initiatorRole || '--')
+                + detailField('当前处理节点', row.currentNode || '--')
                 + '</div>'
+                + '</section>'
+                + (isElectronic ? '<section class="contract-detail-section"><h2 class="contract-detail-heading">电子签约信息</h2><div class="monitor-contract-summary-grid"><div><span>制文方式</span><strong>' + escapeHTML(row.source || '--') + '</strong><small>' + escapeHTML(row.templateName || '--') + '</small></div><div><span>法大大任务</span><strong>' + escapeHTML(displayTaskStatus) + '</strong><small>' + escapeHTML(row.taskId || '--') + '</small></div><div><span>三方签署进度</span><strong>' + escapeHTML(row.signProgress || '--') + '</strong><small>' + escapeHTML(row.currentNode || '--') + '</small></div><div><span>任务关闭</span><strong>' + (taskClosed ? '关闭成功' : '未关闭') + '</strong><small>三方签署完成后关闭任务</small></div><div><span>最终签署文件</span><strong>' + (finalFileReady ? '下载并校验成功' : '未生成') + '</strong><small>以平台本地归档文件为准</small></div><div><span>签署截止时间</span><strong>' + escapeHTML(row.deadline || '--') + '</strong><small>三方不设置先后顺序，可独立签署</small></div></div>' + (row.latestException && row.latestException !== '--' ? '<div class="monitor-contract-exception">' + ICONS.warning + '<span>' + escapeHTML(row.latestException) + '</span></div>' : '') + '</section>' : '')
+                + '<section class="contract-detail-section">'
+                + '<h2 class="contract-detail-heading">关联审核记录</h2>'
+                + detailTable(['处理节点', '处理方', '处理结果', '处理时间', '审批意见'], auditRows)
                 + '</section>'
                 + '<section class="contract-detail-section">'
                 + '<h2 class="contract-detail-heading">合同文件</h2>'
-                + '<div class="contract-file-row"><span>数据汇聚.docx</span><a class="monitor-table-action" href="javascript:void(0)">预览</a><a class="monitor-table-action" href="javascript:void(0)">下载</a></div>'
+                + '<div class="monitor-contract-file-list"><div class="contract-file-row"><span><b>原始合同</b>' + escapeHTML(row.contractNo || '合同') + '-待签文件.pdf</span><a class="monitor-table-action" href="javascript:void(0)">预览</a><a class="monitor-table-action" href="javascript:void(0)">下载</a></div>'
+                + (finalFileReady ? '<div class="contract-file-row"><span><b>最终合同</b>' + escapeHTML(row.contractNo || '合同') + '-三方签署完成.pdf</span><a class="monitor-table-action" href="javascript:void(0)">预览</a><a class="monitor-table-action" href="javascript:void(0)">下载</a></div>' : '<div class="monitor-contract-file-pending">等待三方签署完成、关闭任务并下载最终合同</div>') + '</div>'
                 + '</section>'
                 + '<section class="contract-detail-section">'
                 + '<h2 class="contract-detail-heading">签署主体</h2>'
-                + detailTable(
-                    ['主体类型', '签署方角色', '签署方名称'],
-                    [
-                        { '主体类型': '法人', '签署方角色': '提供方', '签署方名称': row.seller },
-                        { '主体类型': '法人', '签署方角色': '需求方', '签署方名称': row.buyer }
-                    ]
-                )
+                + detailTable(['主体类型', '签署方角色', '签署方名称', '认证授权', '审核/签署状态', '签署时间'], signerRows)
+                + '</section>'
+                + '<section class="contract-detail-section">'
+                + '<h2 class="contract-detail-heading">本地归档与存证</h2>'
+                + '<div class="contract-info-grid">'
+                + detailField('本地归档状态', row.archiveStatus || '--')
+                + detailField('归档时间', row.archiveStatus === '归档成功' ? row.updatedAt : '--')
+                + detailField('归档文件哈希', row.archiveStatus === '归档成功' ? 'SHA256: 7f3c9a8d...e102' : '--')
+                + detailField('法大大司法存证', fddEvidenceStatus)
+                + detailField('法大大存证编号', fddEvidenceNo)
+                + detailField('平台区块链存证', row.evidenceStatus || '--')
+                + detailField('平台存证编号', row.evidenceNo || '--')
+                + detailField('最后同步时间', row.updatedAt || '--')
+                + '</div>'
                 + '</section>'
                 + '<section class="contract-detail-section">'
                 + '<h2 class="contract-detail-heading">合同流程</h2>'
@@ -1085,40 +1118,60 @@
                 + '<thead><tr><th>合同流程ID</th><th>处理类型</th><th>处理方式</th><th>发起时间</th><th>发起方</th><th>流程状态</th><th>操作</th></tr></thead>'
                 + '<tbody><tr>'
                 + '<td><div class="monitor-ellipsis" title="' + escapeHTML(flowId) + '">' + escapeHTML(flowId.slice(0, 10)) + '...</div></td>'
-                + '<td>合同签署</td><td>' + escapeHTML(row.signMode) + '</td><td>' + escapeHTML(row.signedAt) + ' ...</td><td>提供方</td>'
-                + '<td><span class="monitor-flow-status success"><i></i>' + escapeHTML(row.status || '已签署') + '</span></td>'
-                + '<td><a class="monitor-table-action" href="javascript:void(0)" data-contract-flow-detail>详情</a></td>'
+                + '<td>合同签署</td><td>' + escapeHTML(row.signMode) + '</td><td>' + escapeHTML(row.updatedAt || row.signedAt) + '</td><td>' + escapeHTML(row.initiatorRole || '提供方') + '</td>'
+                + '<td><span class="monitor-flow-status ' + statusTone(row.status) + '"><i></i>' + escapeHTML(row.status || '已签署') + '</span></td>'
+                + '<td><a class="monitor-table-action" href="javascript:void(0)" data-contract-flow-detail data-contract-row="' + escapeHTML(row.contractNo || '') + '">详情</a></td>'
                 + '</tr></tbody>'
                 + '</table>'
                 + '</section>'
         };
     }
 
-    function renderContractFlowModal() {
+    function renderContractFlowModal(row) {
+        row = row || {};
+        var flowId = row.flowId || ('CF-' + String(row.contractNo || '').replace(/[^0-9]/g, '').slice(-14));
+        var isElectronic = row.signMode === '电子签章';
+        var isCompleted = row.status === '已签署并归档';
+        function flowSigned(value) { return /已签署|已审核并签署/.test(String(value || '')); }
+        function flowResult(value) { return flowSigned(value) ? '审核通过并完成签署' : (value || '待处理'); }
+        var logs = isElectronic ? [
+            { '流程节点': '签约任务创建', '操作人角色': row.initiatorRole || '提供方', '操作结果': '签约任务已创建，三方可独立签署', '操作时间': row.updatedAt || row.signedAt || '--', '操作意见': '--' },
+            { '流程节点': '提供方审核并签署', '操作人角色': '提供方', '操作结果': flowResult(row.providerStatus), '操作时间': flowSigned(row.providerStatus) ? row.updatedAt : '--', '操作意见': '--' },
+            { '流程节点': '需求方审核并签署', '操作人角色': '需求方', '操作结果': flowResult(row.buyerStatus), '操作时间': flowSigned(row.buyerStatus) ? row.updatedAt : '--', '操作意见': '--' },
+            { '流程节点': '运营方审核并签署', '操作人角色': '平台运营方', '操作结果': flowResult(row.operatorStatus), '操作时间': flowSigned(row.operatorStatus) ? row.updatedAt : '--', '操作意见': '--' }
+        ] : [
+            { '流程节点': '关联合同', '操作人角色': row.initiatorRole || '提供方', '操作结果': '已上传线下签署合同', '操作时间': row.updatedAt || row.signedAt || '--', '操作意见': '--' }
+        ];
+        if (row.signProgress === '3/3 已签署') {
+            logs.unshift({ '流程节点': '本地归档与区块链存证', '操作人角色': '系统', '操作结果': (row.archiveStatus || '--') + ' / ' + (row.evidenceStatus || '--'), '操作时间': row.updatedAt || '--', '操作意见': row.evidenceNo || '--' });
+        }
+        if (row.latestException && row.latestException !== '--') {
+            logs.unshift({ '流程节点': '法大大回调处理', '操作人角色': '系统', '操作结果': '处理异常', '操作时间': row.updatedAt || '--', '操作意见': row.latestException });
+        }
         return {
             title: '流程详情',
             body: '<section class="contract-modal-section">'
                 + '<h3>流程信息</h3>'
                 + '<div class="contract-modal-grid">'
-                + detailField('流程ID', '6d4ccb6a5521459bb05f48ae4417b03a')
+                + detailField('流程ID', flowId || '--')
                 + detailField('处理类型', '合同签署')
-                + detailField('处理方式', '线下签署')
-                + detailField('流程状态', '已签署')
-                + detailField('当前节点', '已完成签署')
-                + detailField('发起时间', '2026-06-04')
-                + detailField('签署截止时间', '--')
-                + detailField('结束时间', '2026-06-04')
-                + detailField('外部流程ID', '--')
+                + detailField('处理方式', row.signMode || '--')
+                + detailField('流程状态', row.status || '--')
+                + detailField('当前节点', row.currentNode || '--')
+                + detailField('发起时间', row.effectiveAt || '--')
+                + detailField('签署截止时间', row.deadline || '--')
+                + detailField('结束时间', isCompleted ? (row.updatedAt || '--') : '--')
+                + detailField('法大大签约任务ID', isElectronic ? (row.taskId || '--') : '不适用')
+                + detailField('法大大任务状态', isElectronic ? (row.taskStatus || '--') : '不适用')
+                + detailField('三方签署进度', row.signProgress || '--')
                 + '</div>'
+                + (row.latestException && row.latestException !== '--' ? '<div class="monitor-contract-exception">' + ICONS.warning + '<span>' + escapeHTML(row.latestException) + '</span></div>' : '')
                 + '</section>'
                 + '<section class="contract-modal-section">'
                 + '<h3>流程日志</h3>'
                 + detailTable(
                     ['流程节点', '操作人角色', '操作结果', '操作时间', '操作意见'],
-                    [
-                        { '流程节点': '已完成签署', '操作人角色': '需方', '操作结果': '通过（线下签署）', '操作时间': '2026-06-04 19:48:50', '操作意见': '--' },
-                        { '流程节点': '发起签署', '操作人角色': '供方', '操作结果': '已发起', '操作时间': '2026-06-04 19:47:57', '操作意见': '--' }
-                    ]
+                    logs
                 )
                 + '</section>'
         };
@@ -1429,6 +1482,12 @@
         }
         if (page.activeTitle === '交易合同监测' && column.key === 'orderCount') {
             return '<span class="monitor-version-link">' + escapeHTML(value) + '</span>';
+        }
+        if (page.activeTitle === '交易合同监测' && column.key === 'signProgress') {
+            return '<div class="monitor-contract-progress"><strong>' + escapeHTML(value) + '</strong><small>' + escapeHTML(row.currentNode || '--') + '</small></div>';
+        }
+        if (page.activeTitle === '交易合同监测' && column.key === 'archiveEvidence') {
+            return '<div class="monitor-contract-archive"><span>' + escapeHTML(row.archiveStatus || '--') + '</span><small>' + escapeHTML(row.evidenceStatus || '--') + '</small></div>';
         }
         if (page.activeTitle === '交易账单监测' && column.key === 'orderNo') {
             return '<span class="monitor-version-link"><span class="monitor-ellipsis">' + escapeHTML(value) + '</span></span>';
@@ -1769,7 +1828,9 @@
             var contractFlowDetail = event.target.closest('[data-contract-flow-detail]');
             if (contractFlowDetail) {
                 event.preventDefault();
-                renderModal(root, renderContractFlowModal());
+                var contractNo = contractFlowDetail.getAttribute('data-contract-row');
+                var contractRow = page.rows.find(function (item) { return item.contractNo === contractNo; });
+                renderModal(root, renderContractFlowModal(contractRow));
                 return;
             }
 

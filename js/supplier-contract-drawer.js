@@ -11,6 +11,15 @@
     var demanderCell;
     var operatorSignerRow;
     var signedAtInput;
+    var signedAtRow;
+    var signingDeadlineInput;
+    var signingDeadlineRow;
+    var electronicPanel;
+    var pendingPdfInput;
+    var pendingPdfButton;
+    var pendingPdfHint;
+    var uploadLabel;
+    var submitButtonText;
     var startsAtInput;
     var endsAtInput;
     var remarkInput;
@@ -20,18 +29,99 @@
     var uploadHint;
     var feedback;
     var paymentTerms;
+    var esignCapability;
+    var providerReadyCell;
+    var demanderReadyCell;
+    var operatorReadyCell;
     var paymentMode = 'installment';
     var paymentStages = [];
     var paymentStageSeed = 0;
     var orderServiceFeeMode = 'P';
     var orderServiceFeeValue = 3;
     var selectedFiles = [];
+    var pendingPdfFile = null;
     var activeOptions = {};
     var lastFocusedElement;
     var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
 
+    function isElectronic() {
+        return Boolean(form && form.elements.supplierContractSigning && form.elements.supplierContractSigning.value === 'electronic');
+    }
+
+    function getDocumentMode() {
+        return form && form.elements.supplierContractDocumentMode
+            ? form.elements.supplierContractDocumentMode.value
+            : 'template';
+    }
+
     function isSelfOperated() {
         return String(activeOptions.provider || '') === PLATFORM_OPERATOR_NAME;
+    }
+
+    function getCenterRole() {
+        var centerPanel = document.querySelector('[data-consult-panel]');
+        return centerPanel && centerPanel.dataset.role === 'buyer' ? '需求方' : '提供方';
+    }
+
+    function getESignReadiness() {
+        if (activeOptions.esignUnavailableDemo) {
+            return {
+                ready: false,
+                label: '未开通',
+                title: '当前企业电子签章服务未开通',
+                description: '请前往用户中心查看电子签章状态，并进入法大大完成企业认证及签章授权。'
+            };
+        }
+        if (activeOptions.demoMode) {
+            return {
+                ready: true,
+                label: '已开通',
+                title: '当前企业电子签章能力已就绪',
+                description: '法大大企业实名认证已通过，电子签章服务已开通；具体签署仍以可用印章及当前授权为准。'
+            };
+        }
+        if (!window.ESignServiceState) {
+            return { ready: false, label: '状态未知', title: '暂时无法校验电子签章能力', description: '请前往用户中心检查电子签章服务状态。' };
+        }
+        var state = window.ESignServiceState.get();
+        var meta = window.ESignServiceState.getMeta(state);
+        return {
+            ready: window.ESignServiceState.isReady(state),
+            label: meta.label,
+            title: meta.title,
+            description: meta.description
+        };
+    }
+
+    function updateESignReadiness() {
+        if (!esignCapability) return;
+        var readiness = getESignReadiness();
+        var centerRole = getCenterRole();
+        esignCapability.hidden = readiness.ready;
+        esignCapability.classList.toggle('is-ready', readiness.ready);
+        esignCapability.classList.toggle('is-blocked', !readiness.ready);
+        var icon = esignCapability.querySelector('[data-esign-capability-icon]');
+        var title = esignCapability.querySelector('[data-esign-capability-title]');
+        var description = esignCapability.querySelector('[data-esign-capability-description]');
+        var link = esignCapability.querySelector('[data-esign-capability-link]');
+        if (icon) icon.textContent = readiness.ready ? 'verified' : 'gpp_maybe';
+        if (title) title.textContent = readiness.title;
+        if (description) description.textContent = readiness.description;
+        if (link) link.hidden = readiness.ready;
+
+        function setReadyCell(cell, isCurrentRole) {
+            if (!cell) return;
+            cell.textContent = isCurrentRole
+                ? (readiness.ready ? '服务已开通' : readiness.label)
+                : '签约能力已就绪';
+            cell.classList.toggle('is-warning', isCurrentRole && !readiness.ready);
+        }
+        setReadyCell(providerReadyCell, centerRole === '提供方');
+        setReadyCell(demanderReadyCell, centerRole === '需求方');
+        if (operatorReadyCell) {
+            operatorReadyCell.textContent = '签约能力已就绪';
+            operatorReadyCell.classList.remove('is-warning');
+        }
     }
 
     function formatDate(date) {
@@ -215,9 +305,9 @@
     }
 
     function updateDateMinimums() {
-        startsAtInput.min = signedAtInput.value || '';
+        startsAtInput.min = isElectronic() ? '' : (signedAtInput.value || '');
 
-        if (signedAtInput.value && startsAtInput.value && startsAtInput.value < signedAtInput.value) {
+        if (!isElectronic() && signedAtInput.value && startsAtInput.value && startsAtInput.value < signedAtInput.value) {
             startsAtInput.value = signedAtInput.value;
         }
         endsAtInput.min = startsAtInput.value || signedAtInput.value || '';
@@ -238,6 +328,7 @@
             number: 'LG-' + typeCode + '-' + baseDate.replace(/-/g, '') + '-' + orderSuffix,
             name: (activeOptions.itemName || '数据要素交易') + '交易合同',
             signedAt: signedDate,
+            signingDeadline: addDays(baseDate, 10),
             startsAt: startDate,
             endsAt: addYears(startDate, 1)
         };
@@ -247,6 +338,7 @@
         contractNumberInput.value = preset.number;
         contractNameInput.value = preset.name;
         signedAtInput.value = preset.signedAt;
+        if (signingDeadlineInput) signingDeadlineInput.value = preset.signingDeadline || addDays(preset.signedAt, 10);
         startsAtInput.value = preset.startsAt;
         endsAtInput.value = preset.endsAt;
         contractNumberInput.readOnly = readOnly;
@@ -263,13 +355,28 @@
     }
 
     function updateUploadState() {
+        var electronic = isElectronic();
+        if (uploadButton) uploadButton.disabled = form.elements.supplierContractRelation.value === 'existing';
+        if (uploadLabel) uploadLabel.firstChild.nodeValue = electronic ? '补充附件' : '合同文件';
+        if (fileInput) fileInput.accept = '.doc,.docx,.pdf,.png,.jpg,.jpeg';
         if (!selectedFiles.length) {
-            uploadHint.textContent = '最多上传10个附件，支持doc/docx/pdf/png/jpg/jpeg格式，单个文件不超过5M';
+            uploadHint.textContent = electronic
+                ? '选填，最多上传10个补充附件，单个文件不超过5M'
+                : '最多上传10个附件，支持doc/docx/pdf/png/jpg/jpeg格式，单个文件不超过5M';
             uploadHint.classList.remove('has-files');
             return;
         }
         uploadHint.textContent = '已选择' + selectedFiles.length + '个文件：' + selectedFiles.map(function (file) { return file.name; }).join('、');
         uploadHint.classList.add('has-files');
+    }
+
+    function updatePendingPdfState() {
+        if (!pendingPdfHint || !pendingPdfButton) return;
+        pendingPdfButton.disabled = form.elements.supplierContractRelation.value === 'existing';
+        pendingPdfHint.textContent = pendingPdfFile
+            ? '已选择：' + pendingPdfFile.name
+            : '仅支持1个未签署的PDF文件，单个文件不超过20M';
+        pendingPdfHint.classList.toggle('has-files', Boolean(pendingPdfFile));
     }
 
     function validateSelectedFiles(files) {
@@ -289,11 +396,21 @@
         return '';
     }
 
+    function validatePendingPdf(file) {
+        if (!file) return '';
+        var extension = String(file.name || '').split('.').pop().toLowerCase();
+        if (extension !== 'pdf') return '待签合同仅支持PDF格式，请重新选择。';
+        if (file.size > 20 * 1024 * 1024) return '待签合同PDF不能超过20M，请重新选择。';
+        return '';
+    }
+
     function applyRelationMode(value) {
         var existing = value === 'existing';
         clearInvalidState();
         selectedFiles = [];
+        pendingPdfFile = null;
         fileInput.value = '';
+        if (pendingPdfInput) pendingPdfInput.value = '';
         uploadButton.disabled = existing;
 
         if (existing) {
@@ -301,21 +418,54 @@
                 number: 'HJU-0001',
                 name: '企业扶持政策合同',
                 signedAt: '2026-06-04',
+                signingDeadline: '2026-06-14',
                 startsAt: '2026-06-04',
                 endsAt: '2027-06-30'
             }, true);
-            uploadHint.textContent = '已关联合同文件：企业扶持政策合同.pdf';
-            uploadHint.classList.add('has-files');
         } else {
             applyContractPreset(buildNewContractPreset(), false);
             updateUploadState();
         }
+        updateSigningMode();
+        if (existing) {
+            uploadHint.textContent = '已关联合同文件：企业扶持政策合同.pdf';
+            uploadHint.classList.add('has-files');
+        }
+        updatePendingPdfState();
         renderPaymentTerms();
+    }
+
+    function updateSigningMode() {
+        var electronic = isElectronic();
+        var templateRow = drawer.querySelector('[data-supplier-contract-template-row]');
+        var pdfRow = drawer.querySelector('[data-supplier-contract-pdf-row]');
+        if (electronicPanel) electronicPanel.hidden = !electronic;
+        if (templateRow) templateRow.hidden = !electronic || getDocumentMode() !== 'template';
+        if (pdfRow) pdfRow.hidden = !electronic || getDocumentMode() !== 'pdf';
+        if (signedAtRow) signedAtRow.hidden = electronic;
+        if (signingDeadlineRow) signingDeadlineRow.hidden = !electronic;
+        if (operatorSignerRow) operatorSignerRow.hidden = false;
+        if (submitButtonText) submitButtonText.textContent = electronic ? '创建任务并前往签署' : '确定';
+        if (remarkInput && !remarkInput.dataset.userEdited) {
+            remarkInput.value = electronic
+                ? '本合同采用法大大电子签章，供方、需方和运营方不设置先后顺序，可独立完成审核与签署。'
+                : '本合同用于当前订单的线下签署及履约确认。';
+            remarkCount.textContent = String(remarkInput.value.length);
+        }
+        selectedFiles = [];
+        pendingPdfFile = null;
+        if (fileInput) fileInput.value = '';
+        if (pendingPdfInput) pendingPdfInput.value = '';
+        updateUploadState();
+        updatePendingPdfState();
+        updateESignReadiness();
+        updateDateMinimums();
     }
 
     function validateForm() {
         clearInvalidState();
         var relation = form.elements.supplierContractRelation.value;
+        var electronic = isElectronic();
         var invalidElement = null;
         var message = '';
 
@@ -323,13 +473,18 @@
             contractNameInput.classList.add('is-invalid');
             invalidElement = contractNameInput;
             message = '请输入合同名称。';
-        } else if (!signedAtInput.value || !startsAtInput.value || !endsAtInput.value) {
-            [signedAtInput, startsAtInput, endsAtInput].forEach(function (input) {
+        } else if (electronic && !getESignReadiness().ready) {
+            invalidElement = esignCapability.querySelector('[data-esign-capability-link]');
+            message = '当前企业电子签章服务未开通，请先前往用户中心查看状态并进入法大大完成企业认证及签章授权。';
+        } else if ((!electronic && !signedAtInput.value) || (electronic && !signingDeadlineInput.value) || !startsAtInput.value || !endsAtInput.value) {
+            [electronic ? signingDeadlineInput : signedAtInput, startsAtInput, endsAtInput].forEach(function (input) {
                 if (!input.value) input.parentElement.classList.add('is-invalid');
             });
-            invalidElement = !signedAtInput.value ? signedAtInput : (!startsAtInput.value ? startsAtInput : endsAtInput);
-            message = '请选择完整的合同签署、生效和结束日期。';
-        } else if (startsAtInput.value < signedAtInput.value) {
+            invalidElement = electronic && !signingDeadlineInput.value
+                ? signingDeadlineInput
+                : (!electronic && !signedAtInput.value ? signedAtInput : (!startsAtInput.value ? startsAtInput : endsAtInput));
+            message = electronic ? '请选择签署截止、生效和结束日期。' : '请选择完整的合同签署、生效和结束日期。';
+        } else if (!electronic && startsAtInput.value < signedAtInput.value) {
             startsAtInput.parentElement.classList.add('is-invalid');
             invalidElement = startsAtInput;
             message = '合同生效时间不能早于合同签署时间。';
@@ -355,7 +510,11 @@
             if (fixedFeeInput) fixedFeeInput.classList.add('is-invalid');
             invalidElement = fixedFeeInput;
             message = '平台服务费固定金额不能大于任一期付款金额。';
-        } else if (relation === 'new' && !selectedFiles.length) {
+        } else if (relation === 'new' && electronic && getDocumentMode() === 'pdf' && !pendingPdfFile) {
+            pendingPdfButton.classList.add('is-invalid');
+            invalidElement = pendingPdfButton;
+            message = '请上传未签署的合同PDF。';
+        } else if (relation === 'new' && !electronic && !selectedFiles.length) {
             uploadButton.classList.add('is-invalid');
             invalidElement = uploadButton;
             message = '请上传已签署的合同文件。';
@@ -374,9 +533,15 @@
             orderNo: orderInput.value,
             relation: form.elements.supplierContractRelation.value,
             signing: form.elements.supplierContractSigning.value,
+            documentMode: isElectronic() ? getDocumentMode() : 'offline-file',
+            templateId: isElectronic() && getDocumentMode() === 'template' ? form.elements.supplierContractTemplate.value : '',
+            templateName: isElectronic() && getDocumentMode() === 'template'
+                ? form.elements.supplierContractTemplate.options[form.elements.supplierContractTemplate.selectedIndex].textContent
+                : '',
             contractNo: contractNumberInput.value.trim(),
             contractName: contractNameInput.value.trim(),
             signedAt: signedAtInput.value,
+            signingDeadline: isElectronic() ? signingDeadlineInput.value : '',
             startsAt: startsAtInput.value,
             endsAt: endsAtInput.value,
             contractAmount: parseMoney(activeOptions.amount),
@@ -394,6 +559,7 @@
                 };
             }),
             files: selectedFiles.map(function (file) { return file.name; }),
+            pendingPdfFile: isElectronic() && getDocumentMode() === 'pdf' && pendingPdfFile ? pendingPdfFile.name : '',
             remark: remarkInput.value.trim()
         };
     }
@@ -446,9 +612,33 @@
             +           '<div class="supplier-contract-form-label">签署方式</div>'
             +           '<div class="supplier-contract-radio-group">'
             +               '<label class="supplier-contract-radio"><input type="radio" name="supplierContractSigning" value="offline" checked><span>线下签署</span></label>'
-            +               '<label class="supplier-contract-radio is-disabled"><input type="radio" name="supplierContractSigning" value="electronic" disabled><span>电子签章</span></label>'
+            +               '<label class="supplier-contract-radio"><input type="radio" name="supplierContractSigning" value="electronic"><span>电子签章（法大大）</span></label>'
             +           '</div>'
             +       '</div>'
+            +       '<section class="supplier-contract-electronic-panel" data-supplier-contract-electronic hidden>'
+            +           '<div class="supplier-contract-esign-capability" data-supplier-contract-esign-capability>'
+            +               '<span class="material-symbols-outlined" data-esign-capability-icon aria-hidden="true">gpp_maybe</span>'
+            +               '<div><strong data-esign-capability-title>正在校验电子签章能力</strong><p data-esign-capability-description>请稍候</p></div>'
+            +               '<a href="user-center.html?menu=esign-service" target="_blank" data-esign-capability-link><span class="material-symbols-outlined" aria-hidden="true">open_in_new</span><span>前往用户中心</span></a>'
+            +           '</div>'
+            +           '<div class="supplier-contract-electronic-head"><div><strong>电子合同制文</strong><p>合同模板在法大大应用中维护，本平台可选择已发布模板，或上传待签PDF，二选一发起签署。</p></div><span><span class="material-symbols-outlined" aria-hidden="true">verified_user</span>三方签署</span></div>'
+            +           '<div class="supplier-contract-form-row is-required">'
+            +               '<div class="supplier-contract-form-label">制文方式</div>'
+            +               '<div class="supplier-contract-radio-group">'
+            +                   '<label class="supplier-contract-radio"><input type="radio" name="supplierContractDocumentMode" value="template" checked><span>使用法大大模板</span></label>'
+            +                   '<label class="supplier-contract-radio"><input type="radio" name="supplierContractDocumentMode" value="pdf"><span>上传待签PDF</span></label>'
+            +               '</div>'
+            +           '</div>'
+            +           '<div class="supplier-contract-form-row is-required" data-supplier-contract-template-row>'
+            +               '<label class="supplier-contract-form-label" for="supplierContractTemplate">合同模板</label>'
+            +               '<div class="supplier-contract-template-field"><select id="supplierContractTemplate" name="supplierContractTemplate"><option value="TPL-LG-CP-001">数据产品三方交易合同（V3.2）</option><option value="TPL-LG-FW-002">数据服务三方交易合同（V2.6）</option></select><button type="button" data-supplier-template-preview><span class="material-symbols-outlined" aria-hidden="true">visibility</span><span>预览</span></button><small>已发布 · 2026-07-18更新</small></div>'
+            +           '</div>'
+            +           '<div class="supplier-contract-form-row is-required" data-supplier-contract-pdf-row hidden>'
+            +               '<label class="supplier-contract-form-label" for="supplierContractPendingPdf">待签合同</label>'
+            +               '<div class="supplier-contract-pdf-upload"><input id="supplierContractPendingPdf" type="file" accept=".pdf,application/pdf" data-supplier-contract-pdf-file><button type="button" data-supplier-contract-pdf-upload><span class="material-symbols-outlined" aria-hidden="true">upload_file</span><span>上传待签PDF</span></button><p data-supplier-contract-pdf-hint>仅支持1个未签署的PDF文件，单个文件不超过20M</p></div>'
+            +           '</div>'
+            +           '<div class="supplier-contract-electronic-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p>提交后创建法大大签约任务，供方、需方和运营方可分别进入法大大完成审核与签署，不设置先后顺序；三方全部签署后进入任务关闭与归档。</p></div>'
+            +       '</section>'
             +       '<div class="supplier-contract-form-row">'
             +           '<label class="supplier-contract-form-label" for="supplierContractNo">合同编号</label>'
             +           '<input class="supplier-contract-input" id="supplierContractNo" type="text" placeholder="请输入合同编号" autocomplete="off" data-supplier-contract-number>'
@@ -460,15 +650,19 @@
             +       '<div class="supplier-contract-form-row is-top-aligned">'
             +           '<div class="supplier-contract-form-label">签署主体</div>'
             +           '<div class="supplier-contract-signers">'
-            +               '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span></div>'
-            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span data-supplier-contract-provider>深圳市龙岗数智科技有限公司</span></div>'
-            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span data-supplier-contract-demander>产品需求方测试X</span></div>'
-            +               '<div class="supplier-contract-signer-row" data-supplier-contract-operator><span>法人</span><span>平台运营方</span><span>' + PLATFORM_OPERATOR_NAME + '</span></div>'
+            +               '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span><span>签约准备</span></div>'
+            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span data-supplier-contract-provider>深圳市龙岗数智科技有限公司</span><span class="supplier-contract-ready" data-supplier-provider-ready>待校验</span></div>'
+            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span data-supplier-contract-demander>产品需求方测试X</span><span class="supplier-contract-ready" data-supplier-demander-ready>待校验</span></div>'
+            +               '<div class="supplier-contract-signer-row" data-supplier-contract-operator><span>法人</span><span>平台运营方</span><span>' + PLATFORM_OPERATOR_NAME + '</span><span class="supplier-contract-ready" data-supplier-operator-ready>待校验</span></div>'
             +           '</div>'
             +       '</div>'
-            +       '<div class="supplier-contract-form-row is-required">'
+            +       '<div class="supplier-contract-form-row is-required" data-supplier-contract-signed-row>'
             +           '<label class="supplier-contract-form-label" for="supplierContractSignedAt">合同签署时间</label>'
             +           '<div class="supplier-contract-date-field"><input id="supplierContractSignedAt" type="date" autocomplete="off" data-supplier-contract-signed-at><button type="button" aria-label="选择合同签署日期" data-supplier-contract-date-button><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span></button></div>'
+            +       '</div>'
+            +       '<div class="supplier-contract-form-row is-required" data-supplier-contract-deadline-row hidden>'
+            +           '<label class="supplier-contract-form-label" for="supplierContractDeadline">签署截止时间</label>'
+            +           '<div class="supplier-contract-date-field"><input id="supplierContractDeadline" type="date" autocomplete="off" data-supplier-contract-deadline><button type="button" aria-label="选择签署截止日期" data-supplier-contract-date-button><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span></button></div>'
             +       '</div>'
             +       '<div class="supplier-contract-form-row is-required">'
             +           '<label class="supplier-contract-form-label" for="supplierContractStartsAt">合同生效时间</label>'
@@ -480,7 +674,7 @@
             +       '</div>'
             +       '<div class="supplier-contract-payment-terms" data-supplier-contract-payment></div>'
             +       '<div class="supplier-contract-form-row is-required is-top-aligned">'
-            +           '<label class="supplier-contract-form-label supplier-contract-label-with-help" for="supplierContractFile">合同文件<span class="material-symbols-outlined" title="上传已签署的合同文件" aria-hidden="true">help_outline</span></label>'
+            +           '<label class="supplier-contract-form-label supplier-contract-label-with-help" for="supplierContractFile" data-supplier-contract-upload-label>合同文件<span class="material-symbols-outlined" title="线下签署上传已签文件；电子签章可补充上传附件" aria-hidden="true">help_outline</span></label>'
             +           '<div class="supplier-contract-upload">'
             +               '<input class="supplier-contract-file-input" id="supplierContractFile" type="file" accept=".doc,.docx,.pdf,.png,.jpg,.jpeg" multiple data-supplier-contract-file>'
             +               '<button class="supplier-contract-upload-button" type="button" data-supplier-contract-upload>上传文件</button>'
@@ -496,8 +690,8 @@
             +       '</div>'
             +   '</div>'
             +   '<footer class="supplier-contract-drawer-foot">'
-            +       '<button class="supplier-contract-button" type="button" data-supplier-contract-close>取消</button>'
-            +       '<button class="supplier-contract-button is-primary" type="submit">确定</button>'
+            +       '<button class="supplier-contract-button" type="button" data-supplier-contract-close><span class="material-symbols-outlined" aria-hidden="true">close</span><span>取消</span></button>'
+            +       '<button class="supplier-contract-button is-primary" type="submit"><span class="material-symbols-outlined" aria-hidden="true">draw</span><span data-supplier-contract-submit-text>确定</span></button>'
             +   '</footer>'
             + '</form>';
 
@@ -512,6 +706,15 @@
         demanderCell = drawer.querySelector('[data-supplier-contract-demander]');
         operatorSignerRow = drawer.querySelector('[data-supplier-contract-operator]');
         signedAtInput = drawer.querySelector('[data-supplier-contract-signed-at]');
+        signedAtRow = drawer.querySelector('[data-supplier-contract-signed-row]');
+        signingDeadlineInput = drawer.querySelector('[data-supplier-contract-deadline]');
+        signingDeadlineRow = drawer.querySelector('[data-supplier-contract-deadline-row]');
+        electronicPanel = drawer.querySelector('[data-supplier-contract-electronic]');
+        pendingPdfInput = drawer.querySelector('[data-supplier-contract-pdf-file]');
+        pendingPdfButton = drawer.querySelector('[data-supplier-contract-pdf-upload]');
+        pendingPdfHint = drawer.querySelector('[data-supplier-contract-pdf-hint]');
+        uploadLabel = drawer.querySelector('[data-supplier-contract-upload-label]');
+        submitButtonText = drawer.querySelector('[data-supplier-contract-submit-text]');
         startsAtInput = drawer.querySelector('[data-supplier-contract-starts-at]');
         endsAtInput = drawer.querySelector('[data-supplier-contract-ends-at]');
         remarkInput = drawer.querySelector('[data-supplier-contract-remark]');
@@ -521,6 +724,10 @@
         uploadHint = drawer.querySelector('[data-supplier-contract-upload-hint]');
         feedback = drawer.querySelector('[data-supplier-contract-feedback]');
         paymentTerms = drawer.querySelector('[data-supplier-contract-payment]');
+        esignCapability = drawer.querySelector('[data-supplier-contract-esign-capability]');
+        providerReadyCell = drawer.querySelector('[data-supplier-provider-ready]');
+        demanderReadyCell = drawer.querySelector('[data-supplier-demander-ready]');
+        operatorReadyCell = drawer.querySelector('[data-supplier-operator-ready]');
 
         mask.addEventListener('click', closeDrawer);
         drawer.querySelectorAll('[data-supplier-contract-close]').forEach(function (button) {
@@ -539,6 +746,34 @@
                 if (this.checked) applyRelationMode(this.value);
             });
         });
+        drawer.querySelectorAll('input[name="supplierContractSigning"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                if (this.checked) updateSigningMode();
+            });
+        });
+        drawer.querySelectorAll('input[name="supplierContractDocumentMode"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                var templateRow = drawer.querySelector('[data-supplier-contract-template-row]');
+                var pdfRow = drawer.querySelector('[data-supplier-contract-pdf-row]');
+                if (templateRow) templateRow.hidden = this.value !== 'template';
+                if (pdfRow) pdfRow.hidden = this.value !== 'pdf';
+                pendingPdfFile = null;
+                pendingPdfInput.value = '';
+                updatePendingPdfState();
+            });
+        });
+        var templatePreview = drawer.querySelector('[data-supplier-template-preview]');
+        if (templatePreview) {
+            templatePreview.addEventListener('click', function () {
+                var templateSelect = drawer.querySelector('#supplierContractTemplate');
+                var selectedTemplate = templateSelect && templateSelect.options[templateSelect.selectedIndex];
+                var params = new URLSearchParams();
+                params.set('scene', 'template-preview');
+                params.set('templateId', templateSelect ? templateSelect.value : 'TPL-LG-CP-001');
+                params.set('contractName', selectedTemplate ? selectedTemplate.textContent : '数据产品三方交易合同（V3.2）');
+                window.open('fadada-sign-demo.html?' + params.toString(), '_blank', 'noopener');
+            });
+        }
         paymentTerms.addEventListener('change', function (event) {
             var target = event.target;
             if (target.matches('input[name="supplierPaymentMode"]')) {
@@ -611,7 +846,7 @@
                 renderPaymentTerms();
             }
         });
-        [signedAtInput, startsAtInput, endsAtInput].forEach(function (input) {
+        [signedAtInput, signingDeadlineInput, startsAtInput, endsAtInput].forEach(function (input) {
             input.addEventListener('change', function () {
                 updateDateMinimums();
                 this.parentElement.classList.remove('is-invalid');
@@ -624,6 +859,25 @@
         });
         uploadButton.addEventListener('click', function () {
             fileInput.click();
+        });
+        pendingPdfButton.addEventListener('click', function () {
+            pendingPdfInput.click();
+        });
+        pendingPdfInput.addEventListener('change', function () {
+            var file = this.files && this.files[0];
+            var error = validatePendingPdf(file);
+            if (error) {
+                this.value = '';
+                pendingPdfFile = null;
+                pendingPdfButton.classList.add('is-invalid');
+                updatePendingPdfState();
+                setFeedback(error);
+                return;
+            }
+            pendingPdfFile = file || null;
+            pendingPdfButton.classList.remove('is-invalid');
+            setFeedback('');
+            updatePendingPdfState();
         });
         fileInput.addEventListener('change', function () {
             var files = Array.prototype.slice.call(this.files || []);
@@ -642,12 +896,36 @@
             updateUploadState();
         });
         remarkInput.addEventListener('input', function () {
+            this.dataset.userEdited = 'true';
             remarkCount.textContent = String(this.value.length);
         });
         form.addEventListener('submit', function (event) {
             event.preventDefault();
             if (!validateForm()) return;
             var values = collectFormValues();
+            var optionsForTask = activeOptions;
+            if (values.signing === 'electronic' && window.FadadaSignDemo) {
+                var centerRole = getCenterRole();
+                values.taskId = 'FDD-' + String(values.orderNo || '').slice(-14);
+                values.signatureStatus = 'waiting_signature';
+                values.signProgress = '0/3 已签署';
+                var launchResult = window.FadadaSignDemo.open({
+                    taskId: values.taskId,
+                    contractName: values.contractName,
+                    contractNo: values.contractNo,
+                    orderNo: values.orderNo,
+                    role: centerRole,
+                    party: centerRole === '需求方' ? activeOptions.demander : activeOptions.provider,
+                    node: '提交关联并签署',
+                    onResult: function (result) {
+                        if (typeof optionsForTask.onSignResult === 'function') optionsForTask.onSignResult(result, values);
+                    }
+                });
+                if (!launchResult.windowRef) {
+                    setFeedback('浏览器阻止了法大大签署页面，请允许打开新窗口后重试。');
+                    return;
+                }
+            }
             var onConfirm = activeOptions.onConfirm;
             closeDrawer();
             if (typeof onConfirm === 'function') {
@@ -671,12 +949,12 @@
             : (Number.isFinite(legacyServiceFeeRate) ? legacyServiceFeeRate : 3);
         lastFocusedElement = document.activeElement;
         form.reset();
+        remarkInput.dataset.userEdited = '';
         orderInput.value = options.orderNo || '';
         providerCell.textContent = options.provider || '深圳市龙岗数智科技有限公司';
         demanderCell.textContent = options.demander || '产品需求方测试X';
-        if (operatorSignerRow) operatorSignerRow.hidden = isSelfOperated();
-        remarkInput.value = '本合同用于当前订单的线下签署及履约确认。';
-        remarkCount.textContent = String(remarkInput.value.length);
+        if (operatorSignerRow) operatorSignerRow.hidden = false;
+        updateESignReadiness();
         resetPaymentTerms();
         applyRelationMode('new');
         drawer.classList.add('show');
@@ -692,4 +970,8 @@
         open: openDrawer,
         close: closeDrawer
     };
+
+    window.addEventListener('esignservicechange', function () {
+        if (drawer && drawer.classList.contains('show')) updateESignReadiness();
+    });
 })();

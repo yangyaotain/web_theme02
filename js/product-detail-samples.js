@@ -2,6 +2,7 @@
     'use strict';
 
     var SAMPLE_OUTPUT_ROOT = 'outputs/019fa0fb-0add-75a2-85a0-b0e49bf3fdcd/';
+    var OTHER_SAMPLE_FILE = 'output/pdf/龙岗区产业运行分析样例报告.pdf';
     var PRODUCTS = {
         dataset: {
             name: '龙岗区企业经营活力监测数据集',
@@ -32,6 +33,75 @@
             delivery: '文件传输',
             industry: '产业发展',
             introduction: '以说明文件形式交付产业运行分析样例，内容包括重点产业结构、企业活跃度、园区运行情况以及数据使用说明。'
+        }
+    };
+
+    var RESOURCES = {
+        dataset: {
+            name: '龙岗区企业经营活力基础数据集',
+            type: '数据集',
+            resourceType: '企业数据',
+            image: 'images/stock-data.jpg',
+            description: '汇聚龙岗区企业登记、所属行业、所在街道和经营活跃度等基础信息，形成可用于产业分析和企业服务的标准化数据资源。',
+            delivery: '文件传输',
+            industry: '信息传输、软件和信息技术服务业',
+            owner: '深圳市龙岗区政务数据运营有限公司',
+            publishedAt: '2026-07-18 09:30:00',
+            format: 'XLSX / CSV',
+            source: '原始数据',
+            introduction: '围绕企业经营活跃度、产业结构和空间分布整理形成标准化基础数据集，提供统一字段口径和按日更新的数据文件。',
+            fields: [
+                ['企业编码', 'enterprise_code', '字符串型', '32'],
+                ['企业名称', 'enterprise_name', '字符串型', '255'],
+                ['所属行业', 'industry_name', '字符串型', '100'],
+                ['所属街道', 'street_name', '字符串型', '50'],
+                ['注册资本', 'registered_capital', '数值型', '18,2'],
+                ['活力指数', 'vitality_index', '数值型', '5,2'],
+                ['经营状态', 'operation_status', '字符串型', '20'],
+                ['数据日期', 'stat_date', '日期型', '10']
+            ]
+        },
+        api: {
+            name: '龙岗企业登记信息查询 API 资源',
+            type: 'API',
+            resourceType: '企业数据',
+            image: 'images/realtime-data.jpg',
+            description: '提供龙岗区企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统通过标准接口按企业编码调用。',
+            delivery: 'API传输',
+            industry: '信息传输、软件和信息技术服务业',
+            owner: '深圳市龙岗区政务数据运营有限公司',
+            publishedAt: '2026-07-17 16:35:00',
+            format: 'JSON',
+            source: '加工数据',
+            introduction: '通过数据岛 API 网关提供标准化查询接口，调用方可按企业编码及统计日期获取结构化企业经营活力信息。',
+            fields: [
+                ['企业编码', 'enterpriseCode', '字符串型', '32'],
+                ['企业名称', 'enterpriseName', '字符串型', '255'],
+                ['活力指数', 'vitalityIndex', '数值型', '5,2'],
+                ['经营状态', 'operationStatus', '字符串型', '20'],
+                ['统计日期', 'statDate', '日期型', '10']
+            ]
+        },
+        other: {
+            name: '龙岗区产业运行分析资料包',
+            type: '其他',
+            resourceType: '行业数据',
+            image: 'images/data-screen.jpg',
+            description: '汇集龙岗区重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究和业务研判参考。',
+            delivery: '文件传输',
+            industry: '租赁和商务服务业',
+            owner: '深圳市龙岗区产业数据运营有限公司',
+            publishedAt: '2026-07-16 14:10:00',
+            format: 'PDF / TXT',
+            source: '加工数据',
+            introduction: '资料包包括覆盖范围、数据周期、主要分析内容和指标口径说明，以登记时上传的文件形式提供样例。',
+            fields: [
+                ['文件名称', 'file_name', '字符串型', '255'],
+                ['文件类型', 'file_type', '字符串型', '20'],
+                ['文件大小', 'file_size', '字符串型', '20'],
+                ['内容摘要', 'content_summary', '字符串型', '500'],
+                ['更新日期', 'update_date', '日期型', '10']
+            ]
         }
     };
 
@@ -151,12 +221,11 @@
         return ''
             + renderOverview('other', product, '该类型以登记时上传的文件作为样例，用户可查看文件信息并直接下载。')
             + renderFileCard(
-                '龙岗区产业运行分析样例说明.txt',
-                'TXT 文档 · 产业运行分析说明 · UTF-8',
-                SAMPLE_OUTPUT_ROOT + '龙岗区产业运行分析样例说明.txt',
+                '龙岗区产业运行分析样例报告.pdf',
+                'PDF 文件',
+                OTHER_SAMPLE_FILE,
                 'file'
-            )
-            + '<div class="other-file-note">文件包含覆盖范围、数据周期、主要分析内容以及数据使用说明，可下载后查看完整样例。</div>';
+            );
     }
 
     function setText(selector, value) {
@@ -182,23 +251,63 @@
         });
     }
 
-    function initProductSamples() {
+    function renderResourceFields(fields) {
+        var target = document.querySelector('[data-resource-detail-fields]');
+        if (!target || !fields) return;
+        target.innerHTML = fields.map(function (field, index) {
+            return '<tr><td>' + (index + 1) + '</td>'
+                + '<td>' + escapeHtml(field[0]) + '</td>'
+                + '<td>' + escapeHtml(field[1]) + '</td>'
+                + '<td>' + escapeHtml(field[2]) + '</td>'
+                + '<td>' + escapeHtml(field[3]) + '</td></tr>';
+        }).join('');
+    }
+
+    function applyResource(resource) {
+        document.title = resource.name + ' - 龙岗数据聚合服务平台';
+        setText('[data-resource-detail-breadcrumb]', resource.name);
+        setText('[data-resource-detail-title]', resource.name);
+        setText('[data-resource-detail-description]', resource.description);
+        setText('[data-resource-detail-published]', resource.publishedAt);
+        setText('[data-resource-detail-delivery]', resource.delivery);
+        setText('[data-resource-detail-name]', resource.name);
+        setText('[data-resource-detail-type]', resource.resourceType);
+        setText('[data-resource-detail-industry]', resource.industry);
+        setText('[data-resource-detail-format]', resource.format);
+        setText('[data-resource-detail-source]', resource.source);
+        setText('[data-resource-detail-introduction]', resource.introduction);
+        setText('[data-resource-detail-transfer]', resource.delivery);
+        setText('[data-resource-consult-target]', resource.name);
+        document.querySelectorAll('[data-resource-detail-owner]').forEach(function (element) {
+            element.textContent = resource.owner;
+        });
+        document.querySelectorAll('[data-resource-detail-image]').forEach(function (image) {
+            image.src = resource.image;
+            image.alt = resource.name;
+        });
+        renderResourceFields(resource.fields);
+    }
+
+    function initDetailSamples() {
         var samplePanel = document.getElementById('tabSample');
         if (!samplePanel) return;
+        var context = samplePanel.getAttribute('data-sample-context') === 'resource' ? 'resource' : 'product';
+        var catalog = context === 'resource' ? RESOURCES : PRODUCTS;
         var params = new URLSearchParams(window.location.search || '');
         var type = params.get('sampleType');
-        if (!PRODUCTS[type]) type = 'dataset';
-        var product = PRODUCTS[type];
-        applyProduct(product);
+        if (!catalog[type]) type = 'dataset';
+        var item = catalog[type];
+        if (context === 'resource') applyResource(item);
+        else applyProduct(item);
         samplePanel.classList.add('sample-panel');
         samplePanel.innerHTML = type === 'api'
-            ? renderApiSample(product)
-            : (type === 'other' ? renderOtherSample(product) : renderDatasetSample(product));
+            ? renderApiSample(item)
+            : (type === 'other' ? renderOtherSample(item) : renderDatasetSample(item));
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initProductSamples);
+        document.addEventListener('DOMContentLoaded', initDetailSamples);
     } else {
-        initProductSamples();
+        initDetailSamples();
     }
 })();

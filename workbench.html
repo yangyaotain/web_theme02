@@ -63,7 +63,7 @@
                 <section class="wb-panel wb-todo-panel">
                     <div class="wb-panel-head">
                         <h2 class="wb-panel-title">待办中心</h2>
-                        <a class="wb-panel-more" href="supplier-center.html?menu=resource-order">更多</a>
+                        <a class="wb-panel-more" href="site-message.html">更多</a>
                     </div>
                     <div class="wb-panel-body">
                         <div class="wb-todo-stats">
@@ -72,38 +72,43 @@
                                     <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6V8h12v11zm-8.5-3.5L7 13l1.41-1.41L9.5 12.67l3.59-3.59L14.5 10.5l-5 5z"/></svg>
                                     <span>我的待办</span>
                                 </div>
-                                <span class="wb-stat-num">9</span>
+                                <span class="wb-stat-num">12</span>
                             </div>
                             <div class="wb-todo-stat">
                                 <div class="wb-stat-left">
                                     <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
                                     <span>即将超时</span>
                                 </div>
-                                <span class="wb-stat-num">0</span>
+                                <span class="wb-stat-num">2</span>
                             </div>
                             <div class="wb-todo-stat">
                                 <div class="wb-stat-left">
                                     <svg viewBox="0 0 24 24"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8.4 3.1 1.8-1 1.7-4.1-2.4V7h2v4.6z"/></svg>
                                     <span>已超时</span>
                                 </div>
-                                <span class="wb-stat-num">9</span>
+                                <span class="wb-stat-num">1</span>
                             </div>
                         </div>
                         <div class="wb-todo-list">
                             <div class="wb-todo-row">
-                                <span class="wb-todo-tag">数据授权</span>
-                                <a class="wb-todo-link" href="supplier-center.html?menu=product-contract">【合同签署】用户提交了合同申请，请及时审批处理</a>
-                                <span class="wb-todo-deadline">刚刚逾期</span>
+                                <span class="wb-todo-tag contract">合同签约</span>
+                                <a class="wb-todo-link" href="supplier-center.html?menu=product-order">【产品合同】待运营方审核并签署：龙岗区交通运行拥堵指数数据产品交易合同</a>
+                                <span class="wb-todo-deadline">剩余2天</span>
                             </div>
                             <div class="wb-todo-row">
-                                <span class="wb-todo-tag">数据授权</span>
-                                <a class="wb-todo-link" href="supplier-center.html?menu=product-order">产品申请审批</a>
-                                <span class="wb-todo-deadline">逾期4天</span>
+                                <span class="wb-todo-tag contract">合同签约</span>
+                                <a class="wb-todo-link" href="supplier-center.html?menu=service-order">【服务合同】待提供方审核并签署：企业信用画像合规查询服务合同</a>
+                                <span class="wb-todo-deadline">剩余1天</span>
+                            </div>
+                            <div class="wb-todo-row">
+                                <span class="wb-todo-tag danger">签署异常</span>
+                                <a class="wb-todo-link danger" href="supplier-center.html?menu=product-order">【电子合同】法大大签署回调验签失败，请检查任务处理状态</a>
+                                <span class="wb-todo-deadline danger">已超时</span>
                             </div>
                             <div class="wb-todo-row">
                                 <span class="wb-todo-tag">数据授权</span>
                                 <a class="wb-todo-link" href="supplier-center.html?menu=resource-order">资源申请审批</a>
-                                <span class="wb-todo-deadline">逾期4天</span>
+                                <span class="wb-todo-deadline">剩余3天</span>
                             </div>
                         </div>
                     </div>
@@ -166,11 +171,13 @@
                 <section class="wb-panel wb-message-panel">
                     <div class="wb-panel-head">
                         <h2 class="wb-panel-title">我的消息</h2>
-                        <span class="wb-panel-more">更多</span>
+                        <a class="wb-panel-more" href="site-message.html">更多</a>
                     </div>
-                    <div class="wb-empty">
-                        <svg viewBox="0 0 24 24"><path d="M20 6h-3.17l-1.84-2H9.01L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 11c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/></svg>
-                        <span>暂无数据</span>
+                    <div class="wb-message-list">
+                        <a class="wb-message-row unread" href="supplier-center.html?menu=product-order"><i></i><span class="wb-message-type todo">待办</span><span class="wb-message-content"><strong>产品合同待运营方审核并签署</strong><small>请以供方角色进入产品订单管理，完成运营方审核并前往法大大盖章。</small></span><time>10:22</time></a>
+                        <a class="wb-message-row unread" href="supplier-center.html?menu=service-order"><i></i><span class="wb-message-type system">签约</span><span class="wb-message-content"><strong>法大大签约任务已创建</strong><small>供方、需方和运营方可独立进入法大大完成签署，三方全部完成后进入归档。</small></span><time>09:48</time></a>
+                        <a class="wb-message-row" href="supplier-center.html?menu=product-contract"><i></i><span class="wb-message-type success">完成</span><span class="wb-message-content"><strong>三方合同已完成任务关闭、归档和存证</strong><small>最终合同已下载校验并归档，可在产品合同管理查看。</small></span><time>昨天</time></a>
+                        <a class="wb-message-row unread" href="supplier-center.html?menu=product-order"><i></i><span class="wb-message-type alert">异常</span><span class="wb-message-content"><strong>电子合同签署回调处理异常</strong><small>系统自动重试中，请关注订单中的签约任务状态。</small></span><time>昨天</time></a>
                     </div>
                 </section>
             </div>

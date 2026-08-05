@@ -236,6 +236,118 @@
 
     var DATA_TYPE_OPTIONS = ['字符串型C', '数值型N', '货币型Y', '日期型D', '日期时间型T', '逻辑型L'];
 
+    var RESOURCE_TABLE_TREE = [
+        {
+            id: 'catalog-park',
+            label: '园区运营',
+            children: [
+                {
+                    id: 'catalog-park-energy',
+                    label: '能耗管理',
+                    children: [
+                        { id: 'table-park-energy-daily', label: '园区企业能耗日汇总表', code: 'lg_park_energy_daily' },
+                        { id: 'table-park-energy-device', label: '园区能耗采集设备表', code: 'lg_park_energy_device' },
+                        { id: 'table-park-carbon-detail', label: '园区碳排放测算明细表', code: 'lg_park_carbon_detail' }
+                    ]
+                },
+                {
+                    id: 'catalog-park-enterprise',
+                    label: '企业服务',
+                    children: [
+                        { id: 'table-park-enterprise-profile', label: '园区企业基础信息表', code: 'lg_park_enterprise_profile' },
+                        { id: 'table-park-enterprise-operation', label: '园区企业经营状态表', code: 'lg_park_enterprise_operation' }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'catalog-industry',
+            label: '产业发展',
+            children: [
+                {
+                    id: 'catalog-industry-monitor',
+                    label: '产业监测',
+                    children: [
+                        { id: 'table-industry-distribution', label: '产业空间分布统计表', code: 'lg_industry_distribution' },
+                        { id: 'table-industry-chain', label: '产业链企业关联表', code: 'lg_industry_chain_relation' }
+                    ]
+                }
+            ]
+        }
+    ];
+
+    var SAMPLE_UPLOAD_FIELDS = {
+        dataset: {
+            key: 'sampleDataset',
+            label: '数据集样例',
+            accept: '.xls,.xlsx',
+            extensions: ['xls', 'xlsx'],
+            maxSize: 30,
+            maxCount: 1,
+            description: '支持 .xls、.xlsx，单个文件不超过 30MB，最多导入 1 个 Excel 文件'
+        },
+        other: {
+            key: 'sampleOther',
+            label: '其他样例',
+            accept: '.doc,.docx,.pdf,.jpg,.jpeg,.png,.txt',
+            extensions: ['doc', 'docx', 'pdf', 'jpg', 'jpeg', 'png', 'txt'],
+            maxSize: 30,
+            maxCount: 1,
+            description: '支持 .doc、.docx、.pdf、.jpg、.png、.txt，单个文件不超过 30MB，最多上传 1 个附件'
+        }
+    };
+
+    var SAMPLE_API_TREE = [
+        {
+            id: 'enterprise',
+            label: '企业服务',
+            children: [
+                {
+                    id: 'enterprise-subject',
+                    label: '商事主体',
+                    children: [
+                        { id: 'api-enterprise-profile', label: '企业基础信息查询 API', code: 'API-LG-ENT-001', method: 'GET', path: '/v1/enterprises/profile' },
+                        { id: 'api-enterprise-status', label: '企业经营状态查询 API', code: 'API-LG-ENT-002', method: 'GET', path: '/v1/enterprises/status' }
+                    ]
+                },
+                {
+                    id: 'enterprise-vitality',
+                    label: '经营活力',
+                    children: [
+                        { id: 'api-enterprise-vitality', label: '企业经营活力指数 API', code: 'API-LG-ENT-006', method: 'POST', path: '/v1/enterprises/vitality' }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'industry',
+            label: '产业发展',
+            children: [
+                {
+                    id: 'industry-chain',
+                    label: '产业链分析',
+                    children: [
+                        { id: 'api-industry-distribution', label: '产业空间分布查询 API', code: 'API-LG-IND-003', method: 'GET', path: '/v1/industries/distribution' },
+                        { id: 'api-industry-match', label: '产业链供需匹配 API', code: 'API-LG-IND-008', method: 'POST', path: '/v1/industries/match' }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'park',
+            label: '园区运营',
+            children: [
+                {
+                    id: 'park-operation',
+                    label: '园区运行',
+                    children: [
+                        { id: 'api-park-company', label: '园区企业名录查询 API', code: 'API-LG-PARK-002', method: 'GET', path: '/v1/parks/enterprises' }
+                    ]
+                }
+            ]
+        }
+    ];
+
     function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
             return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character];
@@ -268,9 +380,89 @@
         });
     }
 
+    function defaultTableTreeConfig() {
+        return {
+            selectedId: 'table-park-energy-daily',
+            query: '',
+            open: false,
+            expanded: ['catalog-park', 'catalog-park-energy']
+        };
+    }
+
+    function copyTableTreeConfig(source) {
+        var config = source || defaultTableTreeConfig();
+        return {
+            selectedId: config.selectedId || 'table-park-energy-daily',
+            query: '',
+            open: false,
+            expanded: (config.expanded || []).slice()
+        };
+    }
+
+    function emptySampleAttachments() {
+        return { sampleDataset: [], sampleOther: [] };
+    }
+
+    function copySampleAttachments(source) {
+        var result = emptySampleAttachments();
+        Object.keys(result).forEach(function (key) {
+            result[key] = (source && source[key] || []).map(function (file) {
+                return {
+                    name: file.name,
+                    size: file.size || 0,
+                    type: file.type || '',
+                    source: file.source || 'existing',
+                    file: file.file || null
+                };
+            });
+        });
+        return result;
+    }
+
+    function copyEffectiveSampleAttachments(source, sampleType) {
+        var result = copySampleAttachments(source);
+        if (sampleType !== 'dataset') result.sampleDataset = [];
+        if (sampleType !== 'other') result.sampleOther = [];
+        return result;
+    }
+
+    function existingSampleAttachments(resourceName) {
+        var safeName = resourceName || '数据资源';
+        return {
+            sampleDataset: [{ name: safeName + '-数据样例.xlsx', size: 2860000, source: 'existing' }],
+            sampleOther: [{ name: safeName + '-数据样例.pdf', size: 2860000, source: 'existing' }]
+        };
+    }
+
+    function defaultSampleApiConfig() {
+        return {
+            selectedId: 'api-enterprise-vitality',
+            query: '',
+            open: false,
+            expanded: ['enterprise', 'enterprise-vitality']
+        };
+    }
+
+    function copySampleApiConfig(source) {
+        var config = source || defaultSampleApiConfig();
+        return {
+            selectedId: config.selectedId || '',
+            query: '',
+            open: false,
+            expanded: (config.expanded || []).slice()
+        };
+    }
+
+    function copyEffectiveSampleApiConfig(source, sampleType) {
+        if (sampleType === 'api') return copySampleApiConfig(source);
+        return { selectedId: '', query: '', open: false, expanded: [] };
+    }
+
     function initSupplierResourceRegister() {
         var params = new URLSearchParams(window.location.search || '');
-        if (params.get('menu') !== 'resource-register') return;
+        var sidebar = document.querySelector('[data-workbench-sidebar]');
+        var activeMenu = params.get('menu') || (sidebar && sidebar.dataset.active);
+        if (activeMenu !== 'resource-register') return;
 
         var panel = document.querySelector('[data-consult-panel]');
         var title = document.querySelector('[data-center-title]');
@@ -294,6 +486,10 @@
             formData: copyObject(RESOURCE_FORM_EXAMPLE),
             dataItems: copyDataItems(RESOURCE_DATA_ITEM_EXAMPLES),
             selectedDataItems: {},
+            dataTable: defaultTableTreeConfig(),
+            attachments: emptySampleAttachments(),
+            sampleType: 'dataset',
+            sampleApi: defaultSampleApiConfig(),
             itemDrawer: {
                 open: false,
                 mode: 'create',
@@ -481,7 +677,9 @@
         }
 
         function getEditorTitle() {
-            return state.formMode === 'create' ? '新增' : '编辑';
+            if (state.formMode === 'create') return '新增';
+            if (state.formMode === 'change') return '变更';
+            return '编辑';
         }
 
         function getFormDataForRecord(item) {
@@ -515,6 +713,16 @@
             state.formData = getFormDataForRecord(item);
             state.dataItems = copyDataItems(item && item.dataItems ? item.dataItems : RESOURCE_DATA_ITEM_EXAMPLES);
             state.selectedDataItems = {};
+            state.dataTable = copyTableTreeConfig(item && item.dataTable);
+            state.attachments = item
+                ? copySampleAttachments(item.attachments || existingSampleAttachments(item.name))
+                : emptySampleAttachments();
+            state.sampleType = item && item.sampleType
+                ? item.sampleType
+                : (item && state.formData.format === 'API接口' ? 'api' : 'dataset');
+            state.sampleApi = item
+                ? copySampleApiConfig(item.sampleApi)
+                : defaultSampleApiConfig();
             state.itemDrawer = { open: false, mode: 'create', index: -1, draft: null };
             render();
         }
@@ -528,17 +736,22 @@
         }
 
         function renderEditorHeader() {
-            var isSecondStep = state.formStep === 2;
+            var afterFirstStep = state.formStep > 1;
+            var afterSecondStep = state.formStep > 2;
             return ''
                 + '<header class="resource-editor-header">'
                 +   '<button class="resource-editor-back" type="button" data-resource-editor-action="cancel">' + icon('arrow_back') + '<span>' + getEditorTitle() + '</span></button>'
                 +   '<div class="resource-editor-steps" aria-label="资源登记步骤">'
-                +       '<button class="resource-editor-step' + (isSecondStep ? ' complete' : ' active') + '" type="button" data-resource-editor-step="1">'
-                +           '<i>' + (isSecondStep ? icon('check') : '1') + '</i><span>基本信息</span>'
+                +       '<button class="resource-editor-step' + (afterFirstStep ? ' complete' : ' active') + '" type="button" data-resource-editor-step="1">'
+                +           '<i>' + (afterFirstStep ? icon('check') : '1') + '</i><span>基本信息</span>'
                 +       '</button>'
-                +       '<span class="resource-editor-step-line' + (isSecondStep ? ' active' : '') + '"></span>'
-                +       '<button class="resource-editor-step' + (isSecondStep ? ' active' : '') + '" type="button" data-resource-editor-step="2"' + (isSecondStep ? '' : ' disabled') + '>'
-                +           '<i>2</i><span>数据项信息</span>'
+                +       '<span class="resource-editor-step-line' + (afterFirstStep ? ' active' : '') + '"></span>'
+                +       '<button class="resource-editor-step' + (afterSecondStep ? ' complete' : (state.formStep === 2 ? ' active' : '')) + '" type="button" data-resource-editor-step="2"' + (afterFirstStep ? '' : ' disabled') + '>'
+                +           '<i>' + (afterSecondStep ? icon('check') : '2') + '</i><span>数据项信息</span>'
+                +       '</button>'
+                +       '<span class="resource-editor-step-line' + (afterSecondStep ? ' active' : '') + '"></span>'
+                +       '<button class="resource-editor-step' + (state.formStep === 3 ? ' active' : '') + '" type="button" data-resource-editor-step="3"' + (afterSecondStep ? '' : ' disabled') + '>'
+                +           '<i>3</i><span>样例数据</span>'
                 +       '</button>'
                 +   '</div>'
                 + '</header>';
@@ -641,6 +854,86 @@
             }).join('');
         }
 
+        function findTreeSelection(id, nodes, path) {
+            var result = null;
+            (nodes || []).some(function (node) {
+                var nextPath = (path || []).concat(node.label);
+                if (node.id === id) {
+                    result = { node: node, path: nextPath };
+                    return true;
+                }
+                if (node.children) {
+                    result = findTreeSelection(id, node.children, nextPath);
+                    return Boolean(result);
+                }
+                return false;
+            });
+            return result;
+        }
+
+        function treeNodeMatches(node, keyword) {
+            if (!keyword) return true;
+            var searchable = [node.label, node.code, node.method, node.path].join(' ').toLowerCase();
+            if (searchable.indexOf(keyword) !== -1) return true;
+            return Boolean(node.children && node.children.some(function (child) {
+                return treeNodeMatches(child, keyword);
+            }));
+        }
+
+        function renderTableTree(nodes, depth) {
+            var keyword = state.dataTable.query.trim().toLowerCase();
+            var html = '';
+            (nodes || []).forEach(function (node) {
+                if (!treeNodeMatches(node, keyword)) return;
+                var isFolder = Boolean(node.children);
+                var expanded = keyword || state.dataTable.expanded.indexOf(node.id) !== -1;
+                var selected = state.dataTable.selectedId === node.id;
+                if (isFolder) {
+                    html += ''
+                        + '<div class="product-register-api-folder">'
+                        +   '<button type="button" style="--tree-indent:' + (depth * 18) + 'px" data-resource-table-folder="' + escapeHtml(node.id) + '">'
+                        +       icon(expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right')
+                        +       icon('folder')
+                        +       '<span>' + escapeHtml(node.label) + '</span>'
+                        +   '</button>'
+                        +   (expanded ? '<div>' + renderTableTree(node.children, depth + 1) + '</div>' : '')
+                        + '</div>';
+                    return;
+                }
+                html += ''
+                    + '<button class="product-register-api-option' + (selected ? ' selected' : '') + '" type="button" style="--tree-indent:' + (depth * 18) + 'px" data-resource-table-select="' + escapeHtml(node.id) + '">'
+                    +   icon('table_view')
+                    +   '<span><b>' + escapeHtml(node.label) + '</b><small>' + escapeHtml(node.code) + '</small></span>'
+                    +   (selected ? icon('check') : '')
+                    + '</button>';
+            });
+            return html;
+        }
+
+        function renderTableSelector() {
+            var selected = findTreeSelection(state.dataTable.selectedId, RESOURCE_TABLE_TREE, []);
+            var selectedLabel = selected ? selected.path.join(' / ') : '请选择数据库表';
+            var treeHtml = renderTableTree(RESOURCE_TABLE_TREE, 0);
+            return ''
+                + '<div class="product-register-api-selector resource-editor-table-tree">'
+                +   '<button class="product-register-api-trigger' + (state.dataTable.open ? ' active' : '') + '" type="button" data-resource-table-toggle aria-expanded="' + (state.dataTable.open ? 'true' : 'false') + '">'
+                +       icon('account_tree')
+                +       '<span>' + escapeHtml(selectedLabel) + '</span>'
+                +       icon(state.dataTable.open ? 'expand_less' : 'expand_more')
+                +   '</button>'
+                +   (state.dataTable.open
+                        ? '<div class="product-register-api-dropdown">'
+                            + '<label class="product-register-api-search">' + icon('search')
+                            +   '<input type="search" value="' + escapeHtml(state.dataTable.query) + '" placeholder="搜索目录或数据库表" data-resource-table-search>'
+                            + '</label>'
+                            + '<div class="product-register-api-tree">'
+                            +   (treeHtml || '<div class="product-register-api-empty">' + icon('search_off') + '<span>未找到匹配的目录或数据库表</span></div>')
+                            + '</div>'
+                        + '</div>'
+                        : '')
+                + '</div>';
+        }
+
         function renderDataItemsStep() {
             var allSelected = state.dataItems.length && state.dataItems.every(function (item) {
                 return state.selectedDataItems[item.id];
@@ -648,12 +941,8 @@
             return ''
                 + '<div class="resource-editor-body resource-editor-items-body">'
                 +   '<div class="resource-editor-items-toolbar">'
-                +       '<select aria-label="选择数据库表" data-resource-database-table>'
-                +           '<option>园区企业能耗日汇总表（lg_park_energy_daily）</option>'
-                +           '<option>园区能耗采集设备表（lg_park_energy_device）</option>'
-                +           '<option>园区碳排放测算明细表（lg_park_carbon_detail）</option>'
-                +       '</select>'
-                +       '<div>'
+                +       renderTableSelector()
+                +       '<div class="resource-editor-items-actions">'
                 +           '<button type="button" data-resource-item-import>' + icon('upload_file') + '<span>导入</span></button>'
                 +           '<button class="primary" type="button" data-resource-item-add>' + icon('add') + '<span>新增</span></button>'
                 +       '</div>'
@@ -667,6 +956,152 @@
                 +           '</tr></thead>'
                 +           '<tbody>' + renderDataItemRows() + '</tbody>'
                 +       '</table>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderSampleFormLabel() {
+            return '<label class="product-register-form-label"><span>数据样例</span>' + icon('help_outline') + '</label>';
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return '';
+            if (bytes >= 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + 'MB';
+            return Math.max(1, Math.round(bytes / 1024)) + 'KB';
+        }
+
+        function renderUploadedSampleFile(field, file, index) {
+            return ''
+                + '<div class="product-register-uploaded-file">'
+                +   icon('description')
+                +   '<span title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>'
+                +   '<small>' + escapeHtml(formatFileSize(file.size)) + '</small>'
+                +   icon('check_circle')
+                +   '<button type="button" data-resource-sample-remove="' + escapeHtml(field.key) + '" data-resource-sample-index="' + index + '">'
+                +       icon('delete')
+                +       '<span>移除</span>'
+                +   '</button>'
+                + '</div>';
+        }
+
+        function renderSampleUploadSpace(field, buttonLabel, buttonIcon) {
+            var files = state.attachments[field.key] || [];
+            var uploadId = 'resourceSampleUpload-' + field.key;
+            var canUpload = files.length < field.maxCount;
+            return ''
+                + '<div class="product-register-upload-space">'
+                +   (canUpload
+                        ? '<input id="' + uploadId + '" type="file" accept="' + escapeHtml(field.accept) + '" data-resource-sample-upload="' + escapeHtml(field.key) + '">'
+                            + '<label class="product-register-upload-button" for="' + uploadId + '">' + icon(buttonIcon || 'upload_file') + '<span>' + escapeHtml(buttonLabel || '上传文件') + '</span></label>'
+                        : '')
+                +   '<p>' + escapeHtml(field.description) + '</p>'
+                +   '<div class="product-register-uploaded-files">'
+                +       files.map(function (file, index) { return renderUploadedSampleFile(field, file, index); }).join('')
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderSampleApiTree(nodes, depth) {
+            var keyword = state.sampleApi.query.trim().toLowerCase();
+            var html = '';
+            (nodes || []).forEach(function (node) {
+                if (!treeNodeMatches(node, keyword)) return;
+                var isFolder = Boolean(node.children);
+                var expanded = keyword || state.sampleApi.expanded.indexOf(node.id) !== -1;
+                var selected = state.sampleApi.selectedId === node.id;
+                if (isFolder) {
+                    html += ''
+                        + '<div class="product-register-api-folder">'
+                        +   '<button type="button" style="--tree-indent:' + (depth * 18) + 'px" data-resource-sample-api-folder="' + escapeHtml(node.id) + '">'
+                        +       icon(expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right')
+                        +       icon('folder')
+                        +       '<span>' + escapeHtml(node.label) + '</span>'
+                        +   '</button>'
+                        +   (expanded ? '<div>' + renderSampleApiTree(node.children, depth + 1) + '</div>' : '')
+                        + '</div>';
+                    return;
+                }
+                html += ''
+                    + '<button class="product-register-api-option' + (selected ? ' selected' : '') + '" type="button" style="--tree-indent:' + (depth * 18) + 'px" data-resource-sample-api-select="' + escapeHtml(node.id) + '">'
+                    +   icon('api')
+                    +   '<span><b>' + escapeHtml(node.label) + '</b><small>' + escapeHtml(node.code) + '</small></span>'
+                    +   (selected ? icon('check') : '')
+                    + '</button>';
+            });
+            return html;
+        }
+
+        function renderSampleApiConfig() {
+            var selected = findTreeSelection(state.sampleApi.selectedId, SAMPLE_API_TREE, []);
+            var selectedLabel = selected ? selected.path.join(' / ') : '请选择目录中的 API';
+            var treeHtml = renderSampleApiTree(SAMPLE_API_TREE, 0);
+            return ''
+                + '<div class="product-register-api-selector">'
+                +   '<button class="product-register-api-trigger' + (state.sampleApi.open ? ' active' : '') + '" type="button" data-resource-sample-api-toggle aria-expanded="' + (state.sampleApi.open ? 'true' : 'false') + '">'
+                +       icon('account_tree')
+                +       '<span>' + escapeHtml(selectedLabel) + '</span>'
+                +       icon(state.sampleApi.open ? 'expand_less' : 'expand_more')
+                +   '</button>'
+                +   (state.sampleApi.open
+                        ? '<div class="product-register-api-dropdown">'
+                            + '<label class="product-register-api-search">' + icon('search')
+                            +   '<input type="search" value="' + escapeHtml(state.sampleApi.query) + '" placeholder="搜索目录或 API" data-resource-sample-api-search>'
+                            + '</label>'
+                            + '<div class="product-register-api-tree">'
+                            +   (treeHtml || '<div class="product-register-api-empty">' + icon('search_off') + '<span>未找到匹配的目录或 API</span></div>')
+                            + '</div>'
+                        + '</div>'
+                        : '')
+                +   (selected
+                        ? '<div class="product-register-api-selected">'
+                            + '<span>' + icon('check_circle') + '已选择</span>'
+                            + '<b>' + escapeHtml(selected.node.label) + '</b>'
+                            + '<code>' + escapeHtml(selected.node.method + '  ' + selected.node.path) + '</code>'
+                        + '</div>'
+                        : '')
+                +   '<p>可按名称、编码搜索，展开目录后选择具体 API。</p>'
+                + '</div>';
+        }
+
+        function renderSampleStep() {
+            var type = state.sampleType;
+            var content = '';
+            var description = '';
+            var typeOptions = [
+                { value: 'dataset', label: '数据集', icon: 'table_view' },
+                { value: 'api', label: 'API', icon: 'api' },
+                { value: 'other', label: '其他', icon: 'upload_file' }
+            ];
+            if (type === 'api') {
+                description = '从数据岛已登记的 API 目录中选择一项作为调用样例。';
+                content = renderSampleApiConfig();
+            } else if (type === 'other') {
+                description = '上传文档、图片或文本等其他形式的数据样例。';
+                content = renderSampleUploadSpace(SAMPLE_UPLOAD_FIELDS.other, '上传文件', 'upload_file');
+            } else {
+                description = '导入 Excel 文件作为数据集的结构与内容样例。';
+                content = renderSampleUploadSpace(SAMPLE_UPLOAD_FIELDS.dataset, '导入 Excel 文件', 'table_view');
+            }
+            return ''
+                + '<div class="resource-editor-body product-register-declaration-body">'
+                +   '<div class="product-register-declaration-form">'
+                +       '<div class="product-register-upload-row product-register-sample-row">'
+                +           renderSampleFormLabel()
+                +           '<div class="product-register-sample-config">'
+                +               '<div class="product-register-sample-type-options" role="radiogroup" aria-label="数据样例类型">'
+                +                   typeOptions.map(function (option) {
+                                        var active = option.value === type;
+                                        return '<label class="' + (active ? 'active' : '') + '">'
+                                            + '<input type="radio" name="resourceSampleType" value="' + option.value + '" data-resource-sample-type="' + option.value + '"' + (active ? ' checked' : '') + '>'
+                                            + icon(option.icon)
+                                            + '<span>' + option.label + '</span>'
+                                            + '</label>';
+                                    }).join('')
+                +               '</div>'
+                +               '<div class="product-register-sample-heading"><p>' + escapeHtml(description) + '</p></div>'
+                +               content
+                +           '</div>'
+                +       '</div>'
                 +   '</div>'
                 + '</div>';
         }
@@ -696,11 +1131,19 @@
         }
 
         function renderEditorFooter() {
-            var isSecondStep = state.formStep === 2;
-            if (!isSecondStep) {
+            if (state.formStep === 1) {
                 return ''
                     + '<footer class="resource-editor-footer">'
                     +   '<button type="button" data-resource-editor-action="cancel">' + icon('close') + '<span>取消</span></button>'
+                    +   '<button class="primary" type="button" data-resource-editor-action="next">' + icon('arrow_forward') + '<span>下一步</span></button>'
+                    + '</footer>';
+            }
+
+            if (state.formStep === 2) {
+                return ''
+                    + '<footer class="resource-editor-footer">'
+                    +   '<button type="button" data-resource-editor-action="cancel">' + icon('close') + '<span>取消</span></button>'
+                    +   '<button type="button" data-resource-editor-action="previous">' + icon('arrow_back') + '<span>上一步</span></button>'
                     +   '<button class="primary" type="button" data-resource-editor-action="next">' + icon('arrow_forward') + '<span>下一步</span></button>'
                     + '</footer>';
             }
@@ -724,7 +1167,7 @@
             panel.innerHTML = ''
                 + '<div class="resource-register-editor">'
                 +   renderEditorHeader()
-                +   (state.formStep === 1 ? renderBasicInfoStep() : renderDataItemsStep())
+                +   (state.formStep === 1 ? renderBasicInfoStep() : (state.formStep === 2 ? renderDataItemsStep() : renderSampleStep()))
                 +   renderEditorFooter()
                 + '</div>'
                 + '<div class="resource-register-toast" role="status" aria-live="polite" data-resource-register-toast hidden>' + icon('check_circle') + '<span></span></div>'
@@ -748,11 +1191,14 @@
             return true;
         }
 
+        function validateDataItems() {
+            if (state.dataItems.length) return true;
+            showToast('请至少保留一个数据项后再继续。');
+            return false;
+        }
+
         function submitResourceForm(action) {
-            if (!state.dataItems.length) {
-                showToast('请至少保留一个数据项后再继续。');
-                return;
-            }
+            if (!validateDataItems()) return;
 
             var nowText = '2026-07-27 10:30:00';
             var item = state.editingId ? getRecordById(state.editingId) : null;
@@ -768,7 +1214,11 @@
                     updatedAt: nowText,
                     status: isSave ? '待登记' : '登记审核中',
                     formData: copyObject(state.formData),
-                    dataItems: copyDataItems(state.dataItems)
+                    dataItems: copyDataItems(state.dataItems),
+                    dataTable: copyTableTreeConfig(state.dataTable),
+                    attachments: copyEffectiveSampleAttachments(state.attachments, state.sampleType),
+                    sampleType: state.sampleType,
+                    sampleApi: copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType)
                 };
                 RESOURCE_RECORDS.unshift(newRecord);
             } else if (item) {
@@ -780,6 +1230,10 @@
                 if (state.formMode === 'change') item.status = '变更审核中';
                 item.formData = copyObject(state.formData);
                 item.dataItems = copyDataItems(state.dataItems);
+                item.dataTable = copyTableTreeConfig(state.dataTable);
+                item.attachments = copyEffectiveSampleAttachments(state.attachments, state.sampleType);
+                item.sampleType = state.sampleType;
+                item.sampleApi = copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType);
             }
 
             var message = '资源信息已更新。';
@@ -834,6 +1288,47 @@
             showToast(message);
         }
 
+        function rerenderEditorAtCurrentScroll(focusSelector) {
+            var body = panel.querySelector('.resource-editor-body');
+            var scrollTop = body ? body.scrollTop : 0;
+            render();
+            var nextBody = panel.querySelector('.resource-editor-body');
+            if (nextBody) nextBody.scrollTop = scrollTop;
+            if (!focusSelector) return;
+            var focusTarget = panel.querySelector(focusSelector);
+            if (!focusTarget) return;
+            focusTarget.focus();
+            if (typeof focusTarget.setSelectionRange === 'function') {
+                focusTarget.setSelectionRange(focusTarget.value.length, focusTarget.value.length);
+            }
+        }
+
+        function handleSampleFiles(fieldKey, fileList) {
+            var field = SAMPLE_UPLOAD_FIELDS.dataset.key === fieldKey
+                ? SAMPLE_UPLOAD_FIELDS.dataset
+                : (SAMPLE_UPLOAD_FIELDS.other.key === fieldKey ? SAMPLE_UPLOAD_FIELDS.other : null);
+            if (!field || !fileList || !fileList.length) return;
+            var file = fileList[0];
+            var extension = (file.name.split('.').pop() || '').toLowerCase();
+            if (field.extensions.indexOf(extension) === -1) {
+                showToast(file.name + ' 的文件格式不支持。');
+                return;
+            }
+            if (file.size > field.maxSize * 1024 * 1024) {
+                showToast(file.name + ' 超过 ' + field.maxSize + 'MB 限制。');
+                return;
+            }
+            state.attachments[fieldKey] = [{
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                source: 'local',
+                file: file
+            }];
+            rerenderEditorAtCurrentScroll();
+            showToast('样例文件已上传。');
+        }
+
         function bindEditorEvents() {
             panel.querySelectorAll('[data-resource-form-field]').forEach(function (field) {
                 var eventName = field.tagName === 'SELECT' || field.type === 'radio' ? 'change' : 'input';
@@ -849,11 +1344,16 @@
                 button.addEventListener('click', function () {
                     var action = this.dataset.resourceEditorAction;
                     if (action === 'cancel') closeEditor();
-                    else if (action === 'next' && validateBasicForm()) {
-                        state.formStep = 2;
-                        render();
+                    else if (action === 'next') {
+                        if (state.formStep === 1 && validateBasicForm()) {
+                            state.formStep = 2;
+                            render();
+                        } else if (state.formStep === 2 && validateDataItems()) {
+                            state.formStep = 3;
+                            render();
+                        }
                     } else if (action === 'previous') {
-                        state.formStep = 1;
+                        state.formStep = Math.max(1, state.formStep - 1);
                         render();
                     } else if (action === 'save' || action === 'register' || action === 'update') {
                         submitResourceForm(action);
@@ -872,9 +1372,46 @@
             var addItem = panel.querySelector('[data-resource-item-add]');
             if (addItem) addItem.addEventListener('click', function () { openDataItemDrawer('create', -1); });
 
+            var tableToggle = panel.querySelector('[data-resource-table-toggle]');
+            if (tableToggle) {
+                tableToggle.addEventListener('click', function () {
+                    state.dataTable.open = !state.dataTable.open;
+                    state.dataTable.query = '';
+                    rerenderEditorAtCurrentScroll(state.dataTable.open ? '[data-resource-table-search]' : '');
+                });
+            }
+
+            var tableSearch = panel.querySelector('[data-resource-table-search]');
+            if (tableSearch) {
+                tableSearch.addEventListener('input', function () {
+                    state.dataTable.query = this.value;
+                    rerenderEditorAtCurrentScroll('[data-resource-table-search]');
+                });
+            }
+
+            panel.querySelectorAll('[data-resource-table-folder]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var id = this.dataset.resourceTableFolder;
+                    var index = state.dataTable.expanded.indexOf(id);
+                    if (index === -1) state.dataTable.expanded.push(id);
+                    else state.dataTable.expanded.splice(index, 1);
+                    rerenderEditorAtCurrentScroll();
+                });
+            });
+
+            panel.querySelectorAll('[data-resource-table-select]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.dataTable.selectedId = this.dataset.resourceTableSelect;
+                    state.dataTable.query = '';
+                    state.dataTable.open = false;
+                    rerenderEditorAtCurrentScroll();
+                });
+            });
+
             var importItems = panel.querySelector('[data-resource-item-import]');
             if (importItems) importItems.addEventListener('click', function () {
-                showToast('已载入数据库表字段示例，可继续新增或编辑数据项。');
+                var selectedTable = findTreeSelection(state.dataTable.selectedId, RESOURCE_TABLE_TREE, []);
+                showToast('已载入“' + (selectedTable ? selectedTable.node.label : '所选数据库表') + '”字段示例，可继续新增或编辑数据项。');
             });
 
             panel.querySelectorAll('[data-resource-item-action]').forEach(function (button) {
@@ -918,6 +1455,66 @@
 
             var confirmItem = panel.querySelector('[data-resource-item-confirm]');
             if (confirmItem) confirmItem.addEventListener('click', saveDataItemDrawer);
+
+            panel.querySelectorAll('[data-resource-sample-type]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    if (!this.checked || this.dataset.resourceSampleType === state.sampleType) return;
+                    state.sampleType = this.dataset.resourceSampleType;
+                    state.sampleApi.open = false;
+                    state.sampleApi.query = '';
+                    rerenderEditorAtCurrentScroll();
+                });
+            });
+
+            panel.querySelectorAll('[data-resource-sample-upload]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    handleSampleFiles(this.dataset.resourceSampleUpload, this.files);
+                });
+            });
+
+            panel.querySelectorAll('[data-resource-sample-remove]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.attachments[this.dataset.resourceSampleRemove] = [];
+                    rerenderEditorAtCurrentScroll();
+                    showToast('样例文件已移除，可重新上传。');
+                });
+            });
+
+            var sampleApiToggle = panel.querySelector('[data-resource-sample-api-toggle]');
+            if (sampleApiToggle) {
+                sampleApiToggle.addEventListener('click', function () {
+                    state.sampleApi.open = !state.sampleApi.open;
+                    state.sampleApi.query = '';
+                    rerenderEditorAtCurrentScroll(state.sampleApi.open ? '[data-resource-sample-api-search]' : '');
+                });
+            }
+
+            var sampleApiSearch = panel.querySelector('[data-resource-sample-api-search]');
+            if (sampleApiSearch) {
+                sampleApiSearch.addEventListener('input', function () {
+                    state.sampleApi.query = this.value;
+                    rerenderEditorAtCurrentScroll('[data-resource-sample-api-search]');
+                });
+            }
+
+            panel.querySelectorAll('[data-resource-sample-api-folder]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var id = this.dataset.resourceSampleApiFolder;
+                    var index = state.sampleApi.expanded.indexOf(id);
+                    if (index === -1) state.sampleApi.expanded.push(id);
+                    else state.sampleApi.expanded.splice(index, 1);
+                    rerenderEditorAtCurrentScroll();
+                });
+            });
+
+            panel.querySelectorAll('[data-resource-sample-api-select]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.sampleApi.selectedId = this.dataset.resourceSampleApiSelect;
+                    state.sampleApi.query = '';
+                    state.sampleApi.open = false;
+                    rerenderEditorAtCurrentScroll();
+                });
+            });
         }
 
         function render() {

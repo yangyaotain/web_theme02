@@ -41,6 +41,7 @@
             cursor: pointer; transition: all 0.15s; font-family: inherit;
         }
         .btn-outline:hover { background: #f0f9f4; }
+        .btn-outline:disabled { color: #aeb7b2; border-color: #d8dedb; background: #f5f6f6; cursor: not-allowed; }
         .btn-primary {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 8px 20px; font-size: 13px; font-weight: 500;
@@ -90,6 +91,115 @@
         }
         .member-action-row .btn-primary,
         .member-action-row .btn-outline { min-width: 76px; }
+
+        /* ── 电子签章能力 ── */
+        .esign-service-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 9px; border: 1px solid #d9e0dc; border-radius: 12px;
+            color: #68766f; background: #f5f7f6; font-size: 12px; font-weight: 600;
+        }
+        .esign-service-status i { width: 7px; height: 7px; border-radius: 50%; background: #98a39d; }
+        .esign-service-status.is-success { color: var(--forest-green); border-color: #bfe2ce; background: #f0f9f4; }
+        .esign-service-status.is-success i { background: var(--forest-green); }
+        .esign-service-status.is-warning { color: #9a6a13; border-color: #ecd8ad; background: #fff8e8; }
+        .esign-service-status.is-warning i { background: #d69a24; }
+        .esign-service-status.is-processing { color: #2f6f9f; border-color: #bfd9eb; background: #eef7fc; }
+        .esign-service-status.is-processing i { background: #3a84b7; }
+        .esign-service-status.is-danger { color: #b84b4b; border-color: #efcaca; background: #fff2f2; }
+        .esign-service-status.is-danger i { background: #d75b5b; }
+        .esign-overview {
+            display: flex; align-items: center; justify-content: space-between; gap: 28px;
+            padding: 18px 20px; border: 1px solid #dce9e2; border-radius: 6px; background: linear-gradient(135deg, #f7fbf8 0%, #f2f8f5 100%);
+        }
+        .esign-overview-main { min-width: 0; display: flex; align-items: center; gap: 14px; }
+        .esign-overview-icon {
+            width: 46px; height: 46px; flex: 0 0 auto; display: grid; place-items: center;
+            color: var(--forest-green); border-radius: 10px; background: #e4f2ea;
+        }
+        .esign-overview-icon svg { width: 24px; height: 24px; fill: currentColor; }
+        .esign-overview h2 { margin: 0; color: #34443c; font-size: 17px; font-weight: 600; }
+        .esign-overview p { margin: 6px 0 0; color: #748078; font-size: 12px; line-height: 20px; }
+        .esign-overview .btn-primary { flex: 0 0 auto; min-width: 132px; }
+        .esign-progress-wrap { margin: 20px 0; }
+        .esign-progress-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+        .esign-progress-head div { min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+        .esign-progress-head strong { color: #3d4a43; font-size: 13px; }
+        .esign-demo-reset {
+            flex: 0 0 auto; padding: 3px 5px; border: 0; background: transparent;
+            color: var(--forest-green); font-family: inherit; font-size: 12px; cursor: pointer;
+        }
+        .esign-demo-reset:hover { color: var(--forest-green-600); text-decoration: underline; }
+        .esign-progress { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+        .esign-progress-tab {
+            min-width: 0; min-height: 78px; display: flex; align-items: flex-start; gap: 10px;
+            padding: 13px 14px; border: 1px solid #dfe7e3; border-radius: 6px;
+            outline: none; background: #fff; font-family: inherit; text-align: left; cursor: pointer;
+            transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+        .esign-progress-tab:hover { border-color: #a9cfba; background: #f8fcfa; transform: translateY(-1px); }
+        .esign-progress-tab:focus-visible { border-color: var(--forest-green); box-shadow: 0 0 0 3px rgba(32, 165, 101, .12); }
+        .esign-step-number {
+            width: 28px; height: 28px; flex: 0 0 auto; display: grid; place-items: center;
+            color: #738078; border: 1px solid #cfd9d4; border-radius: 50%; background: #f8faf9;
+            font-size: 12px; font-weight: 600;
+        }
+        .esign-step-copy { min-width: 0; flex: 1; display: block; }
+        .esign-step-title { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .esign-step-title strong { overflow: hidden; color: #526059; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+        .esign-step-title em {
+            flex: 0 0 auto; padding: 1px 5px; border-radius: 8px; background: #f0f3f1;
+            color: #929d97; font-size: 10px; font-style: normal; font-weight: 500; line-height: 16px;
+        }
+        .esign-step-copy > span { display: block; margin-top: 6px; color: #909b95; font-size: 11px; line-height: 17px; }
+        .esign-progress-tab.is-done .esign-step-number { color: #fff; border-color: #78b894; background: #78b894; }
+        .esign-progress-tab.is-done .esign-step-title em { color: #468562; background: #eaf6ef; }
+        .esign-progress-tab.is-current .esign-step-number,
+        .esign-progress-tab.is-selected .esign-step-number { color: #fff; border-color: var(--forest-green); background: var(--forest-green); }
+        .esign-progress-tab.is-selected {
+            border-color: #67b68b; background: #f1faf5;
+            box-shadow: 0 0 0 2px rgba(32, 165, 101, .08), 0 5px 14px rgba(40, 96, 65, .06);
+        }
+        .esign-progress-tab.is-selected .esign-step-title strong { color: var(--forest-green); }
+        .esign-progress-tab.is-selected .esign-step-title em { color: #fff; background: var(--forest-green); }
+        .esign-status-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        .esign-status-item {
+            min-width: 0; padding: 14px 16px; border: 1px solid #e1ebe6;
+            border-radius: 5px; background: #f8fbf9;
+        }
+        .esign-status-item span, .esign-status-item strong, .esign-status-item small { display: block; }
+        .esign-status-item span { color: #909b95; font-size: 12px; }
+        .esign-status-item strong { margin-top: 7px; color: #34443c; font-size: 14px; }
+        .esign-status-item small { margin-top: 5px; color: #84908a; font-size: 11px; line-height: 18px; }
+        .esign-status-item strong.ok { color: var(--forest-green); }
+        .esign-status-item strong.warn { color: #b27b1d; }
+        .esign-status-item strong.error { color: #c45151; }
+        .esign-service-detail {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px 28px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #edf1ef;
+        }
+        .esign-service-detail div { min-width: 0; display: flex; gap: 8px; font-size: 13px; line-height: 22px; }
+        .esign-service-detail span { flex: 0 0 auto; color: #909399; }
+        .esign-service-detail strong { overflow: hidden; color: #4b5751; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+        .esign-service-note {
+            display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 10px 12px;
+            color: #68766f; border-radius: 4px; background: #f4f7f5; font-size: 12px; line-height: 20px;
+        }
+        .esign-service-note svg { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; fill: var(--forest-green); }
+        .esign-service-feedback { display: none; margin-bottom: 14px; padding: 9px 12px; color: #5e6d65; border: 1px solid #d8e7df; border-radius: 4px; background: #f5faf7; font-size: 12px; line-height: 20px; }
+        .esign-service-feedback.show { display: block; }
+        .esign-service-failure { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 10px 12px; color: #a44545; border: 1px solid #efcccc; border-radius: 4px; background: #fff4f4; font-size: 12px; line-height: 20px; }
+        .esign-service-failure[hidden] { display: none; }
+        .esign-service-failure svg { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; fill: currentColor; }
+        @media (max-width: 1100px) {
+            .esign-status-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .esign-service-detail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .esign-progress { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 720px) {
+            .esign-progress-head, .esign-progress-head div { align-items: flex-start; }
+            .esign-progress-head div { flex-direction: column; gap: 3px; }
+            .esign-progress { grid-template-columns: 1fr; }
+        }
 
         /* ══════════════════════════════════════════
            Table
@@ -384,6 +494,7 @@
                     <a class="sidebar-item disabled"><span>业务开通</span></a>
                     <a class="sidebar-item disabled"><span>账号信息</span></a>
                     <a class="sidebar-item disabled"><span>账号安全</span></a>
+                    <a href="user-center.html?menu=esign-service" class="sidebar-item"><span>电子签章</span></a>
                     <a class="sidebar-item active"><span>会员中心</span></a>
                 </div>
 
@@ -413,7 +524,7 @@
         <!-- Main Content -->
         <main class="admin-content">
             <!-- 会员信息 -->
-            <div class="card">
+            <div class="card" data-user-member-content>
                 <div class="card-hd">
                     <span class="card-hd-title">
                         <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -466,8 +577,73 @@
                 </div>
             </div>
 
+            <!-- 电子签章能力 -->
+            <div class="card" data-user-esign-content hidden>
+                <div class="card-hd">
+                    <span class="card-hd-title">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14-4-4 1.41-1.41L11 14.17l4.59-4.58L17 11l-6 6z"/></svg>
+                        电子签章
+                    </span>
+                    <div class="card-hd-right">
+                        <span class="esign-service-status is-processing" data-esign-status><i></i><span>主体同步中</span></span>
+                        <button class="btn-outline" type="button" data-esign-refresh>
+                            <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.09 0-7.19 3.72-6.39 7.69l-2.08.68C2.43 7.31 6.32 2 12 2c2.76 0 5.26 1.12 7.07 2.93L22 2v8h-8l3.65-3.65zM6.35 17.65C7.8 19.1 9.79 20 12 20c4.09 0 7.19-3.72 6.39-7.69l2.08-.68C21.57 16.69 17.68 22 12 22c-2.76 0-5.26-1.12-7.07-2.93L2 22v-8h8l-3.65 3.65z"/></svg>
+                            <span>刷新状态</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-bd">
+                    <div class="esign-service-feedback" role="status" aria-live="polite" data-esign-feedback></div>
+                    <div class="esign-overview">
+                        <div class="esign-overview-main">
+                            <span class="esign-overview-icon"><svg viewBox="0 0 24 24"><path d="M17 3H7C5.9 3 5 3.9 5 5v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7V5h10v14zm-2-8H9v2h6v-2zm0-4H9v2h6V7zm-2 8H9v2h4v-2z"/></svg></span>
+                            <div><h2 data-esign-title>正在同步法大大企业主体</h2><p data-esign-description>本平台已自动调用法大大创建企业主体，无需在此重复提交企业资料。</p></div>
+                        </div>
+                        <button class="btn-primary" type="button" data-esign-action disabled>
+                            <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2zm-6-6H5V5h8v2zm0 12H5v-2h8v2zm2.59-2.41L20.17 12l-4.58-4.59L17 6l6 6-6 6-1.41-1.41z"/></svg>
+                            <span>同步中</span>
+                        </button>
+                    </div>
+
+                    <section class="esign-progress-wrap" aria-labelledby="esign-progress-title">
+                        <div class="esign-progress-head">
+                            <div><strong id="esign-progress-title">服务状态</strong></div>
+                            <button class="esign-demo-reset" type="button" data-esign-demo-reset hidden>返回当前状态</button>
+                        </div>
+                        <div class="esign-progress" role="tablist" aria-label="电子签章服务状态" data-esign-progress>
+                            <button class="esign-progress-tab" type="button" role="tab" data-esign-step="syncing" aria-selected="false"><span class="esign-step-number">1</span><span class="esign-step-copy"><span class="esign-step-title"><strong>主体同步中</strong><em data-esign-step-indicator>待处理</em></span><span>平台自动创建法大大企业主体</span></span></button>
+                            <button class="esign-progress-tab" type="button" role="tab" data-esign-step="company" aria-selected="false"><span class="esign-step-number">2</span><span class="esign-step-copy"><span class="esign-step-title"><strong>待企业认证</strong><em data-esign-step-indicator>待处理</em></span><span>进入法大大提交认证资料</span></span></button>
+                            <button class="esign-progress-tab" type="button" role="tab" data-esign-step="verify" aria-selected="false"><span class="esign-step-number">3</span><span class="esign-step-copy"><span class="esign-step-title"><strong>企业认证中</strong><em data-esign-step-indicator>待处理</em></span><span>含审核、待授权及异常状态</span></span></button>
+                            <button class="esign-progress-tab" type="button" role="tab" data-esign-step="active" aria-selected="false"><span class="esign-step-number">4</span><span class="esign-step-copy"><span class="esign-step-title"><strong>服务可用</strong><em data-esign-step-indicator>待处理</em></span><span>进入法大大管理签章业务</span></span></button>
+                        </div>
+                    </section>
+
+                    <div class="esign-status-grid">
+                        <div class="esign-status-item"><span>法大大企业主体</span><strong data-esign-company-status>同步中</strong><small data-esign-company-help>平台正在自动创建企业主体</small></div>
+                        <div class="esign-status-item"><span>法大大企业认证</span><strong data-esign-verify-status>未认证</strong><small data-esign-verify-help>主体创建成功后可前往法大大办理</small></div>
+                        <div class="esign-status-item"><span>法大大平台入口</span><strong data-esign-entry-status>暂不可进入</strong><small data-esign-entry-help>主体创建成功后开放入口</small></div>
+                    </div>
+                    <div class="esign-service-failure" data-esign-failure hidden>
+                        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                        <span data-esign-failure-text></span>
+                    </div>
+                    <div class="esign-service-detail">
+                        <div><span>签约主体：</span><strong data-esign-company-name>中国电子云</strong></div>
+                        <div><span>统一社会信用代码：</span><strong data-esign-credit-code>91440300731109149K</strong></div>
+                        <div><span>企业管理员：</span><strong data-esign-admin-name>企业经办人</strong></div>
+                        <div><span>法大大企业ID：</span><strong data-esign-company-id>--</strong></div>
+                        <div><span>签约服务提供方：</span><strong>法大大</strong></div>
+                        <div><span>最后同步时间：</span><strong data-esign-sync-time>--</strong></div>
+                    </div>
+                    <div class="esign-service-note">
+                        <svg viewBox="0 0 24 24"><path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zM11 9h2V7h-2v2z"/></svg>
+                        <span>本平台仅使用法大大提供的电子签章能力，不在本平台维护印章、授权或合同模板。企业认证及后续签章业务管理均通过法大大平台完成。</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- 会员权益 -->
-            <div class="card">
+            <div class="card" data-user-member-content>
                 <div class="card-hd">
                     <span class="card-hd-title">
                         <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -1171,7 +1347,271 @@
         setMemberMode('apply');
     })();
     </script>
+    <script src="js/e-sign-service-state.js"></script>
     <script src="js/user-center-layout.js"></script>
     <script src="js/admin-topbar.js"></script>
+    <script>
+        (function () {
+            var isEsignPage = new URLSearchParams(window.location.search).get('menu') === 'esign-service';
+            document.querySelectorAll('[data-user-member-content]').forEach(function (section) {
+                section.hidden = isEsignPage;
+            });
+            var esignContent = document.querySelector('[data-user-esign-content]');
+            if (esignContent) esignContent.hidden = !isEsignPage;
+            if (isEsignPage) document.title = '电子签章 - 用户中心';
+
+            if (!isEsignPage || !window.ESignServiceState) return;
+
+            var service = window.ESignServiceState;
+            var actionButton = document.querySelector('[data-esign-action]');
+            var refreshButton = document.querySelector('[data-esign-refresh]');
+            var feedback = document.querySelector('[data-esign-feedback]');
+            var demoResetButton = document.querySelector('[data-esign-demo-reset]');
+            var progressTabs = Array.prototype.slice.call(document.querySelectorAll('[data-esign-step]'));
+            var demoStep = '';
+            var demoSyncTime = new Date().toLocaleString('zh-CN', { hour12: false });
+
+            function setText(selector, value) {
+                var target = document.querySelector(selector);
+                if (target) target.textContent = value;
+            }
+
+            function statusInfo(value, type) {
+                var maps = {
+                    certification: {
+                        not_started: ['未认证', '', '主体创建成功后可前往法大大办理'],
+                        unverified: ['待认证', 'warn', '请进入法大大提交认证资料'],
+                        verifying: ['认证中', 'warn', '认证结果以法大大回调或查询结果为准'],
+                        pending_authorization: ['待认证授权', 'warn', '请由法定代表人或企业负责人进入法大大完成认证授权'],
+                        authorization_failed: ['认证授权失败', 'error', '请核对授权人身份后重新办理'],
+                        verified: ['已认证', 'ok', '认证主体与平台会员主体一致'],
+                        failed: ['认证失败', 'error', '请查看失败原因并重新认证'],
+                        expired: ['认证失效', 'error', '请重新完成企业实名认证']
+                    }
+                };
+                return (maps[type] && maps[type][value]) || ['未知', '', '请刷新法大大状态'];
+            }
+
+            function setStrong(selector, info) {
+                var target = document.querySelector(selector);
+                if (!target) return;
+                target.textContent = info[0];
+                target.classList.remove('ok', 'warn', 'error');
+                if (info[1]) target.classList.add(info[1]);
+            }
+
+            function getDemoState(step, actualState) {
+                var companyId = actualState.companyId || 'FDD-DEMO-COMPANY-001';
+                var states = {
+                    syncing: {
+                        status: 'syncing_company',
+                        companyId: '',
+                        certificationStatus: 'not_started',
+                        authorizationStatus: 'not_started',
+                        lastSyncAt: demoSyncTime
+                    },
+                    company: {
+                        status: 'pending_verification',
+                        companyId: companyId,
+                        certificationStatus: 'unverified',
+                        authorizationStatus: 'not_started',
+                        lastSyncAt: demoSyncTime
+                    },
+                    verify: {
+                        status: 'verifying',
+                        companyId: companyId,
+                        certificationStatus: 'verifying',
+                        authorizationStatus: 'not_started',
+                        lastSyncAt: demoSyncTime
+                    },
+                    active: {
+                        status: 'active',
+                        companyId: companyId,
+                        certificationStatus: 'verified',
+                        authorizationStatus: 'authorized',
+                        lastSyncAt: demoSyncTime
+                    }
+                };
+                return Object.assign({}, actualState, states[step] || states.syncing, { failureReason: '' });
+            }
+
+            function getCurrentStep(state) {
+                if (state.status === 'active') return 'active';
+                if (['verifying', 'pending_authorization', 'verification_failed', 'authorization_failed', 'expired'].indexOf(state.status) !== -1) return 'verify';
+                if (state.status === 'pending_verification') return 'company';
+                return 'syncing';
+            }
+
+            function renderProgress(state) {
+                var steps = {
+                    syncing: { done: Boolean(state.companyId), current: ['syncing_company', 'sync_failed'].indexOf(state.status) !== -1 },
+                    company: { done: Boolean(state.companyId) && state.status !== 'pending_verification', current: state.status === 'pending_verification' },
+                    verify: { done: state.certificationStatus === 'verified', current: ['verifying', 'pending_authorization', 'verification_failed', 'authorization_failed', 'expired'].indexOf(state.status) !== -1 },
+                    active: { done: state.status === 'active', current: state.status === 'active' }
+                };
+                var selectedStep = demoStep || getCurrentStep(state);
+                Object.keys(steps).forEach(function (key) {
+                    var element = document.querySelector('[data-esign-step="' + key + '"]');
+                    if (!element) return;
+                    element.classList.toggle('is-done', steps[key].done);
+                    element.classList.toggle('is-current', steps[key].current && !steps[key].done);
+                    element.classList.toggle('is-selected', selectedStep === key);
+                    element.setAttribute('aria-selected', selectedStep === key ? 'true' : 'false');
+                    element.tabIndex = selectedStep === key ? 0 : -1;
+                    var indicator = element.querySelector('[data-esign-step-indicator]');
+                    if (indicator) {
+                        indicator.textContent = selectedStep === key
+                            ? (demoStep ? '当前查看' : '当前状态')
+                            : (steps[key].done ? '已完成' : '待处理');
+                    }
+                });
+            }
+
+            function render() {
+                var actualState = service.get();
+                var state = demoStep ? getDemoState(demoStep, actualState) : actualState;
+                var meta = service.getMeta(state);
+                var status = document.querySelector('[data-esign-status]');
+                if (status) {
+                    status.classList.remove('is-success', 'is-warning', 'is-processing', 'is-danger');
+                    if (meta.tone !== 'default') status.classList.add('is-' + meta.tone);
+                    status.querySelector('span').textContent = meta.label;
+                }
+
+                setText('[data-esign-title]', meta.title);
+                setText('[data-esign-description]', meta.description);
+                setText('[data-esign-company-name]', state.companyName);
+                setText('[data-esign-credit-code]', state.creditCode);
+                setText('[data-esign-admin-name]', state.adminName);
+                setText('[data-esign-company-id]', state.companyId || '--');
+                setText('[data-esign-sync-time]', state.lastSyncAt || '--');
+
+                var actionLabel = actionButton && actionButton.querySelector('span');
+                if (actionLabel) actionLabel.textContent = meta.action;
+                if (actionButton) {
+                    actionButton.dataset.actionType = meta.actionType;
+                    actionButton.dataset.demoMode = demoStep ? 'true' : 'false';
+                    actionButton.disabled = Boolean(demoStep) || meta.actionType === 'wait';
+                }
+                if (demoResetButton) demoResetButton.hidden = !demoStep;
+
+                var companyInfo = state.companyId
+                    ? ['已创建', 'ok', '企业主体已由平台自动同步至法大大']
+                    : (state.status === 'sync_failed'
+                        ? ['同步异常', 'error', '平台将自动重试，请刷新查看结果']
+                        : ['同步中', 'warn', '平台正在自动创建法大大企业主体']);
+                setStrong('[data-esign-company-status]', companyInfo);
+                setText('[data-esign-company-help]', companyInfo[2]);
+
+                var verifyInfo = statusInfo(state.certificationStatus, 'certification');
+                setStrong('[data-esign-verify-status]', verifyInfo);
+                setText('[data-esign-verify-help]', verifyInfo[2]);
+
+                var entryInfo = state.companyId
+                    ? ['可进入', 'ok', state.status === 'active'
+                        ? '印章、模板及具体用印授权均在法大大维护'
+                        : '可进入法大大继续企业认证或查看认证进度']
+                    : ['暂不可进入', '', '主体创建成功后开放法大大入口'];
+                setStrong('[data-esign-entry-status]', entryInfo);
+                setText('[data-esign-entry-help]', entryInfo[2]);
+
+                var failure = document.querySelector('[data-esign-failure]');
+                var failureStates = ['sync_failed', 'verification_failed', 'authorization_failed', 'expired'];
+                var failureText = failureStates.indexOf(state.status) !== -1 ? (state.failureReason || ({
+                    sync_failed: '法大大企业主体创建失败，平台正在自动重试。',
+                    verification_failed: '企业实名认证未通过，请核对企业名称、统一社会信用代码及认证材料。',
+                    authorization_failed: '法定代表人或企业负责人认证授权未通过，请重新办理。',
+                    expired: '企业实名认证已失效，电子签章能力已暂停。'
+                })[state.status] || '') : '';
+                if (failure) failure.hidden = !failureText;
+                setText('[data-esign-failure-text]', failureText);
+                renderProgress(state);
+            }
+
+            function showFeedback(message) {
+                if (!feedback) return;
+                feedback.textContent = message;
+                feedback.classList.add('show');
+                window.clearTimeout(showFeedback.timer);
+                showFeedback.timer = window.setTimeout(function () { feedback.classList.remove('show'); }, 3200);
+            }
+
+            if (actionButton) {
+                actionButton.addEventListener('click', function () {
+                    var actionType = this.dataset.actionType;
+                    if (this.dataset.demoMode === 'true') {
+                        return;
+                    }
+                    if (actionType === 'wait') {
+                        return;
+                    }
+                    if (actionType === 'refresh') {
+                        refreshButton.click();
+                        return;
+                    }
+                    if (actionType === 'verify') {
+                        service.openFadada('verify');
+                        showFeedback('已在新窗口打开法大大实名认证页面，提交结果以回调或状态查询为准。');
+                        return;
+                    }
+                    if (actionType === 'authorize') {
+                        service.openFadada('authorize');
+                        showFeedback('已在新窗口打开法大大企业认证授权页面，结果以回调或查询为准。');
+                        return;
+                    }
+                    service.openFadada('manage');
+                    showFeedback('已在新窗口打开法大大业务管理页面。');
+                });
+            }
+
+            progressTabs.forEach(function (tab, index) {
+                tab.addEventListener('click', function () {
+                    demoStep = this.dataset.esignStep;
+                    render();
+                });
+                tab.addEventListener('keydown', function (event) {
+                    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+                    event.preventDefault();
+                    var offset = event.key === 'ArrowRight' ? 1 : -1;
+                    var nextIndex = (index + offset + progressTabs.length) % progressTabs.length;
+                    progressTabs[nextIndex].focus();
+                    progressTabs[nextIndex].click();
+                });
+            });
+
+            if (demoResetButton) {
+                demoResetButton.addEventListener('click', function () {
+                    demoStep = '';
+                    render();
+                    showFeedback('已返回电子签章当前真实状态。');
+                });
+            }
+
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function () {
+                    var button = this;
+                    var label = button.querySelector('span');
+                    demoStep = '';
+                    button.disabled = true;
+                    label.textContent = '同步中...';
+                    window.setTimeout(function () {
+                        var before = service.get().status;
+                        var after = service.refresh().status;
+                        label.textContent = '刷新状态';
+                        button.disabled = false;
+                        showFeedback(before === 'syncing_company' || before === 'sync_failed'
+                            ? '法大大企业主体已自动创建，可以进入法大大完成企业认证。'
+                            : (before === 'verifying' && after === 'pending_authorization'
+                                ? '法大大返回待认证授权，请由法定代表人或企业负责人继续办理。'
+                                : '已同步法大大最新状态。'));
+                    }, 700);
+                });
+            }
+
+            window.addEventListener('esignservicechange', render);
+            window.addEventListener('focus', render);
+            render();
+        })();
+    </script>
 </body>
 </html>

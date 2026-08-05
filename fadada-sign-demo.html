@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法大大电子签约</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="css/fadada-sign-demo.css">
+</head>
+<body>
+    <header class="fdd-header">
+        <div class="fdd-brand"><span class="fdd-brand-mark">法</span><strong>法大大</strong><i></i><span data-fdd-brand-context>电子签约</span></div>
+        <div class="fdd-header-actions"><button type="button" data-fdd-help><span class="material-symbols-outlined">help</span><span data-fdd-help-text>签署帮助</span></button></div>
+    </header>
+
+    <main class="fdd-layout" data-fdd-sign-view>
+        <section class="fdd-document-area">
+            <div class="fdd-document-toolbar">
+                <div><strong data-fdd-contract-name>数据交易三方合同</strong><span data-fdd-contract-no>--</span></div>
+                <div><button type="button" aria-label="缩小"><span class="material-symbols-outlined">remove</span></button><span>100%</span><button type="button" aria-label="放大"><span class="material-symbols-outlined">add</span></button><button type="button"><span class="material-symbols-outlined">download</span>下载合同</button></div>
+            </div>
+            <div class="fdd-document-scroll">
+                <article class="fdd-paper">
+                    <div class="fdd-paper-number"><span data-fdd-number-label>合同编号</span>：<span data-fdd-paper-no>--</span></div>
+                    <h1 data-fdd-paper-title>数据交易三方合同</h1>
+                    <p class="fdd-paper-intro">本合同由数据提供方、数据需求方及平台运营方共同签署，各方依据交易订单及平台规则，就数据产品或服务的交付、使用、费用结算等事项达成一致。</p>
+                    <h2>第一条　合同主体</h2>
+                    <dl><div><dt>甲方（提供方）</dt><dd>深圳市龙岗数智科技有限公司</dd></div><div><dt>乙方（需求方）</dt><dd>龙岗智慧交通科技有限公司</dd></div><div><dt>丙方（平台运营方）</dt><dd>深圳市龙岗区数据要素交易服务有限公司</dd></div></dl>
+                    <h2>第二条　交易内容</h2>
+                    <p>交易标的、交付方式、合同金额及付款计划以平台关联订单为准。各方确认电子签署后的合同文件与纸质合同具有同等法律效力。</p>
+                    <h2>第三条　电子签署</h2>
+                    <p>各方通过法大大完成身份认证、签署意愿确认及电子印章签署。签署完成后，平台下载最终合同并完成本地归档及区块链存证。</p>
+                    <div class="fdd-signature-zone"><span>当前签署区</span><div><b data-fdd-sign-role>签署方</b><small data-fdd-sign-party>当前登录企业</small></div><em>请在右侧选择印章完成签署</em></div>
+                    <footer>第 1 页 / 共 6 页</footer>
+                </article>
+            </div>
+        </section>
+
+        <aside class="fdd-sign-panel">
+            <div class="fdd-task-summary"><span>签约任务</span><strong data-fdd-task-id>FDD-DEMO-2026070001</strong><small data-fdd-order-no>关联订单：--</small></div>
+            <ol class="fdd-steps">
+                <li class="done"><i>1</i><div><strong>企业身份认证</strong><span>企业主体和当前经办人身份已认证</span></div><em>已完成</em></li>
+                <li class="active" data-fdd-step="read"><i>2</i><div><strong>阅读并确认合同</strong><span>请确认合同内容及签署主体</span></div><em>进行中</em></li>
+                <li data-fdd-step="seal"><i>3</i><div><strong>选择企业印章</strong><span>选择已授权的企业电子印章</span></div><em>待处理</em></li>
+                <li data-fdd-step="complete"><i>4</i><div><strong>完成签署</strong><span>签署结果将回调业务平台</span></div><em>待处理</em></li>
+            </ol>
+
+            <section class="fdd-read-card" data-fdd-read-card>
+                <label><input type="checkbox" data-fdd-agree><span>我已完整阅读合同内容，并确认本次签署为企业真实意愿。</span></label>
+                <button class="fdd-primary" type="button" disabled data-fdd-next><span>同意并进入盖章</span><span class="material-symbols-outlined">arrow_forward</span></button>
+                <button class="fdd-secondary" type="button" data-fdd-refuse><span class="material-symbols-outlined">block</span>拒绝签署</button>
+            </section>
+
+            <section class="fdd-seal-card" data-fdd-seal-card hidden>
+                <h2>请选择企业印章</h2>
+                <button class="fdd-seal selected" type="button" data-fdd-seal><span class="fdd-seal-image">合同专用章<small>深圳市龙岗区数据要素<br>交易服务有限公司</small></span><span><strong>企业合同专用章</strong><small>已授权 · 有效期至 2027-07-31</small></span><i class="material-symbols-outlined">check_circle</i></button>
+                <div class="fdd-security-note"><span class="material-symbols-outlined">verified_user</span><p>提交后将进行签署意愿认证，本页面不会保存短信验证码或其他认证信息。</p></div>
+                <button class="fdd-primary" type="button" data-fdd-sign><span>确认盖章并签署</span><span class="material-symbols-outlined">draw</span></button>
+            </section>
+
+            <section class="fdd-success-card" data-fdd-success-card hidden>
+                <span class="material-symbols-outlined">task_alt</span><h2 data-fdd-result-title>合同签署成功</h2><p data-fdd-result-description>签署结果已生成，正在回调业务平台并同步三方签署进度。</p><dl><div><dt>处理时间</dt><dd data-fdd-signed-at>--</dd></div><div><dt>签署状态</dt><dd data-fdd-result-status>等待回调</dd></div><div><dt>下一节点</dt><dd data-fdd-next-node>等待平台确认</dd></div></dl><button type="button" data-fdd-close>关闭当前页面</button>
+            </section>
+        </aside>
+    </main>
+
+    <main class="fdd-management-layout" data-fdd-management-view hidden>
+        <aside class="fdd-management-sidebar">
+            <div class="fdd-company-switch"><span class="material-symbols-outlined">corporate_fare</span><div><strong data-fdd-company-name>中国电子云</strong><small data-fdd-company-id>--</small></div></div>
+            <nav>
+                <button class="active" type="button" data-fdd-manage-nav="overview"><span class="material-symbols-outlined">space_dashboard</span>企业概览</button>
+                <button type="button" data-fdd-manage-nav="seal"><span class="material-symbols-outlined">approval</span>印章管理</button>
+                <button type="button" data-fdd-manage-nav="template"><span class="material-symbols-outlined">description</span>模板管理</button>
+                <button type="button" data-fdd-manage-nav="authorization"><span class="material-symbols-outlined">admin_panel_settings</span>授权管理</button>
+            </nav>
+        </aside>
+
+        <section class="fdd-management-content">
+            <div class="fdd-management-topbar"><div><h1 data-fdd-management-title>企业概览</h1><p data-fdd-management-subtitle>企业签章业务由法大大提供并维护</p></div><button type="button" data-fdd-management-close><span class="material-symbols-outlined">close</span>关闭页面</button></div>
+
+            <section class="fdd-management-home" data-fdd-manage-home>
+                <div class="fdd-management-banner"><span class="material-symbols-outlined">verified</span><div><strong>企业电子签章服务已开通</strong><p>企业印章、合同模板和具体印章授权可在当前法大大页面统一维护。</p></div><em>服务正常</em></div>
+                <div class="fdd-management-metrics"><div><span>企业实名认证</span><strong>已认证</strong><small data-fdd-credit-code>--</small></div><div><span>企业印章</span><strong>2 枚</strong><small>1 枚合同章已授权</small></div><div><span>合同模板</span><strong>6 个</strong><small>4 个模板已启用</small></div><div><span>用印授权</span><strong>1 项</strong><small>按具体印章维护</small></div></div>
+                <div class="fdd-management-modules">
+                    <article><span class="material-symbols-outlined">approval</span><div><h2>企业印章</h2><p>创建、启停和授权企业电子印章。</p></div><button type="button" data-fdd-module-action="印章管理">进入管理<span class="material-symbols-outlined">arrow_forward</span></button></article>
+                    <article><span class="material-symbols-outlined">description</span><div><h2>合同模板</h2><p>维护合同模板、控件和启停状态。</p></div><button type="button" data-fdd-module-action="模板管理">进入管理<span class="material-symbols-outlined">arrow_forward</span></button></article>
+                    <article><span class="material-symbols-outlined">admin_panel_settings</span><div><h2>用印授权</h2><p>按具体印章查看用户及文档授权。</p></div><button type="button" data-fdd-module-action="授权管理">进入管理<span class="material-symbols-outlined">arrow_forward</span></button></article>
+                </div>
+            </section>
+
+            <section class="fdd-onboarding-card" data-fdd-verify-card hidden>
+                <div class="fdd-onboarding-heading"><span class="material-symbols-outlined">domain_verification</span><div><h2>企业实名认证</h2><p>请确认企业信息并选择认证方案，提交后认证结果将异步回调业务平台。</p></div></div>
+                <div class="fdd-form-grid"><label><span>企业名称</span><input type="text" readonly data-fdd-verify-company></label><label><span>统一社会信用代码</span><input type="text" readonly data-fdd-verify-credit></label></div>
+                <fieldset><legend>认证方案</legend><label><input type="radio" name="fddVerifyWay" checked><span><strong>法大大快捷认证</strong><small>通过企业信息与法定代表人身份完成认证</small></span></label><label><input type="radio" name="fddVerifyWay"><span><strong>标准认证方案</strong><small>对公打款、纸质审核及法定代表人授权</small></span></label></fieldset>
+                <div class="fdd-onboarding-note"><span class="material-symbols-outlined">info</span>标准认证方案可能进入人工审核，请以法大大回调或状态查询结果为准。</div>
+                <button class="fdd-primary fdd-onboarding-submit" type="button" data-fdd-submit-verification><span>提交认证资料</span><span class="material-symbols-outlined">arrow_forward</span></button>
+                <div class="fdd-onboarding-result" data-fdd-verifying-result hidden><span class="material-symbols-outlined">hourglass_top</span><h2>认证资料已提交</h2><p>当前状态为“认证中”，请返回平台刷新状态。页面跳转成功不代表认证已经通过。</p></div>
+            </section>
+
+            <section class="fdd-onboarding-card" data-fdd-authorize-card hidden>
+                <div class="fdd-onboarding-heading"><span class="material-symbols-outlined">verified_user</span><div><h2>企业实名认证授权</h2><p>当前企业认证状态为“待授权”，请由法定代表人或企业负责人完成认证授权。</p></div></div>
+                <div class="fdd-authorization-summary"><div><span>认证主体</span><strong data-fdd-authorize-company>中国电子云</strong></div><div><span>授权身份</span><strong>法人或企业负责人</strong></div><div><span>授权用途</span><strong>企业实名认证</strong></div></div>
+                <label class="fdd-authorization-agree"><input type="checkbox" data-fdd-authorize-agree><span>本人确认具有企业认证授权权限，并同意提交本次实名认证授权。</span></label>
+                <button class="fdd-primary fdd-onboarding-submit" type="button" disabled data-fdd-submit-authorization><span>确认并完成认证</span><span class="material-symbols-outlined">task_alt</span></button>
+                <div class="fdd-onboarding-result is-success" data-fdd-authorize-result hidden><span class="material-symbols-outlined">task_alt</span><h2>企业实名认证已完成</h2><p>认证结果已回调业务平台，电子签章服务已开通；印章与具体用印授权可在法大大业务管理中维护。</p></div>
+            </section>
+        </section>
+    </main>
+
+    <div class="fdd-toast" role="status" data-fdd-toast><span class="material-symbols-outlined">info</span><span></span></div>
+    <script src="js/e-sign-service-state.js"></script>
+    <script src="js/fadada-sign-demo.js"></script>
+</body>
+</html>
