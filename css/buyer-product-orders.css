@@ -333,12 +333,28 @@
 .buyer-order-sign-mode {
     display: inline-flex;
     align-items: center;
-    height: 20px;
-    padding: 0 6px;
-    border-radius: 10px;
+    box-sizing: border-box;
+    height: 22px;
+    padding: 0 8px;
+    border: 1px solid #cfe9d9;
+    border-radius: 11px;
     color: #26784e;
     background: #e9f7ef;
-    font-size: 10px;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+.buyer-order-sign-mode.is-electronic {
+    border-color: #cfe9d9;
+    color: #26784e;
+    background: #e9f7ef;
+}
+
+.buyer-order-sign-mode.is-offline {
+    border-color: #d9dfdc;
+    color: #5f6f68;
+    background: #f0f3f1;
 }
 
 .buyer-order-table .is-contract-demo .buyer-order-status-stack small {

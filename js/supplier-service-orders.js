@@ -58,6 +58,7 @@
     if (window.EContractDemoScenarios) {
         ORDER_RECORDS = window.EContractDemoScenarios.getOrders('supplier', 'service').concat(ORDER_RECORDS);
     }
+    ensureOrderSignModes(ORDER_RECORDS);
 
     function applyElectronicSignResult(record, result, role) {
         if (!record) return '';
@@ -123,6 +124,24 @@
         return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICON_PATHS[name] || ICON_PATHS.detail) + '</svg>';
     }
 
+    function hasAssociatedContract(item) {
+        return Boolean(item && item.status !== '订单退回' && item.status !== '待关联合同');
+    }
+
+    function ensureOrderSignModes(records) {
+        records.forEach(function (item, index) {
+            if (!item.signMode && hasAssociatedContract(item)) {
+                item.signMode = index % 2 === 0 ? '电子签章' : '线下签署';
+            }
+        });
+    }
+
+    function renderSignModeBadge(item) {
+        if (!item.signMode || !hasAssociatedContract(item)) return '';
+        var modeClass = item.signMode === '线下签署' ? ' is-offline' : ' is-electronic';
+        return '<span class="supplier-order-sign-mode' + modeClass + '" aria-label="签署方式：' + escapeHtml(item.signMode) + '">' + escapeHtml(item.signMode) + '</span>';
+    }
+
     function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
             return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
@@ -146,6 +165,36 @@
             filterOpen: false
         };
         var toastTimer = null;
+
+        function restoreServiceOrderList() {
+            panel.classList.add('is-supplier-order-management');
+            if (title) title.textContent = '服务订单管理';
+            document.title = '服务订单管理 - 供方中心';
+            render();
+        }
+
+        var serviceDeliveryDetail = window.ServiceOrderDeliveryDetail ? window.ServiceOrderDeliveryDetail.create({
+            panel: panel,
+            titleElement: title,
+            onBack: restoreServiceOrderList
+        }) : null;
+
+        var serviceOrderDetail = window.ServiceOrderDetail ? window.ServiceOrderDetail.create({
+            panel: panel,
+            titleElement: title,
+            role: 'supplier',
+            supplierName: '深圳市龙岗数智科技有限公司',
+            operatorName: '深圳市龙岗区数据要素交易服务有限公司',
+            onBack: restoreServiceOrderList,
+            onAction: function (action, item, controls) {
+                if ((action === '服务交付' || action === '交付详情') && serviceDeliveryDetail) {
+                    serviceOrderDetail.close();
+                    serviceDeliveryDetail.open(item, 'basic');
+                    return;
+                }
+                controls.showToast(action + '操作已触发：' + item.name + '（原型演示）');
+            }
+        }) : null;
 
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management');
         panel.classList.add('is-supplier-order-management');
@@ -223,7 +272,7 @@
                     +   '<td>' + escapeHtml(item.amount) + '</td>'
                     +   '<td>' + escapeHtml(item.appliedAt) + '</td>'
                     +   '<td class="order-status-cell"><div class="supplier-order-status-stack"><span class="supplier-order-status' + muted + '">' + escapeHtml(item.status) + '</span>'
-                    +       (item.signMode ? '<span class="supplier-order-sign-mode">' + escapeHtml(item.signMode) + '</span>' : '')
+                    +       renderSignModeBadge(item)
                     +       (item.contractSubStatus ? '<small>' + escapeHtml(item.contractSubStatus) + (item.signProgress ? ' · ' + escapeHtml(item.signProgress) : '') + (item.currentActor ? ' · 当前处理：' + escapeHtml(item.currentActor) : '') + '</small>' : '')
                     +   '</div></td>'
                     +   '<td class="order-action-cell"><div class="supplier-order-actions">' + renderActions(item) + '</div></td>'
@@ -399,18 +448,29 @@
                 button.addEventListener('click', function () {
                     var action = this.dataset.supplierServiceAction;
                     var clickedRecord = ORDER_RECORDS.find(function (item) { return item.orderNo === button.dataset.supplierServiceNo; });
+                    if (action === '订单详情' && serviceOrderDetail && clickedRecord) {
+                        serviceOrderDetail.open(clickedRecord, 'order', this);
+                        return;
+                    }
+                    if ((action === '服务交付' || action === '交付详情') && serviceDeliveryDetail && clickedRecord) {
+                        serviceDeliveryDetail.open(clickedRecord, 'basic', this);
+                        return;
+                    }
                     if ((action === '关联审批' || action === '审核并签署') && window.SupplierContractApproval) {
                         var approvalOrderNo = this.dataset.supplierServiceNo;
                         var approvalRecord = ORDER_RECORDS.find(function (item) { return item.orderNo === approvalOrderNo; });
+                        var approvalSnapshot = approvalRecord && approvalRecord.contractSnapshot;
                         window.SupplierContractApproval.open({
                             orderNo: approvalOrderNo,
                             demander: approvalRecord ? approvalRecord.user : '',
                             itemName: approvalRecord ? approvalRecord.name : '',
-                            amount: approvalRecord ? approvalRecord.amount : '',
+                            amount: approvalSnapshot && approvalSnapshot.contractAmount != null ? approvalSnapshot.contractAmount : (approvalRecord ? approvalRecord.amount : ''),
                             appliedAt: approvalRecord ? approvalRecord.appliedAt : '',
                             businessType: 'service',
-                            serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
-                            serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+                            paymentMode: approvalSnapshot && approvalSnapshot.paymentMode,
+                            paymentStages: approvalSnapshot && approvalSnapshot.paymentStages,
+                            serviceFeeMode: approvalSnapshot && approvalSnapshot.serviceFeeMode || CONTRACT_SERVICE_FEE_MODE,
+                            serviceFeeValue: approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : CONTRACT_SERVICE_FEE_VALUE,
                             signing: approvalRecord && approvalRecord.signMode ? approvalRecord.signMode : '电子签章',
                             initiatorRole: approvalRecord && approvalRecord.initiatorRole,
                             reviewerRole: approvalRecord && approvalRecord.reviewerRole,
@@ -462,6 +522,14 @@
                             demoMode: Boolean(record && record.demoMode),
                             esignUnavailableDemo: Boolean(record && record.esignUnavailableDemo),
                             onConfirm: function (values) {
+                                if (record && window.ServiceOrderDetail) {
+                                    window.ServiceOrderDetail.applyContractValues(record, values, {
+                                        role: 'supplier',
+                                        supplierName: '深圳市龙岗数智科技有限公司',
+                                        buyerName: record.user,
+                                        operatorName: '深圳市龙岗区数据要素交易服务有限公司'
+                                    });
+                                }
                                 if (record && values.signing === 'electronic') {
                                     record.status = '关联合同签署中';
                                     record.signMode = '电子签章';
@@ -476,6 +544,17 @@
                                     render();
                                     showToast('法大大签约任务已创建，三方可分别进入法大大完成签署。');
                                     return;
+                                }
+                                if (record) {
+                                    record.status = '关联审批中';
+                                    record.signMode = '线下签署';
+                                    record.initiatorRole = '提供方';
+                                    record.reviewerRole = '需求方、平台运营方';
+                                    record.currentActor = '需求方、平台运营方';
+                                    record.contractSubStatus = '线下三方合同已提交，等待关联审批';
+                                    record.signProgress = '3/3 已签署';
+                                    record.primaryAction = '关联审批';
+                                    render();
                                 }
                                 showToast('线下合同已提交，等待关联审核。');
                             },

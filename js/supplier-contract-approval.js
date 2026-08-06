@@ -47,7 +47,8 @@
         var orderNo = String(options.orderNo || '');
         var datePart = orderNo.slice(0, 8) || '20260718';
         var serialPart = orderNo.slice(-6) || '000001';
-        return 'LG-' + (options.businessType === 'service' ? 'FWHT' : 'CPHT') + '-' + datePart + '-' + serialPart;
+        var businessCode = options.businessType === 'service' ? 'FWHT' : (options.businessType === 'resource' ? 'ZYHT' : 'CPHT');
+        return 'LG-' + businessCode + '-' + datePart + '-' + serialPart;
     }
 
     function buildPaymentSnapshot(options) {
@@ -322,6 +323,10 @@
                 signatureStatus: decision === 'pass' && activeOptions.signing === '电子签章' ? 'waiting_signature' : '',
                 taskId: activeOptions.signing === '电子签章' ? (activeOptions.taskId || ('FDD-' + String(activeOptions.orderNo || '').slice(-10))) : ''
             };
+            if (result.requiresSignature && !window.FadadaSignDemo) {
+                setFeedback('电子签署页面暂不可用，请刷新页面后重试。');
+                return;
+            }
             if (result.requiresSignature && window.FadadaSignDemo) {
                 if (!activeOptions.demoMode && (!window.ESignServiceState || !window.ESignServiceState.isReady())) {
                     setFeedback('当前企业电子签章服务尚未就绪，请前往用户中心查看状态，并进入法大大完成企业认证或授权。');
@@ -339,6 +344,10 @@
                     role: reviewerRole,
                     party: reviewerParty,
                     node: '审核通过并签署',
+                    businessType: activeOptions.businessType,
+                    sourceMenu: activeOptions.sourceMenu,
+                    returnUrl: activeOptions.returnUrl || window.location.href,
+                    signUrl: activeOptions.signUrl,
                     onResult: function (signResult) {
                         if (typeof onSignResult === 'function') onSignResult(signResult, result, optionsForTask);
                     }

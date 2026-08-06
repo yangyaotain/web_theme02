@@ -224,9 +224,22 @@
         });
     }
 
+    function getPaymentPlan(orderNo) {
+        return clone(PAYMENT_PLANS[orderNo] || null);
+    }
+
+    function getOrderBill(orderNo) {
+        var bill = PLATFORM_BILLS.find(function (item) {
+            return item.orderNo === orderNo;
+        });
+        return clone(bill || null);
+    }
+
     window.TransactionBillDemoData = {
         currentSupplierName: CURRENT_SUPPLIER_NAME,
         getPlatformBills: getPlatformBills,
-        getSupplierReceivables: getSupplierReceivables
+        getSupplierReceivables: getSupplierReceivables,
+        getPaymentPlan: getPaymentPlan,
+        getOrderBill: getOrderBill
     };
 })();

@@ -20,10 +20,20 @@
         params.set('role', options.role || '签署方');
         params.set('party', options.party || '当前登录企业');
         params.set('node', options.node || '合同签署');
+        params.set('businessType', options.businessType || 'product');
+        if (options.sourceMenu) params.set('sourceMenu', options.sourceMenu);
+        if (options.returnUrl) params.set('returnUrl', options.returnUrl);
         callbacks[channelId] = typeof options.onResult === 'function' ? options.onResult : null;
-        var child = window.open('fadada-sign-demo.html?' + params.toString(), '_blank');
+        var targetUrl;
+        try {
+            targetUrl = new URL(options.signUrl || 'fadada-sign-demo.html', window.location.href);
+        } catch (error) {
+            targetUrl = new URL('fadada-sign-demo.html', window.location.href);
+        }
+        params.forEach(function (value, key) { targetUrl.searchParams.set(key, value); });
+        var child = window.open(targetUrl.toString(), '_blank');
         if (!child) delete callbacks[channelId];
-        return { channelId: channelId, windowRef: child };
+        return { channelId: channelId, windowRef: child, url: targetUrl.toString() };
     }
 
     window.addEventListener('message', function (event) {

@@ -28,6 +28,8 @@
     var uploadButton;
     var uploadHint;
     var feedback;
+    var footerFeedback;
+    var submitButton;
     var paymentTerms;
     var esignCapability;
     var providerReadyCell;
@@ -295,6 +297,19 @@
     function setFeedback(message) {
         feedback.textContent = message || '';
         feedback.classList.toggle('show', Boolean(message));
+        if (footerFeedback) {
+            footerFeedback.textContent = message || '';
+            footerFeedback.classList.toggle('show', Boolean(message));
+        }
+    }
+
+    function setSubmitBusy(busy, label) {
+        if (!submitButton) return;
+        submitButton.disabled = Boolean(busy);
+        submitButton.classList.toggle('is-loading', Boolean(busy));
+        if (submitButtonText) submitButtonText.textContent = busy
+            ? (label || '正在提交…')
+            : (isElectronic() ? '创建任务并前往签署' : '确定');
     }
 
     function clearInvalidState() {
@@ -321,7 +336,7 @@
         var baseDate = /^\d{4}-\d{2}-\d{2}$/.test(appliedDate) ? appliedDate : formatDate(new Date());
         var signedDate = addDays(baseDate, 1);
         var startDate = signedDate;
-        var typeCode = activeOptions.businessType === 'service' ? 'FW' : 'CP';
+        var typeCode = activeOptions.businessType === 'service' ? 'FW' : (activeOptions.businessType === 'resource' ? 'ZY' : 'CP');
         var orderSuffix = String(activeOptions.orderNo || '').slice(-6) || '000001';
 
         return {
@@ -332,6 +347,16 @@
             startsAt: startDate,
             endsAt: addYears(startDate, 1)
         };
+    }
+
+    function getContractTemplateMeta() {
+        if (activeOptions.businessType === 'resource') {
+            return { id: 'TPL-LG-ZY-003', name: activeOptions.templateName || '数据资源三方交易合同' };
+        }
+        if (activeOptions.businessType === 'service') {
+            return { id: 'TPL-LG-FW-002', name: activeOptions.templateName || '数据服务三方交易合同（V2.6）' };
+        }
+        return { id: 'TPL-LG-CP-001', name: activeOptions.templateName || '数据产品三方交易合同（V3.2）' };
     }
 
     function applyContractPreset(preset, readOnly) {
@@ -414,21 +439,17 @@
         uploadButton.disabled = existing;
 
         if (existing) {
-            applyContractPreset({
-                number: 'HJU-0001',
-                name: '企业扶持政策合同',
-                signedAt: '2026-06-04',
-                signingDeadline: '2026-06-14',
-                startsAt: '2026-06-04',
-                endsAt: '2027-06-30'
-            }, true);
+            var existingPreset = activeOptions.businessType === 'resource'
+                ? { number: 'LG-ZY-20260715-001', name: '数据资源三方交易存量合同', signedAt: '2026-07-15', signingDeadline: '2026-07-25', startsAt: '2026-07-15', endsAt: '2027-07-14' }
+                : { number: 'HJU-0001', name: '企业扶持政策合同', signedAt: '2026-06-04', signingDeadline: '2026-06-14', startsAt: '2026-06-04', endsAt: '2027-06-30' };
+            applyContractPreset(existingPreset, true);
         } else {
             applyContractPreset(buildNewContractPreset(), false);
             updateUploadState();
         }
         updateSigningMode();
         if (existing) {
-            uploadHint.textContent = '已关联合同文件：企业扶持政策合同.pdf';
+            uploadHint.textContent = '已关联合同文件：' + contractNameInput.value + '.pdf';
             uploadHint.classList.add('has-files');
         }
         updatePendingPdfState();
@@ -566,6 +587,8 @@
 
     function closeDrawer() {
         if (!drawer || !drawer.classList.contains('show')) return;
+        setFeedback('');
+        setSubmitBusy(false);
         drawer.classList.remove('show');
         mask.classList.remove('show');
         drawer.setAttribute('aria-hidden', 'true');
@@ -689,9 +712,12 @@
             +           '</div>'
             +       '</div>'
             +   '</div>'
-            +   '<footer class="supplier-contract-drawer-foot">'
-            +       '<button class="supplier-contract-button" type="button" data-supplier-contract-close><span class="material-symbols-outlined" aria-hidden="true">close</span><span>取消</span></button>'
-            +       '<button class="supplier-contract-button is-primary" type="submit"><span class="material-symbols-outlined" aria-hidden="true">draw</span><span data-supplier-contract-submit-text>确定</span></button>'
+            +   '<footer class="supplier-contract-drawer-foot supplier-contract-association-foot">'
+            +       '<span class="supplier-contract-footer-feedback" role="status" aria-live="polite" data-supplier-contract-footer-feedback></span>'
+            +       '<div class="supplier-contract-footer-actions">'
+            +           '<button class="supplier-contract-button" type="button" data-supplier-contract-close><span class="material-symbols-outlined" aria-hidden="true">close</span><span>取消</span></button>'
+            +           '<button class="supplier-contract-button is-primary" type="submit" data-supplier-contract-submit><span class="material-symbols-outlined" aria-hidden="true">draw</span><span data-supplier-contract-submit-text>确定</span></button>'
+            +       '</div>'
             +   '</footer>'
             + '</form>';
 
@@ -723,6 +749,8 @@
         uploadButton = drawer.querySelector('[data-supplier-contract-upload]');
         uploadHint = drawer.querySelector('[data-supplier-contract-upload-hint]');
         feedback = drawer.querySelector('[data-supplier-contract-feedback]');
+        footerFeedback = drawer.querySelector('[data-supplier-contract-footer-feedback]');
+        submitButton = drawer.querySelector('[data-supplier-contract-submit]');
         paymentTerms = drawer.querySelector('[data-supplier-contract-payment]');
         esignCapability = drawer.querySelector('[data-supplier-contract-esign-capability]');
         providerReadyCell = drawer.querySelector('[data-supplier-provider-ready]');
@@ -769,8 +797,9 @@
                 var selectedTemplate = templateSelect && templateSelect.options[templateSelect.selectedIndex];
                 var params = new URLSearchParams();
                 params.set('scene', 'template-preview');
-                params.set('templateId', templateSelect ? templateSelect.value : 'TPL-LG-CP-001');
-                params.set('contractName', selectedTemplate ? selectedTemplate.textContent : '数据产品三方交易合同（V3.2）');
+                var templateMeta = getContractTemplateMeta();
+                params.set('templateId', templateSelect ? templateSelect.value : templateMeta.id);
+                params.set('contractName', selectedTemplate ? selectedTemplate.textContent : templateMeta.name);
                 window.open('fadada-sign-demo.html?' + params.toString(), '_blank', 'noopener');
             });
         }
@@ -904,6 +933,11 @@
             if (!validateForm()) return;
             var values = collectFormValues();
             var optionsForTask = activeOptions;
+            if (values.signing === 'electronic' && !window.FadadaSignDemo) {
+                setFeedback('电子签署页面暂不可用，请刷新页面后重试。');
+                return;
+            }
+            setSubmitBusy(true, values.signing === 'electronic' ? '正在创建签约任务…' : '正在提交合同…');
             if (values.signing === 'electronic' && window.FadadaSignDemo) {
                 var centerRole = getCenterRole();
                 values.taskId = 'FDD-' + String(values.orderNo || '').slice(-14);
@@ -917,11 +951,16 @@
                     role: centerRole,
                     party: centerRole === '需求方' ? activeOptions.demander : activeOptions.provider,
                     node: '提交关联并签署',
+                    businessType: activeOptions.businessType,
+                    sourceMenu: activeOptions.sourceMenu,
+                    returnUrl: activeOptions.returnUrl || window.location.href,
+                    signUrl: activeOptions.signUrl,
                     onResult: function (result) {
                         if (typeof optionsForTask.onSignResult === 'function') optionsForTask.onSignResult(result, values);
                     }
                 });
                 if (!launchResult.windowRef) {
+                    setSubmitBusy(false);
                     setFeedback('浏览器阻止了法大大签署页面，请允许打开新窗口后重试。');
                     return;
                 }
@@ -938,9 +977,9 @@
     }
 
     function openDrawer(options) {
-        if (!drawer) createDrawer();
         options = options || {};
         activeOptions = options;
+        if (!drawer) createDrawer();
         orderServiceFeeMode = options.serviceFeeMode === 'G' ? 'G' : 'P';
         var defaultServiceFeeValue = Number(options.serviceFeeValue);
         var legacyServiceFeeRate = Number(options.serviceFeeRate);
@@ -948,7 +987,17 @@
             ? defaultServiceFeeValue
             : (Number.isFinite(legacyServiceFeeRate) ? legacyServiceFeeRate : 3);
         lastFocusedElement = document.activeElement;
+        setSubmitBusy(false);
         form.reset();
+        var templateMeta = getContractTemplateMeta();
+        var templateSelect = drawer.querySelector('#supplierContractTemplate');
+        if (templateSelect) {
+            templateSelect.innerHTML = '';
+            var templateOption = document.createElement('option');
+            templateOption.value = templateMeta.id;
+            templateOption.textContent = templateMeta.name;
+            templateSelect.appendChild(templateOption);
+        }
         remarkInput.dataset.userEdited = '';
         orderInput.value = options.orderNo || '';
         providerCell.textContent = options.provider || '深圳市龙岗数智科技有限公司';

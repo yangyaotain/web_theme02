@@ -10,6 +10,9 @@
     var party = params.get('party') || '当前登录企业';
     var node = params.get('node') || '合同签署';
     var channelId = params.get('channelId') || '';
+    var businessType = params.get('businessType') || 'product';
+    var sourceMenu = params.get('sourceMenu') || '';
+    var returnUrl = params.get('returnUrl') || '';
 
     function setText(selector, value) {
         var target = document.querySelector(selector);
@@ -23,6 +26,25 @@
         toast.classList.add('show');
         window.clearTimeout(showToast.timer);
         showToast.timer = window.setTimeout(function () { toast.classList.remove('show'); }, 2400);
+    }
+
+    function closeOrReturn() {
+        if (window.opener && !window.opener.closed) {
+            window.close();
+            return;
+        }
+        if (returnUrl) {
+            try {
+                var target = new URL(returnUrl, window.location.href);
+                if (window.location.origin === 'null' || target.origin === window.location.origin) {
+                    window.location.href = target.href;
+                    return;
+                }
+            } catch (error) {
+                // 返回地址异常时保留当前页面。
+            }
+        }
+        window.close();
     }
 
     function initTemplatePreviewScene() {
@@ -225,7 +247,11 @@
 
     document.querySelector('[data-fdd-sign]').addEventListener('click', function () { showResult('signed'); });
     document.querySelector('[data-fdd-refuse]').addEventListener('click', function () { showResult('refused'); });
-    document.querySelector('[data-fdd-close]').addEventListener('click', function () { window.close(); });
+    var closeButton = document.querySelector('[data-fdd-close]');
+    if (closeButton) {
+        closeButton.textContent = sourceMenu === 'resource-order' || businessType === 'resource' ? '返回资源订单管理' : '返回订单管理';
+        closeButton.addEventListener('click', closeOrReturn);
+    }
     document.querySelector('[data-fdd-help]').addEventListener('click', function () { showToast('身份认证、签署意愿校验及印章授权均由法大大完成。'); });
     document.querySelector('.fdd-document-toolbar button:last-child').addEventListener('click', function () { showToast('合同文件已加入下载队列。'); });
 })();

@@ -35,7 +35,7 @@
                     icon: 'order',
                     defaultOpen: true,
                     children: [
-                        { key: 'resource-apply', label: '资源申请管理', href: 'buyer-center.html?menu=resource-apply' },
+                        { key: 'resource-order', label: '资源订单管理', href: 'buyer-center.html?menu=resource-order' },
                         { key: 'product-order', label: '产品订单管理', href: 'buyer-center.html?menu=product-order' },
                         { key: 'service-order', label: '服务订单管理', href: 'buyer-center.html?menu=service-order' },
                         { key: 'product-contract', label: '产品合同管理', href: 'buyer-center.html?menu=product-contract' },
@@ -101,7 +101,7 @@
                     label: '订单合同',
                     icon: 'order',
                     children: [
-                        { key: 'resource-order', label: '资源申请审批', href: 'supplier-center.html?menu=resource-order' },
+                        { key: 'resource-order', label: '资源订单管理', href: 'supplier-center.html?menu=resource-order' },
                         { key: 'product-order', label: '产品订单管理', href: 'supplier-center.html?menu=product-order' },
                         { key: 'service-order', label: '服务订单管理', href: 'supplier-center.html?menu=service-order' },
                         { key: 'product-contract', label: '产品合同管理', href: 'supplier-center.html?menu=product-contract' },
@@ -144,9 +144,8 @@
     };
 
     var menuMeta = {
-        'resource-apply': { title: '资源申请管理', desc: '查看和跟进已提交的数据资源申请、授权进度与交付状态。' },
-        'resource-order': { title: '资源申请审批', desc: '处理需求方提交的数据资源申请、授权审批与交付确认。' },
-        'product-order': { title: '产品订单管理', desc: '查看产品订单、购买申请、审批状态与交易进度。' },
+        'resource-order': { title: '资源订单管理', desc: '查看资源订单、合同签署、支付状态与资源交付进度。' },
+        'product-order': { title: '产品订单管理', desc: '查看产品订单、合同签署、支付状态与产品交付进度。' },
         'service-order': { title: '服务订单管理', desc: '查看服务订单、服务申请、审批状态与交付进度。' },
         'product-contract': { title: '产品合同管理', desc: '查看产品交易合同、签署结果、归档存证信息，并对已签署归档的有效合同进行作废处理。' },
         'service-contract': { title: '服务合同管理', desc: '查看服务交易合同、签署结果、归档存证信息，并对已签署归档的有效合同进行作废处理。' },

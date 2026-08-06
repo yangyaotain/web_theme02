@@ -472,6 +472,37 @@
         ORDER_RECORDS = window.EContractDemoScenarios.getOrders('buyer', 'product').concat(ORDER_RECORDS);
         SERVICE_ORDER_RECORDS = window.EContractDemoScenarios.getOrders('buyer', 'service').concat(SERVICE_ORDER_RECORDS);
     }
+    ensureOrderSignModes(ORDER_RECORDS);
+    ensureOrderSignModes(SERVICE_ORDER_RECORDS);
+
+    window.BuyerProductOrderConfig = {
+        key: 'product',
+        menu: 'product-order',
+        entityLabel: '产品',
+        entityDataLabel: '数据产品',
+        pageTitle: '产品订单管理',
+        typeKey: 'productType',
+        allTypeLabel: '全部产品类型',
+        typeLabel: '产品类型',
+        typeOptions: Array.from(new Set(ORDER_RECORDS.map(function (item) { return item.productType; }))),
+        contractBusinessType: 'product',
+        contractTemplateName: '数据产品三方交易合同（V3.2）',
+        deliveryStepLabel: '产品交付',
+        centerRole: 'buyer',
+        centerTitle: '需方中心',
+        currentRoleLabel: '需求方',
+        counterpartyRoleLabel: '提供方',
+        counterpartyLabel: '提供方',
+        currentPartyName: '深圳市龙岗智慧产业有限公司',
+        supplierReferenceActionsOnly: true,
+        snapshotStorageKey: 'BuyerProductOrderContractSnapshots:v1',
+        records: ORDER_RECORDS,
+        getOrderBill: function (orderNo) {
+            return window.TransactionBillDemoData && window.TransactionBillDemoData.getOrderBill
+                ? window.TransactionBillDemoData.getOrderBill(orderNo)
+                : null;
+        }
+    };
 
     var ACTIONS_BY_STATUS = {
         '订单退回': [
@@ -562,11 +593,30 @@
         });
     }
 
+    function hasAssociatedContract(item) {
+        return Boolean(item && item.status !== '订单退回' && item.status !== '待关联合同');
+    }
+
+    function ensureOrderSignModes(records) {
+        records.forEach(function (item, index) {
+            if (!item.signMode && hasAssociatedContract(item)) {
+                item.signMode = index % 2 === 0 ? '电子签章' : '线下签署';
+            }
+        });
+    }
+
+    function renderSignModeBadge(item) {
+        if (!item.signMode || !hasAssociatedContract(item)) return '';
+        var modeClass = item.signMode === '线下签署' ? ' is-offline' : ' is-electronic';
+        return '<span class="buyer-order-sign-mode' + modeClass + '" aria-label="签署方式：' + escapeHtml(item.signMode) + '">' + escapeHtml(item.signMode) + '</span>';
+    }
+
     function initProductOrders() {
         var params = new URLSearchParams(window.location.search || '');
         var menu = params.get('menu');
         if (menu !== 'product-order' && menu !== 'service-order') return;
         var serviceMode = menu === 'service-order';
+        if (!serviceMode && (params.get('view') === 'detail' || params.get('view') === 'delivery')) return;
         var activeRecords = serviceMode ? SERVICE_ORDER_RECORDS : ORDER_RECORDS;
         var activeActions = serviceMode ? SERVICE_ACTIONS_BY_STATUS : ACTIONS_BY_STATUS;
         var objectTypeLabel = serviceMode ? '服务类型' : '产品类型';
@@ -598,7 +648,41 @@
             checkoutError: ''
         };
         var toastTimer = null;
+        var operationReturnFocus = null;
+        var operationKeydownHandler = null;
         var sharedCheckout = window.BuyerPaymentCheckout ? window.BuyerPaymentCheckout.create() : null;
+        var serviceDeliveryDetail = serviceMode && window.ServiceOrderDeliveryDetail ? window.ServiceOrderDeliveryDetail.create({
+            panel: panel,
+            titleElement: title,
+            role: 'buyer',
+            onBack: function () {
+                panel.classList.add('is-order-management');
+                if (title) title.textContent = '服务订单管理';
+                document.title = '服务订单管理 - 需方中心';
+                render();
+            }
+        }) : null;
+        var serviceOrderDetail = serviceMode && window.ServiceOrderDetail ? window.ServiceOrderDetail.create({
+            panel: panel,
+            titleElement: title,
+            role: 'buyer',
+            buyerName: '深圳市龙岗智慧产业有限公司',
+            operatorName: '深圳市龙岗区数据要素交易服务有限公司',
+            onBack: function () {
+                panel.classList.add('is-order-management');
+                if (title) title.textContent = '服务订单管理';
+                document.title = '服务订单管理 - 需方中心';
+                render();
+            },
+            onAction: function (action, item, controls) {
+                if (action === '交付详情' && serviceDeliveryDetail) {
+                    serviceDeliveryDetail.open(item, 'basic');
+                    return;
+                }
+                if (action === '去支付' && openOrderPayment(item, true, controls)) return;
+                controls.showToast(action + '操作已触发：' + item.name + '（原型演示）');
+            }
+        }) : null;
         var paymentQueryTimer = null;
         var paymentResultTimer = null;
         var bankPaymentWindow = null;
@@ -678,6 +762,56 @@
         function getPayableAmount(item) {
             var amount = Number(String(item.amount).replace(/[^\d.]/g, '')) || 0;
             return amount.toFixed(2) + '元';
+        }
+
+        function openOrderPayment(item, stayInDetail, controls) {
+            if (!sharedCheckout || !item) return false;
+            sharedCheckout.open({
+                feeType: '交易价款',
+                merchantId: 'MER-PLATFORM-202607-0001',
+                orderNo: item.orderNo,
+                billNo: getBillNo(item),
+                objectLabel: serviceMode ? '服务名称' : '产品名称',
+                objectName: item.name,
+                objectTypeLabel: objectTypeLabel,
+                objectType: item.productType,
+                payerName: '深圳市龙岗智慧产业有限公司',
+                providerName: item.provider,
+                merchantName: item.provider,
+                receiverName: '深圳市龙岗区数据要素交易服务有限公司',
+                receiverBank: '中国农业银行深圳龙岗支行',
+                receiverAccount: serviceMode ? '4405 0101 0000 78632' : '4405 0101 0000 12345',
+                receiverMemo: (serviceMode ? '服务订单号' : '订单号') + '后8位',
+                amount: item.paymentStage ? item.paymentStage.amount : item.amount,
+                stageNo: item.paymentStage ? item.paymentStage.periodNo : '',
+                stageTotal: item.paymentStage ? item.paymentStage.periodTotal : '',
+                stageName: item.paymentStage ? item.paymentStage.name : '',
+                stagePercent: item.paymentStage ? item.paymentStage.percent : '',
+                contractAmount: item.paymentStage ? item.paymentStage.contractAmount : '',
+                serviceFeeMode: item.paymentStage ? item.paymentStage.serviceFeeMode : 'P',
+                serviceFeeValue: item.paymentStage ? item.paymentStage.serviceFeeValue : 3,
+                stageStatus: item.paymentStage ? item.paymentStage.payStatus : '待支付',
+                outTradeNo: item.paymentStage ? item.paymentStage.outTradeNo : '',
+                successText: (serviceMode ? '服务订单' : '订单') + '已进入待交付状态。',
+                failureText: '订单仍保留在当前待支付期次，不会重复扣款。'
+            }, {
+                onOfflineSubmitted: function () {
+                    var message = serviceMode ? '线下支付凭证已提交，等待支付确认。' : '线下支付凭证已提交。';
+                    if (controls) controls.showToast(message);
+                    else showToast(message);
+                },
+                onOnlineSuccess: function () {
+                    if (item.paymentStage) item.paymentStage.payStatus = '已支付';
+                    item.status = '待交付';
+                    if (stayInDetail && serviceOrderDetail) serviceOrderDetail.refresh(item);
+                    else render();
+                },
+                onDone: function () {
+                    if (controls) controls.showToast('支付成功，' + (serviceMode ? '服务订单' : '订单') + '已进入待交付。');
+                    else showToast('支付成功，' + (serviceMode ? '服务订单' : '订单') + '已进入待交付。');
+                }
+            });
+            return true;
         }
 
         function getOnlineChannel() {
@@ -950,7 +1084,7 @@
                     +   '<td>' + escapeHtml(item.amount) + '</td>'
                     +   '<td>' + escapeHtml(item.appliedAt) + '</td>'
                     +   '<td class="order-status-cell"><div class="buyer-order-status-stack"><span class="buyer-order-status">' + escapeHtml(item.status) + '</span>'
-                    +       (item.signMode ? '<span class="buyer-order-sign-mode">' + escapeHtml(item.signMode) + '</span>' : '')
+                    +       renderSignModeBadge(item)
                     +       (item.contractSubStatus ? '<small>' + escapeHtml(item.contractSubStatus) + (item.signProgress ? ' · ' + escapeHtml(item.signProgress) : '') + (item.currentActor ? ' · 当前处理：' + escapeHtml(item.currentActor) : '') + '</small>' : '')
                     +   '</div></td>'
                     +   '<td class="order-action-cell"><div class="buyer-order-actions">' + renderActions(item) + '</div></td>'
@@ -1035,6 +1169,119 @@
             toastTimer = window.setTimeout(function () {
                 toast.classList.remove('show');
             }, 2200);
+        }
+
+        function openProductSharedView(item, view) {
+            if (!item) return;
+            var url = new URL(window.location.href);
+            url.searchParams.set('menu', 'product-order');
+            url.searchParams.set('view', view);
+            url.searchParams.set('orderNo', item.orderNo);
+            url.searchParams.set('tab', view === 'delivery' ? 'basic' : 'order');
+            window.location.href = url.pathname + url.search + url.hash;
+        }
+
+        function removeContractSnapshot(item) {
+            if (!item) return;
+            item.contractSnapshot = null;
+            var storageKey = serviceMode ? 'ServiceOrderContractSnapshots:v1' : 'BuyerProductOrderContractSnapshots:v1';
+            var snapshotKey = (serviceMode ? 'buyer:' : 'product:') + item.orderNo;
+            try {
+                var store = JSON.parse(window.localStorage.getItem(storageKey) || '{}') || {};
+                delete store[snapshotKey];
+                window.localStorage.setItem(storageKey, JSON.stringify(store));
+            } catch (error) {
+                // localStorage不可用时，仅清理当前页面中的合同快照。
+            }
+        }
+
+        function closeOrderOperationLayer(immediate) {
+            var layers = Array.prototype.slice.call(document.querySelectorAll('[data-buyer-order-operation-layer]'));
+            if (!layers.length) return;
+            if (operationKeydownHandler) document.removeEventListener('keydown', operationKeydownHandler);
+            operationKeydownHandler = null;
+            layers.forEach(function (layer) { layer.classList.remove('show'); });
+            document.body.classList.remove('supplier-contract-drawer-open');
+            window.setTimeout(function () {
+                layers.forEach(function (layer) { layer.remove(); });
+                if (operationReturnFocus && document.contains(operationReturnFocus)) operationReturnFocus.focus();
+                operationReturnFocus = null;
+            }, immediate ? 0 : 220);
+        }
+
+        function activateOrderOperationLayer() {
+            var layers = document.querySelectorAll('[data-buyer-order-operation-layer]');
+            window.requestAnimationFrame(function () {
+                layers.forEach(function (layer) { layer.classList.add('show'); });
+            });
+            document.body.classList.add('supplier-contract-drawer-open');
+            document.querySelectorAll('[data-buyer-order-operation-close]').forEach(function (control) {
+                control.addEventListener('click', function () { closeOrderOperationLayer(false); });
+            });
+            operationKeydownHandler = function (event) {
+                var dialog = document.querySelector('[data-buyer-order-operation-dialog]');
+                if (!dialog) return;
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeOrderOperationLayer(false);
+                    return;
+                }
+                if (event.key !== 'Tab') return;
+                var focusables = dialog.querySelectorAll('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])');
+                if (!focusables.length) return;
+                var first = focusables[0];
+                var last = focusables[focusables.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            };
+            document.addEventListener('keydown', operationKeydownHandler);
+            window.setTimeout(function () {
+                var cancel = document.querySelector('[data-buyer-order-operation-close].supplier-order-operation-button');
+                if (cancel) cancel.focus();
+            }, 60);
+        }
+
+        function openWithdrawRelationModal(item) {
+            if (!item) return;
+            closeOrderOperationLayer(true);
+            operationReturnFocus = document.activeElement;
+            document.body.insertAdjacentHTML('beforeend', ''
+                + '<div class="supplier-contract-drawer-mask supplier-order-operation-mask" data-buyer-order-operation-layer data-buyer-order-operation-close></div>'
+                + '<section class="supplier-order-withdraw-modal" role="dialog" aria-modal="true" aria-labelledby="buyerOrderWithdrawTitle" data-buyer-order-operation-layer data-buyer-order-operation-dialog>'
+                +   '<div class="supplier-order-withdraw-content">'
+                +       '<h2 id="buyerOrderWithdrawTitle"><span class="material-symbols-outlined" aria-hidden="true">warning</span><span>撤回关联</span></h2>'
+                +       '<p>确定撤回已关联的合同吗？</p>'
+                +   '</div>'
+                +   '<footer>'
+                +       '<button class="supplier-order-operation-button" type="button" data-buyer-order-operation-close>取消</button>'
+                +       '<button class="supplier-order-operation-button is-primary" type="button" data-buyer-order-withdraw-confirm>确定</button>'
+                +   '</footer>'
+                + '</section>');
+            activateOrderOperationLayer();
+            var confirm = document.querySelector('[data-buyer-order-withdraw-confirm]');
+            if (confirm) {
+                confirm.addEventListener('click', function () {
+                    item.status = '待关联合同';
+                    item.primaryAction = '';
+                    item.contractSubStatus = '';
+                    item.signMode = '';
+                    item.signProgress = '';
+                    item.initiatorRole = '';
+                    item.currentActor = '';
+                    item.reviewerRole = '';
+                    item.taskId = '';
+                    item.taskStatus = '签约任务已撤回';
+                    removeContractSnapshot(item);
+                    closeOrderOperationLayer(false);
+                    render();
+                    showToast('已撤回合同关联，订单已恢复为待关联合同。');
+                });
+            }
         }
 
         function closeCheckout() {
@@ -1265,6 +1512,20 @@
                 button.addEventListener('click', function () {
                     var orderAction = this.dataset.orderAction;
                     var contractItem = activeRecords.find(function (record) { return record.orderNo === button.dataset.orderNo; });
+                    if (orderAction === '订单详情' && contractItem) {
+                        if (serviceOrderDetail) serviceOrderDetail.open(contractItem, 'order', this);
+                        else openProductSharedView(contractItem, 'detail');
+                        return;
+                    }
+                    if (orderAction === '交付详情' && contractItem) {
+                        if (serviceDeliveryDetail) serviceDeliveryDetail.open(contractItem, 'basic', this);
+                        else openProductSharedView(contractItem, 'delivery');
+                        return;
+                    }
+                    if (orderAction === '撤回关联' && contractItem) {
+                        openWithdrawRelationModal(contractItem);
+                        return;
+                    }
                     if ((orderAction === '关联合同' || orderAction === '重新关联合同') && window.SupplierContractDrawer && contractItem) {
                         window.SupplierContractDrawer.open({
                             orderNo: contractItem.orderNo,
@@ -1279,6 +1540,14 @@
                             demoMode: Boolean(contractItem.demoMode),
                             esignUnavailableDemo: Boolean(contractItem.esignUnavailableDemo),
                             onConfirm: function (values) {
+                                if (serviceMode && window.ServiceOrderDetail) {
+                                    window.ServiceOrderDetail.applyContractValues(contractItem, values, {
+                                        role: 'buyer',
+                                        buyerName: '深圳市龙岗智慧产业有限公司',
+                                        supplierName: contractItem.provider,
+                                        operatorName: '深圳市龙岗区数据要素交易服务有限公司'
+                                    });
+                                }
                                 if (values.signing === 'electronic') {
                                     contractItem.status = '关联合同签署中';
                                     contractItem.signMode = '电子签章';
@@ -1294,6 +1563,15 @@
                                     showToast('法大大签约任务已创建，三方可分别进入法大大完成签署。');
                                     return;
                                 }
+                                contractItem.status = '关联审批中';
+                                contractItem.signMode = '线下签署';
+                                contractItem.initiatorRole = '需求方';
+                                contractItem.reviewerRole = '提供方、平台运营方';
+                                contractItem.currentActor = '提供方、平台运营方';
+                                contractItem.contractSubStatus = '线下三方合同已提交，等待关联审批';
+                                contractItem.signProgress = '3/3 已签署';
+                                contractItem.primaryAction = '';
+                                render();
                                 showToast('线下合同已提交，等待关联审核。');
                             },
                             onSignResult: function (result) {
@@ -1320,16 +1598,19 @@
                         return;
                     }
                     if (orderAction === '审核并签署' && window.SupplierContractApproval && contractItem) {
+                        var approvalSnapshot = serviceMode && contractItem.contractSnapshot;
                         window.SupplierContractApproval.open({
                             orderNo: contractItem.orderNo,
                             provider: contractItem.provider,
                             demander: '深圳市龙岗智慧产业有限公司',
                             itemName: contractItem.name,
-                            amount: contractItem.amount,
+                            amount: approvalSnapshot && approvalSnapshot.contractAmount != null ? approvalSnapshot.contractAmount : contractItem.amount,
                             appliedAt: contractItem.appliedAt,
                             businessType: serviceMode ? 'service' : 'product',
-                            serviceFeeMode: serviceMode ? 'P' : 'G',
-                            serviceFeeValue: serviceMode ? 2.5 : 50,
+                            paymentMode: approvalSnapshot && approvalSnapshot.paymentMode,
+                            paymentStages: approvalSnapshot && approvalSnapshot.paymentStages,
+                            serviceFeeMode: approvalSnapshot && approvalSnapshot.serviceFeeMode || (serviceMode ? 'P' : 'G'),
+                            serviceFeeValue: approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : (serviceMode ? 2.5 : 50),
                             signing: '电子签章',
                             initiatorRole: contractItem.initiatorRole,
                             reviewerRole: '需求方',
@@ -1384,50 +1665,7 @@
                         var item = activeRecords.find(function (record) {
                             return record.orderNo === button.dataset.orderNo;
                         });
-                        if (sharedCheckout && item) {
-                            sharedCheckout.open({
-                                feeType: '交易价款',
-                                merchantId: 'MER-PLATFORM-202607-0001',
-                                orderNo: item.orderNo,
-                                billNo: getBillNo(item),
-                                objectLabel: serviceMode ? '服务名称' : '产品名称',
-                                objectName: item.name,
-                                objectTypeLabel: objectTypeLabel,
-                                objectType: item.productType,
-                                payerName: '深圳市龙岗智慧产业有限公司',
-                                providerName: item.provider,
-                                merchantName: item.provider,
-                                receiverName: '深圳市龙岗区数据要素交易服务有限公司',
-                                receiverBank: '中国农业银行深圳龙岗支行',
-                                receiverAccount: serviceMode ? '4405 0101 0000 78632' : '4405 0101 0000 12345',
-                                receiverMemo: (serviceMode ? '服务订单号' : '订单号') + '后8位',
-                                amount: item.paymentStage ? item.paymentStage.amount : item.amount,
-                                stageNo: item.paymentStage ? item.paymentStage.periodNo : '',
-                                stageTotal: item.paymentStage ? item.paymentStage.periodTotal : '',
-                                stageName: item.paymentStage ? item.paymentStage.name : '',
-                                stagePercent: item.paymentStage ? item.paymentStage.percent : '',
-                                contractAmount: item.paymentStage ? item.paymentStage.contractAmount : '',
-                                serviceFeeMode: item.paymentStage ? item.paymentStage.serviceFeeMode : 'P',
-                                serviceFeeValue: item.paymentStage ? item.paymentStage.serviceFeeValue : 3,
-                                stageStatus: item.paymentStage ? item.paymentStage.payStatus : '待支付',
-                                outTradeNo: item.paymentStage ? item.paymentStage.outTradeNo : '',
-                                successText: (serviceMode ? '服务订单' : '订单') + '已进入待交付状态。',
-                                failureText: '订单仍保留在当前待支付期次，不会重复扣款。'
-                            }, {
-                                onOfflineSubmitted: function () {
-                                    showToast('线下支付凭证已提交。');
-                                },
-                                onOnlineSuccess: function () {
-                                    if (item.paymentStage) item.paymentStage.payStatus = '已支付';
-                                    item.status = '待交付';
-                                    render();
-                                },
-                                onDone: function () {
-                                    showToast('支付成功，' + (serviceMode ? '服务订单' : '订单') + '已进入待交付。');
-                                }
-                            });
-                            return;
-                        }
+                        if (openOrderPayment(item, false)) return;
                         state.checkoutOrderNo = this.dataset.orderNo;
                         state.paymentMethod = '';
                         state.onlineChannel = '';
