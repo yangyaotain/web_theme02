@@ -522,6 +522,7 @@ th.contract-actions-cell { z-index: 3; background: #f4f7f5 !important; }
     grid-template-columns: 104px minmax(0, 1fr);
     align-items: start;
     margin: 0;
+    font-size: 13px;
     line-height: 1.55;
 }
 
@@ -544,6 +545,7 @@ th.contract-actions-cell { z-index: 3; background: #f4f7f5 !important; }
     gap: 6px;
     overflow: hidden;
     color: #5c6862;
+    font-size: 13px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

@@ -57,7 +57,9 @@
                     defaultOpen: true,
                     children: [
                         { key: 'invoice-info', label: '产品开票信息', href: 'buyer-center.html?menu=invoice-info' },
-                        { key: 'invoice-apply', label: '产品开票申请', href: 'buyer-center.html?menu=invoice-apply' }
+                        { key: 'invoice-apply', label: '产品开票申请', href: 'buyer-center.html?menu=invoice-apply' },
+                        { key: 'service-invoice-info', label: '服务开票信息', href: 'buyer-center.html?menu=service-invoice-info' },
+                        { key: 'service-invoice-apply', label: '服务开票申请', href: 'buyer-center.html?menu=service-invoice-apply' }
                     ]
                 },
                 { key: 'my-demand', label: '我的需求', icon: 'demand', href: 'buyer-center.html?menu=my-demand' },
@@ -121,7 +123,8 @@
                     label: '发票管理',
                     icon: 'invoice',
                     children: [
-                        { key: 'invoice', label: '发票管理', href: 'supplier-center.html?menu=invoice' }
+                        { key: 'invoice', label: '产品开票审核', href: 'supplier-center.html?menu=invoice' },
+                        { key: 'service-invoice-review', label: '服务开票审核', href: 'supplier-center.html?menu=service-invoice-review' }
                     ]
                 },
                 { key: 'demand-response', label: '需求响应', icon: 'demand', href: 'supplier-center.html?menu=demand-response' },
@@ -159,9 +162,12 @@
         'transaction-bill': { title: '交易账单管理', desc: '查看交易账单、结算周期、应收应付与确认记录。' },
         'offline-voucher': { title: '线下支付凭证', desc: '管理线下转账凭证、到账确认和付款记录。' },
         'settlement-account': { title: '收款结算账户', desc: '维护线上收款商户资料、结算账户和进件审核状态。' },
-        'invoice': { title: '发票管理', desc: '处理发票申请、开票记录和发票状态跟踪。' },
+        'invoice': { title: '产品开票审核', desc: '处理产品交易开票申请、开票记录和发票状态跟踪。' },
         'invoice-info': { title: '产品开票信息', desc: '维护产品交易开票抬头、税号和收票信息。' },
         'invoice-apply': { title: '产品开票申请', desc: '查看产品订单的开票申请和处理状态。' },
+        'service-invoice-info': { title: '服务开票信息', desc: '维护服务交易开票抬头、税号和收票信息。' },
+        'service-invoice-apply': { title: '服务开票申请', desc: '查看服务订单的开票申请和处理状态。' },
+        'service-invoice-review': { title: '服务开票审核', desc: '处理服务交易开票申请、开票记录和发票状态跟踪。' },
         'profile': { title: '账号中心', desc: '查看账号信息、会员权益和业务开通情况。' },
         'message': { title: '我的消息', desc: '查看系统通知、业务提醒和站内消息。' },
         'subscribe': { title: '我的订阅', desc: '查看已订阅的数据资源、产品和服务动态。' },

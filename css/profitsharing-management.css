@@ -78,6 +78,14 @@
     cursor: not-allowed;
 }
 
+.profit-btn.is-syncing svg {
+    animation: profit-sync-rotate 0.9s linear infinite;
+}
+
+@keyframes profit-sync-rotate {
+    to { transform: rotate(360deg); }
+}
+
 .profit-btn.text {
     min-height: 28px;
     padding: 0 4px;
@@ -539,6 +547,21 @@
 
 .profit-modal-body {
     overflow-x: hidden;
+}
+
+.profit-receiver-sync-modal {
+    width: min(520px, calc(100vw - 56px));
+}
+
+.profit-sync-description {
+    margin: 0;
+    color: #4d5a53;
+    font-size: 12px;
+    line-height: 1.75;
+}
+
+.profit-receiver-sync-modal .profit-form-note {
+    margin-top: 14px;
 }
 
 .profit-form-grid {

@@ -12,6 +12,9 @@
     var configOpen = false;
     var splitApplyAuditStatus = null;
     var drawerReceiverId = '';
+    var receiverSyncOpen = false;
+    var receiverSyncing = false;
+    var receiverSyncCompleted = false;
     var toastText = '';
     var configUploadError = '';
 
@@ -97,6 +100,17 @@
         { receiverId: 'RCV-202607-00655', merchantId: 'MER2026071700655', name: '深圳市龙数数据技术有限公司', creditCode: '91440300MA5F8LG655', receiverType: '标准商户', account: '招商银行 · 7559 **** 0655', status: '2', createdAt: '2026-07-18 15:26:11' },
         { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', status: '3', createdAt: '2026-07-17 14:08:29' }
     ];
+
+    var RECEIVER_SYNC_CANDIDATE = {
+        receiverId: 'RCV-202607-01036',
+        merchantId: 'MER2026072301036',
+        name: '深圳市龙岗智慧数据服务有限公司',
+        creditCode: '91440300MA5F8LG036',
+        receiverType: '标准商户',
+        account: '中国银行 · 6216 **** 1036',
+        status: '0',
+        createdAt: '2026-07-23 14:36:20'
+    };
 
     var RECEIVER_AUDIT_LABELS = {
         '0': '正在审核',
@@ -373,15 +387,24 @@
 
     function renderReceivers() {
         var records = filteredReceivers();
-        page.innerHTML = renderHead('分账接收方管理', '供方收款结算账号开通后，系统后台自动发起分账接收方添加，并同步展示审核状态。')
+        var syncAction = button(receiverSyncing ? '同步中…' : '同步接收方', receiverSyncing ? 'is-syncing' : '', 'open-receiver-sync', 'refresh', receiverSyncing ? 'disabled aria-busy="true"' : '');
+        page.innerHTML = renderHead('分账接收方管理', '供方收款结算账号开通后，系统后台自动发起分账接收方添加，并同步展示审核状态。', syncAction)
             + renderSummary([['已自动发起', String(RECEIVERS.length) + ' 个', '由结算账号开通触发'], ['正在审核', String(RECEIVERS.filter(function (item) { return item.status === '0'; }).length) + ' 个', '等待审核结果'], ['审核成功', String(RECEIVERS.filter(function (item) { return item.status === '1'; }).length) + ' 个', '可参与订单分账'], ['审核未通过', String(RECEIVERS.filter(function (item) { return item.status === '2' || item.status === '3'; }).length) + ' 个', '审核驳回或拒绝']])
-            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>供方在供方中心完成收款结算账号开通后，系统后台自动发起分账接收方添加；本页仅用于查看自动添加结果和审核状态，无需人工操作。</p></div></section>'
+            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>供方在供方中心完成收款结算账号开通后，系统后台自动发起分账接收方添加；如因自动任务失败或其他原因未能添加，可点击右上角“同步接收方”手动检测并补充未添加记录。</p></div></section>'
             + '<section class="profit-filter-card is-simple"><label class="profit-search">' + icon('search') + '<input type="search" placeholder="搜索供方名称、接收方编号或商户编号" value="' + escapeHtml(query) + '" data-profit-search></label><select data-profit-status aria-label="审核状态"><option value="全部状态">全部状态</option><option value="0">正在审核</option><option value="1">审核成功</option><option value="2">审核驳回</option><option value="3">审核拒绝</option></select>' + button('查询', 'primary', 'search', 'search') + button('重置', '', 'reset', 'refresh') + '</section>'
             + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>接收方由系统后台自动添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>审核状态</th><th>自动发起时间</th><th>操作</th></tr></thead><tbody>'
             + records.map(function (item) {
                 return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + '</div></td></tr>';
-            }).join('') + '</tbody></table></div></section>' + renderReceiverDrawer() + renderToast();
+            }).join('') + '</tbody></table></div></section>' + renderReceiverDrawer() + renderReceiverSyncModal() + renderToast();
         bindEvents();
+    }
+
+    function renderReceiverSyncModal() {
+        if (!receiverSyncOpen) return '';
+        return '<div class="profit-modal-mask" data-profit-receiver-sync-close><div class="profit-modal profit-receiver-sync-modal" role="dialog" aria-modal="true" aria-labelledby="receiverSyncTitle">'
+            + '<header><div><h2 id="receiverSyncTitle">同步接收方</h2><p>手动检测并补充未自动添加的分账接收方</p></div><button type="button" data-profit-action="close-receiver-sync" aria-label="关闭">' + icon('close') + '</button></header>'
+            + '<div class="profit-modal-body"><p class="profit-sync-description">系统将检测已开通收款结算账号但尚未添加为分账接收方的供方，并重新发起添加。</p><div class="profit-form-note">' + icon('info') + '<p>本次操作仅补充尚未添加的接收方，已有接收方不会重复提交。</p></div></div>'
+            + '<footer>' + button('取消', '', 'close-receiver-sync', 'close') + button('确认同步', 'primary', 'confirm-receiver-sync', 'refresh') + '</footer></div></div>';
     }
 
     function getReceiverProfile(item) {
@@ -442,6 +465,23 @@
                 else if (action === 'close-modal') { modalState = null; render(); }
                 else if (action === 'receiver-detail') { drawerReceiverId = this.dataset.receiverId; render(); }
                 else if (action === 'close-drawer') { drawerReceiverId = ''; render(); }
+                else if (action === 'open-receiver-sync') { receiverSyncOpen = true; render(); }
+                else if (action === 'close-receiver-sync') { receiverSyncOpen = false; render(); }
+                else if (action === 'confirm-receiver-sync') {
+                    receiverSyncOpen = false;
+                    receiverSyncing = true;
+                    render();
+                    window.setTimeout(function () {
+                        receiverSyncing = false;
+                        if (!receiverSyncCompleted) {
+                            RECEIVERS.unshift(RECEIVER_SYNC_CANDIDATE);
+                            receiverSyncCompleted = true;
+                            showToast('同步完成：发现 1 个未添加接收方，已成功发起添加。');
+                        } else {
+                            showToast('同步完成，未发现需要补充添加的接收方。');
+                        }
+                    }, 900);
+                }
             });
         });
 
@@ -540,6 +580,8 @@
         });
         var drawerMask = page.querySelector('[data-profit-drawer-close]');
         if (drawerMask) drawerMask.addEventListener('click', function () { drawerReceiverId = ''; render(); });
+        var receiverSyncMask = page.querySelector('[data-profit-receiver-sync-close]');
+        if (receiverSyncMask) receiverSyncMask.addEventListener('click', function () { receiverSyncOpen = false; render(); });
     }
 
     function render() {
