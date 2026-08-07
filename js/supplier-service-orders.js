@@ -21,6 +21,7 @@
         ['2026072116142806100000101149401', '龙岗企业数据资产入表辅导服务', '数据资产入表辅导服务', '深圳市龙岗产业投资服务有限公司', '3000元/次', '1次', '线下交付', '¥3000', '2026-07-21 16:14:28', '待审批'],
         ['2026072015074302800000101149417', '园区数据治理体系规划咨询服务', '企业数据治理与合规咨询服务', '龙岗区园区运营管理有限公司', '5000元/次', '1次', '线下交付', '¥5000', '2026-07-20 15:07:43', '待关联合同'],
         ['2026071911360908500000101149433', '企业信用画像合规查询服务', '企业数据资源托管运营服务', '深圳市清澜企业服务有限公司', '500元/次', '3次', '线下交付', '¥1500', '2026-07-19 11:36:09', '关联审批中'],
+        ['2026071911052604700000101149425', '园区企业数据治理整改实施服务', '企业数据治理与合规咨询服务', '深圳市龙岗智慧产业有限公司', '8000元/项', '1项', '报告+驻场', '¥8000', '2026-07-19 11:05:26', '关联审批中'],
         ['2026071817245104300000101149449', '数字化转型顶层规划咨询服务', '企业数字化转型咨询服务', '龙岗数智产业研究院有限公司', '8000元/次', '1次', '线下交付', '¥8000', '2026-07-18 17:24:51', '关联合同签署中'],
         ['2026071714092607600000101149465', '数据资产融资可行性评估服务', '企业数据资产融资咨询服务', '深圳市龙岗科创金融服务有限公司', '6000元/次', '1次', '线下交付', '¥6000', '2026-07-17 14:09:26', '待支付（首次）'],
         ['2026071610513701900000101149481', '公共数据授权运营合规评估', '数据交易合规评估服务', '深圳市数治咨询服务有限公司', '4500元/次', '1次', '线下交付', '¥4500', '2026-07-16 10:51:37', '解除审批中'],
@@ -49,6 +50,7 @@
 
     var ELECTRONIC_CONTRACT_META = {
         '2026071911360908500000101149433': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '提供方', contractSubStatus: '当前提供方待审核并签署', signProgress: '1/3 已签署', taskId: 'FDD-20260719149433', primaryAction: '审核并签署' },
+        '2026071911052604700000101149425': { signMode: '线下签署', initiatorRole: '提供方', reviewerRole: '需求方', currentActor: '需求方', contractSubStatus: '提供方已提交线下合同，等待需求方确认关联', signProgress: '--', taskStatus: '等待关联确认', primaryAction: '撤回关联' },
         '2026071817245104300000101149449': { signMode: '电子签章', initiatorRole: '提供方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260718149449', primaryAction: '审核并签署' }
     };
 
@@ -97,9 +99,9 @@
         '关联审批中': [['关联审批', 'approve'], ['订单详情', 'detail']],
         '关联合同签署中': [['继续签署', 'sign'], ['订单详情', 'detail']],
         '待支付（首次）': [['解除关联合同', 'unlink'], ['订单详情', 'detail']],
-        '待支付（阶段）': [['解除关联合同', 'unlink'], ['订单详情', 'detail']],
-        '待支付（最后）': [['解除关联合同', 'unlink'], ['订单详情', 'detail']],
-        '解除审批中': [['撤回解除', 'withdraw'], ['订单详情', 'detail']],
+        '待支付（阶段）': [['订单详情', 'detail']],
+        '待支付（最后）': [['订单详情', 'detail']],
+        '解除审批中': [['订单详情', 'detail']],
         '已解除关联': [['关联合同', 'contract'], ['订单详情', 'detail']],
         '待交付': [['服务交付', 'delivery'], ['订单详情', 'detail']],
         '待确认交付': [['交付详情', 'delivery'], ['订单详情', 'detail']],
@@ -244,7 +246,9 @@
         function renderActions(item) {
             var actions = ACTIONS_BY_STATUS[item.status] || [['订单详情', 'detail']];
             if (item.demoMode && !item.primaryAction) actions = [['订单详情', 'detail']];
-            if (item.primaryAction) {
+            if (item.status === '关联审批中' && item.initiatorRole === '提供方') {
+                actions = [['撤回关联', 'withdraw'], ['订单详情', 'detail']];
+            } else if (item.primaryAction) {
                 var primaryIcon = item.primaryAction === '审核并签署' ? 'approve' : 'sign';
                 actions = [[item.primaryAction, primaryIcon], ['订单详情', 'detail']];
             }
@@ -358,6 +362,67 @@
             }, 2200);
         }
 
+        function removeContractSnapshot(record) {
+            if (!record) return;
+            record.contractSnapshot = null;
+            try {
+                var store = JSON.parse(window.localStorage.getItem('ServiceOrderContractSnapshots:v1') || '{}') || {};
+                delete store['supplier:' + record.orderNo];
+                window.localStorage.setItem('ServiceOrderContractSnapshots:v1', JSON.stringify(store));
+            } catch (error) {
+                // localStorage不可用时，仅清理当前页面中的合同快照。
+            }
+        }
+
+        function openWithdrawRelationModal(record, trigger) {
+            if (!record || !window.ContractRelationOperations) return;
+            window.ContractRelationOperations.openWithdraw({
+                returnFocus: trigger,
+                onConfirm: function () {
+                    record.status = '待关联合同';
+                    record.primaryAction = '';
+                    record.contractSubStatus = '';
+                    record.signMode = '';
+                    record.signProgress = '';
+                    record.initiatorRole = '';
+                    record.currentActor = '';
+                    record.reviewerRole = '';
+                    record.taskId = '';
+                    record.taskStatus = '签约任务已撤回';
+                    removeContractSnapshot(record);
+                    render();
+                    showToast('已撤回合同关联，订单已恢复为待关联合同。');
+                }
+            });
+        }
+
+        function openUnlinkContractDrawer(record, trigger) {
+            if (!record || !window.ContractRelationOperations) return;
+            if (window.ServiceOrderDetail) window.ServiceOrderDetail.hydrateSnapshot(record, 'supplier');
+            window.ContractRelationOperations.openUnlink({
+                record: record,
+                snapshot: record.contractSnapshot,
+                businessType: 'service',
+                provider: '深圳市龙岗数智科技有限公司',
+                demander: record.user,
+                operator: '深圳市龙岗区数据要素交易服务有限公司',
+                serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
+                serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+                returnFocus: trigger,
+                onDemo: showToast,
+                onConfirm: function (reason) {
+                    record.preUnlinkStatus = record.status;
+                    record.status = '解除审批中';
+                    record.contractSubStatus = '提供方已提交解除关联合同申请，等待审批';
+                    record.unlinkInitiatorRole = '提供方';
+                    record.unlinkReason = reason;
+                    record.primaryAction = '';
+                    render();
+                    showToast('解除关联合同申请已提交。');
+                }
+            });
+        }
+
         function changePage(value) {
             var totalPages = Math.max(1, Math.ceil(getFilteredRecords().length / state.pageSize));
             state.page = Math.min(totalPages, Math.max(1, parseInt(value, 10) || 1));
@@ -454,6 +519,14 @@
                     }
                     if ((action === '服务交付' || action === '交付详情') && serviceDeliveryDetail && clickedRecord) {
                         serviceDeliveryDetail.open(clickedRecord, 'basic', this);
+                        return;
+                    }
+                    if (action === '撤回关联' && clickedRecord) {
+                        openWithdrawRelationModal(clickedRecord, this);
+                        return;
+                    }
+                    if (action === '解除关联合同' && clickedRecord) {
+                        openUnlinkContractDrawer(clickedRecord, this);
                         return;
                     }
                     if ((action === '关联审批' || action === '审核并签署') && window.SupplierContractApproval) {
@@ -553,7 +626,7 @@
                                     record.currentActor = '需求方、平台运营方';
                                     record.contractSubStatus = '线下三方合同已提交，等待关联审批';
                                     record.signProgress = '3/3 已签署';
-                                    record.primaryAction = '关联审批';
+                                    record.primaryAction = '撤回关联';
                                     render();
                                 }
                                 showToast('线下合同已提交，等待关联审核。');

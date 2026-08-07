@@ -562,7 +562,7 @@
 
     var ELECTRONIC_CONTRACT_META = {
         '2026071811043608500000101149032': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '提供方', contractSubStatus: '当前提供方待审核并签署', signProgress: '1/3 已签署', taskId: 'FDD-20260718149032', primaryAction: '审核并签署' },
-        '2026070211093702400000101149241': { signMode: '电子签章', initiatorRole: '提供方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260702149241', primaryAction: '审核并签署' },
+        '2026070211093702400000101149241': { signMode: '电子签章', initiatorRole: '提供方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260702149241', primaryAction: '' },
         '2026071717251106400000101149048': { signMode: '电子签章', initiatorRole: '提供方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260717149048', primaryAction: '审核并签署' },
         '2026070314261807300000101149225': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '提供方', contractSubStatus: '审核通过，待完成签署', signProgress: '1/3 已签署', taskId: 'FDD-20260703149225', primaryAction: '继续签署' }
     };
@@ -650,6 +650,8 @@
         search: '<path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l4.45 4.44-1.42 1.42-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>',
         filter: '<path d="M3 5h18l-7 8v5l-4 2v-7L3 5zm4.4 2 4.6 5.25V17l1-.5v-4.25L17.6 7H7.4z"/>',
         reset: '<path d="M12 5V2L7 7l5 5V7a5 5 0 1 1-4.55 7.06l-1.82.83A7 7 0 1 0 12 5z"/>',
+        cancel: '<path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5z"/>',
+        dispute: '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
         approve: '<path d="M9 16.2 5.5 12.7 4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/>',
         contract: '<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-5 4h8v2H8v-2zm0 4h8v2H8v-2z"/>',
         withdraw: '<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>',
@@ -1644,7 +1646,6 @@
                     if (item.status === '待交付' || item.status === '待确认交付' || item.status === '交易完成') return '交付详情';
                     return '';
                 }
-                if (item.status === '解除审批中' && item.unlinkInitiatorRole === currentRole) return '撤回解除';
                 if (item.status === '待交付') return '交付详情';
                 if (item.status === '待确认交付') return '确认交付';
                 if (item.status === '交易完成') return item.rating ? '交付详情' : '去评价';
@@ -1659,9 +1660,10 @@
             if (action === '审核并签署' || action === '关联审批') return 'approve';
             if (action === '继续签署') return 'sign';
             if (action === '撤回关联') return 'withdraw';
-            if (action === '撤回解除') return 'withdraw';
             if (action === '关联合同' || action === '重新关联合同') return 'contract';
             if (action === '解除关联合同') return 'unlink';
+            if (action === '取消订单') return 'cancel';
+            if (action === '发起争议') return 'dispute';
             if (action === '去支付') return 'pay';
             if (action === '确认交付') return 'confirm';
             if (action === '去评价') return 'star';
@@ -2030,6 +2032,7 @@
                 +                   '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span></div>'
                 +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span>' + escapeHtml(contract.provider) + '</span></div>'
                 +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span>' + escapeHtml(contract.demander) + '</span></div>'
+                +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span>深圳市龙岗区数据要素交易服务有限公司</span></div>'
                 +               '</div>'
                 +           '</section>'
                 +           paymentTerms
@@ -2085,6 +2088,7 @@
                         }
                         return;
                     }
+                    record.preUnlinkStatus = record.status;
                     record.status = '解除审批中';
                     record.contractSubStatus = '解除关联合同申请已提交，等待审批';
                     record.primaryAction = '';
@@ -2142,34 +2146,70 @@
             });
         }
 
-        function openConfirmDeliveryModal(record) {
-            if (!record) return;
-            closeOrderOperationLayer(true);
-            operationReturnFocus = document.activeElement;
-            document.body.insertAdjacentHTML('beforeend', ''
-                + '<div class="supplier-contract-drawer-mask supplier-order-operation-mask" data-supplier-order-operation-layer data-supplier-order-operation-close></div>'
-                + '<section class="supplier-order-withdraw-modal" role="dialog" aria-modal="true" aria-labelledby="buyerDeliveryConfirmTitle" data-supplier-order-operation-layer data-supplier-order-operation-dialog>'
-                +   '<div class="supplier-order-withdraw-content">'
-                +       '<h2 id="buyerDeliveryConfirmTitle">' + materialIcon('task_alt') + '<span>确认交付</span></h2>'
-                +       '<p>请确认已收到“' + escapeHtml(record.name) + '”的全部交付内容。确认后订单将进入交易完成状态。</p>'
-                +   '</div>'
-                +   '<footer>'
-                +       '<button class="supplier-order-operation-button" type="button" data-supplier-order-operation-close>取消</button>'
-                +       '<button class="supplier-order-operation-button is-primary" type="button" data-buyer-delivery-confirm>确认交付</button>'
-                +   '</footer>'
-                + '</section>');
-            activateOrderOperationLayer('[data-supplier-order-operation-close].supplier-order-operation-button');
-            var confirmButton = document.querySelector('[data-buyer-delivery-confirm]');
-            if (confirmButton) {
-                confirmButton.addEventListener('click', function () {
+        function openBuyerCancelOrder(record, trigger) {
+            if (!record || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openCancel({
+                orderNo: record.orderNo,
+                itemName: record.name,
+                entityLabel: '资源',
+                returnFocus: trigger,
+                onConfirm: function (payload) {
+                    record.preCancelStatus = record.status;
+                    record.status = '已取消';
+                    record.cancelReason = payload.reason;
+                    record.canceledAt = new Date().toLocaleString('zh-CN', { hour12: false });
+                    record.contractSubStatus = '需求方已取消订单';
+                    record.primaryAction = '';
+                    record.signMode = '';
+                    record.signProgress = '';
+                    record.initiatorRole = '';
+                    record.reviewerRole = '';
+                    record.currentActor = '';
+                    record.taskId = '';
+                    record.taskStatus = '订单已取消';
+                    render();
+                    showToast('订单已取消。');
+                }
+            });
+        }
+
+        function openBuyerOrderDispute(record, trigger) {
+            if (!record || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openDispute({
+                orderNo: record.orderNo,
+                itemName: record.name,
+                entityLabel: '资源',
+                returnFocus: trigger,
+                onConfirm: function (payload) {
+                    record.disputeSubmitted = true;
+                    record.dispute = {
+                        description: payload.description,
+                        attachments: payload.files.map(function (file) {
+                            return { name: file.name, size: file.size, type: file.type || '' };
+                        }),
+                        submittedAt: new Date().toLocaleString('zh-CN', { hour12: false })
+                    };
+                    render();
+                    showToast('争议已提交，请在争议仲裁中查看处理进度。');
+                }
+            });
+        }
+
+        function openConfirmDeliveryModal(record, trigger) {
+            if (!record || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openConfirmDelivery({
+                orderNo: record.orderNo,
+                itemName: record.name,
+                entityLabel: '资源',
+                returnFocus: trigger,
+                onConfirm: function () {
                     record.status = '交易完成';
                     record.contractSubStatus = '需求方已确认交付，交易完成';
                     record.deliveredAt = new Date().toLocaleString('zh-CN', { hour12: false });
-                    closeOrderOperationLayer(false);
                     render();
                     showToast('交付已确认，订单已进入交易完成。');
-                });
-            }
+                }
+            });
         }
 
         function openEvaluationModal(record) {
@@ -2337,6 +2377,20 @@
             var actions = primaryAction
                 ? [[primaryAction, getActionIconName(primaryAction)], ['订单详情', 'detail']]
                 : [['订单详情', 'detail']];
+            if (isBuyerCenter()) {
+                if (item.status === '待支付') {
+                    actions = [['发起争议', 'dispute'], ['解除关联合同', 'unlink'], ['去支付', 'pay'], ['订单详情', 'detail']];
+                } else if (item.status === '待交付') {
+                    actions = [['发起争议', 'dispute'], ['交付详情', 'delivery'], ['订单详情', 'detail']];
+                } else if (item.status === '待确认交付') {
+                    actions = [['发起争议', 'dispute'], ['确认交付', 'confirm'], ['交付详情', 'delivery'], ['订单详情', 'detail']];
+                } else if (['订单退回', '待关联合同', '关联审批中', '关联合同签署中'].indexOf(item.status) !== -1) {
+                    actions.unshift(['取消订单', 'cancel']);
+                }
+                if (item.disputeSubmitted) {
+                    actions = actions.filter(function (action) { return action[0] !== '发起争议'; });
+                }
+            }
             return actions.map(function (action) {
                 return '<button class="supplier-order-action" type="button" data-supplier-order-action="' + escapeHtml(action[0]) + '" data-supplier-order-no="' + escapeHtml(item.orderNo) + '">' + icon(action[1]) + '<span>' + escapeHtml(action[0]) + '</span></button>';
             }).join('');
@@ -2658,6 +2712,14 @@
                 button.addEventListener('click', function () {
                     var action = this.dataset.supplierOrderAction;
                     var clickedRecord = records.find(function (item) { return item.orderNo === button.dataset.supplierOrderNo; });
+                    if (action === '取消订单') {
+                        openBuyerCancelOrder(clickedRecord, this);
+                        return;
+                    }
+                    if (action === '发起争议') {
+                        openBuyerOrderDispute(clickedRecord, this);
+                        return;
+                    }
                     if (action === '订单详情') {
                         openOrderDetail(this.dataset.supplierOrderNo);
                         return;
@@ -2671,19 +2733,11 @@
                         return;
                     }
                     if (action === '确认交付') {
-                        openConfirmDeliveryModal(clickedRecord);
+                        openConfirmDeliveryModal(clickedRecord, this);
                         return;
                     }
                     if (action === '去评价') {
                         openEvaluationModal(clickedRecord);
-                        return;
-                    }
-                    if (action === '撤回解除' && clickedRecord) {
-                        clickedRecord.status = '待支付';
-                        clickedRecord.contractSubStatus = '解除关联合同申请已撤回，订单恢复待支付';
-                        clickedRecord.unlinkInitiatorRole = '';
-                        render();
-                        showToast('解除关联合同申请已撤回。');
                         return;
                     }
                     if (action === '撤回关联') {

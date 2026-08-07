@@ -357,6 +357,19 @@
             status: '关联审批中'
         },
         {
+            orderNo: '2026070715483204200000101148192',
+            orderType: '服务订单',
+            name: '园区企业数据治理整改实施服务',
+            productType: '企业数据治理实施服务',
+            provider: '龙岗数智咨询服务有限公司',
+            price: '8000元/项',
+            quantity: '1项',
+            delivery: '报告+驻场',
+            amount: '¥8000',
+            appliedAt: '2026-07-07 15:48:32',
+            status: '关联审批中'
+        },
+        {
             orderNo: '2026061916051502100000101148466',
             orderType: '服务订单',
             name: '福田区金融风控数据建模与实施服务',
@@ -455,6 +468,7 @@
         '2026051811022804700000101148469': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260518148469', primaryAction: '' },
         '2026061014253600800000101148853': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260610148853', primaryAction: '' },
         '2026070716015603600000101148208': { signMode: '电子签章', initiatorRole: '提供方', reviewerRole: '需求方', contractSubStatus: '当前需求方待审核并签署', signProgress: '1/3 已签署', taskId: 'FDD-20260707148208', primaryAction: '审核并签署' },
+        '2026070715483204200000101148192': { signMode: '线下签署', initiatorRole: '需求方', reviewerRole: '提供方', currentActor: '提供方', contractSubStatus: '需求方已提交线下合同，等待提供方确认关联', signProgress: '--', taskStatus: '等待关联确认', primaryAction: '' },
         '2026061916051502100000101148466': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260619148466', primaryAction: '' }
     };
 
@@ -511,6 +525,7 @@
             ['订单详情', 'detail']
         ],
         '待关联合同': [
+            ['取消订单', 'cancel'],
             ['关联合同', 'contract'],
             ['订单详情', 'detail']
         ],
@@ -526,11 +541,11 @@
         ],
         '待支付': [
             ['发起争议', 'dispute'],
+            ['解除关联合同', 'unlink'],
             ['去支付', 'pay'],
             ['订单详情', 'detail']
         ],
         '解除审批中': [
-            ['撤回解除', 'withdraw'],
             ['订单详情', 'detail']
         ],
         '已解除关联': [
@@ -556,8 +571,16 @@
 
     var SERVICE_ACTIONS_BY_STATUS = Object.assign({}, ACTIONS_BY_STATUS, {
         '待支付（首次）': ACTIONS_BY_STATUS['待支付'],
-        '待支付（阶段）': ACTIONS_BY_STATUS['待支付'],
-        '待支付（最后）': ACTIONS_BY_STATUS['待支付'],
+        '待支付（阶段）': [
+            ['发起争议', 'dispute'],
+            ['去支付', 'pay'],
+            ['订单详情', 'detail']
+        ],
+        '待支付（最后）': [
+            ['发起争议', 'dispute'],
+            ['去支付', 'pay'],
+            ['订单详情', 'detail']
+        ],
         '交易完成': [
             ['交付详情', 'delivery'],
             ['去评价', 'confirm'],
@@ -573,6 +596,7 @@
         redo: '<path d="M12 5V2L7 7l5 5V7a5 5 0 1 1-4.55 7.06l-1.82.83A7 7 0 1 0 12 5z"/>',
         withdraw: '<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>',
         contract: '<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-5 4h8v2H8v-2zm0 4h8v2H8v-2z"/>',
+        unlink: '<path d="M17 7h-3V5h3a5 5 0 0 1 0 10h-3v-2h3a3 3 0 0 0 0-6zM7 7a3 3 0 0 0 0 6h3v2H7A5 5 0 0 1 7 5h3v2H7zm1 4h8v2H8v-2zM4.7 3.3l16 16-1.4 1.4-16-16 1.4-1.4z"/>',
         dispute: '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
         pay: '<path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4H4V6h16v2zm-8 8H5v-2h7v2z"/>',
         online: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-3a15.7 15.7 0 0 0-1.4-3.2A8 8 0 0 1 18.9 8zM12 4c.8 1 1.5 2.3 1.8 4h-3.6c.3-1.7 1-3 1.8-4zM4.3 14a7.7 7.7 0 0 1 0-4h3.5a16.5 16.5 0 0 0 0 4H4.3zm.8 2h3a15.7 15.7 0 0 0 1.4 3.2A8 8 0 0 1 5.1 16zm3-8h-3a8 8 0 0 1 4.4-3.2A15.7 15.7 0 0 0 8.1 8zm3.9 12c-.8-1-1.5-2.3-1.8-4h3.6c-.3 1.7-1 3-1.8 4zm2.2-6H9.8a14.8 14.8 0 0 1 0-4h4.4a14.8 14.8 0 0 1 0 4zm.3 5.2a15.7 15.7 0 0 0 1.4-3.2h3a8 8 0 0 1-4.4 3.2zm1.7-5.2a16.5 16.5 0 0 0 0-4h3.5a7.7 7.7 0 0 1 0 4h-3.5z"/>',
@@ -680,6 +704,10 @@
                     return;
                 }
                 if (action === '去支付' && openOrderPayment(item, true, controls)) return;
+                if (action === '确认服务') {
+                    openConfirmOrderDelivery(item, document.activeElement, controls);
+                    return;
+                }
                 controls.showToast(action + '操作已触发：' + item.name + '（原型演示）');
             }
         }) : null;
@@ -737,6 +765,12 @@
 
         function renderActions(item) {
             var actions = activeActions[item.status] || [['订单详情', 'detail']];
+            if (item.status === '关联审批中' && item.initiatorRole && item.initiatorRole !== '需求方') {
+                actions = actions.filter(function (action) { return action[0] !== '撤回关联'; });
+            }
+            if (item.disputeSubmitted) {
+                actions = actions.filter(function (action) { return action[0] !== '发起争议'; });
+            }
             if (item.demoMode && !item.primaryAction) actions = [['订单详情', 'detail']];
             if (item.primaryAction) {
                 var actionIcon = item.primaryAction === '审核并签署'
@@ -812,6 +846,78 @@
                 }
             });
             return true;
+        }
+
+        function showOrderOperationMessage(message, controls) {
+            if (controls && typeof controls.showToast === 'function') controls.showToast(message);
+            else showToast(message);
+        }
+
+        function openCancelOrder(item, trigger, controls) {
+            if (!item || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openCancel({
+                orderNo: item.orderNo,
+                itemName: item.name,
+                entityLabel: serviceMode ? '服务' : '产品',
+                returnFocus: trigger,
+                onConfirm: function (payload) {
+                    item.preCancelStatus = item.status;
+                    item.status = '已取消';
+                    item.cancelReason = payload.reason;
+                    item.canceledAt = new Date().toLocaleString('zh-CN', { hour12: false });
+                    item.contractSubStatus = '需求方已取消订单';
+                    item.primaryAction = '';
+                    item.signMode = '';
+                    item.signProgress = '';
+                    item.initiatorRole = '';
+                    item.reviewerRole = '';
+                    item.currentActor = '';
+                    item.taskId = '';
+                    item.taskStatus = '订单已取消';
+                    render();
+                    showOrderOperationMessage('订单已取消。', controls);
+                }
+            });
+        }
+
+        function openOrderDispute(item, trigger, controls) {
+            if (!item || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openDispute({
+                orderNo: item.orderNo,
+                itemName: item.name,
+                entityLabel: serviceMode ? '服务' : '产品',
+                returnFocus: trigger,
+                onConfirm: function (payload) {
+                    item.disputeSubmitted = true;
+                    item.dispute = {
+                        description: payload.description,
+                        attachments: payload.files.map(function (file) {
+                            return { name: file.name, size: file.size, type: file.type || '' };
+                        }),
+                        submittedAt: new Date().toLocaleString('zh-CN', { hour12: false })
+                    };
+                    render();
+                    showOrderOperationMessage('争议已提交，请在争议仲裁中查看处理进度。', controls);
+                }
+            });
+        }
+
+        function openConfirmOrderDelivery(item, trigger, controls) {
+            if (!item || !window.BuyerOrderOperations) return;
+            window.BuyerOrderOperations.openConfirmDelivery({
+                orderNo: item.orderNo,
+                itemName: item.name,
+                entityLabel: serviceMode ? '服务' : '产品',
+                returnFocus: trigger,
+                onConfirm: function () {
+                    item.status = '交易完成';
+                    item.deliveryConfirmedAt = new Date().toLocaleString('zh-CN', { hour12: false });
+                    item.contractSubStatus = serviceMode ? '需求方已确认服务成果，交易完成' : '需求方已确认交付，交易完成';
+                    if (controls && serviceOrderDetail) serviceOrderDetail.refresh(item);
+                    else render();
+                    showOrderOperationMessage(serviceMode ? '服务成果已确认，订单交易完成。' : '交付已确认，订单交易完成。', controls);
+                }
+            });
         }
 
         function getOnlineChannel() {
@@ -1284,6 +1390,33 @@
             }
         }
 
+        function openUnlinkContractDrawer(item, trigger) {
+            if (!item || !window.ContractRelationOperations) return;
+            if (serviceMode && window.ServiceOrderDetail) window.ServiceOrderDetail.hydrateSnapshot(item, 'buyer');
+            window.ContractRelationOperations.openUnlink({
+                record: item,
+                snapshot: item.contractSnapshot,
+                businessType: serviceMode ? 'service' : 'product',
+                provider: item.provider,
+                demander: '深圳市龙岗智慧产业有限公司',
+                operator: '深圳市龙岗区数据要素交易服务有限公司',
+                serviceFeeMode: serviceMode ? 'P' : 'G',
+                serviceFeeValue: serviceMode ? 2.5 : 50,
+                returnFocus: trigger,
+                onDemo: showToast,
+                onConfirm: function (reason) {
+                    item.preUnlinkStatus = item.status;
+                    item.status = '解除审批中';
+                    item.contractSubStatus = '需求方已提交解除关联合同申请，等待审批';
+                    item.unlinkInitiatorRole = '需求方';
+                    item.unlinkReason = reason;
+                    item.primaryAction = '';
+                    render();
+                    showToast('解除关联合同申请已提交。');
+                }
+            });
+        }
+
         function closeCheckout() {
             window.clearTimeout(paymentQueryTimer);
             window.clearTimeout(paymentResultTimer);
@@ -1512,6 +1645,18 @@
                 button.addEventListener('click', function () {
                     var orderAction = this.dataset.orderAction;
                     var contractItem = activeRecords.find(function (record) { return record.orderNo === button.dataset.orderNo; });
+                    if (orderAction === '取消订单' && contractItem) {
+                        openCancelOrder(contractItem, this);
+                        return;
+                    }
+                    if (orderAction === '发起争议' && contractItem) {
+                        openOrderDispute(contractItem, this);
+                        return;
+                    }
+                    if (orderAction === '确认交付' && contractItem) {
+                        openConfirmOrderDelivery(contractItem, this);
+                        return;
+                    }
                     if (orderAction === '订单详情' && contractItem) {
                         if (serviceOrderDetail) serviceOrderDetail.open(contractItem, 'order', this);
                         else openProductSharedView(contractItem, 'detail');
@@ -1524,6 +1669,10 @@
                     }
                     if (orderAction === '撤回关联' && contractItem) {
                         openWithdrawRelationModal(contractItem);
+                        return;
+                    }
+                    if (orderAction === '解除关联合同' && contractItem) {
+                        openUnlinkContractDrawer(contractItem, this);
                         return;
                     }
                     if ((orderAction === '关联合同' || orderAction === '重新关联合同') && window.SupplierContractDrawer && contractItem) {
