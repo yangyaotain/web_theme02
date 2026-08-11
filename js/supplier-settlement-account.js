@@ -293,7 +293,7 @@
             +       '<div class="settlement-readonly-item"><span>开户银行</span><strong>' + escapeHtml(currentAccountData.bankName) + '</strong></div>'
             +       '<div class="settlement-readonly-item"><span>开户名称</span><strong>' + escapeHtml(currentAccountData.settleName) + '</strong></div>'
             +       '<div class="settlement-readonly-item"><span>银行账号</span><strong>' + escapeHtml(maskBankAccount(currentAccountData.settleCardNo)) + '</strong></div>'
-            +       '<div class="settlement-readonly-item"><span>账户类型</span><strong>对公同名账户</strong></div>'
+            +       '<div class="settlement-readonly-item"><span>账户类型</span><strong>对公同名账号</strong></div>'
             +       '<div class="settlement-readonly-item"><span>开户支行</span><strong>' + escapeHtml(currentAccountData.bankBranch) + '</strong></div>'
             +       '<div class="settlement-readonly-item"><span>结算方式</span><strong>T+1 结算</strong></div>'
             +   '</div>'
@@ -311,12 +311,12 @@
             + '</label>';
     }
 
-    function renderSelect(label, key, required, options) {
+    function renderSelect(label, key, required, options, attrs) {
         var error = fieldErrors[key] || '';
         return ''
             + '<label class="settlement-field' + (error ? ' has-error' : '') + '">'
             +   '<span>' + (required ? '<em>*</em>' : '') + label + '</span>'
-            +   '<select data-settlement-field="' + key + '"' + (error ? ' aria-invalid="true"' : '') + '>'
+            +   '<select data-settlement-field="' + key + '"' + (error ? ' aria-invalid="true"' : '') + (attrs ? ' ' + attrs : '') + '>'
             +       options.map(function (option) {
                         return '<option value="' + option[0] + '"' + (String(formData[key]) === String(option[0]) ? ' selected' : '') + '>' + option[1] + '</option>';
                     }).join('')
@@ -348,11 +348,8 @@
         return ''
             + '<div class="settlement-form-grid">'
             +   renderSelect('结算账户类型', 'settleType', true, [
-                    ['0', '对公同名账户'],
-                    ['1', '法人个人账户'],
-                    ['2', '授权人个人账户'],
-                    ['3', '对公非同名账户']
-                ])
+                    ['0', '对公同名账号']
+                ], 'disabled aria-disabled="true"')
             +   renderField('开户名称', 'settleName', '请输入银行账户开户名称', true)
             +   renderField('银行账号', 'settleCardNo', '请输入银行账号', true, 'text', 'inputmode="numeric" maxlength="24"')
             +   renderField('开户银行', 'bankName', '例如：中国农业银行', true)
@@ -471,6 +468,9 @@
         if (!sensitive) {
             return '<div class="settlement-detail-item"><span>' + label + '</span><strong>' + escapeHtml(value) + '</strong></div>';
         }
+        if (state === 'rejected') {
+            return '<div class="settlement-detail-item sensitive"><span>' + label + '</span><strong>' + escapeHtml(sensitive.masked) + '</strong></div>';
+        }
         var visible = !!sensitiveVisibility[sensitive.key];
         var displayValue = visible ? sensitive.full : sensitive.masked;
         return ''
@@ -505,7 +505,7 @@
     function renderApplicationDetail() {
         if (!detailOpen) return '';
         var settlementTypeLabels = {
-            '0': '对公同名账户',
+            '0': '对公同名账号',
             '1': '法人个人账户',
             '2': '授权人个人账户',
             '3': '对公非同名账户'
@@ -551,7 +551,7 @@
             renderDetailItem('签约方式', productOpenData.agreement)
         ];
         var settlementItems = [
-            renderDetailItem('结算账户类型', settlementTypeLabels[formData.settleType] || '对公同名账户'),
+            renderDetailItem('结算账户类型', settlementTypeLabels[formData.settleType] || '对公同名账号'),
             renderDetailItem('开户名称', formData.settleName),
             renderDetailItem('银行账号', '', { key: 'bankAccount', full: formData.settleCardNo, masked: maskBankAccount(formData.settleCardNo) }),
             renderDetailItem('开户银行', formData.bankName),
@@ -633,7 +633,7 @@
             +   '<section class="settlement-status-hero rejected">'
             +       '<div class="settlement-status-icon">' + icon('warning') + '</div>'
             +       '<div><div class="settlement-eyebrow">' + (changeMode ? '结算账户变更' : '商户进件') + '</div><h2>' + (changeMode ? '结算账户变更未通过' : '审核未通过') + '</h2><p>' + (changeMode ? '当前账户继续正常使用，请根据退回原因修改变更资料后重新提交。' : '请根据退回原因修正资料后重新提交，原申请记录将保留。') + '</p>' + renderStatusTag('审核退回', 'danger') + '</div>'
-            +       '<div class="settlement-status-action">' + renderButton('修改并重新提交', 'primary', 'edit-application', 'edit') + '</div>'
+            +       '<div class="settlement-status-action">' + renderButton('重新发起申请', 'primary', 'edit-application', 'edit') + '</div>'
             +   '</section>'
             +   '<section class="settlement-reject-card">'
             +       '<div class="settlement-reject-title">' + icon('warning') + '<div><strong>退回原因</strong><p>2026-07-21 16:42:06</p></div></div>'
@@ -667,13 +667,13 @@
     function renderApproved() {
         var changeMode = applicationMode === 'change';
         var displayAccount = changeMode ? formData : currentAccountData;
-        var typeLabels = { '0': '对公同名账户', '1': '法人个人账户', '2': '授权人个人账户', '3': '对公非同名账户' };
+        var typeLabels = { '0': '对公同名账号', '1': '法人个人账户', '2': '授权人个人账户', '3': '对公非同名账户' };
         return ''
             + '<div class="settlement-account-page state-approved">'
             +   '<section class="settlement-status-hero approved">'
             +       '<div class="settlement-status-icon">' + icon('check') + '</div>'
             +       '<div><div class="settlement-eyebrow">' + (changeMode ? '结算账户变更' : '线上收款能力') + '</div><h2>' + (changeMode ? '结算账户变更已完成' : '收款结算账户已开通') + '</h2><p>' + (changeMode ? '新结算账户已完成审核和渠道报备，后续订单款项将结算至新账户。' : '商户进件与支付渠道报备均已完成，产品订单可正常发起线上支付。') + '</p>' + renderStatusTag('正常使用', 'success') + '</div>'
-            +       '<div class="settlement-status-action">' + renderButton('申请变更', 'secondary', 'request-change', 'edit', ' disabled title="当前统一支付接口文档未提供结算账户变更能力"') + '</div>'
+            +       '<div class="settlement-status-action">' + renderButton('变更申请', 'primary', 'request-change', 'edit') + '</div>'
             +   '</section>'
             +   '<section class="settlement-card settlement-progress-card">'
             +       '<div class="settlement-section-head"><div><h3>' + (changeMode ? '变更进度' : '开通进度') + '</h3><p>' + (changeMode ? '结算账户变更审核、渠道报备及账户切换均已完成。' : '商户进件、支付渠道报备及线上收款能力均已完成。') + '</p></div></div>'

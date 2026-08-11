@@ -288,11 +288,11 @@
             key: 'sampleOther',
             label: '其他样例',
             required: false,
-            accept: '.doc,.docx,.pdf,.jpg,.jpeg,.png,.txt',
-            extensions: ['doc', 'docx', 'pdf', 'jpg', 'jpeg', 'png', 'txt'],
+            accept: '.doc,.docx,.pdf,.jpg,.jpeg,.png,.txt,.xls,.xlsx,.zip',
+            extensions: ['doc', 'docx', 'pdf', 'jpg', 'jpeg', 'png', 'txt', 'xls', 'xlsx', 'zip'],
             maxSize: 30,
             maxCount: 1,
-            description: '支持 .doc、.docx、.pdf、.jpg、.png、.txt，单个文件不超过 30MB，最多上传 1 个附件'
+            description: '支持 .doc、.docx、.pdf、.jpg、.png、.txt、.xls、.xlsx、.zip，单个文件不超过 30MB，最多上传 1 个附件'
         }
     };
 

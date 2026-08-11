@@ -24,6 +24,25 @@
         { code: 'CMB', label: '招商银行' },
         { code: 'CCB', label: '中国建设银行' }
     ];
+    var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
+
+    function getOperationMode(item) {
+        if (item && item.operationMode === 'self') return 'self';
+        if (item && item.operationMode === 'thirdParty') return 'thirdParty';
+        return String(item && item.provider || '') === PLATFORM_OPERATOR_NAME ? 'self' : 'thirdParty';
+    }
+
+    function isSelfOperated(item) {
+        return getOperationMode(item) === 'self';
+    }
+
+    function getPartyTotal(item) {
+        return isSelfOperated(item) ? 2 : 3;
+    }
+
+    function getOperationModeLabel(item) {
+        return isSelfOperated(item) ? '自营' : '第三方';
+    }
 
     var ORDER_RECORDS = [
         {
@@ -472,10 +491,18 @@
         '2026061916051502100000101148466': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '平台运营方', contractSubStatus: '当前运营方待审核并签署', signProgress: '2/3 已签署', taskId: 'FDD-20260619148466', primaryAction: '' }
     };
 
-    ORDER_RECORDS.forEach(function (item) {
+    ORDER_RECORDS.forEach(function (item, index) {
+        var selfOperated = index % 4 === 0;
+        item.operationMode = selfOperated ? 'self' : 'thirdParty';
+        item.partyTotal = selfOperated ? 2 : 3;
+        if (selfOperated) item.provider = PLATFORM_OPERATOR_NAME;
         if (ELECTRONIC_CONTRACT_META[item.orderNo]) Object.assign(item, ELECTRONIC_CONTRACT_META[item.orderNo]);
     });
-    SERVICE_ORDER_RECORDS.forEach(function (item) {
+    SERVICE_ORDER_RECORDS.forEach(function (item, index) {
+        var selfOperated = index % 4 === 0;
+        item.operationMode = selfOperated ? 'self' : 'thirdParty';
+        item.partyTotal = selfOperated ? 2 : 3;
+        if (selfOperated) item.provider = PLATFORM_OPERATOR_NAME;
         if (ELECTRONIC_CONTRACT_META[item.orderNo]) Object.assign(item, ELECTRONIC_CONTRACT_META[item.orderNo]);
     });
     var buyerPendingProduct = ORDER_RECORDS.find(function (item) { return item.orderNo === '2026052614553110700000101148227'; });
@@ -485,6 +512,19 @@
     if (window.EContractDemoScenarios) {
         ORDER_RECORDS = window.EContractDemoScenarios.getOrders('buyer', 'product').concat(ORDER_RECORDS);
         SERVICE_ORDER_RECORDS = window.EContractDemoScenarios.getOrders('buyer', 'service').concat(SERVICE_ORDER_RECORDS);
+    }
+    if (window.EContractDemoScenarios && window.EContractDemoScenarios.ensureOperationModeCoverage) {
+        ORDER_RECORDS = window.EContractDemoScenarios.ensureOperationModeCoverage(ORDER_RECORDS, {
+            orderPrefix: '42',
+            thirdPartyProvider: '深圳市龙岗数智科技有限公司',
+            requiredStatuses: ['订单退回', '待关联合同', '关联审批中', '关联合同签署中', '待支付', '解除审批中', '已解除关联', '待交付', '待确认交付', '交易完成']
+        });
+        SERVICE_ORDER_RECORDS = window.EContractDemoScenarios.ensureOperationModeCoverage(SERVICE_ORDER_RECORDS, {
+            orderPrefix: '43',
+            thirdPartyProvider: '深圳市龙岗数智科技有限公司',
+            requiredStatuses: ['订单退回', '待关联合同', '关联审批中', '关联合同签署中', '待支付（首次）', '待支付（阶段）', '待支付（最后）', '解除审批中', '已解除关联', '待交付', '待确认交付', '交易完成'],
+            forceSamples: [{ status: '待关联合同', mode: 'self' }]
+        });
     }
     ensureOrderSignModes(ORDER_RECORDS);
     ensureOrderSignModes(SERVICE_ORDER_RECORDS);
@@ -617,12 +657,64 @@
         });
     }
 
+    function parseOrderAmount(value) {
+        return Number(String(value == null ? '' : value).replace(/[^\d.-]/g, '')) || 0;
+    }
+
+    function getPaidAmount(item, totalAmount, installmentMode) {
+        if (item.paidAmount != null && Number.isFinite(Number(item.paidAmount))) {
+            return Math.min(totalAmount, Math.max(0, Number(item.paidAmount)));
+        }
+        if (!installmentMode) {
+            return ['待交付', '待确认交付', '交易完成'].indexOf(item.status) !== -1 ? totalAmount : 0;
+        }
+        if (item.status === '交易完成') return totalAmount;
+
+        var totalStages = Math.max(1, Number(item.paymentStage && item.paymentStage.periodTotal || 3));
+        var currentStage = Math.max(1, Number(item.paymentStage && item.paymentStage.periodNo || 1));
+        var paidCount = 0;
+        if (item.status === '待支付（阶段）') paidCount = Math.max(1, currentStage - 1);
+        else if (item.status === '待支付（最后）') paidCount = totalStages - 1;
+        else if (item.status === '待交付') paidCount = item.paymentStage && item.paymentStage.payStatus === '已支付' ? currentStage : 1;
+        else if (item.status === '待确认交付') paidCount = Math.max(1, totalStages - 1);
+
+        if (!paidCount) return 0;
+        var percents = totalStages === 4 ? [25, 25, 25, 25] : (totalStages === 3 ? [30, 40, 30] : Array(totalStages).fill(100 / totalStages));
+        if (item.paymentStage && Number.isFinite(Number(item.paymentStage.percent))) {
+            percents[currentStage - 1] = Number(item.paymentStage.percent);
+        }
+        var paidPercent = percents.slice(0, paidCount).reduce(function (sum, percent) {
+            return sum + percent;
+        }, 0);
+        return Math.min(totalAmount, Math.round(totalAmount * paidPercent) / 100);
+    }
+
+    function formatPaymentProgress(item, installmentMode) {
+        var totalAmount = parseOrderAmount(item.amount);
+        var paidAmount = getPaidAmount(item, totalAmount, installmentMode);
+        return '￥' + paidAmount.toFixed(2) + '/￥' + totalAmount.toFixed(2);
+    }
+
     function hasAssociatedContract(item) {
         return Boolean(item && item.status !== '订单退回' && item.status !== '待关联合同');
     }
 
     function ensureOrderSignModes(records) {
         records.forEach(function (item, index) {
+            item.operationMode = getOperationMode(item);
+            item.partyTotal = getPartyTotal(item);
+            if (isSelfOperated(item) && item.signProgress) {
+                item.signProgress = String(item.signProgress).replace(/(\d+)\/\d+/, function (_, count) {
+                    return Math.min(2, Number(count) || 0) + '/2';
+                });
+                item.contractSubStatus = String(item.contractSubStatus || '').replace(/三方/g, '双方');
+                item.taskStatus = String(item.taskStatus || '').replace(/三方/g, '双方');
+                if (item.reviewerRole === '平台运营方') {
+                    item.reviewerRole = '需求方';
+                    item.currentActor = '需求方';
+                    item.contractSubStatus = '当前需求方待审核并签署';
+                }
+            }
             if (!item.signMode && hasAssociatedContract(item)) {
                 item.signMode = index % 2 === 0 ? '电子签章' : '线下签署';
             }
@@ -655,8 +747,10 @@
         var state = {
             tab: '全部',
             keyword: '',
+            keywordDraft: '',
             orderType: '全部订单类型',
             productType: allObjectTypeLabel,
+            operationMode: 'all',
             page: 1,
             pageSize: 10,
             filterOpen: false,
@@ -723,9 +817,11 @@
         function getFilteredRecords() {
             var keyword = state.keyword.toLowerCase();
             return activeRecords.filter(function (item) {
-                if (state.tab !== '全部' && item.status !== state.tab) return false;
+                if (serviceMode && state.tab === '待支付' && item.status.indexOf('待支付') !== 0) return false;
+                if (state.tab !== '全部' && (!serviceMode || state.tab !== '待支付') && item.status !== state.tab) return false;
                 if (state.orderType !== '全部订单类型' && item.orderType !== state.orderType) return false;
                 if (state.productType !== allObjectTypeLabel && item.productType !== state.productType) return false;
+                if (state.operationMode !== 'all' && getOperationMode(item) !== state.operationMode) return false;
                 if (!keyword) return true;
                 var text = [item.orderNo, item.name, item.provider].join(' ').toLowerCase();
                 return text.indexOf(keyword) !== -1;
@@ -733,14 +829,7 @@
         }
 
         function renderTabs() {
-            var tabs = serviceMode
-                ? STATUS_TABS.reduce(function (result, tab) {
-                    if (tab === '待支付') return result.concat(['待支付（首次）', '待支付（阶段）', '待支付（最后）']);
-                    result.push(tab);
-                    return result;
-                }, [])
-                : STATUS_TABS;
-            return tabs.map(function (tab) {
+            return STATUS_TABS.map(function (tab) {
                 var active = tab === state.tab;
                 return '<button class="buyer-order-tab' + (active ? ' active' : '') + '" type="button" role="tab" aria-selected="' + active + '" data-order-tab="' + escapeHtml(tab) + '">' + escapeHtml(tab) + '</button>';
             }).join('');
@@ -758,6 +847,11 @@
                 +       objectTypeOptions.map(function (type) {
                             return '<option' + (state.productType === type ? ' selected' : '') + '>' + escapeHtml(type) + '</option>';
                         }).join('')
+                +   '</select>'
+                +   '<select data-order-operation-mode aria-label="经营属性">'
+                +       '<option value="all"' + (state.operationMode === 'all' ? ' selected' : '') + '>全部经营属性</option>'
+                +       '<option value="self"' + (state.operationMode === 'self' ? ' selected' : '') + '>自营</option>'
+                +       '<option value="thirdParty"' + (state.operationMode === 'thirdParty' ? ' selected' : '') + '>第三方</option>'
                 +   '</select>'
                 +   '<button class="buyer-order-filter-reset" type="button" data-order-reset>' + icon('reset') + '<span>重置</span></button>'
                 + '</div>';
@@ -1181,13 +1275,13 @@
                     + '<tr' + (item.demoMode ? ' class="is-contract-demo"' : '') + '>'
                     +   '<td title="' + escapeHtml(item.orderNo) + '">' + escapeHtml(item.orderNo) + '</td>'
                     +   (serviceMode ? '' : '<td>' + escapeHtml(item.orderType) + '</td>')
-                    +   '<td class="buyer-order-ellipsis" title="' + escapeHtml(item.name) + '">' + escapeHtml(item.name) + '</td>'
+                    +   '<td class="buyer-order-ellipsis" title="' + escapeHtml(item.name) + '"><span class="buyer-order-name-with-badge"><span>' + escapeHtml(item.name) + '</span><span class="buyer-order-operation-badge is-' + escapeHtml(getOperationMode(item)) + '">' + escapeHtml(getOperationModeLabel(item)) + '</span></span></td>'
                     +   '<td>' + escapeHtml(item.productType) + '</td>'
                     +   '<td class="buyer-order-ellipsis" title="' + escapeHtml(item.provider) + '">' + escapeHtml(item.provider) + '</td>'
                     +   '<td>' + escapeHtml(item.price) + '</td>'
                     +   '<td>' + escapeHtml(item.quantity) + '</td>'
                     +   '<td>' + escapeHtml(item.delivery) + '</td>'
-                    +   '<td>' + escapeHtml(item.amount) + '</td>'
+                    +   '<td>' + escapeHtml(formatPaymentProgress(item, serviceMode)) + '</td>'
                     +   '<td>' + escapeHtml(item.appliedAt) + '</td>'
                     +   '<td class="order-status-cell"><div class="buyer-order-status-stack"><span class="buyer-order-status">' + escapeHtml(item.status) + '</span>'
                     +       renderSignModeBadge(item)
@@ -1237,7 +1331,7 @@
                 +           '</colgroup>'
                 +           '<thead><tr>'
                 +               '<th>订单编号</th>' + (serviceMode ? '' : '<th>订单类型</th>') + '<th>名称</th><th>' + objectTypeLabel + '</th><th>提供方</th><th>价格</th>'
-                +               '<th>数量</th><th>交付方式</th><th>实支付/应支付</th><th>申请时间</th>'
+                +               '<th>数量</th><th>交付方式</th><th>已支付/应支付</th><th>申请时间</th>'
                 +               '<th class="order-status-cell">交易状态</th><th class="order-action-cell">操作</th>'
                 +           '</tr></thead>'
                 +           '<tbody>' + renderRows(pageRecords) + '</tbody>'
@@ -1253,9 +1347,10 @@
                 +   '<div class="buyer-order-tabs" role="tablist" aria-label="订单状态">' + renderTabs() + '</div>'
                 +   '<div class="buyer-order-toolbar">'
                 +       '<label class="buyer-order-search">'
-                +           '<input type="search" placeholder="请输入订单编号/名称" value="' + escapeHtml(state.keyword) + '" data-order-keyword aria-label="搜索订单">'
+                +           '<input type="search" placeholder="请输入订单编号/名称" value="' + escapeHtml(state.keywordDraft) + '" data-order-keyword aria-label="搜索订单">'
                 +           icon('search')
                 +       '</label>'
+                +       '<button class="buyer-order-query-button" type="button" data-order-query>' + icon('search') + '<span>查询</span></button>'
                 +       '<button class="buyer-order-filter-toggle' + (state.filterOpen ? ' active' : '') + '" type="button" aria-label="筛选订单" aria-expanded="' + state.filterOpen + '" data-order-filter-toggle>' + icon('filter') + '</button>'
                 +   '</div>'
                 +   renderFilterPanel()
@@ -1397,11 +1492,12 @@
                 record: item,
                 snapshot: item.contractSnapshot,
                 businessType: serviceMode ? 'service' : 'product',
+                operationMode: getOperationMode(item),
                 provider: item.provider,
                 demander: '深圳市龙岗智慧产业有限公司',
                 operator: '深圳市龙岗区数据要素交易服务有限公司',
                 serviceFeeMode: serviceMode ? 'P' : 'G',
-                serviceFeeValue: serviceMode ? 2.5 : 50,
+                serviceFeeValue: isSelfOperated(item) ? 0 : (serviceMode ? 2.5 : 50),
                 returnFocus: trigger,
                 onDemo: showToast,
                 onConfirm: function (reason) {
@@ -1552,6 +1648,7 @@
         function bindEvents() {
             panel.querySelectorAll('[data-order-tab]').forEach(function (button) {
                 button.addEventListener('click', function () {
+                    state.keyword = state.keywordDraft.trim();
                     state.tab = this.dataset.orderTab;
                     state.page = 1;
                     render();
@@ -1561,14 +1658,22 @@
             var keywordInput = panel.querySelector('[data-order-keyword]');
             if (keywordInput) {
                 keywordInput.addEventListener('input', function () {
-                    state.keyword = this.value.trim();
+                    state.keywordDraft = this.value;
+                });
+                keywordInput.addEventListener('keydown', function (event) {
+                    if (event.key !== 'Enter') return;
+                    state.keyword = state.keywordDraft.trim();
                     state.page = 1;
                     render();
-                    var nextInput = panel.querySelector('[data-order-keyword]');
-                    if (nextInput) {
-                        nextInput.focus();
-                        nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
-                    }
+                });
+            }
+
+            var queryButton = panel.querySelector('[data-order-query]');
+            if (queryButton) {
+                queryButton.addEventListener('click', function () {
+                    state.keyword = state.keywordDraft.trim();
+                    state.page = 1;
+                    render();
                 });
             }
 
@@ -1584,6 +1689,7 @@
             if (orderType) {
                 orderType.value = state.orderType;
                 orderType.addEventListener('change', function () {
+                    state.keyword = state.keywordDraft.trim();
                     state.orderType = this.value;
                     state.page = 1;
                     render();
@@ -1594,7 +1700,19 @@
             if (productType) {
                 productType.value = state.productType;
                 productType.addEventListener('change', function () {
+                    state.keyword = state.keywordDraft.trim();
                     state.productType = this.value;
+                    state.page = 1;
+                    render();
+                });
+            }
+
+            var operationMode = panel.querySelector('[data-order-operation-mode]');
+            if (operationMode) {
+                operationMode.value = state.operationMode;
+                operationMode.addEventListener('change', function () {
+                    state.keyword = state.keywordDraft.trim();
+                    state.operationMode = this.value;
                     state.page = 1;
                     render();
                 });
@@ -1603,8 +1721,10 @@
             var reset = panel.querySelector('[data-order-reset]');
             if (reset) {
                 reset.addEventListener('click', function () {
+                    state.keyword = state.keywordDraft.trim();
                     state.orderType = '全部订单类型';
                     state.productType = allObjectTypeLabel;
+                    state.operationMode = 'all';
                     state.page = 1;
                     render();
                 });
@@ -1676,6 +1796,9 @@
                         return;
                     }
                     if ((orderAction === '关联合同' || orderAction === '重新关联合同') && window.SupplierContractDrawer && contractItem) {
+                        var selfOperated = isSelfOperated(contractItem);
+                        var partyTotal = getPartyTotal(contractItem);
+                        var partyLabel = selfOperated ? '双方' : '三方';
                         window.SupplierContractDrawer.open({
                             orderNo: contractItem.orderNo,
                             provider: contractItem.provider,
@@ -1684,8 +1807,10 @@
                             amount: contractItem.amount,
                             appliedAt: contractItem.appliedAt,
                             businessType: serviceMode ? 'service' : 'product',
+                            operationMode: getOperationMode(contractItem),
+                            partyTotal: partyTotal,
                             serviceFeeMode: serviceMode ? 'P' : 'G',
-                            serviceFeeValue: serviceMode ? 2.5 : 50,
+                            serviceFeeValue: selfOperated ? 0 : (serviceMode ? 2.5 : 50),
                             demoMode: Boolean(contractItem.demoMode),
                             esignUnavailableDemo: Boolean(contractItem.esignUnavailableDemo),
                             onConfirm: function (values) {
@@ -1703,22 +1828,22 @@
                                     contractItem.initiatorRole = '需求方';
                                     contractItem.reviewerRole = '需求方';
                                     contractItem.currentActor = '需求方';
-                                    contractItem.contractSubStatus = '法大大任务已创建，三方可独立签署；当前需求方待签署';
-                                    contractItem.signProgress = '0/3 已签署';
+                                    contractItem.contractSubStatus = '法大大任务已创建，' + partyLabel + '可独立签署；当前需求方待签署';
+                                    contractItem.signProgress = '0/' + partyTotal + ' 已签署';
                                     contractItem.taskId = values.taskId || ('FDD-' + String(contractItem.orderNo).slice(-14));
                                     contractItem.taskStatus = '签约任务进行中';
                                     contractItem.primaryAction = '继续签署';
                                     render();
-                                    showToast('法大大签约任务已创建，三方可分别进入法大大完成签署。');
+                                    showToast('法大大签约任务已创建，' + partyLabel + '可分别进入法大大完成签署。');
                                     return;
                                 }
                                 contractItem.status = '关联审批中';
                                 contractItem.signMode = '线下签署';
                                 contractItem.initiatorRole = '需求方';
-                                contractItem.reviewerRole = '提供方、平台运营方';
-                                contractItem.currentActor = '提供方、平台运营方';
-                                contractItem.contractSubStatus = '线下三方合同已提交，等待关联审批';
-                                contractItem.signProgress = '3/3 已签署';
+                                contractItem.reviewerRole = selfOperated ? '提供方' : '提供方、平台运营方';
+                                contractItem.currentActor = selfOperated ? '提供方' : '提供方、平台运营方';
+                                contractItem.contractSubStatus = '线下' + partyLabel + '合同已提交，等待关联审批';
+                                contractItem.signProgress = partyTotal + '/' + partyTotal + ' 已签署';
                                 contractItem.primaryAction = '';
                                 render();
                                 showToast('线下合同已提交，等待关联审核。');
@@ -1726,7 +1851,7 @@
                             onSignResult: function (result) {
                                 if (result.status === 'signed') {
                                     contractItem.status = '关联合同签署中';
-                                    contractItem.signProgress = '1/3 已签署';
+                                    contractItem.signProgress = '1/' + partyTotal + ' 已签署';
                                     contractItem.reviewerRole = '';
                                     contractItem.currentActor = '其他未签署方';
                                     contractItem.contractSubStatus = '需求方已完成签署，等待其他签署方独立完成';
@@ -1736,7 +1861,7 @@
                                 } else {
                                     contractItem.status = '待关联合同';
                                     contractItem.contractSubStatus = '需求方已拒绝签署';
-                                    contractItem.signProgress = '0/3 已签署';
+                                    contractItem.signProgress = '0/' + partyTotal + ' 已签署';
                                     contractItem.primaryAction = '';
                                     contractItem.currentActor = '流程终止';
                                     showToast('需求方已拒绝签署，本次签约任务已停止。');
@@ -1748,6 +1873,9 @@
                     }
                     if (orderAction === '审核并签署' && window.SupplierContractApproval && contractItem) {
                         var approvalSnapshot = serviceMode && contractItem.contractSnapshot;
+                        var approvalSelfOperated = isSelfOperated(contractItem);
+                        var approvalPartyTotal = getPartyTotal(contractItem);
+                        var approvalPartyLabel = approvalSelfOperated ? '双方' : '三方';
                         window.SupplierContractApproval.open({
                             orderNo: contractItem.orderNo,
                             provider: contractItem.provider,
@@ -1756,10 +1884,12 @@
                             amount: approvalSnapshot && approvalSnapshot.contractAmount != null ? approvalSnapshot.contractAmount : contractItem.amount,
                             appliedAt: contractItem.appliedAt,
                             businessType: serviceMode ? 'service' : 'product',
+                            operationMode: getOperationMode(contractItem),
+                            partyTotal: approvalPartyTotal,
                             paymentMode: approvalSnapshot && approvalSnapshot.paymentMode,
                             paymentStages: approvalSnapshot && approvalSnapshot.paymentStages,
                             serviceFeeMode: approvalSnapshot && approvalSnapshot.serviceFeeMode || (serviceMode ? 'P' : 'G'),
-                            serviceFeeValue: approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : (serviceMode ? 2.5 : 50),
+                            serviceFeeValue: approvalSelfOperated ? 0 : (approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : (serviceMode ? 2.5 : 50)),
                             signing: '电子签章',
                             initiatorRole: contractItem.initiatorRole,
                             reviewerRole: '需求方',
@@ -1769,7 +1899,7 @@
                             taskId: contractItem.taskId,
                             demoMode: Boolean(contractItem.demoMode),
                             documentMode: 'template',
-                            templateName: serviceMode ? '数据服务三方交易合同（V2.6）' : '数据产品三方交易合同（V3.2）',
+                            templateName: serviceMode ? '数据服务' + approvalPartyLabel + '交易合同（V2.6）' : '数据产品' + approvalPartyLabel + '交易合同（V3.2）',
                             providerSignStatus: '已审核并签署',
                             demanderSignStatus: '待审核并签署',
                             onConfirm: function (result) {
@@ -1790,11 +1920,14 @@
                             },
                             onSignResult: function (signResult) {
                                 if (signResult.status === 'signed') {
-                                    contractItem.status = '关联合同签署中';
-                                    contractItem.signProgress = '2/3 已签署';
+                                    var signedCount = Math.min(approvalPartyTotal, (parseInt(contractItem.signProgress, 10) || 1) + 1);
+                                    contractItem.status = signedCount >= approvalPartyTotal ? '待支付' : '关联合同签署中';
+                                    contractItem.signProgress = signedCount + '/' + approvalPartyTotal + ' 已签署';
                                     contractItem.reviewerRole = '';
-                                    contractItem.currentActor = '其他未签署方';
-                                    contractItem.contractSubStatus = '当前企业已完成签署，等待其余签署方独立完成';
+                                    contractItem.currentActor = signedCount >= approvalPartyTotal ? '需求方' : '其他未签署方';
+                                    contractItem.contractSubStatus = signedCount >= approvalPartyTotal
+                                        ? approvalPartyLabel + '签署完成，最终合同已归档，等待需求方支付'
+                                        : '当前企业已完成签署，等待其余签署方独立完成';
                                     contractItem.primaryAction = '';
                                     contractItem.lastSignCallbackAt = signResult.processedAt;
                                     showToast('需求方签署成功回调已确认，其他签署方可独立完成签署。');
@@ -1836,21 +1969,27 @@
                                 return;
                             }
                             var signRole = '需求方';
+                            var signPartyTotal = getPartyTotal(contractItem);
+                            var signPartyLabel = isSelfOperated(contractItem) ? '双方' : '三方';
                             window.FadadaSignDemo.open({
                                 taskId: contractItem.taskId,
-                                contractName: contractItem.name + '三方交易合同',
+                                contractName: contractItem.name + signPartyLabel + '交易合同',
                                 orderNo: contractItem.orderNo,
+                                operationMode: getOperationMode(contractItem),
+                                partyTotal: signPartyTotal,
                                 role: signRole,
                                 party: '深圳市龙岗智慧产业有限公司',
                                 node: orderAction,
                                 onResult: function (signResult) {
                                     if (signResult.status === 'signed') {
-                                        var signedCount = String(contractItem.signProgress || '').indexOf('0/3') === 0 ? 1 : 2;
-                                        contractItem.signProgress = signedCount + '/3 已签署';
-                                        contractItem.status = '关联合同签署中';
+                                        var signedCount = Math.min(signPartyTotal, (parseInt(contractItem.signProgress, 10) || 0) + 1);
+                                        contractItem.signProgress = signedCount + '/' + signPartyTotal + ' 已签署';
+                                        contractItem.status = signedCount >= signPartyTotal ? '待支付' : '关联合同签署中';
                                         contractItem.reviewerRole = '';
-                                        contractItem.currentActor = '其他未签署方';
-                                        contractItem.contractSubStatus = '当前企业已完成签署，等待其他签署方独立完成';
+                                        contractItem.currentActor = signedCount >= signPartyTotal ? '需求方' : '其他未签署方';
+                                        contractItem.contractSubStatus = signedCount >= signPartyTotal
+                                            ? signPartyLabel + '签署完成，最终合同已归档，等待需求方支付'
+                                            : '当前企业已完成签署，等待其他签署方独立完成';
                                         contractItem.primaryAction = '';
                                         contractItem.lastSignCallbackAt = signResult.processedAt;
                                         showToast('签署成功回调已确认，其他签署方可独立完成签署。');

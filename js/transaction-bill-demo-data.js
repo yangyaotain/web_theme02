@@ -198,9 +198,16 @@
     PLATFORM_BILLS.forEach(function (bill) {
         var plan = PAYMENT_PLANS[bill.orderNo];
         bill.space = '流通利用平台';
+        bill.operationMode = bill.seller === '深圳市龙岗区数据要素交易服务有限公司' ? 'self' : 'thirdParty';
+        if (bill.operationMode === 'self') bill.serviceFeeValue = 0;
         if (!plan) return;
         bill.orderAmount = plan.orderAmount;
         bill.paymentStages = plan.stages;
+        if (bill.operationMode === 'self') {
+            bill.paymentStages.forEach(function (stage) {
+                if (stage.payment) stage.payment.split = null;
+            });
+        }
     });
 
     function clone(value) {
@@ -215,7 +222,7 @@
 
     function getSupplierReceivables(supplierName) {
         return clone(PLATFORM_BILLS).filter(function (bill) {
-            return bill.seller === supplierName;
+            return bill.seller === supplierName || bill.operationMode === 'self';
         }).sort(function (left, right) {
             return String(right.createdAt).localeCompare(String(left.createdAt));
         }).map(function (bill) {

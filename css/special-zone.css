@@ -252,22 +252,6 @@ body.zone-preview-mode .special-zone-page {
     background: var(--forest-green);
 }
 
-.zone-tab em {
-    min-width: 24px;
-    padding: 2px 7px;
-    border-radius: 999px;
-    background: var(--gray-100);
-    color: var(--text-tertiary);
-    font-size: 11px;
-    font-style: normal;
-    line-height: 1.5;
-}
-
-.zone-tab.active em {
-    background: var(--forest-green-50);
-    color: var(--forest-green-700);
-}
-
 .zone-search-panel {
     margin: 24px 26px 0;
     padding: 24px;

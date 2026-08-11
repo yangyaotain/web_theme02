@@ -27,8 +27,7 @@
     function cacheElements() {
         [
             'zoneBreadcrumbName', 'zoneHero', 'zoneName', 'zoneIntroduction', 'zoneResourceCount',
-            'zoneProductCount', 'zoneSearchForm', 'zoneSearchInput', 'resourceTabCount',
-            'productTabCount', 'zoneFilterGroups', 'zoneResultHeader',
+            'zoneProductCount', 'zoneSearchForm', 'zoneSearchInput', 'zoneFilterGroups', 'zoneResultHeader',
             'zoneResultTitle', 'zoneResultCount', 'zoneSortSelect', 'zoneActiveSearch', 'zoneActiveKeyword',
             'zoneClearKeyword', 'zoneCardGrid', 'zoneEmpty', 'zoneEmptyReset', 'zonePagination',
             'zoneContentCard', 'zoneUnavailable', 'zonePreviewClose'
@@ -57,8 +56,6 @@
         elements.zoneIntroduction.textContent = state.zone.introduction;
         elements.zoneResourceCount.textContent = resources.length;
         elements.zoneProductCount.textContent = products.length;
-        elements.resourceTabCount.textContent = resources.length;
-        elements.productTabCount.textContent = products.length;
         elements.zoneHero.style.backgroundImage = 'url("' + String(state.zone.cover || 'images/hero-ai-longgang.jpg').replace(/"/g, '') + '")';
     }
 

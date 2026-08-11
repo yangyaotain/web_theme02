@@ -22,7 +22,57 @@
             price: '0.08元/次',
             delivery: 'API传输',
             industry: '企业服务',
-            introduction: '通过数据岛 API 网关提供企业经营活力指标查询服务，支持企业编码和统计日期参数，返回结构化 JSON 数据。'
+            introduction: '通过数据岛 API 网关提供企业经营活力指标查询服务，支持企业编码和统计日期参数，返回结构化 JSON 数据。',
+            apiService: {
+                name: '龙岗企业经营活力指数查询服务',
+                registry: '外部注册数据服务_8163',
+                serviceType: '外部接口',
+                org: '深圳市龙岗区产业服务集团有限公司',
+                updated: '2026-08-07 11:08:25',
+                creator: '周妍',
+                method: 'GET',
+                format: 'JSON',
+                requestProtocol: 'HTTPS',
+                average: '18(ms)',
+                frequency: '80 (次/秒)',
+                callUrl: 'https://api.dataisland.longgang.gov.cn/v1/enterprises/vitality',
+                cache: '启动（5分钟）',
+                auth: 'key-auth',
+                serviceProtocol: 'HTTPS',
+                balance: '一致性哈希',
+                upstreamPath: '/api/v1/enterprise/vitality-index',
+                node: 'api.dataisland.longgang.gov.cn:443',
+                params: [
+                    { name: 'enterpriseCode', type: '字符串', required: '是', example: 'LGQY0001', desc: '企业统一编码' },
+                    { name: 'statDate', type: '日期', required: '否', example: '2026-07-20', desc: '统计日期，默认返回最新数据' }
+                ],
+                body: [],
+                headers: [
+                    { name: 'X-Data-Island-Key', type: '字符串', required: '是', example: 'di_live_******', desc: '数据岛调用凭证' },
+                    { name: 'Accept', type: '字符串', required: '否', example: 'application/json', desc: '响应数据格式' }
+                ],
+                returns: [
+                    { name: 'code', type: '整数', desc: '业务状态码，0表示成功' },
+                    { name: 'message', type: '字符串', desc: '业务处理结果说明' },
+                    { name: 'data.enterpriseCode', type: '字符串', desc: '企业统一编码' },
+                    { name: 'data.enterpriseName', type: '字符串', desc: '企业名称' },
+                    { name: 'data.vitalityIndex', type: '数字', desc: '企业经营活力指数' },
+                    { name: 'data.operationStatus', type: '字符串', desc: '企业经营状态标签' },
+                    { name: 'data.statDate', type: '日期', desc: '数据统计日期' }
+                ],
+                exampleUrl: 'https://api.dataisland.longgang.gov.cn/v1/enterprises/vitality?enterpriseCode=LGQY0001&statDate=2026-07-20',
+                response: {
+                    code: 0,
+                    message: 'success',
+                    data: {
+                        enterpriseCode: 'LGQY0001',
+                        enterpriseName: '深圳市启辰智能科技有限公司',
+                        vitalityIndex: 92.6,
+                        operationStatus: '活跃',
+                        statDate: '2026-07-20'
+                    }
+                }
+            }
         },
         other: {
             name: '龙岗区产业运行分析样例报告',
@@ -80,7 +130,58 @@
                 ['活力指数', 'vitalityIndex', '数值型', '5,2'],
                 ['经营状态', 'operationStatus', '字符串型', '20'],
                 ['统计日期', 'statDate', '日期型', '10']
-            ]
+            ],
+            apiService: {
+                name: '龙岗企业登记信息查询服务',
+                registry: '外部注册数据服务_7284',
+                serviceType: '外部接口',
+                org: '深圳市龙岗区政务数据运营有限公司',
+                updated: '2026-07-17 16:35:00',
+                creator: '李晨',
+                method: 'GET',
+                format: 'JSON',
+                requestProtocol: 'HTTPS',
+                average: '12(ms)',
+                frequency: '100 (次/秒)',
+                callUrl: 'https://api.dataisland.longgang.gov.cn/v1/enterprises/registration',
+                cache: '不启动',
+                auth: 'key-auth',
+                serviceProtocol: 'HTTPS',
+                balance: '轮询',
+                upstreamPath: '/api/v1/enterprise/registration-info',
+                node: 'api.dataisland.longgang.gov.cn:443',
+                params: [
+                    { name: 'enterpriseCode', type: '字符串', required: '是', example: 'LGQY0001', desc: '企业统一编码' },
+                    { name: 'statDate', type: '日期', required: '否', example: '2026-07-20', desc: '统计日期，默认返回最新数据' }
+                ],
+                body: [],
+                headers: [
+                    { name: 'X-Data-Island-Key', type: '字符串', required: '是', example: 'di_live_******', desc: '数据岛调用凭证' },
+                    { name: 'X-Request-Id', type: '字符串', required: '否', example: 'req-20260720-00128', desc: '请求链路追踪标识' },
+                    { name: 'Accept', type: '字符串', required: '否', example: 'application/json', desc: '响应数据格式' }
+                ],
+                returns: [
+                    { name: 'code', type: '整数', desc: '业务状态码，0表示成功' },
+                    { name: 'message', type: '字符串', desc: '业务处理结果说明' },
+                    { name: 'data.enterpriseCode', type: '字符串', desc: '企业统一编码' },
+                    { name: 'data.enterpriseName', type: '字符串', desc: '企业名称' },
+                    { name: 'data.vitalityIndex', type: '数字', desc: '企业经营活力指数' },
+                    { name: 'data.operationStatus', type: '字符串', desc: '企业经营状态标签' },
+                    { name: 'data.statDate', type: '日期', desc: '数据统计日期' }
+                ],
+                exampleUrl: 'https://api.dataisland.longgang.gov.cn/v1/enterprises/registration?enterpriseCode=LGQY0001&statDate=2026-07-20',
+                response: {
+                    code: 0,
+                    message: 'success',
+                    data: {
+                        enterpriseCode: 'LGQY0001',
+                        enterpriseName: '深圳市启辰智能科技有限公司',
+                        vitalityIndex: 92.6,
+                        operationStatus: '活跃',
+                        statDate: '2026-07-20'
+                    }
+                }
+            }
         },
         other: {
             name: '龙岗区产业运行分析资料包',
@@ -141,7 +242,7 @@
             +   '<div class="sample-overview-copy">'
             +       '<span class="sample-type-badge">' + icon(iconName) + escapeHtml(product.type) + '</span>'
             +       '<h3>' + escapeHtml(product.name) + '</h3>'
-            +       '<p>' + escapeHtml(description) + '</p>'
+            +       (description ? '<p>' + escapeHtml(description) + '</p>' : '')
             +   '</div>'
             + '</div>';
     }
@@ -179,42 +280,94 @@
             + '</table></div>';
     }
 
-    function renderApiSample(product) {
+    function renderApiInfoField(label, value, full) {
+        return '<div class="sample-api-info-field' + (full ? ' full' : '') + '"><span>' + escapeHtml(label) + '：</span><strong>' + escapeHtml(value) + '</strong></div>';
+    }
+
+    function renderApiParamRows(rows) {
+        if (!rows || !rows.length) {
+            return '<tr class="sample-api-empty-row"><td colspan="5">暂无数据</td></tr>';
+        }
+        return rows.map(function (row) {
+            return '<tr>'
+                + '<td>' + escapeHtml(row.name) + '</td>'
+                + '<td>' + escapeHtml(row.type) + '</td>'
+                + '<td' + (row.required === '是' ? ' class="api-required"' : '') + '>' + escapeHtml(row.required) + '</td>'
+                + '<td>' + escapeHtml(row.example) + '</td>'
+                + '<td>' + escapeHtml(row.desc) + '</td>'
+                + '</tr>';
+        }).join('');
+    }
+
+    function renderApiReturnRows(rows) {
+        if (!rows || !rows.length) {
+            return '<tr class="sample-api-empty-row"><td colspan="3">暂无数据</td></tr>';
+        }
+        return rows.map(function (row) {
+            return '<tr><td>' + escapeHtml(row.name) + '</td><td>' + escapeHtml(row.type) + '</td><td>' + escapeHtml(row.desc) + '</td></tr>';
+        }).join('');
+    }
+
+    function renderApiParamGroup(service, key, label) {
+        if (!service[key] || !service[key].length) return '';
         return ''
-            + renderOverview('api', product, '以下为数据岛 API 文档示例，可直接查看调用地址、请求参数和响应结构。')
-            + '<div class="api-doc-meta">'
-            +   '<div><span>API 编码</span><strong>API-LG-ENT-006</strong></div>'
-            +   '<div><span>当前版本</span><strong>v1.2</strong></div>'
-            +   '<div><span>数据格式</span><strong>JSON</strong></div>'
-            +   '<div><span>更新频率</span><strong>每日</strong></div>'
+            + '<section class="sample-api-param-group">'
+            +   '<h4>' + escapeHtml(label) + '</h4>'
+            +   '<div class="sample-table-scroll"><table class="api-parameter-table sample-api-service-table">'
+            +       '<colgroup><col class="col-name"><col class="col-type"><col class="col-required"><col class="col-example"><col class="col-description"></colgroup>'
+            +       '<thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th></tr></thead>'
+            +       '<tbody>' + renderApiParamRows(service[key]) + '</tbody>'
+            +   '</table></div>'
+            + '</section>';
+    }
+
+    function renderApiSample(product) {
+        var service = product.apiService;
+        var responseText = JSON.stringify(service.response, null, 2);
+        return ''
+            + renderOverview('api', product, '以下为 API 样例信息，可查看接口配置、请求参数及返回示例。')
+            + '<article class="sample-api-service-card">'
+            +   '<h3>' + escapeHtml(service.name) + '</h3>'
+            +   '<p>' + escapeHtml(service.registry) + '</p>'
+            +   '<div class="sample-api-service-meta">'
+            +       '<span>服务类型：<strong>' + escapeHtml(service.serviceType) + '</strong></span>'
+            +       '<span>所属组织：<strong>' + escapeHtml(service.org) + '</strong></span>'
+            +       '<span>更新时间：<strong>' + escapeHtml(service.updated) + '</strong></span>'
+            +   '</div>'
+            + '</article>'
+            + '<h3 class="api-doc-title">基础属性</h3>'
+            + '<div class="sample-api-info-card">'
+            +   renderApiInfoField('请求方式', service.method)
+            +   renderApiInfoField('支持格式', service.format)
+            +   renderApiInfoField('请求协议', service.requestProtocol)
+            +   renderApiInfoField('创建人', service.creator)
+            +   renderApiInfoField('平均耗时', service.average)
+            +   renderApiInfoField('频次限制', service.frequency)
+            +   '<div class="sample-api-info-field full"><span>调用地址：</span><span class="api-method">' + escapeHtml(service.method) + '</span><code>' + escapeHtml(service.callUrl) + '</code></div>'
+            +   renderApiInfoField('数据缓存', service.cache)
+            +   renderApiInfoField('认证策略', service.auth)
             + '</div>'
-            + '<h3 class="api-doc-title">请求地址</h3>'
-            + '<div class="api-endpoint"><span class="api-method">GET</span><code>https://api.dataisland.longgang.gov.cn/v1/enterprises/vitality</code></div>'
+            + '<h3 class="api-doc-title">服务配置信息</h3>'
+            + '<div class="sample-api-info-card">'
+            +   renderApiInfoField('服务协议', service.serviceProtocol)
+            +   renderApiInfoField('负载均衡', service.balance)
+            +   '<div class="sample-api-info-field full"><span>接口地址：</span><span class="api-method">' + escapeHtml(service.method) + '</span><code>' + escapeHtml(service.upstreamPath) + '</code></div>'
+            +   renderApiInfoField('服务节点', service.node, true)
+            + '</div>'
             + '<h3 class="api-doc-title">请求参数</h3>'
-            + '<div class="sample-table-scroll"><table class="api-parameter-table">'
-            +   '<thead><tr><th>参数名称</th><th>位置</th><th>类型</th><th>必填</th><th>说明</th><th>示例值</th></tr></thead>'
-            +   '<tbody>'
-            +       '<tr><td>X-Data-Island-Key</td><td>Header</td><td>String</td><td class="api-required">是</td><td>数据岛调用凭证</td><td>di_live_******</td></tr>'
-            +       '<tr><td>enterpriseCode</td><td>Query</td><td>String</td><td class="api-required">是</td><td>企业统一编码</td><td>LGQY0001</td></tr>'
-            +       '<tr><td>statDate</td><td>Query</td><td>Date</td><td>否</td><td>统计日期，默认返回最新数据</td><td>2026-07-20</td></tr>'
-            +   '</tbody>'
+            + renderApiParamGroup(service, 'params', 'Params')
+            + renderApiParamGroup(service, 'body', 'Body')
+            + renderApiParamGroup(service, 'headers', 'Headers')
+            + '<h3 class="api-doc-title">返回参数</h3>'
+            + '<p class="sample-api-format">参数格式：<strong>' + escapeHtml(service.format) + '</strong></p>'
+            + '<div class="sample-table-scroll"><table class="api-parameter-table sample-api-return-table">'
+            +   '<thead><tr><th>参数名称</th><th>参数类型</th><th>说明</th></tr></thead>'
+            +   '<tbody>' + renderApiReturnRows(service.returns) + '</tbody>'
             + '</table></div>'
-            + '<h3 class="api-doc-title">调用示例</h3>'
-            + '<pre class="api-code-block">curl -X GET \\\n'
-            + '  "https://api.dataisland.longgang.gov.cn/v1/enterprises/vitality?enterpriseCode=LGQY0001&amp;statDate=2026-07-20" \\\n'
-            + '  -H "X-Data-Island-Key: di_live_******"</pre>'
-            + '<h3 class="api-doc-title">响应示例</h3>'
-            + '<pre class="api-code-block">{\n'
-            + '  "code": 0,\n'
-            + '  "message": "success",\n'
-            + '  "data": {\n'
-            + '    "enterpriseCode": "LGQY0001",\n'
-            + '    "enterpriseName": "深圳市启辰智能科技有限公司",\n'
-            + '    "vitalityIndex": 92.6,\n'
-            + '    "operationStatus": "活跃",\n'
-            + '    "statDate": "2026-07-20"\n'
-            + '  }\n'
-            + '}</pre>';
+            + '<h3 class="api-doc-title">请求示例</h3>'
+            + '<div class="api-endpoint"><span class="api-method">' + escapeHtml(service.method) + '</span><code>' + escapeHtml(service.exampleUrl) + '</code></div>'
+            + '<h3 class="api-doc-title">返回示例</h3>'
+            + '<pre class="api-code-block">' + escapeHtml(responseText) + '</pre>';
     }
 
     function renderOtherSample(product) {

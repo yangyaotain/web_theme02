@@ -10,6 +10,8 @@
     var providerCell;
     var demanderCell;
     var operatorSignerRow;
+    var electronicPartyBadge;
+    var electronicPartyNote;
     var signedAtInput;
     var signedAtRow;
     var signingDeadlineInput;
@@ -57,7 +59,22 @@
     }
 
     function isSelfOperated() {
+        if (activeOptions.operationMode === 'self') return true;
+        if (activeOptions.operationMode === 'thirdParty') return false;
         return String(activeOptions.provider || '') === PLATFORM_OPERATOR_NAME;
+    }
+
+    function getPartyTotal() {
+        return isSelfOperated() ? 2 : 3;
+    }
+
+    function getPartyLabel() {
+        return isSelfOperated() ? '双方' : '三方';
+    }
+
+    function normalizePartyCopy(value) {
+        var text = String(value || '');
+        return isSelfOperated() ? text.replace(/三方/g, '双方') : text;
     }
 
     function getCenterRole() {
@@ -341,7 +358,7 @@
 
         return {
             number: 'LG-' + typeCode + '-' + baseDate.replace(/-/g, '') + '-' + orderSuffix,
-            name: (activeOptions.itemName || '数据要素交易') + '交易合同',
+            name: (activeOptions.itemName || '数据要素交易') + getPartyLabel() + '交易合同',
             signedAt: signedDate,
             signingDeadline: addDays(baseDate, 10),
             startsAt: startDate,
@@ -350,13 +367,14 @@
     }
 
     function getContractTemplateMeta() {
+        var partyLabel = getPartyLabel();
         if (activeOptions.businessType === 'resource') {
-            return { id: 'TPL-LG-ZY-003', name: activeOptions.templateName || '数据资源三方交易合同' };
+            return { id: 'TPL-LG-ZY-003', name: normalizePartyCopy(activeOptions.templateName) || '数据资源' + partyLabel + '交易合同' };
         }
         if (activeOptions.businessType === 'service') {
-            return { id: 'TPL-LG-FW-002', name: activeOptions.templateName || '数据服务三方交易合同（V2.6）' };
+            return { id: 'TPL-LG-FW-002', name: normalizePartyCopy(activeOptions.templateName) || '数据服务' + partyLabel + '交易合同（V2.6）' };
         }
-        return { id: 'TPL-LG-CP-001', name: activeOptions.templateName || '数据产品三方交易合同（V3.2）' };
+        return { id: 'TPL-LG-CP-001', name: normalizePartyCopy(activeOptions.templateName) || '数据产品' + partyLabel + '交易合同（V3.2）' };
     }
 
     function applyContractPreset(preset, readOnly) {
@@ -440,7 +458,7 @@
 
         if (existing) {
             var existingPreset = activeOptions.businessType === 'resource'
-                ? { number: 'LG-ZY-20260715-001', name: '数据资源三方交易存量合同', signedAt: '2026-07-15', signingDeadline: '2026-07-25', startsAt: '2026-07-15', endsAt: '2027-07-14' }
+                ? { number: 'LG-ZY-20260715-001', name: '数据资源' + getPartyLabel() + '交易存量合同', signedAt: '2026-07-15', signingDeadline: '2026-07-25', startsAt: '2026-07-15', endsAt: '2027-07-14' }
                 : { number: 'HJU-0001', name: '企业扶持政策合同', signedAt: '2026-06-04', signingDeadline: '2026-06-14', startsAt: '2026-06-04', endsAt: '2027-06-30' };
             applyContractPreset(existingPreset, true);
         } else {
@@ -465,11 +483,17 @@
         if (pdfRow) pdfRow.hidden = !electronic || getDocumentMode() !== 'pdf';
         if (signedAtRow) signedAtRow.hidden = electronic;
         if (signingDeadlineRow) signingDeadlineRow.hidden = !electronic;
-        if (operatorSignerRow) operatorSignerRow.hidden = false;
+        if (operatorSignerRow) operatorSignerRow.hidden = isSelfOperated();
+        if (electronicPartyBadge) electronicPartyBadge.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">verified_user</span>' + getPartyLabel() + '签署';
+        if (electronicPartyNote) electronicPartyNote.textContent = isSelfOperated()
+            ? '提交后创建法大大签约任务，供方和需方可分别进入法大大完成审核与签署，不设置先后顺序；双方全部签署后进入任务关闭与归档。'
+            : '提交后创建法大大签约任务，供方、需方和运营方可分别进入法大大完成审核与签署，不设置先后顺序；三方全部签署后进入任务关闭与归档。';
         if (submitButtonText) submitButtonText.textContent = electronic ? '创建任务并前往签署' : '确定';
         if (remarkInput && !remarkInput.dataset.userEdited) {
             remarkInput.value = electronic
-                ? '本合同采用法大大电子签章，供方、需方和运营方不设置先后顺序，可独立完成审核与签署。'
+                ? (isSelfOperated()
+                    ? '本合同采用法大大电子签章，供方和需方不设置先后顺序，可独立完成审核与签署。'
+                    : '本合同采用法大大电子签章，供方、需方和运营方不设置先后顺序，可独立完成审核与签署。')
                 : '本合同用于当前订单的线下签署及履约确认。';
             remarkCount.textContent = String(remarkInput.value.length);
         }
@@ -566,8 +590,10 @@
             startsAt: startsAtInput.value,
             endsAt: endsAtInput.value,
             contractAmount: parseMoney(activeOptions.amount),
+            operationMode: isSelfOperated() ? 'self' : 'thirdParty',
+            partyTotal: getPartyTotal(),
             serviceFeeMode: orderServiceFeeMode,
-            serviceFeeValue: orderServiceFeeValue,
+            serviceFeeValue: isSelfOperated() ? 0 : orderServiceFeeValue,
             paymentMode: paymentMode,
             paymentStages: paymentStages.map(function (stage, index) {
                 return {
@@ -644,7 +670,7 @@
             +               '<div><strong data-esign-capability-title>正在校验电子签章能力</strong><p data-esign-capability-description>请稍候</p></div>'
             +               '<a href="user-center.html?menu=esign-service" target="_blank" data-esign-capability-link><span class="material-symbols-outlined" aria-hidden="true">open_in_new</span><span>前往用户中心</span></a>'
             +           '</div>'
-            +           '<div class="supplier-contract-electronic-head"><div><strong>电子合同制文</strong><p>合同模板在法大大应用中维护，本平台可选择已发布模板，或上传待签PDF，二选一发起签署。</p></div><span><span class="material-symbols-outlined" aria-hidden="true">verified_user</span>三方签署</span></div>'
+            +           '<div class="supplier-contract-electronic-head"><div><strong>电子合同制文</strong><p>合同模板在法大大应用中维护，本平台可选择已发布模板，或上传待签PDF，二选一发起签署。</p></div><span data-supplier-contract-party-badge><span class="material-symbols-outlined" aria-hidden="true">verified_user</span>三方签署</span></div>'
             +           '<div class="supplier-contract-form-row is-required">'
             +               '<div class="supplier-contract-form-label">制文方式</div>'
             +               '<div class="supplier-contract-radio-group">'
@@ -660,7 +686,7 @@
             +               '<label class="supplier-contract-form-label" for="supplierContractPendingPdf">待签合同</label>'
             +               '<div class="supplier-contract-pdf-upload"><input id="supplierContractPendingPdf" type="file" accept=".pdf,application/pdf" data-supplier-contract-pdf-file><button type="button" data-supplier-contract-pdf-upload><span class="material-symbols-outlined" aria-hidden="true">upload_file</span><span>上传待签PDF</span></button><p data-supplier-contract-pdf-hint>仅支持1个未签署的PDF文件，单个文件不超过20M</p></div>'
             +           '</div>'
-            +           '<div class="supplier-contract-electronic-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p>提交后创建法大大签约任务，供方、需方和运营方可分别进入法大大完成审核与签署，不设置先后顺序；三方全部签署后进入任务关闭与归档。</p></div>'
+            +           '<div class="supplier-contract-electronic-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p data-supplier-contract-party-note>提交后创建法大大签约任务，供方、需方和运营方可分别进入法大大完成审核与签署，不设置先后顺序；三方全部签署后进入任务关闭与归档。</p></div>'
             +       '</section>'
             +       '<div class="supplier-contract-form-row">'
             +           '<label class="supplier-contract-form-label" for="supplierContractNo">合同编号</label>'
@@ -731,6 +757,8 @@
         providerCell = drawer.querySelector('[data-supplier-contract-provider]');
         demanderCell = drawer.querySelector('[data-supplier-contract-demander]');
         operatorSignerRow = drawer.querySelector('[data-supplier-contract-operator]');
+        electronicPartyBadge = drawer.querySelector('[data-supplier-contract-party-badge]');
+        electronicPartyNote = drawer.querySelector('[data-supplier-contract-party-note]');
         signedAtInput = drawer.querySelector('[data-supplier-contract-signed-at]');
         signedAtRow = drawer.querySelector('[data-supplier-contract-signed-row]');
         signingDeadlineInput = drawer.querySelector('[data-supplier-contract-deadline]');
@@ -942,7 +970,7 @@
                 var centerRole = getCenterRole();
                 values.taskId = 'FDD-' + String(values.orderNo || '').slice(-14);
                 values.signatureStatus = 'waiting_signature';
-                values.signProgress = '0/3 已签署';
+                values.signProgress = '0/' + getPartyTotal() + ' 已签署';
                 var launchResult = window.FadadaSignDemo.open({
                     taskId: values.taskId,
                     contractName: values.contractName,
@@ -952,6 +980,8 @@
                     party: centerRole === '需求方' ? activeOptions.demander : activeOptions.provider,
                     node: '提交关联并签署',
                     businessType: activeOptions.businessType,
+                    operationMode: isSelfOperated() ? 'self' : 'thirdParty',
+                    partyTotal: getPartyTotal(),
                     sourceMenu: activeOptions.sourceMenu,
                     returnUrl: activeOptions.returnUrl || window.location.href,
                     signUrl: activeOptions.signUrl,
@@ -1002,7 +1032,7 @@
         orderInput.value = options.orderNo || '';
         providerCell.textContent = options.provider || '深圳市龙岗数智科技有限公司';
         demanderCell.textContent = options.demander || '产品需求方测试X';
-        if (operatorSignerRow) operatorSignerRow.hidden = false;
+        if (operatorSignerRow) operatorSignerRow.hidden = isSelfOperated();
         updateESignReadiness();
         resetPaymentTerms();
         applyRelationMode('new');

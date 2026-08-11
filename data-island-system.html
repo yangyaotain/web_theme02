@@ -6,12 +6,14 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>供方交付任务 - 数据岛系统</title>
+    <title>数据连接 - 数据岛系统</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/data-island-metadata.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { min-height: 100%; }
@@ -454,9 +456,880 @@
             outline: none;
             text-align: center;
         }
+        .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 18px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            font-feature-settings: 'liga';
+        }
+        .island-view[hidden] { display: none !important; }
+
+        /* 数据连接入口 */
+        .connection-view { min-height: calc(100vh - 128px); }
+        .connection-heading-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .connection-heading-row .page-title { margin-bottom: 18px; }
+        .connection-tools { display: flex; align-items: center; gap: 12px; }
+        .icon-tool-button {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e8eeeb;
+            border-radius: 6px;
+            color: #667670;
+            background: #fff;
+            cursor: pointer;
+            transition: color .15s ease, border-color .15s ease, background .15s ease;
+        }
+        .icon-tool-button:hover,
+        .icon-tool-button:focus-visible {
+            color: var(--forest-green);
+            border-color: #bde6cf;
+            background: #f4fbf7;
+            outline: none;
+        }
+        .connection-search {
+            position: relative;
+            width: 330px;
+            height: 34px;
+            margin-bottom: 18px;
+        }
+        .connection-search input {
+            width: 100%;
+            height: 100%;
+            padding: 0 40px 0 13px;
+            border: 1px solid #e6ece9;
+            border-radius: 6px;
+            color: #30423c;
+            background: #fff;
+            outline: none;
+            font-size: 13px;
+        }
+        .connection-search input::placeholder { color: #b3bdb9; }
+        .connection-search input:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32,165,101,.08);
+        }
+        .connection-search button {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 38px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            color: #8f9b97;
+            background: transparent;
+            cursor: pointer;
+        }
+        .connection-search button:hover { color: var(--forest-green); }
+        .connection-section { margin-bottom: 8px; }
+        .connection-section-title {
+            margin: 0 0 14px;
+            color: #17231f;
+            font-size: 16px;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+        .connection-cards { display: flex; align-items: flex-start; gap: 16px; }
+        .connection-card {
+            width: 378px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px;
+            border: 1px solid #dbe3df;
+            border-radius: 7px;
+            color: #4d5d57;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+        }
+        .connection-card:hover,
+        .connection-card:focus-visible {
+            border-color: #51cf8b;
+            background: #fcfffd;
+            box-shadow: 0 2px 9px rgba(32,165,101,.08);
+            outline: none;
+        }
+        .connection-card-icon {
+            width: 46px;
+            height: 46px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #15945a;
+            background: #e8f7ef;
+        }
+        .connection-card-icon .material-symbols-rounded { font-size: 25px; }
+        .connection-card strong {
+            display: block;
+            margin-bottom: 2px;
+            color: #40514b;
+            font-size: 17px;
+            line-height: 1.35;
+            font-weight: 700;
+        }
+        .connection-card small {
+            display: block;
+            color: #9aa6a2;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .connection-card.api-card {
+            width: 280px;
+            min-height: 100px;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            padding: 18px;
+            text-align: center;
+        }
+        .connection-card.api-card .connection-card-icon { width: 36px; height: 36px; }
+        .connection-card.api-card .connection-card-icon .material-symbols-rounded { font-size: 21px; }
+        .connection-card.api-card strong { margin: 0; font-size: 13px; font-weight: 500; }
+        .connection-empty {
+            width: 378px;
+            padding: 36px 20px;
+            border: 1px dashed #dbe3df;
+            border-radius: 7px;
+            color: #9aa6a2;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* 上传文件弹窗 */
+        .upload-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #30403b;
+            background: rgba(38, 51, 47, .22);
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .upload-mask.show { display: flex; }
+        .upload-modal {
+            width: 688px;
+            max-width: calc(100vw - 48px);
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 20px 50px rgba(25, 39, 34, .14);
+            overflow: visible;
+        }
+        .upload-modal-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 1px solid #edf1ef;
+        }
+        .upload-modal-title { color: #202e29; font-size: 16px; font-weight: 700; }
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 6px;
+            color: #929e99;
+            background: transparent;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #40514b; background: #f5f8f7; }
+        .upload-modal-body { padding: 10px 24px 28px; }
+        .upload-dropzone {
+            height: 132px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px dashed #cad4d0;
+            border-radius: 4px;
+            color: #6a7873;
+            background: #fff;
+            cursor: pointer;
+            transition: border-color .15s ease, background .15s ease;
+        }
+        .upload-dropzone:hover,
+        .upload-dropzone.dragover {
+            border-color: var(--forest-green);
+            background: #f7fdf9;
+        }
+        .upload-dropzone .upload-cloud { color: #34433e; font-size: 27px; }
+        .upload-dropzone strong { color: #53625d; font-size: 14px; font-weight: 500; }
+        .upload-dropzone small { color: #a5afab; font-size: 12px; }
+        .upload-selected-name {
+            max-width: 520px;
+            color: var(--forest-green);
+            font-size: 13px;
+            font-weight: 600;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .upload-field-row {
+            position: relative;
+            display: grid;
+            grid-template-columns: 82px minmax(0,1fr);
+            align-items: center;
+            gap: 0;
+            margin-top: 20px;
+        }
+        .upload-field-label { color: #5c6b66; font-size: 13px; }
+        .required-star { margin-right: 3px; color: #ef6a67; }
+        .storage-picker { position: relative; min-width: 0; }
+        .storage-trigger {
+            width: 100%;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 0 10px 0 12px;
+            border: 1px solid #dce5e1;
+            border-radius: 6px;
+            color: #41514b;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+        }
+        .storage-picker.open .storage-trigger {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 2px rgba(32,165,101,.08);
+        }
+        .storage-trigger .placeholder { color: #a7b1ad; }
+        .storage-trigger .material-symbols-rounded { color: #899691; font-size: 17px; transition: transform .15s ease; }
+        .storage-picker.open .storage-trigger .material-symbols-rounded { transform: rotate(180deg); }
+        .storage-popover {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 5px);
+            z-index: 8;
+            display: none;
+            max-height: 260px;
+            overflow: auto;
+            padding: 8px;
+            border: 1px solid #e1e7e4;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 10px 28px rgba(35, 51, 45, .15);
+        }
+        .storage-picker.open .storage-popover { display: block; }
+        .storage-search { position: sticky; top: -8px; z-index: 2; padding: 0 0 7px; background: #fff; }
+        .storage-search input {
+            width: 100%;
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #e0e7e4;
+            border-radius: 6px;
+            color: #40514b;
+            background: #f8faf9;
+            outline: none;
+            font-size: 12px;
+        }
+        .storage-search input:focus { border-color: var(--forest-green); background: #fff; }
+        .storage-node.collapsed > .storage-children { display: none; }
+        .storage-tree-row {
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 8px;
+            border-radius: 5px;
+            color: #5f6e69;
+            cursor: pointer;
+        }
+        .storage-tree-row:hover { color: var(--forest-green); background: #f1faf5; }
+        .storage-tree-row.selected { color: var(--forest-green); background: #eaf8f0; font-weight: 600; }
+        .storage-tree-row .toggle-icon { width: 17px; color: #909c98; font-size: 16px; transition: transform .15s ease; }
+        .storage-node.collapsed > .storage-tree-row .toggle-icon { transform: rotate(-90deg); }
+        .storage-tree-row .node-icon { color: #778781; font-size: 18px; }
+        .storage-tree-row.leaf .node-icon { color: #24a96a; }
+        .storage-children { padding-left: 18px; }
+        .storage-empty { padding: 22px 8px; color: #9ca7a3; text-align: center; font-size: 12px; }
+        .upload-error { min-height: 18px; margin: 8px 0 0 82px; color: #e45d5d; font-size: 12px; }
+        .upload-modal-footer {
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 12px 24px;
+            border-top: 1px solid #edf1ef;
+            border-radius: 0 0 18px 18px;
+            background: #fff;
+        }
+
+        /* 请求JSON编辑弹窗 */
+        .request-json-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 720;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #34443e;
+            background: rgba(39, 52, 48, .18);
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .request-json-mask.show { display: flex; }
+        .request-json-modal {
+            width: 960px;
+            max-width: calc(100vw - 48px);
+            border-radius: 17px;
+            background: #fff;
+            box-shadow: 0 20px 50px rgba(25,39,34,.15);
+            overflow: hidden;
+        }
+        .request-json-header {
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 26px;
+            border-bottom: 1px solid #edf1ef;
+        }
+        .request-json-header h2 { color: #26352f; font-size: 16px; font-weight: 700; }
+        .request-json-body { padding: 10px 26px 10px; }
+        .request-json-body .api-code-editor { min-height: 340px; margin: 0; }
+        .request-json-body .api-code-editor textarea { min-height: 340px; }
+        .request-json-error { min-height: 20px; padding-top: 5px; color: #e45d5d; font-size: 12px; }
+        .request-json-footer {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 12px 26px;
+            border-top: 1px solid #edf1ef;
+        }
+        .request-json-footer button {
+            height: 36px;
+            min-width: 62px;
+            padding: 0 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .request-json-cancel { border: 1px solid #e1e7e4; color: #63716c; background: #fff; }
+        .request-json-submit { border: 1px solid var(--forest-green); color: #fff; background: var(--forest-green); font-weight: 600; }
+        .request-json-submit:hover { border-color: var(--forest-green-600); background: var(--forest-green-600); }
+
+        /* API三步配置 */
+        .island-main.api-mode {
+            height: calc(100vh - 64px);
+            max-height: calc(100vh - 64px);
+            padding: 0;
+            overflow-y: auto;
+        }
+        .api-wizard-view {
+            min-height: 100%;
+            color: #52615c;
+            background: #fff;
+            font-size: 13px;
+        }
+        .api-stepbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 64px;
+            display: grid;
+            grid-template-columns: 230px minmax(0,1fr);
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e4e9e7;
+            background: #fff;
+        }
+        .api-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 0;
+            color: #26352f;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: left;
+        }
+        .api-steps { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); align-items: center; }
+        .api-step { position: relative; display: flex; align-items: center; gap: 10px; color: #7e8b86; }
+        .api-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 42px;
+            right: 12px;
+            top: 50%;
+            height: 1px;
+            background: #dfe6e3;
+        }
+        .api-step.done:not(:last-child)::after,
+        .api-step.current:not(:last-child)::after { background: #58ca8d; }
+        .api-step-index {
+            position: relative;
+            z-index: 1;
+            width: 28px;
+            height: 28px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dbe3df;
+            border-radius: 50%;
+            color: #7b8984;
+            background: #fff;
+            font-size: 13px;
+        }
+        .api-step.current .api-step-index { color: #fff; border-color: var(--forest-green); background: var(--forest-green); font-weight: 700; }
+        .api-step.done .api-step-index { color: var(--forest-green); border-color: #d9f3e4; background: #effbf4; }
+        .api-step-label { position: relative; z-index: 1; padding-right: 12px; background: #fff; font-size: 14px; }
+        .api-step.current .api-step-label { color: #40514b; font-weight: 700; }
+        .api-content { padding: 26px 24px 14px; }
+        .api-step-panel[hidden] { display: none !important; }
+        .api-section { padding: 0 0 18px; border-bottom: 1px solid #dfe6e3; }
+        .api-section + .api-section { padding-top: 18px; }
+        .api-section:last-child { border-bottom: 0; }
+        .api-section-title { margin-bottom: 16px; color: #26352f; font-size: 15px; font-weight: 700; }
+        .api-field-row {
+            min-height: 38px;
+            display: grid;
+            grid-template-columns: 74px minmax(0,1fr);
+            align-items: center;
+            gap: 0;
+            margin-bottom: 10px;
+        }
+        .api-field-row:last-child { margin-bottom: 0; }
+        .api-field-label { color: #64736e; white-space: nowrap; }
+        .api-control,
+        .api-select,
+        .api-textarea {
+            width: 100%;
+            border: 1px solid #e3e9e6;
+            border-radius: 5px;
+            color: #586863;
+            background: #fff;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .api-control,
+        .api-select { height: 32px; padding: 0 10px; }
+        .api-textarea { min-height: 76px; padding: 9px 10px; resize: vertical; line-height: 1.55; }
+        .api-control:focus,
+        .api-select:focus,
+        .api-textarea:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.07); }
+        .api-select:disabled { color: #a8b2ae; background: #eef2f0; cursor: not-allowed; }
+        .api-radio-group,
+        .api-check-group { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+        .api-radio-group label,
+        .api-check-group label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+        .api-radio-group input,
+        .api-check-group input { accent-color: var(--forest-green); }
+        .api-address-row { display: grid; grid-template-columns: 94px minmax(320px, 550px); }
+        .api-address-row .api-select { border-radius: 5px 0 0 5px; border-right: 0; }
+        .api-address-row .api-control { border-radius: 0 5px 5px 0; }
+        .upstream-list { display: grid; gap: 8px; }
+        .upstream-row { display: grid; grid-template-columns: minmax(240px, 410px) 94px 32px; }
+        .upstream-row .api-control:first-child { border-radius: 5px 0 0 5px; }
+        .upstream-row .api-control:nth-child(2) { border-radius: 0; border-left: 0; }
+        .api-square-button {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e3e9e6;
+            border-radius: 0 5px 5px 0;
+            color: #7b8984;
+            background: #fff;
+            cursor: pointer;
+        }
+        .api-square-button:hover { color: var(--forest-green); border-color: #bde6cf; }
+        .api-tabs { display: flex; gap: 28px; height: 42px; border-bottom: 1px solid #dfe6e3; }
+        .api-tab {
+            position: relative;
+            height: 42px;
+            border: 0;
+            color: #64736e;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .api-tab.active { color: var(--forest-green); font-weight: 700; }
+        .api-tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--forest-green); }
+        .api-tab-panel[hidden] { display: none !important; }
+        .api-table-wrap { margin-top: 16px; overflow-x: auto; }
+        .api-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 12px; }
+        .api-table th {
+            height: 42px;
+            padding: 0 10px;
+            border-right: 1px solid #dfe6e3;
+            color: #5d6c67;
+            background: #f3f7f5;
+            text-align: left;
+            font-weight: 600;
+        }
+        .api-table th:first-child { border-radius: 7px 0 0 7px; }
+        .api-table th:last-child { border-right: 0; border-radius: 0 7px 7px 0; text-align: right; }
+        .api-table td { height: 42px; padding: 5px 8px; border-bottom: 1px solid #edf1ef; color: #60706a; }
+        .api-table td:last-child { text-align: right; }
+        .api-table input,
+        .api-table select {
+            width: 100%; height: 30px; padding: 0 7px; border: 1px solid transparent; border-radius: 4px;
+            color: #60706a; background: transparent; outline: none; font: inherit;
+        }
+        .api-table input:focus,
+        .api-table select:focus { border-color: #bde6cf; background: #fff; }
+        .api-table-wrap.param-table-wrap { overflow: visible; }
+        .api-param-table { table-layout: fixed; }
+        .api-param-table th:nth-child(1) { width: 17%; }
+        .api-param-table th:nth-child(2) { width: 17%; }
+        .api-param-table th:nth-child(3) { width: 8%; }
+        .api-param-table th:nth-child(4) { width: 26%; }
+        .api-param-table th:nth-child(5) { width: 26%; }
+        .api-param-table th:nth-child(6) { width: 6%; }
+        .api-param-table td { height: 66px; padding: 10px 8px; transition: background .15s ease; }
+        .api-param-table tbody tr:focus-within td,
+        .api-param-table tbody tr.row-active td { background: #f1faf4; }
+        .api-param-input-wrap { position: relative; display: block; }
+        .api-param-input-wrap input {
+            width: 100%;
+            height: 36px;
+            padding: 0 58px 0 12px;
+            border: 1px solid #e3e9e6;
+            border-radius: 6px;
+            color: #53635d;
+            background: #fff;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .api-param-input-wrap input::placeholder { color: #b8c1bd; }
+        .api-param-input-wrap input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.07); }
+        .api-param-count {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            color: #8f9b97;
+            font-size: 12px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .api-table .api-row-select {
+            width: 100%;
+            height: 36px;
+            padding: 0 30px 0 12px;
+            border: 1px solid #e3e9e6;
+            border-radius: 6px;
+            color: #53635d;
+            background: #fff;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .api-table .api-row-select:focus { border-color: var(--forest-green); }
+        .api-type-picker { position: relative; }
+        .api-type-trigger {
+            width: 100%;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 0 10px 0 12px;
+            border: 1px solid #e3e9e6;
+            border-radius: 6px;
+            color: #53635d;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .api-type-trigger .material-symbols-rounded { color: #8f9b97; font-size: 17px; transition: transform .15s ease; }
+        .api-type-picker.open .api-type-trigger { border-color: var(--forest-green); box-shadow: 0 0 0 2px rgba(32,165,101,.07); }
+        .api-type-picker.open .api-type-trigger .material-symbols-rounded { transform: rotate(180deg); }
+        .api-type-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            z-index: 45;
+            display: none;
+            padding: 4px 0;
+            border: 1px solid #e0e7e4;
+            border-radius: 7px;
+            background: #fff;
+            box-shadow: 0 10px 24px rgba(35,51,45,.14);
+        }
+        .api-type-picker.open .api-type-menu { display: block; }
+        .api-type-option {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px;
+            border: 0;
+            color: #53635d;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .api-type-option:hover,
+        .api-type-option.selected { color: #2f5b47; background: #eefbf4; }
+        .api-table-action {
+            display: inline-flex; align-items: center; border: 0; color: var(--forest-green);
+            background: transparent; cursor: pointer; font-size: 12px;
+        }
+        .api-add-row {
+            width: 100%; height: 36px; margin-top: 8px; display: flex; align-items: center; justify-content: center;
+            border: 1px dashed #dfe6e3; border-radius: 5px; color: var(--forest-green); background: #fff; cursor: pointer;
+        }
+        .api-empty-panel { padding: 38px 20px; color: #9ba6a2; text-align: center; }
+        .api-body-format-row,
+        .api-body-required-row {
+            min-height: 38px;
+            display: grid;
+            grid-template-columns: 82px minmax(0,1fr);
+            align-items: center;
+            color: #61706b;
+        }
+        .api-body-format-row { margin-top: 10px; }
+        .api-body-required-row { margin-top: 2px; }
+        .api-body-mode[hidden] { display: none !important; }
+        .api-body-mode .api-table-wrap { margin-top: 10px; }
+        .api-body-json-actions { margin: 8px 0 12px; }
+        .api-outline-text-button {
+            height: 36px;
+            padding: 0 13px;
+            border: 1px solid var(--forest-green);
+            border-radius: 6px;
+            color: var(--forest-green);
+            background: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .api-outline-text-button:hover { background: #f3fbf6; }
+        .api-schema-empty,
+        .api-return-empty {
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #a1aca8;
+            border-bottom: 1px solid #e6ece9;
+            font-size: 12px;
+        }
+        .api-schema-empty[hidden],
+        .api-return-empty[hidden] { display: none !important; }
+        .api-schema-empty .material-symbols-rounded,
+        .api-return-empty .material-symbols-rounded { color: #bdc7c3; font-size: 33px; }
+        .api-body-mode .api-table:not(.api-param-table) th:last-child,
+        .api-body-mode .api-table:not(.api-param-table) td:last-child,
+        .api-return-config .api-table th:last-child,
+        .api-return-config .api-table td:last-child { text-align: left; }
+        .api-code-editor {
+            position: relative;
+            min-height: 340px;
+            display: grid;
+            grid-template-columns: 36px minmax(0,1fr);
+            margin-top: 8px;
+            border: 1px solid #e1e8e5;
+            border-radius: 7px;
+            background: #fff;
+            overflow: hidden;
+        }
+        .api-code-editor::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0;
+            right: 0;
+            height: 25px;
+            z-index: 0;
+            background: #eef9fd;
+            pointer-events: none;
+        }
+        .api-code-lines {
+            position: relative;
+            z-index: 1;
+            padding: 18px 8px;
+            color: #b6c0bd;
+            background: #f5f8f7;
+            text-align: right;
+            white-space: pre-line;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            line-height: 25px;
+            user-select: none;
+            overflow: hidden;
+        }
+        .api-code-editor textarea {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            min-height: 340px;
+            padding: 18px 14px;
+            border: 0;
+            color: #465650;
+            background: transparent;
+            outline: none;
+            resize: vertical;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            line-height: 25px;
+        }
+        .api-code-editor textarea::placeholder { color: #b7c2be; }
+        .api-return-config { padding-top: 18px; }
+        .api-return-head { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+        .api-help { color: #9aa6a2; font-size: 12px; }
+        .api-return-mode[hidden] { display: none !important; }
+        .api-return-json-actions { margin: 8px 0 12px; }
+        .api-return-mode .api-table-wrap { margin-top: 10px; }
+        .api-return-mode .api-table th:nth-child(1) { width: 29%; }
+        .api-return-mode .api-table th:nth-child(2) { width: 28%; }
+        .api-return-mode .api-table th:nth-child(3) { width: 43%; }
+        .api-return-fixed-row td,
+        .api-return-schema-row td { height: 64px; padding: 10px 12px; transition: background .15s ease; }
+        .api-return-fixed-row:focus-within td,
+        .api-return-schema-row:focus-within td { background: #f1faf4; }
+        .api-return-mode .api-code-editor,
+        .api-return-mode .api-code-editor textarea { min-height: 220px; }
+        .api-return-mode .api-code-editor { margin-top: 14px; }
+        .api-button,
+        .api-button-secondary {
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .api-button { border: 1px solid var(--forest-green); color: #fff; background: var(--forest-green); }
+        .api-button:hover { background: var(--forest-green-600); border-color: var(--forest-green-600); }
+        .api-button-secondary { border: 1px solid #e0e6e3; color: #66756f; background: #fff; }
+        .api-button-secondary:hover { color: var(--forest-green); border-color: #bde6cf; }
+        .api-step-two { max-width: 800px; margin: 0 auto; }
+        .api-step-two .api-field-row { grid-template-columns: 128px minmax(0,1fr); }
+        .api-step-two .api-control,
+        .api-step-two .api-select { max-width: 330px; }
+        .api-step-two .api-wide { max-width: none; }
+        .api-input-count { position: relative; max-width: 680px; }
+        .api-input-count .api-control,
+        .api-input-count .api-textarea { padding-right: 58px; max-width: none; }
+        .api-input-count span { position: absolute; right: 10px; bottom: 8px; color: #97a29e; font-size: 11px; }
+        .api-timeout-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
+        .timeout-item { display: grid; grid-template-columns: auto minmax(80px,1fr) 36px; align-items: center; }
+        .timeout-item label { color: #66756f; white-space: nowrap; }
+        .timeout-item .api-control { border-radius: 5px 0 0 5px; }
+        .timeout-unit { height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #e3e9e6; border-left: 0; border-radius: 0 5px 5px 0; background: #f3f6f5; }
+        .breaker-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .icon-toggle { border: 0; color: var(--forest-green); background: transparent; cursor: pointer; }
+        .icon-toggle .material-symbols-rounded { font-size: 37px; }
+        .api-bottom-bar {
+            position: sticky;
+            bottom: 0;
+            z-index: 18;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px 16px;
+            border-top: 1px solid #edf1ef;
+            background: #fff;
+        }
+        .api-bottom-bar [hidden] { display: none !important; }
+        .api-test-line { display: grid; grid-template-columns: 104px minmax(420px, 600px) auto; gap: 0 8px; align-items: center; }
+        .api-test-line .api-select { border-radius: 5px 0 0 5px; }
+        .api-test-line .api-control { border-radius: 0 5px 5px 0; }
+        .api-result-title { margin: 22px 0 14px; color: #34443e; font-size: 15px; font-weight: 700; }
+        .api-result-code {
+            min-height: 190px;
+            margin: 0;
+            padding: 18px 26px;
+            border: 1px solid #e3e9e6;
+            border-radius: 7px;
+            color: #4f605a;
+            background: #f5f8f7;
+            overflow: auto;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.75;
+        }
+        .api-test-status { color: var(--forest-green); }
+        .island-toast {
+            position: fixed;
+            top: 76px;
+            left: 50%;
+            z-index: 800;
+            display: none;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 16px;
+            border: 1px solid #d9f0e3;
+            border-radius: 8px;
+            color: #4b5b55;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(31, 49, 41, .13);
+            transform: translateX(-50%);
+            font-size: 13px;
+        }
+        .island-toast.show { display: flex; }
+        .island-toast .material-symbols-rounded { color: var(--forest-green); font-size: 19px; }
+        .island-toast.error { border-color: #f7d8d6; }
+        .island-toast.error .material-symbols-rounded { color: #e45d5d; }
         @media (max-width: 1440px) {
             .advanced-filters { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
             .island-main { padding-right: 20px; }
+            .api-content { padding-right: 20px; }
         }
     </style>
 </head>
@@ -468,14 +1341,14 @@
             <div class="island-brand">数据岛系统</div>
             <nav class="island-nav">
                 <section class="island-group open" data-menu-group>
-                    <div class="island-group-head">
+                    <div class="island-group-head active">
                         <svg viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.57 4 6.5v11C4 19.43 7.58 21 12 21s8-1.57 8-3.5v-11C20 4.57 16.42 3 12 3zm0 2c3.31 0 5.5.92 5.96 1.5C17.5 7.08 15.31 8 12 8s-5.5-.92-5.96-1.5C6.5 5.92 8.69 5 12 5zm0 14c-3.31 0-5.5-.92-6-1.5v-2.62C7.45 15.57 9.56 16 12 16s4.55-.43 6-1.12v2.62c-.5.58-2.69 1.5-6 1.5zm0-5c-3.31 0-5.5-.92-6-1.5V9.88C7.45 10.57 9.56 11 12 11s4.55-.43 6-1.12v2.62c-.5.58-2.69 1.5-6 1.5z"/></svg>
                         <span>数据管理</span>
                         <svg class="arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                     </div>
                     <div class="island-subnav">
-                        <a class="island-menu-item" href="#">数据连接</a>
-                        <a class="island-menu-item" href="#">元数据目录</a>
+                        <a class="island-menu-item active" href="#data-connections" data-island-nav="connections">数据连接</a>
+                        <a class="island-menu-item" href="#metadata-catalog" data-island-nav="metadata">元数据目录</a>
                     </div>
                 </section>
                 <section class="island-group open" data-menu-group>
@@ -490,19 +1363,517 @@
                     </div>
                 </section>
                 <section class="island-group open" data-menu-group>
-                    <div class="island-group-head active">
+                    <div class="island-group-head">
                         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 0v9l6.3 6.3 1.4-1.4-5.7-5.7V3h-2z"/></svg>
                         <span>交付任务管理</span>
                         <svg class="arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                     </div>
                     <div class="island-subnav">
-                        <a class="island-menu-item active" href="#">供方交付任务</a>
+                        <a class="island-menu-item" href="#delivery-tasks" data-island-nav="delivery">供方交付任务</a>
                     </div>
                 </section>
             </nav>
         </aside>
 
-        <main class="island-main">
+        <main class="island-main" data-island-main>
+            <section class="island-view connection-view" data-island-view="connections">
+                <div class="connection-heading-row">
+                    <h1 class="page-title">数据连接</h1>
+                    <div class="connection-tools" aria-label="连接页面工具">
+                        <button class="icon-tool-button" type="button" title="切换排列" aria-label="切换排列">
+                            <span class="material-symbols-rounded" aria-hidden="true">swap_horiz</span>
+                        </button>
+                        <button class="icon-tool-button" type="button" title="连接设置" aria-label="连接设置">
+                            <span class="material-symbols-rounded" aria-hidden="true">tune</span>
+                        </button>
+                    </div>
+                </div>
+
+                <label class="connection-search">
+                    <input type="text" placeholder="请输入连接类型名称搜索" data-connection-search>
+                    <button type="button" aria-label="搜索连接类型" data-connection-search-button>
+                        <span class="material-symbols-rounded" aria-hidden="true">search</span>
+                    </button>
+                </label>
+
+                <div data-connection-groups>
+                    <section class="connection-section" data-connection-group data-search-text="文件 对象存储 上传文件 本地上传">
+                        <h2 class="connection-section-title">文件/对象存储</h2>
+                        <div class="connection-cards">
+                            <button class="connection-card" type="button" data-open-upload>
+                                <span class="connection-card-icon"><span class="material-symbols-rounded" aria-hidden="true">cloud_upload</span></span>
+                                <span>
+                                    <strong>上传文件</strong>
+                                    <small>从本地上传文件并添加到数据元目录中</small>
+                                </span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="connection-section" data-connection-group data-search-text="API连接 自定义API 接口服务">
+                        <h2 class="connection-section-title">API连接</h2>
+                        <div class="connection-cards">
+                            <button class="connection-card api-card" type="button" data-open-api>
+                                <span class="connection-card-icon"><span class="material-symbols-rounded" aria-hidden="true">edit_document</span></span>
+                                <strong>自定义API</strong>
+                            </button>
+                        </div>
+                    </section>
+                    <div class="connection-empty" data-connection-empty hidden>暂无匹配的连接类型</div>
+                </div>
+            </section>
+
+            <section class="island-view metadata-view" data-island-view="metadata" hidden>
+                <aside class="metadata-tree-panel">
+                    <header class="metadata-tree-head">
+                        <h1>元数据目录</h1>
+                        <div class="metadata-tree-tools">
+                            <button type="button" data-metadata-refresh title="刷新目录" aria-label="刷新目录"><span class="material-symbols-rounded" aria-hidden="true">refresh</span></button>
+                            <button type="button" data-metadata-add title="新增分组" aria-label="新增分组"><span class="material-symbols-rounded" aria-hidden="true">add</span></button>
+                        </div>
+                    </header>
+                    <label class="metadata-search">
+                        <input type="text" placeholder="搜索" data-metadata-search>
+                        <button type="button" data-metadata-search-button aria-label="搜索元数据目录"><span class="material-symbols-rounded" aria-hidden="true">search</span></button>
+                    </label>
+                    <div class="metadata-tree" data-metadata-tree>
+                        <section class="metadata-tree-group" data-metadata-group="public">
+                            <div class="metadata-tree-row group-row" data-metadata-group-toggle>
+                                <span class="material-symbols-rounded tree-arrow" aria-hidden="true">expand_more</span>
+                                <span>公共</span>
+                            </div>
+                            <div class="metadata-tree-children">
+                                <button class="metadata-tree-item active" type="button" data-metadata-node="storage" data-search-name="default-oss 对象存储">
+                                    <span class="material-symbols-rounded" aria-hidden="true">folder_open</span><span class="tree-label">default-oss</span>
+                                </button>
+                                <section class="metadata-tree-group" data-metadata-group="api">
+                                    <div class="metadata-tree-row group-row" data-metadata-group-toggle>
+                                        <span class="material-symbols-rounded tree-arrow" aria-hidden="true">expand_more</span>
+                                        <span>服务平台API</span>
+                                    </div>
+                                    <div class="metadata-tree-children" data-metadata-service-tree></div>
+                                </section>
+                            </div>
+                        </section>
+                    </div>
+                </aside>
+
+                <div class="metadata-resizer" data-metadata-resizer title="拖动调整目录宽度"><span class="material-symbols-rounded" aria-hidden="true">drag_indicator</span></div>
+
+                <div class="metadata-detail">
+                    <section class="metadata-detail-panel" data-metadata-panel="storage">
+                        <header class="metadata-resource-head">
+                            <div class="metadata-resource-title">
+                                <span class="resource-icon"><span class="material-symbols-rounded" aria-hidden="true">folder_open</span></span>
+                                <strong>default-oss</strong>
+                            </div>
+                            <div class="metadata-head-actions">
+                                <button class="metadata-icon-button" type="button" title="切换排列" aria-label="切换排列"><span class="material-symbols-rounded" aria-hidden="true">swap_horiz</span></button>
+                                <button class="metadata-secondary-button" type="button" data-metadata-align-all><span class="material-symbols-rounded" aria-hidden="true">auto_fix_high</span>元数据补齐</button>
+                                <button class="metadata-primary-button" type="button" data-open-upload><span class="material-symbols-rounded" aria-hidden="true">upload_file</span>上传文件</button>
+                            </div>
+                        </header>
+                        <div class="metadata-detail-body">
+                            <div class="metadata-storage-summary"><div>注释：<strong>--</strong></div><div>存储类型：<strong>Oss</strong></div></div>
+                            <div class="metadata-file-filter">
+                                <div class="metadata-segmented" data-metadata-file-filter>
+                                    <button class="active" type="button" data-file-status="all">全部</button>
+                                    <button type="button" data-file-status="unaligned">未补齐</button>
+                                    <button type="button" data-file-status="smart">智能补齐</button>
+                                    <button type="button" data-file-status="manual">人工维护</button>
+                                </div>
+                            </div>
+                            <div class="metadata-table-wrap">
+                                <table class="metadata-table">
+                                    <colgroup><col style="width:19%"><col style="width:8%"><col style="width:7%"><col style="width:9%"><col style="width:15%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
+                                    <thead><tr><th>文件名</th><th>大小</th><th>格式</th><th>来源</th><th><button class="metadata-sort" type="button" data-file-sort="modified">修改日期<span class="material-symbols-rounded" aria-hidden="true">unfold_more</span></button></th><th><button class="metadata-sort" type="button" data-file-sort="maintained">维护日期<span class="material-symbols-rounded" aria-hidden="true">unfold_more</span></button></th><th>授权项目空间</th><th>操作</th></tr></thead>
+                                    <tbody data-metadata-file-body></tbody>
+                                </table>
+                            </div>
+                            <div class="metadata-pagination">
+                                <span>共 <strong data-metadata-file-count>3</strong> 条</span>
+                                <button type="button" aria-label="上一页"><span class="material-symbols-rounded" aria-hidden="true">chevron_left</span></button>
+                                <button class="current" type="button">1</button>
+                                <button type="button" aria-label="下一页"><span class="material-symbols-rounded" aria-hidden="true">chevron_right</span></button>
+                                <select aria-label="每页条数"><option>10 条/页</option></select>
+                                <span>前往</span><input type="text" aria-label="前往页码">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="metadata-detail-panel" data-metadata-panel="service" hidden>
+                        <header class="metadata-resource-head">
+                            <div class="metadata-resource-title">
+                                <span class="resource-icon"><span class="material-symbols-rounded" aria-hidden="true">link</span></span>
+                                <strong data-metadata-service-title>园区企业经营概览查询服务</strong>
+                                <span class="metadata-normal-badge">正常</span>
+                            </div>
+                        </header>
+                        <div class="metadata-service-body">
+                            <article class="metadata-service-card">
+                                <h2 data-service-card-title>园区企业经营概览查询服务</h2>
+                                <p data-service-card-subtitle>外部注册数据服务_7284</p>
+                                <div class="metadata-service-meta"><span>服务类型：<strong>外部接口</strong></span><span>所属组织：<strong data-service-org>深圳市龙岗区智城大数据有限公司</strong></span><span>更新时间：<strong data-service-updated>2026-08-08 15:26:40</strong></span></div>
+                            </article>
+                            <div class="metadata-service-tabs">
+                                <button class="active" type="button" data-metadata-service-tab="info">服务信息</button>
+                                <button type="button" data-metadata-service-tab="test">在线测试</button>
+                            </div>
+
+                            <div class="metadata-service-view" data-metadata-service-view="info">
+                                <h3 class="metadata-section-title">基础属性</h3>
+                                <div class="metadata-info-card">
+                                    <div class="metadata-info-field"><span>请求方式：</span><span class="value">GET</span></div>
+                                    <div class="metadata-info-field"><span>支持格式：</span><span class="value">JSON</span></div>
+                                    <div class="metadata-info-field"><span>请求协议：</span><span class="value">HTTP</span></div>
+                                    <div class="metadata-info-field"><span>创建人：</span><span class="value" data-service-creator>李晨</span></div>
+                                    <div class="metadata-info-field"><span>平均耗时：</span><span class="value" data-service-average>12(ms)</span></div>
+                                    <div class="metadata-info-field"><span>频次限制：</span><span class="value" data-service-frequency>100 (次/秒)</span></div>
+                                    <div class="metadata-info-field full"><span>调用地址：</span><span class="metadata-method-tag">GET</span><span class="value" data-service-call-url>http://10.32.18.46:8080/gateway/api/island/v1/park-enterprise/overview</span><button class="metadata-copy-button" type="button" data-copy-target="call" aria-label="复制调用地址"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span></button></div>
+                                    <div class="metadata-info-field"><span>数据缓存：</span><span class="value" data-service-cache>不启动</span></div>
+                                    <div class="metadata-info-field"><span>认证策略：</span><span class="value" data-service-auth>key-auth</span></div>
+                                </div>
+                                <h3 class="metadata-section-title">服务配置信息</h3>
+                                <div class="metadata-info-card service-config">
+                                    <div class="metadata-info-field"><span>服务协议：</span><span class="value">HTTP</span></div>
+                                    <div class="metadata-info-field"><span>负载均衡：</span><span class="value" data-service-balance>轮询</span></div>
+                                    <div class="metadata-info-field full"><span>接口地址：</span><span class="metadata-method-tag">GET</span><span class="value" data-service-upstream-path>/api/v1/park-enterprise/operation-summary</span><button class="metadata-copy-button" type="button" data-copy-target="path" aria-label="复制接口地址"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span></button></div>
+                                    <div class="metadata-info-field full"><span>服务节点：</span><span class="value" data-service-node>10.32.18.46:8080</span></div>
+                                </div>
+                                <h3 class="metadata-section-title">请求参数</h3>
+                                <div class="metadata-param-tabs" data-metadata-param-tabs="info"><button class="active" type="button" data-metadata-param-tab="params">Params</button><button type="button" data-metadata-param-tab="body">Body</button><button type="button" data-metadata-param-tab="headers">Headers</button></div>
+                                <div class="metadata-param-panel" data-metadata-param-panel="params"><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th></tr></thead><tbody data-service-param-body="params"></tbody></table></div>
+                                <div class="metadata-param-panel" data-metadata-param-panel="body" hidden><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th></tr></thead><tbody data-service-param-body="body"></tbody></table></div>
+                                <div class="metadata-param-panel" data-metadata-param-panel="headers" hidden><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th></tr></thead><tbody data-service-param-body="headers"></tbody></table></div>
+                                <h3 class="metadata-section-title">返回参数</h3>
+                                <div>参数格式：　JSON</div>
+                                <table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>说明</th></tr></thead><tbody data-service-return-body></tbody></table>
+                                <h3 class="metadata-section-title">请求示例 <span class="material-symbols-rounded" style="font-size:15px;color:#9aa6a2;vertical-align:middle" aria-hidden="true">info</span></h3>
+                                <div class="metadata-example-line"><span class="metadata-method-tag">GET</span><span data-service-example-url>http://10.32.18.46:8080/gateway/api/island/v1/park-enterprise/overview</span><button class="metadata-copy-button" type="button" data-copy-target="example" aria-label="复制请求示例"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span></button></div>
+                                <h3 class="metadata-section-title">返回示例</h3>
+                                <pre class="metadata-code-block" data-service-return-example><code data-service-return-code>{}</code><button class="metadata-copy-button" type="button" data-copy-return aria-label="复制返回示例"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span></button></pre>
+                            </div>
+
+                            <div class="metadata-service-view" data-metadata-service-view="test" hidden>
+                                <div class="metadata-test-line"><select aria-label="测试请求方式"><option>GET</option></select><input type="text" data-service-test-url value="http://10.32.18.46:8080/gateway/api/island/v1/park-enterprise/overview"><button class="metadata-secondary-button" type="button" data-metadata-test-api>测试接口</button></div>
+                                <div class="metadata-param-tabs" data-metadata-param-tabs="test"><button class="active" type="button" data-metadata-param-tab="params">Params</button><button type="button" data-metadata-param-tab="body">Body</button><button type="button" data-metadata-param-tab="headers">Headers</button></div>
+                                <div class="metadata-param-panel" data-metadata-test-param-panel="params"><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>说明</th><th>参数值</th></tr></thead><tbody data-service-test-param-body="params"></tbody></table></div>
+                                <div class="metadata-param-panel" data-metadata-test-param-panel="body" hidden><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>说明</th><th>参数值</th></tr></thead><tbody data-service-test-param-body="body"></tbody></table></div>
+                                <div class="metadata-param-panel" data-metadata-test-param-panel="headers" hidden><table class="metadata-table metadata-service-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>说明</th><th>参数值</th></tr></thead><tbody data-service-test-param-body="headers"></tbody></table></div>
+                                <h3 class="metadata-section-title">返回结果</h3>
+                                <pre class="metadata-code-block" data-metadata-test-result>{}</pre>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="metadata-node-menu" data-metadata-node-menu>
+                    <button type="button" data-metadata-node-action="edit">编辑</button>
+                    <button type="button" data-metadata-node-action="move">移动到...</button>
+                    <button type="button" data-metadata-node-action="delete">删除</button>
+                </div>
+            </section>
+
+            <section class="island-view api-wizard-view" data-island-view="api" hidden>
+                <header class="api-stepbar">
+                    <button class="api-back" type="button" data-api-cancel>
+                        <span class="material-symbols-rounded" aria-hidden="true">chevron_left</span>
+                        外部接口服务
+                    </button>
+                    <div class="api-steps" aria-label="自定义API配置步骤">
+                        <div class="api-step current" data-step-indicator="1">
+                            <span class="api-step-index" data-step-index>1</span><span class="api-step-label">上游接口配置</span>
+                        </div>
+                        <div class="api-step" data-step-indicator="2">
+                            <span class="api-step-index" data-step-index>2</span><span class="api-step-label">服务属性配置</span>
+                        </div>
+                        <div class="api-step" data-step-indicator="3">
+                            <span class="api-step-index" data-step-index>3</span><span class="api-step-label">服务测试</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="api-content">
+                    <section class="api-step-panel" data-api-step="1">
+                        <section class="api-section">
+                            <h2 class="api-section-title">节点配置</h2>
+                            <div class="api-field-row">
+                                <div class="api-field-label"><span class="required-star">*</span>接口协议</div>
+                                <div class="api-radio-group">
+                                    <label><input type="radio" name="upstreamProtocol" value="http" checked>http</label>
+                                    <label><input type="radio" name="upstreamProtocol" value="https">https</label>
+                                    <label><input type="radio" name="upstreamProtocol" value="gRPC">gRPC</label>
+                                </div>
+                            </div>
+                            <div class="api-field-row">
+                                <div class="api-field-label"><span class="required-star">*</span>接口地址</div>
+                                <div class="api-address-row">
+                                    <select class="api-select" data-upstream-method>
+                                        <option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option>
+                                    </select>
+                                    <input class="api-control" type="text" value="/api/v1/park-enterprise/operation-summary" data-upstream-path>
+                                </div>
+                            </div>
+                            <div class="api-field-row">
+                                <div class="api-field-label"><span class="required-star">*</span>负载均衡</div>
+                                <div class="api-radio-group">
+                                    <label><input type="radio" name="balanceMode" checked>轮询</label>
+                                    <label><input type="radio" name="balanceMode">一致性哈希</label>
+                                    <label><input type="radio" name="balanceMode">最小连接数</label>
+                                </div>
+                            </div>
+                            <div class="api-field-row">
+                                <div class="api-field-label"><span class="required-star">*</span>上游节点</div>
+                                <div class="upstream-list" data-upstream-list>
+                                    <div class="upstream-row">
+                                        <input class="api-control" type="text" value="10.32.18.46" aria-label="上游节点地址">
+                                        <input class="api-control" type="text" value="8080" aria-label="上游节点端口">
+                                        <button class="api-square-button" type="button" data-add-upstream title="新增上游节点" aria-label="新增上游节点"><span class="material-symbols-rounded" aria-hidden="true">add</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="api-section">
+                            <div class="api-tabs" role="tablist" aria-label="上游接口参数">
+                                <button class="api-tab active" type="button" data-config-tab="params">Params</button>
+                                <button class="api-tab" type="button" data-config-tab="body">Body</button>
+                                <button class="api-tab" type="button" data-config-tab="headers">Headers</button>
+                            </div>
+                            <div class="api-tab-panel" data-config-panel="params">
+                                <div class="api-table-wrap param-table-wrap">
+                                    <table class="api-table api-param-table">
+                                        <thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th><th>操作</th></tr></thead>
+                                        <tbody data-param-body="params"></tbody>
+                                    </table>
+                                </div>
+                                <button class="api-add-row" type="button" data-add-param="params">新增一行</button>
+                            </div>
+                            <div class="api-tab-panel" data-config-panel="body" hidden>
+                                <div class="api-body-format-row">
+                                    <span>参数格式</span>
+                                    <div class="api-radio-group">
+                                        <label><input type="radio" name="bodyFormat" value="form" checked>表单</label>
+                                        <label><input type="radio" name="bodyFormat" value="json">json</label>
+                                        <label><input type="radio" name="bodyFormat" value="xml">xml</label>
+                                        <label><input type="radio" name="bodyFormat" value="text">text</label>
+                                    </div>
+                                </div>
+
+                                <div class="api-body-mode" data-body-mode="form">
+                                    <div class="api-table-wrap param-table-wrap">
+                                        <table class="api-table api-param-table">
+                                            <thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th><th>操作</th></tr></thead>
+                                            <tbody data-param-body="body-form"></tbody>
+                                        </table>
+                                    </div>
+                                    <button class="api-add-row" type="button" data-add-param="body-form">新增一行</button>
+                                </div>
+
+                                <div class="api-body-mode" data-body-mode="json" hidden>
+                                    <div class="api-body-required-row">
+                                        <span>是否必填</span>
+                                        <div class="api-radio-group"><label><input type="radio" name="bodyJsonRequired">是</label><label><input type="radio" name="bodyJsonRequired" checked>否</label></div>
+                                    </div>
+                                    <div class="api-body-json-actions"><button class="api-outline-text-button" type="button" data-open-json-editor="request">编辑json</button></div>
+                                    <div class="api-table-wrap">
+                                        <table class="api-table">
+                                            <thead><tr><th>参数名称</th><th>参数类型</th><th>示例值</th><th>说明</th></tr></thead>
+                                            <tbody data-request-schema-body></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="api-schema-empty" data-request-schema-empty><span class="material-symbols-rounded" aria-hidden="true">inbox</span><span>暂无数据</span></div>
+                                </div>
+
+                                <div class="api-body-mode" data-body-mode="xml" hidden>
+                                    <div class="api-body-required-row">
+                                        <span>是否必填</span>
+                                        <div class="api-radio-group"><label><input type="radio" name="bodyXmlRequired">是</label><label><input type="radio" name="bodyXmlRequired" checked>否</label></div>
+                                    </div>
+                                    <div class="api-code-editor">
+                                        <div class="api-code-lines" data-code-lines="xml">1</div>
+                                        <textarea aria-label="XML请求参数示例" placeholder="请输入请求参数示例" data-body-code="xml"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="api-body-mode" data-body-mode="text" hidden>
+                                    <div class="api-body-required-row">
+                                        <span>是否必填</span>
+                                        <div class="api-radio-group"><label><input type="radio" name="bodyTextRequired">是</label><label><input type="radio" name="bodyTextRequired" checked>否</label></div>
+                                    </div>
+                                    <div class="api-code-editor">
+                                        <div class="api-code-lines" data-code-lines="text">1</div>
+                                        <textarea aria-label="文本请求参数示例" placeholder="请输入请求参数示例" data-body-code="text"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="api-tab-panel" data-config-panel="headers" hidden>
+                                <div class="api-table-wrap param-table-wrap">
+                                    <table class="api-table api-param-table">
+                                        <thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>示例值</th><th>说明</th><th>操作</th></tr></thead>
+                                        <tbody data-param-body="headers"></tbody>
+                                    </table>
+                                </div>
+                                <button class="api-add-row" type="button" data-add-param="headers">新增一行</button>
+                            </div>
+
+                            <div class="api-return-config">
+                                <div class="api-return-head">
+                                    <strong>返回参数</strong>
+                                    <span class="api-help">（在服务编排中需要将返回参数作为下游接口的入参或需要将结果输出到调用端，需配置返回参数）</span>
+                                </div>
+                                <div class="api-field-row">
+                                    <div class="api-field-label">参数类型</div>
+                                    <div class="api-radio-group">
+                                        <label><input type="radio" name="returnFormat" value="JSON" checked>json</label>
+                                        <label><input type="radio" name="returnFormat" value="XML">xml</label>
+                                        <label><input type="radio" name="returnFormat" value="TEXT">text</label>
+                                        <label><input type="radio" name="returnFormat" value="BINARY">binary</label>
+                                    </div>
+                                </div>
+                                <div class="api-return-mode" data-return-mode="JSON">
+                                    <div class="api-return-json-actions"><button class="api-outline-text-button" type="button" data-open-json-editor="return">编辑json</button></div>
+                                    <div class="api-table-wrap">
+                                        <table class="api-table">
+                                            <thead><tr><th>参数名称</th><th>参数类型</th><th>说明</th></tr></thead>
+                                            <tbody data-return-param-body></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="api-return-empty" data-return-empty><span class="material-symbols-rounded" aria-hidden="true">inbox</span><span>暂无数据</span></div>
+                                </div>
+
+                                <div class="api-return-mode" data-return-mode="XML" hidden>
+                                    <div class="api-table-wrap">
+                                        <table class="api-table">
+                                            <thead><tr><th>参数名称</th><th>参数类型</th><th>说明</th></tr></thead>
+                                            <tbody><tr class="api-return-fixed-row"><td>xmlStr</td><td>xml</td><td><label class="api-param-input-wrap"><input type="text" placeholder="请输入" maxlength="500" data-param-input="return-xml-desc" aria-label="XML返回参数说明"><span class="api-param-count" data-param-count>0/500</span></label></td></tr></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="api-code-editor">
+                                        <div class="api-code-lines" data-return-code-lines="XML">1</div>
+                                        <textarea aria-label="XML返回参数示例" placeholder="请输入返回参数示例" data-return-code="XML"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="api-return-mode" data-return-mode="TEXT" hidden>
+                                    <div class="api-table-wrap">
+                                        <table class="api-table">
+                                            <thead><tr><th>参数名称</th><th>参数类型</th><th>说明</th></tr></thead>
+                                            <tbody><tr class="api-return-fixed-row"><td>textStr</td><td>text</td><td><label class="api-param-input-wrap"><input type="text" placeholder="请输入" maxlength="500" data-param-input="return-text-desc" aria-label="文本返回参数说明"><span class="api-param-count" data-param-count>0/500</span></label></td></tr></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="api-code-editor">
+                                        <div class="api-code-lines" data-return-code-lines="TEXT">1</div>
+                                        <textarea aria-label="文本返回参数示例" placeholder="请输入返回参数示例" data-return-code="TEXT"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="api-return-mode" data-return-mode="BINARY" hidden></div>
+                            </div>
+                        </section>
+                    </section>
+
+                    <section class="api-step-panel api-step-two" data-api-step="2" hidden>
+                        <section class="api-section">
+                            <h2 class="api-section-title">基本信息</h2>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>服务名称</div><input class="api-control" type="text" value="龙岗园区企业经营概览查询服务" data-service-name></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>服务调用</div><div class="api-check-group"><label><input type="checkbox">外部使用</label><label><input type="checkbox" checked>内部使用</label></div></div>
+                            <div class="api-field-row"><div class="api-field-label">供应商</div><input class="api-control" type="text" list="supplierOptions" value="深圳市龙岗区智城大数据有限公司" placeholder="请选择或输入文字按回车键创建"></div>
+                            <datalist id="supplierOptions">
+                                <option value="深圳市龙岗区智城大数据有限公司"><option value="深圳市龙岗区数据有限公司"><option value="龙岗区大数据中心"><option value="深圳市龙岗区产业投资服务集团有限公司"><option value="深圳市龙岗区城市建设投资集团有限公司"><option value="深圳市龙岗信息管道有限公司"><option value="深圳北理莫斯科大学"><option value="深圳市人工智能与机器人研究院"><option value="深圳数据交易所"><option value="深圳市数据商协会"><option value="深圳市智慧城市科技发展集团有限公司">
+                            </datalist>
+                            <div class="api-field-row"><div class="api-field-label">计费模式</div><input class="api-control" type="text" value="内部调用免费；外部调用按次计费"></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>服务地址</div><div class="api-input-count"><input class="api-control api-wide" type="text" value="/api/island/v1/park-enterprise/overview" data-service-path><span>39/128</span></div></div>
+                            <div class="api-field-row"><div class="api-field-label">服务标签</div><input class="api-control api-wide" type="text" value="企业服务，园区运营"></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>服务描述</div><div class="api-input-count"><textarea class="api-textarea api-wide" data-service-desc>提供龙岗区重点园区企业数量、经营活跃率等月度概览指标查询。</textarea><span>35/400</span></div></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>数据缓存</div><div class="api-radio-group"><label><input type="radio" name="cacheMode">启动</label><label><input type="radio" name="cacheMode" checked>不启动</label></div></div>
+                        </section>
+
+                        <section class="api-section">
+                            <h2 class="api-section-title">服务参数</h2>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>接口协议</div><div class="api-radio-group"><label><input type="radio" name="serviceProtocol" checked>http</label><label><input type="radio" name="serviceProtocol">https</label></div></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>请求方式</div><select class="api-select" disabled data-service-method><option>GET</option></select></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>返回类型</div><select class="api-select" disabled data-service-return><option>JSON</option></select></div>
+                        </section>
+
+                        <section class="api-section">
+                            <h2 class="api-section-title">安全策略</h2>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>认证策略</div><div class="api-check-group"><label><input type="checkbox" checked>key-auth</label><label><input type="checkbox">jwt-auth</label><label><input type="checkbox">basic-auth</label><label><input type="checkbox">hmac-auth</label></div></div>
+                            <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>调用频次</div><div class="api-address-row" style="grid-template-columns:110px 98px"><input class="api-control" type="number" value="100"><select class="api-select"><option>次/秒</option><option>次/分</option></select></div></div>
+                            <div class="api-field-row"><div class="api-field-label">安全组</div><select class="api-select"><option>数据岛内部服务组</option><option>园区运营服务组</option><option>公共数据服务组</option></select></div>
+                        </section>
+
+                        <section class="api-section">
+                            <h2 class="api-section-title">上游超时配置</h2>
+                            <div class="api-timeout-grid">
+                                <div class="timeout-item"><label><span class="required-star">*</span>连接超时&nbsp;</label><input class="api-control" type="number" value="10"><span class="timeout-unit">s</span></div>
+                                <div class="timeout-item"><label><span class="required-star">*</span>发送超时&nbsp;</label><input class="api-control" type="number" value="60"><span class="timeout-unit">s</span></div>
+                                <div class="timeout-item"><label><span class="required-star">*</span>接收超时&nbsp;</label><input class="api-control" type="number" value="60"><span class="timeout-unit">s</span></div>
+                            </div>
+                        </section>
+
+                        <section class="api-section" data-breaker-section>
+                            <div class="breaker-head">
+                                <h2 class="api-section-title" style="margin:0">上游熔断配置</h2>
+                                <button class="icon-toggle" type="button" data-breaker-toggle aria-pressed="true" title="启用上游熔断"><span class="material-symbols-rounded" aria-hidden="true">toggle_on</span></button>
+                            </div>
+                            <div data-breaker-fields>
+                                <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>健康状态码</div><input class="api-control api-wide" type="text" value="200"></div>
+                                <div class="api-field-row"><div class="api-field-label"><span class="required-star">*</span>不健康状态码</div><input class="api-control api-wide" type="text" value="500，502，503"></div>
+                            </div>
+                        </section>
+                    </section>
+
+                    <section class="api-step-panel" data-api-step="3" hidden>
+                        <div class="api-test-line">
+                            <select class="api-select" data-test-method><option>GET</option></select>
+                            <input class="api-control" type="text" readonly data-test-url value="http://10.32.18.46:8080/gateway/api/island/v1/park-enterprise/overview">
+                            <button class="api-button-secondary" type="button" data-test-api><span class="material-symbols-rounded" aria-hidden="true">science</span>测试接口</button>
+                        </div>
+                        <div class="api-tabs" role="tablist" aria-label="服务测试参数">
+                            <button class="api-tab active" type="button" data-test-tab="params">Params</button>
+                            <button class="api-tab" type="button" data-test-tab="body">Body</button>
+                            <button class="api-tab" type="button" data-test-tab="headers">Headers</button>
+                        </div>
+                        <div class="api-tab-panel" data-test-panel="params">
+                            <div class="api-table-wrap">
+                                <table class="api-table">
+                                    <thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>说明</th><th>参数值</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>parkCode</td><td>string</td><td>是</td><td>园区编码</td><td><input value="LG-BANTIAN-01"></td></tr>
+                                        <tr><td>statMonth</td><td>string</td><td>是</td><td>统计月份</td><td><input value="2026-07"></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="api-tab-panel" data-test-panel="body" hidden><div class="api-empty-panel">当前GET请求无需填写Body</div></div>
+                        <div class="api-tab-panel" data-test-panel="headers" hidden>
+                            <div class="api-table-wrap"><table class="api-table"><thead><tr><th>参数名称</th><th>参数类型</th><th>是否必填</th><th>说明</th><th>参数值</th></tr></thead><tbody><tr><td>X-Source-System</td><td>string</td><td>是</td><td>来源系统标识</td><td><input value="data-island"></td></tr></tbody></table></div>
+                        </div>
+                        <h2 class="api-result-title">返回结果</h2>
+                        <pre class="api-result-code" data-api-result>{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "parkCode": "LG-BANTIAN-01",
+    "statMonth": "2026-07",
+    "enterpriseCount": 386,
+    "activeRate": 92.6
+  }
+}</pre>
+                    </section>
+                </div>
+
+                <footer class="api-bottom-bar">
+                    <button class="api-button-secondary" type="button" data-api-footer="cancel">取消</button>
+                    <button class="api-button-secondary" type="button" data-api-footer="prev" hidden>上一步</button>
+                    <button class="api-button" type="button" data-api-footer="next">下一步</button>
+                    <button class="api-button" type="button" data-api-footer="test" hidden>创建并测试</button>
+                    <button class="api-button" type="button" data-api-footer="finish" hidden>完成</button>
+                </footer>
+            </section>
+
+            <section class="island-view" data-island-view="delivery" hidden>
             <h1 class="page-title">交付任务管理</h1>
             <div class="task-tabs" role="tablist" aria-label="交付任务状态">
                 <button class="task-tab active" type="button" data-tab="all">全部(6)</button>
@@ -665,7 +2036,118 @@
                 <span>前往</span>
                 <input class="page-jump" type="text" aria-label="前往页码">
             </div>
+            </section>
         </main>
+    </div>
+
+    <div class="upload-mask" data-upload-mask aria-hidden="true">
+        <section class="upload-modal" role="dialog" aria-modal="true" aria-labelledby="uploadModalTitle">
+            <header class="upload-modal-header">
+                <h2 class="upload-modal-title" id="uploadModalTitle">上传文件</h2>
+                <button class="modal-close" type="button" data-close-upload aria-label="关闭上传文件弹窗"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+            </header>
+            <div class="upload-modal-body">
+                <div class="upload-dropzone" data-upload-dropzone tabindex="0" role="button" aria-label="点击或拖动文件到此处上传">
+                    <span class="material-symbols-rounded upload-cloud" aria-hidden="true">cloud_upload</span>
+                    <strong data-upload-main-text>点击或拖动文件到虚线框内上传</strong>
+                    <small data-upload-helper>单文件大小不超过50G，文件名不超过32位</small>
+                    <div class="upload-selected-name" data-upload-selected hidden></div>
+                </div>
+                <input type="file" data-upload-input hidden>
+
+                <div class="upload-field-row">
+                    <label class="upload-field-label"><span class="required-star">*</span>存储位置</label>
+                    <div class="storage-picker" data-storage-picker>
+                        <button class="storage-trigger" type="button" data-storage-trigger aria-haspopup="tree" aria-expanded="false">
+                            <span class="placeholder" data-storage-value>请选择</span>
+                            <span class="material-symbols-rounded" aria-hidden="true">expand_more</span>
+                        </button>
+                        <div class="storage-popover" data-storage-popover>
+                            <label class="storage-search"><input type="text" placeholder="搜索目录名称" data-storage-search></label>
+                            <div role="tree" data-storage-tree></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="upload-error" data-upload-error aria-live="polite"></div>
+            </div>
+            <footer class="upload-modal-footer">
+                <button class="api-button-secondary" type="button" data-close-upload><span class="material-symbols-rounded" aria-hidden="true">close</span>取消</button>
+                <button class="api-button" type="button" data-submit-upload><span class="material-symbols-rounded" aria-hidden="true">cloud_upload</span><span data-upload-button-text>上传</span></button>
+            </footer>
+        </section>
+    </div>
+
+    <div class="request-json-mask" data-json-editor-mask aria-hidden="true">
+        <section class="request-json-modal" role="dialog" aria-modal="true" aria-labelledby="jsonEditorTitle">
+            <header class="request-json-header">
+                <h2 id="jsonEditorTitle">编辑json</h2>
+                <button class="modal-close" type="button" data-close-json-editor aria-label="关闭编辑json弹窗"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+            </header>
+            <div class="request-json-body">
+                <div class="api-code-editor">
+                    <div class="api-code-lines" data-json-editor-lines>1</div>
+                    <textarea aria-label="请求JSON参数示例" placeholder="请输入请求参数示例" data-json-editor-input></textarea>
+                </div>
+                <div class="request-json-error" data-json-editor-error aria-live="polite"></div>
+            </div>
+            <footer class="request-json-footer">
+                <button class="request-json-cancel" type="button" data-close-json-editor>取消</button>
+                <button class="request-json-submit" type="button" data-parse-json-editor>解析</button>
+            </footer>
+        </section>
+    </div>
+
+    <div class="metadata-mask" data-metadata-move-mask aria-hidden="true">
+        <section class="metadata-modal" role="dialog" aria-modal="true" aria-labelledby="metadataMoveTitle">
+            <header class="metadata-modal-head"><strong id="metadataMoveTitle">移动到...</strong><button class="metadata-close" type="button" data-close-metadata-move aria-label="关闭移动弹窗"><span class="material-symbols-rounded" aria-hidden="true">close</span></button></header>
+            <div class="metadata-modal-body"><div class="metadata-move-row"><label><span class="required-star">*</span>上级分组</label><select data-metadata-move-target><option>服务平台API</option></select></div></div>
+            <footer class="metadata-modal-foot"><button class="metadata-secondary-button" type="button" data-close-metadata-move>取消</button><button class="metadata-primary-button" type="button" data-confirm-metadata-move>确定</button></footer>
+        </section>
+    </div>
+
+    <div class="metadata-mask" data-metadata-delete-mask aria-hidden="true">
+        <section class="metadata-modal metadata-delete-modal" role="dialog" aria-modal="true" aria-labelledby="metadataDeleteTitle">
+            <header class="metadata-modal-head"><strong id="metadataDeleteTitle"><span class="material-symbols-rounded warning-icon" aria-hidden="true">warning</span>删除</strong><button class="metadata-close" type="button" data-close-metadata-delete aria-label="关闭删除弹窗"><span class="material-symbols-rounded" aria-hidden="true">close</span></button></header>
+            <div class="metadata-modal-body">确定删除该服务吗？</div>
+            <footer class="metadata-modal-foot"><button class="metadata-secondary-button" type="button" data-close-metadata-delete>取消</button><button class="metadata-primary-button" type="button" data-confirm-metadata-delete>确定</button></footer>
+        </section>
+    </div>
+
+    <div class="metadata-preview-mask" data-metadata-preview-mask aria-hidden="true">
+        <button class="metadata-preview-close" type="button" data-close-metadata-preview aria-label="关闭文件预览"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+        <img class="metadata-preview-image" src="images/ai-longgang-infographic.jpg" alt="龙岗AI产业空间分布图预览" data-metadata-preview-image>
+        <div class="metadata-preview-tools" aria-label="图片预览工具">
+            <button type="button" data-preview-tool="fullscreen" title="全屏"><span class="material-symbols-rounded" aria-hidden="true">fullscreen</span></button>
+            <button type="button" data-preview-tool="rotate-left" title="向左旋转"><span class="material-symbols-rounded" aria-hidden="true">rotate_left</span></button>
+            <button type="button" data-preview-tool="rotate-right" title="向右旋转"><span class="material-symbols-rounded" aria-hidden="true">rotate_right</span></button>
+            <button type="button" data-preview-tool="zoom-in" title="放大"><span class="material-symbols-rounded" aria-hidden="true">zoom_in</span></button>
+            <button type="button" data-preview-tool="zoom-out" title="缩小"><span class="material-symbols-rounded" aria-hidden="true">zoom_out</span></button>
+            <button type="button" data-preview-tool="reset" title="1:1">1:1</button>
+        </div>
+    </div>
+
+    <div class="metadata-drawer-mask" data-metadata-drawer-mask aria-hidden="true">
+        <aside class="metadata-drawer" role="dialog" aria-modal="true" aria-labelledby="metadataDrawerTitle">
+            <header class="metadata-drawer-head"><button class="metadata-close" type="button" data-close-metadata-drawer aria-label="关闭维护抽屉"><span class="material-symbols-rounded" aria-hidden="true">close</span></button><span id="metadataDrawerTitle">维护</span></header>
+            <div class="metadata-drawer-body">
+                <div class="metadata-file-summary"><span class="material-symbols-rounded" aria-hidden="true">draft</span><div class="metadata-file-summary-info"><strong data-maintain-file-name>龙岗区重点园区企业经营月报_202607.xlsx</strong><small data-maintain-file-meta>xlsx · 12.48 KB</small></div><button class="metadata-secondary-button" type="button" data-maintain-auto-fill><span class="material-symbols-rounded" aria-hidden="true">auto_fix_high</span>元数据补齐</button></div>
+                <div class="metadata-maintenance-form">
+                    <label class="metadata-form-row"><span>创作日期</span><span class="metadata-count-field"><input type="text" maxlength="50" placeholder="请输入" data-maintain-field="created"><small class="metadata-count">0/50</small></span></label>
+                    <label class="metadata-form-row"><span>类型</span><span class="metadata-count-field"><input type="text" maxlength="50" placeholder="请输入" data-maintain-field="type"><small class="metadata-count">0/50</small></span></label>
+                    <label class="metadata-form-row"><span>题名</span><span class="metadata-count-field"><input type="text" maxlength="50" placeholder="请输入" data-maintain-field="title"><small class="metadata-count">0/50</small></span></label>
+                    <label class="metadata-form-row"><span>创建者</span><span class="metadata-count-field"><input type="text" maxlength="50" placeholder="请输入" data-maintain-field="creator"><small class="metadata-count">0/50</small></span></label>
+                    <label class="metadata-form-row"><span>主题</span><span class="metadata-count-field"><textarea maxlength="100" placeholder="请输入主题，用;区分多个关键词" data-maintain-field="subject"></textarea><small class="metadata-count">0/100</small></span></label>
+                    <label class="metadata-form-row"><span>标识符</span><span class="metadata-count-field"><input type="text" maxlength="50" placeholder="请输入" data-maintain-field="identifier"><small class="metadata-count">0/50</small></span></label>
+                    <label class="metadata-form-row"><span>描述</span><span class="metadata-count-field"><textarea maxlength="100" placeholder="请输入" data-maintain-field="description"></textarea><small class="metadata-count">0/100</small></span></label>
+                </div>
+            </div>
+            <footer class="metadata-drawer-foot"><button class="metadata-secondary-button" type="button" data-close-metadata-drawer>取消</button><button class="metadata-primary-button" type="button" data-confirm-metadata-drawer>确定</button></footer>
+        </aside>
+    </div>
+
+    <div class="island-toast" data-island-toast role="status" aria-live="polite">
+        <span class="material-symbols-rounded" aria-hidden="true">check_circle</span>
+        <span data-island-toast-text>操作成功</span>
     </div>
 
     <script src="js/admin-topbar.js"></script>
@@ -724,5 +2206,781 @@
             });
         })();
     </script>
+    <script>
+        (function () {
+            var main = document.querySelector('[data-island-main]');
+            var views = Array.prototype.slice.call(document.querySelectorAll('[data-island-view]'));
+            var navItems = Array.prototype.slice.call(document.querySelectorAll('[data-island-nav]'));
+            var currentView = 'connections';
+
+            function showView(name) {
+                currentView = name;
+                views.forEach(function (view) {
+                    view.hidden = view.dataset.islandView !== name;
+                });
+                main.classList.toggle('api-mode', name === 'api');
+                main.classList.toggle('metadata-mode', name === 'metadata');
+
+                var activeNav = name === 'delivery' ? 'delivery' : name === 'metadata' ? 'metadata' : 'connections';
+                navItems.forEach(function (item) {
+                    var active = item.dataset.islandNav === activeNav;
+                    item.classList.toggle('active', active);
+                    var head = item.closest('.island-group').querySelector('.island-group-head');
+                    if (active) head.classList.add('active');
+                    else head.classList.remove('active');
+                });
+
+                if (name !== 'api') main.scrollTop = 0;
+            }
+
+            navItems.forEach(function (item) {
+                item.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (item.dataset.islandNav === 'connections') {
+                        showView('connections');
+                        history.replaceState(null, '', '#data-connections');
+                    } else if (item.dataset.islandNav === 'metadata') {
+                        showView('metadata');
+                        history.replaceState(null, '', '#metadata-catalog');
+                    } else if (item.dataset.islandNav === 'delivery') {
+                        showView('delivery');
+                        history.replaceState(null, '', '#delivery-tasks');
+                    }
+                });
+            });
+
+            /* 连接类型搜索：文本条件仅在回车或点击搜索按钮后执行。 */
+            var connectionSearch = document.querySelector('[data-connection-search]');
+            var connectionSearchButton = document.querySelector('[data-connection-search-button]');
+            var connectionGroups = Array.prototype.slice.call(document.querySelectorAll('[data-connection-group]'));
+            var connectionEmpty = document.querySelector('[data-connection-empty]');
+
+            function applyConnectionSearch() {
+                var keyword = (connectionSearch.value || '').trim().toLowerCase();
+                var visibleCount = 0;
+                connectionGroups.forEach(function (group) {
+                    var matched = !keyword || (group.dataset.searchText || '').toLowerCase().indexOf(keyword) >= 0;
+                    group.hidden = !matched;
+                    if (matched) visibleCount += 1;
+                });
+                connectionEmpty.hidden = visibleCount > 0;
+            }
+
+            connectionSearchButton.addEventListener('click', applyConnectionSearch);
+            connectionSearch.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    applyConnectionSearch();
+                }
+            });
+
+            /* 通用轻提示 */
+            var toast = document.querySelector('[data-island-toast]');
+            var toastText = document.querySelector('[data-island-toast-text]');
+            var toastIcon = toast.querySelector('.material-symbols-rounded');
+            var toastTimer = 0;
+
+            function showToast(message, isError) {
+                window.clearTimeout(toastTimer);
+                toastText.textContent = message;
+                toastIcon.textContent = isError ? 'error' : 'check_circle';
+                toast.classList.toggle('error', Boolean(isError));
+                toast.classList.add('show');
+                toastTimer = window.setTimeout(function () { toast.classList.remove('show'); }, 2200);
+            }
+
+            /* 上传文件 */
+            var uploadMask = document.querySelector('[data-upload-mask]');
+            var uploadDropzone = document.querySelector('[data-upload-dropzone]');
+            var uploadInput = document.querySelector('[data-upload-input]');
+            var uploadMainText = document.querySelector('[data-upload-main-text]');
+            var uploadHelper = document.querySelector('[data-upload-helper]');
+            var uploadSelected = document.querySelector('[data-upload-selected]');
+            var uploadError = document.querySelector('[data-upload-error]');
+            var uploadSubmit = document.querySelector('[data-submit-upload]');
+            var uploadButtonText = document.querySelector('[data-upload-button-text]');
+            var storagePicker = document.querySelector('[data-storage-picker]');
+            var storageTrigger = document.querySelector('[data-storage-trigger]');
+            var storageValue = document.querySelector('[data-storage-value]');
+            var storageSearch = document.querySelector('[data-storage-search]');
+            var storageTree = document.querySelector('[data-storage-tree]');
+            var selectedFile = null;
+            var selectedStorage = null;
+
+            var STORAGE_DATA = [
+                {
+                    id: 'public', name: '公共空间', children: [
+                        {
+                            id: 'island-oss', name: '数据岛对象存储', children: [
+                                { id: 'enterprise-service', name: '企业服务数据' },
+                                { id: 'public-resource', name: '公共数据资源' },
+                                { id: 'temporary-exchange', name: '临时交换区' }
+                            ]
+                        },
+                        {
+                            id: 'shared-file', name: '共享文件存储', children: [
+                                { id: 'catalog-sample', name: '目录样例文件' },
+                                { id: 'service-attachment', name: '服务附件' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 'department', name: '部门空间', children: [
+                        {
+                            id: 'industry-service', name: '产业服务中心', children: [
+                                { id: 'park-operation', name: '园区运营数据' },
+                                { id: 'enterprise-profile', name: '企业画像数据' }
+                            ]
+                        },
+                        {
+                            id: 'transport-service', name: '交通运行中心', children: [
+                                { id: 'traffic-daily', name: '交通日交换区' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 'project', name: '项目空间', children: [
+                        {
+                            id: 'park-analysis', name: '园区经营分析', children: [
+                                { id: 'park-original', name: '原始文件' },
+                                { id: 'park-result', name: '分析成果' }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            function escapeHTML(value) {
+                return String(value == null ? '' : value).replace(/[&<>\"]/g, function (char) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char];
+                });
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes >= 1024 * 1024 * 1024) return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+                if (bytes >= 1024 * 1024) return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+                if (bytes >= 1024) return (bytes / 1024).toFixed(2) + ' KB';
+                return bytes + ' B';
+            }
+
+            function setUploadFile(file) {
+                selectedFile = file || null;
+                uploadError.textContent = '';
+                if (!selectedFile) {
+                    uploadMainText.hidden = false;
+                    uploadHelper.hidden = false;
+                    uploadSelected.hidden = true;
+                    uploadSelected.textContent = '';
+                    return;
+                }
+
+                uploadMainText.hidden = true;
+                uploadHelper.hidden = false;
+                uploadHelper.textContent = formatFileSize(selectedFile.size) + ' · 点击可重新选择';
+                uploadSelected.hidden = false;
+                uploadSelected.textContent = selectedFile.name;
+            }
+
+            function resetUpload() {
+                setUploadFile(null);
+                uploadHelper.textContent = '单文件大小不超过50G，文件名不超过32位';
+                uploadInput.value = '';
+                selectedStorage = null;
+                storageValue.textContent = '请选择';
+                storageValue.classList.add('placeholder');
+                storageSearch.value = '';
+                storagePicker.classList.remove('open');
+                storageTrigger.setAttribute('aria-expanded', 'false');
+                uploadError.textContent = '';
+                uploadSubmit.disabled = false;
+                uploadButtonText.textContent = '上传';
+                renderStorageTree('');
+            }
+
+            function openUpload() {
+                resetUpload();
+                uploadMask.classList.add('show');
+                uploadMask.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                window.setTimeout(function () { uploadDropzone.focus(); }, 20);
+            }
+
+            function closeUpload() {
+                uploadMask.classList.remove('show');
+                uploadMask.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                storagePicker.classList.remove('open');
+            }
+
+            document.querySelectorAll('[data-open-upload]').forEach(function (button) { button.addEventListener('click', openUpload); });
+            document.querySelectorAll('[data-close-upload]').forEach(function (button) {
+                button.addEventListener('click', closeUpload);
+            });
+            uploadMask.addEventListener('click', function (event) {
+                if (event.target === uploadMask) closeUpload();
+            });
+            uploadDropzone.addEventListener('click', function () { uploadInput.click(); });
+            uploadDropzone.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    uploadInput.click();
+                }
+            });
+            uploadInput.addEventListener('change', function () {
+                setUploadFile(uploadInput.files && uploadInput.files[0]);
+            });
+            ['dragenter', 'dragover'].forEach(function (name) {
+                uploadDropzone.addEventListener(name, function (event) {
+                    event.preventDefault();
+                    uploadDropzone.classList.add('dragover');
+                });
+            });
+            ['dragleave', 'drop'].forEach(function (name) {
+                uploadDropzone.addEventListener(name, function (event) {
+                    event.preventDefault();
+                    uploadDropzone.classList.remove('dragover');
+                });
+            });
+            uploadDropzone.addEventListener('drop', function (event) {
+                var files = event.dataTransfer && event.dataTransfer.files;
+                if (files && files.length) setUploadFile(files[0]);
+            });
+
+            function filterStorageNodes(nodes, keyword) {
+                return nodes.reduce(function (list, node) {
+                    var children = node.children ? filterStorageNodes(node.children, keyword) : [];
+                    var matched = !keyword || node.name.toLowerCase().indexOf(keyword) >= 0;
+                    if (matched) {
+                        list.push({ id: node.id, name: node.name, children: node.children || null });
+                    } else if (children.length) {
+                        list.push({ id: node.id, name: node.name, children: children });
+                    }
+                    return list;
+                }, []);
+            }
+
+            function renderStorageNodes(nodes, parentPath, forceOpen) {
+                return nodes.map(function (node) {
+                    var path = parentPath ? parentPath + ' / ' + node.name : node.name;
+                    var hasChildren = Boolean(node.children && node.children.length);
+                    var selected = selectedStorage && selectedStorage.id === node.id;
+                    return '<div class="storage-node' + (hasChildren && !forceOpen ? '' : '') + '">' +
+                        '<div class="storage-tree-row' + (hasChildren ? '' : ' leaf') + (selected ? ' selected' : '') + '" role="treeitem" data-storage-id="' + escapeHTML(node.id) + '" data-storage-path="' + escapeHTML(path) + '" data-storage-leaf="' + (hasChildren ? '0' : '1') + '">' +
+                            '<span class="material-symbols-rounded toggle-icon" aria-hidden="true">' + (hasChildren ? 'expand_more' : '') + '</span>' +
+                            '<span class="material-symbols-rounded node-icon" aria-hidden="true">' + (hasChildren ? 'folder' : 'folder_open') + '</span>' +
+                            '<span>' + escapeHTML(node.name) + '</span>' +
+                        '</div>' +
+                        (hasChildren ? '<div class="storage-children" role="group">' + renderStorageNodes(node.children, path, forceOpen) + '</div>' : '') +
+                    '</div>';
+                }).join('');
+            }
+
+            function renderStorageTree(keyword) {
+                var normalized = (keyword || '').trim().toLowerCase();
+                var filtered = filterStorageNodes(STORAGE_DATA, normalized);
+                storageTree.innerHTML = filtered.length
+                    ? renderStorageNodes(filtered, '', Boolean(normalized))
+                    : '<div class="storage-empty">未找到匹配的存储目录</div>';
+            }
+
+            storageTrigger.addEventListener('click', function (event) {
+                event.stopPropagation();
+                var open = !storagePicker.classList.contains('open');
+                storagePicker.classList.toggle('open', open);
+                storageTrigger.setAttribute('aria-expanded', String(open));
+                if (open) window.setTimeout(function () { storageSearch.focus(); }, 20);
+            });
+            storageSearch.addEventListener('input', function () { renderStorageTree(storageSearch.value); });
+            storageTree.addEventListener('click', function (event) {
+                var row = event.target.closest('.storage-tree-row');
+                if (!row) return;
+                event.stopPropagation();
+                if (row.dataset.storageLeaf === '0') {
+                    row.parentElement.classList.toggle('collapsed');
+                    return;
+                }
+                selectedStorage = { id: row.dataset.storageId, path: row.dataset.storagePath };
+                storageValue.textContent = selectedStorage.path;
+                storageValue.classList.remove('placeholder');
+                storagePicker.classList.remove('open');
+                storageTrigger.setAttribute('aria-expanded', 'false');
+                uploadError.textContent = '';
+                renderStorageTree(storageSearch.value);
+            });
+            document.addEventListener('click', function (event) {
+                if (!storagePicker.contains(event.target)) {
+                    storagePicker.classList.remove('open');
+                    storageTrigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            uploadSubmit.addEventListener('click', function () {
+                if (!selectedFile) {
+                    uploadError.textContent = '请选择需要上传的文件。';
+                    uploadDropzone.focus();
+                    return;
+                }
+                if (selectedFile.size > 50 * 1024 * 1024 * 1024) {
+                    uploadError.textContent = '单文件大小不能超过50G。';
+                    return;
+                }
+                if (selectedFile.name.length > 32) {
+                    uploadError.textContent = '文件名不能超过32位，请重新选择。';
+                    return;
+                }
+                if (!selectedStorage) {
+                    uploadError.textContent = '请选择文件存储位置。';
+                    storagePicker.classList.add('open');
+                    storageTrigger.setAttribute('aria-expanded', 'true');
+                    storageSearch.focus();
+                    return;
+                }
+                uploadError.textContent = '';
+                uploadSubmit.disabled = true;
+                uploadButtonText.textContent = '上传中...';
+                var uploadedFile = selectedFile;
+                window.setTimeout(function () {
+                    var path = selectedStorage.path;
+                    closeUpload();
+                    showToast('文件已上传至“' + path + '”');
+                    document.dispatchEvent(new CustomEvent('data-island-uploaded', { detail: { file: uploadedFile, path: path } }));
+                }, 650);
+            });
+
+            /* 自定义API三步向导 */
+            var apiStep = 1;
+            var apiReturnView = 'connections';
+            var apiEditingServiceId = '';
+            var stepPanels = Array.prototype.slice.call(document.querySelectorAll('[data-api-step]'));
+            var stepIndicators = Array.prototype.slice.call(document.querySelectorAll('[data-step-indicator]'));
+            var footerCancel = document.querySelector('[data-api-footer="cancel"]');
+            var footerPrev = document.querySelector('[data-api-footer="prev"]');
+            var footerNext = document.querySelector('[data-api-footer="next"]');
+            var footerTest = document.querySelector('[data-api-footer="test"]');
+            var footerFinish = document.querySelector('[data-api-footer="finish"]');
+            var footerButtons = Array.prototype.slice.call(document.querySelectorAll('[data-api-footer]'));
+            var STEP_ACTIONS = {
+                1: ['cancel', 'next'],
+                2: ['cancel', 'prev', 'test'],
+                3: ['prev', 'finish']
+            };
+
+            function syncStepTwoValues() {
+                var method = document.querySelector('[data-upstream-method]').value;
+                var format = document.querySelector('input[name="returnFormat"]:checked').value;
+                document.querySelector('[data-service-method]').innerHTML = '<option>' + escapeHTML(method) + '</option>';
+                document.querySelector('[data-service-return]').innerHTML = '<option>' + escapeHTML(format) + '</option>';
+            }
+
+            function syncTestValues() {
+                var protocol = document.querySelector('input[name="upstreamProtocol"]:checked').value;
+                var nodeRow = document.querySelector('[data-upstream-list] .upstream-row');
+                var nodeInputs = nodeRow.querySelectorAll('input');
+                var servicePath = document.querySelector('[data-service-path]').value.trim();
+                document.querySelector('[data-test-method]').innerHTML = '<option>' + escapeHTML(document.querySelector('[data-upstream-method]').value) + '</option>';
+                document.querySelector('[data-test-url]').value = protocol + '://' + nodeInputs[0].value.trim() + ':' + nodeInputs[1].value.trim() + '/gateway' + servicePath;
+            }
+
+            function setApiStep(step) {
+                apiStep = step;
+                stepPanels.forEach(function (panel) { panel.hidden = Number(panel.dataset.apiStep) !== step; });
+                stepIndicators.forEach(function (indicator) {
+                    var index = Number(indicator.dataset.stepIndicator);
+                    var indexElement = indicator.querySelector('[data-step-index]');
+                    indicator.classList.toggle('current', index === step);
+                    indicator.classList.toggle('done', index < step);
+                    indexElement.classList.toggle('material-symbols-rounded', index < step);
+                    indexElement.textContent = index < step ? 'check' : String(index);
+                });
+                footerButtons.forEach(function (button) {
+                    button.hidden = STEP_ACTIONS[step].indexOf(button.dataset.apiFooter) < 0;
+                });
+                if (step === 2) syncStepTwoValues();
+                if (step === 3) syncTestValues();
+                main.scrollTop = 0;
+            }
+
+            function openApiWizard(returnView, service) {
+                apiReturnView = typeof returnView === 'string' ? returnView : 'connections';
+                apiEditingServiceId = service && service.id ? service.id : '';
+                if (service) {
+                    document.querySelector('[data-service-name]').value = service.name || '';
+                    document.querySelector('[data-service-path]').value = service.path || '';
+                    document.querySelector('[data-service-desc]').value = service.description || '';
+                    document.querySelector('[data-upstream-path]').value = service.upstreamPath || '';
+                    document.querySelector('[data-service-path]').dispatchEvent(new Event('input'));
+                    document.querySelector('[data-service-desc]').dispatchEvent(new Event('input'));
+                }
+                showView('api');
+                setApiStep(1);
+                history.replaceState(null, '', '#custom-api');
+            }
+
+            function cancelApiWizard() {
+                showView(apiReturnView);
+                history.replaceState(null, '', apiReturnView === 'metadata' ? '#metadata-catalog' : '#data-connections');
+            }
+
+            document.querySelector('[data-open-api]').addEventListener('click', function () { openApiWizard('connections'); });
+            document.querySelectorAll('[data-api-cancel]').forEach(function (button) { button.addEventListener('click', cancelApiWizard); });
+            footerCancel.addEventListener('click', cancelApiWizard);
+            footerPrev.addEventListener('click', function () { setApiStep(Math.max(1, apiStep - 1)); });
+            footerNext.addEventListener('click', function () { setApiStep(2); });
+            footerTest.addEventListener('click', function () {
+                var name = document.querySelector('[data-service-name]').value.trim();
+                var path = document.querySelector('[data-service-path]').value.trim();
+                var desc = document.querySelector('[data-service-desc]').value.trim();
+                if (!name || !path || !desc) {
+                    showToast('请完善服务名称、地址和描述。', true);
+                    return;
+                }
+                setApiStep(3);
+                window.setTimeout(function () { showToast('测试成功'); }, 120);
+            });
+            footerFinish.addEventListener('click', function () {
+                var returningTo = apiReturnView;
+                if (returningTo === 'metadata' && apiEditingServiceId) {
+                    document.dispatchEvent(new CustomEvent('data-island-api-saved', { detail: {
+                        id: apiEditingServiceId,
+                        name: document.querySelector('[data-service-name]').value.trim(),
+                        path: document.querySelector('[data-service-path]').value.trim(),
+                        description: document.querySelector('[data-service-desc]').value.trim(),
+                        upstreamPath: document.querySelector('[data-upstream-path]').value.trim()
+                    } }));
+                }
+                cancelApiWizard();
+                showToast(returningTo === 'metadata' ? '服务信息已保存' : '自定义API已创建');
+                apiEditingServiceId = '';
+            });
+
+            function bindTabSet(buttonSelector, panelSelector, keyName) {
+                var buttons = Array.prototype.slice.call(document.querySelectorAll(buttonSelector));
+                var panels = Array.prototype.slice.call(document.querySelectorAll(panelSelector));
+                buttons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        var key = button.dataset[keyName];
+                        buttons.forEach(function (item) { item.classList.toggle('active', item === button); });
+                        panels.forEach(function (panel) {
+                            var panelKey = panel.dataset[keyName.replace('Tab', 'Panel')];
+                            panel.hidden = panelKey !== key;
+                        });
+                    });
+                });
+            }
+
+            bindTabSet('[data-config-tab]', '[data-config-panel]', 'configTab');
+            bindTabSet('[data-test-tab]', '[data-test-panel]', 'testTab');
+
+            document.querySelector('[data-add-upstream]').addEventListener('click', function () {
+                var row = document.createElement('div');
+                row.className = 'upstream-row';
+                row.innerHTML = '<input class="api-control" type="text" value="10.32.18.47" aria-label="上游节点地址">' +
+                    '<input class="api-control" type="text" value="8080" aria-label="上游节点端口">' +
+                    '<button class="api-square-button" type="button" data-remove-upstream title="删除上游节点" aria-label="删除上游节点"><span class="material-symbols-rounded" aria-hidden="true">remove</span></button>';
+                document.querySelector('[data-upstream-list]').appendChild(row);
+            });
+            document.querySelector('[data-upstream-list]').addEventListener('click', function (event) {
+                var button = event.target.closest('[data-remove-upstream]');
+                if (button) button.parentElement.remove();
+            });
+
+            var PARAM_TYPES = ['字符串', '布尔类型', '整数', '数组', '对象', '对象数组'];
+
+            function parameterInputHTML(value, placeholder, limit, fieldName) {
+                return '<label class="api-param-input-wrap">' +
+                    '<input type="text" value="' + escapeHTML(value || '') + '" placeholder="' + placeholder + '" maxlength="' + limit + '" data-param-input="' + fieldName + '">' +
+                    '<span class="api-param-count" data-param-count>' + String((value || '').length) + '/' + limit + '</span>' +
+                '</label>';
+            }
+
+            function parameterTypeHTML(type) {
+                var activeType = type || '字符串';
+                var options = PARAM_TYPES.map(function (item) {
+                    return '<button class="api-type-option' + (item === activeType ? ' selected' : '') + '" type="button" data-param-type-option="' + item + '">' + item + '</button>';
+                }).join('');
+                return '<div class="api-type-picker">' +
+                    '<button class="api-type-trigger" type="button" data-param-type-trigger aria-haspopup="listbox" aria-expanded="false">' +
+                        '<span data-param-type-value>' + activeType + '</span><span class="material-symbols-rounded" aria-hidden="true">expand_more</span>' +
+                    '</button>' +
+                    '<div class="api-type-menu" role="listbox">' + options + '</div>' +
+                '</div>';
+            }
+
+            function parameterRowHTML(initial) {
+                var item = initial || {};
+                return '<tr class="api-param-row">' +
+                    '<td>' + parameterInputHTML(item.name, '请输入', 100, 'name') + '</td>' +
+                    '<td>' + parameterTypeHTML(item.type) + '</td>' +
+                    '<td><select class="api-row-select" aria-label="是否必填"><option' + (item.required === '是' ? ' selected' : '') + '>是</option><option' + (item.required === '是' ? '' : ' selected') + '>否</option></select></td>' +
+                    '<td>' + parameterInputHTML(item.example, '请输入', 500, 'example') + '</td>' +
+                    '<td>' + parameterInputHTML(item.desc, '请输入', 500, 'desc') + '</td>' +
+                    '<td><button class="api-table-action" type="button" data-delete-row>删除</button></td>' +
+                '</tr>';
+            }
+
+            function appendParameterRows(target, count) {
+                var body = document.querySelector('[data-param-body="' + target + '"]');
+                for (var index = 0; index < count; index += 1) body.insertAdjacentHTML('beforeend', parameterRowHTML());
+            }
+
+            document.querySelectorAll('[data-add-param]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    document.querySelector('[data-param-body="' + button.dataset.addParam + '"]').insertAdjacentHTML('beforeend', parameterRowHTML());
+                });
+            });
+
+            var apiWizard = document.querySelector('.api-wizard-view');
+            apiWizard.addEventListener('input', function (event) {
+                var input = event.target.closest('[data-param-input]');
+                if (!input) return;
+                var counter = input.parentElement.querySelector('[data-param-count]');
+                counter.textContent = input.value.length + '/' + input.maxLength;
+            });
+            apiWizard.addEventListener('click', function (event) {
+                var deleteButton = event.target.closest('[data-delete-row]');
+                if (deleteButton) {
+                    deleteButton.closest('tr').remove();
+                    return;
+                }
+                var typeTrigger = event.target.closest('[data-param-type-trigger]');
+                if (typeTrigger) {
+                    event.stopPropagation();
+                    var picker = typeTrigger.closest('.api-type-picker');
+                    document.querySelectorAll('.api-type-picker.open').forEach(function (item) {
+                        if (item !== picker) {
+                            item.classList.remove('open');
+                            item.querySelector('[data-param-type-trigger]').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    var open = !picker.classList.contains('open');
+                    picker.classList.toggle('open', open);
+                    typeTrigger.setAttribute('aria-expanded', String(open));
+                    return;
+                }
+                var typeOption = event.target.closest('[data-param-type-option]');
+                if (typeOption) {
+                    event.stopPropagation();
+                    var optionPicker = typeOption.closest('.api-type-picker');
+                    optionPicker.querySelector('[data-param-type-value]').textContent = typeOption.dataset.paramTypeOption;
+                    optionPicker.querySelectorAll('[data-param-type-option]').forEach(function (item) { item.classList.toggle('selected', item === typeOption); });
+                    optionPicker.classList.remove('open');
+                    optionPicker.querySelector('[data-param-type-trigger]').setAttribute('aria-expanded', 'false');
+                }
+            });
+            document.addEventListener('click', function () {
+                document.querySelectorAll('.api-type-picker.open').forEach(function (picker) {
+                    picker.classList.remove('open');
+                    picker.querySelector('[data-param-type-trigger]').setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            appendParameterRows('params', 2);
+            appendParameterRows('body-form', 3);
+            appendParameterRows('headers', 1);
+
+            document.querySelectorAll('input[name="bodyFormat"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    document.querySelectorAll('[data-body-mode]').forEach(function (mode) {
+                        mode.hidden = mode.dataset.bodyMode !== radio.value;
+                    });
+                });
+            });
+
+            function bindCodeLines(textarea, lines) {
+                function updateLines() {
+                    var count = Math.max(1, textarea.value.split('\n').length);
+                    var labels = [];
+                    for (var index = 1; index <= count; index += 1) labels.push(String(index));
+                    lines.textContent = labels.join('\n');
+                }
+                textarea.addEventListener('input', updateLines);
+                textarea.addEventListener('scroll', function () { lines.scrollTop = textarea.scrollTop; });
+                updateLines();
+            }
+
+            document.querySelectorAll('[data-body-code]').forEach(function (textarea) {
+                bindCodeLines(textarea, document.querySelector('[data-code-lines="' + textarea.dataset.bodyCode + '"]'));
+            });
+
+            document.querySelectorAll('[data-return-code]').forEach(function (textarea) {
+                bindCodeLines(textarea, document.querySelector('[data-return-code-lines="' + textarea.dataset.returnCode + '"]'));
+            });
+
+            var jsonEditorMask = document.querySelector('[data-json-editor-mask]');
+            var jsonEditorInput = document.querySelector('[data-json-editor-input]');
+            var jsonEditorError = document.querySelector('[data-json-editor-error]');
+            var jsonEditorLines = document.querySelector('[data-json-editor-lines]');
+            var requestSchemaBody = document.querySelector('[data-request-schema-body]');
+            var requestSchemaEmpty = document.querySelector('[data-request-schema-empty]');
+            var returnParamBody = document.querySelector('[data-return-param-body]');
+            var returnParamEmpty = document.querySelector('[data-return-empty]');
+            var jsonEditorMode = 'request';
+            var jsonEditorDrafts = { request: '', return: '' };
+            bindCodeLines(jsonEditorInput, jsonEditorLines);
+
+            function openJsonEditor(mode) {
+                jsonEditorMode = mode;
+                jsonEditorError.textContent = '';
+                jsonEditorInput.value = jsonEditorDrafts[mode];
+                jsonEditorInput.placeholder = mode === 'return' ? '请输入返回参数示例' : '请输入请求参数示例';
+                jsonEditorInput.setAttribute('aria-label', mode === 'return' ? '返回JSON参数示例' : '请求JSON参数示例');
+                jsonEditorInput.dispatchEvent(new Event('input'));
+                jsonEditorMask.classList.add('show');
+                jsonEditorMask.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                window.setTimeout(function () { jsonEditorInput.focus(); }, 20);
+            }
+
+            function closeJsonEditor() {
+                jsonEditorDrafts[jsonEditorMode] = jsonEditorInput.value;
+                jsonEditorMask.classList.remove('show');
+                jsonEditorMask.setAttribute('aria-hidden', 'true');
+                jsonEditorError.textContent = '';
+                document.body.style.overflow = '';
+            }
+
+            function schemaType(value) {
+                if (Array.isArray(value)) return value.length && value.every(function (item) { return item && typeof item === 'object' && !Array.isArray(item); }) ? '对象数组' : '数组';
+                if (value === null || typeof value === 'object') return '对象';
+                if (typeof value === 'boolean') return '布尔类型';
+                if (typeof value === 'number') return Number.isInteger(value) ? '整数' : '数字';
+                return '字符串';
+            }
+
+            function schemaExample(value) {
+                if (value !== null && typeof value === 'object') return JSON.stringify(value);
+                return String(value == null ? '' : value);
+            }
+
+            function renderRequestSchema(value) {
+                var rows = [];
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    Object.keys(value).forEach(function (key) {
+                        rows.push({ name: key, type: schemaType(value[key]), example: schemaExample(value[key]) });
+                    });
+                } else {
+                    rows.push({ name: 'root', type: schemaType(value), example: schemaExample(value) });
+                }
+                requestSchemaBody.innerHTML = rows.map(function (row) {
+                    return '<tr><td>' + escapeHTML(row.name) + '</td><td>' + escapeHTML(row.type) + '</td><td>' + escapeHTML(row.example) + '</td><td></td></tr>';
+                }).join('');
+                requestSchemaEmpty.hidden = rows.length > 0;
+            }
+
+            function renderReturnSchema(value) {
+                var rows = [];
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    Object.keys(value).forEach(function (key) {
+                        rows.push({ name: key, type: schemaType(value[key]) });
+                    });
+                } else {
+                    rows.push({ name: 'root', type: schemaType(value) });
+                }
+                returnParamBody.innerHTML = rows.map(function (row) {
+                    return '<tr class="api-return-schema-row"><td>' + escapeHTML(row.name) + '</td><td>' + escapeHTML(row.type) + '</td><td>' + parameterInputHTML('', '请输入', 500, 'return-desc') + '</td></tr>';
+                }).join('');
+                returnParamEmpty.hidden = rows.length > 0;
+            }
+
+            document.querySelectorAll('[data-open-json-editor]').forEach(function (button) {
+                button.addEventListener('click', function () { openJsonEditor(button.dataset.openJsonEditor); });
+            });
+            document.querySelectorAll('[data-close-json-editor]').forEach(function (button) { button.addEventListener('click', closeJsonEditor); });
+            jsonEditorMask.addEventListener('click', function (event) { if (event.target === jsonEditorMask) closeJsonEditor(); });
+            document.querySelector('[data-parse-json-editor]').addEventListener('click', function () {
+                var source = jsonEditorInput.value.trim();
+                if (!source) {
+                    jsonEditorError.textContent = jsonEditorMode === 'return' ? '请输入返回参数示例。' : '请输入请求参数示例。';
+                    jsonEditorInput.focus();
+                    return;
+                }
+                try {
+                    var parsed = JSON.parse(source);
+                    if (jsonEditorMode === 'return') renderReturnSchema(parsed);
+                    else renderRequestSchema(parsed);
+                    closeJsonEditor();
+                } catch (error) {
+                    jsonEditorError.textContent = 'json格式错误，请检查后重新解析。';
+                    jsonEditorInput.focus();
+                }
+            });
+
+            document.querySelectorAll('input[name="returnFormat"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    document.querySelectorAll('[data-return-mode]').forEach(function (mode) {
+                        mode.hidden = mode.dataset.returnMode !== radio.value;
+                    });
+                });
+            });
+
+            var breakerToggle = document.querySelector('[data-breaker-toggle]');
+            breakerToggle.addEventListener('click', function () {
+                var enabled = breakerToggle.getAttribute('aria-pressed') !== 'true';
+                breakerToggle.setAttribute('aria-pressed', String(enabled));
+                breakerToggle.title = enabled ? '关闭上游熔断' : '启用上游熔断';
+                breakerToggle.querySelector('.material-symbols-rounded').textContent = enabled ? 'toggle_on' : 'toggle_off';
+                document.querySelector('[data-breaker-fields]').hidden = !enabled;
+            });
+
+            document.querySelector('[data-test-api]').addEventListener('click', function (event) {
+                var button = event.currentTarget;
+                var original = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">progress_activity</span>测试中';
+                window.setTimeout(function () {
+                    document.querySelector('[data-api-result]').textContent = '{\n' +
+                        '  "code": 0,\n' +
+                        '  "message": "success",\n' +
+                        '  "data": {\n' +
+                        '    "parkCode": "LG-BANTIAN-01",\n' +
+                        '    "statMonth": "2026-07",\n' +
+                        '    "enterpriseCount": 386,\n' +
+                        '    "activeRate": 92.6\n' +
+                        '  }\n' +
+                        '}';
+                    button.disabled = false;
+                    button.innerHTML = original;
+                    showToast('测试成功');
+                }, 650);
+            });
+
+            function bindCounter(selector, max) {
+                var input = document.querySelector(selector);
+                var counter = input.parentElement.querySelector('span');
+                function update() { counter.textContent = input.value.length + '/' + max; }
+                input.addEventListener('input', update);
+                update();
+            }
+            bindCounter('[data-service-path]', 128);
+            bindCounter('[data-service-desc]', 400);
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key !== 'Escape') return;
+                if (jsonEditorMask.classList.contains('show')) {
+                    closeJsonEditor();
+                } else if (storagePicker.classList.contains('open')) {
+                    storagePicker.classList.remove('open');
+                    storageTrigger.setAttribute('aria-expanded', 'false');
+                } else if (uploadMask.classList.contains('show')) {
+                    closeUpload();
+                }
+            });
+
+            renderStorageTree('');
+            window.dataIsland = {
+                showView: showView,
+                showToast: showToast,
+                openUpload: openUpload,
+                openApiWizard: openApiWizard,
+                getCurrentView: function () { return currentView; }
+            };
+            if (location.hash === '#metadata-catalog') showView('metadata');
+            else if (location.hash === '#delivery-tasks') showView('delivery');
+            else showView('connections');
+        })();
+    </script>
+    <script src="js/data-island-metadata.js"></script>
 </body>
 </html>

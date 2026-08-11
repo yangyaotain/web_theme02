@@ -100,6 +100,32 @@
     pointer-events: none;
 }
 
+.buyer-order-query-button {
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 12px;
+    border: 1px solid var(--forest-green);
+    border-radius: 4px;
+    background: var(--forest-green);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.buyer-order-query-button:hover {
+    border-color: var(--forest-green-600);
+    background: var(--forest-green-600);
+}
+
+.buyer-order-query-button svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+}
+
 .buyer-order-filter-toggle {
     width: 36px;
     height: 34px;
@@ -209,7 +235,7 @@
 }
 
 .buyer-order-table {
-    width: 2450px;
+    width: 2500px;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
@@ -253,13 +279,13 @@
 .buyer-order-table .col-price { width: 130px; }
 .buyer-order-table .col-quantity { width: 100px; }
 .buyer-order-table .col-delivery { width: 130px; }
-.buyer-order-table .col-amount { width: 140px; }
+.buyer-order-table .col-amount { width: 190px; }
 .buyer-order-table .col-applied-at { width: 180px; }
 .buyer-order-table .col-status { width: 280px; }
 .buyer-order-table .col-actions { width: 360px; }
 
 .buyer-service-order-table {
-    width: 2590px;
+    width: 2640px;
 }
 
 .buyer-service-order-table .col-name { width: 360px; }
@@ -294,6 +320,39 @@
 .buyer-order-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.buyer-order-name-with-badge {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+}
+
+.buyer-order-name-with-badge > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.buyer-order-operation-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border: 1px solid #c9e7d7;
+    border-radius: 3px;
+    background: #f0faf5;
+    color: #168552;
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.buyer-order-operation-badge.is-thirdParty {
+    border-color: #dfe5e2;
+    background: #f7f9f8;
+    color: #66736d;
 }
 
 .buyer-order-status {

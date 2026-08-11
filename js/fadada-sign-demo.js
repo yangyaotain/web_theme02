@@ -11,12 +11,24 @@
     var node = params.get('node') || '合同签署';
     var channelId = params.get('channelId') || '';
     var businessType = params.get('businessType') || 'product';
+    var operationMode = params.get('operationMode') || (/双方/.test(contractName) ? 'self' : 'thirdParty');
+    var partyTotal = Number(params.get('partyTotal')) || (operationMode === 'self' ? 2 : 3);
     var sourceMenu = params.get('sourceMenu') || '';
     var returnUrl = params.get('returnUrl') || '';
 
     function setText(selector, value) {
         var target = document.querySelector(selector);
         if (target) target.textContent = value;
+    }
+
+    function applyPartyMode() {
+        if (operationMode !== 'self') return;
+        var intro = document.querySelector('.fdd-paper-intro');
+        if (intro) intro.textContent = '本合同由数据提供方与数据需求方共同签署，双方依据交易订单，就数据产品或服务的交付、使用和费用结算等事项达成一致。';
+        var partyList = document.querySelector('.fdd-paper dl');
+        if (partyList && partyList.lastElementChild) partyList.lastElementChild.hidden = true;
+        var resultDescription = document.querySelector('[data-fdd-result-description]');
+        if (resultDescription) resultDescription.textContent = '签署结果已生成，正在回调业务平台并同步双方签署进度。';
     }
 
     function showToast(message) {
@@ -60,6 +72,7 @@
         setText('[data-fdd-number-label]', '模板编号');
         setText('[data-fdd-paper-no]', templateId);
         setText('[data-fdd-paper-title]', contractName.replace(/（V[^）]+）$/, ''));
+        applyPartyMode();
         document.title = contractName + ' - 法大大模板预览';
 
         document.querySelector('[data-fdd-help]').addEventListener('click', function () {
@@ -215,7 +228,7 @@
                 : '签署成功回调已由业务平台接收，当前签署节点已经完成。');
             setText('[data-fdd-next-node]', status === 'refused'
                 ? '合同签署已中止'
-                : (/运营方/.test(role) ? '三方签署完成，等待任务关闭与归档' : '流转下一签署方'));
+                : (partyTotal === 2 ? '等待平台同步双方签署进度' : (/运营方/.test(role) ? '三方签署完成，等待任务关闭与归档' : '流转下一签署方')));
             notifyPlatform(status, processedAt);
             showToast(status === 'refused' ? '拒签结果已回调业务平台' : node + '结果已回调业务平台');
         }, 700);
@@ -228,6 +241,7 @@
     setText('[data-fdd-task-id]', taskId);
     setText('[data-fdd-sign-role]', role);
     setText('[data-fdd-sign-party]', party);
+    applyPartyMode();
     var sealParty = document.querySelector('.fdd-seal-image small');
     if (sealParty) sealParty.textContent = party;
     document.title = contractName + ' - 法大大电子签约';

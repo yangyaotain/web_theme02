@@ -231,7 +231,7 @@
 }
 
 .supplier-order-table {
-    width: 2320px;
+    width: 2370px;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
@@ -276,10 +276,35 @@
 .supplier-order-table .col-price { width: 130px; }
 .supplier-order-table .col-quantity { width: 100px; }
 .supplier-order-table .col-delivery { width: 130px; }
-.supplier-order-table .col-amount { width: 140px; }
+.supplier-order-table .col-amount { width: 190px; }
 .supplier-order-table .col-applied-at { width: 180px; }
 .supplier-order-table .col-status { width: 280px; }
 .supplier-order-table .col-actions { width: 240px; }
+
+[data-consult-panel][data-role="buyer"] .supplier-order-table {
+    width: 2510px;
+}
+
+[data-consult-panel][data-role="buyer"] .supplier-order-table .col-actions {
+    width: 380px;
+}
+
+[data-consult-panel][data-role="buyer"] .supplier-order-table .order-status-cell {
+    right: 380px;
+}
+
+[data-consult-panel][data-role="buyer"] .supplier-order-table .order-action-cell {
+    overflow: hidden;
+}
+
+[data-consult-panel][data-role="buyer"] .supplier-order-actions {
+    gap: 2px;
+}
+
+[data-consult-panel][data-role="buyer"] .supplier-order-action {
+    padding-right: 5px;
+    padding-left: 5px;
+}
 
 .supplier-order-table .order-status-cell {
     position: sticky;
@@ -310,6 +335,39 @@
 .supplier-order-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.supplier-order-name-with-badge {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+}
+
+.supplier-order-name-with-badge > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.supplier-order-operation-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border: 1px solid #c9e7d7;
+    border-radius: 3px;
+    background: #f0faf5;
+    color: #168552;
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.supplier-order-operation-badge.is-thirdParty {
+    border-color: #dfe5e2;
+    background: #f7f9f8;
+    color: #66736d;
 }
 
 .supplier-order-status {

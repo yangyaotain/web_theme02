@@ -21,6 +21,8 @@
         params.set('party', options.party || '当前登录企业');
         params.set('node', options.node || '合同签署');
         params.set('businessType', options.businessType || 'product');
+        params.set('operationMode', options.operationMode || 'thirdParty');
+        params.set('partyTotal', String(options.partyTotal || (options.operationMode === 'self' ? 2 : 3)));
         if (options.sourceMenu) params.set('sourceMenu', options.sourceMenu);
         if (options.returnUrl) params.set('returnUrl', options.returnUrl);
         callbacks[channelId] = typeof options.onResult === 'function' ? options.onResult : null;

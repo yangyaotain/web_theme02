@@ -2663,6 +2663,8 @@
                 editorData.tabTitle = '';
                 editorData.heroTitle = template.heroTitle;
             }
+            editorData.pricing = normalizeEditorPricing(editorData.pricing);
+            editorData.pricing.referencePrice = getReferencePrice(editorData);
             serviceView = 'editor';
             noticeText = '';
             renderServiceEditor();
@@ -2860,12 +2862,35 @@
                 + '</section>';
         }
 
+        function getPricingMeasure(pricing) {
+            var measures = pricing && Array.isArray(pricing.measures) ? pricing.measures : [];
+            var validMeasures = ['按次数', '按时长', '面议'];
+            for (var i = 0; i < measures.length; i += 1) {
+                if (validMeasures.indexOf(measures[i]) !== -1) return measures[i];
+            }
+            if (pricing && pricing.countPrice) return '按次数';
+            if (pricing && pricing.durationPrice) return '按时长';
+            return '面议';
+        }
+
+        function normalizeEditorPricing(pricing) {
+            pricing = pricing || {};
+            var measure = getPricingMeasure(pricing);
+            pricing.payMode = '预付费';
+            pricing.measures = [measure];
+            pricing.countPrice = measure === '按次数' ? (pricing.countPrice || '') : '';
+            pricing.countUnit = pricing.countUnit || '元/次';
+            pricing.durationPrice = measure === '按时长' ? (pricing.durationPrice || '') : '';
+            pricing.durationUnit = pricing.durationUnit || '元/月';
+            return pricing;
+        }
+
         function getReferencePrice(data) {
             var pricing = data.pricing || {};
-            if (pricing.countPrice) return pricing.countPrice + pricing.countUnit;
-            if (pricing.durationPrice) return pricing.durationPrice + pricing.durationUnit;
-            if ((pricing.measures || []).indexOf('面议') !== -1) return '面议';
-            return pricing.referencePrice || '面议';
+            var measure = getPricingMeasure(pricing);
+            if (measure === '按次数' && pricing.countPrice) return pricing.countPrice + pricing.countUnit;
+            if (measure === '按时长' && pricing.durationPrice) return pricing.durationPrice + pricing.durationUnit;
+            return '面议';
         }
 
         function renderEditorSteps() {
@@ -3183,12 +3208,9 @@
 
         function renderEditorPricing() {
             var pricing = editorData.pricing || {};
-            var measures = pricing.measures || [];
+            var measure = getPricingMeasure(pricing);
             function checked(value) {
-                return measures.indexOf(value) !== -1 ? ' checked' : '';
-            }
-            function payModeChecked(value) {
-                return (pricing.payMode || '预付费') === value ? ' checked' : '';
+                return measure === value ? ' checked' : '';
             }
             function unitOptions(options, current) {
                 return options.map(function (item) { return serviceOption(item, item, current); }).join('');
@@ -3201,32 +3223,31 @@
                 +           '<div class="service-editor-row compact">'
                 +               renderRequiredLabel('付费模式')
                 +               '<div class="service-editor-field service-check-group">'
-                +                   '<label class="service-radio-inline"><input type="radio" name="consult-pay-mode" data-pricing-field="payMode" value="预付费"' + payModeChecked('预付费') + '><span>预付费</span></label>'
-                +                   '<label class="service-radio-inline"><input type="radio" name="consult-pay-mode" data-pricing-field="payMode" value="后付费"' + payModeChecked('后付费') + '><span>后付费</span></label>'
+                +                   '<label class="service-radio-inline"><input type="radio" name="consult-pay-mode" data-pricing-field="payMode" value="预付费" checked><span>预付费</span></label>'
                 +               '</div>'
                 +           '</div>'
                 +           '<div class="service-editor-row compact">'
                 +               renderRequiredLabel('计量方式')
                 +               '<div class="service-editor-field service-check-group">'
-                +                   '<label class="service-check-inline"><input type="checkbox" value="按次数" data-pricing-measure' + checked('按次数') + '><span>按次数</span></label>'
-                +                   '<label class="service-check-inline"><input type="checkbox" value="按时长" data-pricing-measure' + checked('按时长') + '><span>按时长</span></label>'
-                +                   '<label class="service-check-inline"><input type="checkbox" value="面议" data-pricing-measure' + checked('面议') + '><span>面议</span></label>'
+                +                   '<label class="service-radio-inline"><input type="radio" name="consult-measure-mode" value="按次数" data-pricing-measure' + checked('按次数') + '><span>按次数</span></label>'
+                +                   '<label class="service-radio-inline"><input type="radio" name="consult-measure-mode" value="按时长" data-pricing-measure' + checked('按时长') + '><span>按时长</span></label>'
+                +                   '<label class="service-radio-inline"><input type="radio" name="consult-measure-mode" value="面议" data-pricing-measure' + checked('面议') + '><span>面议</span></label>'
                 +               '</div>'
                 +           '</div>'
-                +           '<div class="service-editor-row compact">'
+                +           (measure === '按次数' ? '<div class="service-editor-row compact">'
                 +               renderRequiredLabel('按次数计费')
                 +               '<div class="service-price-input">'
                 +                   '<input class="service-editor-input" data-pricing-field="countPrice" value="' + escapeHtml(pricing.countPrice || '') + '" placeholder="请输入">'
                 +                   '<select class="service-editor-select" data-pricing-field="countUnit">' + unitOptions(['元/次', '元/单'], pricing.countUnit || '元/次') + '</select>'
                 +               '</div>'
-                +           '</div>'
-                +           '<div class="service-editor-row compact">'
+                +           '</div>' : '')
+                +           (measure === '按时长' ? '<div class="service-editor-row compact">'
                 +               renderRequiredLabel('按时长计费')
                 +               '<div class="service-price-input">'
                 +                   '<input class="service-editor-input" data-pricing-field="durationPrice" value="' + escapeHtml(pricing.durationPrice || '') + '" placeholder="请输入">'
                 +                   '<select class="service-editor-select" data-pricing-field="durationUnit">' + unitOptions(['元/月', '元/天'], pricing.durationUnit || '元/月') + '</select>'
                 +               '</div>'
-                +           '</div>'
+                +           '</div>' : '')
                 +       '</section>'
                 +   '</div>'
                 + '</div>';
@@ -3320,11 +3341,12 @@
                 var durationPrice = panel.querySelector('[data-pricing-field="durationPrice"]');
                 var durationUnit = panel.querySelector('[data-pricing-field="durationUnit"]');
                 var payMode = panel.querySelector('[data-pricing-field="payMode"]:checked');
+                var measure = panel.querySelector('[data-pricing-measure]:checked');
                 pricing.payMode = payMode ? payMode.value : '预付费';
-                pricing.measures = Array.prototype.map.call(panel.querySelectorAll('[data-pricing-measure]:checked'), function (input) { return input.value; });
-                pricing.countPrice = countPrice ? countPrice.value.trim() : '';
+                pricing.measures = [measure ? measure.value : '面议'];
+                pricing.countPrice = measure && measure.value === '按次数' && countPrice ? countPrice.value.trim() : '';
                 pricing.countUnit = countUnit ? countUnit.value : '元/次';
-                pricing.durationPrice = durationPrice ? durationPrice.value.trim() : '';
+                pricing.durationPrice = measure && measure.value === '按时长' && durationPrice ? durationPrice.value.trim() : '';
                 pricing.durationUnit = durationUnit ? durationUnit.value : '元/月';
                 editorData.pricing = pricing;
                 pricing.referencePrice = getReferencePrice(editorData);
@@ -3507,6 +3529,16 @@
             if (saveButton) saveButton.addEventListener('click', persistEditorData);
             var previewButton = panel.querySelector('[data-editor-open-preview]');
             if (previewButton) previewButton.addEventListener('click', openServicePreview);
+
+            panel.querySelectorAll('[data-pricing-measure]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    if (!this.checked) return;
+                    var scrollTop = getEditorScrollTop();
+                    collectEditorData();
+                    noticeText = '';
+                    renderServiceEditor(scrollTop);
+                });
+            });
 
             var sectionList = panel.querySelector('[data-section-list]');
             bindServiceSortable(sectionList, '.service-section-editor', syncEditorSortOrder);

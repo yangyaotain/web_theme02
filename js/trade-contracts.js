@@ -60,6 +60,7 @@
     ];
 
     function createContract(row, type, index) {
+        var selfOperated = index % 5 === 2;
         var electronic = row[12] === '线上签署' || row[12] === '电子签章';
         var paymentMode = type === 'service' ? 'installment' : 'once';
         var serviceFeeMode = index % 4 === 1 ? 'G' : 'P';
@@ -112,7 +113,7 @@
             orderNo: row[1],
             name: row[2],
             itemName: row[3],
-            provider: row[4],
+            provider: selfOperated ? PLATFORM_OPERATOR_NAME : row[4],
             demander: row[5],
             amount: row[6],
             signedAt: row[7],
@@ -149,9 +150,11 @@
             updatedAt: (row[7] === '--' ? row[8] : row[7]) + ' ' + ['15:18:26', '16:36:12', '17:05:48'][index % 3],
             contractAmount: row[6],
             serviceFeeMode: serviceFeeMode,
-            serviceFeeValue: serviceFeeValue,
+            serviceFeeValue: selfOperated ? 0 : serviceFeeValue,
             paymentMode: paymentMode,
-            paymentStages: paymentStages
+            paymentStages: paymentStages,
+            operationMode: selfOperated ? 'self' : 'thirdParty',
+            partyTotal: selfOperated ? 2 : 3
         };
     }
 
@@ -163,6 +166,43 @@
     if (window.EContractDemoScenarios) {
         CONTRACTS = window.EContractDemoScenarios.getContracts().concat(CONTRACTS);
     }
+
+    function isSelfOperated(item) {
+        if (item.operationMode === 'self') return true;
+        if (item.operationMode === 'thirdParty') return false;
+        return item.provider === PLATFORM_OPERATOR_NAME;
+    }
+
+    function getPartyLabel(item) {
+        return isSelfOperated(item) ? '双方' : '三方';
+    }
+
+    function ensurePartyContractName(value, partyLabel) {
+        var name = String(value || '');
+        if (/双方|三方/.test(name)) return partyLabel === '双方' ? name.replace(/三方/g, '双方') : name;
+        return name.replace(/交易合同$/, partyLabel + '交易合同').replace(/采购合同$/, partyLabel + '采购合同').replace(/服务合同$/, partyLabel + '服务合同');
+    }
+
+    CONTRACTS.forEach(function (item) {
+        var selfOperated = isSelfOperated(item);
+        var partyTotal = selfOperated ? 2 : 3;
+        var partyLabel = selfOperated ? '双方' : '三方';
+        item.operationMode = selfOperated ? 'self' : 'thirdParty';
+        item.partyTotal = partyTotal;
+        item.name = ensurePartyContractName(item.name, partyLabel);
+        item.templateName = ensurePartyContractName(item.templateName, partyLabel);
+        item.currentNode = selfOperated ? String(item.currentNode || '').replace(/三方/g, '双方').replace(/运营方/g, '需求方') : item.currentNode;
+        if (item.signProgress !== '--') {
+            item.signProgress = String(item.signProgress || '').replace(/(\d+)\/\d+/, function (_, count) {
+                return Math.min(partyTotal, Number(count) || 0) + '/' + partyTotal;
+            });
+        }
+        if (selfOperated) {
+            item.provider = PLATFORM_OPERATOR_NAME;
+            item.operatorStatus = '不适用';
+            item.serviceFeeValue = 0;
+        }
+    });
 
     function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
@@ -201,7 +241,7 @@
     function getMyStatus(item) {
         var menuConfig = window.LG_USER_MENU_CONFIG || {};
         var currentCompany = menuConfig.user && menuConfig.user.company;
-        if (role === 'supplier' && currentCompany === PLATFORM_OPERATOR_NAME) return item.operatorStatus;
+        if (role === 'supplier' && currentCompany === PLATFORM_OPERATOR_NAME && !isSelfOperated(item)) return item.operatorStatus;
         return role === 'supplier' ? item.supplierStatus : item.buyerStatus;
     }
 
@@ -337,7 +377,7 @@
             +   '<div class="trade-contract-table-scroll" aria-label="合同列表，可横向滚动">'
             +       '<table class="trade-contract-table">'
             +           '<colgroup><col class="col-name"><col class="col-id"><col class="col-method"><col class="col-party"><col class="col-order"><col class="col-status"><col class="col-progress"><col class="col-status"><col class="col-archive"><col class="col-updated"><col class="col-actions"></colgroup>'
-            +           '<thead><tr><th>合同名称</th><th>合同编号</th><th>签署方式</th><th>' + counterpartyLabel + '</th><th>关联订单</th><th>我的状态</th><th>三方签约进度</th><th class="contract-status-cell">合同状态</th><th>归档/存证</th><th>更新时间</th><th class="contract-actions-cell">操作</th></tr></thead>'
+            +           '<thead><tr><th>合同名称</th><th>合同编号</th><th>签署方式</th><th>' + counterpartyLabel + '</th><th>关联订单</th><th>我的状态</th><th>签约进度</th><th class="contract-status-cell">合同状态</th><th>归档/存证</th><th>更新时间</th><th class="contract-actions-cell">操作</th></tr></thead>'
             +           '<tbody>' + renderRows(currentPageRecords) + '</tbody>'
             +       '</table>'
             +   '</div>'
@@ -350,7 +390,7 @@
     }
 
     function renderPaymentTerms(item) {
-        var selfOperated = item.provider === PLATFORM_OPERATOR_NAME;
+        var selfOperated = isSelfOperated(item);
         var totalServiceFee = selfOperated ? 0 : getTotalServiceFee(item);
         var totalPercent = item.paymentStages.reduce(function (sum, stage) { return sum + Number(stage.percent || 0); }, 0);
         var stageRows = item.paymentStages.map(function (stage) {
@@ -391,10 +431,10 @@
         var electronicLogs = [
             ['签约任务创建', item.initiatorRole, '已完成', item.initiatedAt, '--'],
             ['提供方审核并签署', '提供方', partyResult(item.supplierStatus), isSignedPartyStatus(item.supplierStatus) ? item.updatedAt : '--', '--'],
-            ['需求方审核并签署', '需求方', partyResult(item.buyerStatus), isSignedPartyStatus(item.buyerStatus) ? item.updatedAt : '--', '--'],
-            ['运营方审核并签署', '平台运营方', partyResult(item.operatorStatus), isSignedPartyStatus(item.operatorStatus) ? item.updatedAt : '--', '--'],
-            ['任务关闭与归档', '系统', item.archiveStatus, item.archiveStatus === '归档成功' ? item.updatedAt : '--', item.latestException]
+            ['需求方审核并签署', '需求方', partyResult(item.buyerStatus), isSignedPartyStatus(item.buyerStatus) ? item.updatedAt : '--', '--']
         ];
+        if (!isSelfOperated(item)) electronicLogs.push(['运营方审核并签署', '平台运营方', partyResult(item.operatorStatus), isSignedPartyStatus(item.operatorStatus) ? item.updatedAt : '--', '--']);
+        electronicLogs.push(['任务关闭与归档', '系统', item.archiveStatus, item.archiveStatus === '归档成功' ? item.updatedAt : '--', item.latestException]);
         var offlineLogs = [
             ['关联合同', item.initiatorRole, '已完成', item.initiatedAt, '--'],
             ['线下合同归档', '系统', item.archiveStatus, item.updatedAt, '--']
@@ -442,19 +482,24 @@
         var supplierSignStatus = item.supplierStatus === '已作废' ? '已签署' : item.supplierStatus;
         var buyerSignStatus = item.buyerStatus === '已作废' ? '已签署' : item.buyerStatus;
         var operatorSignStatus = item.operatorStatus === '已作废' ? '已签署' : item.operatorStatus;
-        var signerRows = [
+        var selfOperated = isSelfOperated(item);
+        var partyLabel = getPartyLabel(item);
+        var completeProgress = item.partyTotal + '/' + item.partyTotal;
+        var signerRowData = [
             ['法人', '提供方', item.provider, isSignedPartyStatus(supplierSignStatus) ? '已审核' : '待处理', supplierSignStatus, isSignedPartyStatus(supplierSignStatus) ? signedTime : '--'],
-            ['法人', '需求方', item.demander, isSignedPartyStatus(buyerSignStatus) ? '已审核' : '待处理', buyerSignStatus, isSignedPartyStatus(buyerSignStatus) ? signedTime : '--'],
-            ['法人', '平台运营方', PLATFORM_OPERATOR_NAME, isSignedPartyStatus(operatorSignStatus) ? '已审核' : '待处理', operatorSignStatus, isSignedPartyStatus(operatorSignStatus) ? signedTime : '--']
-        ].map(function (row) {
+            ['法人', '需求方', item.demander, isSignedPartyStatus(buyerSignStatus) ? '已审核' : '待处理', buyerSignStatus, isSignedPartyStatus(buyerSignStatus) ? signedTime : '--']
+        ];
+        if (!selfOperated) signerRowData.push(['法人', '平台运营方', PLATFORM_OPERATOR_NAME, isSignedPartyStatus(operatorSignStatus) ? '已审核' : '待处理', operatorSignStatus, isSignedPartyStatus(operatorSignStatus) ? signedTime : '--']);
+        var signerRows = signerRowData.map(function (row) {
             return '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td>' + escapeHtml(row[2]) + '</td><td>' + renderStatus(row[3]) + '</td><td>' + renderStatus(row[4]) + '</td><td>' + escapeHtml(row[5]) + '</td></tr>';
         }).join('');
-        var approvalRows = [
+        var approvalRowData = [
             ['签约任务创建', item.initiatorRole, '已完成', item.initiatedAt, '--'],
             ['提供方审核并签署', '提供方', partyResult(item.supplierStatus), isSignedPartyStatus(item.supplierStatus) ? item.updatedAt : '--', '--'],
-            ['需求方审核并签署', '需求方', partyResult(item.buyerStatus), isSignedPartyStatus(item.buyerStatus) ? item.updatedAt : '--', '--'],
-            ['运营方审核并签署', '平台运营方', partyResult(item.operatorStatus), isSignedPartyStatus(item.operatorStatus) ? item.updatedAt : '--', '--']
-        ].map(function (row) {
+            ['需求方审核并签署', '需求方', partyResult(item.buyerStatus), isSignedPartyStatus(item.buyerStatus) ? item.updatedAt : '--', '--']
+        ];
+        if (!selfOperated) approvalRowData.push(['运营方审核并签署', '平台运营方', partyResult(item.operatorStatus), isSignedPartyStatus(item.operatorStatus) ? item.updatedAt : '--', '--']);
+        var approvalRows = approvalRowData.map(function (row) {
             return '<tr><td>' + escapeHtml(row[0]) + '</td><td>' + escapeHtml(row[1]) + '</td><td>' + escapeHtml(row[2]) + '</td><td>' + escapeHtml(row[3]) + '</td><td>' + escapeHtml(row[4]) + '</td></tr>';
         }).join('');
         return ''
@@ -469,17 +514,18 @@
             +               detailItem('合同生效时间', item.effectiveAt) + detailItem('合同失效时间', item.endsAt)
             +               detailItem('合同签署方式', item.signMethod) + detailItem('签署时间', item.signedAt)
             +               detailItem('合同来源', item.source) + detailItem('关联订单', item.orderNo)
+            +               detailItem('经营属性', selfOperated ? '自营' : '第三方') + detailItem('合同主体', partyLabel + '合同')
             +               detailItem('关联发起方', item.initiatorRole) + detailItem('当前处理节点', item.currentNode)
             +               detailItem('签署截止时间', item.signingDeadline) + detailItem('法大大任务编号', item.taskId)
             +               detailItem('交易标的', item.itemName, 'wide') + detailItem('备注', item.remark, 'wide')
             +           '</dl>'
             +       '</section>'
-            +       (item.signMethod === '电子签章' ? '<section class="trade-contract-detail-section trade-contract-esign-card"><div class="trade-contract-section-title"><h3>电子签约信息</h3>' + renderStatus(item.taskStatus) + '</div><div class="trade-contract-esign-summary"><div><span>三方签署进度</span><strong>' + escapeHtml(item.signProgress) + '</strong><small>' + escapeHtml(item.currentNode) + '</small></div><div><span>签约任务关闭</span><strong>' + escapeHtml(item.taskCloseStatus) + '</strong><small>三方签署完成后关闭任务</small></div><div><span>最终签署文件</span><strong>' + escapeHtml(item.finalFileStatus) + '</strong><small>下载后校验文件摘要</small></div><div><span>本地归档</span><strong>' + escapeHtml(item.archiveStatus) + '</strong><small>最终文件以本地归档为主</small></div><div><span>法大大司法存证</span><strong>' + escapeHtml(item.fddEvidenceStatus) + '</strong><small>' + escapeHtml(item.fddEvidenceNo) + '</small></div><div><span>平台区块链存证</span><strong>' + escapeHtml(item.evidenceStatus) + '</strong><small>' + escapeHtml(item.evidenceNo) + '</small></div></div>' + (item.latestException !== '--' ? '<div class="trade-contract-exception">' + icon('info') + '<span>' + escapeHtml(item.latestException) + '</span></div>' : '') + '</section>' : '')
+            +       (item.signMethod === '电子签章' ? '<section class="trade-contract-detail-section trade-contract-esign-card"><div class="trade-contract-section-title"><h3>电子签约信息</h3>' + renderStatus(item.taskStatus) + '</div><div class="trade-contract-esign-summary"><div><span>' + partyLabel + '签署进度</span><strong>' + escapeHtml(item.signProgress) + '</strong><small>' + escapeHtml(item.currentNode) + '</small></div><div><span>签约任务关闭</span><strong>' + escapeHtml(item.taskCloseStatus) + '</strong><small>' + partyLabel + '签署完成后关闭任务</small></div><div><span>最终签署文件</span><strong>' + escapeHtml(item.finalFileStatus) + '</strong><small>下载后校验文件摘要</small></div><div><span>本地归档</span><strong>' + escapeHtml(item.archiveStatus) + '</strong><small>最终文件以本地归档为主</small></div><div><span>法大大司法存证</span><strong>' + escapeHtml(item.fddEvidenceStatus) + '</strong><small>' + escapeHtml(item.fddEvidenceNo) + '</small></div><div><span>平台区块链存证</span><strong>' + escapeHtml(item.evidenceStatus) + '</strong><small>' + escapeHtml(item.evidenceNo) + '</small></div></div>' + (item.latestException !== '--' ? '<div class="trade-contract-exception">' + icon('info') + '<span>' + escapeHtml(item.latestException) + '</span></div>' : '') + '</section>' : '')
             +       renderPaymentTerms(item)
             +       renderVoidInfo(item)
             +       '<section class="trade-contract-detail-section">'
             +           '<div class="trade-contract-section-title"><h3>合同文件</h3></div>'
-            +           '<div class="trade-contract-file-list"><div class="trade-contract-file-row"><span title="' + escapeHtml(item.fileName) + '">' + icon('file') + '<b>原始合同</b>' + escapeHtml(item.fileName) + '<small>' + item.fileSize + '</small></span><div>' + actionButton('预览', 'view-file', 'view', '', 'data-contract-id="' + item.id + '"') + actionButton('下载', 'download-file', 'download', '', 'data-contract-id="' + item.id + '"') + '</div></div>' + (item.finalFileStatus === '下载并校验成功' ? '<div class="trade-contract-file-row"><span>' + icon('file') + '<b>最终合同</b>' + escapeHtml(item.id + '-三方签署完成.pdf') + '<small>' + (item.archiveStatus === '归档成功' ? 'SHA256 已校验 · 已归档' : 'SHA256 已校验 · 待归档') + '</small></span><div>' + actionButton('预览', 'view-file', 'view', '', 'data-contract-id="' + item.id + '"') + actionButton('下载', 'download-file', 'download', '', 'data-contract-id="' + item.id + '"') + '</div></div>' : '<div class="trade-contract-file-pending">' + (item.signProgress === '3/3' ? '三方签署已完成，等待关闭任务并下载最终合同' : '等待三方签署完成后生成最终合同') + '</div>') + '</div>'
+            +           '<div class="trade-contract-file-list"><div class="trade-contract-file-row"><span title="' + escapeHtml(item.fileName) + '">' + icon('file') + '<b>原始合同</b>' + escapeHtml(item.fileName) + '<small>' + item.fileSize + '</small></span><div>' + actionButton('预览', 'view-file', 'view', '', 'data-contract-id="' + item.id + '"') + actionButton('下载', 'download-file', 'download', '', 'data-contract-id="' + item.id + '"') + '</div></div>' + (item.finalFileStatus === '下载并校验成功' ? '<div class="trade-contract-file-row"><span>' + icon('file') + '<b>最终合同</b>' + escapeHtml(item.id + '-' + partyLabel + '签署完成.pdf') + '<small>' + (item.archiveStatus === '归档成功' ? 'SHA256 已校验 · 已归档' : 'SHA256 已校验 · 待归档') + '</small></span><div>' + actionButton('预览', 'view-file', 'view', '', 'data-contract-id="' + item.id + '"') + actionButton('下载', 'download-file', 'download', '', 'data-contract-id="' + item.id + '"') + '</div></div>' : '<div class="trade-contract-file-pending">' + (item.signProgress === completeProgress ? partyLabel + '签署已完成，等待关闭任务并下载最终合同' : '等待' + partyLabel + '签署完成后生成最终合同') + '</div>') + '</div>'
             +       '</section>'
             +       '<section class="trade-contract-detail-section">'
             +           '<div class="trade-contract-section-title"><h3>审核及签署记录</h3></div>'

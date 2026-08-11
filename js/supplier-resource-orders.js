@@ -24,13 +24,17 @@
         ['2026071610091902700000101151337', '道路交通运行指标数据', 'API接口', '深圳市龙岗智慧交通有限公司', '110元/次', '10次', 'API传输', '¥1100', '2026-07-16 10:09:19', '交易完成'],
         ['2026071515360705500000101151353', '低空巡检影像数据', '数据集', '龙岗低空科技有限公司', '1500元/份', '1份', '文件传输', '¥1500', '2026-07-15 15:36:07', '交易完成'],
         ['2026071412143608900000101151369', '区域商业活力数据', 'API接口', '深圳市龙岗商业发展有限公司', '100元/次', '8次', 'API传输', '¥800', '2026-07-14 12:14:36', '交易完成']
-    ].map(function (row) {
+    ].map(function (row, index) {
+        var selfOperated = index % 4 === 0;
         return {
             orderNo: row[0],
             orderType: '常规订单',
             name: row[1],
             resourceType: row[2],
             user: row[3],
+            provider: selfOperated ? '深圳市龙岗区数据要素交易服务有限公司' : '深圳市龙岗数智科技有限公司',
+            operationMode: selfOperated ? 'self' : 'thirdParty',
+            partyTotal: selfOperated ? 2 : 3,
             price: row[4],
             quantity: row[5],
             delivery: row[6],
@@ -68,6 +72,14 @@
     records.forEach(function (record) {
         if (contractFlowMeta[record.orderNo]) Object.assign(record, contractFlowMeta[record.orderNo]);
     });
+    if (window.EContractDemoScenarios && window.EContractDemoScenarios.ensureOperationModeCoverage) {
+        records = window.EContractDemoScenarios.ensureOperationModeCoverage(records, {
+            orderPrefix: '31',
+            thirdPartyProvider: '深圳市龙岗数智科技有限公司',
+            requiredStatuses: ['待关联合同', '关联审批中', '关联合同签署中', '待支付', '解除审批中', '已解除关联', '待交付', '待确认交付', '交易完成'],
+            forceSamples: [{ status: '待关联合同', mode: 'self' }]
+        });
+    }
 
     window.SupplierResourceOrderConfig = {
         key: 'resource',

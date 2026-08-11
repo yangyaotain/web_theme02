@@ -81,8 +81,26 @@
         return ACTIVE_ORDER_CONFIG.currentPartyName || (isBuyerCenter() ? CURRENT_BUYER_NAME : CURRENT_SUPPLIER_NAME);
     }
 
+    function getOperationMode(record) {
+        if (record && record.operationMode === 'self') return 'self';
+        if (record && record.operationMode === 'thirdParty') return 'thirdParty';
+        return String(record && record.provider || '') === PLATFORM_OPERATOR_NAME ? 'self' : 'thirdParty';
+    }
+
+    function isSelfOperated(record) {
+        return getOperationMode(record) === 'self';
+    }
+
+    function getContractPartyTotal(record) {
+        return isSelfOperated(record) ? 2 : 3;
+    }
+
+    function getOperationModeLabel(record) {
+        return isSelfOperated(record) ? '自营' : '第三方';
+    }
+
     function getProviderName(record) {
-        return isBuyerCenter() ? String(record && record.provider || '--') : getCurrentPartyName();
+        return String(record && record.provider || getCurrentPartyName() || '--');
     }
 
     function getDemanderName(record) {
@@ -118,8 +136,13 @@
         return '已签署并归档';
     }
 
-    function normalizeSignProgress(value) {
-        var match = String(value || '').match(/\d+\/3/);
+    function normalizeSignProgress(value, record) {
+        var partyTotal = getContractPartyTotal(record);
+        var match = String(value || '').match(/\d+\/\d+/);
+        if (match && isSelfOperated(record)) {
+            var signedCount = Math.min(partyTotal, parseInt(match[0], 10) || 0);
+            return signedCount + '/' + partyTotal;
+        }
         return match ? match[0] : '--';
     }
 
@@ -128,20 +151,22 @@
         var orderNo = String(record && record.orderNo || '');
         var serial = orderNo.slice(-6) || '000001';
         var signed = getSnapshotContractStatus(record) === '已签署并归档';
+        var selfOperated = isSelfOperated(record);
+        var partyLabel = selfOperated ? '双方' : '三方';
         return {
             id: (ACTIVE_ORDER_CONFIG.key === 'resource' ? 'LG-ZY-' : 'LG-C-') + orderNo.slice(0, 8) + '-' + serial,
-            name: String(record && record.name || ACTIVE_ORDER_CONFIG.entityDataLabel) + '三方交易合同',
+            name: String(record && record.name || ACTIVE_ORDER_CONFIG.entityDataLabel) + partyLabel + '交易合同',
             contractStatus: getSnapshotContractStatus(record),
             signedAt: signed ? String(record.appliedAt || '').slice(0, 10) : '--',
             effectiveAt: signed ? String(record.appliedAt || '').slice(0, 10) : '--',
             endsAt: signed ? '2027-08-05' : '--',
             signMethod: record && record.signMode ? record.signMode : '电子签章',
-            signProgress: normalizeSignProgress(record && record.signProgress),
+            signProgress: normalizeSignProgress(record && record.signProgress, record),
             taskId: record && record.taskId ? record.taskId : ('FDD-' + serial),
             taskStatus: record && record.taskStatus ? record.taskStatus : (signed ? '签约任务已关闭' : '签约任务进行中'),
             currentNode: record && record.contractSubStatus ? record.contractSubStatus : '等待合同关联处理',
             source: '订单关联生成',
-            fileName: String(record && record.name || ACTIVE_ORDER_CONFIG.entityDataLabel) + '三方交易合同.pdf',
+            fileName: String(record && record.name || ACTIVE_ORDER_CONFIG.entityDataLabel) + partyLabel + '交易合同.pdf',
             provider: getProviderName(record),
             demander: getDemanderName(record),
             amount: amount,
@@ -149,11 +174,13 @@
             paymentMode: 'once',
             paymentStages: [{ periodNo: 1, periodName: '一次性付款', percent: 100, amount: amount, payStatus: '待发起', outTradeNo: '' }],
             serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
-            serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+            serviceFeeValue: selfOperated ? 0 : CONTRACT_SERVICE_FEE_VALUE,
+            operationMode: getOperationMode(record),
+            partyTotal: getContractPartyTotal(record),
             initiatedAt: record && record.appliedAt ? record.appliedAt : '--',
             remark: '--',
             documentMode: 'template',
-            templateName: ACTIVE_ORDER_CONFIG.contractTemplateName,
+            templateName: selfOperated ? String(ACTIVE_ORDER_CONFIG.contractTemplateName).replace(/三方/g, '双方') : ACTIVE_ORDER_CONFIG.contractTemplateName,
             businessType: ACTIVE_ORDER_CONFIG.contractBusinessType,
             initiatorRole: record && record.initiatorRole ? record.initiatorRole : getCurrentRoleLabel(),
             reviewerRole: record && record.reviewerRole ? record.reviewerRole : '',
@@ -194,7 +221,15 @@
         if (!record) return;
         var stored = readContractSnapshotStore()[getContractSnapshotKey(record.orderNo)];
         if (stored) {
-            record.contractSnapshot = stored;
+            var storedProgress = normalizeSignProgress(stored.signProgressText || stored.signProgress, record);
+            record.contractSnapshot = Object.assign({}, stored, {
+                operationMode: getOperationMode(record),
+                partyTotal: getContractPartyTotal(record),
+                serviceFeeValue: isSelfOperated(record) ? 0 : stored.serviceFeeValue,
+                signProgress: normalizeSignProgress(stored.signProgress, record),
+                signProgressText: storedProgress === '--' ? '--' : storedProgress + ' 已签署'
+            });
+            stored = record.contractSnapshot;
             if (stored.orderStatus) record.status = stored.orderStatus;
             record.primaryAction = stored.primaryAction || '';
             record.signMode = stored.signMethod || record.signMode;
@@ -214,6 +249,7 @@
     function createContractSnapshot(record, values) {
         var currentRole = getCurrentRoleLabel();
         var counterpartyRole = getCounterpartyRoleLabel();
+        var partyTotal = getContractPartyTotal(record);
         var snapshot = Object.assign({}, buildDefaultContractSnapshot(record), {
             id: values.contractNo || buildDefaultContractSnapshot(record).id,
             name: values.contractName || buildDefaultContractSnapshot(record).name,
@@ -222,15 +258,17 @@
             effectiveAt: values.startsAt || '--',
             endsAt: values.endsAt || '--',
             signMethod: values.signing === 'electronic' ? '电子签章' : '线下签署',
-            signProgress: values.signing === 'electronic' ? '0/3' : '--',
+            signProgress: values.signing === 'electronic' ? '0/' + partyTotal : '--',
             taskId: values.taskId || '',
             taskStatus: values.signing === 'electronic' ? '签约任务进行中' : '等待关联确认',
             currentNode: values.signing === 'electronic' ? '签约任务已创建，当前' + currentRole + '待完成签署' : '等待' + counterpartyRole + '确认关联',
-            fileName: values.pendingPdfFile || (values.files && values.files[0]) || ((values.contractName || record.name + '三方交易合同') + '.pdf'),
+            fileName: values.pendingPdfFile || (values.files && values.files[0]) || ((values.contractName || record.name + (isSelfOperated(record) ? '双方' : '三方') + '交易合同') + '.pdf'),
             paymentMode: values.paymentMode || 'once',
             paymentStages: Array.isArray(values.paymentStages) ? values.paymentStages : [],
             serviceFeeMode: values.serviceFeeMode || CONTRACT_SERVICE_FEE_MODE,
-            serviceFeeValue: Number.isFinite(Number(values.serviceFeeValue)) ? Number(values.serviceFeeValue) : CONTRACT_SERVICE_FEE_VALUE,
+            serviceFeeValue: isSelfOperated(record) ? 0 : (Number.isFinite(Number(values.serviceFeeValue)) ? Number(values.serviceFeeValue) : CONTRACT_SERVICE_FEE_VALUE),
+            operationMode: getOperationMode(record),
+            partyTotal: partyTotal,
             initiatedAt: new Date().toLocaleString('zh-CN', { hour12: false }),
             remark: values.remark || '--',
             documentMode: values.documentMode || 'offline-file',
@@ -240,7 +278,7 @@
             currentActor: values.signing === 'electronic' ? currentRole : counterpartyRole,
             orderStatus: values.signing === 'electronic' ? '关联合同签署中' : '关联审批中',
             primaryAction: values.signing === 'electronic' ? '继续签署' : '撤回关联',
-            signProgressText: values.signing === 'electronic' ? '0/3 已签署' : '--',
+            signProgressText: values.signing === 'electronic' ? '0/' + partyTotal + ' 已签署' : '--',
             contractSubStatus: values.signing === 'electronic'
                 ? '签约任务已创建，当前' + currentRole + '待完成签署'
                 : currentRole + '已提交线下合同，等待' + counterpartyRole + '确认关联'
@@ -252,7 +290,7 @@
         if (!record || !record.contractSnapshot) return;
         var snapshot = Object.assign({}, record.contractSnapshot, {
             contractStatus: getSnapshotContractStatus(record),
-            signProgress: normalizeSignProgress(record.signProgress),
+            signProgress: normalizeSignProgress(record.signProgress, record),
             taskId: record.taskId || record.contractSnapshot.taskId,
             taskStatus: record.taskStatus || record.contractSnapshot.taskStatus,
             currentNode: record.contractSubStatus || record.contractSnapshot.currentNode,
@@ -266,7 +304,7 @@
         });
         if (snapshot.contractStatus === '已签署并归档') {
             snapshot.signedAt = record.lastSignCallbackAt || snapshot.signedAt || String(record.appliedAt || '').slice(0, 10);
-            snapshot.signProgress = '3/3';
+            snapshot.signProgress = getContractPartyTotal(record) + '/' + getContractPartyTotal(record);
         }
         persistContractSnapshot(record, snapshot);
     }
@@ -567,11 +605,22 @@
         '2026070314261807300000101149225': { signMode: '电子签章', initiatorRole: '需求方', reviewerRole: '提供方', contractSubStatus: '审核通过，待完成签署', signProgress: '1/3 已签署', taskId: 'FDD-20260703149225', primaryAction: '继续签署' }
     };
 
-    ORDER_RECORDS.forEach(function (item) {
+    ORDER_RECORDS.forEach(function (item, index) {
+        var selfOperated = index % 4 === 0;
+        item.operationMode = selfOperated ? 'self' : 'thirdParty';
+        item.partyTotal = selfOperated ? 2 : 3;
+        item.provider = selfOperated ? PLATFORM_OPERATOR_NAME : CURRENT_SUPPLIER_NAME;
         if (ELECTRONIC_CONTRACT_META[item.orderNo]) Object.assign(item, ELECTRONIC_CONTRACT_META[item.orderNo]);
     });
     if (window.EContractDemoScenarios) {
         ORDER_RECORDS = window.EContractDemoScenarios.getOrders('supplier', 'product').concat(ORDER_RECORDS);
+    }
+    if (window.EContractDemoScenarios && window.EContractDemoScenarios.ensureOperationModeCoverage) {
+        ORDER_RECORDS = window.EContractDemoScenarios.ensureOperationModeCoverage(ORDER_RECORDS, {
+            orderPrefix: '32',
+            thirdPartyProvider: CURRENT_SUPPLIER_NAME,
+            requiredStatuses: ['待关联合同', '关联审批中', '关联合同签署中', '待支付', '解除审批中', '已解除关联', '待交付', '待确认交付', '交易完成']
+        });
     }
 
     function applyElectronicSignResult(record, result, role) {
@@ -586,10 +635,12 @@
             return role + '已拒绝签署，本次签约任务已停止。';
         }
 
-        var targetCount = Math.min(3, (parseInt(record.signProgress, 10) || 0) + 1);
-        record.signProgress = targetCount + '/3 已签署';
+        var partyTotal = getContractPartyTotal(record);
+        var partyLabel = isSelfOperated(record) ? '双方' : '三方';
+        var targetCount = Math.min(partyTotal, (parseInt(record.signProgress, 10) || 0) + 1);
+        record.signProgress = targetCount + '/' + partyTotal + ' 已签署';
         record.lastSignCallbackAt = result.processedAt;
-        if (targetCount < 3) {
+        if (targetCount < partyTotal) {
             record.status = '关联合同签署中';
             record.reviewerRole = '';
             record.currentActor = '其他未签署方';
@@ -601,11 +652,11 @@
         record.status = '待支付';
         record.reviewerRole = '';
         record.currentActor = '需求方';
-        record.contractSubStatus = '三方签署完成，最终合同已归档，等待需求方支付';
+        record.contractSubStatus = partyLabel + '签署完成，最终合同已归档，等待需求方支付';
         record.taskStatus = '签约任务已关闭并归档';
         record.primaryAction = '';
         syncContractSnapshotFromRecord(record);
-        return role + '签署成功回调已确认，三方合同已归档，订单进入待支付。';
+        return role + '签署成功回调已确认，' + partyLabel + '合同已归档，订单进入待支付。';
     }
 
     var ACTIONS_BY_STATUS = {
@@ -681,6 +732,21 @@
 
     function ensureOrderSignModes(records) {
         records.forEach(function (item, index) {
+            item.operationMode = getOperationMode(item);
+            item.partyTotal = getContractPartyTotal(item);
+            if (isSelfOperated(item) && !item.provider) item.provider = PLATFORM_OPERATOR_NAME;
+            if (isSelfOperated(item) && item.signProgress) {
+                item.signProgress = String(item.signProgress).replace(/(\d+)\/\d+/, function (_, count) {
+                    return Math.min(2, Number(count) || 0) + '/2';
+                });
+                item.contractSubStatus = String(item.contractSubStatus || '').replace(/三方/g, '双方');
+                item.taskStatus = String(item.taskStatus || '').replace(/三方/g, '双方');
+                if (item.reviewerRole === '平台运营方') {
+                    item.reviewerRole = getCounterpartyRoleLabel();
+                    item.currentActor = getCounterpartyRoleLabel();
+                    item.contractSubStatus = '当前' + getCounterpartyRoleLabel() + '待审核并签署';
+                }
+            }
             if (!item.signMode && hasAssociatedContract(item)) {
                 item.signMode = index % 2 === 0 ? '电子签章' : '线下签署';
             }
@@ -715,6 +781,14 @@
             minimumFractionDigits: Number(value || 0) % 1 ? 2 : 0,
             maximumFractionDigits: 2
         });
+    }
+
+    function formatPaymentProgress(item) {
+        var totalAmount = parseMoney(item.amount);
+        var paidAmount = item.paidAmount != null && Number.isFinite(Number(item.paidAmount))
+            ? Math.min(totalAmount, Math.max(0, Number(item.paidAmount)))
+            : (['待交付', '待确认交付', '交易完成'].indexOf(item.status) !== -1 ? totalAmount : 0);
+        return '￥' + paidAmount.toFixed(2) + '/￥' + totalAmount.toFixed(2);
     }
 
     function getMeasureMode(price) {
@@ -835,30 +909,33 @@
     function buildContractDetail(item, source, amountValue) {
         if (item.status === '待关联合同' || item.hasContract === false) return null;
 
+        var selfOperated = isSelfOperated(item);
+        var partyTotal = getContractPartyTotal(item);
+        var partyLabel = selfOperated ? '双方' : '三方';
         var contract;
         if (source) {
             contract = {
-                name: source.name,
+                name: String(source.name || item.name + partyLabel + '交易合同').replace(selfOperated ? /三方/g : /$^/, '双方'),
                 number: source.id,
                 status: source.contractStatus,
                 signedAt: source.signedAt,
                 effectiveAt: source.effectiveAt,
                 endsAt: source.endsAt,
                 signMethod: source.signMethod,
-                signProgress: source.signProgress,
+                signProgress: normalizeSignProgress(source.signProgress, item),
                 taskId: source.taskId,
                 taskStatus: source.taskStatus,
-                currentNode: source.currentNode,
+                currentNode: String(source.currentNode || '').replace(selfOperated ? /三方/g : /$^/, '双方'),
                 source: source.source,
-                fileName: source.fileName,
-                provider: source.provider,
+                fileName: String(source.fileName || item.name + partyLabel + '交易合同.pdf').replace(selfOperated ? /三方/g : /$^/, '双方'),
+                provider: selfOperated ? PLATFORM_OPERATOR_NAME : (source.provider || getProviderName(item)),
                 demander: source.demander,
-                operator: PLATFORM_OPERATOR_NAME,
+                operator: selfOperated ? '' : PLATFORM_OPERATOR_NAME,
                 amount: Number(source.contractAmount || source.amount || amountValue),
                 paymentMode: source.paymentMode,
                 paymentStages: source.paymentStages || [],
                 serviceFeeMode: source.serviceFeeMode,
-                serviceFeeValue: source.serviceFeeValue,
+                serviceFeeValue: selfOperated ? 0 : source.serviceFeeValue,
                 initiatedAt: source.initiatedAt,
                 completedAt: source.signedAt,
                 remark: source.remark || '--',
@@ -869,27 +946,27 @@
             var serial = String(item.orderNo || '').slice(-6);
             var signed = getDetailStepIndex(item.status) >= 2;
             contract = {
-                name: item.name + '三方交易合同',
+                name: item.name + partyLabel + '交易合同',
                 number: (ACTIVE_ORDER_CONFIG.key === 'resource' ? 'LG-ZY-' : 'LG-C-') + String(item.orderNo || '').slice(0, 8) + '-' + serial,
                 status: item.status === '已解除关联' ? '已解除关联' : (signed ? '已签署并归档' : '关联审批中'),
                 signedAt: signed ? String(item.appliedAt || '').slice(0, 10) : '--',
                 effectiveAt: signed ? String(item.appliedAt || '').slice(0, 10) : '--',
                 endsAt: signed ? '2027-07-07' : '--',
                 signMethod: item.signMode || '电子签章',
-                signProgress: signed ? '3/3' : (item.signProgress || '1/3'),
+                signProgress: signed ? partyTotal + '/' + partyTotal : normalizeSignProgress(item.signProgress || '1/' + partyTotal, item),
                 taskId: item.taskId || ('FDD-' + serial),
                 taskStatus: signed ? '签约任务已关闭' : (item.taskStatus || '签约任务进行中'),
-                currentNode: item.contractSubStatus || (signed ? '三方签署完成并归档' : '等待关联审批'),
+                currentNode: String(item.contractSubStatus || (signed ? partyLabel + '签署完成并归档' : '等待关联审批')).replace(selfOperated ? /三方/g : /$^/, '双方'),
                 source: '订单关联生成',
-                fileName: item.name + '三方交易合同.pdf',
+                fileName: item.name + partyLabel + '交易合同.pdf',
                 provider: getProviderName(item),
                 demander: getDemanderName(item),
-                operator: PLATFORM_OPERATOR_NAME,
+                operator: selfOperated ? '' : PLATFORM_OPERATOR_NAME,
                 amount: amountValue,
                 paymentMode: 'once',
                 paymentStages: [],
                 serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
-                serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+                serviceFeeValue: selfOperated ? 0 : CONTRACT_SERVICE_FEE_VALUE,
                 initiatedAt: item.appliedAt,
                 completedAt: signed ? item.appliedAt : '--',
                 remark: '--',
@@ -897,6 +974,11 @@
                 reviewerRole: item.reviewerRole || getCounterpartyRoleLabel()
             };
         }
+
+        contract.operationMode = selfOperated ? 'self' : 'thirdParty';
+        contract.partyTotal = partyTotal;
+        contract.partyLabel = partyLabel;
+        contract.selfOperated = selfOperated;
 
         if (item.orderNo === DETAIL_SAMPLE_ORDER_NO) {
             contract.name = '产业招商线索分析数据集三方交易合同';
@@ -939,7 +1021,8 @@
             ? bill.paymentStages
             : (contract && Array.isArray(contract.paymentStages) && contract.paymentStages.length ? contract.paymentStages : []);
         var serviceFeeMode = bill ? bill.serviceFeeMode : (contract ? contract.serviceFeeMode : CONTRACT_SERVICE_FEE_MODE);
-        var serviceFeeValue = Number(bill ? bill.serviceFeeValue : (contract ? contract.serviceFeeValue : CONTRACT_SERVICE_FEE_VALUE)) || 0;
+        var selfOperated = isSelfOperated(item);
+        var serviceFeeValue = selfOperated ? 0 : (Number(bill ? bill.serviceFeeValue : (contract ? contract.serviceFeeValue : CONTRACT_SERVICE_FEE_VALUE)) || 0);
         var paymentMode = bill ? bill.payMode : (contract && contract.paymentMode === 'installment' ? '分期付款' : '一次性付款');
         var completed = item.status === '交易完成' || item.status === '待交付' || item.status === '待确认交付';
         if (!sourceStages.length) {
@@ -965,7 +1048,7 @@
             var status = stage.status || stage.payStatus || '待发起';
             var payment = stage.payment || null;
             var paid = Boolean(payment) || status === '已支付' || status === '支付成功';
-            var fee = payment && payment.split ? parseMoney(payment.split.fee) : (serviceFeeMode === 'P' ? stageAmount * serviceFeeValue / 100 : serviceFeeValue);
+            var fee = selfOperated ? 0 : (payment && payment.split ? parseMoney(payment.split.fee) : (serviceFeeMode === 'P' ? stageAmount * serviceFeeValue / 100 : serviceFeeValue));
             var netAmount = payment && payment.split ? parseMoney(payment.split.netAmount) : Math.max(0, stageAmount - fee);
             expectedFee += fee;
             if (paid) receivedAmount += stageAmount;
@@ -981,7 +1064,7 @@
                 paidAt: payment ? payment.paidAt : (bill && bill.paidAt && bill.paidAt !== '--' ? bill.paidAt : '--'),
                 fee: fee,
                 netAmount: netAmount,
-                splitStatus: payment && payment.split ? payment.split.status : (paid ? '待分账' : '--')
+                splitStatus: selfOperated ? '不适用' : (payment && payment.split ? payment.split.status : (paid ? '待分账' : '--'))
             };
         });
 
@@ -992,7 +1075,7 @@
                 role: '统一支付平台',
                 type: '支付到账',
                 result: '成功',
-                content: isBuyerCenter() ? row.name + '已完成支付' : row.name + '已完成支付并进入分账处理',
+                content: isBuyerCenter() || selfOperated ? row.name + '已完成支付' : row.name + '已完成支付并进入分账处理',
                 time: row.paidAt
             });
         });
@@ -1009,6 +1092,7 @@
             serviceFeeValue: serviceFeeValue,
             serviceFee: expectedFee,
             netAmount: Math.max(0, amountValue - expectedFee),
+            selfOperated: selfOperated,
             rows: rows,
             logs: logs
         };
@@ -1031,8 +1115,10 @@
         return {
             item: item,
             amountValue: amountValue,
-            provider: sourceContract ? sourceContract.provider : getProviderName(item),
-            operator: PLATFORM_OPERATOR_NAME,
+            provider: contract ? contract.provider : getProviderName(item),
+            operator: isSelfOperated(item) ? '' : PLATFORM_OPERATOR_NAME,
+            operationMode: getOperationMode(item),
+            selfOperated: isSelfOperated(item),
             measureMode: getMeasureMode(item.price),
             stepIndex: getDetailStepIndex(item.status),
             application: buildApplicationDetail(item),
@@ -1210,6 +1296,12 @@
             item.delivery,
             formatMoney(detail.amountValue)
         ]];
+        var partyItems = [
+            { label: '经营属性', value: detail.selfOperated ? '自营' : '第三方' },
+            { label: '需求方', value: getDemanderName(item) },
+            { label: '提供方', value: detail.provider }
+        ];
+        if (!detail.selfOperated) partyItems.push({ label: '平台运营方', value: detail.operator, full: true });
         return ''
             + renderDetailSection('基本信息', renderDetailInfoGrid([
                 { label: '订单编号', html: renderCopyValue(item.orderNo) },
@@ -1220,11 +1312,7 @@
                 { label: '支付状态', value: paymentStatus }
             ]))
             + paymentOverview
-            + renderDetailSection('交易主体信息', renderDetailInfoGrid([
-                { label: '需求方', value: getDemanderName(item) },
-                { label: '提供方', value: detail.provider },
-                { label: '平台运营方', value: detail.operator, full: true }
-            ], 'is-party-grid'))
+            + renderDetailSection('交易主体信息', renderDetailInfoGrid(partyItems, 'is-party-grid'))
             + renderDetailSection(ACTIVE_ORDER_CONFIG.entityLabel + '信息', renderDetailTable(
                 [ACTIVE_ORDER_CONFIG.entityLabel + '名称', ACTIVE_ORDER_CONFIG.typeLabel, '计量方式', '价格', '数量', '交付方式', '金额'],
                 productRows,
@@ -1273,6 +1361,8 @@
             + renderDetailSection('合同信息', renderDetailInfoGrid([
                 { label: '合同名称', value: contract.name },
                 { label: '合同编号', html: renderCopyValue(contract.number) },
+                { label: '合同类型', value: ACTIVE_ORDER_CONFIG.entityDataLabel + contract.partyLabel + '交易合同' },
+                { label: '经营属性', value: contract.selfOperated ? '自营' : '第三方' },
                 { label: '签署时间', value: contract.signedAt },
                 { label: '合同状态', html: statusHtml },
                 { label: '合同文件', html: fileHtml, full: true }
@@ -1299,12 +1389,17 @@
                 + '<div><span>待付金额</span><strong>' + formatMoney(Math.max(0, payment.orderAmount - payment.receivedAmount)) + '</strong><small>按合同付款计划执行</small></div>'
                 + '<div><span>付款状态</span><strong>' + escapeHtml(payment.status) + '</strong><small>支付结果以统一支付平台为准</small></div>'
                 + '</div>'
-            : '<div class="supplier-order-payment-summary">'
+            : (payment.selfOperated ? '<div class="supplier-order-payment-summary">'
+                + '<div><span>订单金额</span><strong>' + formatMoney(payment.orderAmount) + '</strong><small>' + escapeHtml(payment.paymentMode) + '</small></div>'
+                + '<div><span>已收金额</span><strong>' + formatMoney(payment.receivedAmount) + '</strong><small>' + escapeHtml(payment.status) + '</small></div>'
+                + '<div><span>待收金额</span><strong>' + formatMoney(Math.max(0, payment.orderAmount - payment.receivedAmount)) + '</strong><small>自营交易无需平台服务费</small></div>'
+                + '<div><span>预计收款</span><strong>' + formatMoney(payment.netAmount) + '</strong><small>运营方统一收款，不发起对外分账</small></div>'
+                + '</div>' : '<div class="supplier-order-payment-summary">'
                 + '<div><span>订单金额</span><strong>' + formatMoney(payment.orderAmount) + '</strong><small>' + escapeHtml(payment.paymentMode) + '</small></div>'
                 + '<div><span>已收金额</span><strong>' + formatMoney(payment.receivedAmount) + '</strong><small>' + escapeHtml(payment.status) + '</small></div>'
                 + '<div><span>平台服务费</span><strong>' + formatMoney(payment.serviceFee) + '</strong><small>' + escapeHtml(feeRule) + '</small></div>'
                 + '<div><span>提供方预计净收</span><strong>' + formatMoney(payment.netAmount) + '</strong><small>订单金额扣除平台服务费</small></div>'
-                + '</div>';
+                + '</div>');
         var rows = payment.rows.map(function (row) {
             return [
                 row.index,
@@ -1325,7 +1420,7 @@
         });
         return ''
             + renderDetailSection('支付信息', cards)
-            + renderDetailSection(isBuyerCenter() ? '付款明细' : '付款与分账明细', isBuyerCenter()
+            + renderDetailSection(isBuyerCenter() || payment.selfOperated ? '付款明细' : '付款与分账明细', isBuyerCenter() || payment.selfOperated
                 ? renderDetailTable(
                     ['期次', '付款节点', '比例', '应付金额', '支付状态', '支付流水号', '支付方式', '支付时间'],
                     buyerRows,
@@ -1493,10 +1588,10 @@
             ? '按每笔付款金额的 ' + contract.serviceFeeValue + '% 收取'
             : '每笔付款固定收取 ' + formatMoney(contract.serviceFeeValue);
         var signerRows = [
-            ['法人', '提供方', contract.provider, contract.signProgress === '3/3' ? '已签署' : '处理中'],
-            ['法人', '需求方', contract.demander, contract.signProgress === '3/3' ? '已签署' : '处理中'],
-            ['法人', '平台运营方', contract.operator, contract.signProgress === '3/3' ? '已签署' : '待签署']
+            ['法人', '提供方', contract.provider, contract.signProgress === contract.partyTotal + '/' + contract.partyTotal ? '已签署' : '处理中'],
+            ['法人', '需求方', contract.demander, contract.signProgress === contract.partyTotal + '/' + contract.partyTotal ? '已签署' : '处理中']
         ];
+        if (!contract.selfOperated) signerRows.push(['法人', '平台运营方', contract.operator, contract.signProgress === '3/3' ? '已签署' : '待签署']);
         return ''
             + '<div class="supplier-contract-drawer-mask supplier-order-relation-mask" data-supplier-order-relation-layer data-supplier-order-relation-close></div>'
             + '<aside class="supplier-contract-drawer supplier-order-relation-drawer" role="dialog" aria-modal="true" aria-labelledby="supplierOrderRelationTitle" data-supplier-order-relation-layer>'
@@ -1506,7 +1601,8 @@
             +   '</header>'
             +   '<div class="supplier-contract-drawer-body">'
             +       renderDetailSection('关联信息', renderDetailInfoGrid([
-                        { label: '业务类型', value: '三方合同关联' },
+                        { label: '业务类型', value: contract.partyLabel + '合同关联' },
+                        { label: '经营属性', value: contract.selfOperated ? '自营' : '第三方' },
                         { label: '关联状态', value: contract.status },
                         { label: '发起方', value: initiatorParty },
                         { label: '发起时间', value: contract.initiatedAt },
@@ -1522,11 +1618,11 @@
                         { label: '合同签署方式', value: contract.signMethod },
                         { label: '签署时间', value: contract.signedAt },
                         { label: '签约任务编号', html: renderCopyValue(contract.taskId) },
-                        { label: '三方签署进度', value: contract.signProgress }
+                        { label: contract.partyLabel + '签署进度', value: contract.signProgress }
                     ]))
             +       renderDetailSection('合同文件', '<div class="supplier-order-detail-file"><span>' + materialIcon('description') + '<span>' + escapeHtml(contract.fileName) + '</span></span><button type="button" data-supplier-order-demo-action="合同预览">' + materialIcon('visibility') + '<span>预览</span></button><button type="button" data-supplier-order-demo-action="合同下载">' + materialIcon('download') + '<span>下载</span></button></div>')
             +       renderDetailSection('签署主体', renderDetailTable(['主体类型', '签署方角色', '签署方名称', '签署状态'], signerRows, 'is-signer-table'))
-            +       renderDetailSection(isBuyerCenter() ? '付款条款' : '付款与分账条款', '<div class="supplier-order-relation-payment"><div><span>合同金额</span><strong>' + formatMoney(contract.amount) + '</strong></div><div><span>付款方式</span><strong>' + (contract.paymentMode === 'installment' ? '分期付款' : '一次性付款') + '</strong></div><div><span>平台服务费</span><strong>' + escapeHtml(feeRule) + '</strong></div></div>')
+            +       renderDetailSection(isBuyerCenter() || contract.selfOperated ? '付款条款' : '付款与分账条款', '<div class="supplier-order-relation-payment"><div><span>合同金额</span><strong>' + formatMoney(contract.amount) + '</strong></div><div><span>付款方式</span><strong>' + (contract.paymentMode === 'installment' ? '分期付款' : '一次性付款') + '</strong></div>' + (contract.selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong></div>' : '<div><span>平台服务费</span><strong>' + escapeHtml(feeRule) + '</strong></div>') + '</div>')
             +       renderDetailSection('关联日志', renderDetailLogs(contract.logs, true))
             +   '</div>'
             + '</aside>';
@@ -1584,6 +1680,7 @@
             keywordDraft: '',
             orderType: '全部订单类型',
             productType: ACTIVE_ORDER_CONFIG.allTypeLabel,
+            operationMode: 'all',
             page: 1,
             pageSize: 10,
             filterOpen: false,
@@ -1985,12 +2082,11 @@
                     : '每笔付款固定收取 ' + formatMoney(payment.serviceFeeValue);
                 paymentTerms = ''
                     + '<section class="supplier-contract-approval-section">'
-                    +   '<div class="supplier-contract-approval-heading"><h3>付款与分账条款</h3></div>'
+                    +   '<div class="supplier-contract-approval-heading"><h3>' + (payment.selfOperated ? '付款条款' : '付款与分账条款') + '</h3></div>'
                     +   '<div class="supplier-order-relation-payment supplier-contract-unlink-payment">'
                     +       '<div><span>合同金额</span><strong>' + formatMoney(payment.orderAmount) + '</strong></div>'
                     +       '<div><span>付款方式</span><strong>' + escapeHtml(payment.paymentMode) + '</strong></div>'
-                    +       '<div><span>平台服务费</span><strong>' + escapeHtml(feeRule) + '</strong></div>'
-                    +       '<div><span>提供方预计实收</span><strong>' + formatMoney(payment.netAmount) + '</strong></div>'
+                    +       (payment.selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong></div>' : '<div><span>平台服务费</span><strong>' + escapeHtml(feeRule) + '</strong></div><div><span>提供方预计实收</span><strong>' + formatMoney(payment.netAmount) + '</strong></div>')
                     +   '</div>'
                     + '</section>';
             }
@@ -2014,6 +2110,7 @@
                 +                   '<div><span>合同签署方式：</span><strong>' + escapeHtml(contract.signMethod) + '</strong></div>'
                 +                   '<div><span>签署时间：</span><strong>' + escapeHtml(contract.signedAt) + '</strong></div>'
                 +                   '<div><span>合同来源：</span><strong>' + escapeHtml(contract.source || '--') + '</strong></div>'
+                +                   '<div><span>经营属性：</span><strong>' + (contract.selfOperated ? '自营' : '第三方') + '</strong></div>'
                 +                   '<div class="is-full"><span>备注：</span><strong>' + escapeHtml(contract.remark || '--') + '</strong></div>'
                 +               '</div>'
                 +           '</section>'
@@ -2032,7 +2129,7 @@
                 +                   '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span></div>'
                 +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span>' + escapeHtml(contract.provider) + '</span></div>'
                 +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span>' + escapeHtml(contract.demander) + '</span></div>'
-                +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span>深圳市龙岗区数据要素交易服务有限公司</span></div>'
+                +                   (contract.selfOperated ? '' : '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span>深圳市龙岗区数据要素交易服务有限公司</span></div>')
                 +               '</div>'
                 +           '</section>'
                 +           paymentTerms
@@ -2341,6 +2438,7 @@
                 if (state.tab !== '全部' && item.status !== state.tab) return false;
                 if (state.orderType !== '全部订单类型' && item.orderType !== state.orderType) return false;
                 if (state.productType !== ACTIVE_ORDER_CONFIG.allTypeLabel && getItemType(item) !== state.productType) return false;
+                if (state.operationMode !== 'all' && getOperationMode(item) !== state.operationMode) return false;
                 if (!keyword) return true;
                 var searchable = [item.orderNo, item.name, getCounterpartyName(item)].join(' ').toLowerCase();
                 return searchable.indexOf(keyword) !== -1;
@@ -2367,6 +2465,11 @@
                 +   '<select data-supplier-order-product-type aria-label="' + escapeHtml(ACTIVE_ORDER_CONFIG.typeLabel) + '">'
                 +       '<option>' + escapeHtml(ACTIVE_ORDER_CONFIG.allTypeLabel) + '</option>'
                 +       typeOptions
+                +   '</select>'
+                +   '<select data-supplier-order-operation-mode aria-label="经营属性">'
+                +       '<option value="all"' + (state.operationMode === 'all' ? ' selected' : '') + '>全部经营属性</option>'
+                +       '<option value="self"' + (state.operationMode === 'self' ? ' selected' : '') + '>自营</option>'
+                +       '<option value="thirdParty"' + (state.operationMode === 'thirdParty' ? ' selected' : '') + '>第三方</option>'
                 +   '</select>'
                 +   '<button class="supplier-order-filter-reset" type="button" data-supplier-order-reset>' + icon('reset') + '<span>重置</span></button>'
                 + '</div>';
@@ -2407,13 +2510,13 @@
                     + '<tr' + (item.demoMode ? ' class="is-contract-demo"' : '') + '>'
                     +   '<td title="' + escapeHtml(item.orderNo) + '">' + escapeHtml(item.orderNo) + '</td>'
                     +   '<td>' + escapeHtml(item.orderType) + '</td>'
-                    +   '<td class="supplier-order-ellipsis" title="' + escapeHtml(item.name) + '">' + escapeHtml(item.name) + '</td>'
+                    +   '<td class="supplier-order-ellipsis" title="' + escapeHtml(item.name) + '"><span class="supplier-order-name-with-badge"><span>' + escapeHtml(item.name) + '</span><span class="supplier-order-operation-badge is-' + escapeHtml(getOperationMode(item)) + '">' + escapeHtml(getOperationModeLabel(item)) + '</span></span></td>'
                     +   '<td>' + escapeHtml(getItemType(item)) + '</td>'
                     +   '<td class="supplier-order-ellipsis" title="' + escapeHtml(getCounterpartyName(item)) + '">' + escapeHtml(getCounterpartyName(item)) + '</td>'
                     +   '<td>' + escapeHtml(item.price) + '</td>'
                     +   '<td>' + escapeHtml(item.quantity) + '</td>'
                     +   '<td>' + escapeHtml(item.delivery) + '</td>'
-                    +   '<td>' + escapeHtml(item.amount) + '</td>'
+                    +   '<td>' + escapeHtml(formatPaymentProgress(item)) + '</td>'
                     +   '<td>' + escapeHtml(item.appliedAt) + '</td>'
                     +   '<td class="order-status-cell"><div class="supplier-order-status-stack"><span class="supplier-order-status' + muted + '">' + escapeHtml(item.status) + '</span>'
                     +       renderSignModeBadge(item)
@@ -2463,7 +2566,7 @@
                 +           '</colgroup>'
                 +           '<thead><tr>'
                 +               '<th>订单编号</th><th>订单类型</th><th>' + escapeHtml(ACTIVE_ORDER_CONFIG.entityLabel) + '名称</th><th>' + escapeHtml(ACTIVE_ORDER_CONFIG.typeLabel) + '</th><th>' + escapeHtml(ACTIVE_ORDER_CONFIG.counterpartyLabel) + '</th><th>价格</th>'
-                +               '<th>数量</th><th>交付方式</th><th>实支付/应支付</th><th>申请时间</th>'
+                +               '<th>数量</th><th>交付方式</th><th>已支付/应支付</th><th>申请时间</th>'
                 +               '<th class="order-status-cell">交易状态</th><th class="order-action-cell">操作</th>'
                 +           '</tr></thead>'
                 +           '<tbody>' + renderRows(pageRecords) + '</tbody>'
@@ -2669,12 +2772,23 @@
                 });
             }
 
+            var operationMode = panel.querySelector('[data-supplier-order-operation-mode]');
+            if (operationMode) {
+                operationMode.value = state.operationMode;
+                operationMode.addEventListener('change', function () {
+                    applyKeyword();
+                    state.operationMode = this.value;
+                    render();
+                });
+            }
+
             var resetButton = panel.querySelector('[data-supplier-order-reset]');
             if (resetButton) {
                 resetButton.addEventListener('click', function () {
                     applyKeyword();
                     state.orderType = '全部订单类型';
                     state.productType = ACTIVE_ORDER_CONFIG.allTypeLabel;
+                    state.operationMode = 'all';
                     render();
                 });
             }
@@ -2752,6 +2866,8 @@
                         var approvalOrderNo = this.dataset.supplierOrderNo;
                         var approvalRecord = records.find(function (item) { return item.orderNo === approvalOrderNo; });
                         var approvalSnapshot = approvalRecord && approvalRecord.contractSnapshot;
+                        var approvalSelfOperated = approvalRecord && isSelfOperated(approvalRecord);
+                        var approvalPartyTotal = approvalRecord ? getContractPartyTotal(approvalRecord) : 3;
                         window.SupplierContractApproval.open({
                             orderNo: approvalOrderNo,
                             provider: approvalRecord ? getProviderName(approvalRecord) : '',
@@ -2760,8 +2876,10 @@
                             amount: approvalRecord ? approvalRecord.amount : '',
                             appliedAt: approvalRecord ? approvalRecord.appliedAt : '',
                             businessType: ACTIVE_ORDER_CONFIG.contractBusinessType,
+                            operationMode: approvalRecord ? getOperationMode(approvalRecord) : 'thirdParty',
+                            partyTotal: approvalPartyTotal,
                             serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
-                            serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+                            serviceFeeValue: approvalSelfOperated ? 0 : CONTRACT_SERVICE_FEE_VALUE,
                             signing: approvalRecord && approvalRecord.signMode ? approvalRecord.signMode : '电子签章',
                             initiatorRole: approvalRecord && approvalRecord.initiatorRole,
                             reviewerRole: approvalRecord && approvalRecord.reviewerRole,
@@ -2781,7 +2899,7 @@
                             paymentMode: approvalSnapshot && approvalSnapshot.paymentMode,
                             paymentStages: approvalSnapshot && approvalSnapshot.paymentStages,
                             serviceFeeMode: approvalSnapshot && approvalSnapshot.serviceFeeMode || CONTRACT_SERVICE_FEE_MODE,
-                            serviceFeeValue: approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : CONTRACT_SERVICE_FEE_VALUE,
+                            serviceFeeValue: approvalSelfOperated ? 0 : (approvalSnapshot && approvalSnapshot.serviceFeeValue != null ? approvalSnapshot.serviceFeeValue : CONTRACT_SERVICE_FEE_VALUE),
                             sourceMenu: ACTIVE_ORDER_CONFIG.menu,
                             returnUrl: buildSignReturnUrl(approvalOrderNo),
                             signUrl: approvalSnapshot && approvalSnapshot.signUrl,
@@ -2799,7 +2917,7 @@
                                             approvalRecord.status = '待支付';
                                             approvalRecord.taskStatus = '线下合同关联已确认';
                                             approvalRecord.contractSubStatus = '线下合同关联已确认，等待需求方支付';
-                                            approvalRecord.signProgress = '3/3 已签署';
+                                            approvalRecord.signProgress = approvalPartyTotal + '/' + approvalPartyTotal + ' 已签署';
                                             approvalRecord.primaryAction = '';
                                             approvalRecord.currentActor = '需求方';
                                         }
@@ -2828,6 +2946,9 @@
                     if ((action === '关联合同' || action === '重新关联合同') && window.SupplierContractDrawer) {
                         var orderNo = this.dataset.supplierOrderNo;
                         var record = records.find(function (item) { return item.orderNo === orderNo; });
+                        var selfOperated = record && isSelfOperated(record);
+                        var partyTotal = record ? getContractPartyTotal(record) : 3;
+                        var partyLabel = selfOperated ? '双方' : '三方';
                         window.SupplierContractDrawer.open({
                             orderNo: orderNo,
                             provider: record ? getProviderName(record) : '',
@@ -2835,9 +2956,11 @@
                             itemName: record ? record.name : '',
                             amount: record ? record.amount : '',
                             serviceFeeMode: CONTRACT_SERVICE_FEE_MODE,
-                            serviceFeeValue: CONTRACT_SERVICE_FEE_VALUE,
+                            serviceFeeValue: selfOperated ? 0 : CONTRACT_SERVICE_FEE_VALUE,
                             appliedAt: record ? record.appliedAt : '',
                             businessType: ACTIVE_ORDER_CONFIG.contractBusinessType,
+                            operationMode: record ? getOperationMode(record) : 'thirdParty',
+                            partyTotal: partyTotal,
                             templateName: ACTIVE_ORDER_CONFIG.contractTemplateName,
                             demoMode: Boolean(record && record.demoMode),
                             esignUnavailableDemo: Boolean(record && record.esignUnavailableDemo),
@@ -2853,14 +2976,14 @@
                                     record.initiatorRole = getCurrentRoleLabel();
                                     record.reviewerRole = getCurrentRoleLabel();
                                     record.currentActor = getCurrentRoleLabel();
-                                    record.contractSubStatus = '法大大任务已创建，三方可独立签署；当前' + getCurrentRoleLabel() + '待签署';
-                                    record.signProgress = '0/3 已签署';
+                                    record.contractSubStatus = '法大大任务已创建，' + partyLabel + '可独立签署；当前' + getCurrentRoleLabel() + '待签署';
+                                    record.signProgress = '0/' + partyTotal + ' 已签署';
                                     record.taskId = values.taskId || ('FDD-' + String(record.orderNo).slice(-14));
                                     record.taskStatus = '签约任务进行中';
                                     record.primaryAction = '继续签署';
                                     syncContractSnapshotFromRecord(record);
                                     render();
-                                    showToast('法大大签约任务已创建，三方可分别进入法大大完成签署。');
+                                    showToast('法大大签约任务已创建，' + partyLabel + '可分别进入法大大完成签署。');
                                     return;
                                 }
                                 record.status = '关联审批中';
@@ -2896,7 +3019,7 @@
                             var signSnapshot = signRecord.contractSnapshot || buildDefaultContractSnapshot(signRecord);
                             var signLaunchResult = window.FadadaSignDemo.open({
                                 taskId: signRecord.taskId,
-                                contractName: signSnapshot.name || (signRecord.name + '三方交易合同'),
+                                contractName: signSnapshot.name || (signRecord.name + (isSelfOperated(signRecord) ? '双方' : '三方') + '交易合同'),
                                 contractNo: signSnapshot.id || '',
                                 orderNo: signRecord.orderNo,
                                 role: signRecord.reviewerRole || '提供方',
@@ -2905,6 +3028,8 @@
                                     : (signRecord.reviewerRole === '需求方' ? getDemanderName(signRecord) : getProviderName(signRecord)),
                                 node: action,
                                 businessType: ACTIVE_ORDER_CONFIG.contractBusinessType,
+                                operationMode: getOperationMode(signRecord),
+                                partyTotal: getContractPartyTotal(signRecord),
                                 sourceMenu: ACTIVE_ORDER_CONFIG.menu,
                                 returnUrl: buildSignReturnUrl(signRecord.orderNo),
                                 signUrl: signSnapshot.signUrl,

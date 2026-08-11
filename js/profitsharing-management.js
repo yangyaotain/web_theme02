@@ -15,8 +15,11 @@
     var receiverSyncOpen = false;
     var receiverSyncing = false;
     var receiverSyncCompleted = false;
+    var receiverPage = 1;
+    var receiverPageSize = 10;
     var toastText = '';
     var configUploadError = '';
+    var selectedConfigScenes = ['01', '02'];
 
     var OPERATOR = {
         merchantId: 'MER-PLATFORM-202607-0001',
@@ -24,29 +27,26 @@
         creditCode: '91440307MA5LG20261',
         outTraceNo: 'PSE20260723000001',
         notifyUrl: '由平台系统配置并接收审核结果',
-        scene: '01 平台入驻商户应收款、02 平台服务费、05 供应商货款',
+        scene: '01 平台入驻商户应收款、02 平台服务费',
         signType: '0（电子签）',
         billPercent: '97.00%',
         billFeeRate: '0.30%',
         billMinFee: '0.10元'
     };
 
-    var CONFIG_FILES = {
-        background: '聚合平台分账业务场景说明.pdf',
-        statement: '平台近三个月交易单据.pdf',
-        cooperation: '平台与供方合作协议示例.pdf',
-        agreement: '统一支付分账服务协议.pdf',
-        cashflow: '运营方统一收款及资金流转说明.pdf'
+    var CONFIG_SCENE_LABELS = {
+        '01': '01 平台入驻商户应收款',
+        '02': '02 平台服务费'
     };
-    var CONFIG_FILE_IDS = {
-        background: 'FSS20260723000101',
-        statement: 'FSS20260723000102',
-        cooperation: 'FSS20260723000103',
-        agreement: 'FSS20260723000104',
-        cashflow: 'FSS20260723000105'
-    };
-    var CONFIG_VIDEO = '分账业务经营场景核验视频.mp4';
-    var CONFIG_SUPPLEMENT = '分账业务补充说明.pdf';
+    var CONFIG_ATTACHMENTS = [
+        { id: 'FSS20260723000101', name: '聚合平台分账业务场景说明.pdf', size: 1286400, type: 'application/pdf' },
+        { id: 'FSS20260723000102', name: '平台近三个月交易单据.pdf', size: 936960, type: 'application/pdf' },
+        { id: 'FSS20260723000103', name: '平台与供方合作协议示例.pdf', size: 1546240, type: 'application/pdf' },
+        { id: 'FSS20260723000104', name: '统一支付分账服务协议.pdf', size: 1187840, type: 'application/pdf' },
+        { id: 'FSS20260723000105', name: '运营方统一收款及资金流转说明.pdf', size: 860160, type: 'application/pdf' },
+        { id: 'FSS20260723000106', name: '分账业务补充说明.pdf', size: 675840, type: 'application/pdf' },
+        { id: 'FSS20260723000107', name: '分账业务经营场景核验视频.mp4', size: 8437760, type: 'video/mp4' }
+    ];
 
     var SPLIT_APPLY_AUDIT_STATES = {
         '0': {
@@ -98,7 +98,15 @@
         { receiverId: 'RCV-202607-00986', merchantId: 'MER2026072100986', name: '深圳市龙岗数智科技有限公司', creditCode: '91440300MA5F8LG001', receiverType: '标准商户', account: '中国农业银行 · 4405 **** 12345', status: '1', createdAt: '2026-07-22 09:18:36' },
         { receiverId: 'RCV-202607-00762', merchantId: 'MER2026071800762', name: '龙岗数智产业研究院有限公司', creditCode: '91440300MA5F8LG762', receiverType: '标准商户', account: '中国建设银行 · 6217 **** 0762', status: '0', createdAt: '2026-07-19 11:06:22' },
         { receiverId: 'RCV-202607-00655', merchantId: 'MER2026071700655', name: '深圳市龙数数据技术有限公司', creditCode: '91440300MA5F8LG655', receiverType: '标准商户', account: '招商银行 · 7559 **** 0655', status: '2', createdAt: '2026-07-18 15:26:11' },
-        { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', status: '3', createdAt: '2026-07-17 14:08:29' }
+        { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', status: '3', createdAt: '2026-07-17 14:08:29' },
+        { receiverId: 'RCV-202607-00491', merchantId: 'MER2026071500491', name: '深圳市龙岗智慧交通数据有限公司', creditCode: '91440300MA5F8LG491', receiverType: '标准商户', account: '中国工商银行 · 6222 **** 0491', status: '1', createdAt: '2026-07-16 16:42:08' },
+        { receiverId: 'RCV-202607-00436', merchantId: 'MER2026071400436', name: '深圳市龙岗产业空间数据服务有限公司', creditCode: '91440300MA5F8LG436', receiverType: '标准商户', account: '中国银行 · 6216 **** 0436', status: '1', createdAt: '2026-07-15 10:31:45' },
+        { receiverId: 'RCV-202607-00387', merchantId: 'MER2026071300387', name: '深圳市龙岗企业信用数据有限公司', creditCode: '91440300MA5F8LG387', receiverType: '标准商户', account: '交通银行 · 6222 **** 0387', status: '0', createdAt: '2026-07-14 14:20:17' },
+        { receiverId: 'RCV-202607-00342', merchantId: 'MER2026071200342', name: '深圳市龙岗云链科技有限公司', creditCode: '91440300MA5F8LG342', receiverType: '标准商户', account: '浦发银行 · 6217 **** 0342', status: '1', createdAt: '2026-07-13 09:52:33' },
+        { receiverId: 'RCV-202607-00296', merchantId: 'MER2026071100296', name: '深圳市龙岗数字文旅科技有限公司', creditCode: '91440300MA5F8LG296', receiverType: '标准商户', account: '中信银行 · 6217 **** 0296', status: '2', createdAt: '2026-07-12 17:06:54' },
+        { receiverId: 'RCV-202607-00251', merchantId: 'MER2026071000251', name: '深圳市龙岗智能制造数据有限公司', creditCode: '91440300MA5F8LG251', receiverType: '标准商户', account: '兴业银行 · 6229 **** 0251', status: '1', createdAt: '2026-07-11 11:24:39' },
+        { receiverId: 'RCV-202607-00208', merchantId: 'MER2026070900208', name: '深圳市龙岗数据资产服务有限公司', creditCode: '91440300MA5F8LG208', receiverType: '标准商户', account: '广发银行 · 6225 **** 0208', status: '0', createdAt: '2026-07-10 13:48:26' },
+        { receiverId: 'RCV-202607-00169', merchantId: 'MER2026070800169', name: '深圳市龙岗民生服务科技有限公司', creditCode: '91440300MA5F8LG169', receiverType: '标准商户', account: '中国邮政储蓄银行 · 6217 **** 0169', status: '1', createdAt: '2026-07-09 08:56:12' }
     ];
 
     var RECEIVER_SYNC_CANDIDATE = {
@@ -135,6 +143,8 @@
             check: '<path d="m5 12 4 4L19 6"/>',
             info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
             upload: '<path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 20h14"/>',
+            file: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/>',
+            trash: '<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
             link: '<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/>'
         };
         return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (paths[name] || paths.info) + '</svg>';
@@ -176,33 +186,55 @@
         }, 2400);
     }
 
+    function renderConfigWithoutJump(scrollToAttachmentEnd) {
+        var modalBody = page.querySelector('[data-profit-config-form] .profit-modal-body');
+        var attachmentPanel = page.querySelector('[data-profit-config-form] .profit-config-attachments');
+        var modalScrollTop = modalBody ? modalBody.scrollTop : 0;
+        var attachmentTop = attachmentPanel ? attachmentPanel.getBoundingClientRect().top : null;
+        var windowScrollX = window.scrollX || 0;
+        var windowScrollY = window.scrollY || 0;
+        render();
+        modalBody = page.querySelector('[data-profit-config-form] .profit-modal-body');
+        attachmentPanel = page.querySelector('[data-profit-config-form] .profit-config-attachments');
+        if (modalBody) {
+            if (scrollToAttachmentEnd) {
+                modalBody.scrollTop = modalBody.scrollHeight;
+            } else {
+                modalBody.scrollTop = modalScrollTop;
+                if (attachmentPanel && attachmentTop !== null) {
+                    modalBody.scrollTop += attachmentPanel.getBoundingClientRect().top - attachmentTop;
+                }
+            }
+        }
+        if (window.scrollX !== windowScrollX || window.scrollY !== windowScrollY) {
+            window.scrollTo(windowScrollX, windowScrollY);
+        }
+    }
+
     function getSplitApplyAuditState() {
         return splitApplyAuditStatus == null ? SPLIT_APPLY_EMPTY_STATE : SPLIT_APPLY_AUDIT_STATES[splitApplyAuditStatus];
     }
 
-    function renderConfigFile(key, label, example, readonly) {
-        var fileName = CONFIG_FILES[key];
-        return '<div class="profit-config-file' + (fileName ? ' has-file' : '') + '">'
-            + '<span class="profit-config-file-icon">' + icon('upload') + '</span>'
-            + '<div><strong>' + escapeHtml(label) + '</strong><small>示例：' + escapeHtml(example) + '</small><p>' + escapeHtml(fileName ? fileName + ' · ' + (CONFIG_FILE_IDS[key] || '文件编号已生成') : '暂未上传') + '</p></div>'
-            + (readonly ? '' : '<label><span>' + (fileName ? '替换' : '上传') + '</span><input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-config-upload="' + key + '"></label>')
-            + '</div>';
+    function formatAttachmentSize(size) {
+        if (!size) return '未知大小';
+        if (size >= 1024 * 1024) return (size / 1024 / 1024).toFixed(2) + ' MB';
+        return Math.max(1, Math.round(size / 1024)) + ' KB';
     }
 
-    function renderConfigVideo(readonly) {
-        return '<div class="profit-config-file' + (CONFIG_VIDEO ? ' has-file' : '') + '">'
-            + '<span class="profit-config-file-icon">' + icon('upload') + '</span>'
-            + '<div><strong>经营场景核验视频</strong><small>可选；连续展示营业执照和收银场景</small><p>' + escapeHtml(CONFIG_VIDEO ? CONFIG_VIDEO + ' · FSS20260723000107' : '暂未上传') + '</p></div>'
-            + (readonly ? '' : '<label><span>' + (CONFIG_VIDEO ? '替换' : '上传') + '</span><input type="file" accept="video/*,.mp4,.mov" data-config-video></label>')
-            + '</div>';
+    function isVideoAttachment(file) {
+        return /^video\//i.test(file.type || '') || /\.(mp4|mov)$/i.test(file.name || '');
     }
 
-    function renderConfigSupplement(readonly) {
-        return '<div class="profit-config-file' + (CONFIG_SUPPLEMENT ? ' has-file' : '') + '">'
-            + '<span class="profit-config-file-icon">' + icon('upload') + '</span>'
-            + '<div><strong>补充材料</strong><small>选填；上传后记录文件编号</small><p>' + escapeHtml(CONFIG_SUPPLEMENT ? CONFIG_SUPPLEMENT + ' · FSS20260723000106' : '暂未上传') + '</p></div>'
-            + (readonly ? '' : '<label><span>' + (CONFIG_SUPPLEMENT ? '替换' : '上传') + '</span><input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-config-supplement></label>')
-            + '</div>';
+    function renderConfigAttachments(readonly) {
+        var uploadControl = readonly ? ''
+            : '<div class="profit-config-attachment-upload"><span class="profit-config-attachment-upload-icon">' + icon('upload') + '</span><div><strong>选择附件</strong><p>支持一次选择多个文件，再次上传会追加到现有列表。</p></div><label>' + icon('upload') + '<span>上传附件</span><input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mov,video/mp4,video/quicktime" multiple data-config-attachments></label></div>';
+        var attachmentList = CONFIG_ATTACHMENTS.length
+            ? '<div class="profit-config-attachment-list">' + CONFIG_ATTACHMENTS.map(function (item) {
+                return '<div class="profit-config-attachment-item"><span class="profit-config-attachment-file-icon">' + icon('file') + '</span><div><strong>' + escapeHtml(item.name) + '</strong><small>' + escapeHtml(formatAttachmentSize(item.size) + ' · ' + item.id) + '</small></div>'
+                    + (readonly ? '' : button('删除', 'text attachment-remove', 'remove-config-attachment', 'trash', 'data-config-attachment-id="' + item.id + '"')) + '</div>';
+            }).join('') + '</div>'
+            : '<div class="profit-config-attachment-empty">' + icon('file') + '<span>暂未上传附件</span></div>';
+        return '<div class="profit-config-attachments">' + uploadControl + attachmentList + '</div>';
     }
 
     function renderConfigModal() {
@@ -224,10 +256,8 @@
             + '<label><span>申请流水号</span><input value="' + escapeHtml(OPERATOR.outTraceNo) + '" readonly><small>每次申请唯一，由系统生成</small></label>'
             + '<label class="is-wide"><span>审核结果通知</span><input value="' + escapeHtml(OPERATOR.notifyUrl) + '" readonly><small>回调地址由系统统一维护</small></label>'
             + '<div class="profit-form-field is-wide"><span>分账业务场景 <b>*</b></span><div class="profit-scene-options">'
-            +   '<label><input type="checkbox" name="scene" value="01" checked' + (readonly ? ' disabled' : '') + '><span>01 平台入驻商户应收款</span></label>'
-            +   '<label><input type="checkbox" name="scene" value="02" checked' + (readonly ? ' disabled' : '') + '><span>02 平台服务费</span></label>'
-            +   '<label><input type="checkbox" name="scene" value="05" checked' + (readonly ? ' disabled' : '') + '><span>05 供应商货款</span></label>'
-            +   '<label><input type="checkbox" name="scene" value="99"' + (readonly ? ' disabled' : '') + '><span>99 其他</span></label>'
+            +   '<label><input type="checkbox" name="scene" value="01"' + (selectedConfigScenes.indexOf('01') >= 0 ? ' checked' : '') + (readonly ? ' disabled' : '') + '><span>01 平台入驻商户应收款</span></label>'
+            +   '<label><input type="checkbox" name="scene" value="02"' + (selectedConfigScenes.indexOf('02') >= 0 ? ' checked' : '') + (readonly ? ' disabled' : '') + '><span>02 平台服务费</span></label>'
             + '</div></div>'
             + '<label><span>签约方式 <b>*</b></span><select name="signType"' + (readonly ? ' disabled' : '') + '><option value="0" selected>电子签</option><option value="1">纸质签</option></select></label>'
             + '<label><span>最大对外分账比例</span><div class="profit-field-suffix"><input name="billPercent" type="number" min="0.01" max="100" step="0.01" value="97.00"' + (readonly ? ' readonly' : '') + '><i>%</i></div><small>选填，留空按渠道配置执行</small></label>'
@@ -235,17 +265,10 @@
             + '<label><span>最低分账手续费</span><div class="profit-field-suffix"><input name="billMinFee" type="number" min="0" step="0.01" value="0.10"' + (readonly ? ' readonly' : '') + '><i>元</i></div><small>选填，金额单位为元</small></label>'
             + '<label><span>当前状态</span><div class="profit-form-status">' + tag(state.label) + '</div></label>'
             + '</div>'
-            + '<div class="profit-config-file-title"><strong>分账业务材料</strong><span>普通文件不超过2MB；核验视频不超过9MB。</span></div>'
+            + '<div class="profit-config-file-title"><strong>附件上传</strong><span>普通文件单个不超过2MB；视频单个不超过9MB。</span></div>'
             + (configUploadError ? '<div class="profit-form-error">' + escapeHtml(configUploadError) + '</div>' : '')
-            + '<div class="profit-config-file-grid">'
-            + renderConfigFile('background', '业务背景资料', '业务场景说明.pdf', readonly)
-            + renderConfigFile('statement', '平台交易单据', '近三个月交易单据.pdf', readonly)
-            + renderConfigFile('cooperation', '供方合作协议', '平台与供方合作协议.pdf', readonly)
-            + renderConfigFile('agreement', '分账服务协议', '统一支付分账服务协议.pdf', readonly)
-            + renderConfigFile('cashflow', '资金流转说明', '统一收款与分账说明.pdf', readonly)
-            + renderConfigSupplement(readonly)
-            + renderConfigVideo(readonly)
-            + '</div></div>'
+            + renderConfigAttachments(readonly)
+            + '</div>'
             + '<footer>' + footer + '</footer>'
             + '</form></div>';
     }
@@ -282,15 +305,9 @@
         }
         detailItems.push('<div><span>' + (splitApplyAuditStatus === null ? '申请状态' : '审核状态') + '</span>' + tag(state.label) + '</div>');
         var inlineFiles = splitApplyAuditStatus !== null
-            ? '<div class="profit-config-inline-files"><div class="profit-config-file-title"><strong>分账业务材料</strong><span>本次分账开通申请附件</span></div><div class="profit-config-file-grid">'
-                + renderConfigFile('background', '业务背景资料', '业务场景说明.pdf', true)
-                + renderConfigFile('statement', '平台交易单据', '近三个月交易单据.pdf', true)
-                + renderConfigFile('cooperation', '供方合作协议', '平台与供方合作协议.pdf', true)
-                + renderConfigFile('agreement', '分账服务协议', '统一支付分账服务协议.pdf', true)
-                + renderConfigFile('cashflow', '资金流转说明', '统一收款与分账说明.pdf', true)
-                + renderConfigSupplement(true)
-                + renderConfigVideo(true)
-                + '</div></div>'
+            ? '<div class="profit-config-inline-files"><div class="profit-config-file-title"><strong>已上传附件</strong><span>本次分账开通申请附件</span></div>'
+                + renderConfigAttachments(true)
+                + '</div>'
             : '';
         return '<section class="profit-table-card profit-config-card"><div class="profit-section-title"><div><h3>' + title + '</h3><p>' + description + '</p></div></div><div class="profit-detail-grid">'
             + detailItems.join('') + '</div>' + inlineFiles + '</section>';
@@ -298,18 +315,13 @@
 
     function renderConfig() {
         var state = getSplitApplyAuditState();
-        var auditSuccess = splitApplyAuditStatus === '1';
         var businessAction = splitApplyAuditStatus === null
             ? button('申请开通分账', 'primary', 'open-config', 'edit')
             : splitApplyAuditStatus === '2' || splitApplyAuditStatus === '3'
                 ? button('重新发起申请', 'primary', 'open-config', 'edit')
                 : '';
         var headActions = renderConfigStateSimulator() + businessAction;
-        var summaryItems = auditSuccess
-            ? [['分账主体', '1 个', '平台运营方商户'], ['审核状态', state.label, '分账能力已开通'], ['对外分账比例上限', OPERATOR.billPercent, '以开通配置为准'], ['审核成功接收方', String(RECEIVERS.filter(function (item) { return item.status === '1'; }).length) + ' 个', '可参与订单分账']]
-            : [['分账主体', '1 个', '平台运营方商户'], [splitApplyAuditStatus === null ? '申请状态' : '审核状态', state.label, splitApplyAuditStatus === null ? '尚未提交开通申请' : '当前不可发起分账']];
         page.innerHTML = renderHead('分账基础配置', '运营方作为统一收款商户和分账方，在本页提交申请并查看审核状态。', headActions)
-            + renderSummary(summaryItems, !auditSuccess)
             + '<section class="profit-config-hero is-' + state.tone + '"><div class="profit-config-hero-icon">' + icon(state.icon) + '</div><div><span>分账开通申请</span><h2>' + escapeHtml(state.title) + '</h2><p>' + escapeHtml(state.description) + '</p></div>' + tag(state.label) + '</section>'
             + renderConfigDetail(state)
             + '<section class="profit-api-banner">' + icon('info') + '<div><strong>订单处理规则</strong><p>自营产品由运营方全额收款，不发起对外分账；第三方产品仅在运营方分账能力已确认开通、供方已成为有效接收方后，按合同服务费快照计算供方实收金额。</p></div></section>'
@@ -385,17 +397,58 @@
         });
     }
 
+    function receiverPaginationItems(currentPage, pageCount) {
+        var items = [];
+        var start;
+        var end;
+        var index;
+        if (pageCount <= 7) {
+            for (index = 1; index <= pageCount; index += 1) items.push(index);
+            return items;
+        }
+        items.push(1);
+        start = Math.max(2, currentPage - 1);
+        end = Math.min(pageCount - 1, currentPage + 1);
+        if (start > 2) items.push('start-ellipsis');
+        for (index = start; index <= end; index += 1) items.push(index);
+        if (end < pageCount - 1) items.push('end-ellipsis');
+        items.push(pageCount);
+        return items;
+    }
+
+    function renderReceiverPagination(total, pageCount) {
+        var pageItems = receiverPaginationItems(receiverPage, pageCount);
+        return '<div class="pagination-bar profit-pagination">'
+            + '<span class="pagination-info">共 ' + total + ' 条</span>'
+            + '<select class="profit-page-size" data-profit-page-size aria-label="每页条数">'
+            + [10, 20, 50].map(function (size) {
+                return '<option value="' + size + '"' + (receiverPageSize === size ? ' selected' : '') + '>' + size + ' 条/页</option>';
+            }).join('') + '</select>'
+            + '<button class="page-btn" type="button" data-profit-action="receiver-page-prev" aria-label="上一页"' + (receiverPage <= 1 ? ' disabled' : '') + '>‹</button>'
+            + '<span class="profit-pagination-pages">' + pageItems.map(function (item) {
+                if (typeof item === 'string') return '<span class="page-ellipsis">•••</span>';
+                return '<button class="page-btn' + (item === receiverPage ? ' active' : '') + '" type="button" data-profit-action="receiver-page" data-receiver-page="' + item + '"' + (item === receiverPage ? ' aria-current="page"' : '') + '>' + item + '</button>';
+            }).join('') + '</span>'
+            + '<button class="page-btn" type="button" data-profit-action="receiver-page-next" aria-label="下一页"' + (receiverPage >= pageCount ? ' disabled' : '') + '>›</button>'
+            + '</div>';
+    }
+
     function renderReceivers() {
         var records = filteredReceivers();
+        var pageCount = Math.max(1, Math.ceil(records.length / receiverPageSize));
+        var pageStart;
+        var visibleRecords;
+        receiverPage = Math.min(Math.max(receiverPage, 1), pageCount);
+        pageStart = (receiverPage - 1) * receiverPageSize;
+        visibleRecords = records.slice(pageStart, pageStart + receiverPageSize);
         var syncAction = button(receiverSyncing ? '同步中…' : '同步接收方', receiverSyncing ? 'is-syncing' : '', 'open-receiver-sync', 'refresh', receiverSyncing ? 'disabled aria-busy="true"' : '');
         page.innerHTML = renderHead('分账接收方管理', '供方收款结算账号开通后，系统后台自动发起分账接收方添加，并同步展示审核状态。', syncAction)
-            + renderSummary([['已自动发起', String(RECEIVERS.length) + ' 个', '由结算账号开通触发'], ['正在审核', String(RECEIVERS.filter(function (item) { return item.status === '0'; }).length) + ' 个', '等待审核结果'], ['审核成功', String(RECEIVERS.filter(function (item) { return item.status === '1'; }).length) + ' 个', '可参与订单分账'], ['审核未通过', String(RECEIVERS.filter(function (item) { return item.status === '2' || item.status === '3'; }).length) + ' 个', '审核驳回或拒绝']])
             + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>供方在供方中心完成收款结算账号开通后，系统后台自动发起分账接收方添加；如因自动任务失败或其他原因未能添加，可点击右上角“同步接收方”手动检测并补充未添加记录。</p></div></section>'
             + '<section class="profit-filter-card is-simple"><label class="profit-search">' + icon('search') + '<input type="search" placeholder="搜索供方名称、接收方编号或商户编号" value="' + escapeHtml(query) + '" data-profit-search></label><select data-profit-status aria-label="审核状态"><option value="全部状态">全部状态</option><option value="0">正在审核</option><option value="1">审核成功</option><option value="2">审核驳回</option><option value="3">审核拒绝</option></select>' + button('查询', 'primary', 'search', 'search') + button('重置', '', 'reset', 'refresh') + '</section>'
             + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>接收方由系统后台自动添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>审核状态</th><th>自动发起时间</th><th>操作</th></tr></thead><tbody>'
-            + records.map(function (item) {
+            + visibleRecords.map(function (item) {
                 return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + '</div></td></tr>';
-            }).join('') + '</tbody></table></div></section>' + renderReceiverDrawer() + renderReceiverSyncModal() + renderToast();
+            }).join('') + '</tbody></table></div>' + renderReceiverPagination(records.length, pageCount) + '</section>' + renderReceiverDrawer() + renderReceiverSyncModal() + renderToast();
         bindEvents();
     }
 
@@ -446,20 +499,50 @@
         var searchInput = page.querySelector('[data-profit-search]');
         if (searchInput) {
             searchInput.addEventListener('input', function () { query = this.value; });
-            searchInput.addEventListener('keydown', function (event) { if (event.key === 'Enter') render(); });
+            searchInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    receiverPage = 1;
+                    render();
+                }
+            });
         }
         var scene = page.querySelector('[data-profit-scene]');
         var status = page.querySelector('[data-profit-status]');
         if (scene) { scene.value = sceneFilter; scene.addEventListener('change', function () { sceneFilter = this.value; }); }
-        if (status) { status.value = statusFilter; status.addEventListener('change', function () { statusFilter = this.value; }); }
+        if (status) {
+            status.value = statusFilter;
+            status.addEventListener('change', function () {
+                statusFilter = this.value;
+                receiverPage = 1;
+                render();
+            });
+        }
+
+        var receiverPageSizeSelect = page.querySelector('[data-profit-page-size]');
+        if (receiverPageSizeSelect) {
+            receiverPageSizeSelect.addEventListener('change', function () {
+                receiverPageSize = Number(this.value) || 10;
+                receiverPage = 1;
+                render();
+            });
+        }
 
         page.querySelectorAll('[data-profit-action]').forEach(function (control) {
             control.addEventListener('click', function () {
                 var action = this.dataset.profitAction;
-                if (action === 'search') render();
-                else if (action === 'reset') { query = ''; statusFilter = '全部状态'; sceneFilter = '全部业务类型'; render(); }
+                if (action === 'search') { receiverPage = 1; render(); }
+                else if (action === 'reset') { query = ''; statusFilter = '全部状态'; sceneFilter = '全部业务类型'; receiverPage = 1; render(); }
+                else if (action === 'receiver-page') { receiverPage = Number(this.dataset.receiverPage) || 1; render(); }
+                else if (action === 'receiver-page-prev') { receiverPage = Math.max(1, receiverPage - 1); render(); }
+                else if (action === 'receiver-page-next') { receiverPage += 1; render(); }
                 else if (action === 'open-config') { configOpen = true; configUploadError = ''; render(); }
                 else if (action === 'close-config') { configOpen = false; render(); }
+                else if (action === 'remove-config-attachment') {
+                    var attachmentId = this.dataset.configAttachmentId;
+                    CONFIG_ATTACHMENTS = CONFIG_ATTACHMENTS.filter(function (item) { return item.id !== attachmentId; });
+                    configUploadError = '';
+                    renderConfigWithoutJump();
+                }
                 else if (action === 'set-audit-status') { splitApplyAuditStatus = this.dataset.auditStatus; configOpen = false; render(); }
                 else if (action === 'edit-rule') { modalState = { mode: 'edit', rule: RULES.find(function (rule) { return rule.id === control.dataset.ruleId; }) }; render(); }
                 else if (action === 'close-modal') { modalState = null; render(); }
@@ -476,6 +559,7 @@
                         if (!receiverSyncCompleted) {
                             RECEIVERS.unshift(RECEIVER_SYNC_CANDIDATE);
                             receiverSyncCompleted = true;
+                            receiverPage = 1;
                             showToast('同步完成：发现 1 个未添加接收方，已成功发起添加。');
                         } else {
                             showToast('同步完成，未发现需要补充添加的接收方。');
@@ -486,53 +570,58 @@
         });
 
         var configForm = page.querySelector('[data-profit-config-form]');
-        if (configForm) configForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            if (!configForm.reportValidity()) return;
-            if (!configForm.querySelector('input[name="scene"]:checked')) {
-                configUploadError = '请至少选择一个分账业务场景。';
-                render();
-                return;
-            }
-            var missingMaterial = Object.keys(CONFIG_FILES).some(function (key) { return !CONFIG_FILES[key]; });
-            if (missingMaterial) {
-                configUploadError = '请上传完整的分账业务材料后再提交申请。';
-                render();
-                return;
-            }
-            splitApplyAuditStatus = '0';
-            configOpen = false;
-            showToast('分账开通申请已提交，当前审核状态为正在审核。');
-        });
-        page.querySelectorAll('[data-config-upload]').forEach(function (input) {
-            input.addEventListener('change', function () {
-                var file = this.files && this.files[0];
-                if (!file) return;
-                if (!/\.(pdf|doc|docx|jpg|jpeg|png)$/i.test(file.name || '')) configUploadError = '材料格式不支持，请上传PDF、Word、JPG或PNG文件。';
-                else if (file.size > 2 * 1024 * 1024) configUploadError = '普通分账业务材料不能超过2MB。';
-                else {
-                    CONFIG_FILES[this.dataset.configUpload] = file.name;
-                    CONFIG_FILE_IDS[this.dataset.configUpload] = 'FSS' + String(Date.now()).slice(-14);
-                    configUploadError = '';
-                }
-                render();
+        if (configForm) {
+            configForm.querySelectorAll('input[name="scene"]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    selectedConfigScenes = Array.prototype.map.call(configForm.querySelectorAll('input[name="scene"]:checked'), function (item) { return item.value; });
+                });
             });
-        });
-        var configVideoInput = page.querySelector('[data-config-video]');
-        if (configVideoInput) configVideoInput.addEventListener('change', function () {
-            var file = this.files && this.files[0];
-            if (!file) return;
-            if (file.size > 9 * 1024 * 1024) configUploadError = '经营场景核验视频不能超过9MB。';
-            else { CONFIG_VIDEO = file.name; configUploadError = ''; }
-            render();
-        });
-        var configSupplementInput = page.querySelector('[data-config-supplement]');
-        if (configSupplementInput) configSupplementInput.addEventListener('change', function () {
-            var file = this.files && this.files[0];
-            if (!file) return;
-            if (file.size > 2 * 1024 * 1024) configUploadError = '分账补充材料不能超过2MB。';
-            else { CONFIG_SUPPLEMENT = file.name; configUploadError = ''; }
-            render();
+            configForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                if (!configForm.reportValidity()) return;
+                selectedConfigScenes = Array.prototype.map.call(configForm.querySelectorAll('input[name="scene"]:checked'), function (item) { return item.value; });
+                if (!selectedConfigScenes.length) {
+                    configUploadError = '请至少选择一个分账业务场景。';
+                    render();
+                    return;
+                }
+                if (!CONFIG_ATTACHMENTS.length) {
+                    configUploadError = '请至少上传一个附件后再提交申请。';
+                    render();
+                    return;
+                }
+                OPERATOR.scene = selectedConfigScenes.map(function (value) { return CONFIG_SCENE_LABELS[value]; }).join('、');
+                splitApplyAuditStatus = '0';
+                configOpen = false;
+                showToast('分账开通申请已提交，当前审核状态为正在审核。');
+            });
+        }
+        var configAttachmentInput = page.querySelector('[data-config-attachments]');
+        if (configAttachmentInput) configAttachmentInput.addEventListener('change', function () {
+            var files = Array.prototype.slice.call(this.files || []);
+            var errors = [];
+            var uploadedCount = 0;
+            var createdAt = Date.now();
+            files.forEach(function (file, index) {
+                var video = isVideoAttachment(file);
+                if (!/\.(pdf|doc|docx|jpg|jpeg|png|mp4|mov)$/i.test(file.name || '')) {
+                    errors.push(file.name + '：格式不支持');
+                } else if (video && file.size > 9 * 1024 * 1024) {
+                    errors.push(file.name + '：视频不能超过9MB');
+                } else if (!video && file.size > 2 * 1024 * 1024) {
+                    errors.push(file.name + '：普通文件不能超过2MB');
+                } else {
+                    CONFIG_ATTACHMENTS.push({
+                        id: 'FSS' + String(createdAt + index),
+                        name: file.name,
+                        size: file.size,
+                        type: file.type || ''
+                    });
+                    uploadedCount += 1;
+                }
+            });
+            configUploadError = errors.join('；');
+            renderConfigWithoutJump(uploadedCount > 0);
         });
 
         var ruleForm = page.querySelector('[data-profit-rule-form]');

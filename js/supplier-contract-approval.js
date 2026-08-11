@@ -11,6 +11,21 @@
     var lastFocusedElement;
     var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
 
+    function isSelfOperated(options) {
+        options = options || activeOptions;
+        if (options.operationMode === 'self') return true;
+        if (options.operationMode === 'thirdParty') return false;
+        return String(options.provider || '') === PLATFORM_OPERATOR_NAME;
+    }
+
+    function getPartyTotal(options) {
+        return isSelfOperated(options) ? 2 : 3;
+    }
+
+    function getPartyLabel(options) {
+        return isSelfOperated(options) ? '双方' : '三方';
+    }
+
     function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
             return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
@@ -52,6 +67,7 @@
     }
 
     function buildPaymentSnapshot(options) {
+        var selfOperated = isSelfOperated(options);
         var totalAmount = parseMoney(options.amount);
         var totalCents = Math.round(totalAmount * 100);
         var feeMode = options.serviceFeeMode === 'G' ? 'G' : 'P';
@@ -76,7 +92,7 @@
                     : Math.round(totalCents * Number(stage.percent || 0) / 100));
             allocatedCents += stageCents;
             var stageAmount = stageCents / 100;
-            var serviceFee = feeMode === 'G' ? feeValue : stageAmount * feeValue / 100;
+            var serviceFee = selfOperated ? 0 : (feeMode === 'G' ? feeValue : stageAmount * feeValue / 100);
             return {
                 name: stage.name || ('第' + (index + 1) + '期'),
                 percent: Number(stage.percent || 0),
@@ -103,6 +119,7 @@
         if (!target) return;
         var snapshot = buildPaymentSnapshot(options);
         var isService = options.businessType === 'service';
+        var selfOperated = isSelfOperated(options);
         var feeLabel = snapshot.feeMode === 'G'
             ? '固定金额 ' + formatMoney(snapshot.feeValue) + '/笔'
             : '金额比例 ' + snapshot.feeValue.toFixed(2) + '%';
@@ -114,26 +131,25 @@
                 +   '<span class="supplier-contract-stage-value">' + escapeHtml(stage.name) + '</span>'
                 +   '<strong class="supplier-contract-stage-value is-percent">' + stage.percent.toFixed(2) + '%</strong>'
                 +   '<strong class="supplier-contract-stage-calculated">' + formatMoney(stage.amount) + '</strong>'
-                +   '<strong class="supplier-contract-stage-money">' + formatMoney(stage.serviceFee) + '</strong>'
-                +   '<strong class="supplier-contract-stage-money is-net">' + formatMoney(stage.providerNet) + '</strong>'
+                +   (selfOperated ? '' : '<strong class="supplier-contract-stage-money">' + formatMoney(stage.serviceFee) + '</strong><strong class="supplier-contract-stage-money is-net">' + formatMoney(stage.providerNet) + '</strong>')
                 +   '<strong class="supplier-contract-stage-status">' + escapeHtml(stage.payStatus) + '</strong>'
                 + '</div>';
         }).join('');
 
         target.innerHTML = ''
             + '<div class="supplier-contract-payment-head">'
-            +   '<div><strong>付款与分账条款</strong><p>以下内容为关联合同时已确定的付款计划和平台服务费规则。</p></div>'
+            +   '<div><strong>' + (selfOperated ? '付款条款' : '付款与分账条款') + '</strong><p>' + (selfOperated ? '以下内容为关联合同时已确定的付款计划。' : '以下内容为关联合同时已确定的付款计划和平台服务费规则。') + '</p></div>'
             +   '<span class="supplier-contract-freeze"><span class="material-symbols-outlined" aria-hidden="true">lock</span>签订后冻结</span>'
             + '</div>'
-            + '<div class="supplier-contract-payment-summary">'
+            + '<div class="supplier-contract-payment-summary' + (selfOperated ? ' is-self-operated' : '') + '">'
             +   '<div><span>合同金额</span><strong>' + formatMoney(snapshot.totalAmount) + '</strong><small>关联订单应付总额</small></div>'
-            +   '<div><span>平台服务费</span><strong>' + feeLabel + '</strong><small>' + feeNote + '</small></div>'
-            +   '<div><span>结算方式</span><strong>' + (isService ? '按合同付款计划支付' : '订单一次性支付') + '</strong><small>支付成功后按订单发起分账</small></div>'
-            +   '<div><span>提供方预计实收</span><strong>' + formatMoney(snapshot.totalAmount - snapshot.totalServiceFee) + '</strong><small>合同金额扣除各笔平台服务费</small></div>'
+            +   (selfOperated ? '' : '<div><span>平台服务费</span><strong>' + feeLabel + '</strong><small>' + feeNote + '</small></div>')
+            +   '<div><span>结算方式</span><strong>' + (isService ? '按合同付款计划支付' : '订单一次性支付') + '</strong><small>' + (selfOperated ? '运营方统一收款，不发起对外分账' : '支付成功后按订单发起分账') + '</small></div>'
+            +   (selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong><small>提供方与收款方均为运营方</small></div>' : '<div><span>提供方预计实收</span><strong>' + formatMoney(snapshot.totalAmount - snapshot.totalServiceFee) + '</strong><small>合同金额扣除各笔平台服务费</small></div>')
             + '</div>'
             + '<div class="supplier-contract-approval-payment-mode"><span>付款方式</span><strong>' + (snapshot.paymentMode === 'installment' ? '分期付款' : '一次性付款') + '</strong><small>关联合同时已确定</small></div>'
-            + '<div class="supplier-contract-stage-table is-display-only">'
-            +   '<div class="supplier-contract-stage-head"><span>期次</span><span>阶段名称</span><span>付款比例</span><span>付款金额</span><span>平台服务费</span><span>提供方实收</span><span>支付状态</span></div>'
+            + '<div class="supplier-contract-stage-table is-display-only' + (selfOperated ? ' is-self-operated' : '') + '">'
+            +   '<div class="supplier-contract-stage-head"><span>期次</span><span>阶段名称</span><span>付款比例</span><span>付款金额</span>' + (selfOperated ? '' : '<span>平台服务费</span><span>提供方实收</span>') + '<span>支付状态</span></div>'
             +   rows
             + '</div>'
             + '<div class="supplier-contract-payment-foot">'
@@ -211,6 +227,7 @@
             +               '<div><span>关联订单：</span><strong data-contract-approval-order></strong></div>'
             +               '<div><span>当前审核方：</span><strong data-contract-approval-reviewer></strong></div>'
             +               '<div><span>关联发起方：</span><strong data-contract-approval-initiator></strong></div>'
+            +               '<div><span>经营属性：</span><strong data-contract-approval-operation-mode></strong></div>'
             +               '<div class="is-full"><span>备注：</span><strong data-contract-approval-remark></strong></div>'
             +           '</div>'
             +       '</section>'
@@ -219,8 +236,8 @@
             +           '<div class="supplier-contract-esign-grid">'
             +               '<div><span>制文方式</span><strong data-contract-approval-document-mode></strong><small data-contract-approval-template></small></div>'
             +               '<div><span>法大大任务编号</span><strong data-contract-approval-task-id></strong><small>签署结果以回调为准</small></div>'
-            +               '<div><span>当前处理节点</span><strong data-contract-approval-current-node></strong><small>三方可独立完成审核与签署</small></div>'
-            +               '<div><span>三方签署进度</span><strong data-contract-approval-progress></strong><small>运营方必须完成盖章</small></div>'
+            +               '<div><span>当前处理节点</span><strong data-contract-approval-current-node></strong><small data-contract-approval-party-note>三方可独立完成审核与签署</small></div>'
+            +               '<div><span data-contract-approval-progress-label>三方签署进度</span><strong data-contract-approval-progress></strong><small data-contract-approval-progress-note>运营方必须完成盖章</small></div>'
             +           '</div>'
             +           '<div class="supplier-contract-electronic-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p>审核通过后将跳转法大大完成意愿认证和电子签署；仅签署成功回调后，当前企业的审核与签署才算完成。<a href="user-center.html?menu=esign-service" target="_blank" data-contract-approval-open-service hidden>查看电子签章状态</a></p></div>'
             +       '</section>'
@@ -239,7 +256,7 @@
             +               '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span><span>审核/签署状态</span></div>'
             +               '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span data-contract-approval-provider></span><span data-contract-approval-provider-status></span></div>'
             +               '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span data-contract-approval-demander></span><span data-contract-approval-demander-status></span></div>'
-            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span data-contract-approval-operator></span><span data-contract-approval-operator-status></span></div>'
+            +               '<div class="supplier-contract-signer-row" data-contract-approval-operator-row><span>法人</span><span>平台运营方</span><span data-contract-approval-operator></span><span data-contract-approval-operator-status></span></div>'
             +           '</div>'
             +       '</section>'
             +       '<section class="supplier-contract-approval-section supplier-contract-approval-payment-section">'
@@ -317,6 +334,8 @@
             var result = {
                 orderNo: activeOptions.orderNo || '',
                 contractNo: drawer.querySelector('[data-contract-approval-number]').textContent,
+                operationMode: isSelfOperated(activeOptions) ? 'self' : 'thirdParty',
+                partyTotal: getPartyTotal(activeOptions),
                 decision: decision,
                 opinion: opinion,
                 requiresSignature: decision === 'pass' && activeOptions.signing === '电子签章',
@@ -333,6 +352,9 @@
                     return;
                 }
                 var reviewerRole = activeOptions.reviewerRole || '提供方';
+                if (isSelfOperated(activeOptions) && reviewerRole === '平台运营方') {
+                    reviewerRole = activeOptions.initiatorRole === '需求方' ? '提供方' : '需求方';
+                }
                 var reviewerParty = reviewerRole === '平台运营方'
                     ? (activeOptions.operator || PLATFORM_OPERATOR_NAME)
                     : (reviewerRole === '需求方' ? activeOptions.demander : activeOptions.provider);
@@ -345,6 +367,8 @@
                     party: reviewerParty,
                     node: '审核通过并签署',
                     businessType: activeOptions.businessType,
+                    operationMode: isSelfOperated(activeOptions) ? 'self' : 'thirdParty',
+                    partyTotal: getPartyTotal(activeOptions),
                     sourceMenu: activeOptions.sourceMenu,
                     returnUrl: activeOptions.returnUrl || window.location.href,
                     signUrl: activeOptions.signUrl,
@@ -368,9 +392,14 @@
 
     function populate(options) {
         var dates = getContractDates(options.appliedAt);
-        var contractName = options.contractName || ((options.itemName || '数据交易') + '三方交易合同');
+        var selfOperated = isSelfOperated(options);
+        var partyLabel = getPartyLabel(options);
+        var partyTotal = getPartyTotal(options);
+        var contractName = options.contractName || ((options.itemName || '数据交易') + partyLabel + '交易合同');
+        if (selfOperated) contractName = contractName.replace(/三方/g, '双方');
         var contractNumber = options.contractNo || buildContractNumber(options);
         var reviewerRole = options.reviewerRole || '提供方';
+        if (selfOperated && reviewerRole === '平台运营方') reviewerRole = options.initiatorRole === '需求方' ? '提供方' : '需求方';
         var electronic = options.signing === '电子签章';
         setText('#supplierContractApprovalTitle', electronic ? '审核并签署' : '合同审核');
         var esignReady = Boolean(options.demoMode) || (window.ESignServiceState && window.ESignServiceState.isReady());
@@ -389,23 +418,32 @@
         setText('[data-contract-approval-order]', options.orderNo);
         setText('[data-contract-approval-reviewer]', reviewerRole);
         setText('[data-contract-approval-initiator]', options.initiatorRole || '需求方');
+        setText('[data-contract-approval-operation-mode]', selfOperated ? '自营' : '第三方');
         setText('[data-contract-approval-remark]', options.remark || '--');
         setText('[data-contract-approval-file]', options.fileName || (contractName + '.pdf'));
         setText('[data-contract-approval-provider]', options.provider || '深圳市龙岗数智科技有限公司');
         setText('[data-contract-approval-demander]', options.demander);
         setText('[data-contract-approval-operator]', options.operator || PLATFORM_OPERATOR_NAME);
         setText('[data-contract-approval-document-mode]', options.documentMode === 'pdf' ? '上传待签PDF' : '法大大模板生成');
-        setText('[data-contract-approval-template]', options.documentMode === 'pdf' ? (options.fileName || contractName + '.pdf') : (options.templateName || '数据交易三方合同（V3.2）'));
+        var templateName = options.documentMode === 'pdf' ? (options.fileName || contractName + '.pdf') : (options.templateName || '数据交易' + partyLabel + '合同（V3.2）');
+        setText('[data-contract-approval-template]', selfOperated ? String(templateName).replace(/三方/g, '双方') : templateName);
         setText('[data-contract-approval-task-id]', options.taskId || ('FDD-' + String(options.orderNo || '').slice(-10)));
         setText('[data-contract-approval-task-status]', options.taskStatus || '签约任务进行中');
         setText('[data-contract-approval-current-node]', options.currentNode || ('待' + reviewerRole + (electronic ? '审核并签署' : '审批')));
-        setText('[data-contract-approval-progress]', options.signProgress || (electronic ? '1/3 已签署' : '线下合同已上传'));
+        var progress = options.signProgress || (electronic ? '1/' + partyTotal + ' 已签署' : '线下合同已上传');
+        if (selfOperated) progress = String(progress).replace(/(\d+)\/\d+/, function (_, count) { return Math.min(partyTotal, Number(count) || 0) + '/' + partyTotal; });
+        setText('[data-contract-approval-progress]', progress);
+        setText('[data-contract-approval-party-note]', partyLabel + '可独立完成审核与签署');
+        setText('[data-contract-approval-progress-label]', partyLabel + '签署进度');
+        setText('[data-contract-approval-progress-note]', selfOperated ? '供需双方均需完成盖章' : '运营方必须完成盖章');
         var readinessLabel = electronic && !esignReady && window.ESignServiceState
             ? window.ESignServiceState.getMeta().label
             : '';
         setText('[data-contract-approval-provider-status]', options.providerSignStatus || (reviewerRole === '提供方' ? (readinessLabel || (electronic ? '待审核并签署' : '待审批')) : (electronic ? '已审核并签署' : '已提交')));
         setText('[data-contract-approval-demander-status]', options.demanderSignStatus || (reviewerRole === '需求方' ? (readinessLabel || (electronic ? '待审核并签署' : '待审批')) : (electronic ? '已审核并签署' : '已提交')));
         setText('[data-contract-approval-operator-status]', options.operatorSignStatus || (reviewerRole === '平台运营方' ? (readinessLabel || (electronic ? '待审核并签署' : '待审核')) : (electronic ? '待审核并签署' : '待审核')));
+        var operatorRow = drawer.querySelector('[data-contract-approval-operator-row]');
+        if (operatorRow) operatorRow.hidden = selfOperated;
         renderPaymentTerms(options);
 
         form.reset();

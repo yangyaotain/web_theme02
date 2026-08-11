@@ -344,8 +344,9 @@
 
         function renderPaymentDetail(item) {
             var stages = item.paymentStages || getFallbackPaymentStages(item);
+            var selfOperated = item.operationMode === 'self';
             return '<div class="supplier-bill-payment-groups">' + stages.map(function (stage, index) {
-                return renderPaymentStage(stage, index, stages.length, state.tab === 'receivable');
+                return renderPaymentStage(stage, index, stages.length, state.tab === 'receivable' && !selfOperated);
             }).join('') + '</div>';
         }
 
@@ -354,7 +355,7 @@
             var payer = state.tab === 'payable' ? supplierName : item.counterparty;
             var receiver = state.tab === 'payable' ? item.counterparty : supplierName;
             var currentStage = (item.paymentStages || []).find(function (stage) { return stage.current; });
-            var currentSplit = currentStage && currentStage.payment && currentStage.payment.split;
+            var currentSplit = item.operationMode === 'self' ? null : (currentStage && currentStage.payment && currentStage.payment.split);
             var rows = [
                 { operator: '系统自动', type: '生成账单', result: '成功', content: '--', time: item.createdAt }
             ];
@@ -393,6 +394,7 @@
                             { label: '订单编号', value: item.orderNo },
                             { label: '交易标的', value: item.target },
                             { label: '业务类型', value: item.businessType },
+                            { label: '经营属性', value: item.operationMode === 'self' ? '自营' : '第三方' },
                             { label: '标的类型', value: item.targetType },
                             { label: counterpartyLabel, value: item.counterparty },
                             { label: '付费方式', value: item.payMode },

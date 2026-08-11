@@ -6,6 +6,7 @@
     var activeLayers = [];
     var returnFocus = null;
     var keydownHandler = null;
+    var PLATFORM_OPERATOR_NAME = '深圳市龙岗区数据要素交易服务有限公司';
 
     function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
@@ -115,16 +116,19 @@
         var itemName = record.name || options.itemName || '数据交易标的';
         var provider = options.provider || snapshot.provider || record.provider || '深圳市龙岗数智科技有限公司';
         var demander = options.demander || snapshot.demander || record.user || '深圳市龙岗智慧产业有限公司';
-        var operator = options.operator || snapshot.operator || '深圳市龙岗区数据要素交易服务有限公司';
+        var operationMode = options.operationMode || snapshot.operationMode || record.operationMode || (provider === PLATFORM_OPERATOR_NAME ? 'self' : 'thirdParty');
+        var selfOperated = operationMode === 'self';
+        var partyLabel = selfOperated ? '双方' : '三方';
+        var operator = selfOperated ? '' : (options.operator || snapshot.operator || PLATFORM_OPERATOR_NAME);
         var amount = snapshot.contractAmount != null ? parseMoney(snapshot.contractAmount) : parseMoney(record.amount || options.amount);
         var serviceFeeMode = snapshot.serviceFeeMode || options.serviceFeeMode || (options.businessType === 'service' ? 'P' : 'G');
         var serviceFeeValue = snapshot.serviceFeeValue != null ? Number(snapshot.serviceFeeValue) : Number(options.serviceFeeValue != null ? options.serviceFeeValue : (options.businessType === 'service' ? 2.5 : 50));
         var stages = Array.isArray(snapshot.paymentStages) ? snapshot.paymentStages : [];
-        var feeTotal = serviceFeeMode === 'P'
+        var feeTotal = selfOperated ? 0 : (serviceFeeMode === 'P'
             ? amount * serviceFeeValue / 100
-            : serviceFeeValue * Math.max(1, stages.length || 1);
+            : serviceFeeValue * Math.max(1, stages.length || 1));
         return {
-            name: snapshot.contractName || snapshot.name || itemName + '三方交易合同',
+            name: (snapshot.contractName || snapshot.name || itemName + partyLabel + '交易合同').replace(selfOperated ? /三方/g : /$^/, '双方'),
             number: snapshot.contractNo || snapshot.number || snapshot.id || ('LG-HT-' + String(orderNo).slice(-16)),
             effectiveAt: snapshot.startsAt || snapshot.effectiveAt || String(record.appliedAt || '--').slice(0, 10),
             endsAt: snapshot.endsAt || '--',
@@ -132,13 +136,15 @@
             signedAt: snapshot.signedAt || '--',
             source: snapshot.source || '订单关联生成',
             remark: snapshot.remark || '--',
-            fileName: snapshot.fileName || (snapshot.files && snapshot.files[0]) || itemName + '三方交易合同.pdf',
+            fileName: (snapshot.fileName || (snapshot.files && snapshot.files[0]) || itemName + partyLabel + '交易合同.pdf').replace(selfOperated ? /三方/g : /$^/, '双方'),
             provider: provider,
             demander: demander,
             operator: operator,
+            operationMode: operationMode,
+            selfOperated: selfOperated,
             amount: amount,
             paymentMode: snapshot.paymentMode === 'installment' || stages.length > 1 ? '分期付款' : '一次性付款',
-            feeRule: serviceFeeMode === 'P' ? '按每笔付款金额的 ' + serviceFeeValue + '% 收取' : '每笔付款固定收取 ' + formatMoney(serviceFeeValue),
+            feeRule: selfOperated ? '--' : (serviceFeeMode === 'P' ? '按每笔付款金额的 ' + serviceFeeValue + '% 收取' : '每笔付款固定收取 ' + formatMoney(serviceFeeValue)),
             netAmount: Math.max(0, amount - feeTotal)
         };
     }
@@ -168,6 +174,7 @@
             +                   '<div><span>合同签署方式：</span><strong>' + escapeHtml(contract.signMethod) + '</strong></div>'
             +                   '<div><span>签署时间：</span><strong>' + escapeHtml(contract.signedAt) + '</strong></div>'
             +                   '<div><span>合同来源：</span><strong>' + escapeHtml(contract.source) + '</strong></div>'
+            +                   '<div><span>经营属性：</span><strong>' + (contract.selfOperated ? '自营' : '第三方') + '</strong></div>'
             +                   '<div class="is-full"><span>备注：</span><strong>' + escapeHtml(contract.remark) + '</strong></div>'
             +               '</div>'
             +           '</section>'
@@ -185,16 +192,15 @@
             +                   '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span></div>'
             +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span>' + escapeHtml(contract.provider) + '</span></div>'
             +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span>' + escapeHtml(contract.demander) + '</span></div>'
-            +                   '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span>' + escapeHtml(contract.operator) + '</span></div>'
+            +                   (contract.selfOperated ? '' : '<div class="supplier-contract-signer-row"><span>法人</span><span>平台运营方</span><span>' + escapeHtml(contract.operator) + '</span></div>')
             +               '</div>'
             +           '</section>'
             +           '<section class="supplier-contract-approval-section">'
-            +               '<div class="supplier-contract-approval-heading"><h3>付款与分账条款</h3></div>'
+            +               '<div class="supplier-contract-approval-heading"><h3>' + (contract.selfOperated ? '付款条款' : '付款与分账条款') + '</h3></div>'
             +               '<div class="supplier-order-relation-payment supplier-contract-unlink-payment">'
             +                   '<div><span>合同金额</span><strong>' + formatMoney(contract.amount) + '</strong></div>'
             +                   '<div><span>付款方式</span><strong>' + escapeHtml(contract.paymentMode) + '</strong></div>'
-            +                   '<div><span>平台服务费</span><strong>' + escapeHtml(contract.feeRule) + '</strong></div>'
-            +                   '<div><span>提供方预计实收</span><strong>' + formatMoney(contract.netAmount) + '</strong></div>'
+            +                   (contract.selfOperated ? '<div><span>经营属性</span><strong>运营方自营</strong></div>' : '<div><span>平台服务费</span><strong>' + escapeHtml(contract.feeRule) + '</strong></div><div><span>提供方预计实收</span><strong>' + formatMoney(contract.netAmount) + '</strong></div>')
             +               '</div>'
             +           '</section>'
             +           '<section class="supplier-contract-approval-section">'
