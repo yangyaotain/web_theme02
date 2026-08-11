@@ -2341,48 +2341,128 @@
 
     var industrySolutionShelfSamples = [
         {
-            id: 'solution-smart-park',
+            id: 'solution-energy-carbon',
             status: 'listed',
-            name: '智慧园区数据运营行业解决方案',
+            name: '龙岗区工业园区能碳协同管理解决方案',
             category: '行业解决方案',
             serviceType: '行业解决方案',
-            payMode: '预付费',
-            measureMode: '按时长',
-            createdAt: '2026-06-08',
-            version: 'v1.2'
-        },
-        {
-            id: 'solution-manufacturing-chain',
-            status: 'listed',
-            name: '制造业供应链协同数据解决方案',
-            category: '行业解决方案',
-            serviceType: '行业解决方案',
-            payMode: '预付费',
-            measureMode: '按次数',
-            createdAt: '2026-06-12',
-            version: 'v1.1'
-        },
-        {
-            id: 'solution-finance-risk',
-            status: 'listed',
-            name: '金融风控数据融合应用解决方案',
-            category: '行业解决方案',
-            serviceType: '行业解决方案',
+            cover: 'images/solution-manufacturing.jpg',
+            orgTypes: ['数据提供方', '数据需求方'],
+            businessTypes: ['数据产品', '应用场景'],
+            delivery: '线下交付',
+            description: '汇聚园区企业用能、设备运行与碳排放数据，构建能耗诊断、碳核算和节能策略协同体系。',
             payMode: '预付费',
             measureMode: '面议',
-            createdAt: '2026-06-18',
-            version: 'v1.0'
+            createdAt: '2026-07-16',
+            version: 'v1.0',
+            intro: {
+                explanation: '<p>面向龙岗区工业园区及重点用能企业，整合电、水、气、设备运行与碳排放数据，形成园区能碳数据底座、企业用能画像和协同管理机制，支撑节能诊断、碳核算与绿色运营决策。</p>',
+                process: '<p>需求调研 → 数据盘点 → 指标设计 → 数据接入 → 能碳模型配置 → 试运行验证 → 培训交付</p>',
+                advantage: '<p>统一园区和企业两级能碳口径，兼顾数据采集、核算分析与运营管理；支持分行业、分企业、分设备对标，便于定位异常能耗并持续跟踪改进效果。</p>',
+                cases: '<p>为龙岗区某制造园区梳理重点用能设备与能源账单数据，建立园区能耗指标体系和企业能碳画像，辅助园区识别高耗能环节并形成分阶段节能改造建议。</p>'
+            },
+            pricing: {
+                payMode: '预付费',
+                measures: ['面议'],
+                countPrice: '',
+                countUnit: '元/次',
+                durationPrice: '',
+                durationUnit: '元/月',
+                referencePrice: '面议'
+            }
         },
         {
-            id: 'solution-urban-governance',
+            id: 'solution-commerce-inventory',
             status: 'listed',
-            name: '城市治理多源数据分析解决方案',
+            name: '商贸流通供需匹配与库存预警解决方案',
             category: '行业解决方案',
             serviceType: '行业解决方案',
+            cover: 'images/solution-asset.jpg',
+            orgTypes: ['数据提供方', '数据需求方'],
+            businessTypes: ['数据产品', '数据资源需求'],
+            delivery: '线下交付',
+            description: '融合订单、库存、价格和物流数据，构建供需匹配、滞销识别与库存风险预警能力。',
+            payMode: '预付费',
+            measureMode: '按次数',
+            createdAt: '2026-07-19',
+            version: 'v1.0',
+            intro: {
+                explanation: '<p>围绕商贸企业采购、销售、库存和物流协同需求，融合多环节经营数据，形成商品供需匹配、库存健康度分析和风险预警方案，帮助企业提升周转效率。</p>',
+                process: '<p>业务访谈 → 数据映射 → 商品主数据治理 → 供需模型设计 → 预警规则配置 → 场景验证 → 运营交付</p>',
+                advantage: '<p>覆盖采购、销售、库存和物流全链路，可按商品、门店和区域进行多维分析；预警规则可结合周转天数、销量变化和补货周期灵活配置。</p>',
+                cases: '<p>为龙岗区某商贸企业建立商品供需匹配与库存预警模型，识别慢周转商品和区域缺货风险，为采购计划与跨仓调拨提供数据依据。</p>'
+            },
+            pricing: {
+                payMode: '预付费',
+                measures: ['按次数'],
+                countPrice: '36000',
+                countUnit: '元/次',
+                durationPrice: '',
+                durationUnit: '元/月',
+                referencePrice: '36000元/次'
+            }
+        },
+        {
+            id: 'solution-low-altitude-logistics',
+            status: 'listed',
+            name: '低空物流运行监测与航线协同解决方案',
+            category: '行业解决方案',
+            serviceType: '行业解决方案',
+            cover: 'images/solution-infotech.jpg',
+            orgTypes: ['数据提供方', '数据需求方'],
+            businessTypes: ['数据资源需求', '应用场景'],
+            delivery: '线下交付',
+            description: '整合飞行计划、气象、航线和物流任务数据，支撑低空物流运行监测与航线协同分析。',
             payMode: '预付费',
             measureMode: '按时长',
-            createdAt: '2026-06-22',
-            version: 'v1.0'
+            createdAt: '2026-07-23',
+            version: 'v1.0',
+            intro: {
+                explanation: '<p>面向低空物流运营和监管协同场景，整合飞行计划、航线、气象、起降点与物流任务数据，形成运行监测、异常识别和航线协同分析能力。</p>',
+                process: '<p>场景梳理 → 数据目录确认 → 航线指标设计 → 监测模型配置 → 联调验证 → 运行培训 → 持续优化</p>',
+                advantage: '<p>兼顾物流效率与运行安全，将飞行任务、环境条件和航线资源统一分析；支持按区域、时段和任务类型评估运行状态。</p>',
+                cases: '<p>为龙岗区某低空物流试点梳理航线、起降点和配送任务数据，搭建运行监测指标和异常处置流程，支撑试点航线运营复盘。</p>'
+            },
+            pricing: {
+                payMode: '预付费',
+                measures: ['按时长'],
+                countPrice: '',
+                countUnit: '元/次',
+                durationPrice: '18000',
+                durationUnit: '元/月',
+                referencePrice: '18000元/月'
+            }
+        },
+        {
+            id: 'solution-supply-chain-risk',
+            status: 'listed',
+            name: '企业供应链风险洞察行业解决方案',
+            category: '行业解决方案',
+            serviceType: '行业解决方案',
+            cover: 'images/solution-finance.jpg',
+            orgTypes: ['数据需求方', '财务服务商'],
+            businessTypes: ['数据产品需求', '应用场景'],
+            delivery: '线下交付',
+            description: '融合企业经营、履约、物流和外部风险数据，形成供应链主体画像与风险洞察机制。',
+            payMode: '预付费',
+            measureMode: '面议',
+            createdAt: '2026-07-28',
+            version: 'v1.0',
+            intro: {
+                explanation: '<p>围绕核心企业供应链稳定性管理需求，融合主体经营、订单履约、物流和外部风险数据，构建供应商画像、风险识别与分级处置机制。</p>',
+                process: '<p>风险场景调研 → 主体数据盘点 → 指标与规则设计 → 数据融合 → 风险模型验证 → 处置流程配置 → 交付复盘</p>',
+                advantage: '<p>将供应商经营表现、履约情况和外部风险统一纳入分析，支持风险分层、趋势跟踪和处置留痕，便于采购、财务与风控部门协同。</p>',
+                cases: '<p>为龙岗区某制造企业梳理重点供应商经营与履约数据，形成风险指标清单和分级预警规则，辅助企业优化供应商准入与日常监测。</p>'
+            },
+            pricing: {
+                payMode: '预付费',
+                measures: ['面议'],
+                countPrice: '',
+                countUnit: '元/次',
+                durationPrice: '',
+                durationUnit: '元/月',
+                referencePrice: '面议'
+            }
         }
     ];
 
@@ -2410,8 +2490,8 @@
             serviceType: item.serviceType,
             payMode: getShelfPayMode(item),
             measureMode: getShelfMeasureMode(item),
-            org: item.org || '',
-            business: item.business || '',
+            org: item.org || (item.orgTypes || []).join(','),
+            business: item.business || (item.businessTypes || []).join(','),
             delivery: item.delivery || '',
             createdAt: item.createdAt,
             version: item.version
@@ -2535,6 +2615,9 @@
         var editorMode = 'create';
         var editorStep = 'intro';
         var editorData = null;
+        var solutionOpenSelect = '';
+        var solutionInstitutionOptions = ['数据提供方', '数据需求方', '法律服务商', '财务服务商'];
+        var solutionBusinessOptions = ['数据产品', '数据资源需求', '数据产品需求', '应用场景'];
         var icons = {
             add: '<svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z"/></svg>',
             search: '<svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l4.45 4.44-1.42 1.42-4.44-4.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>',
@@ -2668,6 +2751,85 @@
             serviceView = 'editor';
             noticeText = '';
             renderServiceEditor();
+        }
+
+        function findIndustrySolution(id) {
+            return industrySolutionShelfSamples.find(function (item) { return item.id === id; }) || null;
+        }
+
+        function getEmptyIndustrySolution() {
+            return {
+                id: 'solution-custom-' + (industrySolutionShelfSamples.length + 1),
+                status: 'draft',
+                name: '',
+                category: '行业解决方案',
+                serviceType: '行业解决方案',
+                cover: '',
+                orgTypes: [],
+                businessTypes: [],
+                delivery: '线下交付',
+                description: '',
+                createdAt: '2026-08-11',
+                version: 'v1.0',
+                intro: {
+                    explanation: '',
+                    process: '',
+                    advantage: '',
+                    cases: ''
+                },
+                pricing: {
+                    payMode: '预付费',
+                    measures: ['面议'],
+                    countPrice: '',
+                    countUnit: '元/次',
+                    durationPrice: '',
+                    durationUnit: '元/月',
+                    referencePrice: '面议'
+                }
+            };
+        }
+
+        function normalizeIndustrySolution(data) {
+            data = data || getEmptyIndustrySolution();
+            data.category = '行业解决方案';
+            data.serviceType = '行业解决方案';
+            data.orgTypes = Array.isArray(data.orgTypes) ? data.orgTypes : String(data.org || '').split(',').filter(Boolean);
+            data.businessTypes = Array.isArray(data.businessTypes) ? data.businessTypes : String(data.business || '').split(',').filter(Boolean);
+            data.delivery = data.delivery || '线下交付';
+            data.description = data.description || '';
+            data.intro = data.intro || {};
+            data.intro.explanation = data.intro.explanation || '';
+            data.intro.process = data.intro.process || '';
+            data.intro.advantage = data.intro.advantage || '';
+            data.intro.cases = data.intro.cases || '';
+            data.pricing = normalizeEditorPricing(data.pricing || {
+                payMode: '预付费',
+                measures: [data.measureMode || '面议']
+            });
+            data.measureMode = getPricingMeasure(data.pricing);
+            data.payMode = '预付费';
+            return data;
+        }
+
+        function openIndustrySolutionEditor(record, mode) {
+            var source = record ? findIndustrySolution(record.id) : getEmptyIndustrySolution();
+            editorMode = mode || 'create';
+            editorStep = 'basic';
+            solutionOpenSelect = '';
+            editorData = normalizeIndustrySolution(JSON.parse(JSON.stringify(source || getEmptyIndustrySolution())));
+            if (editorMode === 'create') {
+                editorData.id = 'solution-custom-' + (industrySolutionShelfSamples.length + 1);
+                editorData.name = '';
+                editorData.cover = '';
+                editorData.orgTypes = [];
+                editorData.businessTypes = [];
+                editorData.description = '';
+                editorData.intro = { explanation: '', process: '', advantage: '', cases: '' };
+                editorData.pricing = normalizeEditorPricing({ payMode: '预付费', measures: ['面议'] });
+            }
+            serviceView = 'editor';
+            noticeText = '';
+            renderSolutionEditor();
         }
 
         function renderRequiredLabel(text) {
@@ -3253,6 +3415,507 @@
                 + '</div>';
         }
 
+        function renderSolutionEditorSteps() {
+            var steps = [
+                { key: 'basic', label: '基本信息' },
+                { key: 'pricing', label: '定价信息' },
+                { key: 'intro', label: '服务介绍' }
+            ];
+            var activeIndex = steps.findIndex(function (item) { return item.key === editorStep; });
+            return '<div class="service-editor-steps solution-editor-steps">' + steps.map(function (step, index) {
+                var state = index < activeIndex ? ' done' : (index === activeIndex ? ' active' : '');
+                var marker = index < activeIndex ? icons.check : String(index + 1);
+                return ''
+                    + '<button class="service-editor-step' + state + '" type="button" data-solution-step="' + step.key + '">'
+                    +   '<span class="service-editor-step-index">' + marker + '</span><strong>' + step.label + '</strong>'
+                    + '</button>'
+                    + (index < steps.length - 1 ? '<span class="service-editor-step-line"></span>' : '');
+            }).join('') + '</div>';
+        }
+
+        function renderSolutionCoverUploader() {
+            var hasCover = !!editorData.cover;
+            return ''
+                + '<div class="solution-cover-field">'
+                +   '<label class="solution-cover-upload' + (hasCover ? ' has-image' : '') + '">'
+                +       (hasCover
+                    ? '<img src="' + escapeHtml(editorData.cover) + '" alt="行业解决方案封面"><span class="solution-cover-change">' + icons.upload + '<em>更换图片</em></span>'
+                    : '<span class="solution-cover-empty">' + icons.add + '<strong>上传图片</strong></span>')
+                +       '<input type="file" accept="image/jpeg,image/png" data-solution-cover-upload>'
+                +   '</label>'
+                +   '<p>上传单张图片，支持 jpg/jpeg/png 等格式，单张大小不超过 2M</p>'
+                + '</div>';
+        }
+
+        function renderSolutionMultiSelect(field, options) {
+            var selected = Array.isArray(editorData[field]) ? editorData[field] : [];
+            var isOpen = solutionOpenSelect === field;
+            var tags = selected.map(function (item) {
+                return '<span class="solution-multi-tag">' + escapeHtml(item)
+                    + '<button type="button" data-solution-remove-option="' + escapeHtml(item) + '" data-solution-select-field="' + field + '" aria-label="移除' + escapeHtml(item) + '"><span class="material-symbols-outlined">close</span></button></span>';
+            }).join('');
+            var optionHtml = options.map(function (item) {
+                var checked = selected.indexOf(item) !== -1;
+                return ''
+                    + '<button class="solution-multi-option' + (checked ? ' selected' : '') + '" type="button" data-solution-option="' + escapeHtml(item) + '" data-solution-select-field="' + field + '">'
+                    +   '<input type="checkbox" tabindex="-1"' + (checked ? ' checked' : '') + ' aria-hidden="true">'
+                    +   '<span>' + escapeHtml(item) + '</span>'
+                    + '</button>';
+            }).join('');
+            return ''
+                + '<div class="solution-multi-select' + (isOpen ? ' open' : '') + '" data-solution-multi-select="' + field + '">'
+                +   '<div class="solution-multi-control" data-solution-select-control="' + field + '">'
+                +       '<div class="solution-multi-values">' + tags
+                +           '<input type="text" data-solution-select-search="' + field + '" placeholder="' + (selected.length ? '' : '请选择') + '" autocomplete="off">'
+                +       '</div>'
+                +       '<span class="solution-multi-search-icon">' + icons.search + '</span>'
+                +   '</div>'
+                +   '<div class="solution-multi-dropdown">'
+                +       optionHtml
+                +       '<div class="solution-multi-empty">暂无匹配结果</div>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderSolutionBasic() {
+            var nameLength = String(editorData.name || '').length;
+            var descLength = String(editorData.description || '').length;
+            return ''
+                + '<div class="service-editor-layout solution-editor-layout-basic">'
+                +   '<div class="service-editor-main">'
+                +       '<section class="service-form-section solution-basic-section">'
+                +           '<h2>基本信息</h2>'
+                +           '<div class="service-editor-row align-start">'
+                +               renderRequiredLabel('服务封面')
+                +               '<div class="service-editor-field">' + renderSolutionCoverUploader() + '</div>'
+                +           '</div>'
+                +           '<div class="service-editor-row">'
+                +               renderRequiredLabel('服务名称')
+                +               '<div class="service-editor-field service-field-with-count">'
+                +                   '<input class="service-editor-input solution-count-input" maxlength="64" data-solution-field="name" value="' + escapeHtml(editorData.name || '') + '" placeholder="请输入">'
+                +                   '<span data-solution-count="name">' + nameLength + '/64</span>'
+                +               '</div>'
+                +           '</div>'
+                +           '<div class="service-editor-row align-start">'
+                +               renderRequiredLabel('面向机构类型')
+                +               '<div class="service-editor-field">' + renderSolutionMultiSelect('orgTypes', solutionInstitutionOptions) + '</div>'
+                +           '</div>'
+                +           '<div class="service-editor-row align-start">'
+                +               renderRequiredLabel('关联业务类型')
+                +               '<div class="service-editor-field solution-short-field">' + renderSolutionMultiSelect('businessTypes', solutionBusinessOptions) + '</div>'
+                +           '</div>'
+                +           '<div class="service-editor-row">'
+                +               renderRequiredLabel('服务交付方式')
+                +               '<div class="service-editor-field service-check-group">'
+                +                   '<label class="service-check-inline"><input type="checkbox" data-solution-delivery value="线下交付"' + (editorData.delivery === '线下交付' ? ' checked' : '') + '><span>线下交付</span></label>'
+                +               '</div>'
+                +           '</div>'
+                +           '<div class="service-editor-row align-start">'
+                +               renderRequiredLabel('服务简介')
+                +               '<div class="service-editor-field service-field-with-count">'
+                +                   '<textarea class="service-editor-textarea solution-count-input" maxlength="200" data-solution-field="description" placeholder="请输入">' + escapeHtml(editorData.description || '') + '</textarea>'
+                +                   '<span data-solution-count="description">' + descLength + '/200</span>'
+                +               '</div>'
+                +           '</div>'
+                +       '</section>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function richToolbarButton(icon, title, command, value) {
+            return '<button type="button" title="' + title + '" data-rich-command="' + command + '"' + (value ? ' data-rich-value="' + value + '"' : '') + '><span class="material-symbols-outlined">' + icon + '</span></button>';
+        }
+
+        function renderSolutionRichToolbar() {
+            return ''
+                + '<div class="solution-rich-toolbar">'
+                +   '<div class="solution-rich-toolbar-row">'
+                +       richToolbarButton('undo', '撤销', 'undo')
+                +       richToolbarButton('redo', '重做', 'redo')
+                +       richToolbarButton('format_paint', '格式刷', 'copy')
+                +       richToolbarButton('format_clear', '清除格式', 'removeFormat')
+                +       '<select data-rich-block title="段落格式"><option value="p">段落</option><option value="h2">标题 2</option><option value="h3">标题 3</option></select>'
+                +       '<select data-rich-font title="字体"><option value="Microsoft YaHei">系统字体</option><option value="SimSun">宋体</option><option value="SimHei">黑体</option></select>'
+                +       '<select data-rich-size title="字号"><option value="3">14px</option><option value="2">12px</option><option value="4">16px</option><option value="5">18px</option></select>'
+                +       richToolbarButton('format_bold', '加粗', 'bold')
+                +       richToolbarButton('format_italic', '斜体', 'italic')
+                +       richToolbarButton('format_underlined', '下划线', 'underline')
+                +       richToolbarButton('strikethrough_s', '删除线', 'strikeThrough')
+                +       richToolbarButton('subscript', '下标', 'subscript')
+                +       richToolbarButton('superscript', '上标', 'superscript')
+                +       richToolbarButton('format_color_text', '文字颜色', 'foreColor', '#1f2d28')
+                +       richToolbarButton('ink_highlighter', '背景色', 'hiliteColor', '#eaf8f1')
+                +   '</div>'
+                +   '<div class="solution-rich-toolbar-row">'
+                +       richToolbarButton('format_align_left', '左对齐', 'justifyLeft')
+                +       richToolbarButton('format_align_center', '居中', 'justifyCenter')
+                +       richToolbarButton('format_align_right', '右对齐', 'justifyRight')
+                +       richToolbarButton('format_align_justify', '两端对齐', 'justifyFull')
+                +       richToolbarButton('format_indent_decrease', '减少缩进', 'outdent')
+                +       richToolbarButton('format_indent_increase', '增加缩进', 'indent')
+                +       richToolbarButton('format_list_numbered', '有序列表', 'insertOrderedList')
+                +       richToolbarButton('format_list_bulleted', '无序列表', 'insertUnorderedList')
+                +       richToolbarButton('table', '表格', 'insertHTML', '<table><tbody><tr><td>内容</td><td>内容</td></tr></tbody></table>')
+                +       richToolbarButton('image', '图片', 'insertImage')
+                +       richToolbarButton('smart_display', '视频', 'insertVideo')
+                +       richToolbarButton('link', '链接', 'createLink')
+                +       richToolbarButton('special_character', '特殊字符', 'insertText', 'Ω')
+                +       richToolbarButton('schedule', '时间', 'insertText', '2026-08-11')
+                +       richToolbarButton('search', '查找', 'find')
+                +       richToolbarButton('visibility', '预览', 'preview')
+                +       richToolbarButton('fullscreen', '全屏', 'fullscreen')
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderSolutionRichEditor(label, key, required) {
+            var value = (editorData.intro && editorData.intro[key]) || '<p><br></p>';
+            var labelHtml = required ? renderRequiredLabel(label) : '<div class="service-editor-label">' + label + '</div>';
+            return ''
+                + '<div class="service-editor-row align-start solution-rich-row">'
+                +   labelHtml
+                +   '<div class="service-editor-field">'
+                +       '<div class="solution-rich-editor" data-rich-editor-wrap="' + key + '">'
+                +           renderSolutionRichToolbar()
+                +           '<div class="solution-rich-content" contenteditable="true" data-solution-rich="' + key + '" data-placeholder="请输入"></div>'
+                +           '<template data-solution-rich-template="' + key + '">' + value + '</template>'
+                +       '</div>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function renderSolutionIntro() {
+            return ''
+                + '<div class="service-editor-layout service-editor-layout-content solution-editor-layout-intro">'
+                +   '<div class="service-editor-main">'
+                +       '<section class="service-form-section solution-intro-section">'
+                +           renderSolutionRichEditor('服务说明', 'explanation', true)
+                +           renderSolutionRichEditor('服务流程', 'process', false)
+                +           renderSolutionRichEditor('服务优势', 'advantage', false)
+                +           renderSolutionRichEditor('服务案例', 'cases', false)
+                +       '</section>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        function collectSolutionData() {
+            if (!editorData) return;
+            var nameInput = panel.querySelector('[data-solution-field="name"]');
+            var descInput = panel.querySelector('[data-solution-field="description"]');
+            var deliveryInput = panel.querySelector('[data-solution-delivery]');
+            if (nameInput) editorData.name = nameInput.value.trim();
+            if (descInput) editorData.description = descInput.value.trim();
+            if (deliveryInput) editorData.delivery = deliveryInput.checked ? '线下交付' : '';
+            panel.querySelectorAll('[data-solution-rich]').forEach(function (editable) {
+                editorData.intro[editable.dataset.solutionRich] = editable.innerHTML;
+            });
+            if (panel.querySelector('[data-pricing-field]') || panel.querySelector('[data-pricing-measure]')) {
+                var pricing = editorData.pricing || {};
+                var measure = panel.querySelector('[data-pricing-measure]:checked');
+                var countPrice = panel.querySelector('[data-pricing-field="countPrice"]');
+                var countUnit = panel.querySelector('[data-pricing-field="countUnit"]');
+                var durationPrice = panel.querySelector('[data-pricing-field="durationPrice"]');
+                var durationUnit = panel.querySelector('[data-pricing-field="durationUnit"]');
+                pricing.payMode = '预付费';
+                pricing.measures = [measure ? measure.value : '面议'];
+                pricing.countPrice = measure && measure.value === '按次数' && countPrice ? countPrice.value.trim() : '';
+                pricing.countUnit = countUnit ? countUnit.value : (pricing.countUnit || '元/次');
+                pricing.durationPrice = measure && measure.value === '按时长' && durationPrice ? durationPrice.value.trim() : '';
+                pricing.durationUnit = durationUnit ? durationUnit.value : (pricing.durationUnit || '元/月');
+                editorData.pricing = pricing;
+                pricing.referencePrice = getReferencePrice(editorData);
+                editorData.measureMode = getPricingMeasure(pricing);
+            }
+            editorData.payMode = '预付费';
+            editorData.org = (editorData.orgTypes || []).join(',');
+            editorData.business = (editorData.businessTypes || []).join(',');
+        }
+
+        function persistIndustrySolution(status) {
+            collectSolutionData();
+            editorData.status = status;
+            editorData.category = '行业解决方案';
+            editorData.serviceType = '行业解决方案';
+            editorData.version = editorData.version || 'v1.0';
+            editorData.createdAt = editorData.createdAt || '2026-08-11';
+            var saved = JSON.parse(JSON.stringify(editorData));
+            var index = industrySolutionShelfSamples.findIndex(function (item) { return item.id === saved.id; });
+            if (index >= 0) industrySolutionShelfSamples[index] = saved;
+            else industrySolutionShelfSamples.push(saved);
+            syncServiceShelfRecords();
+            activeStatus = status;
+            serviceView = 'list';
+            editorData = null;
+            solutionOpenSelect = '';
+            noticeText = '';
+            renderPanel();
+        }
+
+        function getSolutionStepIndex(step) {
+            return ['basic', 'pricing', 'intro'].indexOf(step);
+        }
+
+        function moveSolutionStep(direction) {
+            collectSolutionData();
+            var steps = ['basic', 'pricing', 'intro'];
+            var nextIndex = Math.max(0, Math.min(steps.length - 1, getSolutionStepIndex(editorStep) + direction));
+            editorStep = steps[nextIndex];
+            solutionOpenSelect = '';
+            noticeText = '';
+            renderSolutionEditor();
+        }
+
+        function initializeSolutionRichEditors() {
+            panel.querySelectorAll('[data-solution-rich-template]').forEach(function (template) {
+                var editable = panel.querySelector('[data-solution-rich="' + template.dataset.solutionRichTemplate + '"]');
+                if (editable) editable.innerHTML = template.innerHTML;
+            });
+        }
+
+        function runRichCommand(button) {
+            var wrap = button.closest('[data-rich-editor-wrap]');
+            var editable = wrap && wrap.querySelector('[contenteditable="true"]');
+            if (!editable) return;
+            var command = button.dataset.richCommand;
+            var value = button.dataset.richValue || null;
+            editable.focus();
+            if (command === 'insertImage') {
+                value = window.prompt('请输入图片地址');
+                if (!value) return;
+                document.execCommand('insertImage', false, value);
+                return;
+            }
+            if (command === 'insertVideo') {
+                value = window.prompt('请输入视频地址');
+                if (!value) return;
+                document.execCommand('insertHTML', false, '<a href="' + escapeHtml(value) + '">查看视频</a>');
+                return;
+            }
+            if (command === 'createLink') {
+                value = window.prompt('请输入链接地址');
+                if (!value) return;
+                document.execCommand('createLink', false, value);
+                return;
+            }
+            if (command === 'fullscreen') {
+                wrap.classList.toggle('fullscreen');
+                return;
+            }
+            if (command === 'find' || command === 'preview' || command === 'copy') return;
+            document.execCommand(command, false, value);
+        }
+
+        function closeSolutionSelectOnPanelClick(event) {
+            if (event.target.closest('.solution-multi-select')) return;
+            solutionOpenSelect = '';
+            panel.querySelectorAll('.solution-multi-select.open').forEach(function (select) {
+                select.classList.remove('open');
+            });
+        }
+
+        function bindSolutionEditorEvents(renderOptions) {
+            var backButton = panel.querySelector('[data-service-editor-back]');
+            if (backButton) backButton.addEventListener('click', function () {
+                serviceView = 'list';
+                editorData = null;
+                solutionOpenSelect = '';
+                noticeText = '';
+                renderPanel();
+            });
+
+            panel.querySelectorAll('[data-solution-step]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    collectSolutionData();
+                    editorStep = this.dataset.solutionStep;
+                    solutionOpenSelect = '';
+                    noticeText = '';
+                    renderSolutionEditor();
+                });
+            });
+
+            var cancelButton = panel.querySelector('[data-solution-cancel]');
+            if (cancelButton) cancelButton.addEventListener('click', function () {
+                serviceView = 'list';
+                editorData = null;
+                solutionOpenSelect = '';
+                noticeText = '';
+                renderPanel();
+            });
+            var prevButton = panel.querySelector('[data-solution-prev]');
+            if (prevButton) prevButton.addEventListener('click', function () { moveSolutionStep(-1); });
+            var nextButton = panel.querySelector('[data-solution-next]');
+            if (nextButton) nextButton.addEventListener('click', function () { moveSolutionStep(1); });
+            var draftButton = panel.querySelector('[data-solution-save-draft]');
+            if (draftButton) draftButton.addEventListener('click', function () { persistIndustrySolution('draft'); });
+            var submitButton = panel.querySelector('[data-solution-submit]');
+            if (submitButton) submitButton.addEventListener('click', function () { persistIndustrySolution('approval'); });
+
+            panel.querySelectorAll('.solution-count-input').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    var counter = panel.querySelector('[data-solution-count="' + this.dataset.solutionField + '"]');
+                    if (counter) counter.textContent = this.value.length + '/' + this.maxLength;
+                });
+            });
+
+            var coverInput = panel.querySelector('[data-solution-cover-upload]');
+            if (coverInput) coverInput.addEventListener('change', function () {
+                if (!this.files || !this.files[0]) return;
+                var file = this.files[0];
+                if (file.size > 2 * 1024 * 1024) {
+                    noticeText = '图片大小不能超过 2M。';
+                    renderSolutionEditor({ scrollTop: getEditorScrollTop() });
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    collectSolutionData();
+                    editorData.cover = event.target.result;
+                    noticeText = '';
+                    renderSolutionEditor({ scrollTop: getEditorScrollTop() });
+                };
+                reader.readAsDataURL(file);
+            });
+
+            panel.querySelectorAll('[data-solution-select-control]').forEach(function (control) {
+                control.addEventListener('click', function (event) {
+                    if (event.target.closest('[data-solution-remove-option]')) return;
+                    var field = this.dataset.solutionSelectControl;
+                    solutionOpenSelect = solutionOpenSelect === field ? '' : field;
+                    panel.querySelectorAll('.solution-multi-select').forEach(function (select) {
+                        select.classList.toggle('open', select.dataset.solutionMultiSelect === solutionOpenSelect);
+                    });
+                    var search = panel.querySelector('[data-solution-select-search="' + field + '"]');
+                    if (solutionOpenSelect && search) search.focus();
+                });
+            });
+
+            panel.querySelectorAll('[data-solution-select-search]').forEach(function (input) {
+                input.addEventListener('click', function (event) { event.stopPropagation(); });
+                input.addEventListener('focus', function () {
+                    solutionOpenSelect = this.dataset.solutionSelectSearch;
+                    var select = this.closest('.solution-multi-select');
+                    if (select) select.classList.add('open');
+                });
+                input.addEventListener('input', function () {
+                    var query = this.value.trim().toLowerCase();
+                    var select = this.closest('.solution-multi-select');
+                    var visibleCount = 0;
+                    if (!select) return;
+                    select.querySelectorAll('[data-solution-option]').forEach(function (option) {
+                        var matches = option.dataset.solutionOption.toLowerCase().indexOf(query) !== -1;
+                        option.hidden = !matches;
+                        if (matches) visibleCount += 1;
+                    });
+                    var empty = select.querySelector('.solution-multi-empty');
+                    if (empty) empty.style.display = visibleCount ? 'none' : 'flex';
+                });
+            });
+
+            panel.querySelectorAll('[data-solution-option]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    collectSolutionData();
+                    var field = this.dataset.solutionSelectField;
+                    var value = this.dataset.solutionOption;
+                    var list = editorData[field] || [];
+                    var index = list.indexOf(value);
+                    if (index === -1) list.push(value);
+                    else list.splice(index, 1);
+                    editorData[field] = list;
+                    solutionOpenSelect = field;
+                    renderSolutionEditor({ scrollTop: getEditorScrollTop(), focusSelect: field });
+                });
+            });
+
+            panel.querySelectorAll('[data-solution-remove-option]').forEach(function (button) {
+                button.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    collectSolutionData();
+                    var field = this.dataset.solutionSelectField;
+                    var value = this.dataset.solutionRemoveOption;
+                    editorData[field] = (editorData[field] || []).filter(function (item) { return item !== value; });
+                    solutionOpenSelect = field;
+                    renderSolutionEditor({ scrollTop: getEditorScrollTop(), focusSelect: field });
+                });
+            });
+
+            panel.removeEventListener('click', closeSolutionSelectOnPanelClick);
+            panel.addEventListener('click', closeSolutionSelectOnPanelClick);
+
+            panel.querySelectorAll('[data-pricing-measure]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    if (!this.checked) return;
+                    var scrollTop = getEditorScrollTop();
+                    collectSolutionData();
+                    noticeText = '';
+                    renderSolutionEditor({ scrollTop: scrollTop });
+                });
+            });
+
+            panel.querySelectorAll('[data-rich-command]').forEach(function (button) {
+                button.addEventListener('mousedown', function (event) {
+                    event.preventDefault();
+                    runRichCommand(this);
+                });
+            });
+            panel.querySelectorAll('[data-rich-block]').forEach(function (select) {
+                select.addEventListener('change', function () {
+                    var editable = this.closest('[data-rich-editor-wrap]').querySelector('[contenteditable="true"]');
+                    editable.focus();
+                    document.execCommand('formatBlock', false, this.value);
+                });
+            });
+            panel.querySelectorAll('[data-rich-font]').forEach(function (select) {
+                select.addEventListener('change', function () {
+                    var editable = this.closest('[data-rich-editor-wrap]').querySelector('[contenteditable="true"]');
+                    editable.focus();
+                    document.execCommand('fontName', false, this.value);
+                });
+            });
+            panel.querySelectorAll('[data-rich-size]').forEach(function (select) {
+                select.addEventListener('change', function () {
+                    var editable = this.closest('[data-rich-editor-wrap]').querySelector('[contenteditable="true"]');
+                    editable.focus();
+                    document.execCommand('fontSize', false, this.value);
+                });
+            });
+
+            restoreEditorScrollTop(renderOptions && renderOptions.scrollTop);
+            if (renderOptions && renderOptions.focusSelect) {
+                var focusInput = panel.querySelector('[data-solution-select-search="' + renderOptions.focusSelect + '"]');
+                if (focusInput) focusInput.focus();
+            }
+        }
+
+        function renderSolutionEditor(renderOptions) {
+            renderOptions = renderOptions || {};
+            var title = editorMode === 'create' ? '新建行业解决方案' : '更新行业解决方案';
+            var body = editorStep === 'basic' ? renderSolutionBasic() : (editorStep === 'pricing' ? renderEditorPricing() : renderSolutionIntro());
+            var isFirst = editorStep === 'basic';
+            var isLast = editorStep === 'intro';
+            var footer = ''
+                + '<button class="service-secondary-btn" type="button" data-solution-cancel>' + icons.back + '<span>取消</span></button>'
+                + (editorMode === 'create' ? '<button class="service-secondary-btn" type="button" data-solution-save-draft>' + icons.save + '<span>保存草稿</span></button>' : '')
+                + (!isFirst ? '<button class="service-secondary-btn" type="button" data-solution-prev>' + icons.back + '<span>上一步</span></button>' : '')
+                + (isLast
+                    ? '<button class="service-create-btn" type="button" data-solution-submit>' + icons.check + '<span>提交</span></button>'
+                    : '<button class="service-create-btn" type="button" data-solution-next>' + icons.next + '<span>下一步</span></button>');
+            panel.innerHTML = ''
+                + '<div class="service-editor-page solution-editor-page">'
+                +   '<div class="service-editor-top">'
+                +       '<div class="service-editor-heading">'
+                +           '<button class="service-back-btn" type="button" data-service-editor-back>' + icons.back + '<span>返回</span></button>'
+                +           '<h1>' + title + '</h1>'
+                +       '</div>'
+                +       renderSolutionEditorSteps()
+                +   '</div>'
+                +   (noticeText ? '<div class="service-notice service-editor-notice">' + escapeHtml(noticeText) + '</div>' : '')
+                +   '<div class="service-editor-scroll">' + body + '</div>'
+                +   '<div class="service-editor-footer">' + footer + '</div>'
+                + '</div>';
+            initializeSolutionRichEditors();
+            bindSolutionEditorEvents(renderOptions);
+        }
+
         function renderServiceEditor(renderOptions) {
             if (typeof renderOptions === 'number') {
                 renderOptions = { scrollTop: renderOptions };
@@ -3385,7 +4048,7 @@
             activeStatus = saved.status;
             serviceView = 'list';
             editorData = null;
-            noticeText = '咨询服务内容已保存，数据门户将按当前服务介绍与定价信息展示。';
+            noticeText = '';
             renderPanel();
         }
 
@@ -3547,16 +4210,16 @@
 
         function renderPanel() {
             var records = getFilteredRecords();
+            panel.removeEventListener('click', closeSolutionSelectOnPanelClick);
             panel.innerHTML = ''
                 + '<div class="service-board">'
                 +   '<div class="service-page-head">'
                 +       '<h1 class="service-page-title">服务管理</h1>'
                 +       '<div class="service-create-actions">'
                 +           '<button class="service-create-btn" type="button" data-service-create="consult">' + icons.add + '<span>新建咨询服务</span></button>'
-                +           '<button class="service-create-btn" type="button" data-service-create="solution">' + icons.add + '<span>新建行业方案</span></button>'
+                +           '<button class="service-create-btn" type="button" data-service-create="solution">' + icons.add + '<span>新建行业解决方案</span></button>'
                 +       '</div>'
                 +   '</div>'
-                +   (noticeText ? '<div class="service-notice">' + escapeHtml(noticeText) + '</div>' : '')
                 +   '<div class="service-tabs" role="tablist">' + renderTabs() + '</div>'
                 +   renderFilters()
                 +   renderTable(records)
@@ -3619,8 +4282,7 @@
             panel.querySelectorAll('[data-service-create]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     if (this.dataset.serviceCreate === 'solution') {
-                        noticeText = '新建行业方案表单将在下一步设计。';
-                        renderPanel();
+                        openIndustrySolutionEditor(null, 'create');
                         return;
                     }
                     openConsultServiceEditor(null, 'create');
@@ -3632,17 +4294,12 @@
                     var action = this.dataset.serviceRowAction;
                     var record = serviceShelfRecords.find(function (item) { return item.id === button.dataset.serviceId; });
                     if (action === 'update') {
-                        if (!record || record.category !== '数据咨询服务') {
-                            noticeText = '行业方案更新表单将在下一步设计。';
-                            renderPanel();
-                            return;
-                        }
-                        openConsultServiceEditor(record, 'edit');
+                        if (!record) return;
+                        if (record.category === '行业解决方案') openIndustrySolutionEditor(record, 'edit');
+                        else openConsultServiceEditor(record, 'edit');
                         return;
                     }
-                    var labelMap = { update: '更新', offline: '下架', log: '日志' };
-                    noticeText = (labelMap[action] || '操作') + '功能将在下一步设计。';
-                    renderPanel();
+                    return;
                 });
             });
 

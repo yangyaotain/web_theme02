@@ -420,7 +420,7 @@
                 + (state.page === pageCount ? ' disabled' : '') + '>下一页</button>';
         }
 
-        function selectedRow(item, type, index, total) {
+        function selectedRow(item, type, index) {
             var typeValue = type === 'resource' ? item.category : (item.productType || item.category);
             return '<tr>'
                 + '<td class="zone-order-column"><span class="zone-selected-index">' + (index + 1) + '</span></td>'
@@ -429,13 +429,7 @@
                 + '<td>' + escapeHtml(item.provider) + '</td>'
                 + '<td>' + escapeHtml(typeValue) + '</td>'
                 + '<td>' + escapeHtml(item.delivery) + '</td>'
-                + '<td><div class="zone-table-actions">'
-                + '<button class="zone-selected-action" type="button" data-selected-action="up" data-selected-type="' + type
-                + '" data-selected-index="' + index + '"' + (index === 0 ? ' disabled' : '') + '>'
-                + ICONS.up + '<span>上移</span></button>'
-                + '<button class="zone-selected-action" type="button" data-selected-action="down" data-selected-type="' + type
-                + '" data-selected-index="' + index + '"' + (index === total - 1 ? ' disabled' : '') + '>'
-                + ICONS.down + '<span>下移</span></button>'
+                + '<td class="zone-selected-actions-column"><div class="zone-table-actions">'
                 + '<button class="zone-selected-action danger" type="button" data-selected-action="remove" data-selected-type="' + type
                 + '" data-selected-index="' + index + '">' + ICONS.remove + '<span>移除</span></button>'
                 + '</div></td>'
@@ -463,7 +457,7 @@
             var pageItems = items.slice(start, start + state.pageSize);
             selectedBody(type).innerHTML = pageItems.map(function (item) {
                 var itemIndex = ids.indexOf(item.id);
-                return selectedRow(item, type, itemIndex, allItems.length);
+                return selectedRow(item, type, itemIndex);
             }).join('');
             selectedBody(type).closest('table').hidden = pageItems.length === 0;
             selectedEmpty(type).hidden = pageItems.length !== 0;
@@ -490,29 +484,14 @@
             renderAllSelected();
         }
 
-        function moveSelected(type, index, direction) {
-            var ids = selectedIds(type);
-            var target = index + direction;
-            if (target < 0 || target >= ids.length) return;
-            var temp = ids[index];
-            ids[index] = ids[target];
-            ids[target] = temp;
-            renderSelected(type);
-        }
-
         function bindSelectedActions() {
             document.getElementById('zoneEditorForm').addEventListener('click', function (event) {
                 var button = event.target.closest('[data-selected-action]');
                 if (!button || button.disabled) return;
                 var type = button.dataset.selectedType;
                 var index = Number(button.dataset.selectedIndex);
-                var action = button.dataset.selectedAction;
-                if (action === 'up') moveSelected(type, index, -1);
-                if (action === 'down') moveSelected(type, index, 1);
-                if (action === 'remove') {
-                    selectedIds(type).splice(index, 1);
-                    renderSelected(type);
-                }
+                selectedIds(type).splice(index, 1);
+                renderSelected(type);
             });
         }
 

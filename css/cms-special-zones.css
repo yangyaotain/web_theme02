@@ -556,7 +556,12 @@
 }
 
 .zone-selected-actions-column {
-    width: 210px;
+    width: 140px;
+    text-align: center !important;
+}
+
+.zone-selected-actions-column .zone-table-actions {
+    justify-content: center;
 }
 
 .zone-selected-index {
