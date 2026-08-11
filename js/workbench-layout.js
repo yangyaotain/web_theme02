@@ -796,7 +796,7 @@
             "行业场景化AI数据服务咨询服务类"
     ];
     var serviceCategoryOptions = ['数据咨询服务', '行业解决方案'];
-    var servicePayModeOptions = ['预付费', '后付费'];
+    var servicePayModeOptions = ['预付费'];
     var serviceMeasureModeOptions = ['按次数', '按时长', '面议'];
 
     var consultationServiceCatalog = [
@@ -2346,7 +2346,7 @@
             name: '智慧园区数据运营行业解决方案',
             category: '行业解决方案',
             serviceType: '行业解决方案',
-            payMode: '后付费',
+            payMode: '预付费',
             measureMode: '按时长',
             createdAt: '2026-06-08',
             version: 'v1.2'
@@ -2368,7 +2368,7 @@
             name: '金融风控数据融合应用解决方案',
             category: '行业解决方案',
             serviceType: '行业解决方案',
-            payMode: '后付费',
+            payMode: '预付费',
             measureMode: '面议',
             createdAt: '2026-06-18',
             version: 'v1.0'
