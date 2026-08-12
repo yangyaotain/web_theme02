@@ -114,6 +114,7 @@
             background: #fafbfc;
             padding: 12px 16px;
             text-align: left;
+            white-space: nowrap;
             font-weight: 600;
             color: #606266;
             border-bottom: 1px solid #ebeef5;
@@ -823,9 +824,9 @@
                     <table class="dataspace-table">
                         <thead>
                             <tr>
-                                <th style="width:80px;">缩略图</th>
-                                <th style="width:180px;">标题</th>
-                                <th>概述</th>
+                                <th style="width:80px;">空间背景</th>
+                                <th style="width:180px;">空间标题</th>
+                                <th>空间副标题</th>
                                 <th style="width:70px;">状态</th>
                                 <th style="width:220px; text-align:center;">操作</th>
                             </tr>
@@ -894,15 +895,15 @@
                     </div>
 
                     <div class="ds-edit-card">
-                        <div class="ds-edit-card-title">横幅设置</div>
+                        <div class="ds-edit-card-title">空间设置</div>
                         <div class="ds-form-row">
-                            <div class="ds-form-label is-required">横幅背景</div>
+                            <div class="ds-form-label is-required">空间背景</div>
                             <div class="ds-form-value">
                                 <div class="ds-hero-preview" id="dsHeroPreview">
-                                    <img id="dsHeroBgImg" src="images/space-hero.jpg" alt="横幅背景">
+                                    <img id="dsHeroBgImg" src="images/space-hero.jpg" alt="空间背景">
                                     <div class="ds-hero-preview-empty" id="dsHeroBgEmpty">
                                         <svg viewBox="0 0 24 24"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>
-                                        <span>请上传横幅背景图</span>
+                                        <span>请上传空间背景图</span>
                                     </div>
                                     <div class="ds-hero-preview-overlay">
                                         <span class="ds-hero-preview-badge">
@@ -921,7 +922,7 @@
                                     </label>
                                     <span class="ds-hero-size-hint">建议尺寸 1200×400，支持 JPG/PNG</span>
                                 </div>
-                                <div class="ds-form-error" data-error-for="heroImg">请上传横幅背景图</div>
+                                <div class="ds-form-error" data-error-for="heroImg">请上传空间背景图</div>
                             </div>
                         </div>
                         <div class="ds-form-row">
@@ -932,17 +933,17 @@
                             </div>
                         </div>
                         <div class="ds-form-row">
-                            <div class="ds-form-label is-required">横幅标题</div>
+                            <div class="ds-form-label is-required">空间标题</div>
                             <div class="ds-form-value">
                                 <input class="ds-form-input" id="dsHeroTitle" value="低空经济可信数据空间" placeholder="请输入空间标题">
-                                <div class="ds-form-error" data-error-for="heroTitle">请输入横幅标题</div>
+                                <div class="ds-form-error" data-error-for="heroTitle">请输入空间标题</div>
                             </div>
                         </div>
                         <div class="ds-form-row">
-                            <div class="ds-form-label is-required">横幅副标题</div>
+                            <div class="ds-form-label is-required">空间副标题</div>
                             <div class="ds-form-value">
-                                <textarea class="ds-form-textarea" id="dsHeroSubtitle" rows="2" placeholder="横幅区域的副标题描述">以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系</textarea>
-                                <div class="ds-form-error" data-error-for="heroSubtitle">请输入横幅副标题</div>
+                                <textarea class="ds-form-textarea" id="dsHeroSubtitle" rows="2" placeholder="空间副标题描述">以"空中高德"时空数字底座为核心，构建覆盖空域管理、安全屏障及多元应用场景的立体化体系</textarea>
+                                <div class="ds-form-error" data-error-for="heroSubtitle">请输入空间副标题</div>
                             </div>
                         </div>
                     </div>
@@ -1198,8 +1199,8 @@
                 if (firstTarget.matches('input, textarea')) firstTarget.focus();
             }
             GlobalDialog.warning({
-                title: '请完善横幅设置',
-                desc: '横幅背景、角标文字、横幅标题和横幅副标题均为必填项。',
+                title: '请完善空间设置',
+                desc: '空间背景、角标文字、空间标题和空间副标题均为必填项。',
                 confirmText: '知道了'
             });
             return false;
