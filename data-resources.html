@@ -670,14 +670,15 @@
         <!-- Content Area -->
         <div class="content-area">
             <div class="content-tabs">
+                <button class="tab active">全部</button>
                 <button class="tab is-hidden">公共数据</button>
-                <button class="tab active">行业数据</button>
+                <button class="tab">行业数据</button>
                 <button class="tab">企业数据</button>
             </div>
 
             <div class="content-header">
                 <div class="results-count">
-                    共 <strong>128</strong> 条数据资源
+                    共 <strong>223</strong> 条数据资源
                 </div>
                 <div class="sort-dropdown">
                     <span class="sort-label">排序：</span>
@@ -872,7 +873,7 @@
                     <button class="pagination-number">4</button>
                     <button class="pagination-number">5</button>
                     <span class="pagination-ellipsis">...</span>
-                    <button class="pagination-number">89</button>
+                    <button class="pagination-number">23</button>
                 </div>
                 <button class="pagination-btn">下一页</button>
             </nav>
@@ -928,15 +929,22 @@
             }
         };
 
+        tabDataSets['全部'] = {
+            count: tabDataSets['行业数据'].count + tabDataSets['企业数据'].count,
+            cards: tabDataSets['行业数据'].cards.slice(0, 6).concat(tabDataSets['企业数据'].cards.slice(0, 3))
+        };
+
         var dataGrid = document.querySelector('.data-grid');
         var tabs = document.querySelectorAll('.tab');
         var resultsCount = document.querySelector('.results-count strong');
+        var lastPageButton = document.querySelector('.pagination-number:last-of-type');
 
         function renderCards(tabName) {
             var data = tabDataSets[tabName];
             if (!data) return;
             dataGrid.innerHTML = '';
             resultsCount.textContent = data.count;
+            if (lastPageButton) lastPageButton.textContent = Math.ceil(data.count / 10);
 
             data.cards.forEach(function(c) {
                 var article = document.createElement('article');
@@ -982,7 +990,7 @@
             });
         });
 
-        renderCards('行业数据');
+        renderCards('全部');
 
         document.querySelectorAll('.filter-option').forEach(function(option) {
             option.addEventListener('click', function() {

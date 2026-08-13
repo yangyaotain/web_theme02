@@ -99,6 +99,10 @@
     padding: 24px;
 }
 
+.buyer-order-operation-dialog.is-dispute .buyer-order-operation-body {
+    padding-top: 12px;
+}
+
 .buyer-order-operation-dialog.is-confirm .buyer-order-operation-body {
     padding-top: 28px;
     padding-bottom: 30px;
@@ -130,9 +134,22 @@
 
 .buyer-order-operation-field {
     display: grid;
-    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-columns: var(--buyer-order-operation-label-width, 92px) minmax(0, 1fr);
     align-items: start;
     gap: 14px;
+}
+
+.buyer-order-operation-order-no ~ .buyer-order-operation-field {
+    --buyer-order-operation-label-width: 44px;
+}
+
+.buyer-order-operation-dialog.is-dispute .buyer-order-operation-textarea {
+    min-height: 100px;
+}
+
+.buyer-order-operation-dialog.is-dispute .buyer-order-operation-error:empty,
+.buyer-order-operation-dialog.is-dispute .buyer-order-operation-files:empty {
+    display: none;
 }
 
 .buyer-order-operation-field + .buyer-order-operation-field {

@@ -101,7 +101,7 @@
             ? renderCancelBody()
             : (state.type === 'dispute' ? renderDisputeBody() : renderConfirmBody());
         return ''
-            + '<section class="buyer-order-operation-dialog' + (isConfirm ? ' is-confirm' : '') + '" role="dialog" aria-modal="true" aria-labelledby="buyerOrderOperationTitle">'
+            + '<section class="buyer-order-operation-dialog is-' + escapeHtml(state.type) + (isConfirm ? ' is-confirm' : '') + '" role="dialog" aria-modal="true" aria-labelledby="buyerOrderOperationTitle">'
             +   '<header class="buyer-order-operation-header">'
             +       '<h2 class="buyer-order-operation-title" id="buyerOrderOperationTitle">'
             +           (isConfirm ? materialIcon('warning') : '')

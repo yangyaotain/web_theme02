@@ -1,4 +1,7 @@
 (function () {
+    const OPEN_GROUPS_QUERY_KEY = 'operationSidebarOpen';
+    const OPEN_GROUPS_STORAGE_KEY = 'lg-operation-sidebar-open-groups:v2';
+
     const ICONS = {
         overview: '<svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>',
         users: '<svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
@@ -111,6 +114,18 @@
                 { key: 'cms-dashboard', label: '大屏管理', href: 'cms-dashboard.html' },
                 { key: 'cms-ai-service', label: '智能客服', href: 'cms-ai-service.html' }
             ]
+        },
+        {
+            type: 'group',
+            key: 'dispute-arbitration',
+            label: '争议仲裁',
+            icon: 'overview',
+            children: [
+                { key: 'dispute', label: '争议管理', href: 'operation-dispute-arbitration.html?menu=dispute' },
+                { key: 'service-dispute', label: '服务争议管理', href: 'operation-dispute-arbitration.html?menu=service-dispute' },
+                { key: 'arbitration', label: '仲裁管理', href: 'operation-dispute-arbitration.html?menu=arbitration' },
+                { key: 'service-arbitration', label: '服务仲裁管理', href: 'operation-dispute-arbitration.html?menu=service-arbitration' }
+            ]
         }
     ];
 
@@ -151,7 +166,8 @@
         'cms-community-audit-view.html': 'cms-community',
         'cms-community-detail.html': 'cms-community',
         'cms-dashboard.html': 'cms-dashboard',
-        'cms-ai-service.html': 'cms-ai-service'
+        'cms-ai-service.html': 'cms-ai-service',
+        'operation-dispute-arbitration.html': 'dispute'
     };
 
     function getPageName() {
@@ -160,6 +176,10 @@
     }
 
     function getActiveKey(container) {
+        if (getPageName() === 'operation-dispute-arbitration.html') {
+            const menu = new URLSearchParams(window.location.search || '').get('menu');
+            if (['dispute', 'service-dispute', 'arbitration', 'service-arbitration'].includes(menu)) return menu;
+        }
         return container.dataset.active || ACTIVE_BY_PAGE[getPageName()] || '';
     }
 
@@ -180,6 +200,53 @@
         return item.children && item.children.some(child => child.key === activeKey);
     }
 
+    function parseOpenGroups(value) {
+        if (value === null) return null;
+        return new Set(value.split(',').filter(Boolean));
+    }
+
+    function getOpenGroups() {
+        const queryValue = new URLSearchParams(window.location.search || '').get(OPEN_GROUPS_QUERY_KEY);
+        if (queryValue !== null) return parseOpenGroups(queryValue);
+
+        try {
+            return parseOpenGroups(window.sessionStorage.getItem(OPEN_GROUPS_STORAGE_KEY));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function saveOpenGroups(container) {
+        const keys = Array.from(container.querySelectorAll('[data-sidebar-group].open'))
+            .map(group => group.dataset.sidebarGroupKey)
+            .filter(Boolean);
+
+        try {
+            window.sessionStorage.setItem(OPEN_GROUPS_STORAGE_KEY, keys.join(','));
+        } catch (error) {
+            // Local-file previews may not provide session storage.
+        }
+        return keys;
+    }
+
+    function syncOpenGroupsToLinks(container, keys) {
+        container.querySelectorAll('.sidebar-item[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const hashIndex = href.indexOf('#');
+            const hash = hashIndex >= 0 ? href.substring(hashIndex) : '';
+            const hrefWithoutHash = hashIndex >= 0 ? href.substring(0, hashIndex) : href;
+            const queryIndex = hrefWithoutHash.indexOf('?');
+            const path = queryIndex >= 0 ? hrefWithoutHash.substring(0, queryIndex) : hrefWithoutHash;
+            const query = queryIndex >= 0 ? hrefWithoutHash.substring(queryIndex + 1) : '';
+            const params = new URLSearchParams(query);
+
+            params.set(OPEN_GROUPS_QUERY_KEY, keys.join(','));
+            link.setAttribute('href', path + '?' + params.toString() + hash);
+        });
+    }
+
     function renderItem(item, activeKey, isRoot) {
         const classes = ['sidebar-item'];
         if (isRoot) classes.push('is-root');
@@ -194,12 +261,12 @@
         return '<a class="' + classes.join(' ') + '">' + content + '</a>';
     }
 
-    function renderGroup(item, activeKey) {
+    function renderGroup(item, activeKey, openGroups) {
         const childActive = isChildActive(item, activeKey);
-        const open = childActive;
+        const open = childActive || (openGroups === null ? false : openGroups.has(item.key));
         const children = item.children.map(child => renderItem(child, activeKey, false)).join('');
         return ''
-            + '<div class="sidebar-group-title' + (open ? ' open active' : '') + '" data-sidebar-group>'
+            + '<div class="sidebar-group-title' + (open ? ' open' : '') + (childActive ? ' active' : '') + '" data-sidebar-group data-sidebar-group-key="' + item.key + '">'
             + (ICONS[item.icon] || '')
             + '<span>' + item.label + '</span>'
             + ICONS.arrow
@@ -211,16 +278,22 @@
 
     function render(container) {
         const activeKey = getActiveKey(container);
-        const nav = MENU.map(item => item.type === 'group' ? renderGroup(item, activeKey) : renderItem(item, activeKey, true)).join('');
+        const openGroups = getOpenGroups();
+        const nav = MENU.map(item => item.type === 'group' ? renderGroup(item, activeKey, openGroups) : renderItem(item, activeKey, true)).join('');
         container.innerHTML = '<div class="sidebar-title">运营中心</div><nav class="sidebar-nav">' + nav + '</nav>';
     }
 
     function bind(container) {
+        const initialOpenGroups = saveOpenGroups(container);
+        syncOpenGroupsToLinks(container, initialOpenGroups);
+
         container.querySelectorAll('[data-sidebar-group]').forEach(group => {
             group.addEventListener('click', () => {
                 group.classList.toggle('open');
                 const sub = group.nextElementSibling;
                 if (sub) sub.style.display = group.classList.contains('open') ? '' : 'none';
+                const openGroups = saveOpenGroups(container);
+                syncOpenGroupsToLinks(container, openGroups);
             });
         });
     }

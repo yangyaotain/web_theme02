@@ -45,7 +45,6 @@
                 {
                     label: '费用管理',
                     icon: 'money',
-                    defaultOpen: true,
                     children: [
                         { key: 'transaction-bill', label: '交易账单管理', href: 'buyer-center.html?menu=transaction-bill' },
                         { key: 'offline-voucher', label: '线下支付凭证', href: 'buyer-center.html?menu=offline-voucher' }
@@ -54,7 +53,6 @@
                 {
                     label: '发票管理',
                     icon: 'invoice',
-                    defaultOpen: true,
                     children: [
                         { key: 'invoice-info', label: '产品开票信息', href: 'buyer-center.html?menu=invoice-info' },
                         { key: 'invoice-apply', label: '产品开票申请', href: 'buyer-center.html?menu=invoice-apply' },
@@ -67,7 +65,10 @@
                     label: '争议仲裁',
                     icon: 'dispute',
                     children: [
-                        { key: 'dispute', label: '争议仲裁', href: 'buyer-center.html?menu=dispute' }
+                        { key: 'dispute', label: '争议管理', href: 'buyer-center.html?menu=dispute' },
+                        { key: 'service-dispute', label: '服务争议管理', href: 'buyer-center.html?menu=service-dispute' },
+                        { key: 'arbitration', label: '仲裁管理', href: 'buyer-center.html?menu=arbitration' },
+                        { key: 'service-arbitration', label: '服务仲裁管理', href: 'buyer-center.html?menu=service-arbitration' }
                     ]
                 },
                 {
@@ -132,7 +133,10 @@
                     label: '争议仲裁',
                     icon: 'dispute',
                     children: [
-                        { key: 'dispute', label: '争议仲裁', href: 'supplier-center.html?menu=dispute' }
+                        { key: 'dispute', label: '争议管理', href: 'supplier-center.html?menu=dispute' },
+                        { key: 'service-dispute', label: '服务争议管理', href: 'supplier-center.html?menu=service-dispute' },
+                        { key: 'arbitration', label: '仲裁管理', href: 'supplier-center.html?menu=arbitration' },
+                        { key: 'service-arbitration', label: '服务仲裁管理', href: 'supplier-center.html?menu=service-arbitration' }
                     ]
                 },
                 {
@@ -175,7 +179,10 @@
         'demand-response': { title: '需求响应', desc: '查看可响应需求、已响应记录和需求沟通进度。' },
         'consults': { title: '我的咨询', desc: '查看需求、资源、产品、服务和方案咨询记录。' },
         'objection': { title: '公示异议', desc: '查看公示异议提交和处理情况。' },
-        'dispute': { title: '争议仲裁', desc: '管理交易争议、仲裁申请和处理记录。' },
+        'dispute': { title: '争议管理', desc: '查看交易争议及处理记录。' },
+        'service-dispute': { title: '服务争议管理', desc: '查看服务订单争议及处理记录。' },
+        'arbitration': { title: '仲裁管理', desc: '查看资源和产品订单仲裁及处理记录。' },
+        'service-arbitration': { title: '服务仲裁管理', desc: '查看服务订单仲裁及处理记录。' },
         'contract': { title: '合约管理', desc: '查看智能合约、合约状态和链上存证信息。' }
     };
 
@@ -2510,6 +2517,64 @@
         }
     }
 
+    var SIDEBAR_OPEN_QUERY_KEY = 'wbSidebarOpen';
+    var SIDEBAR_OPEN_STORAGE_PREFIX = 'lg-workbench-sidebar-open-groups:';
+
+    function parseSidebarOpenGroups(value) {
+        if (value === null) return null;
+        var groups = {};
+        value.split(',').forEach(function (index) {
+            if (/^\d+$/.test(index)) groups[index] = true;
+        });
+        return groups;
+    }
+
+    function getSidebarOpenGroups(center) {
+        var params = new URLSearchParams(window.location.search || '');
+        var queryValue = params.get(SIDEBAR_OPEN_QUERY_KEY);
+        if (queryValue !== null) return parseSidebarOpenGroups(queryValue);
+        if (!params.has('menu')) return null;
+
+        try {
+            var stored = window.sessionStorage.getItem(SIDEBAR_OPEN_STORAGE_PREFIX + center);
+            return parseSidebarOpenGroups(stored);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function saveSidebarOpenGroups(container, center) {
+        var indexes = Array.prototype.map.call(
+            container.querySelectorAll('[data-wb-side-group]:not(.collapsed)'),
+            function (group) { return group.dataset.wbSideGroupIndex; }
+        ).filter(Boolean);
+
+        try {
+            window.sessionStorage.setItem(SIDEBAR_OPEN_STORAGE_PREFIX + center, indexes.join(','));
+        } catch (error) {
+            // Local-file previews may not provide session storage.
+        }
+        return indexes;
+    }
+
+    function syncSidebarOpenGroupsToLinks(container, indexes) {
+        container.querySelectorAll('.wb-side-item[href]').forEach(function (link) {
+            var href = link.getAttribute('href');
+            if (!href) return;
+
+            var hashIndex = href.indexOf('#');
+            var hash = hashIndex >= 0 ? href.substring(hashIndex) : '';
+            var hrefWithoutHash = hashIndex >= 0 ? href.substring(0, hashIndex) : href;
+            var queryIndex = hrefWithoutHash.indexOf('?');
+            var path = queryIndex >= 0 ? hrefWithoutHash.substring(0, queryIndex) : hrefWithoutHash;
+            var query = queryIndex >= 0 ? hrefWithoutHash.substring(queryIndex + 1) : '';
+            var params = new URLSearchParams(query);
+
+            params.set(SIDEBAR_OPEN_QUERY_KEY, indexes.join(','));
+            link.setAttribute('href', path + '?' + params.toString() + hash);
+        });
+    }
+
     function renderSidebar() {
         var container = document.querySelector('[data-workbench-sidebar]');
         if (!container) return;
@@ -2518,6 +2583,8 @@
         var active = getActiveMenu(container);
         var config = sidebarMenus[center];
         if (!config) return;
+        var openGroups = getSidebarOpenGroups(center);
+        var hasSavedOpenGroups = openGroups !== null;
 
         function itemHtml(item, isRoot) {
             var cls = 'wb-side-item' + (isRoot ? ' is-root' : '') + (item.key === active ? ' active' : '');
@@ -2527,11 +2594,11 @@
             return '<span class="' + cls + '">' + content + '</span>';
         }
 
-        var sections = config.sections.map(function (section) {
+        var sections = config.sections.map(function (section, sectionIndex) {
             var isActiveGroup = section.children && section.children.some(function (child) { return child.key === active; });
-            var isOpen = section.children && (isActiveGroup || section.defaultOpen);
+            var isOpen = section.children && (isActiveGroup || (hasSavedOpenGroups ? openGroups[sectionIndex] : section.defaultOpen));
             var groupClass = 'wb-side-group' + (isActiveGroup ? ' active' : '') + (isOpen ? '' : ' collapsed');
-            var group = '<div class="' + groupClass + '" data-wb-side-group>' + (ICONS[section.icon] || '') + '<span>' + section.label + '</span>';
+            var group = '<div class="' + groupClass + '" data-wb-side-group data-wb-side-group-index="' + sectionIndex + '">' + (ICONS[section.icon] || '') + '<span>' + section.label + '</span>';
             if (section.children) group += ICONS.arrow;
             group += '</div>';
 
@@ -2546,12 +2613,17 @@
 
         container.innerHTML = '<div class="wb-sidebar-title">' + config.title + '</div><nav class="wb-side-nav">' + sections + '</nav>';
 
+        var initialOpenGroups = saveSidebarOpenGroups(container, center);
+        syncSidebarOpenGroupsToLinks(container, initialOpenGroups);
+
         container.querySelectorAll('[data-wb-side-group]').forEach(function (group) {
             var sub = group.nextElementSibling;
             if (!sub || !sub.classList.contains('wb-side-sub')) return;
             group.addEventListener('click', function () {
                 var collapsed = group.classList.toggle('collapsed');
                 sub.style.display = collapsed ? 'none' : '';
+                var currentOpenGroups = saveSidebarOpenGroups(container, center);
+                syncSidebarOpenGroupsToLinks(container, currentOpenGroups);
             });
         });
     }
@@ -4341,6 +4413,11 @@
         var meta = menuMeta[activeMenu] || menuMeta.consults;
         if (titleEl) titleEl.textContent = meta.title;
         if (titleEl) titleEl.style.display = '';
+
+        if (['dispute', 'service-dispute', 'arbitration', 'service-arbitration'].indexOf(activeMenu) >= 0) {
+            panel.classList.remove('is-placeholder', 'is-service-management');
+            return;
+        }
 
         panel.classList.remove('is-service-management');
 
