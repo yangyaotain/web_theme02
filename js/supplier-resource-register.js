@@ -289,11 +289,11 @@
         other: {
             key: 'sampleOther',
             label: '其他样例',
-            accept: '.doc,.docx,.pdf,.jpg,.jpeg,.png,.txt,.xls,.xlsx,.zip',
-            extensions: ['doc', 'docx', 'pdf', 'jpg', 'jpeg', 'png', 'txt', 'xls', 'xlsx', 'zip'],
-            maxSize: 30,
-            maxCount: 1,
-            description: '支持 .doc、.docx、.pdf、.jpg、.png、.txt、.xls、.xlsx、.zip，单个文件不超过 30MB，最多上传 1 个附件'
+            maxSize: 2048,
+            maxSizeText: '2GB',
+            maxCount: null,
+            multiple: true,
+            description: '支持多个附件上传，单个文件大小不超过2GB。'
         }
     };
 
@@ -987,11 +987,13 @@
         function renderSampleUploadSpace(field, buttonLabel, buttonIcon) {
             var files = state.attachments[field.key] || [];
             var uploadId = 'resourceSampleUpload-' + field.key;
-            var canUpload = files.length < field.maxCount;
+            var canUpload = !field.maxCount || files.length < field.maxCount;
+            var acceptAttr = field.accept ? ' accept="' + escapeHtml(field.accept) + '"' : '';
+            var multipleAttr = field.multiple || !field.maxCount || field.maxCount > 1 ? ' multiple' : '';
             return ''
                 + '<div class="product-register-upload-space">'
                 +   (canUpload
-                        ? '<input id="' + uploadId + '" type="file" accept="' + escapeHtml(field.accept) + '" data-resource-sample-upload="' + escapeHtml(field.key) + '">'
+                        ? '<input id="' + uploadId + '" type="file"' + acceptAttr + multipleAttr + ' data-resource-sample-upload="' + escapeHtml(field.key) + '">'
                             + '<label class="product-register-upload-button" for="' + uploadId + '">' + icon(buttonIcon || 'upload_file') + '<span>' + escapeHtml(buttonLabel || '上传文件') + '</span></label>'
                         : '')
                 +   '<p>' + escapeHtml(field.description) + '</p>'
@@ -1308,25 +1310,41 @@
                 ? SAMPLE_UPLOAD_FIELDS.dataset
                 : (SAMPLE_UPLOAD_FIELDS.other.key === fieldKey ? SAMPLE_UPLOAD_FIELDS.other : null);
             if (!field || !fileList || !fileList.length) return;
-            var file = fileList[0];
-            var extension = (file.name.split('.').pop() || '').toLowerCase();
-            if (field.extensions.indexOf(extension) === -1) {
-                showToast(file.name + ' 的文件格式不支持。');
+            var current = state.attachments[fieldKey] || [];
+            var selected = Array.prototype.slice.call(fileList);
+            var room = field.maxCount ? field.maxCount - current.length : selected.length;
+            if (field.maxCount && room <= 0) {
+                showToast(field.label + '最多上传 ' + field.maxCount + ' 个附件。');
                 return;
             }
-            if (file.size > field.maxSize * 1024 * 1024) {
-                showToast(file.name + ' 超过 ' + field.maxSize + 'MB 限制。');
-                return;
+
+            var accepted = [];
+            var rejectedMessage = '';
+            selected.slice(0, room).forEach(function (file) {
+                var extension = (file.name.split('.').pop() || '').toLowerCase();
+                if (field.extensions && field.extensions.length && field.extensions.indexOf(extension) === -1) {
+                    rejectedMessage = file.name + ' 的文件格式不支持。';
+                    return;
+                }
+                if (file.size > field.maxSize * 1024 * 1024) {
+                    rejectedMessage = file.name + ' 超过 ' + (field.maxSizeText || field.maxSize + 'MB') + ' 限制。';
+                    return;
+                }
+                accepted.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    source: 'local',
+                    file: file
+                });
+            });
+            if (accepted.length) {
+                state.attachments[fieldKey] = current.concat(accepted);
+                rerenderEditorAtCurrentScroll();
+                showToast(rejectedMessage ? '已上传 ' + accepted.length + ' 个文件，部分文件未通过校验。' : '已上传 ' + accepted.length + ' 个文件。');
+            } else if (rejectedMessage) {
+                showToast(rejectedMessage);
             }
-            state.attachments[fieldKey] = [{
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                source: 'local',
-                file: file
-            }];
-            rerenderEditorAtCurrentScroll();
-            showToast('样例文件已上传。');
         }
 
         function bindEditorEvents() {
@@ -1474,9 +1492,12 @@
 
             panel.querySelectorAll('[data-resource-sample-remove]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    state.attachments[this.dataset.resourceSampleRemove] = [];
+                    var key = this.dataset.resourceSampleRemove;
+                    var index = parseInt(this.dataset.resourceSampleIndex, 10);
+                    var files = state.attachments[key] || [];
+                    if (index >= 0 && index < files.length) files.splice(index, 1);
                     rerenderEditorAtCurrentScroll();
-                    showToast('样例文件已移除，可重新上传。');
+                    showToast('样例文件已移除。');
                 });
             });
 
