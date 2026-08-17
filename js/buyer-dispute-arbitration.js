@@ -273,6 +273,26 @@
         pageSize: 10
     };
 
+    var pageTitleBar = null;
+
+    function ensureRequirementsEntry() {
+        if (pageTitleBar) return pageTitleBar;
+        pageTitleBar = document.createElement('div');
+        pageTitleBar.className = 'bda-page-titlebar';
+        pageTitle.parentNode.insertBefore(pageTitleBar, pageTitle);
+        pageTitleBar.appendChild(pageTitle);
+
+        var requirementsLink = document.createElement('a');
+        requirementsLink.className = 'bda-requirements-entry';
+        requirementsLink.href = 'dispute-arbitration-requirements.html?from=' + encodeURIComponent(currentRole) + '&menu=' + encodeURIComponent(state.mode);
+        requirementsLink.target = '_blank';
+        requirementsLink.rel = 'noopener';
+        requirementsLink.title = '查看争议仲裁需求说明（原型辅助文档）';
+        requirementsLink.innerHTML = materialIcon('description') + '<span>需求说明</span>' + materialIcon('open_in_new', 'bda-requirements-entry-open');
+        pageTitleBar.appendChild(requirementsLink);
+        return pageTitleBar;
+    }
+
     function isDisputeMode() {
         return state.mode === 'dispute' || state.mode === 'service-dispute';
     }
@@ -286,8 +306,10 @@
     }
 
     function setPageTitle(title, visible) {
+        var titleBar = ensureRequirementsEntry();
         pageTitle.textContent = title;
-        pageTitle.style.display = visible ? '' : 'none';
+        pageTitle.style.display = '';
+        titleBar.style.display = visible ? 'flex' : 'none';
         document.title = title + ' - ' + centerName;
     }
 

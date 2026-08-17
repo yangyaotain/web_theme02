@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/detail-favorite.css">
     <script src="js/nav-bar.js"></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/detail-favorite.js" defer></script>
     <style>
         .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
 
@@ -159,6 +161,10 @@
                         <h1 class="product-title">金融行业数据应用解决方案</h1>
                         <div class="product-stats">
                             <span class="product-stat">浏览量：<b>1,056</b></span>
+                            <button type="button" class="detail-favorite-btn" data-detail-favorite data-favorite-scope="solution" aria-pressed="false" aria-label="收藏此内容">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                <span data-favorite-label>收藏</span>
+                            </button>
                         </div>
                     </div>
                     <p class="product-desc">本方案面向银行、证券、保险、基金等金融机构，提供从数据采集、治理、建模到智能分析的一站式数据应用解决方案，帮助金融企业构建数据驱动的决策体系，实现风控升级、精准营销与业务创新。</p>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>争议仲裁功能需求说明 - 龙岗数据聚合服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/dispute-arbitration-requirements.css">
+</head>
+<body>
+    <header class="dar-topbar">
+        <a class="dar-brand" href="index.html">
+            <img src="images/logo.png" alt="龙岗数据">
+            <span>龙岗数据聚合服务平台</span>
+        </a>
+        <div class="dar-topbar-meta">
+            <span class="dar-doc-badge"><span class="material-symbols-outlined" aria-hidden="true">description</span>原型辅助说明</span>
+            <button type="button" class="dar-close-button" data-action="close-page"><span class="material-symbols-outlined" aria-hidden="true">close</span><span>关闭说明</span></button>
+        </div>
+    </header>
+
+    <div class="dar-layout">
+        <aside class="dar-toc" aria-label="页面目录">
+            <p>需求说明目录</p>
+            <nav>
+                <a class="is-active" href="#overview"><span>01</span>业务范围</a>
+                <a href="#flow"><span>02</span>总体流程</a>
+                <a href="#roles"><span>03</span>角色职责</a>
+                <a href="#states"><span>04</span>状态与操作</a>
+                <a href="#features"><span>05</span>页面功能</a>
+                <a href="#boundary"><span>06</span>原型边界</a>
+            </nav>
+            <div class="dar-toc-note">
+                <span class="material-symbols-outlined" aria-hidden="true">info</span>
+                <p>本页用于需求评审和原型讲解，不属于实际业务功能。</p>
+            </div>
+        </aside>
+
+        <main class="dar-main">
+            <section class="dar-hero" id="overview">
+                <div>
+                    <span class="dar-eyebrow">需求评审文档 · 静态原型</span>
+                    <h1>争议仲裁功能需求说明</h1>
+                    <p>用于说明产品订单与服务订单发生争议后的三方职责、处理分支、状态流转和页面操作规则。</p>
+                </div>
+                <div class="dar-hero-stats" aria-label="模块概览">
+                    <div><strong>3</strong><span>参与角色</span></div>
+                    <div><strong>4</strong><span>业务菜单</span></div>
+                    <div><strong>2</strong><span>处理阶段</span></div>
+                </div>
+            </section>
+
+            <section class="dar-section">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">01</span>
+                    <div><h2>业务范围</h2><p>产品订单与服务订单共用同一套争议仲裁逻辑，分别在四个菜单中展示。</p></div>
+                </div>
+                <div class="dar-scope-grid">
+                    <article class="dar-scope-card">
+                        <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+                        <div><h3>产品订单</h3><p>覆盖数据资源订单、数据产品订单。</p></div>
+                        <div class="dar-menu-pair"><span>产品争议管理</span><span>产品仲裁管理</span></div>
+                    </article>
+                    <article class="dar-scope-card">
+                        <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>
+                        <div><h3>服务订单</h3><p>覆盖数据咨询服务订单、行业解决方案订单。</p></div>
+                        <div class="dar-menu-pair"><span>服务争议管理</span><span>服务仲裁管理</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="dar-section" id="flow">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">02</span>
+                    <div><h2>总体流程</h2><p>供方审批结果决定争议直接结束，或自动进入三方仲裁处理。</p></div>
+                </div>
+                <div class="dar-flow-card">
+                    <div class="dar-process-legend" aria-label="流程角色图例">
+                        <span class="dar-process-role dar-process-role--buyer"><i></i>需方</span>
+                        <span class="dar-process-role dar-process-role--supplier"><i></i>供方</span>
+                        <span class="dar-process-role dar-process-role--system"><i></i>系统</span>
+                        <span class="dar-process-role dar-process-role--operation"><i></i>运营方</span>
+                    </div>
+                    <div class="dar-process-map" aria-label="争议仲裁业务流程图">
+                        <div class="dar-process-opening">
+                            <article class="dar-process-node dar-process-node--buyer">
+                                <span class="dar-process-node-role">需方</span>
+                                <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+                                <div><strong>发起争议</strong><small>填写描述并上传证明材料</small></div>
+                            </article>
+                            <span class="dar-process-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                            <article class="dar-process-node dar-process-node--supplier">
+                                <span class="dar-process-node-role">供方</span>
+                                <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+                                <div><strong>审批争议</strong><small>选择同意或不通过</small></div>
+                            </article>
+                        </div>
+
+                        <div class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</div>
+                        <div class="dar-process-decision"><span class="material-symbols-outlined" aria-hidden="true">call_split</span><strong>供方审批结果</strong></div>
+
+                        <div class="dar-process-branches">
+                            <section class="dar-process-branch dar-process-branch--agree">
+                                <span class="dar-process-branch-label dar-process-branch-label--agree">同意</span>
+                                <span class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                                <article class="dar-process-node dar-process-node--end">
+                                    <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                                    <div><strong>争议结束</strong><small>认可需方诉求，流程结束</small></div>
+                                </article>
+                            </section>
+
+                            <section class="dar-process-branch dar-process-branch--reject">
+                                <span class="dar-process-branch-label dar-process-branch-label--reject">不通过</span>
+                                <span class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                                <article class="dar-process-node dar-process-node--system">
+                                    <span class="dar-process-node-role">系统</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+                                    <div><strong>自动转仲裁</strong><small>创建对应仲裁记录</small></div>
+                                </article>
+
+                                <span class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                                <div class="dar-process-parallel-title"><span class="material-symbols-outlined" aria-hidden="true">fork_right</span>供需双方上报（并行）</div>
+                                <div class="dar-process-parallel">
+                                    <article class="dar-process-node dar-process-node--buyer">
+                                        <span class="dar-process-node-role">需方</span>
+                                        <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+                                        <div><strong>上报需方结果</strong><small>结果、描述及证明文件</small></div>
+                                    </article>
+                                    <article class="dar-process-node dar-process-node--supplier">
+                                        <span class="dar-process-node-role">供方</span>
+                                        <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+                                        <div><strong>上报供方结果</strong><small>结果、描述及证明文件</small></div>
+                                    </article>
+                                </div>
+
+                                <div class="dar-process-merge"><span></span><span class="material-symbols-outlined" aria-hidden="true">south</span><span></span></div>
+                                <article class="dar-process-node dar-process-node--system">
+                                    <span class="dar-process-node-role">系统</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">done_all</span>
+                                    <div><strong>双方已上报</strong><small>进入运营确认环节</small></div>
+                                </article>
+
+                                <span class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                                <article class="dar-process-node dar-process-node--operation">
+                                    <span class="dar-process-node-role">运营方</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+                                    <div><strong>运营方确认结果</strong><small>比较双方材料并选择采纳结果</small></div>
+                                </article>
+
+                                <span class="dar-process-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                                <div class="dar-process-final-choice">
+                                    <span>采纳需方结果</span>
+                                    <strong>二选一</strong>
+                                    <span>采纳供方结果</span>
+                                </div>
+                                <div class="dar-process-merge dar-process-merge--final"><span></span><span class="material-symbols-outlined" aria-hidden="true">south</span><span></span></div>
+                                <article class="dar-process-node dar-process-node--end">
+                                    <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                                    <div><strong>仲裁结束</strong><small>按运营方采纳的结果执行</small></div>
+                                </article>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="dar-rule-note"><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>核心规则：</strong>“驳回”是供方审批结果；审批不通过后，业务状态自动进入“转仲裁”，两者不是两条独立流程。</p></div>
+            </section>
+
+            <section class="dar-section" id="roles">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">03</span>
+                    <div><h2>角色职责</h2><p>三方只在各自负责的节点执行操作，其余节点以查看详情为主。</p></div>
+                </div>
+                <div class="dar-role-grid">
+                    <article><span class="dar-role-icon dar-role-icon--buyer material-symbols-outlined" aria-hidden="true">shopping_cart</span><h3>需方</h3><ul><li>从订单发起争议</li><li>查看供方审批结果</li><li>转仲裁后上报需方结果</li><li>查看最终采纳结果</li></ul></article>
+                    <article><span class="dar-role-icon dar-role-icon--supplier material-symbols-outlined" aria-hidden="true">storefront</span><h3>供方</h3><ul><li>审批需方发起的争议</li><li>同意后结束争议</li><li>不通过后上报供方结果</li><li>查看最终采纳结果</li></ul></article>
+                    <article><span class="dar-role-icon dar-role-icon--operation material-symbols-outlined" aria-hidden="true">verified_user</span><h3>运营方</h3><ul><li>查看争议和仲裁过程</li><li>等待供需双方均已上报</li><li>采纳需方或供方结果</li><li>确认后结束仲裁</li></ul></article>
+                </div>
+            </section>
+
+            <section class="dar-section" id="states">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">04</span>
+                    <div><h2>状态与操作</h2><p>状态决定各中心能够看到的功能按钮；没有处理权限时仅提供详情查看。</p></div>
+                </div>
+                <div class="dar-table-card">
+                    <h3>争议阶段</h3>
+                    <div class="dar-table-wrap"><table><thead><tr><th>状态</th><th>状态含义</th><th>需方</th><th>供方</th><th>运营方</th></tr></thead><tbody>
+                        <tr><td><span class="dar-status dar-status--active">待审批</span></td><td>需方已发起，等待供方处理</td><td>争议详情</td><td><b>审批</b>、争议详情</td><td>争议详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--done">已通过</span></td><td>供方同意，争议已结束</td><td>争议详情</td><td>争议详情</td><td>争议详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--danger">已驳回</span></td><td>供方审批结果为驳回</td><td>争议详情</td><td>争议详情</td><td>争议详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--warning">转仲裁</span></td><td>系统已自动创建对应仲裁</td><td><b>仲裁详情</b>、争议详情</td><td><b>仲裁详情</b>、争议详情</td><td><b>仲裁详情</b>、争议详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--muted">已关闭</span></td><td>争议协商结束或终止</td><td>争议详情</td><td>争议详情</td><td>争议详情</td></tr>
+                    </tbody></table></div>
+                </div>
+                <div class="dar-table-card">
+                    <h3>仲裁阶段</h3>
+                    <div class="dar-table-wrap"><table><thead><tr><th>状态</th><th>状态含义</th><th>需方</th><th>供方</th><th>运营方</th></tr></thead><tbody>
+                        <tr><td><span class="dar-status dar-status--active">仲裁中</span></td><td>双方均未完成结果上报</td><td><b>上报仲裁结果</b></td><td><b>上报仲裁结果</b></td><td>仲裁详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--warning">需方已上报</span></td><td>等待供方完成上报</td><td>仲裁详情</td><td><b>上报仲裁结果</b></td><td>仲裁详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--warning">供方已上报</span></td><td>等待需方完成上报</td><td><b>上报仲裁结果</b></td><td>仲裁详情</td><td>仲裁详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--active">双方已上报</span></td><td>等待运营方确认最终结果</td><td>仲裁详情</td><td>仲裁详情</td><td><b>去确认结果</b></td></tr>
+                        <tr><td><span class="dar-status dar-status--done">采纳需方结果</span></td><td>运营方已选择需方结果</td><td>仲裁详情</td><td>仲裁详情</td><td>仲裁详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--done">采纳供方结果</span></td><td>运营方已选择供方结果</td><td>仲裁详情</td><td>仲裁详情</td><td>仲裁详情</td></tr>
+                        <tr><td><span class="dar-status dar-status--muted">已关闭</span></td><td>仲裁主动或异常终止</td><td>仲裁详情</td><td>仲裁详情</td><td>仲裁详情</td></tr>
+                    </tbody></table></div>
+                </div>
+            </section>
+
+            <section class="dar-section" id="features">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">05</span>
+                    <div><h2>页面功能</h2><p>三方页面保持相同的信息结构，根据角色和状态控制可执行操作。</p></div>
+                </div>
+                <div class="dar-feature-grid">
+                    <article><span class="material-symbols-outlined" aria-hidden="true">search</span><h3>列表查询</h3><p>支持编号、订单编号、名称关键词查询，以及状态和发起时间筛选。</p></article>
+                    <article><span class="material-symbols-outlined" aria-hidden="true">table_rows</span><h3>状态列表</h3><p>分别展示产品订单、服务订单的争议与仲裁数据，并覆盖各类示例状态。</p></article>
+                    <article><span class="material-symbols-outlined" aria-hidden="true">fact_check</span><h3>争议审批</h3><p>供方选择同意或不通过，可填写审批意见并上传附件。</p></article>
+                    <article><span class="material-symbols-outlined" aria-hidden="true">upload_file</span><h3>结果上报</h3><p>供需双方选择仲裁结果，填写描述并上传结果证明文件。</p></article>
+                    <article><span class="material-symbols-outlined" aria-hidden="true">balance</span><h3>结果确认</h3><p>运营方在双方已上报后，选择采纳需方或供方结果。</p></article>
+                    <article><span class="material-symbols-outlined" aria-hidden="true">history</span><h3>详情日志</h3><p>详情页集中展示发起、审批、上报、确认等操作节点和时间。</p></article>
+                </div>
+            </section>
+
+            <section class="dar-section" id="boundary">
+                <div class="dar-section-heading">
+                    <span class="dar-section-index">06</span>
+                    <div><h2>原型边界</h2><p>当前交付用于前端高保真演示，不包含真实后台处理能力。</p></div>
+                </div>
+                <div class="dar-boundary-card">
+                    <ul>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">database</span><div><strong>模拟数据</strong><p>需方、供方和运营中心分别展示静态示例数据，不做真实跨中心同步。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">refresh</span><div><strong>临时状态</strong><p>页面操作只更新当前浏览器内存，刷新页面后恢复初始示例状态。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><div><strong>无后台接口</strong><p>不涉及真实审批、文件存储、消息通知、权限校验和接口调用。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">visibility</span><div><strong>交互演示</strong><p>上传、预览、下载、筛选和确认等操作仅用于展示前端交互效果。</p></div></li>
+                    </ul>
+                </div>
+            </section>
+
+            <footer class="dar-footer">
+                <span>争议仲裁功能需求说明</span>
+                <span>原型辅助文档 · 不属于实际业务功能</span>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/dispute-arbitration-requirements.js"></script>
+</body>
+</html>

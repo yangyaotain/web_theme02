@@ -41,6 +41,59 @@
     min-width: 980px;
 }
 
+.bda-page-titlebar {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 30px;
+    margin-bottom: 16px;
+}
+
+.bda-page-titlebar .wb-page-title,
+.bda-page-titlebar .operation-dispute-title {
+    min-width: 0;
+    margin: 0;
+}
+
+.bda-requirements-entry {
+    height: 30px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 10px;
+    color: #65736e;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid #dce4e1;
+    border-radius: 5px;
+    background: #f8faf9;
+    transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.bda-requirements-entry:hover,
+.bda-requirements-entry:focus-visible {
+    color: var(--bda-green);
+    border-color: #bcdcca;
+    outline: 0;
+    background: #f1faf6;
+}
+
+.bda-requirements-entry .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.bda-requirements-entry .bda-requirements-entry-open {
+    color: #9aa5a1;
+    font-size: 14px;
+}
+
 .bda-toolbar {
     display: flex;
     align-items: center;

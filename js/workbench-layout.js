@@ -65,9 +65,9 @@
                     label: '争议仲裁',
                     icon: 'dispute',
                     children: [
-                        { key: 'dispute', label: '争议管理', href: 'buyer-center.html?menu=dispute' },
+                        { key: 'dispute', label: '产品争议管理', href: 'buyer-center.html?menu=dispute' },
                         { key: 'service-dispute', label: '服务争议管理', href: 'buyer-center.html?menu=service-dispute' },
-                        { key: 'arbitration', label: '仲裁管理', href: 'buyer-center.html?menu=arbitration' },
+                        { key: 'arbitration', label: '产品仲裁管理', href: 'buyer-center.html?menu=arbitration' },
                         { key: 'service-arbitration', label: '服务仲裁管理', href: 'buyer-center.html?menu=service-arbitration' }
                     ]
                 },
@@ -75,7 +75,11 @@
                     label: '合约管理',
                     icon: 'contract',
                     children: [
-                        { key: 'contract', label: '合约管理', href: 'buyer-center.html?menu=contract' }
+                        { key: 'contract', label: '数字合约管理', href: 'buyer-center.html?menu=contract' },
+                        { key: 'contract-sign', label: '数字合约签署', href: 'buyer-center.html?menu=contract-sign' },
+                        { key: 'contract-filing', label: '数字合约备案', href: 'buyer-center.html?menu=contract-filing' },
+                        { key: 'contract-performance', label: '数字合约履行', href: 'buyer-center.html?menu=contract-performance' },
+                        { key: 'contract-termination', label: '数字合约解除', href: 'buyer-center.html?menu=contract-termination' }
                     ]
                 }
             ]
@@ -133,9 +137,9 @@
                     label: '争议仲裁',
                     icon: 'dispute',
                     children: [
-                        { key: 'dispute', label: '争议管理', href: 'supplier-center.html?menu=dispute' },
+                        { key: 'dispute', label: '产品争议管理', href: 'supplier-center.html?menu=dispute' },
                         { key: 'service-dispute', label: '服务争议管理', href: 'supplier-center.html?menu=service-dispute' },
-                        { key: 'arbitration', label: '仲裁管理', href: 'supplier-center.html?menu=arbitration' },
+                        { key: 'arbitration', label: '产品仲裁管理', href: 'supplier-center.html?menu=arbitration' },
                         { key: 'service-arbitration', label: '服务仲裁管理', href: 'supplier-center.html?menu=service-arbitration' }
                     ]
                 },
@@ -143,7 +147,11 @@
                     label: '合约管理',
                     icon: 'contract',
                     children: [
-                        { key: 'contract', label: '合约管理', href: 'supplier-center.html?menu=contract' }
+                        { key: 'contract', label: '数字合约管理', href: 'supplier-center.html?menu=contract' },
+                        { key: 'contract-sign', label: '数字合约签署', href: 'supplier-center.html?menu=contract-sign' },
+                        { key: 'contract-filing', label: '数字合约备案', href: 'supplier-center.html?menu=contract-filing' },
+                        { key: 'contract-performance', label: '数字合约履行', href: 'supplier-center.html?menu=contract-performance' },
+                        { key: 'contract-termination', label: '数字合约解除', href: 'supplier-center.html?menu=contract-termination' }
                     ]
                 }
             ]
@@ -183,7 +191,11 @@
         'service-dispute': { title: '服务争议管理', desc: '查看服务订单争议及处理记录。' },
         'arbitration': { title: '仲裁管理', desc: '查看资源和产品订单仲裁及处理记录。' },
         'service-arbitration': { title: '服务仲裁管理', desc: '查看服务订单仲裁及处理记录。' },
-        'contract': { title: '合约管理', desc: '查看智能合约、合约状态和链上存证信息。' }
+        'contract': { title: '数字合约管理', desc: '查看数字合约、合约状态和链上存证信息。' },
+        'contract-sign': { title: '数字合约签署', desc: '查看数字合约签署状态和协商过程。' },
+        'contract-filing': { title: '数字合约备案', desc: '查看数字合约备案状态、备案版本和备案凭证。' },
+        'contract-performance': { title: '数字合约履行', desc: '查看数字合约履行状态、履行日志和履约证明。' },
+        'contract-termination': { title: '数字合约解除', desc: '查看数字合约解除状态和关联订单信息。' }
     };
 
     var CONSULT_TYPES = ['需求咨询', '资源咨询', '产品咨询', '服务咨询', '方案咨询'];

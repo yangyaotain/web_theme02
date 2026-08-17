@@ -1,0 +1,954 @@
+:root {
+    --dar-green: var(--forest-green, #18a76f);
+    --dar-green-dark: #0f8f5c;
+    --dar-green-soft: #eef9f4;
+    --dar-text: #26332f;
+    --dar-muted: #74817c;
+    --dar-border: #e1e8e5;
+    --dar-panel: #f6f9f8;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+}
+
+body {
+    min-width: 1080px;
+    color: var(--dar-text);
+    background: #f4f7f6;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.material-symbols-outlined {
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+}
+
+.dar-topbar {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    border-bottom: 1px solid var(--dar-border);
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 2px 10px rgba(36, 59, 50, .04);
+}
+
+.dar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #26322e;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dar-brand img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.dar-topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dar-doc-badge {
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    color: #497364;
+    font-size: 12px;
+    border: 1px solid #cfe6db;
+    border-radius: 15px;
+    background: var(--dar-green-soft);
+}
+
+.dar-doc-badge .material-symbols-outlined {
+    font-size: 15px;
+}
+
+.dar-close-button {
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 11px;
+    color: #62706b;
+    font-size: 12px;
+    border: 1px solid #d8e1dd;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.dar-close-button:hover,
+.dar-close-button:focus-visible {
+    color: var(--dar-green);
+    border-color: #abd5c1;
+    outline: 0;
+    background: #f7fcf9;
+}
+
+.dar-close-button .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.dar-layout {
+    min-height: 100vh;
+    padding-top: 64px;
+}
+
+.dar-toc {
+    position: fixed;
+    z-index: 20;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    width: 224px;
+    padding: 28px 18px 24px;
+    overflow-y: auto;
+    border-right: 1px solid var(--dar-border);
+    background: #fff;
+}
+
+.dar-toc > p {
+    margin: 0 10px 12px;
+    color: #87938f;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .08em;
+}
+
+.dar-toc nav {
+    display: grid;
+    gap: 4px;
+}
+
+.dar-toc nav a {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 12px;
+    color: #53615c;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color .18s ease, background .18s ease;
+}
+
+.dar-toc nav a span {
+    color: #a0aaa6;
+    font-size: 11px;
+}
+
+.dar-toc nav a:hover,
+.dar-toc nav a.is-active {
+    color: var(--dar-green-dark);
+    background: var(--dar-green-soft);
+}
+
+.dar-toc nav a.is-active {
+    font-weight: 600;
+}
+
+.dar-toc nav a.is-active span {
+    color: var(--dar-green);
+}
+
+.dar-toc-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 28px;
+    padding: 12px;
+    color: #7c8984;
+    font-size: 12px;
+    line-height: 20px;
+    border: 1px solid #e3ebe7;
+    border-radius: 7px;
+    background: #f8faf9;
+}
+
+.dar-toc-note .material-symbols-outlined {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: var(--dar-green);
+    font-size: 16px;
+}
+
+.dar-toc-note p {
+    margin: 0;
+}
+
+.dar-main {
+    width: calc(100% - 224px);
+    max-width: 1460px;
+    margin-left: 224px;
+    padding: 28px 36px 42px;
+}
+
+.dar-hero {
+    min-height: 206px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    padding: 34px 40px;
+    overflow: hidden;
+    border: 1px solid #dce7e2;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(35, 62, 51, .06);
+}
+
+.dar-eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: var(--dar-green-dark);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+}
+
+.dar-hero h1 {
+    margin: 0 0 12px;
+    color: #1e2c27;
+    font-size: 30px;
+    line-height: 42px;
+    font-weight: 700;
+}
+
+.dar-hero p {
+    max-width: 720px;
+    margin: 0;
+    color: #687570;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.dar-hero-stats {
+    min-width: 330px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid #dfe9e5;
+    border-radius: 10px;
+    background: var(--dar-panel);
+}
+
+.dar-hero-stats div {
+    min-height: 88px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #dfe9e5;
+}
+
+.dar-hero-stats div:last-child {
+    border-right: 0;
+}
+
+.dar-hero-stats strong {
+    color: var(--dar-green);
+    font-size: 26px;
+    line-height: 34px;
+}
+
+.dar-hero-stats span {
+    color: #72807a;
+    font-size: 12px;
+}
+
+.dar-section {
+    margin-top: 28px;
+    scroll-margin-top: 88px;
+}
+
+.dar-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 15px;
+}
+
+.dar-section-index {
+    width: 34px;
+    height: 24px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    color: var(--dar-green-dark);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    background: #dff4ea;
+}
+
+.dar-section-heading h2 {
+    margin: 0;
+    color: #22312b;
+    font-size: 19px;
+    line-height: 26px;
+}
+
+.dar-section-heading p {
+    margin: 4px 0 0;
+    color: #7b8782;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.dar-scope-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.dar-scope-card {
+    min-height: 142px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 14px;
+    padding: 22px;
+    border: 1px solid var(--dar-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.dar-scope-card > .material-symbols-outlined {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dar-green);
+    font-size: 22px;
+    border-radius: 9px;
+    background: var(--dar-green-soft);
+}
+
+.dar-scope-card h3,
+.dar-role-grid h3,
+.dar-feature-grid h3,
+.dar-table-card h3 {
+    margin: 0;
+    color: #2a3833;
+    font-size: 15px;
+    line-height: 22px;
+}
+
+.dar-scope-card p {
+    margin: 5px 0 0;
+    color: #74817c;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.dar-menu-pair {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+    padding-left: 56px;
+}
+
+.dar-menu-pair span {
+    padding: 5px 10px;
+    color: #547466;
+    font-size: 12px;
+    border: 1px solid #d5e8df;
+    border-radius: 4px;
+    background: #f4faf7;
+}
+
+.dar-flow-card,
+.dar-table-card,
+.dar-boundary-card {
+    padding: 24px;
+    border: 1px solid var(--dar-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.dar-process-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #edf1ef;
+}
+
+.dar-process-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #71807a;
+    font-size: 11px;
+}
+
+.dar-process-role i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dar-process-role--buyer i { background: #2798c7; }
+.dar-process-role--supplier i { background: var(--dar-green); }
+.dar-process-role--system i { background: #8d9a95; }
+.dar-process-role--operation i { background: #d09b2c; }
+
+.dar-process-map {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.dar-process-opening {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+}
+
+.dar-process-arrow,
+.dar-process-down {
+    color: #8caaa0;
+    font-size: 22px;
+    text-align: center;
+}
+
+.dar-process-down {
+    display: block;
+    margin: 9px auto;
+}
+
+.dar-process-node {
+    position: relative;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid #dce6e2;
+    border-left-width: 4px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(34, 55, 47, .04);
+}
+
+.dar-process-node > .material-symbols-outlined {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: 8px;
+}
+
+.dar-process-node strong,
+.dar-process-node small {
+    display: block;
+}
+
+.dar-process-node strong {
+    color: #31403a;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.dar-process-node small {
+    margin-top: 3px;
+    color: #82908a;
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.dar-process-node-role {
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    color: #8c9893;
+    font-size: 10px;
+    line-height: 16px;
+}
+
+.dar-process-node--buyer { border-left-color: #2798c7; }
+.dar-process-node--buyer > .material-symbols-outlined { color: #228eb9; background: #edf7fb; }
+.dar-process-node--supplier { border-left-color: var(--dar-green); }
+.dar-process-node--supplier > .material-symbols-outlined { color: var(--dar-green); background: var(--dar-green-soft); }
+.dar-process-node--system { border-left-color: #8d9a95; }
+.dar-process-node--system > .material-symbols-outlined { color: #707e79; background: #f1f4f3; }
+.dar-process-node--operation { border-left-color: #d09b2c; }
+.dar-process-node--operation > .material-symbols-outlined { color: #aa7b17; background: #fbf6e9; }
+
+.dar-process-node--end {
+    min-height: 64px;
+    border-color: #bce0cf;
+    border-left-color: var(--dar-green);
+    background: #f2faf6;
+    box-shadow: none;
+}
+
+.dar-process-node--end > .material-symbols-outlined {
+    color: var(--dar-green);
+    background: #dff4ea;
+    font-variation-settings: 'FILL' 1;
+}
+
+.dar-process-decision {
+    width: 210px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto;
+    color: #3d4b46;
+    font-size: 13px;
+    border: 1px solid #cfdcd7;
+    border-radius: 8px;
+    background: #f7faf8;
+}
+
+.dar-process-decision .material-symbols-outlined {
+    color: var(--dar-green);
+    font-size: 20px;
+}
+
+.dar-process-branches {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(210px, .7fr) minmax(520px, 1.7fr);
+    gap: 34px;
+    margin-top: 14px;
+    padding-top: 26px;
+    border-top: 1px solid #c5d7cf;
+}
+
+.dar-process-branches::before {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    width: 1px;
+    height: 15px;
+    content: '';
+    background: #c5d7cf;
+}
+
+.dar-process-branch {
+    position: relative;
+    padding: 0 14px 16px;
+    border: 1px solid #e2e9e6;
+    border-radius: 10px;
+    background: #fafcfb;
+}
+
+.dar-process-branch::before {
+    position: absolute;
+    top: -27px;
+    left: 50%;
+    width: 1px;
+    height: 26px;
+    content: '';
+    background: #c5d7cf;
+}
+
+.dar-process-branch--agree {
+    align-self: start;
+}
+
+.dar-process-branch--reject {
+    padding-right: 24px;
+    padding-left: 24px;
+}
+
+.dar-process-branch-label {
+    display: table;
+    margin: -12px auto 0;
+    padding: 3px 10px;
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.dar-process-branch-label--agree {
+    color: var(--dar-green-dark);
+    border: 1px solid #c2e2d3;
+}
+
+.dar-process-branch-label--reject {
+    color: #c07b14;
+    border: 1px solid #ecd4ad;
+}
+
+.dar-process-parallel-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    color: #65736e;
+    font-size: 11px;
+}
+
+.dar-process-parallel-title .material-symbols-outlined {
+    color: #8a9f96;
+    font-size: 18px;
+}
+
+.dar-process-parallel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.dar-process-parallel .dar-process-node {
+    min-height: 80px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.dar-process-merge {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr);
+    align-items: end;
+    margin: 6px 42px 8px;
+    color: #8caaa0;
+}
+
+.dar-process-merge span {
+    height: 18px;
+    border-bottom: 1px solid #c4d6ce;
+}
+
+.dar-process-merge span:first-child {
+    border-right: 1px solid #c4d6ce;
+}
+
+.dar-process-merge span:last-child {
+    border-left: 1px solid #c4d6ce;
+}
+
+.dar-process-merge .material-symbols-outlined {
+    font-size: 20px;
+    text-align: center;
+}
+
+.dar-process-final-choice {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+}
+
+.dar-process-final-choice span {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    color: #386852;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #c9e3d7;
+    border-radius: 6px;
+    background: #f2faf6;
+}
+
+.dar-process-final-choice strong {
+    color: #9a7330;
+    font-size: 10px;
+    text-align: center;
+}
+
+.dar-process-merge--final {
+    margin-right: 48px;
+    margin-left: 48px;
+}
+
+.dar-rule-note {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 11px 16px;
+    color: #65736e;
+    font-size: 12px;
+    line-height: 20px;
+    border: 1px solid #dce7e2;
+    border-radius: 7px;
+    background: #f7faf8;
+}
+
+.dar-rule-note .material-symbols-outlined {
+    color: var(--dar-green);
+    font-size: 19px;
+}
+
+.dar-rule-note p {
+    margin: 0;
+}
+
+.dar-role-grid,
+.dar-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.dar-role-grid article,
+.dar-feature-grid article {
+    padding: 22px;
+    border: 1px solid var(--dar-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.dar-role-icon {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 13px;
+    font-size: 22px;
+    border-radius: 9px;
+}
+
+.dar-role-icon--buyer { color: #168dbe; background: #edf7fb; }
+.dar-role-icon--supplier { color: var(--dar-green); background: var(--dar-green-soft); }
+.dar-role-icon--operation { color: #9b731c; background: #fbf6e9; }
+
+.dar-role-grid ul {
+    display: grid;
+    gap: 7px;
+    margin: 13px 0 0;
+    padding: 0;
+    color: #6d7a75;
+    font-size: 12px;
+    line-height: 19px;
+    list-style: none;
+}
+
+.dar-role-grid li {
+    position: relative;
+    padding-left: 14px;
+}
+
+.dar-role-grid li::before {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    content: '';
+    border-radius: 50%;
+    background: #88baa3;
+}
+
+.dar-table-card + .dar-table-card {
+    margin-top: 16px;
+}
+
+.dar-table-card h3 {
+    margin-bottom: 14px;
+}
+
+.dar-table-wrap {
+    overflow-x: auto;
+}
+
+.dar-table-card table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-size: 12px;
+}
+
+.dar-table-card th {
+    height: 42px;
+    padding: 0 12px;
+    color: #61706a;
+    font-weight: 600;
+    text-align: left;
+    background: #f2f6f4;
+}
+
+.dar-table-card th:first-child {
+    width: 15%;
+    border-radius: 6px 0 0 6px;
+}
+
+.dar-table-card th:nth-child(2) {
+    width: 31%;
+}
+
+.dar-table-card th:last-child {
+    border-radius: 0 6px 6px 0;
+}
+
+.dar-table-card td {
+    height: 46px;
+    padding: 9px 12px;
+    color: #596760;
+    line-height: 19px;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf1ef;
+}
+
+.dar-table-card td b {
+    color: var(--dar-green-dark);
+    font-weight: 600;
+}
+
+.dar-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.dar-status::before {
+    width: 8px;
+    height: 8px;
+    content: '';
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.dar-status--active,
+.dar-status--done { color: #169e68; }
+.dar-status--warning { color: #d99223; }
+.dar-status--danger { color: #e76868; }
+.dar-status--muted { color: #909b97; }
+
+.dar-feature-grid article {
+    min-height: 132px;
+}
+
+.dar-feature-grid article > .material-symbols-outlined {
+    color: var(--dar-green);
+    font-size: 22px;
+}
+
+.dar-feature-grid h3 {
+    margin-top: 10px;
+}
+
+.dar-feature-grid p {
+    margin: 7px 0 0;
+    color: #74817c;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.dar-boundary-card ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dar-boundary-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.dar-boundary-card li > .material-symbols-outlined {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #73817b;
+    font-size: 19px;
+    border-radius: 8px;
+    background: var(--dar-panel);
+}
+
+.dar-boundary-card strong {
+    color: #34423d;
+    font-size: 13px;
+}
+
+.dar-boundary-card p {
+    margin: 4px 0 0;
+    color: #7a8782;
+    font-size: 12px;
+    line-height: 19px;
+}
+
+.dar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding: 18px 4px 4px;
+    color: #929d99;
+    font-size: 11px;
+    border-top: 1px solid #e3e9e6;
+}
+
+@media (max-width: 1280px) {
+    .dar-main {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    .dar-hero {
+        padding: 30px;
+    }
+
+    .dar-hero-stats {
+        min-width: 300px;
+    }
+
+    .dar-flow-card {
+        padding: 20px;
+    }
+
+    .dar-process-branches {
+        grid-template-columns: minmax(180px, .65fr) minmax(480px, 1.7fr);
+        gap: 24px;
+    }
+
+    .dar-process-branch--reject {
+        padding-right: 18px;
+        padding-left: 18px;
+    }
+}

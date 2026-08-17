@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/product-detail-samples.css">
+    <link rel="stylesheet" href="css/detail-favorite.css">
     <script src="js/nav-bar.js"></script>
     <script src="js/smart-service.js" defer></script>
     <script src="js/product-detail-samples.js" defer></script>
+    <script src="js/detail-favorite.js" defer></script>
     <style>
         .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
 
@@ -52,15 +54,6 @@
         .product-stats { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px; }
         .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
         .product-stat b { color: var(--text-primary); font-weight: 600; }
-        .subscribe-btn {
-            display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
-            font-size: 12px; color: var(--text-secondary); background: var(--bg-card);
-            border: 1px solid var(--border-default); border-radius: 14px;
-            cursor: pointer; font-family: inherit; transition: all 150ms ease;
-        }
-        .subscribe-btn:hover { color: var(--forest-green); border-color: var(--forest-green); }
-        .subscribe-btn svg { width: 14px; height: 14px; }
-
         .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
         .product-meta-row {
             display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary); margin-bottom: 10px;
@@ -245,9 +238,9 @@
                         <div class="product-stats">
                             <span class="product-stat">浏览量：<b>1,056</b></span>
                             <span class="product-stat">购买量：<b>56</b></span>
-                            <button class="subscribe-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                                收藏
+                            <button type="button" class="detail-favorite-btn" data-detail-favorite data-favorite-scope="product" aria-pressed="false" aria-label="收藏此内容">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                <span data-favorite-label>收藏</span>
                             </button>
                         </div>
                     </div>

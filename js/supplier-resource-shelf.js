@@ -1000,14 +1000,14 @@
             var form = state.form;
             var contractRows = '';
             if (form.digitalContract === '是') {
-                contractRows = renderFormRow('数字合约模板', true, renderContractPicker()) + renderContractPreview();
+                contractRows = renderFormRow('数字合约模板', true, renderContractPicker(), '所选模板将作为后续交易生成数字合约的预设依据；模板中的约束条件可按本次上架要求调整，最终以交易双方确认并签署的合约内容为准。') + renderContractPreview();
             }
             return ''
                 + '<div class="product-shelf-step-content resource-shelf-step-content">'
                 +   '<div class="product-shelf-form resource-shelf-delivery-form">'
                 +       (state.formError ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>' + escapeHtml(state.formError) + '</span></div>' : '')
                 +       renderFormRow('传输模式', true, renderRadioOptions('resourceTransferMode', ['拉取(pull)', '推送(push)', '双向支持(all)'], form.transferMode, 'data-resource-shelf-transfer-mode'))
-                +       renderFormRow('数字合约', true, renderRadioOptions('resourceDigitalContract', ['是', '否'], form.digitalContract, 'data-resource-shelf-digital-contract'))
+                +       renderFormRow('数字合约', true, renderRadioOptions('resourceDigitalContract', ['是', '否'], form.digitalContract, 'data-resource-shelf-digital-contract'), '数字合约是将数据使用范围、访问方式、调用频次、安全要求等交易约束数字化记录的电子合约，用于明确供需双方的权利义务，并为后续合约签署、履约监测和异常处置提供依据。')
                 +       contractRows
                 +   '</div>'
                 +   '<div class="product-shelf-api-tag"><span>API传输</span></div>'

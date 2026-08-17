@@ -121,9 +121,9 @@
             label: '争议仲裁',
             icon: 'overview',
             children: [
-                { key: 'dispute', label: '争议管理', href: 'operation-dispute-arbitration.html?menu=dispute' },
+                { key: 'dispute', label: '产品争议管理', href: 'operation-dispute-arbitration.html?menu=dispute' },
                 { key: 'service-dispute', label: '服务争议管理', href: 'operation-dispute-arbitration.html?menu=service-dispute' },
-                { key: 'arbitration', label: '仲裁管理', href: 'operation-dispute-arbitration.html?menu=arbitration' },
+                { key: 'arbitration', label: '产品仲裁管理', href: 'operation-dispute-arbitration.html?menu=arbitration' },
                 { key: 'service-arbitration', label: '服务仲裁管理', href: 'operation-dispute-arbitration.html?menu=service-arbitration' }
             ]
         }

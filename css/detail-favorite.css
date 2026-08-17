@@ -1,0 +1,47 @@
+.detail-favorite-btn {
+    min-width: 82px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.detail-favorite-btn:hover {
+    color: var(--forest-green);
+    border-color: var(--forest-green);
+}
+
+.detail-favorite-btn:focus-visible {
+    outline: none;
+    border-color: var(--forest-green);
+    box-shadow: 0 0 0 3px var(--forest-green-100);
+}
+
+.detail-favorite-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    fill: transparent;
+    transition: fill 150ms ease;
+}
+
+.detail-favorite-btn.is-favorite {
+    color: var(--forest-green);
+    background: var(--forest-green-50);
+    border-color: var(--forest-green-200);
+}
+
+.detail-favorite-btn.is-favorite svg {
+    fill: currentColor;
+}

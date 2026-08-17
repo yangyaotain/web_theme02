@@ -179,6 +179,67 @@
         }
     ];
 
+    var CONTRACT_TEMPLATES = [
+        {
+            id: 'contract-api-standard',
+            name: '标准API访问合约',
+            strategyName: '访问策略模板',
+            behavior: '访问',
+            constraints: {
+                timeRange: { start: '2026-08-01', end: '2027-07-31' },
+                timeWindow: { start: '09:00:00', end: '18:00:00' },
+                usageCount: '1000',
+                usageFrequency: { value: '60', unit: '次/分钟' },
+                networkAddress: '0.0.0.0/0'
+            }
+        },
+        {
+            id: 'contract-enterprise-credit',
+            name: '企业信用数据查询合约',
+            strategyName: 'API策略',
+            behavior: '访问',
+            constraints: {
+                usageCount: '500',
+                usageFrequency: { value: '30', unit: '次/分钟' },
+                networkAddress: '10.26.0.0/16'
+            }
+        },
+        {
+            id: 'contract-park-energy',
+            name: '园区能耗API调用合约',
+            strategyName: '访问策略模板',
+            behavior: '访问',
+            constraints: {
+                timeWindow: { start: '08:30:00', end: '20:00:00' },
+                usageCount: '2000',
+                usageFrequency: { value: '120', unit: '次/分钟' },
+                networkAddress: '172.16.0.0/12'
+            }
+        },
+        {
+            id: 'contract-public-development',
+            name: '公共数据开发利用合约',
+            strategyName: '访问策略模板',
+            behavior: '访问',
+            constraints: {
+                timeRange: { start: '2026-08-01', end: '2026-12-31' },
+                timeWindow: { start: '09:00:00', end: '17:00:00' },
+                networkAddress: '0.0.0.0/0'
+            }
+        },
+        {
+            id: 'contract-product-trial',
+            name: '数据产品试用合约',
+            strategyName: 'API策略',
+            behavior: '访问',
+            constraints: {
+                timeRange: { start: '2026-08-01', end: '2026-08-31' },
+                usageCount: '100',
+                networkAddress: '0.0.0.0/0'
+            }
+        }
+    ];
+
     function icon(name) {
         return '<span class="material-symbols-outlined" aria-hidden="true">' + name + '</span>';
     }
@@ -214,6 +275,8 @@
             currentId: '',
             form: null,
             formError: '',
+            modalOpen: false,
+            pendingTemplateId: '',
             pendingToast: ''
         };
         var toastTimer = null;
@@ -240,6 +303,12 @@
             });
         }
 
+        function getTemplate(id) {
+            return CONTRACT_TEMPLATES.find(function (item) {
+                return item.id === id;
+            });
+        }
+
         function createForm(record) {
             return {
                 deliverySpec: record.name + 'API交付说明.pdf',
@@ -253,6 +322,8 @@
                 supportPostpaid: false,
                 transferMode: '推送(push)',
                 digitalContract: '否',
+                contractTemplateId: '',
+                contractValues: {},
                 trial: '否',
                 strategies: ['访问次数限制', '访问时间限制', '并发限制'],
                 timeStart: '08:30',
@@ -599,14 +670,87 @@
             return html;
         }
 
+        function contractConstraintLabel(key) {
+            return ({
+                timeRange: '时间范围',
+                timeWindow: '时间窗口',
+                usageCount: '使用次数',
+                usageFrequency: '使用频次',
+                networkAddress: '网络地址'
+            })[key] || key;
+        }
+
+        function contractValueSummary(key, value) {
+            if (key === 'timeRange') return value.start + '~' + value.end;
+            if (key === 'timeWindow') return value.start + '-' + value.end;
+            if (key === 'usageFrequency') return value.value + value.unit;
+            return value;
+        }
+
+        function renderContractValueEditor(key, value) {
+            if (key === 'timeRange') {
+                return '<div class="resource-shelf-contract-range"><input type="date" value="' + escapeHtml(value.start) + '" aria-label="合约开始日期" data-product-shelf-contract-field="timeRange.start"><span>至</span><input type="date" value="' + escapeHtml(value.end) + '" aria-label="合约结束日期" data-product-shelf-contract-field="timeRange.end">' + icon('calendar_month') + '</div>';
+            }
+            if (key === 'timeWindow') {
+                return '<div class="resource-shelf-contract-range"><input type="time" step="1" value="' + escapeHtml(value.start) + '" aria-label="合约开始时间" data-product-shelf-contract-field="timeWindow.start"><span>至</span><input type="time" step="1" value="' + escapeHtml(value.end) + '" aria-label="合约结束时间" data-product-shelf-contract-field="timeWindow.end">' + icon('schedule') + '</div>';
+            }
+            if (key === 'usageCount') {
+                return '<input class="resource-shelf-contract-input" type="number" min="1" step="1" value="' + escapeHtml(value) + '" aria-label="合约使用次数" data-product-shelf-contract-field="usageCount">';
+            }
+            if (key === 'usageFrequency') {
+                return '<div class="resource-shelf-contract-frequency"><input type="number" min="1" step="1" value="' + escapeHtml(value.value) + '" aria-label="合约使用频次" data-product-shelf-contract-field="usageFrequency.value"><select aria-label="使用频次单位" data-product-shelf-contract-field="usageFrequency.unit"><option value="次/秒"' + (value.unit === '次/秒' ? ' selected' : '') + '>次/秒</option><option value="次/分钟"' + (value.unit === '次/分钟' ? ' selected' : '') + '>次/分钟</option><option value="次/小时"' + (value.unit === '次/小时' ? ' selected' : '') + '>次/小时</option></select></div>';
+            }
+            return '<input class="resource-shelf-contract-input" type="text" value="' + escapeHtml(value) + '" aria-label="合约网络地址" data-product-shelf-contract-field="networkAddress">';
+        }
+
+        function renderContractRows(template, values, editable) {
+            var keys = Object.keys(template.constraints);
+            return keys.map(function (key, index) {
+                var value = values[key] == null ? copyObject(template.constraints[key]) : values[key];
+                return '<tr>'
+                    + (index === 0 ? '<td rowspan="' + keys.length + '"><strong>' + escapeHtml(template.strategyName) + '</strong></td><td rowspan="' + keys.length + '">' + escapeHtml(template.behavior) + '</td>' : '')
+                    + '<td>' + escapeHtml(contractConstraintLabel(key)) + '</td>'
+                    + '<td>' + (editable ? renderContractValueEditor(key, value) : '<span class="resource-shelf-contract-value">' + escapeHtml(contractValueSummary(key, value)) + '</span>') + '</td>'
+                    + '</tr>';
+            }).join('');
+        }
+
+        function renderContractPicker() {
+            var template = getTemplate(state.form.contractTemplateId);
+            return '<button class="resource-shelf-contract-picker" type="button" data-product-shelf-open-template>'
+                + '<span>' + (template ? escapeHtml(template.name) : '请选择数字合约模板') + '</span>'
+                + icon('more_vert')
+                + '</button>';
+        }
+
+        function renderContractPreview() {
+            var template = getTemplate(state.form.contractTemplateId);
+            if (!template) return '';
+            return ''
+                + '<div class="resource-shelf-contract-preview">'
+                +   '<div class="resource-shelf-contract-caption">' + icon('contract_edit') + '<span>已关联数字合约模板，可根据本次上架要求调整约束条件具体值。</span></div>'
+                +   '<div class="resource-shelf-contract-table-wrap">'
+                +       '<table class="resource-shelf-contract-table">'
+                +           '<thead><tr><th>策略模板</th><th>行为</th><th>约束条件</th><th>约束条件具体值</th></tr></thead>'
+                +           '<tbody>' + renderContractRows(template, state.form.contractValues, true) + '</tbody>'
+                +       '</table>'
+                +   '</div>'
+                + '</div>';
+        }
+
         function renderStepThree() {
             var form = state.form;
+            var contractRows = '';
+            if (form.digitalContract === '是') {
+                contractRows = renderFormRow('数字合约模板', true, renderContractPicker(), '所选模板将作为后续交易生成数字合约的预设依据；模板中的约束条件可按本次上架要求调整，最终以交易双方确认并签署的合约内容为准。') + renderContractPreview();
+            }
             return ''
                 + '<div class="product-shelf-step-content">'
                 +   '<div class="product-shelf-form">'
-                +       (state.formError ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>请完整填写已启用控制策略对应的限制值。</span></div>' : '')
+                +       (state.formError ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>' + escapeHtml(state.formError) + '</span></div>' : '')
                 +       renderFormRow('传输模式', true, renderRadioOptions('transferMode', ['拉(pull)', '推(push)', '都支持(all)'], form.transferMode, 'data-product-shelf-transfer-mode'))
-                +       renderFormRow('数字合约', true, renderRadioOptions('digitalContract', ['是', '否'], form.digitalContract, 'data-product-shelf-digital-contract'))
+                +       renderFormRow('数字合约', true, renderRadioOptions('digitalContract', ['是', '否'], form.digitalContract, 'data-product-shelf-digital-contract'), '数字合约是将数据使用范围、访问方式、调用频次、安全要求等交易约束数字化记录的电子合约，用于明确供需双方的权利义务，并为后续合约签署、履约监测和异常处置提供依据。')
+                +       contractRows
                 +   '</div>'
                 +   '<div class="product-shelf-api-tag"><span>' + escapeHtml(form.deliveryMethod) + '</span></div>'
                 +   '<h3 class="product-shelf-subsection-title">试用策略</h3>'
@@ -619,6 +763,34 @@
                 +       renderFormRow('控制策略', true, renderStrategyOptions())
                 +       renderStrategyFields()
                 +   '</div>'
+                + '</div>';
+        }
+
+        function renderTemplateModal() {
+            if (!state.modalOpen) return '';
+            var selected = getTemplate(state.pendingTemplateId) || CONTRACT_TEMPLATES[0];
+            return ''
+                + '<div class="resource-shelf-modal-backdrop" data-product-shelf-modal-backdrop>'
+                +   '<section class="resource-shelf-modal" role="dialog" aria-modal="true" aria-labelledby="product-contract-modal-title">'
+                +       '<header class="resource-shelf-modal-header"><h2 id="product-contract-modal-title">选择数字合约模板</h2><button type="button" aria-label="关闭合约模板弹窗" data-product-shelf-template-close>' + icon('close') + '</button></header>'
+                +       '<div class="resource-shelf-modal-body">'
+                +           '<nav class="resource-shelf-template-list" aria-label="数字合约模板列表">'
+                +               CONTRACT_TEMPLATES.map(function (template) {
+                                    return '<button class="resource-shelf-template-item' + (template.id === selected.id ? ' active' : '') + '" type="button" data-product-shelf-template-id="' + template.id + '">' + icon('description') + '<span>' + escapeHtml(template.name) + '</span></button>';
+                                }).join('')
+                +           '</nav>'
+                +           '<div class="resource-shelf-template-detail">'
+                +               '<div class="resource-shelf-template-intro"><span>操作类行为：数据使用方在使用数据产品时的操作</span></div>'
+                +               '<div class="resource-shelf-contract-table-wrap">'
+                +                   '<table class="resource-shelf-contract-table">'
+                +                       '<thead><tr><th>策略模板</th><th>行为</th><th>约束条件</th><th>约束条件具体值</th></tr></thead>'
+                +                       '<tbody>' + renderContractRows(selected, selected.constraints, false) + '</tbody>'
+                +                   '</table>'
+                +               '</div>'
+                +           '</div>'
+                +       '</div>'
+                +       '<footer class="resource-shelf-modal-footer"><button class="product-shelf-footer-button" type="button" data-product-shelf-template-close>' + icon('close') + '<span>取消</span></button><button class="product-shelf-footer-button primary" type="button" data-product-shelf-template-confirm>' + icon('check') + '<span>确定</span></button></footer>'
+                +   '</section>'
                 + '</div>';
         }
 
@@ -653,7 +825,8 @@
                 +   '</div>'
                 +   renderEditorFooter()
                 + '</div>'
-                + '<div class="product-shelf-toast" role="status" aria-live="polite" data-product-shelf-toast>' + icon('check_circle') + '<span></span></div>';
+                + '<div class="product-shelf-toast" role="status" aria-live="polite" data-product-shelf-toast>' + icon('check_circle') + '<span></span></div>'
+                + renderTemplateModal();
             bindEditorEvents();
         }
 
@@ -689,6 +862,7 @@
             state.step = 1;
             state.form = createForm(record);
             state.formError = '';
+            state.modalOpen = false;
             renderEditor();
         }
 
@@ -811,10 +985,22 @@
                 }
             }
             if (state.step === 3) {
+                if (!state.form.transferMode || !state.form.digitalContract) {
+                    state.formError = '请选择传输模式和数字合约。';
+                    return false;
+                }
+                if (state.form.digitalContract === '是' && !state.form.contractTemplateId) {
+                    state.formError = '请选择数字合约模板。';
+                    return false;
+                }
+                if (state.form.digitalContract === '是' && !validateContract(getTemplate(state.form.contractTemplateId))) {
+                    state.formError = '请完整填写数字合约的约束条件具体值，并确认起止范围有效。';
+                    return false;
+                }
                 if ((hasStrategy('访问时间限制') && (!state.form.timeStart || !state.form.timeEnd))
                     || (hasStrategy('并发限制') && (!state.form.concurrency || Number(state.form.concurrency) <= 0))
                     || (hasStrategy('访问次数限制') && (!state.form.accessCount || Number(state.form.accessCount) <= 0))) {
-                    state.formError = 'delivery';
+                    state.formError = '请完整填写已启用控制策略对应的限制值。';
                     return false;
                 }
             }
@@ -832,6 +1018,37 @@
             state.page = 1;
             state.pendingToast = message;
             renderList();
+        }
+
+        function applyTemplate(template) {
+            var templateChanged = state.form.contractTemplateId !== template.id;
+            state.form.contractTemplateId = template.id;
+            if (templateChanged || !Object.keys(state.form.contractValues).length) {
+                state.form.contractValues = copyObject(template.constraints);
+            }
+        }
+
+        function validateContract(template) {
+            if (!template) return false;
+            return Object.keys(template.constraints).every(function (key) {
+                var value = state.form.contractValues[key];
+                if (key === 'timeRange' || key === 'timeWindow') {
+                    return Boolean(value && value.start && value.end && value.start <= value.end);
+                }
+                if (key === 'usageCount') return Boolean(value && Number(value) > 0);
+                if (key === 'usageFrequency') return Boolean(value && Number(value.value) > 0 && value.unit);
+                return Boolean(String(value || '').trim());
+            });
+        }
+
+        function setNestedValue(target, path, value) {
+            var parts = path.split('.');
+            if (parts.length === 1) {
+                target[parts[0]] = value;
+                return;
+            }
+            if (!target[parts[0]]) target[parts[0]] = {};
+            target[parts[0]][parts[1]] = value;
         }
 
         function bindEditorEvents() {
@@ -862,7 +1079,18 @@
             panel.querySelectorAll('[data-product-shelf-digital-contract]').forEach(function (radio) {
                 radio.addEventListener('change', function () {
                     state.form.digitalContract = this.value;
+                    state.formError = '';
+                    renderEditor();
                 });
+            });
+
+            panel.querySelectorAll('[data-product-shelf-contract-field]').forEach(function (control) {
+                function syncContractField() {
+                    setNestedValue(state.form.contractValues, control.dataset.productShelfContractField, control.value);
+                    state.formError = '';
+                }
+                control.addEventListener('input', syncContractField);
+                control.addEventListener('change', syncContractField);
             });
 
             panel.querySelectorAll('[data-product-shelf-trial]').forEach(function (radio) {
@@ -921,12 +1149,44 @@
                 });
             }
 
+            var openTemplate = panel.querySelector('[data-product-shelf-open-template]');
+            if (openTemplate) openTemplate.addEventListener('click', function () {
+                state.pendingTemplateId = state.form.contractTemplateId || CONTRACT_TEMPLATES[0].id;
+                state.modalOpen = true;
+                renderEditor();
+            });
+
+            panel.querySelectorAll('[data-product-shelf-template-id]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.pendingTemplateId = this.dataset.productShelfTemplateId;
+                    renderEditor();
+                });
+            });
+
+            panel.querySelectorAll('[data-product-shelf-template-close]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.modalOpen = false;
+                    renderEditor();
+                });
+            });
+
+            var confirmTemplate = panel.querySelector('[data-product-shelf-template-confirm]');
+            if (confirmTemplate) confirmTemplate.addEventListener('click', function () {
+                var template = getTemplate(state.pendingTemplateId);
+                if (!template) return;
+                applyTemplate(template);
+                state.modalOpen = false;
+                state.formError = '';
+                renderEditor();
+            });
+
             panel.querySelectorAll('[data-product-shelf-editor-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var action = this.dataset.productShelfEditorAction;
                     if (action === 'cancel') {
                         state.view = 'list';
                         state.formError = '';
+                        state.modalOpen = false;
                         renderList();
                         return;
                     }
