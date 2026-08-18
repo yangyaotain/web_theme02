@@ -6,7 +6,6 @@
 
     var pageType = page.dataset.profitAdminPage;
     var query = '';
-    var statusFilter = '全部状态';
     var sceneFilter = '全部业务类型';
     var modalState = null;
     var configOpen = false;
@@ -95,18 +94,18 @@
     ];
 
     var RECEIVERS = [
-        { receiverId: 'RCV-202607-00986', merchantId: 'MER2026072100986', name: '深圳市龙岗数智科技有限公司', creditCode: '91440300MA5F8LG001', receiverType: '标准商户', account: '中国农业银行 · 4405 **** 12345', status: '1', createdAt: '2026-07-22 09:18:36' },
-        { receiverId: 'RCV-202607-00762', merchantId: 'MER2026071800762', name: '龙岗数智产业研究院有限公司', creditCode: '91440300MA5F8LG762', receiverType: '标准商户', account: '中国建设银行 · 6217 **** 0762', status: '0', createdAt: '2026-07-19 11:06:22' },
-        { receiverId: 'RCV-202607-00655', merchantId: 'MER2026071700655', name: '深圳市龙数数据技术有限公司', creditCode: '91440300MA5F8LG655', receiverType: '标准商户', account: '招商银行 · 7559 **** 0655', status: '2', createdAt: '2026-07-18 15:26:11' },
-        { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', status: '3', createdAt: '2026-07-17 14:08:29' },
-        { receiverId: 'RCV-202607-00491', merchantId: 'MER2026071500491', name: '深圳市龙岗智慧交通数据有限公司', creditCode: '91440300MA5F8LG491', receiverType: '标准商户', account: '中国工商银行 · 6222 **** 0491', status: '1', createdAt: '2026-07-16 16:42:08' },
-        { receiverId: 'RCV-202607-00436', merchantId: 'MER2026071400436', name: '深圳市龙岗产业空间数据服务有限公司', creditCode: '91440300MA5F8LG436', receiverType: '标准商户', account: '中国银行 · 6216 **** 0436', status: '1', createdAt: '2026-07-15 10:31:45' },
-        { receiverId: 'RCV-202607-00387', merchantId: 'MER2026071300387', name: '深圳市龙岗企业信用数据有限公司', creditCode: '91440300MA5F8LG387', receiverType: '标准商户', account: '交通银行 · 6222 **** 0387', status: '0', createdAt: '2026-07-14 14:20:17' },
-        { receiverId: 'RCV-202607-00342', merchantId: 'MER2026071200342', name: '深圳市龙岗云链科技有限公司', creditCode: '91440300MA5F8LG342', receiverType: '标准商户', account: '浦发银行 · 6217 **** 0342', status: '1', createdAt: '2026-07-13 09:52:33' },
-        { receiverId: 'RCV-202607-00296', merchantId: 'MER2026071100296', name: '深圳市龙岗数字文旅科技有限公司', creditCode: '91440300MA5F8LG296', receiverType: '标准商户', account: '中信银行 · 6217 **** 0296', status: '2', createdAt: '2026-07-12 17:06:54' },
-        { receiverId: 'RCV-202607-00251', merchantId: 'MER2026071000251', name: '深圳市龙岗智能制造数据有限公司', creditCode: '91440300MA5F8LG251', receiverType: '标准商户', account: '兴业银行 · 6229 **** 0251', status: '1', createdAt: '2026-07-11 11:24:39' },
-        { receiverId: 'RCV-202607-00208', merchantId: 'MER2026070900208', name: '深圳市龙岗数据资产服务有限公司', creditCode: '91440300MA5F8LG208', receiverType: '标准商户', account: '广发银行 · 6225 **** 0208', status: '0', createdAt: '2026-07-10 13:48:26' },
-        { receiverId: 'RCV-202607-00169', merchantId: 'MER2026070800169', name: '深圳市龙岗民生服务科技有限公司', creditCode: '91440300MA5F8LG169', receiverType: '标准商户', account: '中国邮政储蓄银行 · 6217 **** 0169', status: '1', createdAt: '2026-07-09 08:56:12' }
+        { receiverId: 'RCV-202607-00986', merchantId: 'MER2026072100986', name: '深圳市龙岗数智科技有限公司', creditCode: '91440300MA5F8LG001', receiverType: '标准商户', account: '中国农业银行 · 4405 **** 12345', createdAt: '2026-07-22 09:18:36' },
+        { receiverId: 'RCV-202607-00762', merchantId: 'MER2026071800762', name: '龙岗数智产业研究院有限公司', creditCode: '91440300MA5F8LG762', receiverType: '标准商户', account: '中国建设银行 · 6217 **** 0762', createdAt: '2026-07-19 11:06:22' },
+        { receiverId: 'RCV-202607-00655', merchantId: 'MER2026071700655', name: '深圳市龙数数据技术有限公司', creditCode: '91440300MA5F8LG655', receiverType: '标准商户', account: '招商银行 · 7559 **** 0655', createdAt: '2026-07-18 15:26:11' },
+        { receiverId: 'RCV-202607-00528', merchantId: 'MER2026071600528', name: '深圳龙岗科创金融服务有限公司', creditCode: '91440300MA5F8LG528', receiverType: '标准商户', account: '平安银行 · 1101 **** 0528', createdAt: '2026-07-17 14:08:29' },
+        { receiverId: 'RCV-202607-00491', merchantId: 'MER2026071500491', name: '深圳市龙岗智慧交通数据有限公司', creditCode: '91440300MA5F8LG491', receiverType: '标准商户', account: '中国工商银行 · 6222 **** 0491', createdAt: '2026-07-16 16:42:08' },
+        { receiverId: 'RCV-202607-00436', merchantId: 'MER2026071400436', name: '深圳市龙岗产业空间数据服务有限公司', creditCode: '91440300MA5F8LG436', receiverType: '标准商户', account: '中国银行 · 6216 **** 0436', createdAt: '2026-07-15 10:31:45' },
+        { receiverId: 'RCV-202607-00387', merchantId: 'MER2026071300387', name: '深圳市龙岗企业信用数据有限公司', creditCode: '91440300MA5F8LG387', receiverType: '标准商户', account: '交通银行 · 6222 **** 0387', createdAt: '2026-07-14 14:20:17' },
+        { receiverId: 'RCV-202607-00342', merchantId: 'MER2026071200342', name: '深圳市龙岗云链科技有限公司', creditCode: '91440300MA5F8LG342', receiverType: '标准商户', account: '浦发银行 · 6217 **** 0342', createdAt: '2026-07-13 09:52:33' },
+        { receiverId: 'RCV-202607-00296', merchantId: 'MER2026071100296', name: '深圳市龙岗数字文旅科技有限公司', creditCode: '91440300MA5F8LG296', receiverType: '标准商户', account: '中信银行 · 6217 **** 0296', createdAt: '2026-07-12 17:06:54' },
+        { receiverId: 'RCV-202607-00251', merchantId: 'MER2026071000251', name: '深圳市龙岗智能制造数据有限公司', creditCode: '91440300MA5F8LG251', receiverType: '标准商户', account: '兴业银行 · 6229 **** 0251', createdAt: '2026-07-11 11:24:39' },
+        { receiverId: 'RCV-202607-00208', merchantId: 'MER2026070900208', name: '深圳市龙岗数据资产服务有限公司', creditCode: '91440300MA5F8LG208', receiverType: '标准商户', account: '广发银行 · 6225 **** 0208', createdAt: '2026-07-10 13:48:26' },
+        { receiverId: 'RCV-202607-00169', merchantId: 'MER2026070800169', name: '深圳市龙岗民生服务科技有限公司', creditCode: '91440300MA5F8LG169', receiverType: '标准商户', account: '中国邮政储蓄银行 · 6217 **** 0169', createdAt: '2026-07-09 08:56:12' }
     ];
 
     var RECEIVER_SYNC_CANDIDATE = {
@@ -116,15 +115,7 @@
         creditCode: '91440300MA5F8LG036',
         receiverType: '标准商户',
         account: '中国银行 · 6216 **** 1036',
-        status: '0',
         createdAt: '2026-07-23 14:36:20'
-    };
-
-    var RECEIVER_AUDIT_LABELS = {
-        '0': '正在审核',
-        '1': '审核成功',
-        '2': '审核驳回',
-        '3': '审核拒绝'
     };
 
     function escapeHtml(value) {
@@ -392,8 +383,7 @@
     function filteredReceivers() {
         var keyword = query.trim().toLowerCase();
         return RECEIVERS.filter(function (item) {
-            return (!keyword || [item.receiverId, item.merchantId, item.name, item.creditCode].join(' ').toLowerCase().indexOf(keyword) >= 0)
-                && (statusFilter === '全部状态' || item.status === statusFilter);
+            return !keyword || [item.receiverId, item.merchantId, item.name, item.creditCode].join(' ').toLowerCase().indexOf(keyword) >= 0;
         });
     }
 
@@ -442,12 +432,12 @@
         pageStart = (receiverPage - 1) * receiverPageSize;
         visibleRecords = records.slice(pageStart, pageStart + receiverPageSize);
         var syncAction = button(receiverSyncing ? '同步中…' : '同步接收方', receiverSyncing ? 'is-syncing' : '', 'open-receiver-sync', 'refresh', receiverSyncing ? 'disabled aria-busy="true"' : '');
-        page.innerHTML = renderHead('分账接收方管理', '供方收款结算账号开通后，系统后台自动发起分账接收方添加，并同步展示审核状态。', syncAction)
-            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>供方在供方中心完成收款结算账号开通后，系统后台自动发起分账接收方添加；如因自动任务失败或其他原因未能添加，可点击右上角“同步接收方”手动检测并补充未添加记录。</p></div></section>'
-            + '<section class="profit-filter-card is-simple"><label class="profit-search">' + icon('search') + '<input type="search" placeholder="搜索供方名称、接收方编号或商户编号" value="' + escapeHtml(query) + '" data-profit-search></label><select data-profit-status aria-label="审核状态"><option value="全部状态">全部状态</option><option value="0">正在审核</option><option value="1">审核成功</option><option value="2">审核驳回</option><option value="3">审核拒绝</option></select>' + button('查询', 'primary', 'search', 'search') + button('重置', '', 'reset', 'refresh') + '</section>'
-            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>接收方由系统后台自动添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>审核状态</th><th>自动发起时间</th><th>操作</th></tr></thead><tbody>'
+        page.innerHTML = renderHead('分账接收方管理', '用户在用户中心维护交易基础信息后，系统自动同步接收方资料。', syncAction)
+            + '<section class="profit-api-banner">' + icon('link') + '<div><strong>自动添加说明</strong><p>用户在用户中心完成交易基础信息维护后，系统后台自动发起分账接收方添加；如因自动任务失败或其他原因未能添加，可点击右上角“同步接收方”手动检测并补充未添加记录。</p></div></section>'
+            + '<section class="profit-filter-card is-simple"><label class="profit-search">' + icon('search') + '<input type="search" placeholder="搜索供方名称、接收方编号或商户编号" value="' + escapeHtml(query) + '" data-profit-search></label>' + button('查询', 'primary', 'search', 'search') + button('重置', '', 'reset', 'refresh') + '</section>'
+            + '<section class="profit-table-card"><div class="profit-table-meta"><span>共 <strong>' + records.length + '</strong> 个接收方</span><span>接收方由系统后台自动添加</span></div><div class="profit-table-scroll"><table><thead><tr><th>供方名称 / 商户编号</th><th>接收方编号</th><th>接收方类型</th><th>结算账户</th><th>自动发起时间</th><th>操作</th></tr></thead><tbody>'
             + visibleRecords.map(function (item) {
-                return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + '</div></td></tr>';
+                return '<tr><td><strong>' + item.name + '</strong><small>' + item.merchantId + '</small></td><td>' + item.receiverId + '</td><td>' + item.receiverType + '</td><td>' + item.account + '</td><td>' + item.createdAt + '</td><td><div class="profit-row-actions">' + button('详情', 'text', 'receiver-detail', 'eye', 'data-receiver-id="' + item.receiverId + '"') + '</div></td></tr>';
             }).join('') + '</tbody></table></div>' + renderReceiverPagination(records.length, pageCount) + '</section>' + renderReceiverDrawer() + renderReceiverSyncModal() + renderToast();
         bindEvents();
     }
@@ -456,7 +446,7 @@
         if (!receiverSyncOpen) return '';
         return '<div class="profit-modal-mask" data-profit-receiver-sync-close><div class="profit-modal profit-receiver-sync-modal" role="dialog" aria-modal="true" aria-labelledby="receiverSyncTitle">'
             + '<header><div><h2 id="receiverSyncTitle">同步接收方</h2><p>手动检测并补充未自动添加的分账接收方</p></div><button type="button" data-profit-action="close-receiver-sync" aria-label="关闭">' + icon('close') + '</button></header>'
-            + '<div class="profit-modal-body"><p class="profit-sync-description">系统将检测已开通收款结算账号但尚未添加为分账接收方的供方，并重新发起添加。</p><div class="profit-form-note">' + icon('info') + '<p>本次操作仅补充尚未添加的接收方，已有接收方不会重复提交。</p></div></div>'
+            + '<div class="profit-modal-body"><p class="profit-sync-description">系统将检测已维护交易基础信息但尚未添加为分账接收方的供方，并重新发起添加。</p><div class="profit-form-note">' + icon('info') + '<p>本次操作仅补充尚未添加的接收方，已有接收方不会重复提交。</p></div></div>'
             + '<footer>' + button('取消', '', 'close-receiver-sync', 'close') + button('确认同步', 'primary', 'confirm-receiver-sync', 'refresh') + '</footer></div></div>';
     }
 
@@ -489,9 +479,9 @@
             + '<div class="profit-drawer-body"><section><h3>接收方信息</h3><div class="profit-detail-grid">'
             + '<div><span>供方商户编号</span><strong>' + item.merchantId + '</strong></div><div><span>接收方编号</span><strong>' + item.receiverId + '</strong></div>'
             + '<div><span>接收方类型</span><strong>' + item.receiverType + '</strong></div><div><span>自动发起时间</span><strong>' + item.createdAt + '</strong></div>'
-            + '<div><span>统一社会信用代码</span><strong>' + item.creditCode + '</strong></div><div><span>审核状态</span>' + tag(RECEIVER_AUDIT_LABELS[item.status]) + '</div>'
-            + '<div><span>渠道编码</span><strong>' + item.channelCode + '</strong></div><div><span>账户类型</span><strong>' + (item.settleType === '0' ? '对公账户' : '对私账户') + '</strong></div></div></section>'
-            + '<section><h3>结算信息</h3><div class="profit-detail-grid"><div><span>结算户名</span><strong>' + item.settleName + '</strong></div><div><span>结算账号</span><strong>' + item.settleCardNo + '</strong></div><div><span>开户银行</span><strong>' + item.bankName + '</strong></div><div><span>开户支行</span><strong>' + item.bankBranch + '</strong></div><div><span>开户地区编码</span><strong>' + item.bankProvince + '／' + item.bankCity + '</strong></div><div><span>联行号</span><strong>' + item.alliedBankCode + '</strong></div><div><span>法人姓名</span><strong>' + item.legalName + '</strong></div><div><span>法人手机号</span><strong>' + item.legalMobile + '</strong></div></div><div class="profit-receiver-card"><span>供方分账收款账户</span><strong>' + item.account + '</strong><p>接收方资料由供方已开通的收款结算账号同步，系统后台自动发起添加，页面仅用于核对。</p></div></section>'
+            + '<div><span>统一社会信用代码</span><strong>' + item.creditCode + '</strong></div><div><span>渠道编码</span><strong>' + item.channelCode + '</strong></div>'
+            + '<div><span>账户类型</span><strong>' + (item.settleType === '0' ? '对公账户' : '对私账户') + '</strong></div></div></section>'
+            + '<section><h3>结算信息</h3><div class="profit-detail-grid"><div><span>结算户名</span><strong>' + item.settleName + '</strong></div><div><span>结算账号</span><strong>' + item.settleCardNo + '</strong></div><div><span>开户银行</span><strong>' + item.bankName + '</strong></div><div><span>开户支行</span><strong>' + item.bankBranch + '</strong></div><div><span>开户地区编码</span><strong>' + item.bankProvince + '／' + item.bankCity + '</strong></div><div><span>联行号</span><strong>' + item.alliedBankCode + '</strong></div><div><span>法人姓名</span><strong>' + item.legalName + '</strong></div><div><span>法人手机号</span><strong>' + item.legalMobile + '</strong></div></div><div class="profit-receiver-card"><span>供方分账收款账户</span><strong>' + item.account + '</strong><p>接收方资料由用户中心交易基础信息同步，系统后台自动发起添加，页面仅用于核对。</p></div></section>'
             + '</div><footer>' + button('关闭', '', 'close-drawer', 'close') + '</footer></aside>';
     }
 
@@ -507,16 +497,7 @@
             });
         }
         var scene = page.querySelector('[data-profit-scene]');
-        var status = page.querySelector('[data-profit-status]');
         if (scene) { scene.value = sceneFilter; scene.addEventListener('change', function () { sceneFilter = this.value; }); }
-        if (status) {
-            status.value = statusFilter;
-            status.addEventListener('change', function () {
-                statusFilter = this.value;
-                receiverPage = 1;
-                render();
-            });
-        }
 
         var receiverPageSizeSelect = page.querySelector('[data-profit-page-size]');
         if (receiverPageSizeSelect) {
@@ -531,7 +512,7 @@
             control.addEventListener('click', function () {
                 var action = this.dataset.profitAction;
                 if (action === 'search') { receiverPage = 1; render(); }
-                else if (action === 'reset') { query = ''; statusFilter = '全部状态'; sceneFilter = '全部业务类型'; receiverPage = 1; render(); }
+                else if (action === 'reset') { query = ''; sceneFilter = '全部业务类型'; receiverPage = 1; render(); }
                 else if (action === 'receiver-page') { receiverPage = Number(this.dataset.receiverPage) || 1; render(); }
                 else if (action === 'receiver-page-prev') { receiverPage = Math.max(1, receiverPage - 1); render(); }
                 else if (action === 'receiver-page-next') { receiverPage += 1; render(); }

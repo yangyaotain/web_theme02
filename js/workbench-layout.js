@@ -120,8 +120,7 @@
                     icon: 'money',
                     children: [
                         { key: 'transaction-bill', label: '交易账单管理', href: 'supplier-center.html?menu=transaction-bill' },
-                        { key: 'offline-voucher', label: '线下支付凭证', href: 'supplier-center.html?menu=offline-voucher' },
-                        { key: 'settlement-account', label: '收款结算账户', href: 'supplier-center.html?menu=settlement-account' }
+                        { key: 'offline-voucher', label: '线下支付凭证', href: 'supplier-center.html?menu=offline-voucher' }
                     ]
                 },
                 {
@@ -173,7 +172,6 @@
         'fee': { title: '费用管理', desc: '查看交易费用、应收应付、结算记录和费用确认事项。' },
         'transaction-bill': { title: '交易账单管理', desc: '查看交易账单、结算周期、应收应付与确认记录。' },
         'offline-voucher': { title: '线下支付凭证', desc: '管理线下转账凭证、到账确认和付款记录。' },
-        'settlement-account': { title: '收款结算账户', desc: '维护线上收款商户资料、结算账户和进件审核状态。' },
         'invoice': { title: '产品开票审核', desc: '处理产品交易开票申请、开票记录和发票状态跟踪。' },
         'invoice-info': { title: '产品开票信息', desc: '维护产品交易开票抬头、税号和收票信息。' },
         'invoice-apply': { title: '产品开票申请', desc: '查看产品订单的开票申请和处理状态。' },
@@ -2642,7 +2640,22 @@
 
     function getActiveMenu(container) {
         var params = new URLSearchParams(window.location.search || '');
-        return params.get('menu') || (container && container.dataset.active) || 'consults';
+        var requestedMenu = params.get('menu');
+        if (requestedMenu === 'settlement-account') {
+            var fallbackMenu = (container && container.dataset.active) || 'resource-register';
+            params.set('menu', fallbackMenu);
+            params.delete('settlementState');
+            params.delete('settlementMode');
+            if (window.history && window.history.replaceState) {
+                try {
+                    window.history.replaceState(null, '', window.location.pathname + '?' + params.toString() + window.location.hash);
+                } catch (error) {
+                    // Local file previews may not allow URL replacement.
+                }
+            }
+            return fallbackMenu;
+        }
+        return requestedMenu || (container && container.dataset.active) || 'consults';
     }
 
     function getConsultRecords(role) {
