@@ -236,7 +236,7 @@ class NavBar extends HTMLElement {
                         children: [
                             { id: 'factory-production-line', label: '数据工厂生产线', href: 'data-production-line.html' },
                             { id: 'annotation-platform', label: '自有数据标注平台', href: 'data-factory.html' },
-                            { id: 'operation-platform', label: '数据运营平台', href: 'data-scenario.html' },
+                            { id: 'operation-platform', label: '龙岗区公共数据授权运营平台', href: 'https://lgdataops.lggov.cn/index', target: '_blank' },
                             { id: 'development-tools', label: '开发工具', href: 'data-dev-platform.html' }
                         ]
                     }
@@ -315,7 +315,8 @@ class NavBar extends HTMLElement {
             const thirdLevelHTML = item.children.filter(child => child.children).map(group => {
                 const thirdItems = group.children.map(child => {
                     const isActive = child.id === route.tertiary;
-                    return `<a href="${child.href}" class="mega-third-item${isActive ? ' active' : ''}">
+                    const targetAttrs = child.target === '_blank' ? ' target="_blank" rel="noopener noreferrer"' : '';
+                    return `<a href="${child.href}" class="mega-third-item${isActive ? ' active' : ''}"${targetAttrs}>
                         <span class="mega-third-dot"></span>
                         <span>${child.label}</span>
                     </a>`;

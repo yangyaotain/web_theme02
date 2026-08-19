@@ -89,6 +89,8 @@
             border: none;
         }
 
+        .btn-create[hidden] { display: none; }
+
         .btn-create:hover,
         .btn-search:hover { background: #15803d; }
         .btn-create svg,
@@ -807,7 +809,7 @@
 
             <div class="cms-panel active" id="panel-dataspace">
                 <div class="dataspace-toolbar">
-                    <button class="btn-create" id="dataspaceCreateBtn" type="button">
+                    <button class="btn-create" id="dataspaceCreateBtn" type="button" hidden>
                         <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                         新建空间
                     </button>

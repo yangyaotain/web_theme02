@@ -85,8 +85,7 @@
             label: '集成管理',
             icon: 'space',
             children: [
-                { key: 'space-management', label: '空间管理', href: 'space-management.html' },
-                { key: 'space-approval', label: '服务开通审批', href: 'space-approval.html' }
+                { key: 'space-management', label: '空间管理', href: 'space-management.html' }
             ]
         },
         {
