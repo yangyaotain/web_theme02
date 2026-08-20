@@ -839,11 +839,6 @@
             document.getElementById('zonePublishButton').addEventListener('click', function () {
                 save('published', false);
             });
-            document.getElementById('zonePreviewButton').addEventListener('click', function () {
-                if (!validate(false)) return;
-                SpecialZoneStore.setPreview(zone);
-                window.open('special-zone.html?zone=' + encodeURIComponent(zone.id) + '&preview=1', '_blank');
-            });
             document.getElementById('zoneOfflineButton').addEventListener('click', function () {
                 GlobalDialog.warning({
                     title: '下架特色专区',

@@ -12,14 +12,13 @@
         },
         items: [
             { label: '用户中心', href: 'user-center.html' },
-            { label: '管理中心', href: '#' },
             { label: '工作台', href: 'workbench.html' },
             { label: '需方中心', href: 'buyer-center.html' },
             { label: '供方中心', href: 'supplier-center.html' },
             { label: '运营中心', href: 'operation-center.html' },
-            { label: '运维中心', href: 'maintenance-alert-management.html' },
             { label: '全要素展示驾驶舱', href: 'all-elements-dashboard/index.html', target: '_blank' },
-            { label: '全要素展示驾驶舱2', href: 'all-elements-dashboard-v2/index.html', target: '_blank' },
+            { label: '全要素展示驾驶舱v2', href: 'all-elements-dashboard-v2/index.html', target: '_blank' },
+            { label: '全要素展示驾驶舱v3', href: 'all-elements-dashboard-v3/index.html', target: '_blank' },
             { label: '智能问数', href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' }
         ]
     };

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全要素展示驾驶舱v3</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="dashboard-v3.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script src="dashboard-v3-data.js" defer></script>
+  <script src="dashboard-v3.js" defer></script>
+</head>
+<body>
+  <div class="dashboard-shell">
+    <header class="dashboard-header">
+      <div class="brand-block" aria-label="全要素展示驾驶舱">
+        <div class="brand-block__mark"><img src="images/dashboard-logo-white.png" alt=""></div>
+        <div>
+          <h1 class="brand-block__title">全要素展示驾驶舱</h1>
+          <p class="brand-block__subtitle">龙岗数据价值全景</p>
+        </div>
+      </div>
+
+      <div class="dashboard-center-title" aria-label="数据资源与聚合能力全景">
+        <p>DATA RESOURCE &amp; AGGREGATION PANORAMA</p>
+        <h2>数据资源与聚合能力全景</h2>
+      </div>
+
+      <div class="header-status" aria-label="系统时间与数据状态">
+        <div class="status-item status-item--online">
+          <i class="fa fa-circle" aria-hidden="true"></i>
+          <span>数据更新正常</span>
+        </div>
+        <div class="status-item">
+          <i class="fa fa-clock-o" aria-hidden="true"></i>
+          <span data-dashboard-time>--:--:--</span>
+        </div>
+        <div class="status-item status-item--date">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          <span data-dashboard-date>----</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="overview-metric-band" data-metric-grid aria-label="核心资源指标"></section>
+
+      <section class="content-grid">
+        <article class="panel resource-overview-panel" aria-label="高质量数据集与公共数据归集">
+          <header class="panel__header">
+            <div>
+              <h2><i class="fa fa-check-square-o" aria-hidden="true"></i>高质量数据集与公共归集</h2>
+              <p>重点数据集成果、公共数据来源及覆盖范围</p>
+            </div>
+            <span>质量成果</span>
+          </header>
+
+          <section class="quality-highlight-section">
+            <div class="section-heading">
+              <strong>高质量数据集</strong>
+              <span>重点类型分布与代表性成果</span>
+            </div>
+            <div class="quality-highlight-content" data-quality-datasets></div>
+          </section>
+
+          <section class="public-summary">
+            <div class="section-heading">
+              <strong>公共数据归集</strong>
+              <span>核心数据底座</span>
+            </div>
+            <div class="public-summary__content" data-public-data></div>
+          </section>
+
+          <section class="compact-growth-section">
+            <div class="section-heading">
+              <strong>资源规模趋势</strong>
+              <span>单位：亿条</span>
+            </div>
+            <div class="compact-growth-layout">
+              <div class="chart-box chart-box--growth">
+                <canvas id="resourceGrowthChart" role="img" aria-label="年度数据资源增长趋势"></canvas>
+              </div>
+              <div class="growth-highlights" data-growth-highlights aria-label="年度资源增长摘要"></div>
+            </div>
+          </section>
+        </article>
+
+        <article class="hero-panel" aria-label="龙岗数据资源聚合中枢">
+          <header class="hero-panel__header">
+            <div>
+              <p>DATA RESOURCE AGGREGATION HUB</p>
+              <h2>龙岗数据资源聚合中枢</h2>
+              <span>统一汇聚公共、行业、企业、外部与特色数据，形成可信可用的数据资源底座</span>
+            </div>
+            <strong><i class="fa fa-sitemap" aria-hidden="true"></i>覆盖1,452个数据主体</strong>
+          </header>
+
+          <div class="resource-hub-visual">
+            <img src="images/aggregation-hub.png" alt="公共、行业、企业、外部与特色数据向龙岗数据聚合中枢汇聚的示意">
+          </div>
+
+          <section class="resource-composition" aria-label="五类数据资源规模及占比">
+            <div class="section-heading">
+              <strong>五类数据资源结构</strong>
+              <span>资源总量18.6亿条</span>
+            </div>
+            <div data-resource-composition></div>
+          </section>
+
+          <section class="value-output-band" data-value-outputs aria-label="资源价值转化成果"></section>
+        </article>
+
+        <article class="panel trusted-space-panel" aria-label="可信数据空间建设全景">
+          <header class="panel__header">
+            <div>
+              <h2><i class="fa fa-shield" aria-hidden="true"></i>可信数据空间</h2>
+              <p>空间建设、数据分布与特色能力</p>
+            </div>
+            <span>可信流通</span>
+          </header>
+
+          <section class="trusted-space-section">
+            <div class="trusted-space-summary" data-trusted-space-summary aria-label="可信数据空间建设摘要"></div>
+            <div class="section-heading">
+              <strong>空间数据分布与特色</strong>
+              <span>空间汇聚数据共1.2亿条</span>
+            </div>
+            <div class="trusted-space-list" data-trusted-spaces></div>
+          </section>
+
+          <section class="supporting-results-section">
+            <div class="section-heading">
+              <strong>关联特色资源</strong>
+              <span>质量、市场与特色领域</span>
+            </div>
+            <div class="supporting-results-grid" data-supporting-results></div>
+          </section>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="screen-reader-status" role="status" aria-live="polite">精简版数据资源与聚合能力大屏已加载</div>
+</body>
+</html>

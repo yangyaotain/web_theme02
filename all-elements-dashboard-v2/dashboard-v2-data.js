@@ -2,167 +2,283 @@
   "use strict";
 
   var months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-  var industries = ["金融", "制造", "零售", "物流", "能源", "电信", "医疗", "教育", "文旅", "建筑"];
-  var scenes = ["政务服务", "交通出行", "医疗健康", "教育文化", "社保民政", "生态环境", "市场监管", "不动产", "税务服务", "公共安全"];
-
-  var rankings = {
-    resources: [
-      { name: "政务服务事项清单", value: "128,542 次" },
-      { name: "交通出行流量数据", value: "96,325 次" },
-      { name: "企业信用信息库", value: "85,690 次" },
-      { name: "医疗健康服务数据", value: "62,458 次" },
-      { name: "文旅景点预约数据", value: "48,921 次" }
-    ],
-    products: [
-      { name: "金融风控数据集", value: "2,580 单" },
-      { name: "用户行为分析产品", value: "2,156 单" },
-      { name: "市场洞察分析报告", value: "1,890 单" },
-      { name: "供应链 RWA 凭证", value: "1,678 单" },
-      { name: "销量预测数据模型", value: "1,540 单" }
-    ],
-    consulting: [
-      { name: "企业数据资产入表全流程咨询", value: "2,856 次" },
-      { name: "数据合规性尽调服务", value: "2,450 次" },
-      { name: "数据质量评估与优化方案", value: "1,980 次" },
-      { name: "跨境数据合规咨询", value: "1,850 次" },
-      { name: "数据产品开发全流程指导", value: "1,620 次" }
-    ],
-    solutions: [
-      { name: "金融风控大数据分析解决方案", value: "28,540 次" },
-      { name: "制造业智能生产调度系统", value: "25,680 次" },
-      { name: "零售行业用户画像分析平台", value: "22,350 次" },
-      { name: "物流行业智能路径规划系统", value: "19,870 次" },
-      { name: "能源消耗监测与优化解决方案", value: "18,420 次" }
-    ],
-    demands: [
-      { name: "政务数据共享接口开发", value: "28,542 热度" },
-      { name: "交通流量数据分析服务", value: "25,325 热度" },
-      { name: "企业信用数据查询接口", value: "22,690 热度" },
-      { name: "医疗健康数据统计分析", value: "18,458 热度" },
-      { name: "文旅景点数据可视化", value: "16,921 热度" }
-    ]
-  };
 
   window.DASHBOARD_V2_DATA = {
-    years: ["2026", "2025", "2024"],
-    defaultYear: "2026",
-    yearFactors: {
-      "2026": 1,
-      "2025": 0.9,
-      "2024": 0.8
-    },
-    definitions: {
-      responseRate: "响应需求数 ÷ 需求总量",
-      responseSuccessRate: "响应成功数 ÷ 响应需求数",
-      successCoverage: "响应成功数 ÷ 需求总量",
-      totalTransaction: "数据产品、数据咨询与行业方案成交金额合计"
-    },
-    metrics: {
-      leader: [
-        { label: "数据资源总量", value: 156892, format: "integer", unit: "条", trend: 8.2, icon: "fa-database" },
-        { label: "数据产品总量", value: 289568, format: "integer", unit: "个", trend: 15.7, icon: "fa-cubes" },
-        { label: "咨询服务总量", value: 28568, format: "integer", unit: "项", trend: 15.3, icon: "fa-comments" },
-        { label: "行业方案总量", value: 2856, format: "integer", unit: "个", trend: 15.7, icon: "fa-sitemap" },
-        { label: "需求总量", value: 89756, format: "integer", unit: "项", trend: 15.3, icon: "fa-tasks" },
-        { label: "入驻数商", value: 3842, format: "integer", unit: "家", trend: 8.3, icon: "fa-building" },
-        { label: "需求成功覆盖率", value: 78.6, format: "percent", scale: false, trend: 2.4, icon: "fa-check-circle" },
-        { label: "总交易规模", value: 105520.1, format: "amountYi", scale: true, trend: 18.9, icon: "fa-line-chart" }
-      ],
-      operations: [
-        { label: "数据资源总量", value: 156892, format: "integer", unit: "条", trend: 8.2, icon: "fa-database" },
-        { label: "数据产品总量", value: 289568, format: "integer", unit: "个", trend: 15.7, icon: "fa-cubes" },
-        { label: "服务供给总量", value: 31424, format: "integer", unit: "项", trend: 15.4, icon: "fa-briefcase" },
-        { label: "需求总量", value: 89756, format: "integer", unit: "项", trend: 15.3, icon: "fa-tasks" },
-        { label: "响应需求数", value: 76892, format: "integer", unit: "项", trend: 11.2, icon: "fa-reply-all" },
-        { label: "响应成功数", value: 70586, format: "integer", unit: "项", trend: 13.7, icon: "fa-check-square-o" },
-        { label: "需求成功覆盖率", value: 78.6, format: "percent", scale: false, trend: 2.4, icon: "fa-pie-chart" },
-        { label: "总交易规模", value: 105520.1, format: "amountYi", scale: true, trend: 18.9, icon: "fa-line-chart" }
-      ],
-      customer: [
-        { label: "可用数据资源", value: 156892, format: "integer", unit: "条", trend: 8.2, icon: "fa-database" },
-        { label: "可选数据产品", value: 289568, format: "integer", unit: "个", trend: 15.7, icon: "fa-cubes" },
-        { label: "咨询服务", value: 28568, format: "integer", unit: "项", trend: 15.3, icon: "fa-comments" },
-        { label: "行业方案", value: 2856, format: "integer", unit: "个", trend: 15.7, icon: "fa-sitemap" },
-        { label: "有效需求", value: 76892, format: "integer", unit: "项", trend: 11.2, icon: "fa-tasks" },
-        { label: "本月新增需求", value: 11200, format: "integer", unit: "项", trend: 6.7, icon: "fa-plus-square" },
-        { label: "需求成功覆盖率", value: 78.6, format: "percent", scale: false, trend: 2.4, icon: "fa-check-circle" },
-        { label: "市场交易规模", value: 105520.1, format: "amountYi", scale: true, trend: 18.9, icon: "fa-line-chart" }
-      ]
-    },
-    rankings: rankings,
-    leader: {
-      platformTrend: {
-        labels: months,
-        resources: [12000, 13500, 14200, 15800, 17200, 18500, 19800, 21500, 23200, 24800, 26500, 28300],
-        products: [8500, 9200, 9800, 10500, 11200, 12000, 12800, 13500, 14200, 15000, 15800, 16500],
-        consulting: [4200, 4500, 4800, 5200, 5500, 5800, 6200, 6500, 6800, 7200, 7500, 7800],
-        solutions: [280, 320, 350, 380, 420, 450, 480, 520, 550, 580, 620, 650],
-        transaction: [6200, 6800, 7200, 7600, 7900, 8500, 8700, 9000, 9200, 9700, 10500, 12220]
+    defaultScreen: "resources",
+    screens: {
+      resources: {
+        label: "数据资源与聚合",
+        shortLabel: "资源聚合",
+        icon: "fa-database",
+        eyebrow: "DATA RESOURCE PANORAMA",
+        title: "数据资源与聚合全景",
+        description: "汇聚公共、行业、企业与特色数据资源，形成龙岗数据聚合底座",
+        heroImage: "images/aggregation-hub.png",
+        heroLayout: "callouts",
+        heroValue: "18.6",
+        heroUnit: "亿条",
+        heroCaption: "龙岗数据资源汇聚总量",
+        heroItems: [
+          { label: "公共数据", value: "7.8亿条", icon: "fa-university" },
+          { label: "行业数据", value: "4.9亿条", icon: "fa-industry" },
+          { label: "企业数据", value: "3.5亿条", icon: "fa-building" },
+          { label: "外部数据", value: "1.5亿条", icon: "fa-external-link" },
+          { label: "特色数据", value: "0.9亿条", icon: "fa-cubes" }
+        ],
+        metrics: [
+          { label: "数据资源总量", value: "18.6", unit: "亿条", note: "较年初 +23.8%", icon: "fa-database", featured: true },
+          { label: "资源存储总量", value: "126.8", unit: "TB", note: "较年初 +18.6%", icon: "fa-server" },
+          { label: "数据资源目录", value: "12,846", unit: "项", note: "覆盖 32 个主题域", icon: "fa-list-alt" },
+          { label: "接入数据来源", value: "326", unit: "个", note: "本年新增 48 个", icon: "fa-plug" },
+          { label: "覆盖数据主体", value: "1,452", unit: "个", note: "184个部门 · 1,268家企业", icon: "fa-sitemap" },
+          { label: "高质量数据集", value: "168", unit: "个", note: "重点领域 42 个", icon: "fa-check-square-o" },
+          { label: "可信数据空间", value: "6", unit: "个", note: "汇聚数据 1.2 亿条", icon: "fa-shield" }
+        ],
+        panels: {
+          left: [
+            {
+              type: "chart",
+              title: "资源汇聚增长",
+              subtitle: "年度累计数据资源规模",
+              badge: "亿条",
+              icon: "fa-line-chart",
+              chart: {
+                type: "line",
+                labels: months,
+                datasets: [
+                  { label: "资源总量", data: [11.8, 12.4, 13.1, 13.8, 14.6, 15.2, 15.9, 16.5, 17.1, 17.6, 18.1, 18.6], tone: "green", fill: true }
+                ]
+              }
+            },
+            {
+              type: "chart",
+              title: "资源类型结构",
+              subtitle: "按数据资源类别统计占比",
+              badge: "结构",
+              icon: "fa-pie-chart",
+              chart: {
+                type: "doughnut",
+                labels: ["公共数据", "行业数据", "企业数据", "外部数据", "特色数据"],
+                datasets: [
+                  { label: "资源占比", data: [41.8, 26.5, 18.6, 8.2, 4.9], tones: ["green", "blue", "cyan", "amber", "mint"] }
+                ]
+              }
+            }
+          ],
+          right: [
+            {
+              type: "chart",
+              title: "来源覆盖能力",
+              subtitle: "主要来源渠道接入覆盖指数",
+              badge: "指数",
+              icon: "fa-random",
+              chart: {
+                type: "bar",
+                indexAxis: "y",
+                labels: ["区属部门", "街道社区", "重点企业", "数据商", "外部渠道"],
+                datasets: [
+                  { label: "覆盖指数", data: [100, 92, 78, 65, 54], tone: "green" }
+                ]
+              }
+            },
+            {
+              type: "list",
+              title: "特色资源成果",
+              subtitle: "龙岗数据资源代表性建设成果",
+              badge: "重点",
+              icon: "fa-star-o",
+              items: [
+                { icon: "fa-check-circle", title: "高质量数据集", value: "168个", note: "制造、政务、医疗等重点领域" },
+                { icon: "fa-shopping-cart", title: "龙数采买数据", value: "286批", note: "按需补充市场化外部数据" },
+                { icon: "fa-shield", title: "可信数据空间", value: "6个", note: "支撑跨主体可信流通" },
+                { icon: "fa-android", title: "具身智能数据", value: "42套", note: "覆盖训练、仿真与质检数据" }
+              ]
+            }
+          ]
+        }
       },
-      demandTrend: {
-        labels: months,
-        added: [5200, 6800, 7500, 6900, 8200, 9500, 8800, 9200, 8500, 9800, 10500, 11200],
-        responded: [4800, 6200, 7000, 6500, 7800, 8900, 8200, 8800, 8000, 9200, 9800, 10500],
-        successful: [4380, 5680, 6410, 5940, 7140, 8150, 7510, 8060, 7320, 8420, 8970, 9620]
+
+      processing: {
+        label: "数据加工与产品服务",
+        shortLabel: "加工服务",
+        icon: "fa-cogs",
+        eyebrow: "DATA VALUE PRODUCTION",
+        title: "数据加工与产品服务",
+        description: "以实时接入、治理加工和产品化能力，持续释放数据资产价值",
+        heroImage: "images/processing-chain.png",
+        heroValue: "3.62",
+        heroUnit: "TB/日",
+        heroCaption: "日均数据加工处理量",
+        heroItems: [
+          { label: "实时接入", value: "2.48亿条/日", icon: "fa-sign-in" },
+          { label: "清洗治理", value: "16.2亿条", icon: "fa-filter" },
+          { label: "资产沉淀", value: "1,286项", icon: "fa-archive" },
+          { label: "产品封装", value: "328个", icon: "fa-cube" },
+          { label: "服务输出", value: "642项", icon: "fa-cloud" }
+        ],
+        metrics: [
+          { label: "实时接入量", value: "2.48", unit: "亿条/日", note: "峰值 3.16 亿条/日", icon: "fa-bolt", featured: true },
+          { label: "日均加工量", value: "3.62", unit: "TB", note: "较上月 +12.6%", icon: "fa-cogs" },
+          { label: "累计治理数据", value: "16.2", unit: "亿条", note: "质量通过率 97.8%", icon: "fa-filter" },
+          { label: "数据资产", value: "1,286", unit: "项", note: "本年新增 286 项", icon: "fa-archive" },
+          { label: "数据产品", value: "328", unit: "个", note: "覆盖 12 个行业", icon: "fa-cubes" },
+          { label: "数据服务", value: "642", unit: "项", note: "API服务 386 项", icon: "fa-cloud" }
+        ],
+        panels: {
+          left: [
+            {
+              type: "chart",
+              title: "加工处理趋势",
+              subtitle: "月度日均加工处理量",
+              badge: "TB/日",
+              icon: "fa-line-chart",
+              chart: {
+                type: "line",
+                labels: months,
+                datasets: [
+                  { label: "加工处理量", data: [2.02, 2.13, 2.22, 2.36, 2.45, 2.58, 2.72, 2.85, 3.01, 3.18, 3.39, 3.62], tone: "green", fill: true },
+                  { label: "实时接入量", data: [1.42, 1.51, 1.58, 1.66, 1.72, 1.83, 1.91, 2.02, 2.11, 2.23, 2.35, 2.48], tone: "blue", fill: false }
+                ]
+              }
+            },
+            {
+              type: "chart",
+              title: "治理质量指标",
+              subtitle: "数据治理关键质量指标",
+              badge: "%",
+              icon: "fa-check-circle",
+              chart: {
+                type: "bar",
+                indexAxis: "y",
+                labels: ["完整性", "准确性", "一致性", "及时性", "可用性"],
+                datasets: [
+                  { label: "质量得分", data: [98.2, 97.6, 96.8, 95.4, 98.6], tone: "green" }
+                ],
+                max: 100
+              }
+            }
+          ],
+          right: [
+            {
+              type: "chart",
+              title: "本年度新增成果",
+              subtitle: "资产、产品、服务与方案产出",
+              badge: "新增",
+              icon: "fa-bar-chart",
+              chart: {
+                type: "bar",
+                labels: ["数据资产", "数据产品", "数据服务", "行业方案"],
+                datasets: [
+                  { label: "新增成果", data: [286, 86, 142, 38], tones: ["green", "blue", "cyan", "amber"] }
+                ]
+              }
+            },
+            {
+              type: "list",
+              title: "一数多用成果",
+              subtitle: "同一份数据形成不同产品与服务",
+              badge: "转化",
+              icon: "fa-exchange",
+              items: [
+                { icon: "fa-industry", title: "工业设备运行数据", value: "6项成果", note: "质检模型、能耗分析、预测维护" },
+                { icon: "fa-building", title: "企业主体信用数据", value: "5项成果", note: "风险画像、准入核验、融资服务" },
+                { icon: "fa-road", title: "交通运行数据", value: "4项成果", note: "拥堵研判、信号优化、出行服务" },
+                { icon: "fa-heartbeat", title: "公共卫生数据", value: "3项成果", note: "资源调度、趋势分析、便民服务" }
+              ]
+            }
+          ]
+        }
       },
-      industry: {
-        labels: industries,
-        resources: [96, 88, 72, 68, 58, 55, 76, 66, 57, 49],
-        products: [100, 84, 72, 61, 53, 47, 69, 59, 51, 45],
-        consulting: [92, 78, 71, 67, 61, 58, 57, 53, 50, 47],
-        solutions: [100, 88, 73, 60, 54, 46, 42, 38, 31, 22]
-      }
-    },
-    operations: {
-      supplyDemand: {
-        labels: scenes,
-        supply: [100, 72, 48, 38, 30, 18, 15, 13, 11, 9],
-        demand: [100, 68, 53, 46, 41, 34, 31, 24, 21, 13]
-      },
-      demandTrend: {
-        labels: months,
-        added: [5200, 6800, 7500, 6900, 8200, 9500, 8800, 9200, 8500, 9800, 10500, 11200],
-        responded: [4800, 6200, 7000, 6500, 7800, 8900, 8200, 8800, 8000, 9200, 9800, 10500]
-      },
-      priority: {
-        labels: ["紧急", "较高", "普通"],
-        values: [15680, 32540, 41536]
-      },
-      status: {
-        labels: ["匹配中", "已截止"],
-        values: [76892, 12864]
-      },
-      matrix: [
-        { type: "数据资源", total: "156,892 条", growth: "+8.2%", category: "政务服务", hot: "政务服务事项清单", result: "授权申请 28,765", indices: [86, 62, 92, 76] },
-        { type: "数据产品", total: "289,568 个", growth: "+15.7%", category: "金融", hot: "金融风控数据集", result: "成交 8,975.6 万元", indices: [100, 98, 96, 88] },
-        { type: "咨询服务", total: "28,568 项", growth: "+15.3%", category: "金融", hot: "数据资产入表咨询", result: "成交 89,652 万元", indices: [72, 96, 83, 94] },
-        { type: "行业方案", total: "2,856 个", growth: "+15.7%", category: "金融", hot: "金融风控解决方案", result: "成交 6,892.5 万元", indices: [66, 98, 78, 86] },
-        { type: "需求大厅", total: "89,756 项", growth: "+15.3%", category: "政务服务", hot: "政务数据共享接口", result: "成功覆盖 78.6%", indices: [84, 96, 95, 82] }
-      ]
-    },
-    market: {
-      customer: {
-        primary: {
-          labels: industries,
-          resources: [96, 88, 72, 68, 58, 55, 76, 66, 57, 49],
-          products: [100, 84, 72, 61, 53, 47, 69, 59, 51, 45],
-          consulting: [92, 78, 71, 67, 61, 58, 57, 53, 50, 47],
-          solutions: [100, 88, 73, 60, 54, 46, 42, 38, 31, 22]
-        },
-        trend: {
-          labels: months,
-          response: [4800, 6200, 7000, 6500, 7800, 8900, 8200, 8800, 8000, 9200, 9800, 10500],
-          transaction: [6200, 6800, 7200, 7600, 7900, 8500, 8700, 9000, 9200, 9700, 10500, 12220]
-        },
-        leftDonut: {
-          title: "产品交付方式",
-          labels: ["文件传输", "数据流传输", "API传输", "人工交付", "数据库传输"],
-          values: [65400, 89200, 105600, 18900, 10468]
-        },
-        rightDonut: {
-          title: "需求状态",
-          labels: ["匹配中", "已截止"],
-          values: [76892, 12864]
+
+      applications: {
+        label: "行业应用与价值成果",
+        shortLabel: "行业应用",
+        icon: "fa-sitemap",
+        eyebrow: "INDUSTRY APPLICATION VALUE",
+        title: "行业应用与价值成果",
+        description: "以数据产品和服务连接重点行业，形成可感知、可衡量的应用价值",
+        heroImage: "images/industry-ecosystem.png",
+        heroValue: "46",
+        heroUnit: "个场景",
+        heroCaption: "已落地数据应用场景",
+        heroItems: [
+          { label: "智能制造", value: "12个场景", icon: "fa-industry" },
+          { label: "城市治理", value: "10个场景", icon: "fa-university" },
+          { label: "医疗健康", value: "8个场景", icon: "fa-heartbeat" },
+          { label: "智慧交通", value: "9个场景", icon: "fa-road" },
+          { label: "具身智能", value: "7个场景", icon: "fa-android" }
+        ],
+        metrics: [
+          { label: "覆盖重点行业", value: "12", unit: "个", note: "制造与政务为重点", icon: "fa-industry", featured: true },
+          { label: "落地应用场景", value: "46", unit: "个", note: "本年新增 14 个", icon: "fa-sitemap" },
+          { label: "服务对象", value: "1,872", unit: "个", note: "企业主体占 78%", icon: "fa-users" },
+          { label: "累计服务调用", value: "3.8", unit: "亿次", note: "月均 3,200 万次", icon: "fa-exchange" },
+          { label: "代表性成果", value: "28", unit: "项", note: "形成可复制方案 16 项", icon: "fa-trophy" },
+          { label: "特色领域", value: "8", unit: "个", note: "具身智能等重点方向", icon: "fa-star" }
+        ],
+        panels: {
+          left: [
+            {
+              type: "chart",
+              title: "重点行业能力",
+              subtitle: "资源、产品与服务综合供给指数",
+              badge: "指数",
+              icon: "fa-industry",
+              chart: {
+                type: "bar",
+                indexAxis: "y",
+                labels: ["智能制造", "城市治理", "智慧交通", "医疗健康", "具身智能", "商贸服务"],
+                datasets: [
+                  { label: "综合能力", data: [96, 92, 86, 81, 78, 72], tone: "green" }
+                ],
+                max: 100
+              }
+            },
+            {
+              type: "chart",
+              title: "应用场景增长",
+              subtitle: "年度累计落地场景数量",
+              badge: "个",
+              icon: "fa-line-chart",
+              chart: {
+                type: "line",
+                labels: months,
+                datasets: [
+                  { label: "应用场景", data: [24, 25, 27, 29, 31, 33, 35, 37, 39, 41, 44, 46], tone: "green", fill: true }
+                ]
+              }
+            }
+          ],
+          right: [
+            {
+              type: "chart",
+              title: "场景价值表现",
+              subtitle: "典型场景综合价值评估",
+              badge: "评估",
+              icon: "fa-diamond",
+              chart: {
+                type: "radar",
+                labels: ["降本增效", "治理提升", "服务体验", "创新带动", "复制推广"],
+                datasets: [
+                  { label: "综合表现", data: [92, 88, 90, 86, 82], tone: "green", fill: true }
+                ],
+                max: 100
+              }
+            },
+            {
+              type: "list",
+              title: "代表性应用成果",
+              subtitle: "龙岗数据特色场景与实际成效",
+              badge: "案例",
+              icon: "fa-trophy",
+              items: [
+                { icon: "fa-cog", title: "工业质量智能分析", value: "效率 +26%", note: "制造企业质量检测与异常研判" },
+                { icon: "fa-android", title: "具身智能训练数据", value: "42套", note: "面向机器人训练与仿真验证" },
+                { icon: "fa-map-marker", title: "城市治理一张图", value: "18专题", note: "支撑事件发现与协同处置" },
+                { icon: "fa-shield", title: "可信数据协同应用", value: "6空间", note: "实现多主体数据可信使用" }
+              ]
+            }
+          ]
         }
       }
     }
