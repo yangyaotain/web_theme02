@@ -6,7 +6,7 @@
  *   <nav-bar active="home"></nav-bar>
  *
  * active 可选值：
- *   home | data-trade | data-services | data-ecosystem | demand | policy | help
+ *   home | public-data-operations | data-trade | data-services | data-ecosystem | demand | policy | help
  *
  * 登录状态通过 localStorage('lgk_logged_in') 驱动，登录后自动切换右侧 UI。
  */
@@ -171,7 +171,7 @@ class NavBar extends HTMLElement {
             return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'annotation-platform' };
         }
         if (path.includes('data-scenario')) {
-            return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'operation-platform' };
+            return { primary: 'public-data-operations', secondary: 'creative-workshop', tertiary: 'operation-platform' };
         }
         if (path.includes('data-dev-platform')) {
             return { primary: 'data-services', secondary: 'creative-workshop', tertiary: 'development-tools' };
@@ -201,7 +201,7 @@ class NavBar extends HTMLElement {
     _render() {
         const route = this._detectRoute();
         const declaredActive = this.getAttribute('active');
-        const supportedActive = ['home', 'data-trade', 'data-services', 'data-ecosystem', 'demand', 'policy', 'help'];
+        const supportedActive = ['home', 'public-data-operations', 'data-trade', 'data-services', 'data-ecosystem', 'demand', 'policy', 'help'];
         const active = supportedActive.includes(declaredActive) ? declaredActive : route.primary;
         const loggedIn = this._isLoggedIn();
         const dataTradeChildren = [
@@ -219,6 +219,7 @@ class NavBar extends HTMLElement {
 
         const NAV_ITEMS = [
             { id: 'home', label: '首页', href: 'index.html' },
+            { id: 'public-data-operations', label: '公共数据授权运营', href: 'data-scenario.html' },
             {
                 id: 'data-trade',
                 label: '数据交易',

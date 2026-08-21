@@ -4,52 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>全要素展示驾驶舱</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="dashboard-v2.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-  <script src="dashboard-v2-data.js" defer></script>
   <script src="dashboard-v2.js" defer></script>
 </head>
 <body>
-  <div class="dashboard-shell">
-    <header class="dashboard-header">
-      <div class="brand-block" aria-label="全要素展示驾驶舱">
-        <div class="brand-block__mark"><img src="images/dashboard-logo-white.png" alt=""></div>
-        <div class="brand-block__copy">
-          <h1 class="brand-block__title">全要素展示驾驶舱</h1>
-          <p class="brand-block__subtitle">龙岗数据价值全景</p>
-        </div>
-      </div>
+  <main class="dashboard-viewer" aria-label="全要素展示驾驶舱">
+    <div class="dashboard-frame">
+      <img
+        class="dashboard-screen"
+        src="images/dashboard-screen-resources.png"
+        alt="数据资源与聚合大屏"
+        width="3840"
+        height="2160"
+        draggable="false"
+        data-dashboard-screen
+      >
 
-      <div class="dashboard-rail">
-        <nav class="screen-nav" role="tablist" aria-label="驾驶舱主题切换" data-screen-nav></nav>
-      </div>
+      <nav class="dashboard-hotspots" aria-label="驾驶舱主题切换">
+        <a class="dashboard-hotspot dashboard-hotspot--resources" href="#resources" data-screen-link="resources">
+          <span class="screen-reader-only">数据资源与聚合</span>
+        </a>
+        <a class="dashboard-hotspot dashboard-hotspot--processing" href="#processing" data-screen-link="processing">
+          <span class="screen-reader-only">数据加工与产品服务</span>
+        </a>
+        <a class="dashboard-hotspot dashboard-hotspot--applications" href="#applications" data-screen-link="applications">
+          <span class="screen-reader-only">行业应用与价值成果</span>
+        </a>
+      </nav>
+    </div>
+  </main>
 
-      <div class="header-status" aria-label="系统时间与数据状态">
-        <div class="status-item">
-          <i class="fa fa-clock-o" aria-hidden="true"></i>
-          <span data-dashboard-time>--:--:--</span>
-        </div>
-        <div class="status-item">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          <span data-dashboard-date>----</span>
-        </div>
-      </div>
-    </header>
-
-    <main class="dashboard-main">
-      <section class="metric-grid" data-metric-grid aria-label="当前主题核心指标"></section>
-
-      <section class="content-grid" aria-live="polite">
-        <div class="panel-stack" data-left-panels></div>
-
-        <article class="hero-panel" data-hero-panel></article>
-
-        <div class="panel-stack" data-right-panels></div>
-      </section>
-    </main>
-  </div>
-
-  <div class="screen-reader-status" role="status" aria-live="polite" data-live-status></div>
+  <div class="screen-reader-only" role="status" aria-live="polite" data-live-status></div>
 </body>
 </html>
