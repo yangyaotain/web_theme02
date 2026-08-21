@@ -256,6 +256,13 @@
             line-height: 1.4; margin-bottom: 8px;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
+        .data-card-heading { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .data-card-heading .data-card-title { flex: 1; margin-bottom: 0; }
+        .priority-tag { flex-shrink: 0; padding: 3px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; line-height: 1.4; }
+        .priority-tag.urgent { color: #E53935; background: #FFF0F0; }
+        .priority-tag.high { color: #E67E22; background: #FFF6E8; }
+        .data-card-scenarios { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .scenario-tag { padding: 2px 8px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 10px; color: var(--text-secondary); background: var(--surface-primary); }
         .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px; }
         .data-card-desc {
             font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;
@@ -414,7 +421,7 @@
 
         <div class="content-area">
             <div class="content-header">
-                <div class="results-count">共 <strong>128</strong> 条需求</div>
+                <div class="results-count">共 <strong>31</strong> 条需求</div>
                 <div class="sort-dropdown">
                     <span class="sort-label">排序：</span>
                     <select class="sort-select">
@@ -427,135 +434,135 @@
             <div class="data-grid">
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-dashboard.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">服务需求</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">企业领导驾驶舱服务需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">采集企业在资质、财务、业绩等方面的数据，对数据进行综合分析、划定指标归属，企业诊断决策支撑辅助，涉及企业总览</p>
+                        <div class="data-card-heading"><span class="priority-tag urgent">紧急</span><h3 class="data-card-title">企业经营数据核验服务需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">智慧金融</span><span class="scenario-tag">企业服务</span></div>
+                        <p class="data-card-desc">需要对目标企业工商、经营和司法信息进行批量核验，并输出异常项说明及核验结果</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：社会分析</span>
-                            <span class="data-card-type">社会未编</span>
+                            <span class="data-card-meta">10天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-education.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">应用需求</span><span class="data-card-badge price">¥2000~¥5000</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">教育资源评估数据需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">采集企业在教育资源方面的用人需求、人力资源管理数据，上海数字化生态建设方向方智能集成、服务管理及数据管理</p>
+                        <div class="data-card-heading"><span class="priority-tag high">较高</span><h3 class="data-card-title">园区产业运行分析应用需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">园区运营</span><span class="scenario-tag">产业分析</span></div>
+                        <p class="data-card-desc">希望基于园区企业、产值和用工数据形成产业运行分析看板，支持月度经营研判</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据公建</span>
-                            <span class="data-card-type">数据公建</span>
+                            <span class="data-card-meta">10天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-finance.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据需求</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">金融风险评估数据服务需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">数字生态建设方向为方智能集成、数据集成，金融全流程数据管理成熟度评估体系建设，辅助决策支撑</p>
+                        <div class="data-card-heading"><h3 class="data-card-title">龙岗区智慧交通信号优化数据需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">公共服务</span><span class="scenario-tag">交通运输</span></div>
+                        <p class="data-card-desc">需获取重点路口实时流量和历史拥堵数据，用于信号配时优化及交通运行效果评估</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据安全</span>
-                            <span class="data-card-type">智慧文旅</span>
+                            <span class="data-card-meta">29天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-maturity.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">服务需求</span><span class="data-card-badge price">¥10000~¥20000</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">数据管理能力成熟度评估需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">数据管理能力成熟度评估方向为一项对企业数据能力发展下的全企业路径，编制评价企业在企业数据融通、数据质量等方面的成熟度</p>
+                        <div class="data-card-heading"><span class="priority-tag urgent">紧急</span><h3 class="data-card-title">数据管理能力成熟度评估需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">数据治理</span><span class="scenario-tag">企业服务</span></div>
+                        <p class="data-card-desc">需要开展数据管理现状调研、能力评估和问题诊断，并形成分阶段改进建议</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据公建</span>
-                            <span class="data-card-type">数据居住评估</span>
+                            <span class="data-card-meta">7天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-transit.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据需求</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">公共出行数据分析需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">通过公共出行数据的整合分析，分析各类公共出行的时序数据，进行智能出行数据分析，城市规划及交通管理辅助决策</p>
+                        <div class="data-card-heading"><h3 class="data-card-title">重点商圈周末客流热度数据需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">商业服务</span><span class="scenario-tag">消费分析</span></div>
+                        <p class="data-card-desc">需获取重点商圈分时客流、停留时长和来源区域数据，用于活动效果及经营时段分析</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：包括城市</span>
-                            <span class="data-card-type">包括城市</span>
+                            <span class="data-card-meta">18天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-asset.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">应用需求</span><span class="data-card-badge price">¥5000~¥10000</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">数据资产一站式服务需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">数据资产一站式服务平台为企业提供综合性的数据资产管理服务方案，涵盖数据资产管理、数据质量管理等核心功能</p>
+                        <div class="data-card-heading"><span class="priority-tag high">较高</span><h3 class="data-card-title">企业数据资产目录管理应用需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">数据资产</span><span class="scenario-tag">数字化运营</span></div>
+                        <p class="data-card-desc">希望建设轻量化数据资产目录应用，支持资产登记、责任认领和使用情况查询</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据公建</span>
-                            <span class="data-card-type">数据公建</span>
+                            <span class="data-card-meta">15天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-scenario.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据工具</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">服务需求</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">数据要素场景设计需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">数据要素场景设计综合平台为产权类资产经营数据等综合性的数据资产管理服务方案及数据分析平台与方案</p>
+                        <div class="data-card-heading"><h3 class="data-card-title">数据要素应用场景策划服务需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">场景创新</span><span class="scenario-tag">数据服务</span></div>
+                        <p class="data-card-desc">面向制造和商贸行业征集可落地的数据要素应用场景，并形成场景方案与实施路径</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据安全</span>
-                            <span class="data-card-type">数字化运营</span>
+                            <span class="data-card-meta">22天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-security.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据服务</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">服务需求</span><span class="data-card-badge price">¥20000~¥30000</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据安全评估</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">为企业提供专业、全面的数据安全风险评估及合规检测，帮助评估企业在企业数据存储、数据管理等方面的安全性</p>
+                        <div class="data-card-heading"><span class="priority-tag urgent">紧急</span><h3 class="data-card-title">企业数据安全合规评估需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">安全服务</span><span class="scenario-tag">企业服务</span></div>
+                        <p class="data-card-desc">需要对数据采集、存储、共享和销毁环节开展合规检查，并形成风险清单和整改建议</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：数据公建</span>
-                            <span class="data-card-type">企业安全</span>
+                            <span class="data-card-meta">6天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>
 
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/demand-dashboard.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">面议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据需求</span><span class="data-card-badge price">面议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">智慧城市数据融合分析需求</h3>
-                        <p class="data-card-company">中国电子云</p>
-                        <p class="data-card-desc">基于城市多源数据融合分析，构建城市运行态势感知体系，为城市精细化治理和智慧决策提供数据支撑</p>
+                        <div class="data-card-heading"><h3 class="data-card-title">城市运行态势融合分析数据需求</h3></div>
+                        <div class="data-card-scenarios"><span class="scenario-tag">公共服务</span><span class="scenario-tag">城市治理</span></div>
+                        <p class="data-card-desc">需整合交通、事件和公共设施运行数据，支撑城市运行态势监测与专题分析</p>
                         <div class="data-card-footer">
-                            <span class="data-card-meta">数据归属：包括城市</span>
-                            <span class="data-card-type">智慧城市</span>
+                            <span class="data-card-meta">26天后截止</span>
+                            <span class="data-card-type">匹配中</span>
                         </div>
                     </div>
                 </article>

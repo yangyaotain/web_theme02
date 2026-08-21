@@ -171,7 +171,7 @@
             padding: 4px 10px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
             border-radius: var(--radius-md); font-size: 10px; font-weight: 500; color: white;
         }
-        .data-card-badge.api { background: rgba(64,158,255,0.8); }
+        .data-card-badge.price { background: rgba(255, 59, 65, 0.9); }
 
         .data-card-content { padding: 20px; }
         .data-card-title {
@@ -399,7 +399,7 @@
             </div>
 
             <div class="content-header">
-                <div class="results-count">共 <strong>128</strong> 条数据产品</div>
+                <div class="results-count">共 <strong>37</strong> 条数据产品</div>
                 <div class="sort-dropdown">
                     <span class="sort-label">排序：</span>
                     <select class="sort-select">
@@ -411,165 +411,111 @@
             </div>
 
             <div class="data-grid">
-                <!-- Card 1: 数据集样例 -->
                 <article class="data-card" data-sample-type="dataset">
                     <div class="data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge">数据集</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">龙岗区企业经营活力监测数据集</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">数据集</span></p>
-                        <p class="data-card-company">深圳市龙岗数智科技有限公司</p>
-                        <p class="data-card-desc">汇聚企业登记、产业分布和经营活跃度指标，为产业分析、园区运营和企业服务提供数据支撑</p>
-                        <p class="data-card-price">参考价格：<span class="price">9,800元/年</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2026-07-18 10:20:00</span>
-                            <div class="scene-tags"><span class="scene-tag">产业监测</span></div>
-                        </div>
+                        <h3 class="data-card-title">龙岗企业经营画像数据集</h3>
+                        <p class="data-card-company">深圳市龙岗数据交易服务有限公司</p>
+                        <p class="data-card-desc">汇聚企业登记、产业标签和经营活跃度指标，为园区招商及企业服务提供数据支撑</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-21 10:52:11</span><div class="scene-tags"><span class="scene-tag">商务服务</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 2: API样例 -->
-                <article class="data-card" data-sample-type="api">
-                    <div class="data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                <article class="data-card" data-sample-type="dataset">
+                    <div class="data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">龙岗企业经营活力指数查询 API</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">深圳市龙岗数智科技有限公司</p>
-                        <p class="data-card-desc">提供企业经营活力指数、状态标签和统计日期查询能力，支持业务系统实时接口接入</p>
-                        <p class="data-card-price">参考价格：<span class="price">0.08元/次</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2026-07-17 16:35:00</span>
-                            <div class="scene-tags"><span class="scene-tag">企业服务</span></div>
-                        </div>
+                        <h3 class="data-card-title">园区企业经营监测指标数据集</h3>
+                        <p class="data-card-company">深圳市龙岗产业数据运营有限公司</p>
+                        <p class="data-card-desc">形成企业产值、用工、订单和创新能力指标，支持园区企业运行监测与分层服务</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-20 18:17:23</span><div class="scene-tags"><span class="scene-tag">制造业</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 3: 其他样例 -->
                 <article class="data-card" data-sample-type="other">
-                    <div class="data-card-image" style="background: url('images/tourism-weather.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge">其他</span></div>
+                    <div class="data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">龙岗区产业运行分析样例报告</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">其他</span></p>
-                        <p class="data-card-company">深圳市产业数据运营有限公司</p>
-                        <p class="data-card-desc">围绕重点产业、街道和园区形成产业运行分析说明文件，展示数据口径和主要分析内容</p>
-                        <p class="data-card-price">参考价格：<span class="price">3,600元/份</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2026-07-16 14:10:00</span>
-                            <div class="scene-tags"><span class="scene-tag">产业分析</span></div>
-                        </div>
+                        <h3 class="data-card-title">制造业供应链风险画像产品</h3>
+                        <p class="data-card-company">深圳市龙岗供应链科技有限公司</p>
+                        <p class="data-card-desc">融合供应商履约、物流时效和企业风险信息，输出供应链风险画像及分级预警结果</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-20 15:29:53</span><div class="scene-tags"><span class="scene-tag">制造业</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 4: 收费站出口小时流量 -->
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/toll-traffic.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据报告</span><span class="data-card-badge price">399元/份</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">收费站出口小时流量</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">通过日前查询云南交投路网下辖收费站出口小时流量统计，包括出口ETC/CPC车流量</p>
-                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">智慧交通</span></div>
-                        </div>
+                        <h3 class="data-card-title">龙岗区低空经济产业分析报告</h3>
+                        <p class="data-card-company">深圳市低空产业研究有限公司</p>
+                        <p class="data-card-desc">分析低空产业企业分布、应用场景和发展趋势，为产业规划和项目招商提供参考</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-19 16:42:08</span><div class="scene-tags"><span class="scene-tag">科技服务</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 5: 智联云通平台 -->
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">333元/天</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">智联云通平台</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">一站式物联网行业应用的解决方案实现，多元化智能设备的无缝接入与集中管理</p>
-                        <p class="data-card-price">参考价格：<span class="price">0.1元/次</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">数据安全</span></div>
-                        </div>
+                        <h3 class="data-card-title">园区企业经营监测看板</h3>
+                        <p class="data-card-company">深圳市龙岗数智园区有限公司</p>
+                        <p class="data-card-desc">动态展示园区企业经营活力、产业结构和重点风险指标，支持园区日常运营研判</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-19 11:28:36</span><div class="scene-tags"><span class="scene-tag">信息技术</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 6: 公司夜灯光数据 -->
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/night-light.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">公司夜灯光数据</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">利用卫星遥感技术探测计算某制造业公司的夜灯光变量，用于衡量和预测其生产经营情况</p>
-                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">区域产业升级</span></div>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 7: 实时数据链平台 -->
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/data-chain.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">数据模型</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">实时数据链平台</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">将企业核心数据实时集中到中央化数据平台中的方式并通过API/SDK反向提供数据</p>
-                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">数字化运营</span></div>
-                        </div>
+                        <h3 class="data-card-title">中小企业融资风险评分模型</h3>
+                        <p class="data-card-company">深圳市龙岗金融数据服务有限公司</p>
+                        <p class="data-card-desc">基于经营、司法和履约数据形成融资风险评分，为金融机构客户准入提供辅助依据</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-18 17:06:42</span><div class="scene-tags"><span class="scene-tag">金融服务</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 8: 城际高速小时车流量迁移统计 -->
+                <article class="data-card">
+                    <div class="data-card-image" style="background: url('images/night-light.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">180元/次</span></div>
+                    </div>
+                    <div class="data-card-content">
+                        <h3 class="data-card-title">龙岗重点商圈消费活力数据集</h3>
+                        <p class="data-card-company">深圳市龙岗商业数据运营有限公司</p>
+                        <p class="data-card-desc">提供重点商圈客流热度、消费时段和业态结构指标，支持商业运营与选址分析</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-18 14:35:27</span><div class="scene-tags"><span class="scene-tag">批发和零售业</span></div></div>
+                    </div>
+                </article>
+
                 <article class="data-card">
                     <div class="data-card-image" style="background: url('images/highway-migration.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">RWA</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">城际高速小时车流量迁移统计</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计</p>
-                        <p class="data-card-price">参考价格：<span class="price negotiate">面议</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">交通规划</span></div>
-                        </div>
+                        <h3 class="data-card-title">新能源充电设施运营收益权产品</h3>
+                        <p class="data-card-company">深圳市龙岗新能源运营有限公司</p>
+                        <p class="data-card-desc">基于充电设施运营流水和设备利用率数据，形成可核验的收益权数据产品</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-17 16:20:15</span><div class="scene-tags"><span class="scene-tag">能源服务</span></div></div>
                     </div>
                 </article>
 
-                <!-- Card 9 -->
                 <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge api">API</span></div>
+                    <div class="data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
+                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">500元/月</span></div>
                     </div>
                     <div class="data-card-content">
-                        <h3 class="data-card-title">企业工商信息智能匹配</h3>
-                        <p class="data-card-type-row">产品类型：<span class="val">API</span></p>
-                        <p class="data-card-company">广东***有限公司</p>
-                        <p class="data-card-desc">整合全国企业工商登记信息，提供企业基本信息、股东信息、变更记录等多维度智能匹配与查询</p>
-                        <p class="data-card-price">参考价格：<span class="price">0.05元/次</span></p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">上架时间：2025-11-4 11:12:00</span>
-                            <div class="scene-tags"><span class="scene-tag">企业征信</span></div>
-                        </div>
+                        <h3 class="data-card-title">医疗器械企业准入核验产品</h3>
+                        <p class="data-card-company">深圳市龙岗健康数据科技有限公司</p>
+                        <p class="data-card-desc">整合企业资质、产品备案和风险记录，为医疗器械采购及合作准入提供快速核验</p>
+                        <div class="data-card-footer"><span class="data-card-meta">2026-08-17 10:48:39</span><div class="scene-tags"><span class="scene-tag">医疗健康</span></div></div>
                     </div>
                 </article>
             </div>

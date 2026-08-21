@@ -318,30 +318,86 @@
 
         .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .data-card {
+            display: flex; flex-direction: column;
+            min-width: 0; overflow: hidden;
+            color: inherit; text-decoration: none;
             background: var(--surface-elevated); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl); padding: 24px;
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-sm);
             transition: all var(--transition-base); cursor: pointer;
-            position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
+            position: relative;
         }
-        .data-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--forest-green) 0%, var(--forest-green-200) 100%);
-            opacity: 0; transition: opacity var(--transition-base);
+        .data-card::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: var(--radius-xl);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            pointer-events: none;
         }
-        .data-card:hover { border-color: var(--forest-green-200); box-shadow: var(--shadow-lg), 0 0 0 1px rgba(32, 165, 101, 0.1); transform: translateY(-4px); }
-        .data-card:hover::before { opacity: 1; }
-        .data-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+        .data-card:hover {
+            color: inherit; border-color: var(--forest-green-200);
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
+            transform: translateY(-4px);
+        }
+        .data-card-image {
+            height: 140px; flex-shrink: 0;
+            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+            background-position: center; background-size: cover;
+        }
+        .data-card-image img {
+            display: block; width: 100%; height: 100%; object-fit: cover;
+            transition: transform var(--transition-base);
+        }
+        .data-card:hover .data-card-image img { transform: scale(1.025); }
+        .data-card-image::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(9, 24, 19, 0.04) 35%, rgba(9, 24, 19, 0.28) 100%);
+            pointer-events: none;
+        }
+        .data-card-badges {
+            position: absolute; top: 12px; left: 12px; z-index: 1;
+            display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .data-card-badge {
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.58); backdrop-filter: blur(8px);
+            border-radius: 100px; color: #fff;
+            font-size: 10px; font-weight: 500; line-height: 1.4;
+        }
+        .data-card-badge.delivery { background: rgba(32, 165, 101, 0.9); }
+        .data-card-badge.price { background: rgba(229, 57, 53, 0.86); }
+        .data-card-content {
+            display: flex; flex: 1; flex-direction: column;
+            min-height: 214px; padding: 20px;
+        }
+        .data-card-title {
+            min-height: 42px; margin-bottom: 8px;
+            font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-company {
+            margin-bottom: 10px; overflow: hidden;
+            font-size: 12px; color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis;
+        }
+        .data-card-desc {
+            min-height: 39px; margin-bottom: 12px;
+            font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .data-card-detail { margin-bottom: 14px; font-size: 13px; color: var(--text-tertiary); }
+        .data-card-detail strong { color: #E53935; font-size: 15px; font-weight: 700; }
+        .data-card-footer {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-subtle);
+        }
+        .data-card-meta {
+            min-width: 0; overflow: hidden;
+            font-size: 11px; color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis;
+        }
         .data-card-type {
-            display: inline-flex; padding: 4px 10px;
-            background: var(--forest-green-50); border-radius: var(--radius-sm);
+            flex-shrink: 0; padding: 4px 10px;
+            background: var(--forest-green-50); border-radius: 100px;
             font-size: 11px; font-weight: 500; color: var(--forest-green);
-            text-transform: uppercase; letter-spacing: 0.02em;
         }
-        .data-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; }
-        .data-card-company { font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; }
-        .data-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; }
-        .data-card-meta { display: flex; align-items: center; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-tertiary); }
-        .data-card-meta svg { width: 14px; height: 14px; fill: var(--text-tertiary); }
 
         .view-all { display: flex; justify-content: center; margin-top: 40px; }
         .view-all-btn {
@@ -739,78 +795,17 @@
 
     <!-- Content Section -->
     <section class="content-section">
-        <div class="tabs">
-            <button class="tab active">数据资源</button>
-            <button class="tab">数据产品</button>
-            <button class="tab">咨询服务</button>
-            <button class="tab">行业方案</button>
+        <div class="tabs" role="tablist" aria-label="热门内容分类">
+            <button class="tab active" type="button" role="tab" aria-selected="true" data-popular-category="resource">数据资源</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-popular-category="product">数据产品</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-popular-category="consulting">咨询服务</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-popular-category="solution">行业方案</button>
         </div>
 
-        <div class="cards-grid">
-            <div class="data-card" onclick="window.location.href='data-detail.html'">
-                <div class="data-card-header"><span class="data-card-type">数据库</span></div>
-                <h3 class="data-card-title">物流订单信息</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">物流订单全流程数据，包含订单状态、物流轨迹等信息</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    交通运输、仓储和邮政业
-                </div>
-            </div>
-            <div class="data-card">
-                <div class="data-card-header"><span class="data-card-type">文档</span></div>
-                <h3 class="data-card-title">金融行业A股上市公司股吧数据集</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">金融行业A股上市公司股吧讨论数据</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    金融业
-                </div>
-            </div>
-            <div class="data-card">
-                <div class="data-card-header"><span class="data-card-type">API</span></div>
-                <h3 class="data-card-title">工商行政处罚记录</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">企业工商行政处罚记录查询接口</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    信息技术服务业
-                </div>
-            </div>
-            <div class="data-card">
-                <div class="data-card-header"><span class="data-card-type">数据库</span></div>
-                <h3 class="data-card-title">纳税信用等级信息</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">企业纳税信用等级分类信息，分为A、B、C、D四级</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    公共管理
-                </div>
-            </div>
-            <div class="data-card">
-                <div class="data-card-header"><span class="data-card-type">文档</span></div>
-                <h3 class="data-card-title">全国人口迁移与流动数据</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">提供全国各省市人口迁移与流动数据，按季度统计</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    居民服务
-                </div>
-            </div>
-            <div class="data-card">
-                <div class="data-card-header"><span class="data-card-type">数据库</span></div>
-                <h3 class="data-card-title">医学呼吸道疾病原微生物数据库</h3>
-                <p class="data-card-company">智云科技有限公司</p>
-                <p class="data-card-desc">医学呼吸道疾病微生物病毒与治疗药数据</p>
-                <div class="data-card-meta">
-                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                    医学研究
-                </div>
-            </div>
-        </div>
+        <div class="cards-grid" id="popularCards" role="tabpanel" aria-live="polite"></div>
 
         <div class="view-all">
-            <a href="data-resources.html" class="view-all-btn">
+            <a href="data-resources.html" class="view-all-btn" id="popularViewAll">
                 查看全部
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
             </a>
@@ -928,6 +923,274 @@
     </footer>
 
     <script>
+    (function() {
+        var popularCards = document.getElementById('popularCards');
+        var popularViewAll = document.getElementById('popularViewAll');
+        var popularTabs = Array.prototype.slice.call(document.querySelectorAll('[data-popular-category]'));
+        if (!popularCards || !popularViewAll || !popularTabs.length) return;
+
+        function detailHref(page, title, price) {
+            var params = [];
+            if (price) params.push('price=' + encodeURIComponent(price));
+            if (title) params.push('title=' + encodeURIComponent(title));
+            return page + (params.length ? '?' + params.join('&') : '');
+        }
+
+        var popularCatalog = {
+            resource: {
+                label: '数据资源',
+                allHref: 'data-resources.html',
+                items: [
+                    {
+                        image: 'images/stock-data.jpg', badges: [{ text: '原始取得' }, { text: '文件传输', tone: 'delivery' }],
+                        title: '龙岗区先进制造企业产能运行数据集', company: '深圳市龙岗区产业数据运营有限公司',
+                        desc: '汇聚重点制造企业产能、订单和设备运行指标，为产业链监测和园区服务提供数据支撑',
+                        meta: '2026-08-21 11:07:59', type: '制造业', href: 'data-detail.html?sampleType=dataset'
+                    },
+                    {
+                        image: 'images/realtime-data.jpg', badges: [{ text: '原始取得' }, { text: 'API传输', tone: 'delivery' }],
+                        title: '龙岗区工业园区能耗监测数据', company: '深圳市龙岗能源数据服务有限公司',
+                        desc: '提供园区用电、用水和综合能耗小时数据，支持企业节能分析和园区能效管理',
+                        meta: '2026-08-21 09:33:35', type: '能源服务', href: 'data-detail.html?sampleType=api'
+                    },
+                    {
+                        image: 'images/traffic-flow.jpg', badges: [{ text: '交易取得' }, { text: '文件传输', tone: 'delivery' }],
+                        title: '盐田港—龙岗物流通道运行数据', company: '深圳市龙岗交通数据运营有限公司',
+                        desc: '整合港区集疏运车辆、主要通道流量和平均通行时长，为物流调度提供数据参考',
+                        meta: '2026-08-20 18:35:47', type: '交通运输', href: 'data-detail.html?sampleType=other'
+                    },
+                    {
+                        image: 'images/data-screen.jpg', badges: [{ text: '原始取得' }, { text: 'API传输', tone: 'delivery' }],
+                        title: '龙岗区低空飞行基础环境数据', company: '深圳市低空经济产业运营中心',
+                        desc: '汇集低空航路、起降设施和气象环境信息，服务无人机配送与低空应用规划',
+                        meta: '2026-08-20 15:22:18', type: '交通运输', href: 'data-detail.html'
+                    },
+                    {
+                        image: 'images/iot-platform.jpg', badges: [{ text: '交易取得' }, { text: '文件传输', tone: 'delivery' }],
+                        title: '龙岗区电子信息产业链企业名录', company: '龙岗区产业发展服务中心',
+                        desc: '整理电子信息产业链重点企业、主营方向和上下游关系，支持产业招商与供需对接',
+                        meta: '2026-08-20 10:16:42', type: '信息技术', href: 'data-detail.html'
+                    },
+                    {
+                        image: 'images/tourism-weather.jpg', badges: [{ text: '原始取得' }, { text: 'API传输', tone: 'delivery' }],
+                        title: '龙岗区文化旅游客流热度数据', company: '深圳市龙岗文旅数据服务有限公司',
+                        desc: '提供重点景区、商圈和文化场馆客流热度及停留时长统计，为文旅运营提供参考',
+                        meta: '2026-08-19 17:45:06', type: '文化旅游', href: 'data-detail.html'
+                    }
+                ]
+            },
+            product: {
+                label: '数据产品',
+                allHref: 'data-products.html',
+                items: [
+                    {
+                        image: 'images/policy-recommend.jpg', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
+                        title: '龙岗企业经营画像数据集', company: '深圳市龙岗数据交易服务有限公司',
+                        desc: '汇聚企业登记、产业标签和经营活跃度指标，为园区招商及企业服务提供数据支撑',
+                        meta: '2026-08-21 10:52:11', type: '商务服务',
+                        href: 'product-detail.html?sampleType=dataset'
+                    },
+                    {
+                        image: 'images/stock-data.jpg', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
+                        title: '园区企业经营监测指标数据集', company: '深圳市龙岗产业数据运营有限公司',
+                        desc: '形成企业产值、用工、订单和创新能力指标，支持园区企业运行监测与分层服务',
+                        meta: '2026-08-20 18:17:23', type: '制造业',
+                        href: 'product-detail.html?sampleType=dataset'
+                    },
+                    {
+                        image: 'images/data-screen.jpg', badges: [{ text: '数据产品' }, { text: '一事一议', tone: 'price' }],
+                        title: '制造业供应链风险画像产品', company: '深圳市龙岗供应链科技有限公司',
+                        desc: '融合供应商履约、物流时效和企业风险信息，输出供应链风险画像及分级预警结果',
+                        meta: '2026-08-20 15:29:53', type: '制造业',
+                        href: 'product-detail.html?sampleType=other'
+                    },
+                    {
+                        image: 'images/toll-traffic.jpg', badges: [{ text: '数据报告' }, { text: '399元/份', tone: 'price' }],
+                        title: '龙岗区低空经济产业分析报告', company: '深圳市低空产业研究有限公司',
+                        desc: '分析低空产业企业分布、应用场景和发展趋势，为产业规划和项目招商提供参考',
+                        meta: '2026-08-19 16:42:08', type: '科技服务',
+                        href: 'product-detail.html'
+                    },
+                    {
+                        image: 'images/iot-cloud.jpg', badges: [{ text: '数据产品' }, { text: '333元/天', tone: 'price' }],
+                        title: '园区企业经营监测看板', company: '深圳市龙岗数智园区有限公司',
+                        desc: '动态展示园区企业经营活力、产业结构和重点风险指标，支持园区日常运营研判',
+                        meta: '2026-08-19 11:28:36', type: '信息技术',
+                        href: 'product-detail.html'
+                    },
+                    {
+                        image: 'images/data-chain.jpg', badges: [{ text: '数据模型' }, { text: '一事一议', tone: 'price' }],
+                        title: '中小企业融资风险评分模型', company: '深圳市龙岗金融数据服务有限公司',
+                        desc: '基于经营、司法和履约数据形成融资风险评分，为金融机构客户准入提供辅助依据',
+                        meta: '2026-08-18 17:06:42', type: '金融服务',
+                        href: 'product-detail.html'
+                    }
+                ]
+            },
+            consulting: {
+                label: '咨询服务',
+                allHref: 'data-consulting.html',
+                items: [
+                    {
+                        image: 'images/consult-governance.jpg', badges: [{ text: '战略治理' }, { text: '面议', tone: 'price' }],
+                        title: '数据战略与要素发展顶层规划咨询服务', company: '智慧数据科技有限公司',
+                        desc: '围绕数据发展战略蓝图、价值转化路径与业务赋能策略提供顶层规划咨询',
+                        meta: '2026-08-20 16:48:25',
+                        href: detailHref('consulting-detail.html', '数据战略与要素发展顶层规划咨询服务', '面议')
+                    },
+                    {
+                        image: 'images/consult-accounting.jpg', badges: [{ text: '资产管理' }, { text: '3000元/天', tone: 'price' }],
+                        title: '数据资源普查与资产盘点咨询服务', company: '智慧数据科技有限公司',
+                        desc: '开展数据资源底数摸查、资产识别与核心资源盘点，形成可运营资源目录',
+                        meta: '2026-08-20 14:32:16',
+                        href: detailHref('consulting-detail.html', '数据资源普查与资产盘点咨询服务', '3000元/天')
+                    },
+                    {
+                        image: 'images/consult-government.jpg', badges: [{ text: '合规流通' }, { text: '面议', tone: 'price' }],
+                        title: '数据流通与交易合规性评估咨询服务', company: '智慧数据科技有限公司',
+                        desc: '覆盖数据采集、存储、共享、开放、授权及交易全链路的合规审查',
+                        meta: '2026-08-19 17:05:43',
+                        href: detailHref('consulting-detail.html', '数据流通与交易合规性评估咨询服务', '面议')
+                    },
+                    {
+                        image: 'images/consult-incubation.jpg', badges: [{ text: '合规流通' }, { text: '面议', tone: 'price' }],
+                        title: '数据产品孵化、包装与挂牌辅导咨询服务', company: '智慧数据科技有限公司',
+                        desc: '提供产品构思、标准化设计、市场化包装与交易平台挂牌辅导',
+                        meta: '2026-08-19 11:26:08',
+                        href: detailHref('consulting-detail.html', '数据产品孵化、包装与挂牌辅导咨询服务', '面议')
+                    },
+                    {
+                        image: 'images/hero-ai-longgang.jpg', badges: [{ text: 'AI数据服务' }, { text: '面议', tone: 'price' }],
+                        title: 'RAG知识库与企业智能体建设咨询服务', company: '智慧数据科技有限公司',
+                        desc: '建设可检索、可更新、可调用的企业知识底座，并设计企业智能体应用场景',
+                        meta: '2026-08-18 15:44:37',
+                        href: detailHref('consulting-detail.html', 'RAG知识库与企业智能体建设咨询服务', '面议')
+                    },
+                    {
+                        image: 'images/hero-ai-longgang.jpg', badges: [{ text: 'AI数据服务' }, { text: '面议', tone: 'price' }],
+                        title: 'AI模型落地场景适配与治理咨询服务', company: '智慧数据科技有限公司',
+                        desc: '提供AI模型场景适配、数据支撑、知识接入与AI数据治理服务',
+                        meta: '2026-08-18 10:18:52',
+                        href: detailHref('consulting-detail.html', 'AI模型落地场景适配与治理咨询服务', '面议')
+                    }
+                ]
+            },
+            solution: {
+                label: '行业方案',
+                allHref: 'industry-solutions.html',
+                items: [
+                    {
+                        image: 'images/solution-manufacturing.jpg', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
+                        title: '龙华区智能制造诊断解决方案', company: '深圳市龙岗工业互联网有限公司',
+                        desc: '融合设备运行、订单和质量数据，为制造企业提供产线诊断、能效分析和异常预警服务',
+                        meta: '2026-08-20 18:56:03',
+                        href: detailHref('solution-detail.html', '龙华区智能制造诊断解决方案', '100元/次')
+                    },
+                    {
+                        image: 'images/solution-finance.jpg', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
+                        title: '福田区金融风险监测解决方案', company: '深圳市龙岗金融数据服务有限公司',
+                        desc: '整合企业经营、司法和信用信息，构建金融客户风险画像及持续监测预警能力',
+                        meta: '2026-08-20 17:11:53',
+                        href: detailHref('solution-detail.html', '福田区金融风险监测解决方案', '100元/次')
+                    },
+                    {
+                        image: 'images/solution-infotech.jpg', badges: [{ text: '数据资源需求' }, { text: '数据产品需求' }, { text: '面议', tone: 'price' }],
+                        title: '园区产业链精准招商解决方案', company: '深圳市龙岗产业招商服务有限公司',
+                        desc: '围绕产业链图谱、企业画像和项目线索，提供目标企业筛选、招商研判及项目跟踪服务',
+                        meta: '2026-08-20 15:21:38',
+                        href: detailHref('solution-detail.html', '园区产业链精准招商解决方案', '面议')
+                    },
+                    {
+                        image: 'images/solution-construction.jpg', badges: [{ text: '应用场景' }, { text: '数据产品' }, { text: '12万元/套', tone: 'price' }],
+                        title: '智慧工地安全监管解决方案', company: '深圳市龙岗城市建设科技有限公司',
+                        desc: '接入人员、设备和环境监测数据，实现施工风险识别、隐患闭环和项目进度可视化管理',
+                        meta: '2026-08-19 16:42:26',
+                        href: detailHref('solution-detail.html', '智慧工地安全监管解决方案', '12万元/套')
+                    },
+                    {
+                        image: 'images/solution-asset.jpg', badges: [{ text: '数据产品需求' }, { text: '面议', tone: 'price' }],
+                        title: '企业数据资产入表服务方案', company: '深圳市龙岗数据资产服务有限公司',
+                        desc: '提供数据资产盘点、合规评估、成本归集和价值论证，形成可执行的数据资产入表路径',
+                        meta: '2026-08-19 14:05:17',
+                        href: detailHref('solution-detail.html', '企业数据资产入表服务方案', '面议')
+                    },
+                    {
+                        image: 'images/solution-healthcare.jpg', badges: [{ text: '数据资源需求' }, { text: '5万元/次', tone: 'price' }],
+                        title: '区域医疗资源协同分析方案', company: '深圳市龙岗健康数据科技有限公司',
+                        desc: '基于医疗机构、科室和服务量数据，分析区域医疗资源供需并辅助优化资源配置',
+                        meta: '2026-08-19 10:38:49',
+                        href: detailHref('solution-detail.html', '区域医疗资源协同分析方案', '5万元/次')
+                    }
+                ]
+            }
+        };
+
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>"']/g, function(character) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[character];
+            });
+        }
+
+        function renderPopular(category) {
+            var catalog = popularCatalog[category] || popularCatalog.resource;
+            popularCards.setAttribute('aria-label', catalog.label + '热门内容');
+            popularCards.innerHTML = catalog.items.map(function(item) {
+                var badges = item.badges.map(function(badge) {
+                    var tone = badge.tone ? ' ' + escapeHtml(badge.tone) : '';
+                    return '<span class="data-card-badge' + tone + '">' + escapeHtml(badge.text) + '</span>';
+                }).join('');
+                var detail = item.detailValue
+                    ? '<p class="data-card-detail">' + escapeHtml(item.detailLabel) + '<strong>' + escapeHtml(item.detailValue) + '</strong></p>'
+                    : '';
+                return '<a class="data-card" href="' + escapeHtml(item.href) + '" aria-label="查看' + escapeHtml(item.title) + '">'
+                    + '<div class="data-card-image"><img src="' + escapeHtml(item.image) + '" alt=""><div class="data-card-badges">' + badges + '</div></div>'
+                    + '<div class="data-card-content">'
+                    + '<h3 class="data-card-title">' + escapeHtml(item.title) + '</h3>'
+                    + '<p class="data-card-company">' + escapeHtml(item.company) + '</p>'
+                    + '<p class="data-card-desc">' + escapeHtml(item.desc) + '</p>'
+                    + detail
+                    + '<div class="data-card-footer"><span class="data-card-meta">' + escapeHtml(item.meta) + '</span>'
+                    + (item.type ? '<span class="data-card-type">' + escapeHtml(item.type) + '</span>' : '')
+                    + '</div>'
+                    + '</div></a>';
+            }).join('');
+
+            popularViewAll.href = catalog.allHref;
+            popularViewAll.setAttribute('aria-label', '查看全部' + catalog.label);
+            popularTabs.forEach(function(tab) {
+                var isActive = tab.getAttribute('data-popular-category') === category;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                tab.tabIndex = isActive ? 0 : -1;
+            });
+        }
+
+        popularTabs.forEach(function(tab, index) {
+            tab.addEventListener('click', function() {
+                renderPopular(tab.getAttribute('data-popular-category'));
+            });
+            tab.addEventListener('keydown', function(event) {
+                var targetIndex = index;
+                if (event.key === 'ArrowRight') targetIndex = (index + 1) % popularTabs.length;
+                else if (event.key === 'ArrowLeft') targetIndex = (index - 1 + popularTabs.length) % popularTabs.length;
+                else if (event.key === 'Home') targetIndex = 0;
+                else if (event.key === 'End') targetIndex = popularTabs.length - 1;
+                else return;
+                event.preventDefault();
+                popularTabs[targetIndex].focus();
+                popularTabs[targetIndex].click();
+            });
+        });
+
+        renderPopular('resource');
+    })();
+
     (function() {
         var slides = document.querySelectorAll('.hero-slide');
         var dots = document.querySelectorAll('.hero-carousel-dot');
