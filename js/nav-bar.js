@@ -236,7 +236,7 @@ class NavBar extends HTMLElement {
                         label: '创意工坊',
                         children: [
                             { id: 'factory-production-line', label: '数据工厂生产线', href: 'data-production-line.html' },
-                            { id: 'annotation-platform', label: '自有数据标注平台', href: 'data-factory.html' },
+                            { id: 'annotation-platform', label: '数据标注平台', href: 'data-factory.html' },
                             { id: 'operation-platform', label: '龙岗区公共数据授权运营平台', href: 'data-scenario.html' },
                             { id: 'development-tools', label: '开发工具', href: 'data-dev-platform.html' }
                         ]
@@ -245,7 +245,7 @@ class NavBar extends HTMLElement {
             },
             {
                 id: 'data-ecosystem',
-                label: '数据生态',
+                label: '数商生态',
                 children: [
                     {
                         id: 'space-connect',
