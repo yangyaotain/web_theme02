@@ -145,50 +145,37 @@
 
     function cardTemplate(item) {
         var isProduct = state.type === 'product';
-        var deliveryBadge = item.delivery === 'API传输' ? 'API' : item.delivery.replace('传输', '');
-        var secondBadge = isProduct ? (item.productType || '数据产品') : deliveryBadge;
-        var secondBadgeClass = secondBadge === 'API' ? ' api' : '';
+        var price = isProduct ? (item.price || '面议') : '面议';
         return ''
             + '<article class="zone-data-card" tabindex="0" data-zone-href="' + escapeHtml(item.href || '#') + '">'
             +   '<div class="zone-card-image">'
             +       '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '">'
-            +       '<div class="zone-card-badges">'
-            +           '<span class="zone-card-badge">' + escapeHtml(isProduct ? '数据产品' : (item.dataSource || '数据资源')) + '</span>'
-            +           '<span class="zone-card-badge' + secondBadgeClass + '">' + escapeHtml(secondBadge) + '</span>'
-            +       '</div>'
             +   '</div>'
             +   '<div class="zone-card-body">'
             +       '<h2 class="zone-card-title">' + escapeHtml(item.name) + '</h2>'
-            +       (isProduct
-                ? '<p class="zone-card-type-row">产品类型：<span>' + escapeHtml(item.productType || '数据产品') + '</span></p>'
-                : '')
             +       '<p class="zone-card-provider">' + escapeHtml(item.provider) + '</p>'
             +       '<p class="zone-card-description">' + escapeHtml(item.description) + '</p>'
-            +       (isProduct
-                ? '<p class="zone-card-price">参考价格：<span class="price'
-                    + (item.price === '面议' ? ' negotiate' : '') + '">' + escapeHtml(item.price || '面议') + '</span></p>'
-                : '')
+            +       '<p class="zone-card-price">' + escapeHtml(price) + '</p>'
             +       '<div class="zone-card-footer">'
-            +           '<span class="zone-card-meta">' + (isProduct ? '上架时间：' : '') + escapeHtml(item.listedAt) + '</span>'
-            +           (isProduct
-                ? '<div class="zone-scene-tags"><span class="zone-scene-tag">' + escapeHtml(item.category) + '</span></div>'
-                : '<span class="zone-card-type">' + escapeHtml(item.category) + '</span>')
+            +           '<span class="zone-card-type">' + escapeHtml(item.category) + '</span>'
+            +           '<span class="zone-card-meta">' + escapeHtml(item.listedAt) + '</span>'
             +       '</div>'
             +   '</div>'
             + '</article>';
     }
 
     function renderPagination(total) {
-        var pageCount = Math.ceil(total / pageSize);
-        if (pageCount <= 1) {
+        if (total === 0) {
             elements.zonePagination.innerHTML = '';
             return;
         }
+        var pageCount = Math.max(1, Math.ceil(total / pageSize));
         var html = '<button class="zone-page-button" type="button" data-zone-page="' + (state.page - 1) + '"'
             + (state.page === 1 ? ' disabled' : '') + '>上一页</button>';
         for (var page = 1; page <= pageCount; page += 1) {
             html += '<button class="zone-page-button' + (page === state.page ? ' active' : '')
-                + '" type="button" data-zone-page="' + page + '">' + page + '</button>';
+                + '" type="button" data-zone-page="' + page + '"'
+                + (page === state.page ? ' aria-current="page"' : '') + '>' + page + '</button>';
         }
         html += '<button class="zone-page-button" type="button" data-zone-page="' + (state.page + 1) + '"'
             + (state.page === pageCount ? ' disabled' : '') + '>下一页</button>';

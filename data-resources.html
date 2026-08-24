@@ -326,6 +326,12 @@
         }
 
         .data-card {
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
+            grid-template-rows: 64px auto auto minmax(46px, 1fr);
+            column-gap: 16px;
+            min-height: 300px;
+            padding: 26px 24px 20px;
             background: var(--surface-elevated);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl);
@@ -352,18 +358,19 @@
         }
 
         .data-card-image {
-            height: 140px;
-            background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+            grid-column: 1;
+            grid-row: 1;
+            width: 64px;
+            height: 64px;
+            background-color: var(--gray-100);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
             position: relative;
             overflow: hidden;
         }
 
         .data-card-image::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(32,165,101,0.15)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.5;
+            display: none;
         }
 
         .data-card-image-content {
@@ -391,13 +398,7 @@
             fill: var(--forest-green);
         }
 
-        .data-card-badges {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            display: flex;
-            gap: 6px;
-        }
+        .data-card-badges { display: none; }
 
         .data-card-badge {
             padding: 4px 10px;
@@ -411,57 +412,92 @@
 
         .data-card-badge.delivery { background: rgba(32, 165, 101, 0.9); }
 
-        .data-card-content { padding: 20px; }
+        .data-card-content { display: contents; }
 
         .data-card-title {
-            font-size: 15px;
+            grid-column: 2;
+            grid-row: 1;
+            align-self: start;
+            min-width: 0;
+            margin: 2px 0 0;
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-            line-height: 1.4;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            line-height: 1.45;
             overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .data-card-company {
-            font-size: 12px;
+            grid-column: 2;
+            grid-row: 1;
+            align-self: start;
+            min-width: 0;
+            margin: 31px 0 0;
+            overflow: hidden;
+            font-size: 13px;
             color: var(--text-tertiary);
-            margin-bottom: 12px;
+            line-height: 1.5;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .data-card-desc {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            min-height: 44px;
+            margin: 28px 0 14px;
             font-size: 13px;
             color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 16px;
+            line-height: 1.7;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
+        .data-card-price {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            margin: 0 0 12px;
+            color: #ef5b5b;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
         .data-card-footer {
+            grid-column: 1 / -1;
+            grid-row: 4;
+            align-self: end;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
             padding-top: 16px;
             border-top: 1px solid var(--border-subtle);
         }
 
         .data-card-meta {
-            font-size: 11px;
+            order: 2;
+            min-width: 0;
+            margin-left: auto;
+            overflow: hidden;
+            font-size: 12px;
             color: var(--text-tertiary);
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .data-card-type {
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--forest-green);
-            background: var(--forest-green-50);
-            padding: 4px 10px;
-            border-radius: 100px;
+            order: 1;
+            min-width: 0;
+            overflow: hidden;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         /* ==================== Responsive ==================== */
@@ -961,9 +997,10 @@
                         '<h3 class="data-card-title">' + c.title + '</h3>' +
                         '<p class="data-card-company">' + c.company + '</p>' +
                         '<p class="data-card-desc">' + c.desc + '</p>' +
+                        '<p class="data-card-price">面议</p>' +
                         '<div class="data-card-footer">' +
-                            '<span class="data-card-meta">' + c.date + '</span>' +
                             '<span class="data-card-type">' + c.industry + '</span>' +
+                            '<span class="data-card-meta">' + c.date + '</span>' +
                         '</div>' +
                     '</div>';
 

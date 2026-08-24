@@ -147,6 +147,9 @@
         .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
         .data-card {
+            display: grid; grid-template-columns: 64px minmax(0, 1fr);
+            grid-template-rows: 64px auto auto minmax(46px, 1fr);
+            column-gap: 16px; min-height: 300px; padding: 26px 24px 20px;
             background: var(--surface-elevated); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl); overflow: hidden;
             transition: all var(--transition-base);
@@ -164,43 +167,57 @@
             transform: translateY(-4px);
         }
         .data-card-image {
-            height: 140px; position: relative; overflow: hidden;
+            grid-column: 1; grid-row: 1; width: 64px; height: 64px;
+            position: relative; overflow: hidden;
+            background-color: var(--gray-100); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
         }
-        .data-card-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+        .data-card-badges { display: none; }
         .data-card-badge {
             padding: 4px 10px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
             border-radius: var(--radius-md); font-size: 10px; font-weight: 500; color: white;
         }
         .data-card-badge.price { background: rgba(255, 59, 65, 0.9); }
 
-        .data-card-content { padding: 20px; }
+        .data-card-content { display: contents; }
         .data-card-title {
-            font-size: 15px; font-weight: 600; color: var(--text-primary);
-            line-height: 1.4; margin-bottom: 8px;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            grid-column: 2; grid-row: 1; align-self: start; min-width: 0;
+            margin: 2px 0 0; overflow: hidden;
+            font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.45;
+            white-space: nowrap; text-overflow: ellipsis;
         }
         .data-card-type-row { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
         .data-card-type-row .val { color: var(--info-blue); font-weight: 500; }
-        .data-card-company { font-size: 12px; color: var(--text-tertiary); margin-bottom: 10px; }
+        .data-card-company {
+            grid-column: 2; grid-row: 1; align-self: start; min-width: 0;
+            margin: 31px 0 0; overflow: hidden;
+            font-size: 13px; color: var(--text-tertiary); line-height: 1.5;
+            white-space: nowrap; text-overflow: ellipsis;
+        }
         .data-card-desc {
-            font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;
+            grid-column: 1 / -1; grid-row: 2; min-height: 44px; margin: 28px 0 14px;
+            font-size: 13px; color: var(--text-secondary); line-height: 1.7;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .data-card-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
-        .data-card-price .price { color: #E53935; font-size: 16px; font-weight: 700; }
-        .data-card-price .price.negotiate { font-size: 14px; font-weight: 600; }
+        .data-card-price {
+            grid-column: 1 / -1; grid-row: 3; margin: 0 0 12px;
+            color: #ef5b5b; font-size: 22px; font-weight: 700; line-height: 1.35;
+        }
 
         .data-card-footer {
+            grid-column: 1 / -1; grid-row: 4; align-self: end;
             display: flex; align-items: center; justify-content: space-between;
-            padding-top: 16px; border-top: 1px solid var(--border-subtle);
-            font-size: 11px; color: var(--text-tertiary);
+            gap: 12px; padding-top: 16px; border-top: 1px solid var(--border-subtle);
+            font-size: 12px; color: var(--text-tertiary);
         }
-        .data-card-meta { font-size: 11px; color: var(--text-tertiary); }
-        .data-card-footer .scene-tags { display: flex; gap: 4px; }
+        .data-card-meta {
+            order: 2; min-width: 0; margin-left: auto; overflow: hidden;
+            font-size: 12px; color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis;
+        }
+        .data-card-footer .scene-tags { order: 1; min-width: 0; display: flex; gap: 4px; overflow: hidden; }
         .scene-tag {
-            padding: 3px 8px; font-size: 11px; font-weight: 500;
-            color: var(--forest-green); background: var(--forest-green-50);
-            border-radius: var(--radius-md);
+            overflow: hidden; font-size: 12px; font-weight: 400;
+            color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis;
         }
 
         /* ── Responsive ── */
@@ -551,6 +568,14 @@
         });
     });
     document.querySelectorAll('.data-card').forEach(function (card) {
+        var priceBadge = card.querySelector('.data-card-badge.price');
+        var description = card.querySelector('.data-card-desc');
+        if (priceBadge && description) {
+            var priceLine = document.createElement('p');
+            priceLine.className = 'data-card-price';
+            priceLine.textContent = priceBadge.textContent.trim();
+            description.insertAdjacentElement('afterend', priceLine);
+        }
         card.style.cursor = 'pointer';
         card.addEventListener('click', function () {
             var sampleType = this.getAttribute('data-sample-type');

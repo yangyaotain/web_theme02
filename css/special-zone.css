@@ -620,7 +620,13 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-data-card {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-rows: 64px auto auto minmax(46px, 1fr);
+    column-gap: 16px;
     min-width: 0;
+    min-height: 300px;
+    padding: 26px 24px 20px;
     position: relative;
     overflow: hidden;
     border: 1px solid var(--border-subtle);
@@ -647,10 +653,15 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-card-image {
+    grid-column: 1;
+    grid-row: 1;
+    width: 64px;
+    height: 64px;
     position: relative;
-    height: 140px;
     overflow: hidden;
-    background: linear-gradient(135deg, #1a2e35 0%, #0f1a1d 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--gray-100);
 }
 
 .zone-card-image img {
@@ -659,14 +670,7 @@ body.zone-preview-mode .special-zone-page {
     object-fit: cover;
 }
 
-.zone-card-badges {
-    position: absolute;
-    z-index: 2;
-    top: 12px;
-    left: 12px;
-    display: flex;
-    gap: 6px;
-}
+.zone-card-badges { display: none; }
 
 .zone-card-badge {
     padding: 4px 10px;
@@ -683,26 +687,25 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-card-body {
-    padding: 20px;
+    display: contents;
 }
 
 .zone-card-title {
-    margin: 0 0 8px;
-    display: -webkit-box;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    min-width: 0;
+    margin: 2px 0 0;
     overflow: hidden;
     color: var(--text-primary);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
-    line-height: 1.4;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    line-height: 1.45;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.zone-card-type-row {
-    margin: 0 0 4px;
-    color: var(--text-tertiary);
-    font-size: 12px;
-}
+.zone-card-type-row { display: none; }
 
 .zone-card-type-row span {
     color: var(--info-blue);
@@ -710,29 +713,41 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-card-provider {
-    margin: 0 0 10px;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    min-width: 0;
+    margin: 31px 0 0;
     overflow: hidden;
     color: var(--text-tertiary);
-    font-size: 12px;
+    font-size: 13px;
+    line-height: 1.5;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .zone-card-description {
-    margin: 0 0 12px;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 44px;
+    margin: 28px 0 14px;
     display: -webkit-box;
     overflow: hidden;
     color: var(--text-secondary);
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.7;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
 
 .zone-card-price {
-    margin: 0 0 14px;
-    color: var(--text-tertiary);
-    font-size: 13px;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin: 0 0 12px;
+    color: #ef5b5b;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
 }
 
 .zone-card-price .price {
@@ -747,27 +762,38 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-card-footer {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    align-self: end;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--border-subtle);
     color: var(--text-tertiary);
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .zone-card-meta {
+    order: 2;
+    min-width: 0;
+    margin-left: auto;
+    overflow: hidden;
     color: var(--text-tertiary);
-    font-size: 11px;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .zone-card-type {
-    padding: 4px 10px;
-    border-radius: 100px;
-    background: var(--forest-green-50);
-    color: var(--forest-green);
-    font-size: 11px;
-    font-weight: 500;
+    order: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .zone-scene-tags {

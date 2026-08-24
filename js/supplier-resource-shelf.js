@@ -463,7 +463,8 @@
             return {
                 deliverySpec: '',
                 deliveryMethod: 'API传输',
-                images: [],
+                mainImage: null,
+                mainIcon: '',
                 specialZoneId: record.specialZoneId || '',
                 deliveryDescription: '通过平台API网关交付，调用方完成身份认证、签名校验和授权确认后，可按约定频率访问资源。',
                 pricingMode: '按次数',
@@ -768,18 +769,12 @@
         function renderStepOne(record) {
             var form = state.form;
             var alertMessage = state.formError === 'basic'
-                ? '请补充完整交付方式说明、交付方式和资源主图。'
+                ? '请补充完整交付方式说明、交付方式和资源图片。'
                 : state.formError;
             var fileControl = form.deliverySpec
                 ? '<div class="product-shelf-file">' + icon('description') + '<span class="product-shelf-file-name">' + escapeHtml(form.deliverySpec) + '</span>' + icon('check_circle') + '<button class="product-shelf-file-delete" type="button" aria-label="删除交付方式说明" data-resource-shelf-remove-file>' + icon('delete') + '</button></div>'
                 : '<button class="product-shelf-upload-button" type="button" data-resource-shelf-upload-file>' + icon('upload_file') + '<span>上传交付说明</span></button>';
-            var imageControl = ''
-                + '<div class="product-shelf-image-list">'
-                +   form.images.map(function (image, index) {
-                            return '<div class="product-shelf-image-preview"><img src="' + escapeHtml(image.src) + '" alt="' + escapeHtml(image.name || (record.name + '资源主图')) + '"><button type="button" aria-label="删除资源主图" data-resource-shelf-remove-image="' + index + '">' + icon('close') + '</button></div>';
-                        }).join('')
-                +   (form.images.length < 4 ? '<button class="product-shelf-image-upload" type="button" data-resource-shelf-upload-image>' + icon('add_photo_alternate') + '<span>上传图片</span></button>' : '')
-                + '</div>';
+            var imageControl = '<div data-resource-image-icon-picker></div>';
             return ''
                 + '<div class="product-shelf-step-content resource-shelf-step-content">'
                 +   '<h2 class="product-shelf-section-title">资源登记信息</h2>'
@@ -789,12 +784,11 @@
                 +       (alertMessage ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>' + escapeHtml(alertMessage) + '</span></div>' : '')
                 +       renderFormRow('交付方式说明', true, fileControl, '请上传 1 个交付说明文件，支持 doc、docx、pdf 格式，单个文件不超过 3MB。')
                 +       renderFormRow('交付方式', true, '<select aria-label="交付方式" data-resource-shelf-field="deliveryMethod"><option value="API传输" selected>API传输</option></select>', '本次原型按截图实现 API 传输分支。')
-                +       renderFormRow('资源主图', true, imageControl, '最多上传 4 张图片，支持 jpg、jpeg、png 格式，推荐尺寸 800 × 800，单张不超过 5MB。')
+                +       renderFormRow('资源图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。')
                 +       renderFormRow('特色专区', false, '<select aria-label="特色专区" data-resource-shelf-field="specialZoneId">' + renderSpecialZoneOptions(form.specialZoneId) + '</select>')
                 +       renderFormRow('交付说明', false, '<div class="product-shelf-counted"><textarea class="product-shelf-textarea" maxlength="500" data-resource-shelf-field="deliveryDescription" data-resource-counter="deliveryDescription">' + escapeHtml(form.deliveryDescription) + '</textarea><span class="product-shelf-counter">' + form.deliveryDescription.length + '/500</span></div>')
                 +   '</div>'
                 +   '<input class="product-shelf-hidden-input" type="file" accept=".doc,.docx,.pdf" data-resource-shelf-file-input>'
-                +   '<input class="product-shelf-hidden-input" type="file" accept=".jpg,.jpeg,.png" multiple data-resource-shelf-image-input>'
                 + '</div>';
         }
 
@@ -1349,7 +1343,7 @@
         function validateStep() {
             state.formError = '';
             if (state.step === 1) {
-                if (!state.form.deliverySpec || !state.form.deliveryMethod || !state.form.images.length) {
+                if (!state.form.deliverySpec || !state.form.deliveryMethod || (!state.form.mainImage && !state.form.mainIcon)) {
                     state.formError = 'basic';
                     return false;
                 }
@@ -1412,19 +1406,6 @@
         function fileExtension(fileName) {
             var parts = String(fileName || '').toLowerCase().split('.');
             return parts.length > 1 ? parts.pop() : '';
-        }
-
-        function readImageFile(file) {
-            return new Promise(function (resolve, reject) {
-                var reader = new FileReader();
-                reader.addEventListener('load', function () {
-                    resolve({ name: file.name, src: reader.result });
-                });
-                reader.addEventListener('error', function () {
-                    reject(new Error('图片读取失败'));
-                });
-                reader.readAsDataURL(file);
-            });
         }
 
         function setNestedValue(target, path, value) {
@@ -1533,11 +1514,26 @@
             });
 
             var fileInput = panel.querySelector('[data-resource-shelf-file-input]');
-            var imageInput = panel.querySelector('[data-resource-shelf-image-input]');
+            var resourceImagePicker = panel.querySelector('[data-resource-image-icon-picker]');
+            if (resourceImagePicker && window.ImageIconPicker) {
+                window.ImageIconPicker.mount(resourceImagePicker, {
+                    label: '资源图片',
+                    modalTitle: '选择资源图标',
+                    maxSizeMB: 5,
+                    value: state.form.mainImage ? { type: 'image', src: state.form.mainImage.src, name: state.form.mainImage.name } : (state.form.mainIcon ? { type: 'icon', name: state.form.mainIcon } : null),
+                    onChange: function (value) {
+                        state.form.mainImage = value && value.type === 'image' ? { src: value.src, name: value.name || '' } : null;
+                        state.form.mainIcon = value && value.type === 'icon' ? value.name : '';
+                        state.formError = '';
+                    },
+                    onError: function (message) {
+                        state.formError = message;
+                        renderEditor();
+                    }
+                });
+            }
             var uploadFile = panel.querySelector('[data-resource-shelf-upload-file]');
-            var uploadImage = panel.querySelector('[data-resource-shelf-upload-image]');
             if (uploadFile && fileInput) uploadFile.addEventListener('click', function () { fileInput.click(); });
-            if (uploadImage && imageInput) uploadImage.addEventListener('click', function () { imageInput.click(); });
 
             if (fileInput) fileInput.addEventListener('change', function () {
                 if (!this.files || !this.files[0]) return;
@@ -1557,50 +1553,10 @@
                 renderEditor();
             });
 
-            if (imageInput) imageInput.addEventListener('change', function () {
-                var files = Array.prototype.slice.call(this.files || []);
-                if (!files.length) return;
-                if (state.form.images.length + files.length > 4) {
-                    state.formError = '资源主图最多上传 4 张。';
-                    renderEditor();
-                    return;
-                }
-                var invalidType = files.find(function (file) {
-                    return ['jpg', 'jpeg', 'png'].indexOf(fileExtension(file.name)) === -1;
-                });
-                if (invalidType) {
-                    state.formError = '资源主图仅支持 jpg、jpeg、png 格式。';
-                    renderEditor();
-                    return;
-                }
-                var oversized = files.find(function (file) { return file.size > 5 * 1024 * 1024; });
-                if (oversized) {
-                    state.formError = '单张资源主图不能超过 5MB。';
-                    renderEditor();
-                    return;
-                }
-                Promise.all(files.map(readImageFile)).then(function (images) {
-                    state.form.images = state.form.images.concat(images);
-                    state.formError = '';
-                    renderEditor();
-                }).catch(function () {
-                    state.formError = '图片读取失败，请重新选择。';
-                    renderEditor();
-                });
-            });
-
             var removeFile = panel.querySelector('[data-resource-shelf-remove-file]');
             if (removeFile) removeFile.addEventListener('click', function () {
                 state.form.deliverySpec = '';
                 renderEditor();
-            });
-
-            panel.querySelectorAll('[data-resource-shelf-remove-image]').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    var index = parseInt(this.dataset.resourceShelfRemoveImage, 10);
-                    if (!Number.isNaN(index)) state.form.images.splice(index, 1);
-                    renderEditor();
-                });
             });
 
             var openTemplate = panel.querySelector('[data-resource-shelf-open-template]');

@@ -90,6 +90,7 @@
             keywords: config.keywords || [],
             description: config.description,
             image: config.image,
+            imageIcon: config.imageIcon || '',
             supplement: config.supplement || '--',
             dataForm: config.dataForm || '结构化',
             personalInfo: config.personalInfo || '否',
@@ -466,13 +467,7 @@
     }
 
     function renderImages() {
-        var previews = draft.images.map(function (image, index) {
-            return '<div class="dmd-image-preview"><img src="' + image.url + '" alt="已上传需求图片 ' + (index + 1) + '"><button class="dmd-image-remove" type="button" aria-label="移除图片" data-image-remove="' + index + '">' + icon('close') + '</button></div>';
-        }).join('');
-        var upload = draft.images.length < 4
-            ? '<button class="dmd-upload-button" type="button" data-image-upload>' + icon('add') + '<span>上传图片</span></button><input type="file" accept="image/jpeg,image/png" multiple hidden data-image-input>'
-            : '';
-        return '<div class="dmd-image-upload-list">' + previews + upload + '</div><div class="dmd-helper">最多上传4张图片，支持 jpg/jpeg/png 格式，推荐尺寸800×800，单张不超过5M</div>' + renderError('images');
+        return '<div data-demand-image-icon-picker></div><div class="dmd-helper">支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。</div>' + renderError('images');
     }
 
     function renderCalendarMonth(month, kind) {
@@ -606,7 +601,8 @@
 
     function renderDemandInfo(record) {
         var keywords = record.keywords.length ? record.keywords.join('、') : '--';
-        var image = record.image ? '<img class="dmd-detail-image" src="' + escapeHtml(record.image) + '" alt="' + escapeHtml(record.title) + '需求图片">' : '--';
+        var imageValue = record.image ? { type: 'image', src: record.image } : (record.imageIcon ? { type: 'icon', name: record.imageIcon } : null);
+        var image = imageValue && window.ImageIconPicker ? window.ImageIconPicker.renderDisplay(imageValue, { className: 'dmd-detail-image', alt: record.title + '需求图片' }) : '--';
         var logs = record.logs.map(function (log) {
             return '<tr><td>' + escapeHtml(log.role) + '</td><td>' + escapeHtml(log.action) + '</td><td>' + escapeHtml(log.result) + '</td><td>' + escapeHtml(log.content) + '</td><td>' + escapeHtml(log.time) + '</td></tr>';
         }).join('');
@@ -695,6 +691,20 @@
         panel.classList.add('is-demand-management');
         panel.innerHTML = '<div class="demand-board">' + (state.view === 'publish' ? renderPublish() : (state.view === 'detail' ? renderDetail() : renderList())) + '</div>';
         if (state.view === 'publish') {
+            var demandImagePicker = panel.querySelector('[data-demand-image-icon-picker]');
+            if (demandImagePicker && window.ImageIconPicker) {
+                window.ImageIconPicker.mount(demandImagePicker, {
+                    label: '需求图片',
+                    modalTitle: '选择需求图标',
+                    maxSizeMB: 5,
+                    value: draft.images[0] || null,
+                    onChange: function (value) {
+                        draft.images = value ? [value] : [];
+                        clearFieldError('images');
+                    },
+                    onError: function (message) { showToast(message, 'error'); }
+                });
+            }
             var nextFormView = panel.querySelector('.dmd-form-view');
             if (nextFormView) nextFormView.scrollTop = state.formScrollTop;
         }
@@ -752,7 +762,8 @@
             budget: draft.budget,
             keywords: draft.keywords.slice(),
             description: draft.description.trim(),
-            image: draft.images[0] ? draft.images[0].url : 'images/demand-dashboard.jpg',
+            image: draft.images[0] && draft.images[0].type === 'image' ? draft.images[0].src : '',
+            imageIcon: draft.images[0] && draft.images[0].type === 'icon' ? draft.images[0].name : '',
             supplement: draft.supplement || '--',
             dataForm: draft.dataForm,
             personalInfo: draft.personalInfo,
@@ -1034,9 +1045,6 @@
         }
         var keywordRemove = event.target.closest('[data-keyword-remove]');
         if (keywordRemove) { draft.keywords.splice(Number(keywordRemove.dataset.keywordRemove), 1); render(); return; }
-        var imageRemove = event.target.closest('[data-image-remove]');
-        if (imageRemove) { draft.images.splice(Number(imageRemove.dataset.imageRemove), 1); render(); return; }
-        if (event.target.closest('[data-image-upload]')) { var imageInput = panel.querySelector('[data-image-input]'); if (imageInput) imageInput.click(); return; }
         if (event.target.closest('[data-file-upload]')) { var fileInput = panel.querySelector('[data-file-input]'); if (fileInput) fileInput.click(); return; }
         if (event.target.closest('[data-demand-submit]')) {
             if (!validateDraft()) {
@@ -1126,26 +1134,6 @@
         if (event.target.matches('[data-field]')) {
             draft[event.target.dataset.field] = event.target.value;
             clearFieldError(event.target.dataset.field);
-            return;
-        }
-        if (event.target.matches('[data-image-input]')) {
-            var files = Array.prototype.slice.call(event.target.files || []);
-            var room = Math.max(0, 4 - draft.images.length);
-            var accepted = files.filter(function (file) {
-                return /^image\/(jpeg|png)$/.test(file.type) && file.size <= 5 * 1024 * 1024;
-            }).slice(0, room);
-            if (accepted.length !== files.slice(0, room).length) showToast('仅支持5M以内的 JPG、JPEG、PNG 图片', 'error');
-            if (!accepted.length) return;
-            var remaining = accepted.length;
-            accepted.forEach(function (file) {
-                var reader = new FileReader();
-                reader.onload = function () {
-                    draft.images.push({ name: file.name, url: reader.result });
-                    remaining -= 1;
-                    if (!remaining) { clearFieldError('images'); render(); }
-                };
-                reader.readAsDataURL(file);
-            });
             return;
         }
         if (event.target.matches('[data-file-input]')) {

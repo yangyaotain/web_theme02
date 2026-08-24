@@ -314,6 +314,7 @@
                 deliverySpec: record.name + 'API交付说明.pdf',
                 deliveryMethod: 'API传输',
                 image: 'images/economic-monitor.jpg',
+                imageIcon: '',
                 specialZoneId: record.specialZoneId || '',
                 other: '接口按日更新，调用方需按交付说明完成身份认证、签名校验和频率控制。',
                 pricingMode: '按次数',
@@ -555,17 +556,14 @@
 
         function renderStepOne(record) {
             var form = state.form;
-            var alert = state.formError
-                ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>请补充完整交付方式说明和产品主图。</span></div>'
+            var alertMessage = state.formError === 'basic' ? '请补充完整交付方式说明、交付方式和产品图片。' : state.formError;
+            var alert = alertMessage
+                ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>' + escapeHtml(alertMessage) + '</span></div>'
                 : '';
             var fileControl = form.deliverySpec
                 ? '<div class="product-shelf-file">' + icon('description') + '<span class="product-shelf-file-name">' + escapeHtml(form.deliverySpec) + '</span>' + icon('check_circle') + '<button class="product-shelf-file-delete" type="button" aria-label="删除交付方式说明" data-product-shelf-remove-file>' + icon('delete') + '</button></div>'
                 : '<button class="product-shelf-upload-button" type="button" data-product-shelf-upload-file>' + icon('upload_file') + '<span>上传交付说明</span></button>';
-            var imageControl = ''
-                + '<div class="product-shelf-image-list">'
-                +   (form.image ? '<div class="product-shelf-image-preview"><img src="' + escapeHtml(form.image) + '" alt="' + escapeHtml(record.name) + '产品主图"><button type="button" aria-label="删除产品主图" data-product-shelf-remove-image>' + icon('close') + '</button></div>' : '')
-                +   '<button class="product-shelf-image-upload" type="button" data-product-shelf-upload-image>' + icon('add_photo_alternate') + '<span>上传图片</span></button>'
-                + '</div>';
+            var imageControl = '<div data-product-image-icon-picker></div>';
             return ''
                 + '<div class="product-shelf-step-content">'
                 +   '<h2 class="product-shelf-section-title">产品登记信息</h2>'
@@ -574,12 +572,11 @@
                 +       alert
                 +       renderFormRow('交付方式说明', true, fileControl, '请上传 1 个交付说明文件，支持 doc、docx、pdf 格式，单个文件不超过 3MB。')
                 +       renderFormRow('交付方式', true, '<select data-product-shelf-field="deliveryMethod"><option value="API传输"' + (form.deliveryMethod === 'API传输' ? ' selected' : '') + '>API传输</option><option value="文件传输"' + (form.deliveryMethod === '文件传输' ? ' selected' : '') + '>文件传输</option><option value="人工交付"' + (form.deliveryMethod === '人工交付' ? ' selected' : '') + '>人工交付</option></select>')
-                +       renderFormRow('产品主图', true, imageControl, '最多上传 4 张图片，支持 jpg、jpeg、png 格式，推荐尺寸 800 × 800，单张不超过 5MB。')
+                +       renderFormRow('产品图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。')
                 +       renderFormRow('特色专区', false, '<select data-product-shelf-field="specialZoneId">' + renderSpecialZoneOptions(form.specialZoneId) + '</select>')
                 +       renderFormRow('其他说明', false, '<div class="product-shelf-counted"><textarea class="product-shelf-textarea" maxlength="400" data-product-shelf-field="other">' + escapeHtml(form.other) + '</textarea><span class="product-shelf-counter">' + form.other.length + '/400</span></div>')
                 +   '</div>'
                 +   '<input class="product-shelf-hidden-input" type="file" accept=".doc,.docx,.pdf" data-product-shelf-file-input>'
-                +   '<input class="product-shelf-hidden-input" type="file" accept=".jpg,.jpeg,.png" data-product-shelf-image-input>'
                 + '</div>';
         }
 
@@ -973,7 +970,7 @@
         function validateStep() {
             state.formError = '';
             if (state.step === 1) {
-                if (!state.form.deliverySpec || !state.form.image || !state.form.deliveryMethod) {
+                if (!state.form.deliverySpec || (!state.form.image && !state.form.imageIcon) || !state.form.deliveryMethod) {
                     state.formError = 'basic';
                     return false;
                 }
@@ -1111,11 +1108,26 @@
             });
 
             var fileInput = panel.querySelector('[data-product-shelf-file-input]');
-            var imageInput = panel.querySelector('[data-product-shelf-image-input]');
             var uploadFile = panel.querySelector('[data-product-shelf-upload-file]');
-            var uploadImage = panel.querySelector('[data-product-shelf-upload-image]');
             if (uploadFile && fileInput) uploadFile.addEventListener('click', function () { fileInput.click(); });
-            if (uploadImage && imageInput) uploadImage.addEventListener('click', function () { imageInput.click(); });
+            var productImagePicker = panel.querySelector('[data-product-image-icon-picker]');
+            if (productImagePicker && window.ImageIconPicker) {
+                window.ImageIconPicker.mount(productImagePicker, {
+                    label: '产品图片',
+                    modalTitle: '选择产品图标',
+                    maxSizeMB: 5,
+                    value: state.form.image ? { type: 'image', src: state.form.image } : (state.form.imageIcon ? { type: 'icon', name: state.form.imageIcon } : null),
+                    onChange: function (value) {
+                        state.form.image = value && value.type === 'image' ? value.src : '';
+                        state.form.imageIcon = value && value.type === 'icon' ? value.name : '';
+                        state.formError = '';
+                    },
+                    onError: function (message) {
+                        state.formError = message;
+                        renderEditor();
+                    }
+                });
+            }
             if (fileInput) {
                 fileInput.addEventListener('change', function () {
                     if (!this.files || !this.files[0]) return;
@@ -1124,27 +1136,10 @@
                     renderEditor();
                 });
             }
-            if (imageInput) {
-                imageInput.addEventListener('change', function () {
-                    if (!this.files || !this.files[0]) return;
-                    state.form.image = window.URL.createObjectURL(this.files[0]);
-                    state.formError = '';
-                    renderEditor();
-                });
-            }
-
             var removeFile = panel.querySelector('[data-product-shelf-remove-file]');
             if (removeFile) {
                 removeFile.addEventListener('click', function () {
                     state.form.deliverySpec = '';
-                    renderEditor();
-                });
-            }
-
-            var removeImage = panel.querySelector('[data-product-shelf-remove-image]');
-            if (removeImage) {
-                removeImage.addEventListener('click', function () {
-                    state.form.image = '';
                     renderEditor();
                 });
             }

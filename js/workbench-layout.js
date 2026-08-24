@@ -2862,6 +2862,7 @@
                 category: '行业解决方案',
                 serviceType: '行业解决方案',
                 cover: '',
+                coverIcon: '',
                 orgTypes: [],
                 businessTypes: [],
                 delivery: '线下交付',
@@ -2893,6 +2894,7 @@
             data.orgTypes = Array.isArray(data.orgTypes) ? data.orgTypes : String(data.org || '').split(',').filter(Boolean);
             data.businessTypes = Array.isArray(data.businessTypes) ? data.businessTypes : String(data.business || '').split(',').filter(Boolean);
             data.delivery = data.delivery || '线下交付';
+            data.coverIcon = data.coverIcon || '';
             data.description = data.description || '';
             data.intro = data.intro || {};
             data.intro.explanation = data.intro.explanation || '';
@@ -2918,6 +2920,7 @@
                 editorData.id = 'solution-custom-' + (industrySolutionShelfSamples.length + 1);
                 editorData.name = '';
                 editorData.cover = '';
+                editorData.coverIcon = '';
                 editorData.orgTypes = [];
                 editorData.businessTypes = [];
                 editorData.description = '';
@@ -3531,16 +3534,10 @@
         }
 
         function renderSolutionCoverUploader() {
-            var hasCover = !!editorData.cover;
             return ''
                 + '<div class="solution-cover-field">'
-                +   '<label class="solution-cover-upload' + (hasCover ? ' has-image' : '') + '">'
-                +       (hasCover
-                    ? '<img src="' + escapeHtml(editorData.cover) + '" alt="行业解决方案封面"><span class="solution-cover-change">' + icons.upload + '<em>更换图片</em></span>'
-                    : '<span class="solution-cover-empty">' + icons.add + '<strong>上传图片</strong></span>')
-                +       '<input type="file" accept="image/jpeg,image/png" data-solution-cover-upload>'
-                +   '</label>'
-                +   '<p>上传单张图片，支持 jpg/jpeg/png 等格式，单张大小不超过 2M</p>'
+                +   '<div data-solution-image-icon-picker></div>'
+                +   '<p>支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 2MB。</p>'
                 + '</div>';
         }
 
@@ -3583,11 +3580,11 @@
                 +       '<section class="service-form-section solution-basic-section">'
                 +           '<h2>基本信息</h2>'
                 +           '<div class="service-editor-row align-start">'
-                +               renderRequiredLabel('服务封面')
+                +               renderRequiredLabel('方案图片')
                 +               '<div class="service-editor-field">' + renderSolutionCoverUploader() + '</div>'
                 +           '</div>'
                 +           '<div class="service-editor-row">'
-                +               renderRequiredLabel('服务名称')
+                +               renderRequiredLabel('方案名称')
                 +               '<div class="service-editor-field service-field-with-count">'
                 +                   '<input class="service-editor-input solution-count-input" maxlength="64" data-solution-field="name" value="' + escapeHtml(editorData.name || '') + '" placeholder="请输入">'
                 +                   '<span data-solution-count="name">' + nameLength + '/64</span>'
@@ -3602,13 +3599,13 @@
                 +               '<div class="service-editor-field solution-short-field">' + renderSolutionMultiSelect('businessTypes', solutionBusinessOptions) + '</div>'
                 +           '</div>'
                 +           '<div class="service-editor-row">'
-                +               renderRequiredLabel('服务交付方式')
+                +               renderRequiredLabel('方案交付方式')
                 +               '<div class="service-editor-field service-check-group">'
                 +                   '<label class="service-check-inline"><input type="checkbox" data-solution-delivery value="线下交付"' + (editorData.delivery === '线下交付' ? ' checked' : '') + '><span>线下交付</span></label>'
                 +               '</div>'
                 +           '</div>'
                 +           '<div class="service-editor-row align-start">'
-                +               renderRequiredLabel('服务简介')
+                +               renderRequiredLabel('方案简介')
                 +               '<div class="service-editor-field service-field-with-count">'
                 +                   '<textarea class="service-editor-textarea solution-count-input" maxlength="200" data-solution-field="description" placeholder="请输入">' + escapeHtml(editorData.description || '') + '</textarea>'
                 +                   '<span data-solution-count="description">' + descLength + '/200</span>'
@@ -3854,24 +3851,25 @@
                 });
             });
 
-            var coverInput = panel.querySelector('[data-solution-cover-upload]');
-            if (coverInput) coverInput.addEventListener('change', function () {
-                if (!this.files || !this.files[0]) return;
-                var file = this.files[0];
-                if (file.size > 2 * 1024 * 1024) {
-                    noticeText = '图片大小不能超过 2M。';
-                    renderSolutionEditor({ scrollTop: getEditorScrollTop() });
-                    return;
-                }
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    collectSolutionData();
-                    editorData.cover = event.target.result;
-                    noticeText = '';
-                    renderSolutionEditor({ scrollTop: getEditorScrollTop() });
-                };
-                reader.readAsDataURL(file);
-            });
+            var solutionImagePicker = panel.querySelector('[data-solution-image-icon-picker]');
+            if (solutionImagePicker && window.ImageIconPicker) {
+                window.ImageIconPicker.mount(solutionImagePicker, {
+                    label: '方案图片',
+                    modalTitle: '选择方案图标',
+                    maxSizeMB: 2,
+                    value: editorData.cover ? { type: 'image', src: editorData.cover } : (editorData.coverIcon ? { type: 'icon', name: editorData.coverIcon } : null),
+                    onChange: function (value) {
+                        editorData.cover = value && value.type === 'image' ? value.src : '';
+                        editorData.coverIcon = value && value.type === 'icon' ? value.name : '';
+                        noticeText = '';
+                    },
+                    onError: function (message) {
+                        collectSolutionData();
+                        noticeText = message;
+                        renderSolutionEditor({ scrollTop: getEditorScrollTop() });
+                    }
+                });
+            }
 
             panel.querySelectorAll('[data-solution-select-control]').forEach(function (control) {
                 control.addEventListener('click', function (event) {
