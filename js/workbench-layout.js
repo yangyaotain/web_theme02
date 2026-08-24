@@ -2863,6 +2863,7 @@
                 serviceType: '行业解决方案',
                 cover: '',
                 coverIcon: '',
+                coverVisuals: [],
                 orgTypes: [],
                 businessTypes: [],
                 delivery: '线下交付',
@@ -2895,6 +2896,9 @@
             data.businessTypes = Array.isArray(data.businessTypes) ? data.businessTypes : String(data.business || '').split(',').filter(Boolean);
             data.delivery = data.delivery || '线下交付';
             data.coverIcon = data.coverIcon || '';
+            data.coverVisuals = Array.isArray(data.coverVisuals)
+                ? data.coverVisuals.filter(function (item) { return item && ((item.type === 'image' && item.src) || (item.type === 'icon' && item.name)); })
+                : (data.cover ? [{ type: 'image', src: data.cover, name: '' }] : (data.coverIcon ? [{ type: 'icon', name: data.coverIcon }] : []));
             data.description = data.description || '';
             data.intro = data.intro || {};
             data.intro.explanation = data.intro.explanation || '';
@@ -2921,6 +2925,7 @@
                 editorData.name = '';
                 editorData.cover = '';
                 editorData.coverIcon = '';
+                editorData.coverVisuals = [];
                 editorData.orgTypes = [];
                 editorData.businessTypes = [];
                 editorData.description = '';
@@ -3537,7 +3542,7 @@
             return ''
                 + '<div class="solution-cover-field">'
                 +   '<div data-solution-image-icon-picker></div>'
-                +   '<p>支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 2MB。</p>'
+                +   '<p>支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 128 × 128，单张不超过 2MB。</p>'
                 + '</div>';
         }
 
@@ -3857,10 +3862,13 @@
                     label: '方案图片',
                     modalTitle: '选择方案图标',
                     maxSizeMB: 2,
-                    value: editorData.cover ? { type: 'image', src: editorData.cover } : (editorData.coverIcon ? { type: 'icon', name: editorData.coverIcon } : null),
-                    onChange: function (value) {
-                        editorData.cover = value && value.type === 'image' ? value.src : '';
-                        editorData.coverIcon = value && value.type === 'icon' ? value.name : '';
+                    values: editorData.coverVisuals,
+                    onChange: function (values) {
+                        var firstImage = values.find(function (value) { return value.type === 'image'; });
+                        var firstIcon = values.find(function (value) { return value.type === 'icon'; });
+                        editorData.coverVisuals = values;
+                        editorData.cover = firstImage ? firstImage.src : '';
+                        editorData.coverIcon = !firstImage && firstIcon ? firstIcon.name : '';
                         noticeText = '';
                     },
                     onError: function (message) {

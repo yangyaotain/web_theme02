@@ -53,6 +53,11 @@
         return null;
     }
 
+    function normalizeValues(values) {
+        if (!Array.isArray(values)) values = values ? [values] : [];
+        return values.map(normalizeValue).filter(Boolean);
+    }
+
     function getIconLabel(name) {
         var item = ICONS.find(function (candidate) { return candidate.name === name; });
         return item ? item.label : '图片';
@@ -61,7 +66,7 @@
     function Picker(root, options) {
         this.root = root;
         this.options = {};
-        this.value = null;
+        this.values = [];
         this.open = false;
         this.keyword = '';
         this.page = 1;
@@ -83,7 +88,7 @@
             onChange: function () {},
             onError: function () {}
         }, options || {});
-        this.value = normalizeValue(this.options.value);
+        this.values = normalizeValues(this.options.values !== undefined ? this.options.values : this.options.value);
         this.render();
     };
 
@@ -103,12 +108,13 @@
         return { items: items, pageItems: items.slice(start, start + PAGE_SIZE), totalPages: totalPages };
     };
 
-    Picker.prototype.renderPreview = function () {
-        if (!this.value) return '';
-        if (this.value.type === 'image') {
-            return '<div class="image-icon-picker-preview has-image"><img src="' + escapeHtml(this.value.src) + '" alt="' + escapeHtml(this.options.label) + '"><button type="button" aria-label="删除' + escapeHtml(this.options.label) + '" data-iip-remove>' + icon('close') + '</button></div>';
-        }
-        return '<div class="image-icon-picker-preview has-icon" role="img" aria-label="' + escapeHtml(getIconLabel(this.value.name)) + '图标">' + icon(this.value.name) + '<button type="button" aria-label="删除' + escapeHtml(this.options.label) + '" data-iip-remove>' + icon('close') + '</button></div>';
+    Picker.prototype.renderPreviews = function () {
+        return this.values.map(function (value, index) {
+            if (value.type === 'image') {
+                return '<div class="image-icon-picker-preview has-image"><img src="' + escapeHtml(value.src) + '" alt="' + escapeHtml(this.options.label) + '"><button type="button" aria-label="删除' + escapeHtml(this.options.label) + '" data-iip-remove="' + index + '">' + icon('close') + '</button></div>';
+            }
+            return '<div class="image-icon-picker-preview has-icon" role="img" aria-label="' + escapeHtml(getIconLabel(value.name)) + '图标">' + icon(value.name) + '<button type="button" aria-label="删除' + escapeHtml(this.options.label) + '" data-iip-remove="' + index + '">' + icon('close') + '</button></div>';
+        }, this).join('');
     };
 
     Picker.prototype.renderIconOptions = function () {
@@ -153,12 +159,10 @@
     };
 
     Picker.prototype.render = function () {
-        var uploadLabel = this.value && this.value.type === 'image' ? '更换图片' : '上传图片';
-        var iconLabel = this.value && this.value.type === 'icon' ? '更换图标' : '选择图标';
-        this.root.innerHTML = '<div class="image-icon-picker-control">' + this.renderPreview()
-            + '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>' + uploadLabel + '</span></button>'
-            + '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>' + iconLabel + '</span></button>'
-            + '<input type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" hidden data-iip-file></div>'
+        this.root.innerHTML = '<div class="image-icon-picker-control">' + this.renderPreviews()
+            + '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>上传图片</span></button>'
+            + '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>选择图标</span></button>'
+            + '<input type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple hidden data-iip-file></div>'
             + this.renderModal();
     };
 
@@ -168,7 +172,7 @@
     };
 
     Picker.prototype.emitChange = function () {
-        this.options.onChange(normalizeValue(this.value));
+        this.options.onChange(normalizeValues(this.values));
     };
 
     Picker.prototype.close = function () {
@@ -185,16 +189,17 @@
             return;
         }
         if (event.target.closest('[data-iip-open]')) {
-            this.pendingIcon = this.value && this.value.type === 'icon' ? this.value.name : '';
+            this.pendingIcon = '';
             this.keyword = '';
-            var selectedIndex = ICONS.findIndex(function (item) { return item.name === this.pendingIcon; }, this);
-            this.page = selectedIndex === -1 ? 1 : Math.floor(selectedIndex / PAGE_SIZE) + 1;
+            this.page = 1;
             this.open = true;
             this.render();
             return;
         }
-        if (event.target.closest('[data-iip-remove]')) {
-            this.value = null;
+        var removeButton = event.target.closest('[data-iip-remove]');
+        if (removeButton) {
+            var removeIndex = parseInt(removeButton.dataset.iipRemove, 10);
+            if (removeIndex >= 0 && removeIndex < this.values.length) this.values.splice(removeIndex, 1);
             this.emitChange();
             this.render();
             return;
@@ -237,7 +242,7 @@
             return;
         }
         if (event.target.closest('[data-iip-confirm]') && this.pendingIcon) {
-            this.value = { type: 'icon', name: this.pendingIcon };
+            this.values.push({ type: 'icon', name: this.pendingIcon });
             this.emitChange();
             this.close();
         }
@@ -254,30 +259,52 @@
 
     Picker.prototype.handleChange = function (event) {
         if (!event.target.matches('[data-iip-file]')) return;
-        var file = event.target.files && event.target.files[0];
-        if (!file) return;
-        var extensionValid = /\.(jpe?g|png)$/i.test(file.name || '');
-        var mimeValid = !file.type || /^image\/(jpeg|png)$/.test(file.type);
-        if (!extensionValid || !mimeValid) {
-            event.target.value = '';
-            this.options.onError(this.options.label + '仅支持 jpg、jpeg、png 格式。');
+        var input = event.target;
+        var files = Array.prototype.slice.call(input.files || []);
+        if (!files.length) return;
+        var maxBytes = this.options.maxSizeMB * 1024 * 1024;
+        var invalidFormat = false;
+        var invalidSize = false;
+        var acceptedFiles = files.filter(function (file) {
+            var extensionValid = /\.(jpe?g|png)$/i.test(file.name || '');
+            var mimeValid = !file.type || /^image\/(jpeg|png)$/.test(file.type);
+            if (!extensionValid || !mimeValid) {
+                invalidFormat = true;
+                return false;
+            }
+            if (file.size > maxBytes) {
+                invalidSize = true;
+                return false;
+            }
+            return true;
+        });
+
+        input.value = '';
+        var validationMessage = invalidFormat
+            ? '部分' + this.options.label + '未上传：仅支持 jpg、jpeg、png 格式。'
+            : (invalidSize ? '部分' + this.options.label + '未上传：单张不能超过 ' + this.options.maxSizeMB + 'MB。' : '');
+        if (!acceptedFiles.length) {
+            if (validationMessage) this.options.onError(validationMessage);
             return;
         }
-        if (file.size > this.options.maxSizeMB * 1024 * 1024) {
-            event.target.value = '';
-            this.options.onError(this.options.label + '不能超过 ' + this.options.maxSizeMB + 'MB。');
-            return;
-        }
-        var reader = new FileReader();
-        reader.addEventListener('load', function () {
-            this.value = { type: 'image', src: reader.result, name: file.name };
+
+        Promise.all(acceptedFiles.map(function (file) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.addEventListener('load', function () {
+                    resolve({ type: 'image', src: reader.result, name: file.name });
+                });
+                reader.addEventListener('error', reject);
+                reader.readAsDataURL(file);
+            });
+        })).then(function (values) {
+            this.values = this.values.concat(values);
             this.emitChange();
             this.render();
-        }.bind(this));
-        reader.addEventListener('error', function () {
+            if (validationMessage) this.options.onError(validationMessage);
+        }.bind(this)).catch(function () {
             this.options.onError('图片读取失败，请重新选择。');
         }.bind(this));
-        reader.readAsDataURL(file);
     };
 
     function mount(root, options) {

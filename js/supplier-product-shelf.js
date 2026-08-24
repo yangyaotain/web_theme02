@@ -313,8 +313,7 @@
             return {
                 deliverySpec: record.name + 'API交付说明.pdf',
                 deliveryMethod: 'API传输',
-                image: 'images/economic-monitor.jpg',
-                imageIcon: '',
+                visuals: [{ type: 'image', src: 'images/economic-monitor.jpg', name: '' }],
                 specialZoneId: record.specialZoneId || '',
                 other: '接口按日更新，调用方需按交付说明完成身份认证、签名校验和频率控制。',
                 pricingMode: '按次数',
@@ -572,7 +571,7 @@
                 +       alert
                 +       renderFormRow('交付方式说明', true, fileControl, '请上传 1 个交付说明文件，支持 doc、docx、pdf 格式，单个文件不超过 3MB。')
                 +       renderFormRow('交付方式', true, '<select data-product-shelf-field="deliveryMethod"><option value="API传输"' + (form.deliveryMethod === 'API传输' ? ' selected' : '') + '>API传输</option><option value="文件传输"' + (form.deliveryMethod === '文件传输' ? ' selected' : '') + '>文件传输</option><option value="人工交付"' + (form.deliveryMethod === '人工交付' ? ' selected' : '') + '>人工交付</option></select>')
-                +       renderFormRow('产品图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。')
+                +       renderFormRow('产品图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 128 × 128，单张不超过 5MB。')
                 +       renderFormRow('特色专区', false, '<select data-product-shelf-field="specialZoneId">' + renderSpecialZoneOptions(form.specialZoneId) + '</select>')
                 +       renderFormRow('其他说明', false, '<div class="product-shelf-counted"><textarea class="product-shelf-textarea" maxlength="400" data-product-shelf-field="other">' + escapeHtml(form.other) + '</textarea><span class="product-shelf-counter">' + form.other.length + '/400</span></div>')
                 +   '</div>'
@@ -970,7 +969,7 @@
         function validateStep() {
             state.formError = '';
             if (state.step === 1) {
-                if (!state.form.deliverySpec || (!state.form.image && !state.form.imageIcon) || !state.form.deliveryMethod) {
+                if (!state.form.deliverySpec || !state.form.visuals.length || !state.form.deliveryMethod) {
                     state.formError = 'basic';
                     return false;
                 }
@@ -1116,10 +1115,9 @@
                     label: '产品图片',
                     modalTitle: '选择产品图标',
                     maxSizeMB: 5,
-                    value: state.form.image ? { type: 'image', src: state.form.image } : (state.form.imageIcon ? { type: 'icon', name: state.form.imageIcon } : null),
-                    onChange: function (value) {
-                        state.form.image = value && value.type === 'image' ? value.src : '';
-                        state.form.imageIcon = value && value.type === 'icon' ? value.name : '';
+                    values: state.form.visuals,
+                    onChange: function (values) {
+                        state.form.visuals = values;
                         state.formError = '';
                     },
                     onError: function (message) {

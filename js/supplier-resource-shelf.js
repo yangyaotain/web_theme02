@@ -463,8 +463,7 @@
             return {
                 deliverySpec: '',
                 deliveryMethod: 'API传输',
-                mainImage: null,
-                mainIcon: '',
+                visuals: [],
                 specialZoneId: record.specialZoneId || '',
                 deliveryDescription: '通过平台API网关交付，调用方完成身份认证、签名校验和授权确认后，可按约定频率访问资源。',
                 pricingMode: '按次数',
@@ -784,7 +783,7 @@
                 +       (alertMessage ? '<div class="product-shelf-form-alert">' + icon('error') + '<span>' + escapeHtml(alertMessage) + '</span></div>' : '')
                 +       renderFormRow('交付方式说明', true, fileControl, '请上传 1 个交付说明文件，支持 doc、docx、pdf 格式，单个文件不超过 3MB。')
                 +       renderFormRow('交付方式', true, '<select aria-label="交付方式" data-resource-shelf-field="deliveryMethod"><option value="API传输" selected>API传输</option></select>', '本次原型按截图实现 API 传输分支。')
-                +       renderFormRow('资源图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。')
+                +       renderFormRow('资源图片', true, imageControl, '支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 128 × 128，单张不超过 5MB。')
                 +       renderFormRow('特色专区', false, '<select aria-label="特色专区" data-resource-shelf-field="specialZoneId">' + renderSpecialZoneOptions(form.specialZoneId) + '</select>')
                 +       renderFormRow('交付说明', false, '<div class="product-shelf-counted"><textarea class="product-shelf-textarea" maxlength="500" data-resource-shelf-field="deliveryDescription" data-resource-counter="deliveryDescription">' + escapeHtml(form.deliveryDescription) + '</textarea><span class="product-shelf-counter">' + form.deliveryDescription.length + '/500</span></div>')
                 +   '</div>'
@@ -1343,7 +1342,7 @@
         function validateStep() {
             state.formError = '';
             if (state.step === 1) {
-                if (!state.form.deliverySpec || !state.form.deliveryMethod || (!state.form.mainImage && !state.form.mainIcon)) {
+                if (!state.form.deliverySpec || !state.form.deliveryMethod || !state.form.visuals.length) {
                     state.formError = 'basic';
                     return false;
                 }
@@ -1520,10 +1519,9 @@
                     label: '资源图片',
                     modalTitle: '选择资源图标',
                     maxSizeMB: 5,
-                    value: state.form.mainImage ? { type: 'image', src: state.form.mainImage.src, name: state.form.mainImage.name } : (state.form.mainIcon ? { type: 'icon', name: state.form.mainIcon } : null),
-                    onChange: function (value) {
-                        state.form.mainImage = value && value.type === 'image' ? { src: value.src, name: value.name || '' } : null;
-                        state.form.mainIcon = value && value.type === 'icon' ? value.name : '';
+                    values: state.form.visuals,
+                    onChange: function (values) {
+                        state.form.visuals = values;
                         state.formError = '';
                     },
                     onError: function (message) {

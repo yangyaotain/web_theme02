@@ -784,6 +784,7 @@
 .dmd-info-item.full { grid-column: 1 / -1; }
 .dmd-info-label { color: #939d99; }
 .dmd-info-value { min-width: 0; color: #5e6b66; overflow-wrap: anywhere; }
+.dmd-detail-image-list { display: inline-flex; flex-wrap: wrap; gap: 10px; vertical-align: top; }
 .dmd-detail-image { width: 86px; height: 86px; border-radius: 5px; object-fit: cover; }
 .dmd-log-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .dmd-log-table th,

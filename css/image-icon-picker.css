@@ -38,10 +38,14 @@
     color: #208b5a;
 }
 
-.image-icon-picker-preview.has-icon > .material-symbols-outlined,
-.image-icon-picker-display.is-icon > .material-symbols-outlined {
+.image-icon-picker-preview.has-icon > .material-symbols-outlined {
     font-size: 32px;
     font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 32;
+}
+
+.image-icon-picker-display.is-icon > .material-symbols-outlined {
+    font-size: 64px;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 64;
 }
 
 .image-icon-picker-preview > button {
@@ -339,8 +343,8 @@
 .image-icon-picker-footer-button:disabled { border-color: #dce4e0; background: #dce4e0; color: #9aa59f; cursor: not-allowed; }
 
 .image-icon-picker-display {
-    width: 64px;
-    height: 64px;
+    width: 128px;
+    height: 128px;
     display: inline-flex;
     align-items: center;
     justify-content: center;

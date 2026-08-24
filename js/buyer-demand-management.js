@@ -91,6 +91,9 @@
             description: config.description,
             image: config.image,
             imageIcon: config.imageIcon || '',
+            images: Array.isArray(config.images)
+                ? config.images
+                : (config.image ? [{ type: 'image', src: config.image, name: '' }] : (config.imageIcon ? [{ type: 'icon', name: config.imageIcon }] : [])),
             supplement: config.supplement || '--',
             dataForm: config.dataForm || '结构化',
             personalInfo: config.personalInfo || '否',
@@ -467,7 +470,7 @@
     }
 
     function renderImages() {
-        return '<div data-demand-image-icon-picker></div><div class="dmd-helper">支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 64 × 64，单张不超过 5MB。</div>' + renderError('images');
+        return '<div data-demand-image-icon-picker></div><div class="dmd-helper">支持上传 jpg、jpeg、png 图片，或从图标库选择；建议尺寸 128 × 128，单张不超过 5MB。</div>' + renderError('images');
     }
 
     function renderCalendarMonth(month, kind) {
@@ -601,8 +604,14 @@
 
     function renderDemandInfo(record) {
         var keywords = record.keywords.length ? record.keywords.join('、') : '--';
-        var imageValue = record.image ? { type: 'image', src: record.image } : (record.imageIcon ? { type: 'icon', name: record.imageIcon } : null);
-        var image = imageValue && window.ImageIconPicker ? window.ImageIconPicker.renderDisplay(imageValue, { className: 'dmd-detail-image', alt: record.title + '需求图片' }) : '--';
+        var imageValues = record.images && record.images.length
+            ? record.images
+            : (record.image ? [{ type: 'image', src: record.image }] : (record.imageIcon ? [{ type: 'icon', name: record.imageIcon }] : []));
+        var image = imageValues.length && window.ImageIconPicker
+            ? '<span class="dmd-detail-image-list">' + imageValues.map(function (value, index) {
+                return window.ImageIconPicker.renderDisplay(value, { className: 'dmd-detail-image', alt: record.title + '需求图片' + (index + 1) });
+            }).join('') + '</span>'
+            : '--';
         var logs = record.logs.map(function (log) {
             return '<tr><td>' + escapeHtml(log.role) + '</td><td>' + escapeHtml(log.action) + '</td><td>' + escapeHtml(log.result) + '</td><td>' + escapeHtml(log.content) + '</td><td>' + escapeHtml(log.time) + '</td></tr>';
         }).join('');
@@ -697,9 +706,9 @@
                     label: '需求图片',
                     modalTitle: '选择需求图标',
                     maxSizeMB: 5,
-                    value: draft.images[0] || null,
-                    onChange: function (value) {
-                        draft.images = value ? [value] : [];
+                    values: draft.images,
+                    onChange: function (values) {
+                        draft.images = values;
                         clearFieldError('images');
                     },
                     onError: function (message) { showToast(message, 'error'); }
@@ -762,6 +771,7 @@
             budget: draft.budget,
             keywords: draft.keywords.slice(),
             description: draft.description.trim(),
+            images: draft.images.slice(),
             image: draft.images[0] && draft.images[0].type === 'image' ? draft.images[0].src : '',
             imageIcon: draft.images[0] && draft.images[0].type === 'icon' ? draft.images[0].name : '',
             supplement: draft.supplement || '--',
