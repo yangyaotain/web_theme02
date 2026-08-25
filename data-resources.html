@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
@@ -148,6 +149,8 @@
             box-shadow: var(--shadow-sm);
         }
 
+        .filter-card[hidden] { display: none !important; }
+
         .filter-section { margin-bottom: 24px; }
         .filter-section:last-child { margin-bottom: 0; }
 
@@ -162,9 +165,13 @@
         }
 
         .filter-clear {
+            padding: 0;
             font-size: 11px;
             font-weight: 500;
+            font-family: inherit;
             color: var(--text-tertiary);
+            background: transparent;
+            border: 0;
             cursor: pointer;
         }
 
@@ -238,6 +245,105 @@
             height: 1px;
             background: var(--border-subtle);
             margin: 20px 0;
+        }
+
+        /* ==================== Public Data Domain Tree ==================== */
+        .public-domain-card {
+            width: 100%;
+        }
+
+        .public-domain-card[hidden] { display: none !important; }
+
+        .domain-tree-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .domain-tree-group[hidden] { display: none; }
+
+        .domain-tree-trigger {
+            width: 100%;
+            min-height: 38px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--text-secondary);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: left;
+            background: transparent;
+            border: 0;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .domain-tree-trigger:hover {
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+        }
+
+        .domain-tree-chevron {
+            flex: 0 0 auto;
+            color: var(--text-tertiary);
+            font-size: 16px;
+            transition: transform var(--transition-fast);
+        }
+
+        .domain-tree-group.is-open .domain-tree-chevron { transform: rotate(180deg); }
+
+        .domain-tree-children {
+            display: none;
+            margin: 0;
+            padding: 2px 0 6px;
+            list-style: none;
+        }
+
+        .domain-tree-group.is-open .domain-tree-children { display: block; }
+        .domain-tree-child[hidden] { display: none; }
+
+        .domain-tree-child button {
+            width: 100%;
+            min-height: 34px;
+            padding: 7px 12px 7px 28px;
+            color: var(--text-secondary);
+            font: inherit;
+            font-size: 12px;
+            text-align: left;
+            background: transparent;
+            border: 0;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .domain-tree-child button:hover {
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+        }
+
+        .domain-tree-child button.active {
+            color: var(--forest-green-700);
+            font-weight: 600;
+            background: var(--forest-green-100);
+        }
+
+        .data-grid-empty {
+            grid-column: 1 / -1;
+            padding: 72px 24px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            text-align: center;
+            background: var(--surface-elevated);
+            border: 1px dashed var(--border-default);
+            border-radius: var(--radius-xl);
         }
 
         /* ==================== Content Area ==================== */
@@ -373,6 +479,22 @@
             display: none;
         }
 
+        .data-card-image.is-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            border: 0;
+            background: transparent;
+            color: var(--forest-green);
+        }
+
+        .data-card-image.is-icon .material-symbols-outlined {
+            font-size: 64px;
+            line-height: 1;
+            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64;
+        }
+
         .data-card-image-content {
             position: absolute;
             inset: 0;
@@ -498,6 +620,78 @@
             color: var(--text-tertiary);
             white-space: nowrap;
             text-overflow: ellipsis;
+        }
+
+        /* ==================== Public Data Cards ==================== */
+        .public-data-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 300px;
+            padding: 0;
+        }
+
+        .public-data-card-title {
+            margin: 0;
+            padding: 20px 20px 16px;
+            overflow: hidden;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .public-data-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px 20px 12px;
+        }
+
+        .public-data-card-row {
+            display: grid;
+            grid-template-columns: 82px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .public-data-card-label {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .public-data-card-value {
+            min-width: 0;
+            overflow: hidden;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .public-data-card-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: auto;
+            padding: 0 20px 18px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .public-data-card-stats strong {
+            margin-left: 4px;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         /* ==================== Responsive ==================== */
@@ -701,13 +895,166 @@
                     </div>
                 </div>
             </div>
+
+            <section class="filter-card public-domain-card" data-public-domain-tree hidden aria-labelledby="domainTreeTitle">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <span id="domainTreeTitle">领域分类</span>
+                        <button class="filter-clear" type="button" data-domain-tree-clear>清除</button>
+                    </div>
+                    <ul class="domain-tree-list">
+                    <li class="domain-tree-group" data-domain-node data-domain-name="金融服务">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-finance"><span>金融服务</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-finance">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="银行服务">银行服务</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="证券服务">证券服务</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="保险服务">保险服务</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="城市治理">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-city"><span>城市治理</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-city">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="公共交通">公共交通</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="公共文化">公共文化</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="生态环境">生态环境</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="公共停车">公共停车</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="政务服务">政务服务</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="宏观经济">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-economy"><span>宏观经济</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-economy">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="人口统计">人口统计</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="经济运行">经济运行</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="社会保障">社会保障</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="智慧教育">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-education"><span>智慧教育</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-education">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="教育机构">教育机构</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="教育资源">教育资源</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="招生考试">招生考试</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="医疗健康">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-health"><span>医疗健康</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-health">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="医疗机构">医疗机构</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="公共卫生">公共卫生</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="健康服务">健康服务</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="工业制造">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-industry"><span>工业制造</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-industry">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="制造业运行">制造业运行</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="工业园区">工业园区</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="产业链">产业链</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="商贸流通">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-commerce"><span>商贸流通</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-commerce">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="商圈消费">商圈消费</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="市场监管">市场监管</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="物流配送">物流配送</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="现代农业">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-agriculture"><span>现代农业</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-agriculture">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="农业生产">农业生产</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="农产品流通">农产品流通</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="农业监测">农业监测</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="低空经济">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-low-altitude"><span>低空经济</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-low-altitude">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="低空航路">低空航路</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="飞行服务">飞行服务</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="低空气象">低空气象</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="应急管理">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-emergency"><span>应急管理</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-emergency">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="风险监测">风险监测</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="应急资源">应急资源</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="预警事件">预警事件</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="科技创新">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-technology"><span>科技创新</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-technology">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="科研机构">科研机构</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="创新成果">创新成果</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="科技企业">科技企业</button></li>
+                        </ul>
+                    </li>
+                    <li class="domain-tree-group" data-domain-node data-domain-name="社会信用">
+                        <button class="domain-tree-trigger" type="button" aria-expanded="false" aria-controls="domain-credit"><span>社会信用</span><span class="domain-tree-chevron material-symbols-outlined" aria-hidden="true">expand_more</span></button>
+                        <ul class="domain-tree-children" id="domain-credit">
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="企业信用">企业信用</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="个人信用">个人信用</button></li>
+                            <li class="domain-tree-child"><button type="button" data-domain-leaf="公共信用">公共信用</button></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-section">
+                    <div class="filter-title">资源格式</div>
+                    <div class="filter-options" data-public-format-filters>
+                        <div class="filter-option active" data-resource-format="全部">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">全部</span>
+                        </div>
+                        <div class="filter-option" data-resource-format="文件">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">文件</span>
+                        </div>
+                        <div class="filter-option" data-resource-format="库表">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">库表</span>
+                        </div>
+                        <div class="filter-option" data-resource-format="接口">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">接口</span>
+                        </div>
+                        <div class="filter-option" data-resource-format="流式数据">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">流式数据</span>
+                        </div>
+                        <div class="filter-option" data-resource-format="其他">
+                            <div class="filter-checkbox">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <span class="filter-label">其他</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </aside>
 
         <!-- Content Area -->
         <div class="content-area">
             <div class="content-tabs">
                 <button class="tab active">全部</button>
-                <button class="tab is-hidden">公共数据</button>
+                <button class="tab">公共数据</button>
                 <button class="tab">行业数据</button>
                 <button class="tab">企业数据</button>
             </div>
@@ -924,23 +1271,23 @@
             '公共数据': {
                 count: 18,
                 cards: [
-                    { title: '龙岗区常住人口季度统计数据', company: '龙岗区政务数据服务中心', desc: '汇集各街道常住人口、年龄结构和人口流动情况，为公共服务资源配置提供数据支撑', date: '2026-08-18 09:20:16', industry: '公共管理', acquisition: '原始取得', delivery: '文件传输', img: 'images/stock-data.jpg' },
-                    { title: '龙岗区公共交通客流监测数据', company: '龙岗区交通运输数据中心', desc: '提供公交线路、重点站点和时段客流统计，支持城市交通运行分析与运力调度', date: '2026-08-17 15:46:32', industry: '交通运输', acquisition: '原始取得', delivery: 'API传输', img: 'images/traffic-flow.jpg' },
-                    { title: '龙岗区公共文化场馆服务数据', company: '龙岗区文化广电旅游体育局', desc: '涵盖文化馆、图书馆和公共体育场馆的开放时间、服务项目及活动统计信息', date: '2026-08-16 13:08:45', industry: '文化旅游', acquisition: '原始取得', delivery: '文件传输', img: 'images/weather-service.jpg' },
-                    { title: '龙岗区医疗机构基础信息数据', company: '龙岗区卫生健康数据中心', desc: '整合医疗机构、科室、床位及服务能力信息，支持医疗资源查询与区域配置分析', date: '2026-08-15 10:32:08', industry: '医疗健康', acquisition: '交易取得', delivery: 'API传输', img: 'images/water-analysis.jpg' },
-                    { title: '龙岗区空气质量小时监测数据', company: '深圳市生态环境局龙岗管理局', desc: '提供重点监测站空气质量指数及主要污染物小时数据，支持环境态势分析', date: '2026-08-14 17:18:26', industry: '生态环境', acquisition: '原始取得', delivery: 'API传输', img: 'images/realtime-data.jpg' },
-                    { title: '龙岗区公共停车设施信息数据', company: '龙岗区城市管理数据中心', desc: '汇集公共停车场位置、泊位规模和开放时段信息，为停车服务应用提供基础数据', date: '2026-08-13 11:05:39', industry: '公共服务', acquisition: '原始取得', delivery: '文件传输', img: 'images/data-screen.jpg' },
-                    { title: '龙岗区教育机构分布数据', company: '龙岗区教育数据服务中心', desc: '包含学校、幼儿园和职业教育机构的空间分布及办学基础信息', date: '2026-08-12 16:40:12', industry: '教育服务', acquisition: '原始取得', delivery: '文件传输', img: 'images/iot-platform.jpg' },
-                    { title: '龙岗区政务服务事项办理统计', company: '龙岗区政务服务和数据管理局', desc: '提供政务事项受理量、办结量和办理时长统计，支持政务服务效能分析', date: '2026-08-11 14:25:50', industry: '公共管理', acquisition: '交易取得', delivery: 'API传输', img: 'images/data-screen.jpg' },
-                    { title: '龙岗区社会保障服务统计数据', company: '龙岗区人力资源服务中心', desc: '汇集社会保险参保、就业服务和人才服务统计指标，为民生服务分析提供依据', date: '2026-08-10 09:56:18', industry: '社会保障', acquisition: '交易取得', delivery: '文件传输', img: 'images/stock-data.jpg' }
+                    { title: '龙岗区常住人口季度统计数据', company: '龙岗区政务数据服务中心', desc: '汇集各街道常住人口、年龄结构和人口流动情况，为公共服务资源配置提供数据支撑', date: '2026-08-18 09:20:16', industry: '公共管理', domain: '宏观经济', catalog: '人口统计', format: '文件', views: 185, applications: 3, acquisition: '原始取得', delivery: '文件传输', img: 'images/stock-data.jpg' },
+                    { title: '龙岗区公共交通客流监测数据', company: '龙岗区交通运输数据中心', desc: '提供公交线路、重点站点和时段客流统计，支持城市交通运行分析与运力调度', date: '2026-08-17 15:46:32', industry: '交通运输', domain: '城市治理', catalog: '公共交通', format: '接口', views: 276, applications: 8, acquisition: '原始取得', delivery: 'API传输', img: 'images/traffic-flow.jpg' },
+                    { title: '龙岗区公共文化场馆服务数据', company: '龙岗区文化广电旅游体育局', desc: '涵盖文化馆、图书馆和公共体育场馆的开放时间、服务项目及活动统计信息', date: '2026-08-16 13:08:45', industry: '文化旅游', domain: '城市治理', catalog: '公共文化', format: '文件', views: 214, applications: 4, acquisition: '原始取得', delivery: '文件传输', img: 'images/weather-service.jpg' },
+                    { title: '龙岗区医疗机构基础信息数据', company: '龙岗区卫生健康数据中心', desc: '整合医疗机构、科室、床位及服务能力信息，支持医疗资源查询与区域配置分析', date: '2026-08-15 10:32:08', industry: '医疗健康', domain: '医疗健康', catalog: '医疗机构', format: '库表', views: 189, applications: 3, acquisition: '交易取得', delivery: 'API传输', img: 'images/water-analysis.jpg' },
+                    { title: '龙岗区空气质量小时监测数据', company: '深圳市生态环境局龙岗管理局', desc: '提供重点监测站空气质量指数及主要污染物小时数据，支持环境态势分析', date: '2026-08-14 17:18:26', industry: '生态环境', domain: '城市治理', catalog: '生态环境', format: '流式数据', views: 356, applications: 11, acquisition: '原始取得', delivery: 'API传输', img: 'images/realtime-data.jpg' },
+                    { title: '龙岗区公共停车设施信息数据', company: '龙岗区城市管理数据中心', desc: '汇集公共停车场位置、泊位规模和开放时段信息，为停车服务应用提供基础数据', date: '2026-08-13 11:05:39', industry: '公共服务', domain: '城市治理', catalog: '公共停车', format: '接口', views: 168, applications: 2, acquisition: '原始取得', delivery: 'API传输', img: 'images/data-screen.jpg' },
+                    { title: '龙岗区教育机构分布数据', company: '龙岗区教育数据服务中心', desc: '包含学校、幼儿园和职业教育机构的空间分布及办学基础信息', date: '2026-08-12 16:40:12', industry: '教育服务', domain: '智慧教育', catalog: '教育机构', format: '文件', views: 145, applications: 3, acquisition: '原始取得', delivery: '文件传输', img: 'images/iot-platform.jpg' },
+                    { title: '龙岗区政务服务事项办理统计', company: '龙岗区政务服务和数据管理局', desc: '提供政务事项受理量、办结量和办理时长统计，支持政务服务效能分析', date: '2026-08-11 14:25:50', industry: '公共管理', domain: '城市治理', catalog: '政务服务', format: '接口', views: 312, applications: 9, acquisition: '交易取得', delivery: 'API传输', img: 'images/data-screen.jpg' },
+                    { title: '龙岗区社会保障服务统计数据', company: '龙岗区人力资源服务中心', desc: '汇集社会保险参保、就业服务和人才服务统计指标，为民生服务分析提供依据', date: '2026-08-10 09:56:18', industry: '社会保障', domain: '宏观经济', catalog: '社会保障', format: '其他', views: 127, applications: 1, acquisition: '交易取得', delivery: '文件传输', img: 'images/stock-data.jpg' }
                 ]
             },
             '行业数据': {
                 count: 18,
                 cards: [
-                    { title: '龙岗区先进制造企业产能运行数据集', company: '深圳市龙岗区产业数据运营有限公司', desc: '汇聚重点制造企业产能、订单和设备运行指标，为产业链监测和园区服务提供数据支撑', date: '2026-08-21 11:07:59', industry: '制造业', acquisition: '原始取得', delivery: '文件传输', sampleType: 'dataset', img: 'images/stock-data.jpg' },
-                    { title: '龙岗区工业园区能耗监测数据', company: '深圳市龙岗能源数据服务有限公司', desc: '提供园区用电、用水和综合能耗小时数据，支持企业节能分析和园区能效管理', date: '2026-08-21 09:33:35', industry: '能源服务', acquisition: '原始取得', delivery: 'API传输', sampleType: 'api', img: 'images/realtime-data.jpg' },
-                    { title: '盐田港—龙岗物流通道运行数据', company: '深圳市龙岗交通数据运营有限公司', desc: '整合港区集疏运车辆、主要通道流量和平均通行时长，为物流调度提供数据参考', date: '2026-08-20 18:35:47', industry: '交通运输', acquisition: '交易取得', delivery: '文件传输', sampleType: 'other', img: 'images/traffic-flow.jpg' },
+                    { title: '龙岗区先进制造企业产能运行数据集', company: '深圳市龙岗区产业数据运营有限公司', desc: '汇聚重点制造企业产能、订单和设备运行指标，为产业链监测和园区服务提供数据支撑', date: '2026-08-21 11:07:59', industry: '制造业', acquisition: '原始取得', delivery: '文件传输', sampleType: 'dataset', icon: 'precision_manufacturing', img: 'images/stock-data.jpg' },
+                    { title: '龙岗区工业园区能耗监测数据', company: '深圳市龙岗能源数据服务有限公司', desc: '提供园区用电、用水和综合能耗小时数据，支持企业节能分析和园区能效管理', date: '2026-08-21 09:33:35', industry: '能源服务', acquisition: '原始取得', delivery: 'API传输', sampleType: 'api', icon: 'energy_savings_leaf', img: 'images/realtime-data.jpg' },
+                    { title: '盐田港—龙岗物流通道运行数据', company: '深圳市龙岗交通数据运营有限公司', desc: '整合港区集疏运车辆、主要通道流量和平均通行时长，为物流调度提供数据参考', date: '2026-08-20 18:35:47', industry: '交通运输', acquisition: '交易取得', delivery: '文件传输', sampleType: 'other', icon: 'local_shipping', img: 'images/traffic-flow.jpg' },
                     { title: '龙岗区低空飞行基础环境数据', company: '深圳市低空经济产业运营中心', desc: '汇集低空航路、起降设施和气象环境信息，服务无人机配送与低空应用规划', date: '2026-08-20 15:22:18', industry: '交通运输', acquisition: '原始取得', delivery: 'API传输', img: 'images/data-screen.jpg' },
                     { title: '龙岗区电子信息产业链企业名录', company: '龙岗区产业发展服务中心', desc: '整理电子信息产业链重点企业、主营方向和上下游关系，支持产业招商与供需对接', date: '2026-08-20 10:16:42', industry: '信息技术', acquisition: '交易取得', delivery: '文件传输', img: 'images/iot-platform.jpg' },
                     { title: '龙岗区文化旅游客流热度数据', company: '深圳市龙岗文旅数据服务有限公司', desc: '提供重点景区、商圈和文化场馆客流热度及停留时长统计，为文旅运营提供参考', date: '2026-08-19 17:45:06', industry: '文化旅游', acquisition: '原始取得', delivery: 'API传输', img: 'images/tourism-weather.jpg' },
@@ -974,35 +1321,117 @@
         var tabs = document.querySelectorAll('.tab');
         var resultsCount = document.querySelector('.results-count strong');
         var lastPageButton = document.querySelector('.pagination-number:last-of-type');
+        var defaultFilterCard = document.querySelector('.filter-card');
+        var publicDomainCard = document.querySelector('[data-public-domain-tree]');
+        var domainTreeClear = document.querySelector('[data-domain-tree-clear]');
+        var domainNodes = document.querySelectorAll('[data-domain-node]');
+        var resourceFormatOptions = document.querySelectorAll('[data-resource-format]');
+        var pageSearchInput = document.querySelector('.search-input');
+        var pageSearchButton = document.querySelector('.search-btn');
+        var selectedDomainCatalog = '';
+        var selectedResourceFormats = [];
+        var activeTabName = '全部';
+
+        function updateSidebar(tabName) {
+            var isPublicData = tabName === '公共数据';
+            defaultFilterCard.hidden = isPublicData;
+            publicDomainCard.hidden = !isPublicData;
+        }
 
         function renderCards(tabName) {
             var data = tabDataSets[tabName];
             if (!data) return;
-            dataGrid.innerHTML = '';
-            resultsCount.textContent = data.count;
-            if (lastPageButton) lastPageButton.textContent = Math.ceil(data.count / 10);
+            var cards = data.cards;
+            var displayCount = data.count;
+            var keyword = pageSearchInput.value.trim().toLowerCase();
 
-            data.cards.forEach(function(c) {
+            if (tabName === '公共数据' && selectedDomainCatalog) {
+                cards = data.cards.filter(function(card) {
+                    return card.catalog === selectedDomainCatalog;
+                });
+                displayCount = cards.length;
+            }
+
+            if (tabName === '公共数据' && selectedResourceFormats.length) {
+                cards = cards.filter(function(card) {
+                    return selectedResourceFormats.indexOf(card.format) !== -1;
+                });
+                displayCount = cards.length;
+            }
+
+            if (keyword) {
+                cards = cards.filter(function(card) {
+                    return [card.title, card.company, card.desc, card.industry, card.domain, card.catalog, card.format]
+                        .join(' ')
+                        .toLowerCase()
+                        .indexOf(keyword) !== -1;
+                });
+                displayCount = cards.length;
+            }
+
+            dataGrid.innerHTML = '';
+            resultsCount.textContent = displayCount;
+            if (lastPageButton) lastPageButton.textContent = Math.max(1, Math.ceil(displayCount / 10));
+
+            if (!cards.length) {
+                dataGrid.innerHTML = '<div class="data-grid-empty">' +
+                    (tabName === '公共数据' && (selectedDomainCatalog || selectedResourceFormats.length) ? '当前查询条件下暂无公共数据资源' : '未找到匹配的数据资源') +
+                    '</div>';
+                return;
+            }
+
+            cards.forEach(function(c) {
                 var article = document.createElement('article');
                 article.className = 'data-card';
                 if (c.sampleType) article.setAttribute('data-sample-type', c.sampleType);
-                article.innerHTML =
-                    '<div class="data-card-image" style="background:url(\'' + c.img + '\') center/cover;">' +
-                        '<div class="data-card-badges">' +
-                            '<span class="data-card-badge">' + c.acquisition + '</span>' +
-                            '<span class="data-card-badge delivery">' + c.delivery + '</span>' +
+
+                if (tabName === '公共数据') {
+                    article.classList.add('public-data-card');
+                    article.innerHTML =
+                        '<h3 class="public-data-card-title" title="' + c.title + '">' + c.title + '</h3>' +
+                        '<div class="public-data-card-details">' +
+                            '<div class="public-data-card-row">' +
+                                '<span class="public-data-card-label">资源摘要：</span>' +
+                                '<span class="public-data-card-value" title="' + c.desc + '">' + c.desc + '</span>' +
+                            '</div>' +
+                            '<div class="public-data-card-row">' +
+                                '<span class="public-data-card-label">来源平台：</span>' +
+                                '<span class="public-data-card-value">本域数据资源</span>' +
+                            '</div>' +
+                            '<div class="public-data-card-row">' +
+                                '<span class="public-data-card-label">资源持有方：</span>' +
+                                '<span class="public-data-card-value" title="' + c.company + '">' + c.company + '</span>' +
+                            '</div>' +
+                            '<div class="public-data-card-row">' +
+                                '<span class="public-data-card-label">资源格式：</span>' +
+                                '<span class="public-data-card-value">' + c.format + '资源</span>' +
+                            '</div>' +
                         '</div>' +
-                    '</div>' +
-                    '<div class="data-card-content">' +
-                        '<h3 class="data-card-title">' + c.title + '</h3>' +
-                        '<p class="data-card-company">' + c.company + '</p>' +
-                        '<p class="data-card-desc">' + c.desc + '</p>' +
-                        '<p class="data-card-price">面议</p>' +
-                        '<div class="data-card-footer">' +
-                            '<span class="data-card-type">' + c.industry + '</span>' +
-                            '<span class="data-card-meta">' + c.date + '</span>' +
-                        '</div>' +
-                    '</div>';
+                        '<div class="public-data-card-stats">' +
+                            '<span>浏览量<strong>' + c.views + '</strong></span>' +
+                            '<span>申请量<strong>' + c.applications + '</strong></span>' +
+                        '</div>';
+                } else {
+                    var badges = '<div class="data-card-badges">' +
+                        '<span class="data-card-badge">' + c.acquisition + '</span>' +
+                        '<span class="data-card-badge delivery">' + c.delivery + '</span>' +
+                        '</div>';
+                    var visual = c.icon
+                        ? '<div class="data-card-image is-icon" aria-hidden="true"><span class="material-symbols-outlined">' + c.icon + '</span>' + badges + '</div>'
+                        : '<div class="data-card-image" style="background:url(\'' + c.img + '\') center/cover;">' + badges + '</div>';
+                    article.innerHTML =
+                        visual +
+                        '<div class="data-card-content">' +
+                            '<h3 class="data-card-title">' + c.title + '</h3>' +
+                            '<p class="data-card-company">' + c.company + '</p>' +
+                            '<p class="data-card-desc">' + c.desc + '</p>' +
+                            '<p class="data-card-price">面议</p>' +
+                            '<div class="data-card-footer">' +
+                                '<span class="data-card-type">' + c.industry + '</span>' +
+                                '<span class="data-card-meta">' + c.date + '</span>' +
+                            '</div>' +
+                        '</div>';
+                }
 
                 if (tabName === '公共数据') {
                     article.addEventListener('click', function() {
@@ -1023,13 +1452,86 @@
             tab.addEventListener('click', function() {
                 tabs.forEach(function(t) { t.classList.remove('active'); });
                 this.classList.add('active');
-                renderCards(this.textContent.trim());
+                activeTabName = this.textContent.trim();
+                updateSidebar(activeTabName);
+                renderCards(activeTabName);
             });
         });
 
+        domainNodes.forEach(function(node) {
+            var trigger = node.querySelector('.domain-tree-trigger');
+            trigger.addEventListener('click', function() {
+                var willOpen = !node.classList.contains('is-open');
+                node.classList.toggle('is-open', willOpen);
+                trigger.setAttribute('aria-expanded', String(willOpen));
+            });
+        });
+
+        document.querySelectorAll('[data-domain-leaf]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var wasActive = this.classList.contains('active');
+                document.querySelectorAll('[data-domain-leaf]').forEach(function(item) {
+                    item.classList.remove('active');
+                });
+                selectedDomainCatalog = wasActive ? '' : this.getAttribute('data-domain-leaf');
+                if (!wasActive) this.classList.add('active');
+                renderCards('公共数据');
+            });
+        });
+
+        resourceFormatOptions.forEach(function(option) {
+            option.addEventListener('click', function() {
+                var format = this.getAttribute('data-resource-format');
+                var allOption = document.querySelector('[data-resource-format="全部"]');
+
+                if (format === '全部') {
+                    selectedResourceFormats = [];
+                    resourceFormatOptions.forEach(function(item) {
+                        item.classList.toggle('active', item === allOption);
+                    });
+                } else {
+                    this.classList.toggle('active');
+                    allOption.classList.remove('active');
+                    selectedResourceFormats = Array.prototype.filter.call(resourceFormatOptions, function(item) {
+                        return item !== allOption && item.classList.contains('active');
+                    }).map(function(item) {
+                        return item.getAttribute('data-resource-format');
+                    });
+
+                    if (!selectedResourceFormats.length) allOption.classList.add('active');
+                }
+
+                renderCards('公共数据');
+            });
+        });
+
+        domainTreeClear.addEventListener('click', function() {
+            selectedDomainCatalog = '';
+
+            document.querySelectorAll('[data-domain-leaf]').forEach(function(button) {
+                button.classList.remove('active');
+            });
+
+            domainNodes.forEach(function(node) {
+                node.classList.remove('is-open');
+                node.querySelector('.domain-tree-trigger').setAttribute('aria-expanded', 'false');
+            });
+
+            renderCards('公共数据');
+        });
+
+        pageSearchButton.addEventListener('click', function() {
+            renderCards(activeTabName);
+        });
+
+        pageSearchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') renderCards(activeTabName);
+        });
+
+        updateSidebar(activeTabName);
         renderCards('全部');
 
-        document.querySelectorAll('.filter-option').forEach(function(option) {
+        document.querySelectorAll('.filter-option:not([data-resource-format])').forEach(function(option) {
             option.addEventListener('click', function() {
                 this.classList.toggle('active');
             });

@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
@@ -171,6 +172,15 @@
             position: relative; overflow: hidden;
             background-color: var(--gray-100); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
+        }
+        .data-card-image.is-icon {
+            display: flex; align-items: center; justify-content: center;
+            overflow: visible; border: 0; background: transparent;
+            color: var(--forest-green);
+        }
+        .data-card-image.is-icon .material-symbols-outlined {
+            font-size: 64px; line-height: 1;
+            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64;
         }
         .data-card-badges { display: none; }
         .data-card-badge {
@@ -429,7 +439,8 @@
 
             <div class="data-grid">
                 <article class="data-card" data-sample-type="dataset">
-                    <div class="data-card-image" style="background: url('images/policy-recommend.jpg') center/cover;">
+                    <div class="data-card-image is-icon" aria-hidden="true">
+                        <span class="material-symbols-outlined">business</span>
                         <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
                     </div>
                     <div class="data-card-content">
@@ -441,7 +452,8 @@
                 </article>
 
                 <article class="data-card" data-sample-type="dataset">
-                    <div class="data-card-image" style="background: url('images/stock-data.jpg') center/cover;">
+                    <div class="data-card-image is-icon" aria-hidden="true">
+                        <span class="material-symbols-outlined">monitoring</span>
                         <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
                     </div>
                     <div class="data-card-content">
@@ -453,7 +465,8 @@
                 </article>
 
                 <article class="data-card" data-sample-type="other">
-                    <div class="data-card-image" style="background: url('images/data-screen.jpg') center/cover;">
+                    <div class="data-card-image is-icon" aria-hidden="true">
+                        <span class="material-symbols-outlined">shield</span>
                         <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">

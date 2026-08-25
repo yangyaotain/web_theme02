@@ -2,24 +2,19 @@
   "use strict";
 
   var screens = {
-    resources: {
-      src: "images/dashboard-screen-resources.png",
-      alt: "数据资源与聚合大屏",
-      title: "资源聚合"
+    scale: {
+      src: "images/dashboard-two-view-01-scale-service.png",
+      alt: "数据聚合与服务能力全景—规模流通与服务",
+      title: "规模流通与服务"
     },
-    processing: {
-      src: "images/dashboard-screen-processing.png",
-      alt: "数据加工与产品服务大屏",
-      title: "加工服务"
-    },
-    applications: {
-      src: "images/dashboard-screen-applications.png",
-      alt: "行业应用与价值成果大屏",
-      title: "行业应用"
+    ecosystem: {
+      src: "images/dashboard-two-view-02-ecosystem-outcomes.png",
+      alt: "数据聚合与服务能力全景—生态安全与成效",
+      title: "生态安全与成效"
     }
   };
 
-  var defaultScreen = "resources";
+  var defaultScreen = "scale";
   var screenImage = document.querySelector("[data-dashboard-screen]");
   var liveStatus = document.querySelector("[data-live-status]");
 

@@ -143,7 +143,7 @@ class NavBar extends HTMLElement {
                 'city-governance-zone': ['data-trade', 'special-zones', 'city-governance-zone'],
                 'medical-health-zone': ['data-trade', 'special-zones', 'medical-health-zone'],
                 'embodied-intelligence-zone': ['data-trade', 'special-zones', 'embodied-intelligence-zone'],
-                'merchant-onboarding': ['data-ecosystem', 'merchant-onboarding', ''],
+                'merchant-onboarding': ['data-ecosystem', 'ecosystem-cooperation', 'merchant-onboarding'],
                 'ecosystem-cooperation': ['data-ecosystem', 'ecosystem-cooperation', ''],
                 'industry-education': ['data-ecosystem', 'industry-education', '']
             };
@@ -259,8 +259,13 @@ class NavBar extends HTMLElement {
                             { id: 'space-culture', label: '文化艺术可信数据空间', href: 'data-space.html?space=culture' }
                         ]
                     },
-                    { id: 'merchant-onboarding', label: '数商入驻', href: 'portal-placeholder.html?page=merchant-onboarding' },
-                    { id: 'ecosystem-cooperation', label: '生态合作', href: 'portal-placeholder.html?page=ecosystem-cooperation' },
+                    {
+                        id: 'ecosystem-cooperation',
+                        label: '生态合作',
+                        children: [
+                            { id: 'merchant-onboarding', label: '数商入驻', href: 'portal-placeholder.html?page=merchant-onboarding' }
+                        ]
+                    },
                     { id: 'data-science-community', label: '数据科学社区', href: 'community.html' },
                     { id: 'industry-education', label: '产教融合', href: 'portal-placeholder.html?page=industry-education' }
                 ]

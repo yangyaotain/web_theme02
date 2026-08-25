@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
@@ -350,6 +351,18 @@
         .data-card-image img {
             display: block; width: 100%; height: 100%; object-fit: cover;
             transition: transform var(--transition-base);
+        }
+        .data-card-image.is-icon {
+            display: flex; align-items: center; justify-content: center;
+            overflow: visible;
+            border: 0;
+            background: transparent;
+            color: var(--forest-green);
+        }
+        .data-card-image.is-icon .material-symbols-outlined {
+            font-size: 64px;
+            line-height: 1;
+            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64;
         }
         .data-card:hover .data-card-image img { transform: scale(1.04); }
         .data-card-heading { min-width: 0; flex: 1; padding-top: 2px; }
@@ -928,19 +941,19 @@
                 defaultPrice: '面议',
                 items: [
                     {
-                        image: 'images/stock-data.jpg', badges: [{ text: '原始取得' }, { text: '文件传输', tone: 'delivery' }],
+                        image: 'images/stock-data.jpg', icon: 'precision_manufacturing', badges: [{ text: '原始取得' }, { text: '文件传输', tone: 'delivery' }],
                         title: '龙岗区先进制造企业产能运行数据集', company: '深圳市龙岗区产业数据运营有限公司',
                         desc: '汇聚重点制造企业产能、订单、设备稼动率和能耗等指标，支持产业链运行监测、供需研判与园区精准服务',
                         meta: '2026-08-21 11:07:59', type: '制造业', href: 'data-detail.html?sampleType=dataset'
                     },
                     {
-                        image: 'images/realtime-data.jpg', badges: [{ text: '原始取得' }, { text: 'API传输', tone: 'delivery' }],
+                        image: 'images/realtime-data.jpg', icon: 'energy_savings_leaf', badges: [{ text: '原始取得' }, { text: 'API传输', tone: 'delivery' }],
                         title: '龙岗区工业园区能耗监测数据', company: '深圳市龙岗能源数据服务有限公司',
                         desc: '提供园区用电、用水、燃气及综合能耗小时级数据，支持企业能效对标、异常识别和节能改造分析',
                         meta: '2026-08-21 09:33:35', type: '能源服务', href: 'data-detail.html?sampleType=api'
                     },
                     {
-                        image: 'images/traffic-flow.jpg', badges: [{ text: '交易取得' }, { text: '文件传输', tone: 'delivery' }],
+                        image: 'images/traffic-flow.jpg', icon: 'local_shipping', badges: [{ text: '交易取得' }, { text: '文件传输', tone: 'delivery' }],
                         title: '盐田港—龙岗物流通道运行数据', company: '深圳市龙岗交通数据运营有限公司',
                         desc: '整合港区集疏运车辆、主要通道流量、拥堵指数和平均通行时长，为物流调度、路径优化和运力配置提供参考',
                         meta: '2026-08-20 18:35:47', type: '交通运输', href: 'data-detail.html?sampleType=other'
@@ -970,21 +983,21 @@
                 allHref: 'data-products.html',
                 items: [
                     {
-                        image: 'images/policy-recommend.jpg', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
+                        image: 'images/policy-recommend.jpg', icon: 'business', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
                         title: '龙岗企业经营画像数据集', company: '深圳市龙岗数据交易服务有限公司',
                         desc: '汇聚企业登记、产业标签、经营活跃度和信用表现等指标，形成企业画像，支持园区招商筛选与企业分层服务',
                         meta: '2026-08-21 10:52:11', type: '商务服务',
                         href: 'product-detail.html?sampleType=dataset'
                     },
                     {
-                        image: 'images/stock-data.jpg', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
+                        image: 'images/stock-data.jpg', icon: 'monitoring', badges: [{ text: '数据集' }, { text: '100元/次', tone: 'price' }],
                         title: '园区企业经营监测指标数据集', company: '深圳市龙岗产业数据运营有限公司',
                         desc: '形成企业产值、用工、订单、研发投入和创新能力指标，支持园区企业运行监测、趋势分析与分层服务',
                         meta: '2026-08-20 18:17:23', type: '制造业',
                         href: 'product-detail.html?sampleType=dataset'
                     },
                     {
-                        image: 'images/data-screen.jpg', badges: [{ text: '数据产品' }, { text: '一事一议', tone: 'price' }],
+                        image: 'images/data-screen.jpg', icon: 'shield', badges: [{ text: '数据产品' }, { text: '一事一议', tone: 'price' }],
                         title: '制造业供应链风险画像产品', company: '深圳市龙岗供应链科技有限公司',
                         desc: '融合供应商履约、物流时效、舆情和企业风险信息，输出供应链风险画像、风险分级及动态预警结果',
                         meta: '2026-08-20 15:29:53', type: '制造业',
@@ -1018,21 +1031,21 @@
                 allHref: 'data-consulting.html',
                 items: [
                     {
-                        image: 'images/consult-governance.jpg', badges: [{ text: '战略治理' }, { text: '面议', tone: 'price' }],
+                        image: 'images/consult-governance.jpg', icon: 'account_tree', badges: [{ text: '战略治理' }, { text: '面议', tone: 'price' }],
                         title: '数据战略与要素发展顶层规划咨询服务', company: '智慧数据科技有限公司',
                         desc: '围绕数据要素发展战略、治理蓝图、价值转化路径与业务赋能策略，提供现状评估、顶层设计和实施路线规划',
                         meta: '2026-08-20 16:48:25', type: '专业服务',
                         href: detailHref('consulting-detail.html', '数据战略与要素发展顶层规划咨询服务', '面议')
                     },
                     {
-                        image: 'images/consult-accounting.jpg', badges: [{ text: '资产管理' }, { text: '3000元/天', tone: 'price' }],
+                        image: 'images/consult-accounting.jpg', icon: 'inventory_2', badges: [{ text: '资产管理' }, { text: '3000元/天', tone: 'price' }],
                         title: '数据资源普查与资产盘点咨询服务', company: '智慧数据科技有限公司',
                         desc: '开展数据资源底数摸查、资产识别、权属梳理与核心资源盘点，形成分类分级清晰、可持续运营的数据资源目录',
                         meta: '2026-08-20 14:32:16', type: '专业服务',
                         href: detailHref('consulting-detail.html', '数据资源普查与资产盘点咨询服务', '3000元/天')
                     },
                     {
-                        image: 'images/consult-government.jpg', badges: [{ text: '合规流通' }, { text: '面议', tone: 'price' }],
+                        image: 'images/consult-government.jpg', icon: 'policy', badges: [{ text: '合规流通' }, { text: '面议', tone: 'price' }],
                         title: '数据流通与交易合规性评估咨询服务', company: '智慧数据科技有限公司',
                         desc: '覆盖数据采集、存储、共享、开放、授权及交易全链路，识别合规风险并提出制度、流程和技术整改建议',
                         meta: '2026-08-19 17:05:43', type: '专业服务',
@@ -1066,21 +1079,21 @@
                 allHref: 'industry-solutions.html',
                 items: [
                     {
-                        image: 'images/solution-manufacturing.jpg', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
+                        image: 'images/solution-manufacturing.jpg', icon: 'precision_manufacturing', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
                         title: '龙华区智能制造诊断解决方案', company: '深圳市龙岗工业互联网有限公司',
                         desc: '融合设备运行、订单、质量和能耗数据，为制造企业提供产线诊断、能效分析、异常预警及改进建议闭环',
                         meta: '2026-08-20 18:56:03', type: '制造业',
                         href: detailHref('solution-detail.html', '龙华区智能制造诊断解决方案', '100元/次')
                     },
                     {
-                        image: 'images/solution-finance.jpg', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
+                        image: 'images/solution-finance.jpg', icon: 'shield', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
                         title: '福田区金融风险监测解决方案', company: '深圳市龙岗金融数据服务有限公司',
                         desc: '整合企业经营、司法、信用和交易信息，构建金融客户风险画像，支持准入筛查、动态监测和风险分级预警',
                         meta: '2026-08-20 17:11:53', type: '金融服务',
                         href: detailHref('solution-detail.html', '福田区金融风险监测解决方案', '100元/次')
                     },
                     {
-                        image: 'images/solution-infotech.jpg', badges: [{ text: '数据资源需求' }, { text: '数据产品需求' }, { text: '面议', tone: 'price' }],
+                        image: 'images/solution-infotech.jpg', icon: 'hub', badges: [{ text: '数据资源需求' }, { text: '数据产品需求' }, { text: '面议', tone: 'price' }],
                         title: '园区产业链精准招商解决方案', company: '深圳市龙岗产业招商服务有限公司',
                         desc: '围绕产业链图谱、企业画像和项目线索，提供目标企业筛选、招商研判、线索推荐及项目全过程跟踪服务',
                         meta: '2026-08-20 15:21:38', type: '商务服务',
@@ -1130,9 +1143,12 @@
                 var priceBadge = item.badges.find(function(badge) { return badge.tone === 'price'; });
                 var price = item.price || (priceBadge && priceBadge.text) || catalog.defaultPrice || '面议';
                 var dateTime = item.meta ? item.meta.replace(' ', 'T') : '';
+                var visual = item.icon
+                    ? '<div class="data-card-image is-icon" aria-hidden="true"><span class="material-symbols-outlined">' + escapeHtml(item.icon) + '</span></div>'
+                    : '<div class="data-card-image"><img src="' + escapeHtml(item.image) + '" alt=""></div>';
                 return '<a class="data-card" href="' + escapeHtml(item.href) + '" aria-label="查看' + escapeHtml(item.title) + '">'
                     + '<div class="data-card-head">'
-                    + '<div class="data-card-image"><img src="' + escapeHtml(item.image) + '" alt=""></div>'
+                    + visual
                     + '<div class="data-card-heading"><h3 class="data-card-title">' + escapeHtml(item.title) + '</h3>'
                     + '<p class="data-card-company">' + escapeHtml(item.company) + '</p></div></div>'
                     + '<p class="data-card-desc">' + escapeHtml(item.desc) + '</p>'
