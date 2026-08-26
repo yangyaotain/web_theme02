@@ -161,6 +161,10 @@
         }).join('');
 
         var html = ''
+        + '<a href="key-requirements.html" class="topbar-requirements" target="_blank" rel="noopener">'
+        +     '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm1 7V3.5L20.5 9H15zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>'
+        +     '需求说明'
+        + '</a>'
         + '<a href="index.html" class="topbar-home">'
         +     '<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'
         +     '首页'

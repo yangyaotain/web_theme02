@@ -9,16 +9,56 @@
 </head>
 <body>
   <main class="dashboard-viewer" aria-label="全要素展示驾驶舱">
-    <div class="dashboard-frame">
-      <img
-        class="dashboard-screen"
-        src="images/dashboard-two-view-01-scale-service.png"
-        alt="数据聚合与服务能力全景—规模流通与服务"
-        width="1920"
-        height="1080"
-        draggable="false"
-        data-dashboard-screen
-      >
+    <div class="dashboard-frame" data-dashboard-frame>
+      <div class="dashboard-stage">
+        <div class="dashboard-slide is-active" data-dashboard-screen="scale">
+          <img
+            class="dashboard-screen dashboard-screen--scale"
+            src="images/dashboard-two-view-01-scale-service.png"
+            alt="数据聚合与服务能力全景—规模流通与服务"
+            width="1920"
+            height="1080"
+            draggable="false"
+          >
+          <img
+            class="dashboard-screen dashboard-screen--nav dashboard-screen--nav-scale"
+            src="images/dashboard-two-view-01-scale-service.png"
+            alt=""
+            width="1920"
+            height="1080"
+            draggable="false"
+            aria-hidden="true"
+          >
+        </div>
+
+        <div class="dashboard-slide" data-dashboard-screen="ecosystem" aria-hidden="true">
+          <img
+            class="dashboard-screen dashboard-screen--ecosystem"
+            src="images/dashboard-two-view-02-ecosystem-outcomes.png"
+            alt="数据聚合与服务能力全景—生态安全与成效"
+            width="1920"
+            height="1080"
+            draggable="false"
+          >
+          <img
+            class="dashboard-screen dashboard-screen--nav dashboard-screen--nav-ecosystem"
+            src="images/dashboard-two-view-02-ecosystem-outcomes.png"
+            alt=""
+            width="1920"
+            height="1080"
+            draggable="false"
+            aria-hidden="true"
+          >
+        </div>
+      </div>
+
+      <div class="dashboard-shared-shell" aria-hidden="true">
+        <img class="dashboard-shell-piece dashboard-shell-piece--header-left" src="images/dashboard-two-view-01-scale-service.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--header-right" src="images/dashboard-two-view-01-scale-service.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--left-edge" src="images/dashboard-two-view-01-scale-service.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--right-edge" src="images/dashboard-two-view-01-scale-service.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--footer" src="images/dashboard-two-view-01-scale-service.png" alt="" draggable="false">
+      </div>
 
       <nav class="dashboard-hotspots" aria-label="驾驶舱主题切换">
         <a class="dashboard-hotspot dashboard-hotspot--scale" href="#scale" data-screen-link="scale">

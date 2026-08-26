@@ -15,24 +15,28 @@
   };
 
   var defaultScreen = "scale";
-  var screenImage = document.querySelector("[data-dashboard-screen]");
+  var dashboardFrame = document.querySelector("[data-dashboard-frame]");
+  var screenSlides = {};
   var liveStatus = document.querySelector("[data-live-status]");
+  var currentScreenId = null;
+  var switchToken = 0;
+
+  document.querySelectorAll("[data-dashboard-screen]").forEach(function (slide) {
+    screenSlides[slide.getAttribute("data-dashboard-screen")] = slide;
+  });
 
   function getScreenId() {
     var screenId = window.location.hash.replace(/^#/, "");
     return screens[screenId] ? screenId : defaultScreen;
   }
 
-  function showScreen(screenId, updateHash) {
-    var resolvedId = screens[screenId] ? screenId : defaultScreen;
-    var screen = screens[resolvedId];
+  function updateScreenState(screenId, updateHash) {
+    var screen = screens[screenId];
 
-    screenImage.src = screen.src;
-    screenImage.alt = screen.alt;
     document.title = "全要素展示驾驶舱 - " + screen.title;
 
     document.querySelectorAll("[data-screen-link]").forEach(function (link) {
-      var isCurrent = link.getAttribute("data-screen-link") === resolvedId;
+      var isCurrent = link.getAttribute("data-screen-link") === screenId;
       if (isCurrent) {
         link.setAttribute("aria-current", "page");
       } else {
@@ -40,28 +44,76 @@
       }
     });
 
-    if (updateHash && window.location.hash !== "#" + resolvedId) {
-      window.history.replaceState(null, "", "#" + resolvedId);
+    if (updateHash && window.location.hash !== "#" + screenId) {
+      window.history.replaceState(null, "", "#" + screenId);
     }
 
     liveStatus.textContent = "已切换至" + screen.alt;
+  }
+
+  function waitForSlide(slide) {
+    var image = slide.querySelector("img");
+    if (image.complete && image.naturalWidth) {
+      return typeof image.decode === "function" ? image.decode().catch(function () {}) : Promise.resolve();
+    }
+
+    return new Promise(function (resolve) {
+      image.addEventListener("load", resolve, { once: true });
+      image.addEventListener("error", resolve, { once: true });
+    });
+  }
+
+  function activateScreen(screenId) {
+    Object.keys(screenSlides).forEach(function (id) {
+      var isCurrent = id === screenId;
+      screenSlides[id].classList.toggle("is-active", isCurrent);
+      if (isCurrent) {
+        screenSlides[id].removeAttribute("aria-hidden");
+      } else {
+        screenSlides[id].setAttribute("aria-hidden", "true");
+      }
+    });
+    currentScreenId = screenId;
+  }
+
+  function showScreen(screenId, updateHash, immediate) {
+    var resolvedId = screens[screenId] ? screenId : defaultScreen;
+    var targetSlide = screenSlides[resolvedId];
+    var requestToken = ++switchToken;
+
+    if (immediate || currentScreenId === null) {
+      activateScreen(resolvedId);
+      updateScreenState(resolvedId, updateHash);
+      dashboardFrame.classList.add("is-ready");
+      return;
+    }
+
+    if (currentScreenId === resolvedId) {
+      updateScreenState(resolvedId, updateHash);
+      return;
+    }
+
+    waitForSlide(targetSlide).then(function () {
+      if (requestToken !== switchToken) return;
+
+      window.requestAnimationFrame(function () {
+        if (requestToken !== switchToken) return;
+        activateScreen(resolvedId);
+        updateScreenState(resolvedId, updateHash);
+      });
+    });
   }
 
   document.querySelector(".dashboard-hotspots").addEventListener("click", function (event) {
     var link = event.target.closest("[data-screen-link]");
     if (!link) return;
     event.preventDefault();
-    showScreen(link.getAttribute("data-screen-link"), true);
+    showScreen(link.getAttribute("data-screen-link"), true, false);
   });
 
   window.addEventListener("hashchange", function () {
-    showScreen(getScreenId(), false);
+    showScreen(getScreenId(), false, false);
   });
 
-  Object.keys(screens).forEach(function (screenId) {
-    var preloadImage = new Image();
-    preloadImage.src = screens[screenId].src;
-  });
-
-  showScreen(getScreenId(), true);
+  showScreen(getScreenId(), true, true);
 })();

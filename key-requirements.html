@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据聚合服务平台重点需求说明文档</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/key-requirements.css">
+</head>
+<body>
+    <header class="kr-topbar">
+        <a class="kr-brand" href="index.html">
+            <img src="images/logo.png" alt="龙岗数据">
+            <span>龙岗数据聚合服务平台</span>
+        </a>
+        <div class="kr-topbar-actions">
+            <span class="kr-doc-badge"><span class="material-symbols-outlined" aria-hidden="true">description</span>重点需求说明</span>
+            <button type="button" class="kr-close-button" data-action="close-page">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                <span>关闭说明</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="kr-layout">
+        <aside class="kr-toc" aria-label="需求说明目录">
+            <p class="kr-toc-title">需求说明目录</p>
+            <nav class="kr-toc-nav">
+                <div class="kr-toc-group" data-toc-group="transaction-flow">
+                    <button type="button" class="kr-toc-root" data-toc-toggle aria-expanded="true" aria-controls="transaction-flow-menu">
+                        <span class="kr-toc-index">01</span>
+                        <span class="kr-toc-label">交易付款和数据交付流程</span>
+                        <span class="kr-toc-chevron material-symbols-outlined" aria-hidden="true">expand_more</span>
+                    </button>
+                    <div class="kr-toc-children" id="transaction-flow-menu">
+                        <a href="#prepaid" data-toc-link data-parent="transaction-flow"><span></span>预付费</a>
+                        <a href="#postpaid" data-toc-link data-parent="transaction-flow"><span></span>后付费</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="kr-toc-note">
+                <span class="material-symbols-outlined" aria-hidden="true">library_add</span>
+                <p>后续重点需求可继续增加为新的一级目录，并在右侧补充对应说明内容。</p>
+            </div>
+        </aside>
+
+        <main class="kr-main">
+            <section class="kr-hero">
+                <span class="kr-eyebrow">重点需求 · 静态说明文档</span>
+                <h1>数据聚合服务平台重点需求说明文档</h1>
+                <p>集中展示平台重点业务流程、关键节点和完成规则，便于需求评审、原型讲解及后续持续补充。</p>
+            </section>
+
+            <section class="kr-section" id="prepaid">
+                <div class="kr-section-heading kr-section-heading--child">
+                    <span class="kr-section-index">1.1</span>
+                    <div>
+                        <h2>预付费</h2>
+                        <p>支持一次性付款和分期付款；无论采用哪种方式，完成全款或首笔款支付后才允许开始数据交付。</p>
+                    </div>
+                </div>
+
+                <article class="kr-flow-card kr-flow-card--installment">
+                    <div class="kr-flow-card-heading">
+                        <div>
+                            <span class="kr-flow-tag">预付费履约</span>
+                            <h3>首笔支付是数据交付的前置条件</h3>
+                        </div>
+                        <span class="kr-flow-mode kr-flow-mode--required">支持分期付款</span>
+                    </div>
+
+                    <div class="kr-installment-scroll">
+                        <div class="kr-installment-map" aria-label="预付费付款和数据交付流程图">
+                            <div class="kr-flow-track kr-flow-track--prepaid">
+                                <div class="kr-flow-node">
+                                    <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+                                    <strong>购买</strong>
+                                    <small>标准：直接购买<br>面议：填写意向价格</small>
+                                </div>
+                                <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                <div class="kr-flow-node">
+                                    <span class="material-symbols-outlined" aria-hidden="true">contract_edit</span>
+                                    <strong>关联合同</strong>
+                                    <div class="kr-node-highlights">
+                                        <em class="kr-node-highlight kr-node-highlight--locked">标准：带入产品价格，不可编辑</em>
+                                        <em class="kr-node-highlight kr-node-highlight--editable">面议：带入意向价格，可以编辑</em>
+                                    </div>
+                                </div>
+                                <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                <div class="kr-flow-node kr-flow-node--critical">
+                                    <em class="kr-node-key">交付前置条件</em>
+                                    <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+                                    <strong>支付全款或首笔款</strong>
+                                    <small>支付成功后解锁数据交付</small>
+                                </div>
+                            </div>
+
+                            <span class="kr-flow-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                            <div class="kr-parallel-label kr-parallel-label--required"><span class="material-symbols-outlined" aria-hidden="true">lock_open</span>首笔款支付完成后，付款与数据交付并行</div>
+
+                            <div class="kr-parallel-box">
+                                <div class="kr-lane kr-lane--payment">
+                                    <span class="kr-lane-label"><span class="material-symbols-outlined" aria-hidden="true">payments</span>付款路径</span>
+                                    <div class="kr-lane-node"><strong>后续分期支付（如有）</strong><small>一次性付款可直接进入完成状态</small></div>
+                                    <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                    <div class="kr-lane-node kr-lane-node--done"><strong>全部支付完成</strong><small>合同款项全部付清</small></div>
+                                </div>
+                                <div class="kr-lane kr-lane--delivery">
+                                    <span class="kr-lane-label"><span class="material-symbols-outlined" aria-hidden="true">dataset</span>交付路径</span>
+                                    <div class="kr-lane-node"><strong>数据交付</strong><small>首笔支付后可以开始交付</small></div>
+                                    <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                    <div class="kr-lane-node kr-lane-node--done"><strong>交付完成</strong><small>数据全部完成交付</small></div>
+                                </div>
+                            </div>
+
+                            <div class="kr-merge-line"><span></span><span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span><span></span></div>
+                            <div class="kr-completion-rule">全部支付完成 <b>且</b> 数据交付完成</div>
+                            <span class="kr-flow-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                            <div class="kr-flow-node kr-flow-node--complete kr-flow-node--final">
+                                <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                                <strong>交易完成</strong>
+                                <small>付款与交付条件同时满足</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="kr-rule-list">
+                        <li><span class="material-symbols-outlined" aria-hidden="true">looks_one</span><div><strong>首笔支付是必要条件</strong><p>全额付款需完成全款支付；分期付款需至少完成首笔款支付，之后才能交付。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">sync_alt</span><div><strong>分期付款与交付并行</strong><p>首笔款支付后，后续分期支付与数据交付没有强制前后关系。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">done_all</span><div><strong>完成条件同时满足</strong><p>只有全部款项支付完成且数据交付完成，交易才能完成。</p></div></li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="kr-section" id="postpaid">
+                <div class="kr-section-heading kr-section-heading--child">
+                    <span class="kr-section-index">1.2</span>
+                    <div>
+                        <h2>后付费</h2>
+                        <p>没有首笔支付前提；合同关联完成后，付款和数据交付即可按合同约定分别推进。</p>
+                    </div>
+                </div>
+
+                <article class="kr-flow-card kr-flow-card--installment">
+                    <div class="kr-flow-card-heading">
+                        <div>
+                            <span class="kr-flow-tag kr-flow-tag--installment">后付费履约</span>
+                            <h3>数据交付不以首笔支付为前提</h3>
+                        </div>
+                        <span class="kr-flow-mode kr-flow-mode--open">无首笔支付前提</span>
+                    </div>
+
+                    <div class="kr-installment-scroll">
+                        <div class="kr-installment-map" aria-label="后付费付款和数据交付流程图">
+                            <div class="kr-flow-track kr-flow-track--postpaid">
+                                <div class="kr-flow-node">
+                                    <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+                                    <strong>购买</strong>
+                                    <small>标准：直接购买<br>面议：填写意向价格</small>
+                                </div>
+                                <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                <div class="kr-flow-node">
+                                    <span class="material-symbols-outlined" aria-hidden="true">contract_edit</span>
+                                    <strong>关联合同</strong>
+                                    <div class="kr-node-highlights">
+                                        <em class="kr-node-highlight kr-node-highlight--locked">标准：带入产品价格，不可编辑</em>
+                                        <em class="kr-node-highlight kr-node-highlight--editable">面议：带入意向价格，可以编辑</em>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="kr-flow-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                            <div class="kr-parallel-label kr-parallel-label--open"><span class="material-symbols-outlined" aria-hidden="true">lock_open</span>无需先支付首笔款，付款与数据交付直接并行</div>
+
+                            <div class="kr-parallel-box">
+                                <div class="kr-lane kr-lane--payment">
+                                    <span class="kr-lane-label"><span class="material-symbols-outlined" aria-hidden="true">payments</span>付款路径</span>
+                                    <div class="kr-lane-node"><strong>按合同约定付款</strong><small>支持一次性付款或分期付款</small></div>
+                                    <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                    <div class="kr-lane-node kr-lane-node--done"><strong>全部支付完成</strong><small>合同款项全部付清</small></div>
+                                </div>
+                                <div class="kr-lane kr-lane--delivery">
+                                    <span class="kr-lane-label"><span class="material-symbols-outlined" aria-hidden="true">dataset</span>交付路径</span>
+                                    <div class="kr-lane-node"><strong>数据交付</strong><small>合同关联后即可开始交付</small></div>
+                                    <span class="kr-flow-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                    <div class="kr-lane-node kr-lane-node--done"><strong>交付完成</strong><small>数据全部完成交付</small></div>
+                                </div>
+                            </div>
+
+                            <div class="kr-merge-line"><span></span><span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span><span></span></div>
+                            <div class="kr-completion-rule">全部支付完成 <b>且</b> 数据交付完成</div>
+                            <span class="kr-flow-down material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+                            <div class="kr-flow-node kr-flow-node--complete kr-flow-node--final">
+                                <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                                <strong>交易完成</strong>
+                                <small>付款与交付条件同时满足</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="kr-rule-list">
+                        <li><span class="material-symbols-outlined" aria-hidden="true">money_off</span><div><strong>没有首笔支付前提</strong><p>数据交付不依赖首笔款支付状态，合同关联后即可开始。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">sync_alt</span><div><strong>付款和交付独立推进</strong><p>付款可以一次完成或分期完成，与数据交付没有强制前后关系。</p></div></li>
+                        <li><span class="material-symbols-outlined" aria-hidden="true">done_all</span><div><strong>完成条件同时满足</strong><p>只有全部款项支付完成且数据交付完成，交易才能完成。</p></div></li>
+                    </ul>
+                </article>
+            </section>
+
+            <footer class="kr-footer">
+                <span>数据聚合服务平台重点需求说明文档</span>
+                <span>用于需求评审与原型讲解</span>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/key-requirements.js"></script>
+</body>
+</html>

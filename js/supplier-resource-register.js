@@ -498,6 +498,11 @@
             }
         };
         var toastTimer = null;
+        var confirmPopover = null;
+        var confirmPopoverTrigger = null;
+        var confirmOutsideHandler = null;
+        var confirmKeyHandler = null;
+        var confirmViewportHandler = null;
 
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management', 'is-supplier-bill-management');
         panel.classList.add('is-resource-register-management');
@@ -553,6 +558,7 @@
                 +   '</button>'
                 +   '<div class="resource-register-toolbar-actions">'
                 +       '<button class="resource-register-toolbar-button" type="button" data-resource-register-toolbar-action="新增">' + icon('add') + '<span>新增</span></button>'
+                +       '<button class="resource-register-toolbar-button" type="button" data-resource-register-toolbar-action="批量登记">' + icon('playlist_add_check') + '<span>批量登记</span></button>'
                 +       '<button class="resource-register-toolbar-button" type="button" data-resource-register-toolbar-action="导出记录">' + icon('download') + '<span>导出记录</span></button>'
                 +       '<button class="resource-register-toolbar-button is-primary" type="button" data-resource-register-toolbar-action="导入">' + icon('upload') + '<span>导入</span></button>'
                 +       '<button class="resource-register-toolbar-button" type="button" data-resource-register-toolbar-action="更多">' + icon('more_vert') + '<span>更多</span></button>'
@@ -1539,6 +1545,7 @@
         }
 
         function render() {
+            closeConfirmPopover(false);
             if (state.view === 'form') {
                 renderEditor();
                 return;
@@ -1575,6 +1582,102 @@
                     if (!toast.classList.contains('show')) toast.hidden = true;
                 }, 200);
             }, 2200);
+        }
+
+        function closeConfirmPopover(restoreFocus) {
+            var trigger = confirmPopoverTrigger;
+            if (confirmPopover) confirmPopover.remove();
+            if (trigger) {
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.removeAttribute('aria-controls');
+            }
+            if (confirmOutsideHandler) document.removeEventListener('click', confirmOutsideHandler, true);
+            if (confirmKeyHandler) document.removeEventListener('keydown', confirmKeyHandler);
+            if (confirmViewportHandler) {
+                window.removeEventListener('resize', confirmViewportHandler);
+                window.removeEventListener('scroll', confirmViewportHandler, true);
+            }
+            confirmPopover = null;
+            confirmPopoverTrigger = null;
+            confirmOutsideHandler = null;
+            confirmKeyHandler = null;
+            confirmViewportHandler = null;
+            if (restoreFocus && trigger && document.contains(trigger)) trigger.focus();
+        }
+
+        function positionConfirmPopover(trigger) {
+            if (!confirmPopover || !trigger) return;
+            var triggerRect = trigger.getBoundingClientRect();
+            var popoverRect = confirmPopover.getBoundingClientRect();
+            var left = triggerRect.left + triggerRect.width / 2 - popoverRect.width / 2;
+            var top = triggerRect.top - popoverRect.height - 10;
+            left = Math.max(12, Math.min(left, window.innerWidth - popoverRect.width - 12));
+            if (top < 12) top = triggerRect.bottom + 10;
+            confirmPopover.style.left = Math.round(left) + 'px';
+            confirmPopover.style.top = Math.round(top) + 'px';
+        }
+
+        function openConfirmPopover(trigger, message, onConfirm) {
+            closeConfirmPopover(false);
+            var popover = document.createElement('div');
+            var popoverId = 'resourceRegisterConfirmPopover';
+            popover.id = popoverId;
+            popover.className = 'resource-register-confirm-popover';
+            popover.setAttribute('role', 'dialog');
+            popover.setAttribute('aria-label', '登记确认');
+            popover.innerHTML = ''
+                + '<div class="resource-register-confirm-message">'
+                +   icon('error')
+                +   '<span>' + escapeHtml(message) + '</span>'
+                + '</div>'
+                + '<div class="resource-register-confirm-actions">'
+                +   '<button class="resource-register-confirm-button is-cancel" type="button" data-resource-register-confirm-cancel>取消</button>'
+                +   '<button class="resource-register-confirm-button is-confirm" type="button" data-resource-register-confirm-submit>确定</button>'
+                + '</div>';
+            document.body.appendChild(popover);
+            confirmPopover = popover;
+            confirmPopoverTrigger = trigger;
+            trigger.setAttribute('aria-expanded', 'true');
+            trigger.setAttribute('aria-controls', popoverId);
+            positionConfirmPopover(trigger);
+
+            popover.querySelector('[data-resource-register-confirm-cancel]').addEventListener('click', function () {
+                closeConfirmPopover(true);
+            });
+            popover.querySelector('[data-resource-register-confirm-submit]').addEventListener('click', function () {
+                closeConfirmPopover(false);
+                onConfirm();
+            });
+            confirmOutsideHandler = function (event) {
+                if (confirmPopover && !confirmPopover.contains(event.target)) closeConfirmPopover(true);
+            };
+            confirmKeyHandler = function (event) {
+                if (event.key === 'Escape') closeConfirmPopover(true);
+            };
+            confirmViewportHandler = function () {
+                closeConfirmPopover(false);
+            };
+            document.addEventListener('click', confirmOutsideHandler, true);
+            document.addEventListener('keydown', confirmKeyHandler);
+            window.addEventListener('resize', confirmViewportHandler);
+            window.addEventListener('scroll', confirmViewportHandler, true);
+            popover.querySelector('[data-resource-register-confirm-submit]').focus();
+        }
+
+        function isRegisterable(record) {
+            return record && (record.status === '待登记' || record.status === '已退回');
+        }
+
+        function submitRegistrations(records, isBatch) {
+            records.forEach(function (record) {
+                record.status = '登记审核中';
+                record.updatedAt = '2026-07-27 10:30:00';
+                state.selected[record.id] = false;
+            });
+            render();
+            showToast(isBatch
+                ? '已提交 ' + records.length + ' 条资源登记申请，当前状态为“登记审核中”。'
+                : '资源登记申请已提交，当前状态为“登记审核中”。');
         }
 
         function changePage(value) {
@@ -1700,6 +1803,30 @@
                         openEditor('create', '');
                         return;
                     }
+                    if (action === '批量登记') {
+                        var selectedRecords = RESOURCE_RECORDS.filter(function (record) {
+                            return state.selected[record.id];
+                        });
+                        if (!selectedRecords.length) {
+                            showToast('请先勾选需要登记的资源。');
+                            return;
+                        }
+                        var registerableRecords = selectedRecords.filter(isRegisterable);
+                        if (!registerableRecords.length) {
+                            showToast('所选资源当前均不可登记，请选择“待登记”或“已退回”的资源。');
+                            return;
+                        }
+                        GlobalDialog.confirm({
+                            title: '批量登记确认',
+                            desc: '是否确认对已勾选的 ' + registerableRecords.length + ' 条资源执行批量登记？',
+                            confirmText: '确定',
+                            cancelText: '取消',
+                            onConfirm: function () {
+                                submitRegistrations(registerableRecords, true);
+                            }
+                        });
+                        return;
+                    }
                     showToast(action + '功能将在后续设计。');
                 });
             });
@@ -1713,11 +1840,10 @@
                     }
                     if (action === '登记') {
                         var record = getRecordById(this.dataset.resourceRegisterId);
-                        if (record && (record.status === '待登记' || record.status === '已退回')) {
-                            record.status = '登记审核中';
-                            record.updatedAt = '2026-07-27 10:30:00';
-                            render();
-                            showToast('资源登记申请已提交，当前状态为“登记审核中”。');
+                        if (isRegisterable(record)) {
+                            openConfirmPopover(this, '是否确认执行登记吗？', function () {
+                                submitRegistrations([record], false);
+                            });
                             return;
                         }
                     }

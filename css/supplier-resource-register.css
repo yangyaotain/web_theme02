@@ -499,6 +499,78 @@
     border-color: var(--forest-green);
 }
 
+.resource-register-confirm-popover {
+    position: fixed;
+    z-index: 320;
+    width: 250px;
+    box-sizing: border-box;
+    padding: 22px 20px 18px;
+    border: 1px solid #edf0ee;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(31, 48, 41, 0.15);
+    color: #4f5968;
+    font-family: inherit;
+}
+
+.resource-register-confirm-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+.resource-register-confirm-message .material-symbols-outlined {
+    flex: 0 0 auto;
+    color: #f5a623;
+    font-size: 20px;
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+}
+
+.resource-register-confirm-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.resource-register-confirm-button {
+    min-width: 52px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #d8dfdc;
+    border-radius: 7px;
+    background: #f7f9f8;
+    color: var(--forest-green);
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.resource-register-confirm-button:hover,
+.resource-register-confirm-button:focus-visible {
+    border-color: #a9d9bf;
+    background: #edf9f2;
+    outline: 0;
+}
+
+.resource-register-confirm-button.is-confirm {
+    border-color: var(--forest-green);
+    background: var(--forest-green);
+    color: #fff;
+}
+
+.resource-register-confirm-button.is-confirm:hover,
+.resource-register-confirm-button.is-confirm:focus-visible {
+    border-color: var(--forest-green-600);
+    background: var(--forest-green-600);
+    box-shadow: 0 0 0 2px rgba(20, 166, 96, 0.12);
+}
+
 .resource-register-toast {
     position: fixed;
     left: 50%;

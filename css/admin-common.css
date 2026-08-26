@@ -35,6 +35,13 @@ a { text-decoration: none; color: inherit; }
 .topbar-nav-item.active { background: #e8f5e9; color: var(--forest-green); font-weight: 600; }
 
 .topbar-right { display: flex; align-items: center; gap: 16px; flex: 0 0 auto; }
+.topbar-requirements {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 13px; color: #606266; cursor: pointer; padding: 4px 8px;
+    border-radius: 3px; transition: all 0.15s;
+}
+.topbar-requirements:hover { color: var(--forest-green); background: #f0f9f4; }
+.topbar-requirements svg { width: 16px; height: 16px; fill: currentColor; }
 .topbar-home {
     display: flex; align-items: center; gap: 4px;
     font-size: 13px; color: #606266; cursor: pointer; padding: 4px 8px;

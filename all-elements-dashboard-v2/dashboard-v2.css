@@ -1,7 +1,8 @@
 :root {
   --screen-ratio: 1.77777778;
-  --viewer-background: #f4faf7;
+  --viewer-background: #ffffff;
   --focus-color: rgba(61, 219, 151, 0.82);
+  --screen-transition-duration: 300ms;
 }
 
 * {
@@ -26,7 +27,7 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   overflow: hidden;
   background: var(--viewer-background);
@@ -38,10 +39,44 @@ body {
   max-width: 100vw;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--viewer-background);
+}
+
+.dashboard-stage,
+.dashboard-slide,
+.dashboard-shared-shell {
+  position: absolute;
+  inset: 0;
+}
+
+.dashboard-stage {
+  z-index: 1;
+  opacity: 0;
+}
+
+.dashboard-frame.is-ready .dashboard-stage {
+  opacity: 1;
+}
+
+.dashboard-slide {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--screen-transition-duration) ease-out,
+    visibility 0s linear var(--screen-transition-duration);
+  will-change: opacity;
+}
+
+.dashboard-slide.is-active {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .dashboard-screen {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -51,10 +86,51 @@ body {
   -webkit-user-drag: none;
 }
 
+.dashboard-screen--nav {
+  clip-path: inset(0 20% 91.2% 52%);
+}
+
+.dashboard-shared-shell {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.dashboard-shell-piece {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.dashboard-shell-piece--header-left {
+  clip-path: inset(0 48% 91.2% 0);
+}
+
+.dashboard-shell-piece--header-right {
+  clip-path: inset(0 0 91.2% 80%);
+}
+
+.dashboard-shell-piece--left-edge {
+  clip-path: inset(8.8% 98.75% 3.89% 0);
+}
+
+.dashboard-shell-piece--right-edge {
+  clip-path: inset(8.8% 0 3.89% 98.75%);
+}
+
+.dashboard-shell-piece--footer {
+  clip-path: inset(96.11% 0 0 0);
+}
+
 .dashboard-hotspots {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 
@@ -109,6 +185,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --screen-transition-duration: 0ms;
+  }
+
   *,
   *::before,
   *::after {
