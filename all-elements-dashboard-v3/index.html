@@ -7,20 +7,81 @@
   <link
     rel="preload"
     as="image"
-    href="images/dashboard-one-screen-1920.png"
+    href="images/dashboard-two-view-01-scale-service-v2.png"
     fetchpriority="high"
   >
-  <link rel="stylesheet" href="dashboard-v3-image.css">
+  <link
+    rel="preload"
+    as="image"
+    href="../all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png"
+  >
+  <link rel="stylesheet" href="../all-elements-dashboard-v2/dashboard-v2.css">
+  <script src="../all-elements-dashboard-v2/dashboard-v2.js" defer></script>
 </head>
 <body>
-  <main class="dashboard-image-page" aria-label="数据聚合与服务能力全景">
-    <img
-      src="images/dashboard-one-screen-1920.png"
-      alt="数据聚合与服务能力全景设计图"
-      decoding="sync"
-      fetchpriority="high"
-      draggable="false"
-    >
+  <main class="dashboard-viewer" aria-label="全要素展示驾驶舱">
+    <div class="dashboard-frame" data-dashboard-frame data-document-title-prefix="全要素展示驾驶舱v3">
+      <div class="dashboard-stage">
+        <div class="dashboard-slide is-active" data-dashboard-screen="scale">
+          <img
+            class="dashboard-screen dashboard-screen--scale"
+            src="images/dashboard-two-view-01-scale-service-v2.png"
+            alt="数据聚合与服务能力全景—规模流通与服务第二版"
+            width="1920"
+            height="1080"
+            draggable="false"
+          >
+          <img
+            class="dashboard-screen dashboard-screen--nav dashboard-screen--nav-scale"
+            src="images/dashboard-two-view-01-scale-service-v2.png"
+            alt=""
+            width="1920"
+            height="1080"
+            draggable="false"
+            aria-hidden="true"
+          >
+        </div>
+
+        <div class="dashboard-slide" data-dashboard-screen="ecosystem" aria-hidden="true">
+          <img
+            class="dashboard-screen dashboard-screen--ecosystem"
+            src="../all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png"
+            alt="数据聚合与服务能力全景—生态安全与成效"
+            width="1920"
+            height="1080"
+            draggable="false"
+          >
+          <img
+            class="dashboard-screen dashboard-screen--nav dashboard-screen--nav-ecosystem"
+            src="../all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png"
+            alt=""
+            width="1920"
+            height="1080"
+            draggable="false"
+            aria-hidden="true"
+          >
+        </div>
+      </div>
+
+      <div class="dashboard-shared-shell" aria-hidden="true">
+        <img class="dashboard-shell-piece dashboard-shell-piece--header-left" src="images/dashboard-two-view-01-scale-service-v2.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--header-right" src="images/dashboard-two-view-01-scale-service-v2.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--left-edge" src="images/dashboard-two-view-01-scale-service-v2.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--right-edge" src="images/dashboard-two-view-01-scale-service-v2.png" alt="" draggable="false">
+        <img class="dashboard-shell-piece dashboard-shell-piece--footer" src="images/dashboard-two-view-01-scale-service-v2.png" alt="" draggable="false">
+      </div>
+
+      <nav class="dashboard-hotspots" aria-label="驾驶舱主题切换">
+        <a class="dashboard-hotspot dashboard-hotspot--scale" href="#scale" data-screen-link="scale">
+          <span class="screen-reader-only">规模流通与服务</span>
+        </a>
+        <a class="dashboard-hotspot dashboard-hotspot--ecosystem" href="#ecosystem" data-screen-link="ecosystem">
+          <span class="screen-reader-only">生态安全与成效</span>
+        </a>
+      </nav>
+    </div>
   </main>
+
+  <div class="screen-reader-only" role="status" aria-live="polite" data-live-status></div>
 </body>
 </html>

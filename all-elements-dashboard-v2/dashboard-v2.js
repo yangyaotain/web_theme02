@@ -16,6 +16,7 @@
 
   var defaultScreen = "scale";
   var dashboardFrame = document.querySelector("[data-dashboard-frame]");
+  var documentTitlePrefix = dashboardFrame.getAttribute("data-document-title-prefix") || "全要素展示驾驶舱";
   var screenSlides = {};
   var liveStatus = document.querySelector("[data-live-status]");
   var currentScreenId = null;
@@ -33,7 +34,7 @@
   function updateScreenState(screenId, updateHash) {
     var screen = screens[screenId];
 
-    document.title = "全要素展示驾驶舱 - " + screen.title;
+    document.title = documentTitlePrefix + " - " + screen.title;
 
     document.querySelectorAll("[data-screen-link]").forEach(function (link) {
       var isCurrent = link.getAttribute("data-screen-link") === screenId;
