@@ -18,7 +18,7 @@
             { label: '运营中心', href: 'operation-center.html' },
             { label: '全要素展示驾驶舱', href: 'all-elements-dashboard/index.html', target: '_blank' },
             { label: '全要素展示驾驶舱v2', href: 'all-elements-dashboard-v2/index.html', target: '_blank' },
-            { label: '全要素展示驾驶舱v3', href: 'all-elements-dashboard-v3/index.html', target: '_blank' },
+            // 全要素展示驾驶舱 v3 暂时隐藏，保留页面文件和直接访问能力。
             { label: '智能问数', href: 'https://yangyaotain.github.io/smart-query-prototype/pages/business/smart-query.html', target: '_blank' }
         ]
     };

@@ -115,21 +115,32 @@
         .ds-cockpit-panel { width:100%; }
         .ds-preview-head { min-height:32px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
         .ds-preview-title { margin:0; color:#204b36; font-size:16px; font-weight:700; }
+        .ds-preview-subtitle { padding:3px 9px; border-radius:3px; background:#dff1e7; color:#278050; font-size:12px; }
         .ds-preview-chart { position:relative; width:100%; height:270px; }
         .ds-preview-chart canvas { width:100% !important; height:100% !important; }
+        .ds-radar-chart { max-width:640px; height:330px; margin:0 auto; }
+        .ds-radar-kpi { justify-content:flex-end; margin:-4px 8px 0 0; }
+        .ds-radar-center { position:absolute; left:50%; top:50%; z-index:1; min-width:104px; padding:9px 12px; border:1px solid rgba(32,113,70,.12); border-radius:50%; background:rgba(247,252,249,.9); color:#5b6e60; text-align:center; pointer-events:none; transform:translate(-50%,-47%); box-shadow:0 4px 16px rgba(32,113,70,.06); }
+        .ds-radar-center span { display:block; font-size:12px; line-height:18px; }
+        .ds-radar-center strong { display:inline-block; margin-top:1px; color:#168b52; font-size:27px; line-height:32px; font-family:'Inter','Noto Sans SC',sans-serif; }
+        .ds-radar-center em { margin-left:3px; color:#52705f; font-size:12px; font-style:normal; }
         .ds-preview-fallback, .ds-preview-note { color:#7b8982; font-size:12px; line-height:1.7; }
         .ds-preview-note { margin:12px 0 0; }
         .ds-metric-card { width:min(500px, 100%); box-sizing:border-box; padding:22px; border-radius:6px; background:#fff; border:1px solid #cfe5d9; color:#204b36; }
         .ds-metric-card.gold { border-color:#ecd8ad; }
+        .ds-metric-card.blue { border-color:#cbdff1; }
         .ds-metric-label { font-size:14px; color:#52655a; margin-bottom:8px; }
         .ds-metric-value-line { display:flex; align-items:baseline; gap:7px; flex-wrap:wrap; }
         .ds-metric-value { font-family:'Inter','Noto Sans SC',sans-serif; font-size:34px; line-height:42px; font-weight:700; }
         .gold .ds-metric-value { color:#a56a0c; }
+        .blue .ds-metric-value { color:#2f7fcb; }
         .ds-metric-unit { font-size:14px; color:#52655a; }
         .ds-metric-trend { margin-top:12px; display:flex; align-items:center; gap:6px; color:#278050; font-size:13px; }
         .ds-metric-trend.down { color:#c06043; }
         .ds-metric-details { display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:14px; padding-top:12px; border-top:1px solid #e4eee8; font-size:13px; color:#52655a; }
         .ds-metric-details strong { margin-left:8px; color:#207146; }
+        .ds-trend-marker { margin-left:3px; color:#207146; font-style:normal; font-weight:700; }
+        .ds-trend-marker.down { color:#c06043; }
 
         .ds-form-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px 18px; }
         .ds-form-item { min-width:0; }
@@ -184,18 +195,30 @@
         .ds-inline-stats { display:flex; flex-wrap:wrap; gap:12px 24px; margin-bottom:16px; color:#5b6e60; font-size:13px; }
         .ds-inline-stats strong { color:#207146; font-size:18px; margin:0 5px; }
         .ds-case-preview { max-width:560px; display:grid; grid-template-columns:200px minmax(0,1fr); gap:18px; align-items:center; background:#fff; border:1px solid #dcebe2; border-radius:6px; padding:16px; }
-        .ds-case-preview img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:4px; }
+        .ds-case-image { display:block; width:100%; aspect-ratio:16/9; border:1px solid #dcebe2; border-radius:4px; background-repeat:no-repeat; background-color:#eef5f1; }
+        img.ds-case-image { box-sizing:border-box; object-fit:cover; }
         .ds-case-preview h4 { margin:0 0 10px; font-size:16px; color:#355741; overflow-wrap:anywhere; }
         .ds-case-preview p { margin:8px 0; font-size:13px; color:#617367; overflow-wrap:anywhere; }
         .ds-case-preview strong { font-size:24px; color:#207146; }
         .ds-definition-item { padding:12px 0; border-bottom:1px solid #e1ece5; font-size:13px; line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; color:#52655a; }
         .ds-definition-item:last-child { border-bottom:0; }
         .ds-definition-item strong { color:#207146; }
+        .ds-case-preview-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+        .ds-case-preview-list .ds-case-preview { max-width:none; grid-template-columns:130px minmax(0,1fr); gap:14px; padding:12px; }
+        .ds-case-preview-list .ds-case-preview strong { font-size:20px; }
+        .ds-collection-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+        .ds-collection-count { color:#69766f; font-size:12px; }
+        .ds-collection-list { display:flex; flex-direction:column; gap:12px; }
+        .ds-collection-card { padding:14px; border:1px solid #dfe8e3; border-radius:6px; background:#fbfdfc; }
+        .ds-collection-card-head { min-height:30px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .ds-collection-card-head h4 { margin:0; color:#355741; font-size:14px; }
+        .ds-collection-card-head .ds-btn { height:30px; padding:0 10px; font-size:12px; }
+        .ds-collection-card-head .ds-btn:disabled, .ds-collection-toolbar .ds-btn:disabled { border-color:#e2e6e4; background:#f5f7f6; color:#b8bfbc; cursor:not-allowed; }
         .ds-field-unit { display:flex; align-items:center; gap:8px; }
         .ds-field-unit span { flex:none; color:#7d8881; font-size:13px; }
         textarea.ds-form-control { height:90px; min-height:72px; resize:vertical; line-height:1.7; padding:9px 11px; }
         .ds-cover-picker { display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
-        .ds-cover-picker img { width:140px; aspect-ratio:16/9; object-fit:cover; border:1px solid #dcebe2; border-radius:4px; }
+        .ds-cover-picker .ds-case-image { width:140px; flex:none; }
         .ds-form-hint { margin:6px 0 0; font-size:12px; line-height:1.6; color:#88958c; }
         .ds-demo-note { margin-bottom:16px; padding:10px 13px; display:flex; align-items:flex-start; gap:8px; border-radius:4px; background:#edf6f0; color:#53715e; font-size:12px; line-height:20px; }
         .ds-demo-note svg { width:16px; height:16px; margin-top:2px; flex:none; fill:none; stroke:currentColor; stroke-width:1.7; }
@@ -205,6 +228,7 @@
             .ds-rank-row { grid-template-columns:26px minmax(0,1fr) 110px; }
             .ds-rank-track { display:none; }
             .ds-case-preview { grid-template-columns:1fr; }
+            .ds-case-preview-list { grid-template-columns:1fr; }
         }
 
         .ds-toast { position:fixed; left:50%; top:82px; z-index:500; min-width:220px; max-width:420px; padding:11px 16px; border-radius:5px; color:#fff; background:#27352f; box-shadow:0 8px 24px rgba(15,23,42,.2); font-size:13px; text-align:center; opacity:0; pointer-events:none; transform:translate(-50%,-8px); transition:.2s; }
@@ -366,7 +390,7 @@
         function metric(name, value, trend, options) {
             var config = options || {};
             return {
-                type:'metric', name:name, section:'顶部指标',
+                type:'metric', key:config.key || '', name:name, section:'顶部指标',
                 data:{
                     value:value, unit:config.unit || '', tone:config.tone || 'green',
                     trendMode:trend == null ? 'none' : (config.trendMode || 'percent'),
@@ -377,7 +401,10 @@
         }
 
         function series(label, data, options) {
-            return Object.assign({ label:label, data:data }, options || {});
+            var result = Object.assign({ label:label, data:data }, options || {});
+            var countUnit = /[（(](个|家|项)[）)]/.exec(label);
+            if (!result.valueUnit && countUnit) result.valueUnit = countUnit[1];
+            return result;
         }
 
         function chart(name, chartType, labels, datasets, options) {
@@ -404,13 +431,12 @@
             return { name:name, type:type, section:section, data:{ fields:fields } };
         }
 
-        function caseItem(title, imagePath, effect, value) {
-            return details('优秀案例 · ' + title, 'case', [
-                field('案例名称', title, '', { kind:'text' }),
-                field('案例图片', imagePath, '', { kind:'image' }),
-                field('成效说明', effect, '', { kind:'text' }),
-                field('提升比例', value, '%')
-            ], '优秀案例展示');
+        function caseEntry(title, imagePath, effect, value, crop) {
+            return { name:title, image:imagePath, crop:crop || null, effectName:effect, effectValue:value, unit:'%' };
+        }
+
+        function definitionEntry(name, description) {
+            return { name:name, description:description };
         }
 
         var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月'];
@@ -421,18 +447,18 @@
                 components:[
                     metric('数据总量', 824.6, 8.6, { unit:'TB' }),
                     metric('累计交易额', 12.86, 16.8, { unit:'亿元', tone:'gold' }),
-                    metric('数据产品总量', 328, null, { unit:'个', details:[
-                        field('API接口', 186, '个'), field('数据集', 142, '个')
+                    metric('数据产品总量', 328, null, { key:'data-products-total', unit:'个', details:[
+                        field('API接口', 186, '个', { trendDirection:'up' }), field('数据集', 142, '个', { trendDirection:'up' })
                     ] }),
-                    metric('数据调用量', 3.8, null, { unit:'亿次', details:[field('日均调用量', 158, '万次')] }),
+                    metric('数据调用量', 3.8, null, { unit:'亿次', tone:'blue', details:[field('日均调用量', 158, '万次', { trendDirection:'up' })] }),
                     metric('日处理量', 3.62, null, { unit:'TB' }),
-                    chart('数据规模 · 按资源类型', 'bar', ['公共数据','行业数据','企业数据'],
+                    chart('数据规模', 'bar', ['公共数据','行业数据','企业数据'],
                         [series('占比（%）', [38.7,33.6,27.7])],
-                        { previewType:'distribution', section:'数据规模', percent:true }),
-                    chart('数据规模 · 按行业分布', 'bar',
+                        { previewType:'distribution', section:'按资源类型', subtitle:'按资源类型', percent:true }),
+                    chart('数据规模', 'bar',
                         ['金融服务','城市治理','宏观经济','智慧教育','医疗健康','工业制造'],
                         [series('占比（%）', [22.4,19.6,17.3,14.2,12.7,13.8])],
-                        { previewType:'distribution', section:'数据规模', percent:true }),
+                        { previewType:'distribution', section:'按行业分布', subtitle:'按行业分布', percent:true }),
                     chart('流通交易趋势', 'line', MONTHS, [
                         series('累计交易额（亿元）', [2.1,2.8,3.6,4.5,5.8,7.4,9.6,12.86]),
                         series('每月新增交易额（亿元）', [0.7,0.7,0.8,0.9,1.3,1.6,2.2,3.26])
@@ -441,43 +467,43 @@
                         field('数据接入量', 3.62, 'TB'), field('数据加工量', 2.85, 'TB'),
                         field('数据输出量', 3.12, 'TB'), field('并发任务数', 1286, '个')
                     ], '数据处理'),
-                    chart('数据质量评价', 'radar', ['完整性','准确性','一致性','质量及时性','唯一性'],
-                        [series('质量评分', [98.6,96.2,97.8,97.1,99])], {
+                    chart('数据质量评价', 'radar', ['完整性','唯一性','质量及时性','一致性','准确性'],
+                        [series('质量评分', [98.6,99,97.1,97.8,96.2])], {
                             section:'数据质量', max:100,
-                            extras:[field('综合评分', 97.8, '分', { max:100 }), field('更新及时率', 96.8, '%', { max:100 })]
+                            extras:[field('综合评分', 97.8, '分', { key:'overall-score', max:100 }), field('更新及时率', 96.8, '%', { key:'update-timeliness', max:100 })]
                         }),
                     chart('服务调用趋势', 'line', MONTHS, [series('API调用量（亿次）', [0.6,0.9,1.2,1.6,2.1,2.6,3.1,3.8])]),
-                    ranking('数据产品排名 · 按交易额',
+                    ranking('数据产品排名',
                         ['企业信用评估API','金融风险评估模型','交通拥堵预测服务','宏观经济景气报告','医疗资源分析产品','工业设备预测维护模型','商圈客流洞察数据集','企业经营风险监测API','低空物流运行分析服务','政务数据核验服务'],
-                        [3260,2480,2150,1680,1330,1120,980,860,720,650], '交易额（万元）'),
-                    ranking('数据产品排名 · 按产品热度',
+                        [3260,2480,2150,1680,1330,1120,980,860,720,650], '交易额（万元）', { section:'按交易额', subtitle:'按交易额' }),
+                    ranking('数据产品排名',
                         ['城市交通运行API','企业经营策略服务','宏观经济趋势报告','气象风险预警模型','医疗健康分析产品','工业园区能耗分析','商圈消费洞察数据集','低空飞行态势服务','企业信用核验API','文旅客流预测模型'],
-                        [986,884,762,683,567,486,428,376,328,286], '浏览量（万次）')
+                        [986,884,762,683,567,486,428,376,328,286], '浏览量（万次）', { section:'按产品热度', subtitle:'按产品热度' })
                 ]
             },
             {
                 screen:'生态安全与成效',
                 components:[
                     metric('生态机构数', 68, 3, { unit:'家', trendMode:'count', trendUnit:'家', compareText:'本月' }),
-                    metric('用户数', 18760, 5230, { unit:'个', trendMode:'count', trendUnit:'个', compareText:'本月' }),
+                    metric('用户数', 18760, 5230, { unit:'个', tone:'blue', trendMode:'count', trendUnit:'个', compareText:'本月' }),
                     metric('安全认证数', 186, null, { unit:'项' }),
                     metric('确权登记数', 526, null, { unit:'项' }),
                     metric('优秀案例', 46, null, { unit:'个' }),
-                    metric('调用方企业', 1872, null, { unit:'家' }),
-                    metric('可信数据空间', 6, null, { unit:'个' }),
-                    ranking('生态机构分布 · 城市TOP5', ['深圳','北京','上海','杭州','广州'],
+                    metric('调用方企业', 1872, 128, { unit:'家', tone:'blue', trendMode:'count', trendUnit:'家', compareText:'本月' }),
+                    metric('可信数据空间', 6, null, { unit:'个', tone:'gold' }),
+                    ranking('生态机构分布', ['深圳','北京','上海','杭州','广州'],
                         [12,10,8,6,5], '机构数（家）', {
-                            section:'生态机构分布', topLimit:5,
+                            section:'生态机构分布', subtitle:'TOP5 城市', topLimit:5,
                             note:'维护地图配套的城市 TOP5 数据；地图仅作地域分布示意。'
                         }),
                     chart('生态机构增长趋势', 'line', MONTHS, [
                         series('累计总数（家）', [18,30,38,46,53,61,65,68]),
-                        series('每月新增（家）', [1,12,8,8,7,8,4,3], { yAxisID:'y1', dashed:true })
+                        series('每月新增（家）', [1,2,1,1,3,2,4,3], { yAxisID:'y1', dashed:true })
                     ], {
                         section:'生态机构增长', dualAxis:true,
                         note:'V2 参考值为总数 68 家、本月新增 3 家；图中未标注的历史月份数值为编辑演示样例。'
                     }),
-                    chart('可信数据空间 · 领域明细', 'spaces',
+                    chart('可信数据空间', 'spaces',
                         ['文化艺术','企业服务','城市治理','具身智能','低空经济','医疗健康'], [
                             series('数据集数量（个）', [22,31,34,28,25,28]),
                             series('数据量（TB）', [78.4,156.8,186.2,138.6,112.5,152.1])
@@ -489,16 +515,18 @@
                         }),
                     chart('安全认证', 'bar', ['等级认证','ISO认证','数据安全认证'],
                         [series('认证数（项）', [86,68,32])], { section:'安全认证', indexAxis:'y' }),
-                    caseItem('工业质量智能分析', 'images/solution-manufacturing.jpg', '良品率提升', 18.6),
-                    caseItem('城市治理一张图', 'images/rec-smart-city.jpg', '事件处置效率提升', 32.8),
-                    caseItem('具身智能训练数据', 'images/space-hero-robot.jpg', '模型训练效率提升', 24.5),
-                    caseItem('医疗健康协同应用', 'images/solution-healthcare.jpg', '诊疗协同率提升', 27.3),
-                    details('指标口径说明', 'text', [
-                        field('数据总量', '按数据集、数据表、文件量等结构化和非结构化数据统计。', '', { kind:'textarea' }),
-                        field('交易额', '仅计入已完成签署的数据交易合同金额，统计范围涵盖数据产品、数据服务、数据咨询及衍生服务所产生的全部交易收入。', '', { kind:'textarea' }),
-                        field('生态机构数', '按统一社会信用代码去重统计。', '', { kind:'textarea' }),
-                        field('数据调用量', '通过API接口、数据服务等方式，向平台发起数据请求并成功返回数据的次数。', '', { kind:'textarea' })
-                    ], '指标口径说明')
+                    { name:'优秀案例展示', type:'case-list', section:'优秀案例展示', data:{ items:[
+                        caseEntry('工业质量智能分析', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '良品率提升', 18.6, { x:51, y:786, width:120, height:66, sourceWidth:1631, sourceHeight:918 }),
+                        caseEntry('城市治理一张图', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '事件处置效率提升', 32.8, { x:349, y:786, width:124, height:66, sourceWidth:1631, sourceHeight:918 }),
+                        caseEntry('具身智能训练数据', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '模型训练效率提升', 24.5, { x:646, y:786, width:124, height:66, sourceWidth:1631, sourceHeight:918 }),
+                        caseEntry('医疗健康协同应用', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '诊疗协同率提升', 27.3, { x:943, y:786, width:118, height:66, sourceWidth:1631, sourceHeight:918 })
+                    ] } },
+                    { name:'指标口径说明', type:'definition-list', section:'指标口径说明', data:{ items:[
+                        definitionEntry('数据总量', '按数据集、数据表、文件量等结构化和非结构化数据统计。'),
+                        definitionEntry('交易额', '仅计入已完成签署的数据交易合同金额，统计范围涵盖数据产品、数据服务、数据咨询及衍生服务所产生的全部交易收入。'),
+                        definitionEntry('生态机构数', '按统一社会信用代码去重统计。'),
+                        definitionEntry('数据调用量', '通过API接口、数据服务等方式，向平台发起数据请求并成功返回数据的次数。')
+                    ] } }
                 ]
             }
         ];
@@ -511,7 +539,7 @@
                 screen.components.forEach(function (component, componentIndex) {
                     records.push({
                         id:'screen-' + screenIndex + '-component-' + componentIndex + '-year-' + year,
-                        name:component.name, screen:screen.screen, section:component.section,
+                        key:component.key || '', name:component.name, screen:screen.screen, section:component.section,
                         year:year, type:component.type, enabled:true, data:clone(component.data)
                     });
                 });
@@ -547,17 +575,25 @@
         function typeLabel(record) {
             if (record.type === 'metric') return '指标卡';
             if (record.type === 'details') return '指标组';
-            if (record.type === 'case') return '案例图文';
-            if (record.type === 'text') return '口径说明';
+            if (record.type === 'case-list') return '案例集合';
+            if (record.type === 'definition-list') return '口径集合';
             return { ranking:'排行榜', spaces:'空间明细', distribution:'分布图' }[record.data.previewType] ||
                 (record.data.chartType === 'radar' ? '雷达图' : '统计图表');
+        }
+
+        function moduleNameControlHtml() {
+            return '<div class="ds-form-item full"><label class="ds-form-label required" for="dsRecordName">模块 / 指标名称</label>' +
+                '<input id="dsRecordName" class="ds-form-control" maxlength="60" data-record-name value="' + escapeHtml(editDraft.name) + '"></div>';
         }
 
         function fieldControls(fields, group) {
             return fields.map(function (item, index) {
                 var id = 'dsField-' + group + '-' + index;
                 var attrs = ' id="' + id + '" data-field-group="' + group + '" data-field-index="' + index + '"';
-                var label = '<label class="ds-form-label required" for="' + id + '">' + escapeHtml(item.label) + '</label>';
+                var nameId = id + '-label';
+                var nameControl = '<div class="ds-form-item"><label class="ds-form-label required" for="' + nameId + '">属性名称</label>' +
+                    '<input id="' + nameId + '" class="ds-form-control" maxlength="40" data-field-label-group="' + group + '" data-field-index="' + index + '" value="' + escapeHtml(item.label) + '"></div>';
+                var label = '<label class="ds-form-label required" for="' + id + '">属性值</label>';
                 var control;
                 if (item.kind === 'image') {
                     control = '<div class="ds-cover-picker"><img data-cover-thumb src="' + escapeHtml(item.value) + '" alt="案例封面">' +
@@ -571,7 +607,10 @@
                         (item.kind === 'number' ? ' min="0" step="any"' + (item.max != null ? ' max="' + item.max + '"' : '') : ' maxlength="80"') +
                         attrs + ' value="' + escapeHtml(item.value) + '">' + (item.unit ? '<span>' + escapeHtml(item.unit) + '</span>' : '') + '</div>';
                 }
-                return '<div class="ds-form-item' + (item.kind === 'image' || item.kind === 'textarea' ? ' full' : '') + '">' + label + control + '</div>';
+                var trendControl = Object.prototype.hasOwnProperty.call(item, 'trendDirection') ?
+                    '<div class="ds-form-item"><label class="ds-form-label" for="' + id + '-trend">趋势标识</label><select id="' + id + '-trend" class="ds-form-control" data-field-trend-group="' + group + '" data-field-index="' + index + '">' +
+                    [['none','不展示'],['up','上升'],['down','下降']].map(function (option) { return '<option value="' + option[0] + '"' + (item.trendDirection === option[0] ? ' selected' : '') + '>' + option[1] + '</option>'; }).join('') + '</select></div>' : '';
+                return nameControl + '<div class="ds-form-item' + (item.kind === 'image' || item.kind === 'textarea' ? ' full' : '') + '">' + label + control + '</div>' + trendControl;
             }).join('');
         }
 
@@ -582,26 +621,75 @@
             }).join('') + '</div>';
         }
 
+        function caseImageHtml(item) {
+            if (!item.crop) return '<img class="ds-case-image" src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '">';
+            var crop = item.crop;
+            var sizeX = crop.sourceWidth / crop.width * 100;
+            var sizeY = crop.sourceHeight / crop.height * 100;
+            var positionX = crop.sourceWidth === crop.width ? 50 : crop.x / (crop.sourceWidth - crop.width) * 100;
+            var positionY = crop.sourceHeight === crop.height ? 50 : crop.y / (crop.sourceHeight - crop.height) * 100;
+            return '<span class="ds-case-image" role="img" aria-label="' + escapeHtml(item.name) + '" style="aspect-ratio:' + crop.width + '/' + crop.height + ';background-image:url(&quot;' + escapeHtml(item.image) + '&quot;);background-size:' + sizeX + '% ' + sizeY + '%;background-position:' + positionX + '% ' + positionY + '%"></span>';
+        }
+
         function structuredPreviewHtml() {
-            var fields = editDraft.data.fields;
             var content;
-            if (editDraft.type === 'text') {
-                content = fields.map(function (item) {
-                    return '<div class="ds-definition-item"><strong>' + escapeHtml(item.label) + '：</strong>' + escapeHtml(item.value) + '</div>';
+            if (editDraft.type === 'definition-list') {
+                content = editDraft.data.items.map(function (item) {
+                    return '<div class="ds-definition-item"><strong>' + escapeHtml(item.name) + '：</strong>' + escapeHtml(item.description) + '</div>';
                 }).join('');
-            } else if (editDraft.type === 'case') {
-                content = '<div class="ds-case-preview"><img src="' + escapeHtml(fields[1].value) + '" alt="' + escapeHtml(fields[0].value) + '">' +
-                    '<div><h4>' + escapeHtml(fields[0].value) + '</h4><p>应用成效</p><p>' + escapeHtml(fields[2].value) +
-                    '</p><strong>↑ ' + formatNumber(fields[3].value) + '%</strong></div></div>';
-            } else content = fieldsPreview(fields);
-            return '<div class="ds-preview-shell">' + content + '</div>';
+            } else if (editDraft.type === 'case-list') {
+                content = '<div class="ds-case-preview-list">' + editDraft.data.items.map(function (item) {
+                    return '<div class="ds-case-preview">' + caseImageHtml(item) +
+                        '<div><h4>' + escapeHtml(item.name) + '</h4><p>应用成效</p><p>' + escapeHtml(item.effectName) +
+                        '</p><strong>↑ ' + formatNumber(item.effectValue) + escapeHtml(item.unit) + '</strong></div></div>';
+                }).join('') + '</div>';
+            } else content = fieldsPreview(editDraft.data.fields);
+            return '<div class="ds-preview-shell"><div class="ds-preview-head"><h4 class="ds-preview-title">' + escapeHtml(editDraft.name) + '</h4></div>' + content + '</div>';
+        }
+
+        function collectionToolbarHtml(kind, count) {
+            var label = kind === 'case-list' ? '案例' : '口径';
+            return '<div class="ds-collection-toolbar"><span class="ds-collection-count">当前 ' + count + ' 条，默认 4 条，最多 10 条</span>' +
+                '<button class="ds-btn" type="button" data-collection-action="add"' + (count >= 10 ? ' disabled' : '') +
+                '><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>新增' + label + '</span></button></div>';
+        }
+
+        function caseCardsHtml(items) {
+            return '<div class="ds-collection-list">' + items.map(function (item, index) {
+                var imageId = 'dsCaseImage-' + index;
+                return '<article class="ds-collection-card"><div class="ds-collection-card-head"><h4>案例 ' + (index + 1) + '</h4>' +
+                    '<button class="ds-btn" type="button" data-collection-action="remove" data-item-index="' + index + '"' + (items.length <= 1 ? ' disabled' : '') +
+                    '><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="m7 7 1 13h8l1-13"></path></svg><span>删除</span></button></div>' +
+                    '<div class="ds-form-grid">' +
+                    '<div class="ds-form-item full"><label class="ds-form-label required">案例名称</label><input class="ds-form-control" maxlength="80" data-case-field="name" data-item-index="' + index + '" value="' + escapeHtml(item.name) + '"></div>' +
+                    '<div class="ds-form-item"><label class="ds-form-label required">成效名称</label><input class="ds-form-control" maxlength="40" data-case-field="effectName" data-item-index="' + index + '" value="' + escapeHtml(item.effectName) + '"></div>' +
+                    '<div class="ds-form-item"><label class="ds-form-label required">成效值</label><div class="ds-field-unit"><input class="ds-form-control" type="number" min="0" step="any" data-case-field="effectValue" data-item-index="' + index + '" value="' + escapeHtml(item.effectValue) + '"><input class="ds-form-control" style="max-width:86px" maxlength="12" aria-label="成效单位" data-case-field="unit" data-item-index="' + index + '" value="' + escapeHtml(item.unit) + '"></div></div>' +
+                    '<div class="ds-form-item full"><label class="ds-form-label required">案例图片</label><div class="ds-cover-picker">' + caseImageHtml(item) +
+                    '<input class="ds-import-input" id="' + imageId + '" type="file" accept="image/png,image/jpeg,image/webp" data-case-image data-item-index="' + index + '">' +
+                    '<label class="ds-btn" for="' + imageId + '"><svg viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5M4 17v3h16v-3"></path></svg><span>更换图片</span></label></div><p class="ds-form-hint">PNG、JPG 或 WebP，最大 5 MB；仅用于本页原型演示。</p></div>' +
+                    '</div></article>';
+            }).join('') + '</div>';
+        }
+
+        function definitionCardsHtml(items) {
+            return '<div class="ds-collection-list">' + items.map(function (item, index) {
+                return '<article class="ds-collection-card"><div class="ds-collection-card-head"><h4>口径 ' + (index + 1) + '</h4>' +
+                    '<button class="ds-btn" type="button" data-collection-action="remove" data-item-index="' + index + '"' + (items.length <= 1 ? ' disabled' : '') +
+                    '><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="m7 7 1 13h8l1-13"></path></svg><span>删除</span></button></div>' +
+                    '<div class="ds-form-grid"><div class="ds-form-item full"><label class="ds-form-label required">指标名称</label><input class="ds-form-control" maxlength="60" data-definition-field="name" data-item-index="' + index + '" value="' + escapeHtml(item.name) + '"></div>' +
+                    '<div class="ds-form-item full"><label class="ds-form-label required">口径说明</label><textarea class="ds-form-control" maxlength="1000" data-definition-field="description" data-item-index="' + index + '">' + escapeHtml(item.description) + '</textarea></div></div></article>';
+            }).join('') + '</div>';
         }
 
         function renderStructuredEditor() {
+            var isCollection = editDraft.type === 'case-list' || editDraft.type === 'definition-list';
+            var editor = isCollection ? collectionToolbarHtml(editDraft.type, editDraft.data.items.length) +
+                (editDraft.type === 'case-list' ? caseCardsHtml(editDraft.data.items) : definitionCardsHtml(editDraft.data.items)) :
+                '<div class="ds-form-grid">' + fieldControls(editDraft.data.fields, 'fields') + '</div>';
             drawerBody.innerHTML = '<section class="ds-edit-section"><div class="ds-section-head"><h3>组件预览</h3><span>仅演示当前维护内容</span></div>' +
                 '<div class="ds-section-body" id="dsPreviewArea">' + structuredPreviewHtml() + '</div></section>' +
                 '<section class="ds-edit-section"><div class="ds-section-head"><h3>内容编辑</h3><span>保存后可重新打开查看</span></div>' +
-                '<div class="ds-section-body"><div class="ds-form-grid">' + fieldControls(editDraft.data.fields, 'fields') + '</div></div></section>';
+                '<div class="ds-section-body"><div class="ds-form-grid" style="margin-bottom:16px">' + moduleNameControlHtml() + '</div>' + editor + '</div></section>';
         }
 
         function filteredRecords() {
@@ -609,8 +697,12 @@
             return records.filter(function (record) {
                 if (record.screen !== activeScreen) return false;
                 var fieldNames = (record.data.fields || record.data.details || []).map(function (item) { return item.label; });
-                var searchText = [record.name, record.section].concat(fieldNames, record.data.labels || [],
-                    (record.data.extras || []).map(function (item) { return item.label; })).join(' ').toLowerCase();
+                var itemNames = (record.data.items || []).map(function (item) {
+                    return [item.name, item.description, item.effectName].join(' ');
+                });
+                var searchText = [record.name, record.section, record.data.subtitle || ''].concat(fieldNames, record.data.labels || [],
+                    (record.data.datasets || []).map(function (item) { return item.label; }),
+                    (record.data.extras || []).map(function (item) { return item.label; }), itemNames).join(' ').toLowerCase();
                 if (keyword && searchText.indexOf(keyword) < 0) return false;
                 if (filters.year && String(record.year) !== filters.year) return false;
                 if (filters.status === 'enabled' && !record.enabled) return false;
@@ -710,7 +802,8 @@
                 escapeHtml(data.compareText) + ' ' + (data.direction === 'down' ? '↓ ' : '↑ ') +
                 formatNumber(data.trend) + escapeHtml(data.trendMode === 'percent' ? '%' : data.trendUnit) + '</div>';
             var extras = data.details.length ? '<div class="ds-metric-details">' + data.details.map(function (item) {
-                return '<span>' + escapeHtml(item.label) + '<strong>' + formatNumber(item.value) + '</strong> ' + escapeHtml(item.unit) + '</span>';
+                var marker = item.trendDirection && item.trendDirection !== 'none' ? '<em class="ds-trend-marker' + (item.trendDirection === 'down' ? ' down' : '') + '">' + (item.trendDirection === 'down' ? '↓' : '↑') + '</em>' : '';
+                return '<span>' + escapeHtml(item.label) + '<strong>' + formatNumber(item.value) + '</strong>' + marker + ' ' + escapeHtml(item.unit) + '</span>';
             }).join('') + '</div>' : '';
             return '<div class="ds-preview-shell"><div class="ds-metric-card ' + data.tone + '"><div class="ds-metric-label">' +
                 escapeHtml(editDraft.name) + '</div><div class="ds-metric-value-line"><span class="ds-metric-value">' + formatNumber(data.value) +
@@ -723,6 +816,7 @@
             drawerBody.innerHTML = '<section class="ds-edit-section"><div class="ds-section-head"><h3>指标预览</h3><span>V2 浅色指标卡示意</span></div>' +
                 '<div class="ds-section-body" id="dsPreviewArea">' + metricPreviewHtml() + '</div></section>' +
                 '<section class="ds-edit-section"><div class="ds-section-head"><h3>指标数据</h3><span>编辑仅影响本页预览</span></div><div class="ds-section-body"><div class="ds-form-grid">' +
+                moduleNameControlHtml() +
                 '<div class="ds-form-item"><label class="ds-form-label required" for="dsMetricValue">指标值</label><input id="dsMetricValue" class="ds-form-control" type="number" min="0" step="any" data-metric-field="value" value="' + escapeHtml(data.value) + '"></div>' +
                 '<div class="ds-form-item"><label class="ds-form-label required" for="dsMetricUnit">单位</label><input id="dsMetricUnit" class="ds-form-control" maxlength="12" data-metric-field="unit" value="' + escapeHtml(data.unit) + '"></div>' +
                 '<div class="ds-form-item full"><label class="ds-form-label" for="dsTrendMode">趋势展示</label><select id="dsTrendMode" class="ds-form-control" data-metric-field="trendMode">' +
@@ -760,19 +854,32 @@
             return html;
         }
 
+        function radarSummaryHtml(data) {
+            var timely = (data.extras || []).find(function (item) { return item.key === 'update-timeliness'; });
+            return timely ? '<div class="ds-inline-stats ds-radar-kpi"><span>' + escapeHtml(timely.label) + '<strong>' + formatNumber(timely.value) + '</strong>' + escapeHtml(timely.unit) + '</span></div>' : '';
+        }
+
+        function radarCenterHtml(data) {
+            var summary = (data.extras || []).find(function (item) { return item.key === 'overall-score'; });
+            return summary ? '<div class="ds-radar-center"><span>' + escapeHtml(summary.label) + '</span><strong>' + formatNumber(summary.value) + '</strong><em>' + escapeHtml(summary.unit) + '</em></div>' : '';
+        }
+
         function renderChartPreview() {
             destroyPreviewChart();
             var area = document.getElementById('dsPreviewArea');
             if (!area || !editDraft || editDraft.type !== 'dashboard') return;
             var data = editDraft.data;
-            var head = '<div class="ds-preview-head"><h4 class="ds-preview-title">' + escapeHtml(editDraft.name) + '</h4></div>';
+            var circle = data.chartType === 'doughnut' || data.chartType === 'pie';
+            var radar = data.chartType === 'radar';
+            var head = '<div class="ds-preview-head"><h4 class="ds-preview-title">' + escapeHtml(editDraft.name) + '</h4>' +
+                (data.subtitle ? '<span class="ds-preview-subtitle">' + escapeHtml(data.subtitle) + '</span>' : '') + '</div>';
             var note = data.note ? '<p class="ds-preview-note">' + escapeHtml(data.note) + '</p>' : '';
             var content = '';
             if (data.previewType === 'ranking') {
                 var rows = data.labels.map(function (label, index) { return { label:label, value:Number(data.datasets[0].data[index]) || 0 }; })
                     .sort(function (a, b) { return b.value - a.value; }).slice(0, data.topLimit || 10);
                 var max = Math.max(1, rows.length ? rows[0].value : 1);
-                content = '<p class="ds-preview-note">按' + escapeHtml(data.datasets[0].label) + '降序显示 TOP' + (data.topLimit || 10) + '</p><div class="ds-rank-preview">' +
+                content = (data.subtitle ? '' : '<p class="ds-preview-note">按' + escapeHtml(data.datasets[0].label) + '降序显示 TOP' + (data.topLimit || 10) + '</p>') + '<div class="ds-rank-preview">' +
                     rows.map(function (row, index) {
                         return '<div class="ds-rank-row"><span class="ds-rank-index">' + (index + 1) + '</span><span class="ds-rank-name" title="' +
                             escapeHtml(row.label) + '">' + escapeHtml(row.label) + '</span><div class="ds-rank-track"><div class="ds-rank-fill" style="width:' +
@@ -796,15 +903,13 @@
                 area.innerHTML = '<div class="ds-preview-shell">' + head + content + note + '</div>';
                 return;
             }
-            area.innerHTML = '<div class="ds-preview-shell">' + head + chartStatsHtml(data) +
-                '<div class="ds-preview-chart"><canvas id="dsPreviewCanvas"></canvas></div>' + note + '</div>';
+            area.innerHTML = '<div class="ds-preview-shell">' + head + (radar ? radarSummaryHtml(data) : chartStatsHtml(data)) +
+                '<div class="ds-preview-chart' + (radar ? ' ds-radar-chart' : '') + '"><canvas id="dsPreviewCanvas"></canvas>' + (radar ? radarCenterHtml(data) : '') + '</div>' + note + '</div>';
             if (!window.Chart) {
                 area.innerHTML = '<div class="ds-preview-shell">' + head + chartStatsHtml(data) +
                     '<p class="ds-preview-fallback">图表组件暂未加载，仍可在下方维护和保存数据。</p>' + note + '</div>';
                 return;
             }
-            var circle = data.chartType === 'doughnut' || data.chartType === 'pie';
-            var radar = data.chartType === 'radar';
             var datasets = data.datasets.map(function (dataset, index) {
                 var result = {
                     label:dataset.label, data:dataset.data.map(function (value) {
@@ -815,6 +920,16 @@
                     fill:radar || (data.chartType === 'line' && index === 0),
                     tension:.3, pointRadius:3, borderRadius:data.chartType === 'bar' ? 4 : 0
                 };
+                if (radar) {
+                    result.tension = 0;
+                    result.borderWidth = 2.5;
+                    result.backgroundColor = chartColors(index, .14);
+                    result.pointRadius = 4;
+                    result.pointHoverRadius = 5;
+                    result.pointBackgroundColor = '#ffffff';
+                    result.pointBorderColor = chartColors(index);
+                    result.pointBorderWidth = 2;
+                }
                 if (data.chartType === 'bar') result.backgroundColor = chartColors(index, .85);
                 if (dataset.yAxisID) result.yAxisID = dataset.yAxisID;
                 if (dataset.dashed) result.borderDash = [5,4];
@@ -829,8 +944,16 @@
                 animation:{ duration:200 }
             };
             if (radar) {
-                options.scales = { r:{ min:0, max:100, ticks:{ stepSize:20, color:'#819187', backdropColor:'transparent', font:{ size:11 } },
-                    pointLabels:{ color:'#355741', font:{ size:12 } }, grid:{ color:'#dcebe2' }, angleLines:{ color:'#dcebe2' } } };
+                options.plugins.legend.display = false;
+                options.layout = { padding:{ top:18, right:38, bottom:18, left:38 } };
+                options.scales = { r:{ min:0, max:100, beginAtZero:true,
+                    ticks:{ display:false, stepSize:20 },
+                    pointLabels:{ color:'#355741', padding:18, font:{ size:13, weight:'600' }, callback:function (label, index) {
+                        return [label, formatNumber(data.datasets[0].data[index])];
+                    } },
+                    grid:{ color:'rgba(43,138,82,.16)', lineWidth:1 },
+                    angleLines:{ color:'rgba(43,138,82,.14)', lineWidth:1 }
+                } };
             } else if (!circle) {
                 options.indexAxis = data.indexAxis || 'x';
                 options.scales = {
@@ -883,6 +1006,15 @@
                 return '<tr>' + cells + '</tr>';
             }).join('');
             return '<div class="ds-edit-table-wrap"><table class="ds-edit-table"><thead><tr>' + headers + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+        }
+
+        function dashboardSeriesControlsHtml() {
+            var subtitleControl = Object.prototype.hasOwnProperty.call(editDraft.data, 'subtitle') ?
+                '<div class="ds-form-item full"><label class="ds-form-label required" for="dsDashboardSubtitle">分组 / 角标名称</label><input id="dsDashboardSubtitle" class="ds-form-control" maxlength="40" data-dashboard-field="subtitle" value="' + escapeHtml(editDraft.data.subtitle) + '"></div>' : '';
+            return '<div class="ds-form-grid" style="margin-bottom:16px">' + moduleNameControlHtml() + subtitleControl + editDraft.data.datasets.map(function (dataset, index) {
+                return '<div class="ds-form-item"><label class="ds-form-label required" for="dsSeriesName-' + index + '">数据系列 ' + (index + 1) + ' 名称</label>' +
+                    '<input id="dsSeriesName-' + index + '" class="ds-form-control" maxlength="60" data-series-name-index="' + index + '" value="' + escapeHtml(dataset.label) + '"></div>';
+            }).join('') + '</div>';
         }
 
         function selectionCellCount() {
@@ -1022,6 +1154,7 @@
                 '<section class="ds-edit-section">',
                 '  <div class="ds-section-head"><h3>表格数据维护</h3><span>首列为维度，其余列为数据系列</span></div>',
                 '  <div class="ds-section-body">',
+                dashboardSeriesControlsHtml(),
                 '    <div class="ds-data-toolbar">',
                 '      <span class="ds-excel-tip">鼠标拖拽框选；支持 <kbd>Ctrl+C</kbd>/<kbd>Ctrl+V</kbd>、<kbd>Delete</kbd>、<kbd>Ctrl+Z</kbd>/<kbd>Ctrl+Y</kbd></span>',
                 '      <div class="ds-excel-actions">',
@@ -1090,6 +1223,7 @@
         function fieldsError(fields) {
             for (var i = 0; i < fields.length; i++) {
                 var item = fields[i];
+                if (!String(item.label || '').trim()) return '属性名称不能为空';
                 if (item.kind === 'number') {
                     var error = numberError(item.value, item.label, item.unit, item.max);
                     if (error) return error;
@@ -1101,6 +1235,7 @@
         function validateRecord(record) {
             var data = record.data;
             var error;
+            if (!String(record.name || '').trim()) return '模块 / 指标名称不能为空';
             if (record.type === 'metric') {
                 error = numberError(data.value, '指标值', data.unit);
                 if (error) return error;
@@ -1113,19 +1248,42 @@
                 }
                 error = fieldsError(data.details);
                 if (error) return error;
-                if (record.name === '数据产品总量' && Number(data.value) !== data.details.reduce(function (sum, item) { return sum + Number(item.value); }, 0)) {
+                if (record.key === 'data-products-total' && Number(data.value) !== data.details.reduce(function (sum, item) { return sum + Number(item.value); }, 0)) {
                     return 'API接口数量与数据集数量之和应等于数据产品总量';
                 }
                 return '';
             }
+            if (record.type === 'case-list') {
+                if (!data.items.length || data.items.length > 10) return '优秀案例数量应为 1 至 10 条';
+                for (var caseIndex = 0; caseIndex < data.items.length; caseIndex++) {
+                    var caseItem = data.items[caseIndex];
+                    if (!String(caseItem.name || '').trim()) return '案例 ' + (caseIndex + 1) + ' 名称不能为空';
+                    if (!String(caseItem.image || '').trim()) return '案例 ' + (caseIndex + 1) + ' 图片不能为空';
+                    if (!String(caseItem.effectName || '').trim()) return '案例 ' + (caseIndex + 1) + ' 成效名称不能为空';
+                    error = numberError(caseItem.effectValue, '案例 ' + (caseIndex + 1) + ' 成效值', caseItem.unit);
+                    if (error) return error;
+                    if (!String(caseItem.unit || '').trim()) return '案例 ' + (caseIndex + 1) + ' 成效单位不能为空';
+                }
+                return '';
+            }
+            if (record.type === 'definition-list') {
+                if (!data.items.length || data.items.length > 10) return '指标口径数量应为 1 至 10 条';
+                for (var definitionIndex = 0; definitionIndex < data.items.length; definitionIndex++) {
+                    var definition = data.items[definitionIndex];
+                    if (!String(definition.name || '').trim()) return '口径 ' + (definitionIndex + 1) + ' 指标名称不能为空';
+                    if (!String(definition.description || '').trim()) return '口径 ' + (definitionIndex + 1) + ' 说明不能为空';
+                }
+                return '';
+            }
             if (record.type !== 'dashboard') return fieldsError(data.fields);
+            if (Object.prototype.hasOwnProperty.call(data, 'subtitle') && !String(data.subtitle || '').trim()) return '分组 / 角标名称不能为空';
             if (!data.labels.length || data.labels.some(function (label) { return !String(label).trim(); })) return '维度 / 分类不能为空';
             for (var i = 0; i < data.datasets.length; i++) {
                 var dataset = data.datasets[i];
+                if (!String(dataset.label || '').trim()) return '数据系列名称不能为空';
                 if (dataset.data.length !== data.labels.length) return '数据行数与分类数量不一致';
-                var countUnit = /[（(](个|家|项)[）)]/.exec(dataset.label);
                 for (var j = 0; j < dataset.data.length; j++) {
-                    error = numberError(dataset.data[j], '第 ' + (j + 1) + ' 行「' + dataset.label + '」', countUnit ? countUnit[1] : '', data.percent ? 100 : data.max);
+                    error = numberError(dataset.data[j], '第 ' + (j + 1) + ' 行「' + dataset.label + '」', dataset.valueUnit || '', data.percent ? 100 : data.max);
                     if (error) return error;
                 }
             }
@@ -1142,8 +1300,8 @@
             flushDashboardHistory();
             var error = validateRecord(editDraft);
             if (error) { showToast(error, 'error'); return; }
+            editRecord.name = editDraft.name.trim();
             editRecord.data = clone(editDraft.data);
-            if (editRecord.type === 'case') editRecord.name = '优秀案例 · ' + editRecord.data.fields[0].value.trim();
             var name = editRecord.name;
             closeDrawer();
             renderTable();
@@ -1301,14 +1459,37 @@
             showToast('表格导入成功，请确认预览后保存');
         }
 
+        function addCollectionItem() {
+            if (!editDraft || ['case-list','definition-list'].indexOf(editDraft.type) < 0) return;
+            if (editDraft.data.items.length >= 10) { showToast('最多可维护 10 条内容', 'error'); return; }
+            if (editDraft.type === 'case-list') {
+                editDraft.data.items.push(caseEntry('新增案例', 'images/solution-manufacturing.jpg', '成效提升', 0));
+            } else {
+                editDraft.data.items.push(definitionEntry('新增指标', '请输入指标口径说明。'));
+            }
+            renderStructuredEditor();
+        }
+
+        function removeCollectionItem(index) {
+            if (!editDraft || ['case-list','definition-list'].indexOf(editDraft.type) < 0) return;
+            if (editDraft.data.items.length <= 1) { showToast('至少保留 1 条内容', 'error'); return; }
+            if (index < 0 || index >= editDraft.data.items.length) return;
+            editDraft.data.items.splice(index, 1);
+            renderStructuredEditor();
+        }
+
         function updateFieldInput(target) {
             if (!editDraft) return false;
-            var group = target.getAttribute('data-field-group');
+            var group = target.getAttribute('data-field-group') || target.getAttribute('data-field-label-group') || target.getAttribute('data-field-trend-group');
             var index = Number(target.getAttribute('data-field-index'));
             if (!group || !editDraft.data[group] || !editDraft.data[group][index]) return false;
             var item = editDraft.data[group][index];
-            if (item.kind === 'image') return false;
-            item.value = target.value;
+            if (target.hasAttribute('data-field-label-group')) item.label = target.value;
+            else if (target.hasAttribute('data-field-trend-group')) item.trendDirection = target.value;
+            else {
+                if (item.kind === 'image') return false;
+                item.value = target.value;
+            }
             if (editDraft.type === 'dashboard') {
                 scheduleDashboardHistory();
                 renderChartPreview();
@@ -1318,7 +1499,7 @@
 
         function readCaseImage(input) {
             var file = input.files && input.files[0];
-            if (!file || !editDraft || editDraft.type !== 'case') return;
+            if (!file || !editDraft || editDraft.type !== 'case-list') return;
             if (!/^image\/(png|jpeg|webp)$/.test(file.type) || file.size > 5 * 1024 * 1024) {
                 input.value = '';
                 showToast('请选择不超过 5 MB 的 PNG、JPG 或 WebP 图片', 'error');
@@ -1326,7 +1507,7 @@
             }
             var draft = editDraft;
             var token = ++imageReadToken;
-            var index = Number(input.getAttribute('data-field-index'));
+            var index = Number(input.getAttribute('data-item-index'));
             var reader = new FileReader();
             imageLoading = true;
             function failed() {
@@ -1342,7 +1523,9 @@
                 picture.onerror = failed;
                 picture.onload = function () {
                     if (editDraft !== draft || token !== imageReadToken) return;
-                    draft.data.fields[index].value = String(reader.result);
+                    if (!draft.data.items[index]) return failed();
+                    draft.data.items[index].image = String(reader.result);
+                    draft.data.items[index].crop = null;
                     imageLoading = false;
                     renderStructuredEditor();
                 };
@@ -1401,7 +1584,45 @@
 
         drawerBody.addEventListener('input', function (event) {
             if (!editDraft || event.target.type === 'file') return;
+            if (event.target.hasAttribute('data-record-name')) {
+                editDraft.name = event.target.value;
+                var namePreview = document.getElementById('dsPreviewArea');
+                if (namePreview) {
+                    if (editDraft.type === 'metric') namePreview.innerHTML = metricPreviewHtml();
+                    else if (editDraft.type === 'dashboard') renderChartPreview();
+                    else namePreview.innerHTML = structuredPreviewHtml();
+                }
+                return;
+            }
             if (updateFieldInput(event.target)) return;
+            var seriesNameIndex = event.target.getAttribute('data-series-name-index');
+            if (seriesNameIndex != null) {
+                editDraft.data.datasets[Number(seriesNameIndex)].label = event.target.value;
+                scheduleDashboardHistory();
+                renderChartPreview();
+                return;
+            }
+            var dashboardField = event.target.getAttribute('data-dashboard-field');
+            if (dashboardField) {
+                editDraft.data[dashboardField] = event.target.value;
+                scheduleDashboardHistory();
+                renderChartPreview();
+                return;
+            }
+            var caseField = event.target.getAttribute('data-case-field');
+            if (caseField) {
+                var caseIndex = Number(event.target.getAttribute('data-item-index'));
+                editDraft.data.items[caseIndex][caseField] = caseField === 'effectValue' ? parseCellNumber(event.target.value) : event.target.value;
+                document.getElementById('dsPreviewArea').innerHTML = structuredPreviewHtml();
+                return;
+            }
+            var definitionField = event.target.getAttribute('data-definition-field');
+            if (definitionField) {
+                var definitionIndex = Number(event.target.getAttribute('data-item-index'));
+                editDraft.data.items[definitionIndex][definitionField] = event.target.value;
+                document.getElementById('dsPreviewArea').innerHTML = structuredPreviewHtml();
+                return;
+            }
             var metricField = event.target.getAttribute('data-metric-field');
             if (metricField) {
                 if (event.target.tagName === 'SELECT') return;
@@ -1448,6 +1669,13 @@
         });
 
         drawerBody.addEventListener('click', function (event) {
+            var collectionAction = event.target.closest('[data-collection-action]');
+            if (collectionAction) {
+                if (collectionAction.disabled) return;
+                if (collectionAction.getAttribute('data-collection-action') === 'add') addCollectionItem();
+                else removeCollectionItem(Number(collectionAction.getAttribute('data-item-index')));
+                return;
+            }
             var action = event.target.closest('[data-excel-action]');
             if (!action || action.disabled) return;
             var type = action.getAttribute('data-excel-action');
@@ -1478,10 +1706,11 @@
         drawerBody.addEventListener('change', function (event) {
             if (!editDraft) return;
             var target = event.target;
-            if (target.type === 'file' && target.hasAttribute('data-field-group')) {
+            if (target.type === 'file' && target.hasAttribute('data-case-image')) {
                 readCaseImage(target);
                 return;
             }
+            if (updateFieldInput(target)) return;
             var metricField = target.getAttribute('data-metric-field');
             if (metricField) {
                 editDraft.data[metricField] = target.value;
