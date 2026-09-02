@@ -11,6 +11,10 @@
             description: '汇聚企业登记、产业分布和经营活跃度等主题指标，形成龙岗区企业经营活力监测样例数据，为产业分析、园区运营和企业服务提供数据支撑。',
             price: '9,800元/年',
             delivery: '文件传输',
+            measure: '一口价',
+            billing: '预付费',
+            provider: '广东****有限公司',
+            publishedAt: '2025-11-4 15:00:00',
             industry: '企业服务',
             introduction: '围绕龙岗区企业经营活跃度、产业结构和空间分布构建标准化数据集，提供统一字段口径、按日更新的数据文件及可下载样例。'
         },
@@ -21,6 +25,10 @@
             description: '提供企业经营活力指数、状态标签和统计日期查询能力，适用于企业服务、园区运营及产业监测系统的实时接口接入。',
             price: '0.08元/次',
             delivery: 'API传输',
+            measure: '按次计费',
+            billing: '预付费',
+            provider: '广东****有限公司',
+            publishedAt: '2025-11-4 15:00:00',
             industry: '企业服务',
             introduction: '通过数据岛 API 网关提供企业经营活力指标查询服务，支持企业编码和统计日期参数，返回结构化 JSON 数据。',
             apiService: {
@@ -81,6 +89,10 @@
             description: '围绕重点产业、街道和园区形成产业运行分析说明文件，展示数据口径、指标结构和主要分析内容。',
             price: '3,600元/份',
             delivery: '文件传输',
+            measure: '按份计费',
+            billing: '预付费',
+            provider: '广东****有限公司',
+            publishedAt: '2025-11-4 15:00:00',
             industry: '产业发展',
             introduction: '以说明文件形式交付产业运行分析样例，内容包括重点产业结构、企业活跃度、园区运行情况以及数据使用说明。'
         }
@@ -93,7 +105,10 @@
             resourceType: '企业数据',
             image: 'images/stock-data.jpg',
             description: '汇聚龙岗区企业登记、所属行业、所在街道和经营活跃度等基础信息，形成可用于产业分析和企业服务的标准化数据资源。',
+            price: '面议',
             delivery: '文件传输',
+            measure: '一口价',
+            billing: '预付费',
             industry: '信息传输、软件和信息技术服务业',
             owner: '深圳市龙岗区政务数据运营有限公司',
             publishedAt: '2026-07-18 09:30:00',
@@ -117,7 +132,10 @@
             resourceType: '企业数据',
             image: 'images/realtime-data.jpg',
             description: '提供龙岗区企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统通过标准接口按企业编码调用。',
+            price: '面议',
             delivery: 'API传输',
+            measure: '按次计费',
+            billing: '预付费',
             industry: '信息传输、软件和信息技术服务业',
             owner: '深圳市龙岗区政务数据运营有限公司',
             publishedAt: '2026-07-17 16:35:00',
@@ -189,7 +207,10 @@
             resourceType: '行业数据',
             image: 'images/data-screen.jpg',
             description: '汇集龙岗区重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究和业务研判参考。',
+            price: '面议',
             delivery: '文件传输',
+            measure: '按份计费',
+            billing: '预付费',
             industry: '租赁和商务服务业',
             owner: '深圳市龙岗区产业数据运营有限公司',
             publishedAt: '2026-07-16 14:10:00',
@@ -204,6 +225,11 @@
                 ['更新日期', 'update_date', '日期型', '10']
             ]
         }
+    };
+
+    window.ProductDetailCatalog = {
+        products: PRODUCTS,
+        resources: RESOURCES
     };
 
     var DATASET_ROWS = [
@@ -386,13 +412,31 @@
         if (element) element.textContent = value;
     }
 
-    function applyProduct(product) {
+    function setTextAll(selector, value) {
+        document.querySelectorAll(selector).forEach(function (element) {
+            element.textContent = value;
+        });
+    }
+
+    function updateBuyLink(context, type) {
+        var link = document.querySelector('[data-detail-buy]');
+        if (!link) return;
+        link.href = 'product-buy.html?catalog=' + encodeURIComponent(context)
+            + '&sampleType=' + encodeURIComponent(type);
+    }
+
+    function applyProduct(product, type) {
         document.title = product.name + ' - 龙岗数据聚合服务平台';
         setText('[data-product-detail-breadcrumb]', product.name);
         setText('[data-product-detail-title]', product.name);
         setText('[data-product-detail-description]', product.description);
         setText('[data-product-detail-price]', product.price);
+        setText('[data-product-detail-price-table]', product.price);
         setText('[data-product-detail-delivery]', product.delivery);
+        setText('[data-product-detail-measure]', product.measure);
+        setText('[data-product-detail-billing]', product.billing);
+        setText('[data-product-detail-published]', product.publishedAt);
+        setTextAll('[data-product-detail-provider]', product.provider);
         setText('[data-product-detail-name]', product.name);
         setText('[data-product-detail-type]', product.type);
         setText('[data-product-detail-industry]', product.industry);
@@ -402,6 +446,7 @@
             image.src = product.image;
             image.alt = product.name;
         });
+        updateBuyLink('product', type);
     }
 
     function renderResourceFields(fields) {
@@ -416,13 +461,16 @@
         }).join('');
     }
 
-    function applyResource(resource) {
+    function applyResource(resource, type) {
         document.title = resource.name + ' - 龙岗数据聚合服务平台';
         setText('[data-resource-detail-breadcrumb]', resource.name);
         setText('[data-resource-detail-title]', resource.name);
         setText('[data-resource-detail-description]', resource.description);
         setText('[data-resource-detail-published]', resource.publishedAt);
+        setText('[data-resource-detail-price]', resource.price);
         setText('[data-resource-detail-delivery]', resource.delivery);
+        setText('[data-resource-detail-measure]', resource.measure);
+        setText('[data-resource-detail-billing]', resource.billing);
         setText('[data-resource-detail-name]', resource.name);
         setText('[data-resource-detail-type]', resource.resourceType);
         setText('[data-resource-detail-industry]', resource.industry);
@@ -439,6 +487,7 @@
             image.alt = resource.name;
         });
         renderResourceFields(resource.fields);
+        updateBuyLink('resource', type);
     }
 
     function initDetailSamples() {
@@ -450,8 +499,8 @@
         var type = params.get('sampleType');
         if (!catalog[type]) type = 'dataset';
         var item = catalog[type];
-        if (context === 'resource') applyResource(item);
-        else applyProduct(item);
+        if (context === 'resource') applyResource(item, type);
+        else applyProduct(item, type);
         samplePanel.classList.add('sample-panel');
         samplePanel.innerHTML = type === 'api'
             ? renderApiSample(item)

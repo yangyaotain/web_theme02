@@ -70,22 +70,25 @@
         .product-meta-row .val { color: var(--text-primary); }
         .product-meta-row .company { color: var(--forest-green); font-weight: 500; }
 
-        .delivery-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .delivery-label { font-size: 13px; color: var(--text-tertiary); }
+        .product-price { font-size: 13px; color: var(--text-tertiary); margin-bottom: 14px; }
+        .product-price .amount { font-size: 22px; font-weight: 700; color: #E53935; }
+
+        .delivery-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .delivery-label { font-size: 13px; color: var(--text-tertiary); min-width: 70px; }
         .delivery-tag {
             display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
             border: 1px solid var(--forest-green-200); border-radius: 100px;
             font-size: 13px; color: var(--forest-green);
         }
 
-        .action-row { display: flex; gap: 12px; margin-top: 2px; }
-        .apply-btn {
+        .action-row { display: flex; gap: 12px; margin-top: 6px; }
+        .btn-buy {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 10px 28px; font-size: 14px; font-weight: 600; color: #fff;
             background: var(--forest-green); border: none; border-radius: 6px;
             cursor: pointer; font-family: inherit; transition: all 150ms ease;
         }
-        .apply-btn:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
+        .btn-buy:hover { background: var(--forest-green-600); box-shadow: var(--shadow-green-glow); }
         .btn-consult {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--forest-green);
@@ -225,12 +228,21 @@
                         <span>数据资源持有方：<span class="company" data-resource-detail-owner>智云****公司</span></span>
                         <span>上架时间：<span class="val" data-resource-detail-published>2025-11-4 15:00:00</span></span>
                     </div>
+                    <div class="product-price">参考价：<span class="amount" data-resource-detail-price>面议</span></div>
                     <div class="delivery-row">
                         <span class="delivery-label">交付方式：</span>
                         <span class="delivery-tag" data-resource-detail-delivery>在线交付</span>
                     </div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">计量方式：</span>
+                        <span class="delivery-tag" data-resource-detail-measure>一口价</span>
+                    </div>
+                    <div class="delivery-row">
+                        <span class="delivery-label">计费方式：</span>
+                        <span class="delivery-tag" data-resource-detail-billing>预付费</span>
+                    </div>
                     <div class="action-row">
-                        <a href="data-apply.html" class="apply-btn">立即申请</a>
+                        <a href="product-buy.html?catalog=resource&amp;sampleType=dataset" class="btn-buy" data-detail-buy>立即购买</a>
                         <button class="btn-consult" onclick="document.getElementById('consultOverlay').classList.add('active')">资源咨询</button>
                     </div>
                 </div>

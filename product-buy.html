@@ -55,19 +55,19 @@
         <nav class="g-breadcrumb">
             <a href="index.html">首页</a>
             <span class="sep">/</span>
-            <a href="data-products.html">数据产品</a>
+            <a href="data-products.html" data-buy-catalog-list>数据产品</a>
             <span class="sep">/</span>
-            <a href="product-detail.html">慧企政策智能推荐</a>
+            <a href="product-detail.html" data-buy-detail-link>慧企政策智能推荐</a>
             <span class="sep">/</span>
-            <span class="current">购买产品</span>
+            <span class="current" data-buy-current>购买产品</span>
         </nav>
 
         <div class="g-container g-container--pb">
             <div class="g-card">
-                <h1 class="apply-title">慧企政策智能推荐</h1>
+                <h1 class="apply-title" data-buy-item-name>慧企政策智能推荐</h1>
                 <div class="apply-meta g-meta">
-                    <span>产品类型：<span class="val">数据应用</span></span>
-                    <span>产品提供方：<span class="val">广东****有限公司</span></span>
+                    <span><span data-buy-type-label>产品类型</span>：<span class="val" data-buy-item-type>数据应用</span></span>
+                    <span><span data-buy-provider-label>产品提供方</span>：<span class="val" data-buy-provider>广东****有限公司</span></span>
                 </div>
 
                 <form id="buyForm" autocomplete="off">
@@ -76,7 +76,7 @@
                     <table class="order-table">
                         <thead>
                             <tr>
-                                <th>产品名称</th>
+                                <th data-buy-name-heading>产品名称</th>
                                 <th>订单类型</th>
                                 <th>交付方式</th>
                                 <th>付费方式</th>
@@ -89,15 +89,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>金融数据产品1</td>
+                                <td data-buy-order-name>慧企政策智能推荐</td>
                                 <td>常规订单</td>
-                                <td>文件传输</td>
-                                <td>预付费</td>
-                                <td>一口价</td>
-                                <td>1000元</td>
-                                <td>800元</td>
+                                <td data-buy-order-delivery>文件传输</td>
+                                <td data-buy-order-billing>预付费</td>
+                                <td data-buy-order-measure>一口价</td>
+                                <td data-buy-order-price>1000元</td>
+                                <td data-buy-order-member-price>800元</td>
                                 <td>1</td>
-                                <td>800元</td>
+                                <td data-buy-order-total>800元</td>
                             </tr>
                         </tbody>
                     </table>
@@ -251,17 +251,63 @@
     </div>
 
 
+    <script src="js/product-detail-samples.js"></script>
     <script src="js/form-utils.js"></script>
     <script src="js/global-dialog.js"></script>
     <script>
     (function () {
+        var params = new URLSearchParams(window.location.search || '');
+        var isResource = params.get('catalog') === 'resource';
+        var catalog = isResource
+            ? window.ProductDetailCatalog.resources
+            : window.ProductDetailCatalog.products;
+        var sampleType = params.get('sampleType');
+        if (!catalog[sampleType]) sampleType = 'dataset';
+        var item = catalog[sampleType];
+        var entityLabel = isResource ? '资源' : '产品';
+        var listLabel = isResource ? '数据资源' : '数据产品';
+        var listHref = isResource ? 'data-resources.html' : 'data-products.html';
+        var detailHref = (isResource ? 'data-detail.html' : 'product-detail.html')
+            + '?sampleType=' + encodeURIComponent(sampleType);
+        var provider = isResource ? item.owner : item.provider;
+        var type = isResource ? item.resourceType : item.type;
+        var typeLabel = isResource ? '数据资源类型' : '产品类型';
+        var providerLabel = isResource ? '数据资源提供方' : '产品提供方';
+        var memberPrice = isResource ? '--' : item.price;
+        var total = isResource ? item.price : memberPrice;
+
+        function setText(selector, value) {
+            var element = document.querySelector(selector);
+            if (element) element.textContent = value;
+        }
+
+        document.title = '购买' + entityLabel + ' - 龙岗数据聚合服务平台';
+        setText('[data-buy-catalog-list]', listLabel);
+        document.querySelector('[data-buy-catalog-list]').href = listHref;
+        setText('[data-buy-detail-link]', item.name);
+        document.querySelector('[data-buy-detail-link]').href = detailHref;
+        setText('[data-buy-current]', '购买' + entityLabel);
+        setText('[data-buy-item-name]', item.name);
+        setText('[data-buy-type-label]', typeLabel);
+        setText('[data-buy-item-type]', type);
+        setText('[data-buy-provider-label]', providerLabel);
+        setText('[data-buy-provider]', provider);
+        setText('[data-buy-name-heading]', entityLabel + '名称');
+        setText('[data-buy-order-name]', item.name);
+        setText('[data-buy-order-delivery]', item.delivery);
+        setText('[data-buy-order-billing]', item.billing);
+        setText('[data-buy-order-measure]', item.measure);
+        setText('[data-buy-order-price]', item.price);
+        setText('[data-buy-order-member-price]', memberPrice);
+        setText('[data-buy-order-total]', total);
+
         FormUtils.charCount('txtPurpose', 'purposeCount');
 
         document.getElementById('buyForm').addEventListener('submit', function (e) {
             e.preventDefault();
             GlobalDialog.success({
                 title: '提交成功',
-                desc: '您的购买订单已提交，即将返回详情页…',
+                desc: '您的' + entityLabel + '购买订单已提交，即将返回详情页…',
                 duration: 1600,
                 onClose: function () { history.back(); }
             });

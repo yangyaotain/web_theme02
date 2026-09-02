@@ -161,7 +161,14 @@ class NavBar extends HTMLElement {
         if (path.includes('data-resources') || path.includes('data-detail') || path.includes('data-apply')) {
             return { primary: 'data-trade', secondary: 'data-resources', tertiary: '' };
         }
-        if (path.includes('data-products') || path.includes('product-detail') || path.includes('product-buy')) {
+        if (path.includes('product-buy')) {
+            return {
+                primary: 'data-trade',
+                secondary: params.get('catalog') === 'resource' ? 'data-resources' : 'data-products',
+                tertiary: ''
+            };
+        }
+        if (path.includes('data-products') || path.includes('product-detail')) {
             return { primary: 'data-trade', secondary: 'data-products', tertiary: '' };
         }
         if (path.includes('data-production-line')) {
@@ -252,7 +259,7 @@ class NavBar extends HTMLElement {
                         label: '空间互联',
                         children: [
                             { id: 'space-overview', label: '龙岗可信数据空间', href: 'data-space.html?space=overview' },
-                            { id: 'space-public', label: '公共数据可信数据空间', href: 'data-space.html?space=public' },
+                            // 公共数据可信数据空间暂不在三级菜单展示，保留直达页面与路由兼容。
                             { id: 'space-low-altitude', label: '低空经济可信数据空间', href: 'data-space.html?space=low-altitude' },
                             { id: 'space-embodied', label: '具身智能可信数据空间', href: 'data-space.html?space=embodied' },
                             { id: 'space-health', label: '医药健康可信数据空间', href: 'data-space.html?space=health' },
