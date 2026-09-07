@@ -920,6 +920,7 @@
         </div>
     </footer>
 
+    <script src="js/industry-solution-catalog.js"></script>
     <script>
     (function() {
         var popularCards = document.getElementById('popularCards');
@@ -1077,50 +1078,17 @@
             solution: {
                 label: '行业方案',
                 allHref: 'industry-solutions.html',
-                items: [
-                    {
-                        image: 'images/solution-manufacturing.jpg', icon: 'precision_manufacturing', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
-                        title: '龙华区智能制造诊断解决方案', company: '深圳市龙岗工业互联网有限公司',
-                        desc: '融合设备运行、订单、质量和能耗数据，为制造企业提供产线诊断、能效分析、异常预警及改进建议闭环',
-                        meta: '2026-08-20 18:56:03', type: '制造业',
-                        href: detailHref('solution-detail.html', '龙华区智能制造诊断解决方案', '100元/次')
-                    },
-                    {
-                        image: 'images/solution-finance.jpg', icon: 'shield', badges: [{ text: '数据产品' }, { text: '100元/次', tone: 'price' }],
-                        title: '福田区金融风险监测解决方案', company: '深圳市龙岗金融数据服务有限公司',
-                        desc: '整合企业经营、司法、信用和交易信息，构建金融客户风险画像，支持准入筛查、动态监测和风险分级预警',
-                        meta: '2026-08-20 17:11:53', type: '金融服务',
-                        href: detailHref('solution-detail.html', '福田区金融风险监测解决方案', '100元/次')
-                    },
-                    {
-                        image: 'images/solution-infotech.jpg', icon: 'hub', badges: [{ text: '数据资源需求' }, { text: '数据产品需求' }, { text: '面议', tone: 'price' }],
-                        title: '园区产业链精准招商解决方案', company: '深圳市龙岗产业招商服务有限公司',
-                        desc: '围绕产业链图谱、企业画像和项目线索，提供目标企业筛选、招商研判、线索推荐及项目全过程跟踪服务',
-                        meta: '2026-08-20 15:21:38', type: '商务服务',
-                        href: detailHref('solution-detail.html', '园区产业链精准招商解决方案', '面议')
-                    },
-                    {
-                        image: 'images/solution-construction.jpg', badges: [{ text: '应用场景' }, { text: '数据产品' }, { text: '12万元/套', tone: 'price' }],
-                        title: '智慧工地安全监管解决方案', company: '深圳市龙岗城市建设科技有限公司',
-                        desc: '接入人员、设备、视频和环境监测数据，实现施工风险识别、隐患闭环、进度分析和项目可视化监管',
-                        meta: '2026-08-19 16:42:26', type: '建筑业',
-                        href: detailHref('solution-detail.html', '智慧工地安全监管解决方案', '12万元/套')
-                    },
-                    {
-                        image: 'images/solution-asset.jpg', badges: [{ text: '数据产品需求' }, { text: '面议', tone: 'price' }],
-                        title: '企业数据资产入表服务方案', company: '深圳市龙岗数据资产服务有限公司',
-                        desc: '提供数据资产盘点、合规评估、成本归集、价值论证和会计衔接辅导，形成职责清晰、可执行的数据资产入表路径',
-                        meta: '2026-08-19 14:05:17', type: '专业服务',
-                        href: detailHref('solution-detail.html', '企业数据资产入表服务方案', '面议')
-                    },
-                    {
-                        image: 'images/solution-healthcare.jpg', badges: [{ text: '数据资源需求' }, { text: '5万元/次', tone: 'price' }],
-                        title: '区域医疗资源协同分析方案', company: '深圳市龙岗健康数据科技有限公司',
-                        desc: '基于医疗机构、科室、床位和服务量数据，分析区域医疗资源供需、服务半径及结构差异，辅助优化资源配置',
-                        meta: '2026-08-19 10:38:49', type: '医疗健康',
-                        href: detailHref('solution-detail.html', '区域医疗资源协同分析方案', '5万元/次')
-                    }
-                ]
+                items: window.IndustrySolutionCatalog.createRecords().filter(function (item, index) {
+                    return [0, 2, 4, 5, 7, 9].indexOf(index) !== -1;
+                }).map(function (item) {
+                    return {
+                        image: item.thumb,
+                        badges: [{ text: item.badge }, { text: '面议', tone: 'price' }],
+                        title: item.name, company: '行业方案服务商（示例）',
+                        desc: item.tabDesc, meta: item.createdAt, type: item.portalCategory,
+                        href: 'industry-solutions.html?id=' + encodeURIComponent(item.id)
+                    };
+                })
             }
         };
 

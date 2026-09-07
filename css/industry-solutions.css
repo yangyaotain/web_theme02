@@ -1,0 +1,24 @@
+/* 复用 service-catalog.css；仅补充方案自定义卡片与预览状态。 */
+.solution-empty { padding: 28px 20px; color: var(--text-secondary); line-height: 1.8; text-align: center; }
+.solution-empty .outline-button { margin-top: 16px; }
+.solution-card-flow { margin-left: 56px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 16px; }
+.solution-card-flow > .process-card { grid-column: span 2; min-width: 0; height: 100%; }
+.solution-card-flow > .advantage-card { grid-column: span 3; min-width: 0; height: 100%; }
+.solution-card-flow > .case-card { grid-column: 1 / -1; min-width: 0; }
+.solution-card-flow p { white-space: pre-line; overflow-wrap: anywhere; }
+.solution-card-flow .advantage-card > div:last-child { min-width: 0; }
+.solution-card-flow .advantage-icon { color: var(--forest-green); }
+.solution-card-flow .advantage-icon svg { width: 48px; height: 48px; }
+.solution-preview nav-bar, .solution-preview .service-sidebar { display: none; }
+.solution-preview .main-content { grid-template-columns: minmax(0, 1fr); max-width: 1200px; padding-top: 32px; }
+.solution-preview-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; }
+.solution-preview-bar .outline-button { width: auto; padding: 8px 14px; }
+.consult-card .consult-actions svg { width: 16px; height: 16px; vertical-align: middle; margin-right: 6px; fill: currentColor; }
+.consult-card .consult-close-label { font-size: 12px; }
+.consult-card .consult-close { width: auto; padding: 0 10px; gap: 4px; }
+@media (max-width: 1280px) { .solution-card-flow > .process-card { grid-column: span 3; } }
+@media (max-width: 768px) {
+    .solution-card-flow { margin-left: 0; grid-template-columns: minmax(0, 1fr); }
+    .solution-card-flow > .process-card, .solution-card-flow > .advantage-card { grid-column: 1; }
+    .solution-preview .main-content { padding: 24px 16px; }
+}

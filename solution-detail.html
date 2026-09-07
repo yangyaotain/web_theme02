@@ -6,6 +6,16 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // 旧详情地址继续可用，统一进入行业解决方案目录与详情展示。
+        (function () {
+            var source = new URLSearchParams(window.location.search);
+            var target = new URLSearchParams();
+            if (source.get('id')) target.set('id', source.get('id'));
+            else if (source.get('title')) target.set('title', source.get('title'));
+            window.location.replace('industry-solutions.html' + (target.toString() ? '?' + target.toString() : ''));
+        })();
+    </script>
     <title>金融行业数据应用解决方案 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -285,7 +295,7 @@
     </div>
 
 
-    <!-- 服务咨询弹窗 -->
+    <!-- 方案咨询弹窗 -->
     <div class="consult-overlay" id="consultOverlay">
         <div class="consult-card">
             <button class="consult-close" id="consultClose" title="关闭">

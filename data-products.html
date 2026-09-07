@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/domain-filter.css">
     <style>
         /* ── Search Section ── */
         .search-section {
@@ -119,17 +120,33 @@
         /* ── Content Area ── */
         .content-area { min-width: 0; }
         .content-tabs {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
-            padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 32px;
+            margin-bottom: 24px;
+        }
+        .content-tabs-label {
+            flex: 0 0 auto;
+            margin-right: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
         .tab {
-            padding: 8px 16px; font-size: 13px; font-weight: 500;
+            min-width: 48px;
+            padding: 6px 14px; font-size: 13px; font-weight: 500;
             color: var(--text-secondary); background: transparent;
-            border: 1px solid transparent; border-radius: var(--radius-md);
+            border: 1px solid transparent; border-radius: var(--radius-sm);
             cursor: pointer; transition: all var(--transition-fast);
         }
         .tab:hover { color: var(--text-primary); background: var(--gray-100); }
-        .tab.active { color: var(--forest-green); background: var(--forest-green-50); border-color: var(--forest-green-200); }
+        .tab.active {
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border-color: var(--forest-green-100);
+            font-weight: 600;
+        }
 
         .content-header {
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
@@ -272,7 +289,7 @@
                         <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                         <input type="text" class="search-input" placeholder="搜索数据产品、API、解决方案...">
                     </div>
-                    <button class="search-btn">搜索</button>
+                    <button class="search-btn"><span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px;vertical-align:middle;margin-right:6px;">search</span>搜索</button>
                 </div>
                 <div class="search-tags">
                     <span class="search-tags-label">热门：</span>
@@ -291,56 +308,7 @@
         <!-- Left Sidebar -->
         <aside class="sidebar">
             <div class="filter-card">
-                <div class="filter-section">
-                    <div class="filter-title">
-                        行业分类
-                        <span class="filter-clear">清除</span>
-                    </div>
-                    <div class="filter-options">
-                        <div class="filter-option active">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">全部</span>
-                            <span class="filter-count">128</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">交通运输</span>
-                            <span class="filter-count">24</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">金融服务</span>
-                            <span class="filter-count">18</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">文化旅游</span>
-                            <span class="filter-count">15</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">制造业</span>
-                            <span class="filter-count">12</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">房地产</span>
-                            <span class="filter-count">10</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="filter-section" data-domain-filter></div>
 
                 <div class="filter-divider"></div>
 
@@ -416,17 +384,17 @@
 
         <!-- Right Content Area -->
         <div class="content-area">
-            <div class="content-tabs">
-                <button class="tab active">全部</button>
-                <button class="tab">数据集</button>
-                <button class="tab">数据产品</button>
-                <button class="tab">数据报告</button>
-                <button class="tab">RWA</button>
-                <button class="tab">数据模型</button>
+            <div class="content-tabs" role="tablist" aria-label="产品类型">
+                <span class="content-tabs-label">产品类型</span>
+                <button class="tab active" type="button" role="tab" aria-selected="true" data-product-type="全部">全部</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-product-type="API">API</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-product-type="数据集">数据集</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-product-type="报告">报告</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-product-type="数据模型">数据模型</button>
             </div>
 
             <div class="content-header">
-                <div class="results-count">共 <strong>37</strong> 条数据产品</div>
+                <div class="results-count" aria-live="polite">共 <strong>9</strong> 条数据产品</div>
                 <div class="sort-dropdown">
                     <span class="sort-label">排序：</span>
                     <select class="sort-select">
@@ -438,7 +406,7 @@
             </div>
 
             <div class="data-grid">
-                <article class="data-card" data-sample-type="dataset">
+                <article data-domain="商贸流通" class="data-card" data-sample-type="dataset">
                     <div class="data-card-image is-icon" aria-hidden="true">
                         <span class="material-symbols-outlined">business</span>
                         <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
@@ -451,7 +419,7 @@
                     </div>
                 </article>
 
-                <article class="data-card" data-sample-type="dataset">
+                <article data-domain="工业制造" class="data-card" data-sample-type="dataset">
                     <div class="data-card-image is-icon" aria-hidden="true">
                         <span class="material-symbols-outlined">monitoring</span>
                         <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">100元/次</span></div>
@@ -464,10 +432,10 @@
                     </div>
                 </article>
 
-                <article class="data-card" data-sample-type="other">
+                <article data-domain="工业制造" class="data-card" data-sample-type="other">
                     <div class="data-card-image is-icon" aria-hidden="true">
                         <span class="material-symbols-outlined">shield</span>
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">一事一议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">API</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">制造业供应链风险画像产品</h3>
@@ -477,9 +445,9 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="低空经济" class="data-card">
                     <div class="data-card-image" style="background: url('images/toll-traffic.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据报告</span><span class="data-card-badge price">399元/份</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">报告</span><span class="data-card-badge price">399元/份</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗区低空经济产业分析报告</h3>
@@ -489,9 +457,9 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="工业制造" class="data-card">
                     <div class="data-card-image" style="background: url('images/iot-cloud.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">333元/天</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">API</span><span class="data-card-badge price">333元/天</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">园区企业经营监测看板</h3>
@@ -501,7 +469,7 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="金融服务" class="data-card">
                     <div class="data-card-image" style="background: url('images/data-chain.jpg') center/cover;">
                         <div class="data-card-badges"><span class="data-card-badge">数据模型</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
@@ -513,7 +481,7 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="商贸流通" class="data-card">
                     <div class="data-card-image" style="background: url('images/night-light.jpg') center/cover;">
                         <div class="data-card-badges"><span class="data-card-badge">数据集</span><span class="data-card-badge price">180元/次</span></div>
                     </div>
@@ -525,9 +493,9 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="金融服务" class="data-card">
                     <div class="data-card-image" style="background: url('images/highway-migration.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">RWA</span><span class="data-card-badge price">一事一议</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">API</span><span class="data-card-badge price">一事一议</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">新能源充电设施运营收益权产品</h3>
@@ -537,9 +505,9 @@
                     </div>
                 </article>
 
-                <article class="data-card">
+                <article data-domain="医疗健康" class="data-card">
                     <div class="data-card-image" style="background: url('images/water-analytics.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">500元/月</span></div>
+                        <div class="data-card-badges"><span class="data-card-badge">API</span><span class="data-card-badge price">500元/月</span></div>
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">医疗器械企业准入核验产品</h3>
@@ -552,32 +520,82 @@
 
             <!-- Pagination -->
             <nav class="pagination">
-                <button class="pagination-btn" disabled>上一页</button>
+                <button class="pagination-btn" disabled><span aria-hidden="true">‹</span> 上一页</button>
                 <div class="pagination-numbers">
-                    <button class="pagination-number active">1</button>
-                    <button class="pagination-number">2</button>
-                    <button class="pagination-number">3</button>
-                    <button class="pagination-number">4</button>
-                    <button class="pagination-number">5</button>
-                    <span class="pagination-ellipsis">...</span>
-                    <button class="pagination-number">89</button>
+                    <button class="pagination-number active" aria-current="page">1</button>
                 </div>
-                <button class="pagination-btn">下一页</button>
+                <button class="pagination-btn" disabled>下一页 <span aria-hidden="true">›</span></button>
             </nav>
         </div>
     </main>
 
 
+    <script src="js/domain-filter.js"></script>
     <script>
-    document.querySelectorAll('.filter-option').forEach(function (option) {
+    (function () {
+    var pageSearchInput = document.querySelector('.search-input');
+    var activeTabName = '全部';
+    var appliedKeyword = '';
+    var products = Array.prototype.map.call(document.querySelectorAll('.data-card'), function (card) {
+        var domain = card.getAttribute('data-domain');
+        var badgeType = card.querySelector('.data-card-badge').textContent.trim();
+        return {
+            element: card,
+            domain: domain,
+            type: badgeType,
+            searchText: (card.textContent + ' ' + domain).toLowerCase()
+        };
+    });
+    var emptyState = document.createElement('div');
+    emptyState.className = 'data-grid-empty';
+    emptyState.setAttribute('role', 'status');
+    emptyState.textContent = '未找到匹配的数据产品';
+    emptyState.hidden = true;
+    document.querySelector('.data-grid').appendChild(emptyState);
+    var domainFilter = PortalDomainFilter.create(document.querySelectorAll('[data-domain-filter]'), function () {
+        renderCards();
+    });
+    var pager = PortalDomainFilter.createPager(document.querySelector('.pagination'), function () {
+        renderCards(true);
+    });
+
+    function renderCards(keepPage) {
+        if (!keepPage) appliedKeyword = pageSearchInput.value.trim().toLowerCase();
+        var cards = products.filter(function (product) {
+            return (activeTabName === '全部' || product.type === activeTabName) &&
+                (!appliedKeyword || product.searchText.indexOf(appliedKeyword) !== -1);
+        });
+        domainFilter.updateCounts(cards);
+        cards = cards.filter(domainFilter.matches);
+        document.querySelector('.results-count strong').textContent = cards.length;
+        emptyState.hidden = cards.length > 0;
+        var visibleCards = pager.slice(cards, !keepPage);
+        products.forEach(function (product) {
+            product.element.hidden = visibleCards.indexOf(product) === -1;
+        });
+    }
+
+    document.querySelector('.search-btn').addEventListener('click', function () {
+        renderCards();
+    });
+    pageSearchInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') renderCards();
+    });
+    document.querySelectorAll('.filter-section:not(.domain-filter) .filter-option').forEach(function (option) {
         option.addEventListener('click', function () {
             this.classList.toggle('active');
         });
     });
     document.querySelectorAll('.tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
-            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab').forEach(function(t) {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
             tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            activeTabName = tab.getAttribute('data-product-type');
+            renderCards();
         });
     });
     document.querySelectorAll('.data-card').forEach(function (card) {
@@ -597,6 +615,8 @@
                 : 'product-detail.html';
         });
     });
+    renderCards();
+    })();
     </script>
 </body>
 </html>

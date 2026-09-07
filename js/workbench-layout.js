@@ -2356,7 +2356,8 @@
             }
     ];
 
-    var industrySolutionShelfSamples = [
+    // 保留旧方案样例和旧三步编辑器供历史结构参考；当前入口统一使用服务内容编辑器。
+    var legacyIndustrySolutionShelfSamples = [
         {
             id: 'solution-energy-carbon',
             status: 'listed',
@@ -2482,6 +2483,8 @@
             }
         }
     ];
+
+    var industrySolutionShelfSamples = window.IndustrySolutionCatalog ? window.IndustrySolutionCatalog.createRecords() : [];
 
     function getShelfPayMode(item) {
         var pricing = item.pricing || {};
@@ -2799,11 +2802,12 @@
 
         function normalizeServiceData(data) {
             data.category = data.category || '数据咨询服务';
-            data.portalCategory = data.portalCategory || consultPortalCategories[0] || '';
+            var categories = data.category === '行业解决方案' ? getSolutionCategories() : consultPortalCategories;
+            data.portalCategory = data.portalCategory || categories[0] || '';
             data.thumb = data.thumb || data.cover || data.heroImg || 'images/consult-governance.jpg';
             data.cover = data.heroImg || data.cover || data.thumb;
             data.heroImg = data.heroImg || data.cover;
-            data.tabTitle = data.tabTitle || data.name || data.serviceType || '';
+            data.tabTitle = data.tabTitle || data.name || (data.category === '行业解决方案' ? '' : data.serviceType) || '';
             data.tabDesc = data.tabDesc || data.overview || data.heroSubtitle || '';
             data.heroTitle = data.heroTitle || data.tabTitle;
             data.heroSubtitle = data.heroSubtitle || data.tabDesc;
@@ -2825,8 +2829,13 @@
             }).join('');
         }
 
+        function getSolutionCategories() {
+            return window.IndustrySolutionCatalog ? window.IndustrySolutionCatalog.groups.map(function (group) { return group.title; }) : [];
+        }
+
         function getPortalCategoryOptions(current) {
-            return consultPortalCategories.map(function (item) {
+            var categories = editorData && editorData.category === '行业解决方案' ? getSolutionCategories() : consultPortalCategories;
+            return categories.map(function (item) {
                 return serviceOption(item, item, current);
             }).join('');
         }
@@ -2856,19 +2865,29 @@
 
         function getEmptyIndustrySolution() {
             return {
-                id: 'solution-custom-' + (industrySolutionShelfSamples.length + 1),
+                id: 'solution-custom-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7),
                 status: 'draft',
                 name: '',
                 category: '行业解决方案',
                 serviceType: '行业解决方案',
-                cover: '',
+                portalCategory: getSolutionCategories()[0] || '',
+                tabTitle: '',
+                tabDesc: '',
+                thumb: 'images/consult-governance.jpg',
+                heroImg: 'images/consult-governance.jpg',
+                heroTitle: '',
+                heroSubtitle: '',
+                badge: '治理资产',
+                lead: '',
+                sections: ['方案说明', '建设内容', '实施流程', '交付成果', '方案优势', '应用案例'].map(function (title) { return { title: title, content: '', cards: [] }; }),
+                cover: 'images/consult-governance.jpg',
                 coverIcon: '',
                 coverVisuals: [],
                 orgTypes: [],
                 businessTypes: [],
                 delivery: '线下交付',
                 description: '',
-                createdAt: '2026-08-11',
+                createdAt: new Date().toLocaleDateString('sv-SE'),
                 version: 'v1.0',
                 intro: {
                     explanation: '',
@@ -2917,24 +2936,14 @@
         function openIndustrySolutionEditor(record, mode) {
             var source = record ? findIndustrySolution(record.id) : getEmptyIndustrySolution();
             editorMode = mode || 'create';
-            editorStep = 'basic';
+            editorStep = 'intro';
             solutionOpenSelect = '';
-            editorData = normalizeIndustrySolution(JSON.parse(JSON.stringify(source || getEmptyIndustrySolution())));
-            if (editorMode === 'create') {
-                editorData.id = 'solution-custom-' + (industrySolutionShelfSamples.length + 1);
-                editorData.name = '';
-                editorData.cover = '';
-                editorData.coverIcon = '';
-                editorData.coverVisuals = [];
-                editorData.orgTypes = [];
-                editorData.businessTypes = [];
-                editorData.description = '';
-                editorData.intro = { explanation: '', process: '', advantage: '', cases: '' };
-                editorData.pricing = normalizeEditorPricing({ payMode: '预付费', measures: ['面议'] });
-            }
+            editorData = cloneServiceData(source || getEmptyIndustrySolution());
+            editorData.pricing = normalizeEditorPricing(editorData.pricing);
+            editorData.pricing.referencePrice = getReferencePrice(editorData);
             serviceView = 'editor';
             noticeText = '';
-            renderSolutionEditor();
+            renderServiceEditor();
         }
 
         function renderRequiredLabel(text) {
@@ -3190,7 +3199,7 @@
                 + '<div class="service-hero-editor-preview">'
                 +   '<img src="' + escapeHtml(editorData.heroImg || editorData.cover) + '" alt="横幅预览">'
                 +   '<div class="service-hero-editor-mask">'
-                +       '<span>' + escapeHtml(editorData.badge || '数据咨询服务') + '</span>'
+                +       '<span>' + escapeHtml(editorData.badge || editorData.category || '数据咨询服务') + '</span>'
                 +       '<strong>' + escapeHtml(editorData.heroTitle || editorData.tabTitle || editorData.serviceType) + '</strong>'
                 +       '<p>' + escapeHtml(editorData.heroSubtitle || '') + '</p>'
                 +   '</div>'
@@ -4025,7 +4034,8 @@
             } else {
                 renderOptions = renderOptions || {};
             }
-            var title = editorMode === 'create' ? '新建咨询服务' : '编辑咨询服务';
+            var isSolution = editorData && editorData.category === '行业解决方案';
+            var title = isSolution ? (editorMode === 'create' ? '新建行业解决方案' : '更新行业解决方案') : (editorMode === 'create' ? '新建咨询服务' : '编辑咨询服务');
             panel.innerHTML = ''
                 + '<div class="service-editor-page">'
                 +   '<div class="service-editor-top">'
@@ -4066,7 +4076,7 @@
             var leadInput = panel.querySelector('[data-consult-field="lead"]');
             if (tabTitleInput) {
                 editorData.tabTitle = tabTitleInput.value.trim();
-                editorData.name = editorData.tabTitle || editorData.serviceType;
+                editorData.name = editorData.tabTitle || (editorData.category === '行业解决方案' ? '' : editorData.serviceType);
             }
             if (subtitleInput) editorData.heroSubtitle = subtitleInput.value.trim();
             if (tabDescInput) editorData.tabDesc = tabDescInput.value.trim();
@@ -4131,12 +4141,40 @@
 
         function openServicePreview() {
             var previewData = buildServicePreviewData();
+            if (previewData.category === '行业解决方案') {
+                var previewToken = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+                try {
+                    localStorage.setItem('industry-solution-preview:' + previewToken, JSON.stringify(previewData));
+                } catch (error) {
+                    noticeText = '预览暂不可用，请检查浏览器本地存储或缩小上传图片后重试。';
+                    renderServiceEditor();
+                    return;
+                }
+                window.open('industry-solutions.html?preview=' + encodeURIComponent(previewToken), '_blank');
+                return;
+            }
             localStorage.setItem('consult-service-preview-data', JSON.stringify(previewData));
             window.open('consulting-service-preview.html', '_blank');
         }
 
         function persistEditorData() {
             collectEditorData();
+            if (editorData.category === '行业解决方案') {
+                if (!String(editorData.tabTitle || '').trim() || getSolutionCategories().indexOf(editorData.portalCategory) === -1) {
+                    noticeText = '请填写方案标题并选择所属分类。';
+                    editorStep = 'intro';
+                    renderServiceEditor();
+                    return;
+                }
+                var solutionMeasure = getPricingMeasure(editorData.pricing);
+                var solutionPrice = solutionMeasure === '按次数' ? editorData.pricing.countPrice : editorData.pricing.durationPrice;
+                if (solutionMeasure !== '面议' && (!/^\d+(\.\d{1,2})?$/.test(solutionPrice || '') || Number(solutionPrice) <= 0)) {
+                    noticeText = '请填写大于 0 的价格，最多保留两位小数。';
+                    editorStep = 'pricing';
+                    renderServiceEditor();
+                    return;
+                }
+            }
             var saved = pruneEmptyServiceCards(cloneServiceData(editorData));
             saved.name = saved.tabTitle || saved.name || saved.serviceType;
             saved.tabTitle = saved.tabTitle || saved.name;
@@ -4144,9 +4182,10 @@
             saved.heroSubtitle = saved.heroSubtitle || saved.lead;
             saved.cover = saved.heroImg || saved.cover;
             saved.status = editorMode === 'create' ? 'draft' : saved.status || 'listed';
-            var index = consultationServiceCatalog.findIndex(function (item) { return item.id === saved.id; });
-            if (index >= 0) consultationServiceCatalog[index] = saved;
-            else consultationServiceCatalog.push(saved);
+            var targetCatalog = saved.category === '行业解决方案' ? industrySolutionShelfSamples : consultationServiceCatalog;
+            var index = targetCatalog.findIndex(function (item) { return item.id === saved.id; });
+            if (index >= 0) targetCatalog[index] = saved;
+            else targetCatalog.push(saved);
             syncServiceShelfRecords();
             activeStatus = saved.status;
             serviceView = 'list';

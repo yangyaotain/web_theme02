@@ -8,7 +8,7 @@
         '数据资源':     'data-detail.html',
         '数据产品':     'product-detail.html',
         '数据咨询服务': 'consulting-detail.html',
-        '行业解决方案': 'solution-detail.html',
+        '行业解决方案': 'industry-solutions.html',
         '数据需求':     'demand-detail.html'
     };
 
@@ -45,12 +45,13 @@
             date: '2024-12-23 14:30'
         },
         {
-            name: '金融行业数据应用解决方案',
+            name: '产业链可信数据协同应用方案',
+            solutionId: 'solution-chain-collaboration',
             tag: '行业解决方案', tagCls: 'solution',
-            company: '中科数据技术有限公司',
-            img: 'images/rec-finance-solution.jpg',
-            desc: '面向银行、证券、保险等金融机构，提供从数据采集到智能分析的一站式数据应用方案。',
-            date: '2024-12-22 10:15'
+            company: '行业方案服务商（示例）',
+            img: 'images/hero-trusted-data.jpg',
+            desc: '连接订单、库存、产能与物流数据，配置参与方权限和共享规则，支撑产业链多方可信协作。',
+            date: '2026-09-07'
         },
         {
             name: '城市交通运行监测数据集',
@@ -77,12 +78,13 @@
             date: '2024-12-18 11:20'
         },
         {
-            name: '智慧城市综合管理解决方案',
+            name: '城市运行风险监测与协同处置方案',
+            solutionId: 'solution-city-risk',
             tag: '行业解决方案', tagCls: 'solution',
-            company: '华为云计算技术有限公司',
+            company: '行业方案服务商（示例）',
             img: 'images/rec-smart-city.jpg',
-            desc: '融合IoT、AI与大数据技术，为城市管理者提供一体化的智慧城市治理数字底座。',
-            date: '2024-12-17 16:00'
+            desc: '汇聚设施、环境与巡查数据，贯通风险发现、事件分派、处置跟踪和复盘分析。',
+            date: '2026-09-07'
         }
     ];
 
@@ -174,6 +176,7 @@
 
     getRecommendData().forEach(function (item) {
         var href = TAG_HREF[item.tag] || '#';
+        if (item.solutionId) href += '?id=' + encodeURIComponent(item.solutionId);
         var el = document.createElement('a');
         el.className = 'rec-item';
         el.href = href;

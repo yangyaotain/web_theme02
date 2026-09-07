@@ -9,423 +9,74 @@
     <title>行业解决方案 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
-    <style>
-        /* ── Search Section ── */
-        .search-section { padding: 0; margin-top: -20px; position: relative; z-index: 10; }
-        .search-container { max-width: var(--content-max-width); margin: 0 auto; padding: 0 32px; }
-        .search-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px; }
-        .search-inner { display: flex; align-items: center; gap: 12px; }
-        .search-input-wrapper { flex: 1; position: relative; }
-        .search-input { width: 100%; padding: 14px 20px 14px 48px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); font-size: 14px; color: var(--text-primary); outline: none; transition: all var(--transition-fast); }
-        .search-input:focus { border-color: var(--forest-green); box-shadow: 0 0 0 3px var(--forest-green-100); }
-        .search-input::placeholder { color: var(--text-tertiary); }
-        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: var(--text-tertiary); }
-        .search-btn { padding: 14px 32px; background: linear-gradient(180deg, var(--forest-green) 0%, var(--forest-green-600) 100%); color: white; border: none; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); transition: all var(--transition-fast); }
-        .search-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
-        .search-tags { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-        .search-tags-label { font-size: 12px; color: var(--text-tertiary); }
-        .search-tag { padding: 4px 12px; background: transparent; border: 1px solid var(--border-default); border-radius: 100px; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); }
-        .search-tag:hover { border-color: var(--forest-green); color: var(--forest-green); background: var(--forest-green-50); }
-
-        /* ── Main Content (Sidebar + Content Area) ── */
-        .main-content { max-width: var(--content-max-width); margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 260px 1fr; gap: 32px; }
-
-        /* ── Sidebar ── */
-        .sidebar { width: auto; position: sticky; top: 96px; height: fit-content; }
-        .filter-card { background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-sm); }
-        .filter-section { margin-bottom: 24px; }
-        .filter-section:last-child { margin-bottom: 0; }
-        .filter-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-        .filter-clear { font-size: 11px; font-weight: 500; color: var(--text-tertiary); cursor: pointer; }
-        .filter-clear:hover { color: var(--forest-green); }
-        .filter-options { display: flex; flex-direction: column; gap: 8px; }
-        .filter-option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast); }
-        .filter-option:hover { background: var(--gray-100); }
-        .filter-option.active { background: var(--forest-green-50); }
-        .filter-checkbox { width: 16px; height: 16px; border: 1.5px solid var(--gray-300); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); flex-shrink: 0; }
-        .filter-option.active .filter-checkbox { background: var(--forest-green); border-color: var(--forest-green); }
-        .filter-checkbox svg { width: 10px; height: 10px; fill: white; opacity: 0; }
-        .filter-option.active .filter-checkbox svg { opacity: 1; }
-        .filter-label { font-size: 13px; color: var(--text-secondary); }
-        .filter-option.active .filter-label { color: var(--forest-green-700); font-weight: 500; }
-        .filter-count { margin-left: auto; font-size: 11px; color: var(--text-tertiary); background: var(--gray-100); padding: 2px 8px; border-radius: 100px; }
-        .filter-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
-
-        /* ── Content Area ── */
-        .content-area { min-width: 0; }
-        .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .results-count { font-size: 13px; color: var(--text-secondary); }
-        .results-count strong { color: var(--text-primary); font-weight: 600; }
-        .sort-dropdown { display: flex; align-items: center; gap: 8px; }
-        .sort-label { font-size: 12px; color: var(--text-tertiary); }
-        .sort-select { padding: 6px 12px; font-size: 13px; color: var(--text-primary); background: var(--surface-primary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); cursor: pointer; outline: none; }
-
-        /* ── Card Grid ── */
-        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .data-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: 64px auto auto minmax(46px, 1fr); column-gap: 16px; min-height: 300px; padding: 26px 24px 20px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden; transition: all var(--transition-base); box-shadow: var(--shadow-sm); position: relative; }
-        .data-card::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-xl); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8); pointer-events: none; }
-        .data-card:hover { border-color: var(--forest-green-200); box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1); transform: translateY(-4px); }
-        .data-card-image { grid-column: 1; grid-row: 1; width: 64px; height: 64px; position: relative; overflow: hidden; background-color: var(--gray-100); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); }
-        .data-card-image.is-icon { display: flex; align-items: center; justify-content: center; overflow: visible; border: 0; background: transparent; color: var(--forest-green); }
-        .data-card-image.is-icon .material-symbols-outlined { font-size: 64px; line-height: 1; font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64; }
-        .data-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .data-card-badges { display: none; }
-        .data-card-badge { padding: 4px 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: 100px; font-size: 10px; font-weight: 500; color: white; }
-        .data-card-badge.price { background: rgba(229,57,53,0.85); }
-        .data-card-content { display: contents; }
-        .data-card-title { grid-column: 2; grid-row: 1; align-self: start; min-width: 0; margin: 2px 0 0; overflow: hidden; font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.45; white-space: nowrap; text-overflow: ellipsis; }
-        .data-card-company { grid-column: 2; grid-row: 1; align-self: start; min-width: 0; margin: 31px 0 0; overflow: hidden; font-size: 13px; color: var(--text-tertiary); line-height: 1.5; white-space: nowrap; text-overflow: ellipsis; }
-        .data-card-desc { grid-column: 1 / -1; grid-row: 2; min-height: 44px; margin: 28px 0 14px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .data-card-price { grid-column: 1 / -1; grid-row: 3; margin: 0 0 12px; color: #ef5b5b; font-size: 22px; font-weight: 700; line-height: 1.35; }
-        .data-card-footer { grid-column: 1 / -1; grid-row: 4; align-self: end; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
-        .data-card-meta { order: 2; min-width: 0; margin-left: auto; overflow: hidden; font-size: 12px; color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis; }
-        .data-card-meta .price { color: #E53935; font-weight: 700; }
-        .data-card-type { order: 1; min-width: 0; overflow: hidden; font-size: 12px; color: var(--text-tertiary); white-space: nowrap; text-overflow: ellipsis; }
-
-        /* ── Responsive ── */
-        @media (max-width: 1200px) { .data-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 1024px) { .main-content { grid-template-columns: 1fr; } .sidebar { position: static; } .filter-card { display: flex; flex-wrap: wrap; gap: 24px; } .filter-section { margin-bottom: 0; flex: 1; min-width: 200px; } .filter-divider { display: none; } }
-        @media (max-width: 768px) { .data-grid { grid-template-columns: 1fr; } .search-inner { flex-direction: column; } .search-input-wrapper { width: 100%; } .search-btn { width: 100%; } .main-content { padding: 24px 16px; } }
-    </style>
-    <script src="js/nav-bar.js"></script>
+    <link rel="stylesheet" href="css/detail-favorite.css">
+    <link rel="stylesheet" href="css/service-catalog.css">
+    <link rel="stylesheet" href="css/industry-solutions.css">
+    <script src="js/nav-bar.js" defer></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/global-dialog.js" defer></script>
+    <script src="js/detail-favorite.js" defer></script>
+    <script src="js/industry-solution-catalog.js" defer></script>
+    <script src="js/industry-solutions.js" defer></script>
 </head>
 <body>
     <nav-bar active="data-services"></nav-bar>
-
-    <header class="page-header">
-        <div class="page-header-container">
-            <h1 class="page-title">行业解决方案</h1>
-            <p class="page-subtitle">聚焦行业痛点，提供一站式数据应用解决方案</p>
-        </div>
-    </header>
-
-    <section class="search-section">
-        <div class="search-container">
-            <div class="search-card">
-                <div class="search-inner">
-                    <div class="search-input-wrapper">
-                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                        <input type="text" class="search-input" placeholder="请输入关键字">
-                    </div>
-                    <button class="search-btn">搜索</button>
-                </div>
-                <div class="search-tags">
-                    <span class="search-tags-label">热门：</span>
-                    <span class="search-tag">交通运输</span>
-                    <span class="search-tag">文化旅游</span>
-                    <span class="search-tag">气象服务</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <main class="main-content">
-        <aside class="sidebar">
-            <div class="filter-card">
-                <div class="filter-section">
-                    <div class="filter-title">
-                        <span>行业分类</span>
-                        <span class="filter-clear">清除</span>
-                    </div>
-                    <div class="filter-options">
-                        <div class="filter-option active">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">全部</span>
-                            <span class="filter-count">128</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">金融业</span>
-                            <span class="filter-count">24</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">房地产</span>
-                            <span class="filter-count">18</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">教育</span>
-                            <span class="filter-count">15</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">建筑业</span>
-                            <span class="filter-count">12</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">制造业</span>
-                            <span class="filter-count">10</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">信息科技</span>
-                            <span class="filter-count">8</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">医疗健康</span>
-                            <span class="filter-count">6</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="filter-divider"></div>
-                <div class="filter-section">
-                    <div class="filter-title">
-                        <span>服务报价</span>
-                        <span class="filter-clear">清除</span>
-                    </div>
-                    <div class="filter-options">
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">5000以下</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">5001-10000</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">10001-20000</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">20000以上</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </div>
-                            <span class="filter-label">面议</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <aside class="service-sidebar has-tree" aria-label="行业解决方案目录">
+            <div class="solution-tree" aria-live="polite"></div>
         </aside>
-
-        <div class="content-area">
-            <div class="content-header">
-                <div class="results-count">共 <strong>12</strong> 条解决方案</div>
-                <div class="sort-dropdown">
-                    <span class="sort-label">排序：</span>
-                    <select class="sort-select">
-                        <option>发布时间</option>
-                        <option>价格</option>
-                        <option>浏览量</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="data-grid">
-                <article class="data-card">
-                    <div class="data-card-image is-icon" aria-hidden="true">
-                        <span class="material-symbols-outlined">precision_manufacturing</span>
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">100元/次</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">龙华区智能制造诊断解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗工业互联网有限公司</p>
-                        <p class="data-card-desc">融合设备运行、订单和质量数据，为制造企业提供产线诊断、能效分析和异常预警服务</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-20 18:56:03</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image is-icon" aria-hidden="true">
-                        <span class="material-symbols-outlined">shield</span>
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge price">100元/次</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">福田区金融风险监测解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗金融数据服务有限公司</p>
-                        <p class="data-card-desc">整合企业经营、司法和信用信息，构建金融客户风险画像及持续监测预警能力</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-20 17:11:53</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image is-icon" aria-hidden="true">
-                        <span class="material-symbols-outlined">hub</span>
-                        <div class="data-card-badges"><span class="data-card-badge">数据资源需求</span><span class="data-card-badge">数据产品需求</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">园区产业链精准招商解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗产业招商服务有限公司</p>
-                        <p class="data-card-desc">围绕产业链图谱、企业画像和项目线索，提供目标企业筛选、招商研判及项目跟踪服务</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-20 15:21:38</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-construction.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">应用场景</span><span class="data-card-badge">数据产品</span><span class="data-card-badge price">12万元/套</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">智慧工地安全监管解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗城市建设科技有限公司</p>
-                        <p class="data-card-desc">接入人员、设备和环境监测数据，实现施工风险识别、隐患闭环和项目进度可视化管理</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-19 16:42:26</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-asset.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品需求</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">企业数据资产入表服务方案</h3>
-                        <p class="data-card-company">深圳市龙岗数据资产服务有限公司</p>
-                        <p class="data-card-desc">提供数据资产盘点、合规评估、成本归集和价值论证，形成可执行的数据资产入表路径</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-19 14:05:17</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-manufacturing.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据资源需求</span><span class="data-card-badge price">5万元/次</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">区域医疗资源协同分析方案</h3>
-                        <p class="data-card-company">深圳市龙岗健康数据科技有限公司</p>
-                        <p class="data-card-desc">基于医疗机构、科室和服务量数据，分析区域医疗资源供需并辅助优化资源配置</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-19 10:38:49</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-infotech.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">应用场景</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">教育资源均衡配置分析方案</h3>
-                        <p class="data-card-company">深圳市龙岗教育数智有限公司</p>
-                        <p class="data-card-desc">结合生源、学位和师资数据，识别教育资源供需差异并支撑学校布局与学位规划</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-18 17:22:14</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-healthcare.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据产品</span><span class="data-card-badge">应用场景</span><span class="data-card-badge price">8万元/套</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">重点商圈运营洞察解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗商业数据运营有限公司</p>
-                        <p class="data-card-desc">融合客流、消费和业态数据，为商圈运营、品牌招商和营销活动评估提供决策依据</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-18 15:46:32</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="data-card">
-                    <div class="data-card-image" style="background: url('images/solution-finance.jpg') center/cover;">
-                        <div class="data-card-badges"><span class="data-card-badge">数据资源需求</span><span class="data-card-badge">应用场景</span><span class="data-card-badge price">面议</span></div>
-                    </div>
-                    <div class="data-card-content">
-                        <h3 class="data-card-title">现代农业生产监测解决方案</h3>
-                        <p class="data-card-company">深圳市龙岗农业科技服务有限公司</p>
-                        <p class="data-card-desc">融合物联网、气象和遥感数据，提供种植环境监测、产量预测及生产过程管理能力</p>
-                        <div class="data-card-footer">
-                            <span class="data-card-meta">2026-08-18 11:09:25</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
-            <nav class="pagination">
-                <button class="pagination-btn" disabled>上一页</button>
-                <div class="pagination-numbers">
-                    <button class="pagination-number active">1</button>
-                    <button class="pagination-number">2</button>
-                    <button class="pagination-number">3</button>
-                    <button class="pagination-number">4</button>
-                    <button class="pagination-number">5</button>
-                    <span class="pagination-ellipsis">...</span>
-                    <button class="pagination-number">89</button>
-                </div>
-                <button class="pagination-btn">下一页</button>
-            </nav>
-        </div>
+        <div class="content-area" aria-live="polite"></div>
     </main>
+    <div class="consult-overlay" id="consultOverlay">
+        <div class="consult-card">
+            <button class="consult-close" id="consultClose" title="关闭" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <span class="consult-close-label">关闭</span>
+            </button>
+            <form id="consultForm" autocomplete="off">
+                <div class="consult-row">
+                    <div class="consult-label">咨询对象</div>
+                    <div class="consult-val consult-static" id="consultTarget">园区企业数据治理与资源目录建设方案</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">咨询内容</div>
+                    <div class="consult-val">
+                        <div class="consult-ta-wrap">
+                            <textarea class="consult-textarea" id="txtConsult" maxlength="500" required aria-label="咨询内容" placeholder="请输入您的咨询内容"></textarea>
+                            <span class="consult-count"><span id="consultCount">0</span>/500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人姓名：</div>
+                    <div class="consult-val"><input type="text" class="consult-input" value="张三" placeholder="请输入姓名"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人电话：</div>
+                    <div class="consult-val"><input type="tel" class="consult-input" value="15812343213" placeholder="请输入电话"></div>
+                </div>
+                <div class="consult-row">
+                    <div class="consult-label">联系人邮箱：</div>
+                    <div class="consult-val"><input type="email" class="consult-input" value="dianzyun001@cestc.cn" placeholder="请输入邮箱地址"></div>
+                </div>
+                <div class="consult-actions">
+                    <button type="submit" class="consult-btn-ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/></svg>确定</button>
+                    <button type="button" class="consult-btn-cancel" id="consultCancel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg>取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-
-    <script>
-    document.querySelectorAll('.filter-option').forEach(function (option) {
-        option.addEventListener('click', function () {
-            this.classList.toggle('active');
-        });
-    });
-    var solutionIndustries = ['制造业', '金融服务', '商务服务', '建筑业', '专业服务', '医疗健康', '教育服务', '批发和零售业', '现代农业'];
-    document.querySelectorAll('.data-card').forEach(function (card, index) {
-        var priceBadge = card.querySelector('.data-card-badge.price');
-        var description = card.querySelector('.data-card-desc');
-        var footer = card.querySelector('.data-card-footer');
-        if (priceBadge && description) {
-            var priceLine = document.createElement('p');
-            priceLine.className = 'data-card-price';
-            priceLine.textContent = priceBadge.textContent.trim();
-            description.insertAdjacentElement('afterend', priceLine);
-        }
-        if (footer) {
-            var industry = document.createElement('span');
-            industry.className = 'data-card-type';
-            industry.textContent = solutionIndustries[index] || '其他行业';
-            footer.insertBefore(industry, footer.firstChild);
-        }
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function () {
-            var priceBadge = card.querySelector('.data-card-badge.price');
-            var price = priceBadge ? priceBadge.textContent.trim() : '';
-            var title = card.querySelector('.data-card-title') ? card.querySelector('.data-card-title').textContent.trim() : '';
-            window.location.href = 'solution-detail.html?price=' + encodeURIComponent(price) + '&title=' + encodeURIComponent(title);
-        });
-    });
-    </script>
 </body>
 </html>
