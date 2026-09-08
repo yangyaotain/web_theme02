@@ -170,7 +170,7 @@
         .ds-cell-input:focus { position:relative; z-index:1; border-color:var(--forest-green); background:#fff; box-shadow:inset 0 0 0 1px var(--forest-green); }
         .ds-cell-input.selected { background:#e8f5e9; box-shadow:inset 0 0 0 1px rgba(32,165,101,.44); }
         .ds-cell-input.selected:focus { border-color:var(--forest-green); box-shadow:inset 0 0 0 1px var(--forest-green); }
-        .ds-excel-tip { display:flex; align-items:center; gap:6px; color:#7c8782; font-size:12px; }
+        .ds-excel-tip { display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:#7c8782; font-size:12px; line-height:20px; }
         .ds-excel-tip kbd { padding:1px 5px; border:1px solid #d4dad7; border-bottom-width:2px; border-radius:3px; background:#fff; color:#52605a; font:11px 'Inter',sans-serif; }
 
         .ds-rank-preview { display:flex; flex-direction:column; gap:8px; }
@@ -439,11 +439,11 @@
                     metric('日处理量', 3.62, null, { unit:'TB' }),
                     chart('数据规模', 'bar', ['公共数据','行业数据','企业数据'],
                         [series('占比（%）', [38.7,33.6,27.7])],
-                        { previewType:'distribution', section:'按资源类型', subtitle:'按资源类型', percent:true }),
+                        { previewType:'distribution', section:'按资源类型', subtitle:'按资源类型', percent:true, editableSeriesNames:false }),
                     chart('数据规模', 'bar',
                         ['金融服务','城市治理','宏观经济','智慧教育','医疗健康','工业制造'],
                         [series('占比（%）', [22.4,19.6,17.3,14.2,12.7,13.8])],
-                        { previewType:'distribution', section:'按行业分布', subtitle:'按行业分布', percent:true }),
+                        { previewType:'distribution', section:'按行业分布', subtitle:'按行业分布', percent:true, editableSeriesNames:false }),
                     chart('流通交易趋势', 'line', MONTHS, [
                         series('累计交易额（亿元）', [2.1,2.8,3.6,4.5,5.8,7.4,9.6,12.86]),
                         series('每月新增交易额（亿元）', [0.7,0.7,0.8,0.9,1.3,1.6,2.2,3.26])
@@ -992,15 +992,117 @@
         function dashboardSeriesControlsHtml() {
             var subtitleControl = Object.prototype.hasOwnProperty.call(editDraft.data, 'subtitle') ?
                 '<div class="ds-form-item full"><label class="ds-form-label required" for="dsDashboardSubtitle">分组 / 角标名称</label><input id="dsDashboardSubtitle" class="ds-form-control" maxlength="40" data-dashboard-field="subtitle" value="' + escapeHtml(editDraft.data.subtitle) + '"></div>' : '';
-            return '<div class="ds-form-grid" style="margin-bottom:16px">' + moduleNameControlHtml() + subtitleControl + editDraft.data.datasets.map(function (dataset, index) {
+            var seriesControls = editDraft.data.editableSeriesNames === false ? '' : editDraft.data.datasets.map(function (dataset, index) {
                 return '<div class="ds-form-item"><label class="ds-form-label required" for="dsSeriesName-' + index + '">数据系列 ' + (index + 1) + ' 名称</label>' +
                     '<input id="dsSeriesName-' + index + '" class="ds-form-control" maxlength="60" data-series-name-index="' + index + '" value="' + escapeHtml(dataset.label) + '"></div>';
-            }).join('') + '</div>';
+            }).join('');
+            return '<div class="ds-form-grid" style="margin-bottom:16px">' + moduleNameControlHtml() + subtitleControl + seriesControls + '</div>';
         }
 
         function selectionCellCount() {
             var range = normalizedSelection();
             return range ? (range.endRow - range.startRow + 1) * (range.endCol - range.startCol + 1) : 0;
+        }
+
+        function selectedDashboardRow() {
+            var range = normalizedSelection();
+            if (!range || !editDraft || editDraft.type !== 'dashboard' || range.startRow !== range.endRow) return -1;
+            return range.startRow >= 0 && range.startRow < editDraft.data.labels.length ? range.startRow : -1;
+        }
+
+        function dashboardScrollState() {
+            var tableWrap = drawerBody.querySelector('.ds-edit-table-wrap');
+            return {
+                drawerTop:drawerBody.scrollTop,
+                drawerLeft:drawerBody.scrollLeft,
+                tableTop:tableWrap ? tableWrap.scrollTop : 0,
+                tableLeft:tableWrap ? tableWrap.scrollLeft : 0
+            };
+        }
+
+        function restoreDashboardScroll(state) {
+            if (!state) return;
+            drawerBody.scrollTop = state.drawerTop;
+            drawerBody.scrollLeft = state.drawerLeft;
+            var tableWrap = drawerBody.querySelector('.ds-edit-table-wrap');
+            if (tableWrap) {
+                tableWrap.scrollTop = state.tableTop;
+                tableWrap.scrollLeft = state.tableLeft;
+            }
+        }
+
+        function focusSelectedDashboardCell(revealSelection) {
+            if (!selectionRange) return;
+            var cell = drawerBody.querySelector('.ds-cell-input[data-row="' + selectionRange.startRow + '"][data-col="' + selectionRange.startCol + '"]');
+            if (cell) {
+                var drawerTop = drawerBody.scrollTop;
+                var drawerLeft = drawerBody.scrollLeft;
+                cell.focus({ preventScroll:true });
+                var tableWrap = cell.closest('.ds-edit-table-wrap');
+                if (revealSelection && tableWrap) {
+                    var tableRow = cell.closest('tr');
+                    var tableHead = tableWrap.querySelector('thead');
+                    var stickyHeadHeight = tableHead ? tableHead.offsetHeight : 0;
+                    var rowTop = tableRow ? tableRow.offsetTop : 0;
+                    var rowBottom = rowTop + (tableRow ? tableRow.offsetHeight : cell.offsetHeight);
+                    var visibleTop = tableWrap.scrollTop + stickyHeadHeight;
+                    var visibleBottom = tableWrap.scrollTop + tableWrap.clientHeight;
+                    if (rowTop < visibleTop) tableWrap.scrollTop = Math.max(0, rowTop - stickyHeadHeight);
+                    else if (rowBottom > visibleBottom) tableWrap.scrollTop = rowBottom - tableWrap.clientHeight;
+                }
+                drawerBody.scrollTop = drawerTop;
+                drawerBody.scrollLeft = drawerLeft;
+            }
+        }
+
+        function syncDashboardEditorControls() {
+            var subtitle = drawerBody.querySelector('[data-dashboard-field="subtitle"]');
+            if (subtitle) subtitle.value = editDraft.data.subtitle;
+            drawerBody.querySelectorAll('[data-series-name-index]').forEach(function (input) {
+                var dataset = editDraft.data.datasets[Number(input.getAttribute('data-series-name-index'))];
+                if (dataset) input.value = dataset.label;
+            });
+            drawerBody.querySelectorAll('[data-field-label-group], [data-field-group], [data-field-trend-group]').forEach(function (input) {
+                var group = input.getAttribute('data-field-group') || input.getAttribute('data-field-label-group') || input.getAttribute('data-field-trend-group');
+                var item = editDraft.data[group] && editDraft.data[group][Number(input.getAttribute('data-field-index'))];
+                if (!item) return;
+                if (input.hasAttribute('data-field-label-group')) input.value = item.label;
+                else if (input.hasAttribute('data-field-trend-group')) input.value = item.trendDirection;
+                else if (item.kind !== 'image') input.value = item.value;
+            });
+        }
+
+        function refreshDashboardEditor(options) {
+            var config = options || {};
+            var scrollState = config.scrollState || dashboardScrollState();
+            var tableWrap = drawerBody.querySelector('.ds-edit-table-wrap');
+            if (!tableWrap) {
+                renderDashboardEditor();
+                return;
+            }
+            syncDashboardEditorControls();
+            tableWrap.outerHTML = dashboardTableHtml();
+            renderChartPreview();
+            updateExcelToolbar();
+            restoreDashboardScroll(scrollState);
+            if (config.focusSelection) focusSelectedDashboardCell(config.revealSelection);
+            var currentTableWrap = drawerBody.querySelector('.ds-edit-table-wrap');
+            var finalTableTop = currentTableWrap ? currentTableWrap.scrollTop : scrollState.tableTop;
+            restoreDashboardScroll({
+                drawerTop:scrollState.drawerTop,
+                drawerLeft:scrollState.drawerLeft,
+                tableTop:finalTableTop,
+                tableLeft:scrollState.tableLeft
+            });
+            requestAnimationFrame(function () {
+                var refreshedTableWrap = drawerBody.querySelector('.ds-edit-table-wrap');
+                drawerBody.scrollTop = scrollState.drawerTop;
+                drawerBody.scrollLeft = scrollState.drawerLeft;
+                if (refreshedTableWrap) {
+                    refreshedTableWrap.scrollLeft = scrollState.tableLeft;
+                    refreshedTableWrap.scrollTop = finalTableTop;
+                }
+            });
         }
 
         function updateExcelToolbar() {
@@ -1009,7 +1111,12 @@
             var deleteButton = drawerBody.querySelector('[data-excel-action="delete"]');
             if (undoButton) undoButton.disabled = dashboardHistoryIndex <= 0;
             if (redoButton) redoButton.disabled = dashboardHistoryIndex < 0 || dashboardHistoryIndex >= dashboardHistory.length - 1;
-            if (deleteButton) deleteButton.disabled = !selectionRange;
+            if (deleteButton) {
+                var row = selectedDashboardRow();
+                var lastRow = editDraft && editDraft.data.labels.length <= 1;
+                deleteButton.disabled = row < 0 || lastRow;
+                deleteButton.title = lastRow ? '至少保留 1 行数据' : (row < 0 ? '请先选中单行中的单元格' : '删除第 ' + (row + 1) + ' 行（整行数据）');
+            }
         }
 
         function applySelectionClasses() {
@@ -1070,9 +1177,10 @@
         }
 
         function restoreDashboardHistory(message) {
+            var scrollState = dashboardScrollState();
             editDraft.data = clone(dashboardHistory[dashboardHistoryIndex]);
             clampSelectionToData();
-            renderDashboardEditor();
+            refreshDashboardEditor({ scrollState:scrollState, focusSelection:true });
             showToast(message);
         }
 
@@ -1096,9 +1204,41 @@
             restoreDashboardHistory('已恢复下一步操作');
         }
 
+        function addDashboardRow() {
+            if (!editDraft || editDraft.type !== 'dashboard') return;
+            var scrollState = dashboardScrollState();
+            flushDashboardHistory();
+            var cursorRow = selectionAnchor && selectionAnchor.row >= 0 && selectionAnchor.row < editDraft.data.labels.length ? selectionAnchor.row : -1;
+            var row = cursorRow < 0 ? editDraft.data.labels.length : cursorRow + 1;
+            editDraft.data.labels.splice(row, 0, '');
+            editDraft.data.datasets.forEach(function (dataset) { dataset.data.splice(row, 0, 0); });
+            selectionRange = { startRow:row, startCol:0, endRow:row, endCol:0 };
+            selectionAnchor = { row:row, col:0 };
+            commitDashboardHistory();
+            refreshDashboardEditor({ scrollState:scrollState, focusSelection:true, revealSelection:true });
+            showToast('已新增第 ' + (row + 1) + ' 行，请填写分类和数值');
+        }
+
+        function deleteDashboardRow() {
+            var row = selectedDashboardRow();
+            if (row < 0) { showToast('请先选中单行中的单元格', 'error'); return; }
+            if (editDraft.data.labels.length <= 1) { showToast('至少保留 1 行数据', 'error'); return; }
+            var scrollState = dashboardScrollState();
+            flushDashboardHistory();
+            editDraft.data.labels.splice(row, 1);
+            editDraft.data.datasets.forEach(function (dataset) { dataset.data.splice(row, 1); });
+            var nextRow = Math.min(row, editDraft.data.labels.length - 1);
+            selectionRange = { startRow:nextRow, startCol:0, endRow:nextRow, endCol:0 };
+            selectionAnchor = { row:nextRow, col:0 };
+            commitDashboardHistory();
+            refreshDashboardEditor({ scrollState:scrollState, focusSelection:true });
+            showToast('已删除第 ' + (row + 1) + ' 行');
+        }
+
         function clearSelectedCells() {
             var range = normalizedSelection();
             if (!range || !editDraft || editDraft.type !== 'dashboard') return;
+            var scrollState = dashboardScrollState();
             flushDashboardHistory();
             for (var row = range.startRow; row <= range.endRow; row++) {
                 for (var col = range.startCol; col <= range.endCol; col++) {
@@ -1107,8 +1247,8 @@
                 }
             }
             commitDashboardHistory();
-            renderDashboardEditor();
-            showToast('已删除选中的 ' + selectionCellCount() + ' 个单元格');
+            refreshDashboardEditor({ scrollState:scrollState, focusSelection:true });
+            showToast('已清空选中的 ' + selectionCellCount() + ' 个单元格内容');
         }
 
         function selectedRangeText() {
@@ -1137,11 +1277,12 @@
                 '  <div class="ds-section-body">',
                 dashboardSeriesControlsHtml(),
                 '    <div class="ds-data-toolbar">',
-                '      <span class="ds-excel-tip">鼠标拖拽框选；支持 <kbd>Ctrl+C</kbd>/<kbd>Ctrl+V</kbd>、<kbd>Delete</kbd>、<kbd>Ctrl+Z</kbd>/<kbd>Ctrl+Y</kbd></span>',
+                '      <span class="ds-excel-tip">选中单行后可删除整行；拖拽框选，<kbd>Ctrl+C</kbd>/<kbd>Ctrl+V</kbd>复制粘贴，<kbd>Delete</kbd>清空内容，<kbd>Ctrl+Z</kbd>/<kbd>Ctrl+Y</kbd>撤销恢复</span>',
                 '      <div class="ds-excel-actions">',
+                '        <button class="ds-btn" type="button" data-excel-action="add" title="在当前光标行下方新增；未选择时追加到末尾"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>新增</span></button>',
                 '        <button class="ds-btn" type="button" data-excel-action="undo" title="撤销（Ctrl+Z）"><svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5"></path><path d="M4 12h9a6 6 0 0 1 6 6"></path></svg><span>撤销</span></button>',
                 '        <button class="ds-btn" type="button" data-excel-action="redo" title="恢复（Ctrl+Y）"><svg viewBox="0 0 24 24"><path d="m15 7 5 5-5 5"></path><path d="M20 12h-9a6 6 0 0 0-6 6"></path></svg><span>恢复</span></button>',
-                '        <button class="ds-btn" type="button" data-excel-action="delete" title="删除选中单元格（Delete）"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="m7 7 1 13h8l1-13"></path></svg><span>删除</span></button>',
+                '        <button class="ds-btn" type="button" data-excel-action="delete" title="删除选中行"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="m7 7 1 13h8l1-13"></path></svg><span>删除</span></button>',
                 '        <button class="ds-btn" type="button" data-excel-action="template"><svg viewBox="0 0 24 24"><path d="M12 4v12"></path><path d="m7 11 5 5 5-5"></path><path d="M5 20h14"></path></svg><span>下载模板</span></button>',
                 '        <label class="ds-btn" for="dsImportInput"><svg viewBox="0 0 24 24"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 20h14"></path></svg><span>导入表格</span></label>',
                 '      </div>',
@@ -1349,7 +1490,7 @@
             selectionRange = { startRow:startRow, startCol:startCol, endRow:endRow, endCol:endCol };
             selectionAnchor = { row:startRow, col:startCol };
             commitDashboardHistory();
-            renderDashboardEditor();
+            refreshDashboardEditor({ focusSelection:true });
             showToast('已批量粘贴 ' + applied + ' 个单元格');
         }
 
@@ -1436,7 +1577,7 @@
             selectionRange = null;
             selectionAnchor = null;
             commitDashboardHistory();
-            renderDashboardEditor();
+            refreshDashboardEditor();
             showToast('表格导入成功，请确认预览后保存');
         }
 
@@ -1623,6 +1764,17 @@
             renderChartPreview();
         });
 
+        drawerBody.addEventListener('focusin', function (event) {
+            var cell = event.target.closest('.ds-cell-input');
+            if (!cell || dragSelecting || !editDraft || editDraft.type !== 'dashboard') return;
+            var row = Number(cell.getAttribute('data-row'));
+            var col = Number(cell.getAttribute('data-col'));
+            if (isSelectedCell(row, col)) return;
+            selectionRange = { startRow:row, startCol:col, endRow:row, endCol:col };
+            selectionAnchor = { row:row, col:col };
+            applySelectionClasses();
+        });
+
         drawerBody.addEventListener('mousedown', function (event) {
             var cell = event.target.closest('.ds-cell-input');
             if (!cell || event.button !== 0 || !editDraft || editDraft.type !== 'dashboard') return;
@@ -1659,10 +1811,12 @@
             }
             var action = event.target.closest('[data-excel-action]');
             if (!action || action.disabled) return;
+            event.preventDefault();
             var type = action.getAttribute('data-excel-action');
-            if (type === 'undo') undoDashboard();
+            if (type === 'add') addDashboardRow();
+            else if (type === 'undo') undoDashboard();
             else if (type === 'redo') redoDashboard();
-            else if (type === 'delete') clearSelectedCells();
+            else if (type === 'delete') deleteDashboardRow();
             else if (type === 'template') downloadExcelTemplate();
         });
 
