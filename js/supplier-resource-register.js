@@ -1,4 +1,12 @@
 (function () {
+    var RESOURCE_DOMAIN_OPTIONS = window.PortalDomainFilter && Array.isArray(window.PortalDomainFilter.domains)
+        ? window.PortalDomainFilter.domains.slice()
+        : [
+            '金融服务', '城市治理', '宏观经济', '智慧教育', '医疗健康', '工业制造',
+            '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用',
+            '生物制造', '就业创业', '交通运输', '文化旅游', '其他'
+        ];
+
     var RESOURCE_RECORDS = [
         {
             id: 'resource-001',
@@ -202,6 +210,7 @@
     var RESOURCE_FORM_EXAMPLE = {
         name: '园区企业综合能耗监测数据集',
         category: '企业数据',
+        domain: '工业制造',
         industry: '电力、热力、燃气及水生产和供应业',
         region: '深圳市龙岗区',
         updateFrequency: '24',
@@ -458,6 +467,85 @@
         return { selectedId: '', query: '', open: false, expanded: [] };
     }
 
+    function buildResourceFeatureIntroduction(name) {
+        var resourceName = name || RESOURCE_FORM_EXAMPLE.name;
+        if (!/能耗|用能|碳排/.test(resourceName)) {
+            return {
+                sections: [
+                    {
+                        title: '资源特色',
+                        content: '资源结合自身业务口径组织数据内容，突出结构标准、持续更新、质量可控和安全使用。',
+                        cards: [
+                            { type: 'icon', title: '主题口径清晰', desc: '围绕资源名称对应的业务对象统一统计范围、字段含义和数据口径。', icon: 'images/consult-advantage-design.png' },
+                            { type: 'icon', title: '数据结构标准', desc: '通过标准字段、编码和格式组织数据，便于系统接入与关联分析。', icon: 'images/consult-advantage-scenario.png' },
+                            { type: 'icon', title: '更新机制稳定', desc: '按照登记的更新频率维护资源版本，并记录主要变化情况。', icon: 'images/consult-advantage-operation.png' },
+                            { type: 'icon', title: '使用边界明确', desc: '结合资源属性落实授权范围、访问控制和成果使用要求。', icon: 'images/consult-advantage-delivery.png' }
+                        ]
+                    },
+                    {
+                        title: '使用流程',
+                        content: '资源使用遵循申请、审核、交付和留痕的标准路径。',
+                        cards: [
+                            { type: 'sequence', title: '确认使用场景', desc: '明确使用主体、业务目标、数据范围和使用周期。' },
+                            { type: 'sequence', title: '完成授权审核', desc: '核对使用条件、安全环境和成果管理要求。' },
+                            { type: 'sequence', title: '获取资源数据', desc: '按登记的文件或接口方式获取授权范围内的数据。' },
+                            { type: 'sequence', title: '开展业务应用', desc: '完成分析或系统接入，并保留必要的资源使用记录。' }
+                        ]
+                    },
+                    {
+                        title: '应用方向',
+                        content: '具体应用可结合资源主题和实际业务目标进行配置。',
+                        cards: [
+                            { type: 'integrated', title: '业务运行监测', desc: '围绕资源对应业务对象观察数量、结构、状态或变化趋势。' },
+                            { type: 'integrated', title: '综合分析研判', desc: '与其他授权数据关联分析，辅助识别重点对象和异常变化。' },
+                            { type: 'integrated', title: '场景服务支撑', desc: '为数据产品、专题应用和业务系统提供标准化数据输入。' }
+                        ]
+                    }
+                ]
+            };
+        }
+        return {
+            sections: [
+                {
+                    title: '资源特色',
+                    content: '资源按照园区、企业和统计日期统一组织，兼顾数据覆盖、更新效率、质量校验与安全使用要求。',
+                    cards: [
+                        { type: 'icon', title: '多源能耗汇聚', desc: '统一汇聚企业用电、用水、用气和峰值负荷等主要能耗指标。', icon: 'images/consult-advantage-scenario.png' },
+                        { type: 'icon', title: '统计口径统一', desc: '按园区、企业和统计日期形成标准记录，便于跨区域和跨周期比较。', icon: 'images/consult-advantage-design.png' },
+                        { type: 'icon', title: '日级持续更新', desc: '按日汇总采集结果，满足园区常态化能耗监测和趋势分析需要。', icon: 'images/consult-advantage-operation.png' },
+                        { type: 'icon', title: '异常记录校正', desc: '对缺失、突变和重复数据进行复核，并在下一更新周期完成校正。', icon: 'images/consult-advantage-delivery.png' }
+                    ]
+                },
+                {
+                    title: '使用流程',
+                    content: '资源使用遵循场景申请、授权审核、数据交付和使用留痕的流程。',
+                    cards: [
+                        { type: 'sequence', title: '提交场景申请', desc: '说明使用主体、分析目标、数据范围和预计使用周期。' },
+                        { type: 'sequence', title: '完成授权审核', desc: '核对使用边界、安全环境和成果管理要求。' },
+                        { type: 'sequence', title: '获取资源数据', desc: '按登记的交付方式获取数据集或接口访问能力。' },
+                        { type: 'sequence', title: '开展分析应用', desc: '在授权范围内完成能耗分析，并保留必要使用记录。' }
+                    ]
+                },
+                {
+                    title: '典型应用',
+                    content: '资源可用于园区能耗诊断、绿色运营评估和企业节能服务等业务。',
+                    cards: [
+                        { type: 'integrated', title: '园区能耗诊断', desc: '对比不同企业和时段的能耗变化，识别峰值负荷、异常波动和重点用能对象。' },
+                        { type: 'integrated', title: '绿色运营评估', desc: '结合能耗结构与碳排放测算结果，辅助评估园区绿色运营成效。' },
+                        { type: 'integrated', title: '企业节能服务', desc: '为节能服务机构提供标准化能耗数据输入，支撑诊断建议和改造方案设计。' }
+                    ]
+                }
+            ]
+        };
+    }
+
+    function copyFeatureIntroduction(data, fallbackName) {
+        if (window.FeatureIntroduction) {
+            return window.FeatureIntroduction.clone(data || buildResourceFeatureIntroduction(fallbackName));
+        }
+        return JSON.parse(JSON.stringify(data || buildResourceFeatureIntroduction(fallbackName)));
+    }
+
     function initSupplierResourceRegister() {
         var params = new URLSearchParams(window.location.search || '');
         var sidebar = document.querySelector('[data-workbench-sidebar]');
@@ -484,6 +572,7 @@
             formStep: 1,
             editingId: '',
             formData: copyObject(RESOURCE_FORM_EXAMPLE),
+            featureIntroduction: copyFeatureIntroduction(null, RESOURCE_FORM_EXAMPLE.name),
             dataItems: copyDataItems(RESOURCE_DATA_ITEM_EXAMPLES),
             selectedDataItems: {},
             dataTable: defaultTableTreeConfig(),
@@ -717,6 +806,7 @@
             state.formStep = 1;
             state.editingId = item ? item.id : '';
             state.formData = getFormDataForRecord(item);
+            state.featureIntroduction = copyFeatureIntroduction(item && item.featureIntroduction, state.formData.name);
             state.dataItems = copyDataItems(item && item.dataItems ? item.dataItems : RESOURCE_DATA_ITEM_EXAMPLES);
             state.selectedDataItems = {};
             state.dataTable = copyTableTreeConfig(item && item.dataTable);
@@ -742,23 +832,20 @@
         }
 
         function renderEditorHeader() {
-            var afterFirstStep = state.formStep > 1;
-            var afterSecondStep = state.formStep > 2;
+            var steps = ['基本信息', '特色介绍', '数据项信息', '样例数据'];
             return ''
                 + '<header class="resource-editor-header">'
                 +   '<button class="resource-editor-back" type="button" data-resource-editor-action="cancel">' + icon('arrow_back') + '<span>' + getEditorTitle() + '</span></button>'
                 +   '<div class="resource-editor-steps" aria-label="资源登记步骤">'
-                +       '<button class="resource-editor-step' + (afterFirstStep ? ' complete' : ' active') + '" type="button" data-resource-editor-step="1">'
-                +           '<i>' + (afterFirstStep ? icon('check') : '1') + '</i><span>基本信息</span>'
-                +       '</button>'
-                +       '<span class="resource-editor-step-line' + (afterFirstStep ? ' active' : '') + '"></span>'
-                +       '<button class="resource-editor-step' + (afterSecondStep ? ' complete' : (state.formStep === 2 ? ' active' : '')) + '" type="button" data-resource-editor-step="2"' + (afterFirstStep ? '' : ' disabled') + '>'
-                +           '<i>' + (afterSecondStep ? icon('check') : '2') + '</i><span>数据项信息</span>'
-                +       '</button>'
-                +       '<span class="resource-editor-step-line' + (afterSecondStep ? ' active' : '') + '"></span>'
-                +       '<button class="resource-editor-step' + (state.formStep === 3 ? ' active' : '') + '" type="button" data-resource-editor-step="3"' + (afterSecondStep ? '' : ' disabled') + '>'
-                +           '<i>3</i><span>样例数据</span>'
-                +       '</button>'
+                +       steps.map(function (label, index) {
+                            var number = index + 1;
+                            var complete = state.formStep > number;
+                            var active = state.formStep === number;
+                            var step = '<button class="resource-editor-step' + (complete ? ' complete' : (active ? ' active' : '')) + '" type="button" data-resource-editor-step="' + number + '"' + (number > state.formStep ? ' disabled' : '') + '>'
+                                + '<i>' + (complete ? icon('check') : number) + '</i><span>' + label + '</span></button>';
+                            if (index < steps.length - 1) step += '<span class="resource-editor-step-line' + (state.formStep > number ? ' active' : '') + '"></span>';
+                            return step;
+                        }).join('')
                 +   '</div>'
                 + '</header>';
         }
@@ -786,6 +873,21 @@
                 + '</select>';
         }
 
+        function renderDomainSearchSelect(value) {
+            var selectedValue = RESOURCE_DOMAIN_OPTIONS.indexOf(value) !== -1 ? value : '';
+            return ''
+                + '<span class="resource-editor-domain-select" data-resource-domain-select>'
+                +   '<input type="text" value="' + escapeHtml(selectedValue) + '" placeholder="请选择领域分类" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="resourceDomainOptions" data-resource-domain-input required>'
+                +   '<span class="material-symbols-outlined resource-editor-domain-arrow" aria-hidden="true">expand_more</span>'
+                +   '<span class="resource-editor-domain-menu" id="resourceDomainOptions" role="listbox" data-resource-domain-menu hidden>'
+                +       RESOURCE_DOMAIN_OPTIONS.map(function (option) {
+                            return '<span class="resource-editor-domain-option' + (option === selectedValue ? ' active' : '') + '" role="option" aria-selected="' + (option === selectedValue ? 'true' : 'false') + '" tabindex="-1" data-resource-domain-option="' + escapeHtml(option) + '">' + escapeHtml(option) + '</span>';
+                        }).join('')
+                +       '<span class="resource-editor-domain-empty" data-resource-domain-empty hidden>暂无匹配的领域分类</span>'
+                +   '</span>'
+                + '</span>';
+        }
+
         function renderRadioGroup(field, options, value) {
             return '<span class="resource-editor-radio-group">' + options.map(function (option) {
                 return '<label><input type="radio" name="resource-' + escapeHtml(field) + '" value="' + escapeHtml(option) + '" data-resource-form-field="' + escapeHtml(field) + '"' + (option === value ? ' checked' : '') + '><span>' + escapeHtml(option) + '</span></label>';
@@ -798,7 +900,8 @@
                 + '<div class="resource-editor-body resource-editor-basic-body">'
                 +   '<form class="resource-editor-basic-form" novalidate data-resource-basic-form>'
                 +       renderFormRow('资源名称', '<input type="text" maxlength="100" value="' + escapeHtml(form.name) + '" data-resource-form-field="name" required>', true, '用于资源目录展示和检索。')
-                +       renderFormRow('资源类别', renderFormSelect('category', ['公共数据', '企业数据', '个人数据'], form.category, true), true)
+                +       renderFormRow('资源类别', renderFormSelect('category', ['企业数据', '个人数据'], form.category, true), true)
+                +       renderFormRow('领域分类', renderDomainSearchSelect(form.domain), true, '选项与门户数据资源列表的领域分类保持一致。')
                 +       renderFormRow('资源所属行业分类', renderFormSelect('industry', getIndustries(), form.industry, true), true, '按照资源主要业务归属选择行业分类。')
                 +       renderFormRow('地域分类', renderFormSelect('region', ['深圳市龙岗区', '深圳市', '广东省', '全国'], form.region, false), false, '用于标识资源覆盖的主要地域范围。')
                 +       renderFormRow('更新频率', ''
@@ -938,6 +1041,10 @@
                         + '</div>'
                         : '')
                 + '</div>';
+        }
+
+        function renderFeatureIntroductionStep() {
+            return '<div class="resource-editor-body resource-editor-feature-body"><div data-feature-editor-mount></div></div>';
         }
 
         function renderDataItemsStep() {
@@ -1139,19 +1246,11 @@
         }
 
         function renderEditorFooter() {
-            if (state.formStep === 1) {
+            if (state.formStep < 4) {
                 return ''
                     + '<footer class="resource-editor-footer">'
                     +   '<button type="button" data-resource-editor-action="cancel">' + icon('close') + '<span>取消</span></button>'
-                    +   '<button class="primary" type="button" data-resource-editor-action="next">' + icon('arrow_forward') + '<span>下一步</span></button>'
-                    + '</footer>';
-            }
-
-            if (state.formStep === 2) {
-                return ''
-                    + '<footer class="resource-editor-footer">'
-                    +   '<button type="button" data-resource-editor-action="cancel">' + icon('close') + '<span>取消</span></button>'
-                    +   '<button type="button" data-resource-editor-action="previous">' + icon('arrow_back') + '<span>上一步</span></button>'
+                    +   (state.formStep > 1 ? '<button type="button" data-resource-editor-action="previous">' + icon('arrow_back') + '<span>上一步</span></button>' : '')
                     +   '<button class="primary" type="button" data-resource-editor-action="next">' + icon('arrow_forward') + '<span>下一步</span></button>'
                     + '</footer>';
             }
@@ -1172,19 +1271,31 @@
             panel.classList.add('is-resource-register-editor');
             if (title) title.style.display = 'none';
             document.title = getEditorTitle() + '资源登记 - 供方中心';
+            var stepContent = state.formStep === 1
+                ? renderBasicInfoStep()
+                : (state.formStep === 2
+                    ? renderFeatureIntroductionStep()
+                    : (state.formStep === 3 ? renderDataItemsStep() : renderSampleStep()));
             panel.innerHTML = ''
                 + '<div class="resource-register-editor">'
                 +   renderEditorHeader()
-                +   (state.formStep === 1 ? renderBasicInfoStep() : (state.formStep === 2 ? renderDataItemsStep() : renderSampleStep()))
+                +   stepContent
                 +   renderEditorFooter()
                 + '</div>'
                 + '<div class="resource-register-toast" role="status" aria-live="polite" data-resource-register-toast hidden>' + icon('check_circle') + '<span></span></div>'
                 + renderDataItemDrawer();
+            if (state.formStep === 2 && window.FeatureIntroduction) {
+                state.featureIntroduction = window.FeatureIntroduction.mountEditor(
+                    panel.querySelector('[data-feature-editor-mount]'),
+                    state.featureIntroduction,
+                    { onChange: function (value) { state.featureIntroduction = value; } }
+                );
+            }
             bindEditorEvents();
         }
 
         function validateBasicForm() {
-            var requiredFields = ['name', 'category', 'industry', 'updateFrequency', 'updateUnit', 'coverageStart', 'coverageEnd', 'circulationType', 'holder', 'contact', 'contactInfo', 'summary', 'format', 'source', 'personalInfo'];
+            var requiredFields = ['name', 'category', 'domain', 'industry', 'updateFrequency', 'updateUnit', 'coverageStart', 'coverageEnd', 'circulationType', 'holder', 'contact', 'contactInfo', 'summary', 'format', 'source', 'personalInfo'];
             var missing = requiredFields.some(function (field) {
                 return !String(state.formData[field] || '').trim();
             });
@@ -1222,6 +1333,7 @@
                     updatedAt: nowText,
                     status: isSave ? '待登记' : '登记审核中',
                     formData: copyObject(state.formData),
+                    featureIntroduction: copyFeatureIntroduction(state.featureIntroduction, state.formData.name),
                     dataItems: copyDataItems(state.dataItems),
                     dataTable: copyTableTreeConfig(state.dataTable),
                     attachments: copyEffectiveSampleAttachments(state.attachments, state.sampleType),
@@ -1237,6 +1349,7 @@
                 item.updatedAt = nowText;
                 if (state.formMode === 'change') item.status = '变更审核中';
                 item.formData = copyObject(state.formData);
+                item.featureIntroduction = copyFeatureIntroduction(state.featureIntroduction, state.formData.name);
                 item.dataItems = copyDataItems(state.dataItems);
                 item.dataTable = copyTableTreeConfig(state.dataTable);
                 item.attachments = copyEffectiveSampleAttachments(state.attachments, state.sampleType);
@@ -1364,6 +1477,84 @@
                 });
             });
 
+            var domainSelect = panel.querySelector('[data-resource-domain-select]');
+            if (domainSelect) {
+                var domainInput = domainSelect.querySelector('[data-resource-domain-input]');
+                var domainMenu = domainSelect.querySelector('[data-resource-domain-menu]');
+                var domainEmpty = domainSelect.querySelector('[data-resource-domain-empty]');
+                var domainOptions = Array.prototype.slice.call(domainSelect.querySelectorAll('[data-resource-domain-option]'));
+
+                function closeDomainMenu() {
+                    domainSelect.classList.remove('open');
+                    domainMenu.hidden = true;
+                    domainInput.setAttribute('aria-expanded', 'false');
+                }
+
+                function openDomainMenu(keyword) {
+                    var normalized = String(keyword || '').trim().toLowerCase();
+                    var visibleCount = 0;
+                    domainOptions.forEach(function (option) {
+                        var matched = !normalized || option.dataset.resourceDomainOption.toLowerCase().indexOf(normalized) !== -1;
+                        option.hidden = !matched;
+                        if (matched) visibleCount += 1;
+                    });
+                    domainEmpty.hidden = visibleCount > 0;
+                    domainSelect.classList.add('open');
+                    domainMenu.hidden = false;
+                    domainInput.setAttribute('aria-expanded', 'true');
+                }
+
+                function selectDomain(value) {
+                    state.formData.domain = value;
+                    domainInput.value = value;
+                    domainOptions.forEach(function (option) {
+                        var selected = option.dataset.resourceDomainOption === value;
+                        option.classList.toggle('active', selected);
+                        option.setAttribute('aria-selected', selected ? 'true' : 'false');
+                    });
+                    closeDomainMenu();
+                    domainInput.focus();
+                }
+
+                domainInput.addEventListener('focus', function () {
+                    openDomainMenu(this.value === state.formData.domain ? '' : this.value);
+                });
+                domainInput.addEventListener('input', function () {
+                    var exactValue = RESOURCE_DOMAIN_OPTIONS.indexOf(this.value) !== -1 ? this.value : '';
+                    state.formData.domain = exactValue;
+                    openDomainMenu(this.value);
+                });
+                domainInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        this.value = state.formData.domain || '';
+                        closeDomainMenu();
+                        return;
+                    }
+                    if (event.key !== 'Enter' || domainMenu.hidden) return;
+                    var firstOption = domainOptions.find(function (option) { return !option.hidden; });
+                    if (!firstOption) return;
+                    event.preventDefault();
+                    selectDomain(firstOption.dataset.resourceDomainOption);
+                });
+                domainMenu.addEventListener('mousedown', function (event) {
+                    if (event.target.closest('[data-resource-domain-option]')) event.preventDefault();
+                });
+                domainMenu.addEventListener('click', function (event) {
+                    var option = event.target.closest('[data-resource-domain-option]');
+                    if (option) selectDomain(option.dataset.resourceDomainOption);
+                });
+                domainSelect.addEventListener('focusout', function (event) {
+                    if (event.relatedTarget && domainSelect.contains(event.relatedTarget)) return;
+                    domainInput.value = state.formData.domain || '';
+                    closeDomainMenu();
+                });
+                domainSelect.addEventListener('click', function (event) {
+                    if (!event.target.closest('.resource-editor-domain-arrow')) return;
+                    domainInput.focus();
+                    openDomainMenu('');
+                });
+            }
+
             panel.querySelectorAll('[data-resource-editor-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var action = this.dataset.resourceEditorAction;
@@ -1372,8 +1563,11 @@
                         if (state.formStep === 1 && validateBasicForm()) {
                             state.formStep = 2;
                             render();
-                        } else if (state.formStep === 2 && validateDataItems()) {
+                        } else if (state.formStep === 2) {
                             state.formStep = 3;
+                            render();
+                        } else if (state.formStep === 3 && validateDataItems()) {
+                            state.formStep = 4;
                             render();
                         }
                     } else if (action === 'previous') {

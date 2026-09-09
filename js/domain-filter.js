@@ -4,7 +4,8 @@
 
     var domains = [
         '金融服务', '城市治理', '宏观经济', '智慧教育', '医疗健康', '工业制造',
-        '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用'
+        '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用',
+        '生物制造', '就业创业', '交通运输', '文化旅游', '其他'
     ];
 
     function create(roots, onChange) {
@@ -122,5 +123,5 @@
         };
     }
 
-    window.PortalDomainFilter = { create: create, createPager: createPager };
+    window.PortalDomainFilter = { domains: domains.slice(), create: create, createPager: createPager };
 })();

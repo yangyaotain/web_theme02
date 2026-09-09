@@ -1,4 +1,12 @@
 (function () {
+    var PRODUCT_DOMAIN_OPTIONS = window.PortalDomainFilter && Array.isArray(window.PortalDomainFilter.domains)
+        ? window.PortalDomainFilter.domains.slice()
+        : [
+            '金融服务', '城市治理', '宏观经济', '智慧教育', '医疗健康', '工业制造',
+            '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用',
+            '生物制造', '就业创业', '交通运输', '文化旅游', '其他'
+        ];
+
     var STATUS_OPTIONS = ['全部', '待登记', '登记审核中', '已登记', '已退回', '变更审核中', '注销审核中', '已注销'];
     var DELIVERY_OPTIONS = ['全部交付方式', 'API传输', '文件传输', '人工交付'];
 
@@ -201,6 +209,7 @@
         name: '龙岗企业经营活力监测数据产品',
         provider: '深圳市龙岗数智科技有限公司',
         productType: '数据产品',
+        domain: '商贸流通',
         industry: '企业服务',
         region: '深圳市 / 龙岗区',
         coverageStart: '2026-01-01',
@@ -441,6 +450,85 @@
         };
     }
 
+    function buildProductFeatureIntroduction(name) {
+        var productName = name || PRODUCT_FORM_EXAMPLE.name;
+        if (!/企业经营|经营活力/.test(productName)) {
+            return {
+                sections: [
+                    {
+                        title: '核心能力',
+                        content: '产品结合自身主题突出指标整合、结果表达、持续更新和安全应用能力。',
+                        cards: [
+                            { type: 'icon', title: '主题指标整合', desc: '围绕产品主题统一组织主要指标、统计结果和业务标签。', icon: 'images/consult-advantage-scenario.png' },
+                            { type: 'icon', title: '分析结果清晰', desc: '通过标准字段和状态说明呈现结果，便于业务人员理解使用。', icon: 'images/consult-advantage-design.png' },
+                            { type: 'icon', title: '数据持续更新', desc: '按照登记频率更新产品数据，支持常态化监测和周期对比。', icon: 'images/consult-advantage-operation.png' },
+                            { type: 'icon', title: '授权安全应用', desc: '按审核通过的业务场景控制数据范围、调用方式和使用边界。', icon: 'images/consult-advantage-delivery.png' }
+                        ]
+                    },
+                    {
+                        title: '使用流程',
+                        content: '从业务对象选择到分析结果应用形成清晰的使用路径。',
+                        cards: [
+                            { type: 'sequence', title: '确定业务对象', desc: '按照区域、主体或业务条件确定本次分析范围。' },
+                            { type: 'sequence', title: '获取产品结果', desc: '通过文件或接口方式获取对应指标和分析结果。' },
+                            { type: 'sequence', title: '开展趋势研判', desc: '结合时间变化和对象差异识别重点特征与异常情况。' },
+                            { type: 'sequence', title: '支撑业务应用', desc: '将研判结果用于运营管理、专题研究或决策辅助。' }
+                        ]
+                    },
+                    {
+                        title: '应用方向',
+                        content: '产品可结合不同使用主体的实际目标配置业务应用。',
+                        cards: [
+                            { type: 'integrated', title: '运营监测', desc: '持续观察产品主题相关指标和状态变化，为日常运营提供数据参考。' },
+                            { type: 'integrated', title: '专题分析', desc: '围绕重点对象、区域或周期开展对比分析，形成专题研判结果。' },
+                            { type: 'integrated', title: '决策辅助', desc: '将标准化指标与分析结果用于业务规划、资源配置和工作评估。' }
+                        ]
+                    }
+                ]
+            };
+        }
+        return {
+            sections: [
+                {
+                    title: '核心能力',
+                    content: '产品围绕企业画像、指标更新、趋势识别和合规应用构建可直接使用的分析能力。',
+                    cards: [
+                        { type: 'icon', title: '多维企业画像', desc: '整合企业基础、经营活跃度、创新能力和产业归属等主题指标。', icon: 'images/consult-advantage-scenario.png' },
+                        { type: 'icon', title: '日级指标更新', desc: '核心经营活力指标按日更新，满足常态化企业服务和园区监测需求。', icon: 'images/consult-advantage-operation.png' },
+                        { type: 'icon', title: '活力分级识别', desc: '通过统一规则输出企业活力指数和状态标签，便于筛选重点对象。', icon: 'images/consult-advantage-design.png' },
+                        { type: 'icon', title: '授权安全使用', desc: '按审核场景控制查询范围和使用方式，不用于未经授权的个人画像。', icon: 'images/consult-advantage-delivery.png' }
+                    ]
+                },
+                {
+                    title: '使用流程',
+                    content: '产品可通过标准接口接入企业服务、园区运营和产业分析系统。',
+                    cards: [
+                        { type: 'sequence', title: '确定业务对象', desc: '按企业、园区或产业范围确定本次监测对象。' },
+                        { type: 'sequence', title: '查询活力指标', desc: '通过企业编码获取活力指数、状态标签和统计日期。' },
+                        { type: 'sequence', title: '开展趋势研判', desc: '结合历史变化识别活跃、平稳或需要关注的企业。' },
+                        { type: 'sequence', title: '应用分析结果', desc: '将结果用于服务分层、园区招商或政策效果评估。' }
+                    ]
+                },
+                {
+                    title: '典型场景',
+                    content: '产品适合需要持续观察企业经营变化的管理与服务场景。',
+                    cards: [
+                        { type: 'integrated', title: '企业服务分层', desc: '根据企业活力与发展特征识别服务对象，辅助配置走访、政策和专业服务。' },
+                        { type: 'integrated', title: '园区招商运营', desc: '观察园区企业活跃度和产业结构变化，为招商分析和运营复盘提供参考。' },
+                        { type: 'integrated', title: '政策效果评估', desc: '对比政策实施前后的企业活力变化，为政策触达和后续优化提供数据输入。' }
+                    ]
+                }
+            ]
+        };
+    }
+
+    function copyFeatureIntroduction(data, fallbackName) {
+        if (window.FeatureIntroduction) {
+            return window.FeatureIntroduction.clone(data || buildProductFeatureIntroduction(fallbackName));
+        }
+        return JSON.parse(JSON.stringify(data || buildProductFeatureIntroduction(fallbackName)));
+    }
+
     function initSupplierProductRegistration() {
         var params = new URLSearchParams(window.location.search || '');
         var sidebar = document.querySelector('[data-workbench-sidebar]');
@@ -466,6 +554,7 @@
             formStep: 1,
             editingId: '',
             formData: copyObject(PRODUCT_FORM_EXAMPLE),
+            featureIntroduction: copyFeatureIntroduction(null, PRODUCT_FORM_EXAMPLE.name),
             attachments: emptyAttachments(),
             sampleType: 'dataset',
             sampleApi: defaultSampleApiConfig(),
@@ -538,6 +627,7 @@
             state.formStep = 1;
             state.editingId = item ? item.id : '';
             state.formData = getFormDataForRecord(item);
+            state.featureIntroduction = copyFeatureIntroduction(item && item.featureIntroduction, state.formData.name);
             state.attachments = item
                 ? copyAttachments(item.attachments || existingAttachments(item.name))
                 : emptyAttachments();
@@ -595,8 +685,23 @@
                 + '</div>';
         }
 
+        function renderDomainSearchSelect(value) {
+            var selectedValue = PRODUCT_DOMAIN_OPTIONS.indexOf(value) !== -1 ? value : '';
+            return ''
+                + '<div class="product-register-domain-select" data-product-domain-select>'
+                +   '<input type="text" value="' + escapeHtml(selectedValue) + '" placeholder="请选择领域分类" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="productDomainOptions" data-product-domain-input required>'
+                +   '<span class="material-symbols-outlined product-register-domain-arrow" aria-hidden="true">expand_more</span>'
+                +   '<div class="product-register-domain-menu" id="productDomainOptions" role="listbox" data-product-domain-menu hidden>'
+                +       PRODUCT_DOMAIN_OPTIONS.map(function (option) {
+                            return '<span class="product-register-domain-option' + (option === selectedValue ? ' active' : '') + '" role="option" aria-selected="' + (option === selectedValue ? 'true' : 'false') + '" tabindex="-1" data-product-domain-option="' + escapeHtml(option) + '">' + escapeHtml(option) + '</span>';
+                        }).join('')
+                +       '<span class="product-register-domain-empty" data-product-domain-empty hidden>暂无匹配的领域分类</span>'
+                +   '</div>'
+                + '</div>';
+        }
+
         function renderEditorHeader() {
-            var onSecondStep = state.formStep === 2;
+            var steps = ['基本信息', '特色介绍', '声明信息'];
             return ''
                 + '<header class="product-register-editor-header">'
                 +   '<button class="product-register-editor-back" type="button" data-product-editor-action="cancel">'
@@ -604,13 +709,15 @@
                 +       '<span>' + escapeHtml(getEditorTitle()) + '</span>'
                 +   '</button>'
                 +   '<div class="product-register-editor-steps" aria-label="产品登记步骤">'
-                +       '<button class="product-register-editor-step' + (onSecondStep ? ' complete' : ' active') + '" type="button" data-product-editor-step="1">'
-                +           '<i>' + (onSecondStep ? materialIcon('check') : '1') + '</i><span>基本信息</span>'
-                +       '</button>'
-                +       '<span class="product-register-editor-step-line' + (onSecondStep ? ' active' : '') + '"></span>'
-                +       '<button class="product-register-editor-step' + (onSecondStep ? ' active' : '') + '" type="button" data-product-editor-step="2"' + (onSecondStep ? '' : ' disabled') + '>'
-                +           '<i>2</i><span>声明信息</span>'
-                +       '</button>'
+                +       steps.map(function (label, index) {
+                            var number = index + 1;
+                            var complete = state.formStep > number;
+                            var active = state.formStep === number;
+                            var step = '<button class="product-register-editor-step' + (complete ? ' complete' : (active ? ' active' : '')) + '" type="button" data-product-editor-step="' + number + '"' + (number > state.formStep ? ' disabled' : '') + '>'
+                                + '<i>' + (complete ? materialIcon('check') : number) + '</i><span>' + label + '</span></button>';
+                            if (index < steps.length - 1) step += '<span class="product-register-editor-step-line' + (state.formStep > number ? ' active' : '') + '"></span>';
+                            return step;
+                        }).join('')
                 +   '</div>'
                 + '</header>';
         }
@@ -640,6 +747,7 @@
                                 '数据指标产品',
                                 '数据模型产品'
                             ], form.productType) + '</select>')
+                +       renderFormRow('领域分类', true, renderDomainSearchSelect(form.domain))
                 +       renderFormRow('行业分类', true,
                             '<select data-product-form-field="industry">' + renderOptions([
                                 '企业服务',
@@ -888,6 +996,10 @@
                 + '</div>';
         }
 
+        function renderFeatureIntroductionStep() {
+            return '<div class="product-register-editor-body product-register-feature-body"><div data-feature-editor-mount></div></div>';
+        }
+
         function renderDeclarationStep() {
             var alert = state.formError === 'attachments'
                 ? '<div class="product-register-form-alert">' + materialIcon('error') + '<span>发布或更新前，请补充必传声明材料。</span></div>'
@@ -904,17 +1016,18 @@
         }
 
         function renderEditorFooter() {
-            var isSecondStep = state.formStep === 2;
+            var isLastStep = state.formStep === 3;
             var isRegistrationFlow = state.formMode === 'create' || state.formMode === 'draft';
             var primaryLabel = isRegistrationFlow ? '发布' : '更新';
             return ''
                 + '<footer class="product-register-editor-footer">'
                 +   '<button type="button" data-product-editor-action="cancel">' + materialIcon('close') + '<span>取消</span></button>'
-                +   (isSecondStep
+                +   (isLastStep
                         ? '<button type="button" data-product-editor-action="previous">' + materialIcon('arrow_back') + '<span>上一步</span></button>'
                             + (isRegistrationFlow ? '<button type="button" data-product-editor-action="save">' + materialIcon('save') + '<span>保存</span></button>' : '')
                             + '<button class="primary" type="button" data-product-editor-action="submit">' + materialIcon(isRegistrationFlow ? 'publish' : 'update') + '<span>' + primaryLabel + '</span></button>'
-                        : '<button class="primary" type="button" data-product-editor-action="next">' + materialIcon('arrow_forward') + '<span>下一步</span></button>')
+                        : (state.formStep > 1 ? '<button type="button" data-product-editor-action="previous">' + materialIcon('arrow_back') + '<span>上一步</span></button>' : '')
+                            + '<button class="primary" type="button" data-product-editor-action="next">' + materialIcon('arrow_forward') + '<span>下一步</span></button>')
                 + '</footer>';
         }
 
@@ -930,16 +1043,26 @@
             panel.classList.add('is-product-registration-editor');
             if (title) title.style.display = 'none';
             document.title = getEditorTitle() + ' - 供方中心';
+            var stepContent = state.formStep === 1
+                ? renderBasicInfoStep()
+                : (state.formStep === 2 ? renderFeatureIntroductionStep() : renderDeclarationStep());
             panel.innerHTML = ''
                 + '<div class="product-register-editor">'
                 +   renderEditorHeader()
-                +   (state.formStep === 1 ? renderBasicInfoStep() : renderDeclarationStep())
+                +   stepContent
                 +   renderEditorFooter()
                 + '</div>'
                 + '<div class="product-register-toast" role="status" aria-live="polite" data-product-register-toast>'
                 +   materialIcon('check_circle')
                 +   '<span></span>'
                 + '</div>';
+            if (state.formStep === 2 && window.FeatureIntroduction) {
+                state.featureIntroduction = window.FeatureIntroduction.mountEditor(
+                    panel.querySelector('[data-feature-editor-mount]'),
+                    state.featureIntroduction,
+                    { onChange: function (value) { state.featureIntroduction = value; } }
+                );
+            }
             bindEditorEvents();
         }
 
@@ -948,6 +1071,7 @@
                 'name',
                 'provider',
                 'productType',
+                'domain',
                 'industry',
                 'frequencyValue',
                 'frequencyUnit',
@@ -1002,6 +1126,7 @@
                     updatedAt: nowText,
                     status: '待登记',
                     formData: copyObject(state.formData),
+                    featureIntroduction: copyFeatureIntroduction(state.featureIntroduction, state.formData.name),
                     attachments: copyEffectiveAttachments(state.attachments, state.sampleType),
                     sampleType: state.sampleType,
                     sampleApi: copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType)
@@ -1014,6 +1139,7 @@
                 item.updatedAt = nowText;
                 item.status = '待登记';
                 item.formData = copyObject(state.formData);
+                item.featureIntroduction = copyFeatureIntroduction(state.featureIntroduction, state.formData.name);
                 item.attachments = copyEffectiveAttachments(state.attachments, state.sampleType);
                 item.sampleType = state.sampleType;
                 item.sampleApi = copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType);
@@ -1040,6 +1166,7 @@
                     updatedAt: nowText,
                     status: '登记审核中',
                     formData: copyObject(state.formData),
+                    featureIntroduction: copyFeatureIntroduction(state.featureIntroduction, state.formData.name),
                     attachments: copyEffectiveAttachments(state.attachments, state.sampleType),
                     sampleType: state.sampleType,
                     sampleApi: copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType)
@@ -1051,6 +1178,7 @@
                 item.updatedAt = nowText;
                 item.status = state.formMode === 'change' ? '变更审核中' : '登记审核中';
                 item.formData = copyObject(state.formData);
+                item.featureIntroduction = copyFeatureIntroduction(state.featureIntroduction, state.formData.name);
                 item.attachments = copyEffectiveAttachments(state.attachments, state.sampleType);
                 item.sampleType = state.sampleType;
                 item.sampleApi = copyEffectiveSampleApiConfig(state.sampleApi, state.sampleType);
@@ -1138,15 +1266,100 @@
                 });
             });
 
+            var domainSelect = panel.querySelector('[data-product-domain-select]');
+            if (domainSelect) {
+                var domainInput = domainSelect.querySelector('[data-product-domain-input]');
+                var domainMenu = domainSelect.querySelector('[data-product-domain-menu]');
+                var domainEmpty = domainSelect.querySelector('[data-product-domain-empty]');
+                var domainOptions = Array.prototype.slice.call(domainSelect.querySelectorAll('[data-product-domain-option]'));
+
+                function closeDomainMenu() {
+                    domainSelect.classList.remove('open');
+                    domainMenu.hidden = true;
+                    domainInput.setAttribute('aria-expanded', 'false');
+                }
+
+                function openDomainMenu(keyword) {
+                    var normalized = String(keyword || '').trim().toLowerCase();
+                    var visibleCount = 0;
+                    domainOptions.forEach(function (option) {
+                        var matched = !normalized || option.dataset.productDomainOption.toLowerCase().indexOf(normalized) !== -1;
+                        option.hidden = !matched;
+                        if (matched) visibleCount += 1;
+                    });
+                    domainEmpty.hidden = visibleCount > 0;
+                    domainSelect.classList.add('open');
+                    domainMenu.hidden = false;
+                    domainInput.setAttribute('aria-expanded', 'true');
+                }
+
+                function selectDomain(value) {
+                    state.formData.domain = value;
+                    state.formError = '';
+                    domainInput.value = value;
+                    domainOptions.forEach(function (option) {
+                        var selected = option.dataset.productDomainOption === value;
+                        option.classList.toggle('active', selected);
+                        option.setAttribute('aria-selected', selected ? 'true' : 'false');
+                    });
+                    closeDomainMenu();
+                    domainInput.focus();
+                }
+
+                domainInput.addEventListener('focus', function () {
+                    openDomainMenu(this.value === state.formData.domain ? '' : this.value);
+                });
+                domainInput.addEventListener('input', function () {
+                    var exactValue = PRODUCT_DOMAIN_OPTIONS.indexOf(this.value) !== -1 ? this.value : '';
+                    state.formData.domain = exactValue;
+                    state.formError = '';
+                    openDomainMenu(this.value);
+                });
+                domainInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        this.value = state.formData.domain || '';
+                        closeDomainMenu();
+                        return;
+                    }
+                    if (event.key !== 'Enter' || domainMenu.hidden) return;
+                    var firstOption = domainOptions.find(function (option) { return !option.hidden; });
+                    if (!firstOption) return;
+                    event.preventDefault();
+                    selectDomain(firstOption.dataset.productDomainOption);
+                });
+                domainMenu.addEventListener('mousedown', function (event) {
+                    if (event.target.closest('[data-product-domain-option]')) event.preventDefault();
+                });
+                domainMenu.addEventListener('click', function (event) {
+                    var option = event.target.closest('[data-product-domain-option]');
+                    if (option) selectDomain(option.dataset.productDomainOption);
+                });
+                domainSelect.addEventListener('focusout', function (event) {
+                    if (event.relatedTarget && domainSelect.contains(event.relatedTarget)) return;
+                    domainInput.value = state.formData.domain || '';
+                    closeDomainMenu();
+                });
+                domainSelect.addEventListener('click', function (event) {
+                    if (!event.target.closest('.product-register-domain-arrow')) return;
+                    domainInput.focus();
+                    openDomainMenu('');
+                });
+            }
+
             panel.querySelectorAll('[data-product-editor-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var action = this.dataset.productEditorAction;
                     if (action === 'cancel') closeEditor();
-                    else if (action === 'next' && validateBasicForm()) {
-                        state.formStep = 2;
-                        render();
+                    else if (action === 'next') {
+                        if (state.formStep === 1 && validateBasicForm()) {
+                            state.formStep = 2;
+                            render();
+                        } else if (state.formStep === 2) {
+                            state.formStep = 3;
+                            render();
+                        }
                     } else if (action === 'previous') {
-                        state.formStep = 1;
+                        state.formStep = Math.max(1, state.formStep - 1);
                         state.formError = '';
                         render();
                     } else if (action === 'save') {

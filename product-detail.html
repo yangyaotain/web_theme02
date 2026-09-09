@@ -6,7 +6,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>慧企政策智能推荐 - 龙岗数据聚合服务平台</title>
+    <title>龙岗区人群聚集智能监测视觉数据集 - 龙岗数据聚合服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,29 +14,45 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/product-detail-samples.css">
+    <link rel="stylesheet" href="css/feature-introduction.css">
     <link rel="stylesheet" href="css/detail-favorite.css">
     <script src="js/nav-bar.js"></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/feature-introduction.js" defer></script>
     <script src="js/product-detail-samples.js" defer></script>
     <script src="js/detail-favorite.js" defer></script>
     <style>
-        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+        .detail-wrapper {
+            min-height: 100vh;
+            padding-top: 64px;
+            background: #F2F7F4;
+        }
+        .detail-wrapper .g-breadcrumb { padding-top: 16px; padding-bottom: 16px; }
 
         /* ── Product Header ── */
         .product-header {
-            background: var(--bg-card); padding: 24px 32px 28px;
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 0;
+            background: transparent;
         }
         .product-header-container {
-            max-width: var(--content-max-width); margin: 0 auto;
-            display: flex; gap: 32px;
+            display: flex;
+            gap: 32px;
+            width: 100%;
+            margin: 0;
+            padding: 24px;
+            background: var(--bg-card);
+            border: 1px solid rgba(32, 165, 101, 0.10);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.07);
         }
 
         /* Gallery */
         .product-gallery { width: 128px; flex-shrink: 0; }
         .gallery-main {
             width: 128px; height: 128px;
-            border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 10px;
+            border: 1px solid #E1EBE6;
+            border-radius: 10px; overflow: hidden; position: relative; margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(25, 70, 48, 0.08);
         }
         .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
         .gallery-thumbs { width: 128px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
@@ -48,13 +64,20 @@
         .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
         /* Product Info */
-        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
         .product-title { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.4; flex: 1; }
         .product-stats { display: flex; gap: 16px; align-items: center; flex-shrink: 0; padding-top: 4px; }
         .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
         .product-stat b { color: var(--text-primary); font-weight: 600; }
-        .product-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+        .product-desc {
+            max-width: 1040px;
+            padding: 10px 14px;
+            font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px;
+            background: #F7FAF8;
+            border-left: 3px solid rgba(32, 165, 101, 0.55);
+            border-radius: 0 8px 8px 0;
+        }
         .product-meta-row {
             display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary); margin-bottom: 10px;
         }
@@ -70,7 +93,7 @@
         .delivery-tag {
             display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
             border: 1px solid var(--forest-green-200); border-radius: 100px;
-            font-size: 13px; color: var(--forest-green);
+            font-size: 13px; color: var(--forest-green); background: var(--forest-green-50);
         }
 
         .action-row { display: flex; gap: 12px; margin-top: 6px; }
@@ -116,7 +139,7 @@
             border: none; background: transparent; cursor: pointer;
             color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast);
         }
-        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close:hover { background: var(--surface-secondary); color: var(--text-primary); }
         .consult-close svg { width: 20px; height: 20px; }
         .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
         .consult-label {
@@ -158,32 +181,178 @@
         }
         .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
 
-        /* ── Content Area ── */
-        .content-area {
-            max-width: var(--content-max-width); margin: 0 auto; padding: 24px 32px 48px;
-            display: flex; gap: 24px; align-items: flex-start;
+        /* ── Detail Layout ── */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            align-items: start;
+            gap: 24px;
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            padding: 0 32px 48px;
         }
-        .content-main { flex: 1; min-width: 0; }
+        .detail-primary {
+            display: grid;
+            min-width: 0;
+            gap: 24px;
+        }
+        .content-main {
+            width: 100%;
+            min-width: 0;
+            padding: 0 24px 28px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid rgba(31, 43, 40, 0.07);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.06);
+        }
+        .content-main > .g-tabs {
+            margin: 0 -24px 24px;
+            padding: 0 12px;
+            background: #FCFDFC;
+            border-bottom-color: #E7ECE9;
+        }
+        .content-main > .g-tabs .g-tab {
+            position: relative;
+            min-width: 104px;
+            padding: 16px 22px 14px;
+            color: #66746E;
+        }
+        .content-main > .g-tabs .g-tab:hover {
+            color: var(--forest-green);
+            background: #F7FBF9;
+        }
+        .content-main > .g-tabs .g-tab.active {
+            color: var(--forest-green);
+            background: #F4FBF7;
+        }
 
         .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
 
-        /* Info Table */
-        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
-        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
-        .info-table .label-cell { color: var(--text-tertiary); width: 130px; white-space: nowrap; padding-right: 8px; }
-        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
-        .info-table .desc-cell { color: var(--text-secondary); line-height: 1.6; }
+        /* ── Product Introduction ── */
+        .intro-section {
+            margin-bottom: 24px;
+            padding: 0 0 24px;
+            border-bottom: 1px solid #E7ECE9;
+        }
+        .intro-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .intro-section .section-heading,
+        #tabDelivery .g-section-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .intro-section .section-heading::before,
+        #tabDelivery .g-section-heading::before {
+            width: 3px;
+            height: 16px;
+            flex: 0 0 auto;
+            background: var(--forest-green);
+            border-radius: 3px;
+            content: '';
+        }
+        .product-basic-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 34px;
+            row-gap: 0;
+            padding: 0;
+        }
+        .product-basic-grid {
+            display: contents;
+        }
+        .product-basic-item {
+            display: grid;
+            grid-template-columns: 152px minmax(0, 1fr);
+            align-items: start;
+            min-width: 0;
+            padding: 9px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            border-bottom: 1px dashed #DCE8E1;
+        }
+        .product-basic-item.full { grid-column: 1 / -1; }
+        .product-basic-label {
+            color: #718078;
+            white-space: nowrap;
+        }
+        .product-basic-value {
+            min-width: 0;
+            color: #34443D;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .product-basic-item.full .product-basic-value {
+            color: #4F6058;
+            white-space: normal;
+        }
 
         /* Data Table (定价信息) */
-        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
-        .data-table th {
-            padding: 12px 16px; font-size: 13px; font-weight: 500;
-            color: var(--text-secondary); background: #F8FAFB;
-            border-bottom: 1px solid var(--border-default); text-align: left;
+        .pricing-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #E1E6E4 transparent;
         }
+        .pricing-table-wrap::-webkit-scrollbar { height: 8px; }
+        .pricing-table-wrap::-webkit-scrollbar-thumb { background: #E1E6E4; border-radius: 999px; }
+        .data-table {
+            width: 100%;
+            min-width: 700px;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+        }
+        .data-table th,
         .data-table td {
-            padding: 12px 16px; font-size: 13px; color: var(--text-primary);
+            padding: 12px 14px;
+            border: none;
             border-bottom: 1px solid var(--border-divider);
+            text-align: center;
+        }
+        .data-table th {
+            color: #42534B;
+            font-weight: 600;
+            background: #EEF7F2;
+            white-space: nowrap;
+        }
+        .data-table td { color: var(--text-primary); background: #FFFFFF; }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover td { background: #F8FCFA; }
+
+        /* ── Delivery Panel ── */
+        #tabDelivery { padding: 0; }
+        .delivery-info-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 34px;
+        }
+        .delivery-info-item {
+            display: grid;
+            grid-template-columns: 152px minmax(0, 1fr);
+            align-items: start;
+            min-width: 0;
+            padding: 9px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            border-bottom: 1px dashed #DCE8E1;
+        }
+        .delivery-info-label { color: #718078; white-space: nowrap; }
+        .delivery-info-value {
+            min-width: 0;
+            color: #34443D;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* Empty State */
@@ -194,11 +363,32 @@
         .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
         .empty-state p { font-size: 14px; }
 
+        .sidebar-card {
+            border-color: rgba(32, 165, 101, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.06);
+        }
+        .sidebar-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #20A565 0%, #178A54 100%);
+        }
+
         /* ── Responsive ── */
         @media (max-width: 1024px) {
-            .content-area { flex-direction: column; }
+            .detail-layout { grid-template-columns: 1fr; }
             .product-header-container { flex-direction: column; }
             .product-gallery { width: 100%; max-width: 128px; }
+            .product-basic-card,
+            .delivery-info-grid { column-gap: 24px; }
+            .sidebar { width: 100%; }
+        }
+        @media (max-width: 720px) {
+            .detail-layout { padding-right: 16px; padding-left: 16px; }
+            .content-main { padding-right: 16px; padding-left: 16px; }
+            .content-main > .g-tabs { margin-right: -16px; margin-left: -16px; overflow-x: auto; }
+            .product-basic-card,
+            .delivery-info-grid { grid-template-columns: 1fr; }
+            .product-basic-item.full { grid-column: auto; }
         }
     </style>
 </head>
@@ -211,26 +401,28 @@
             <span class="sep">/</span>
             <a href="data-products.html">数据产品</a>
             <span class="sep">/</span>
-            <span class="current" data-product-detail-breadcrumb>慧企政策智能推荐</span>
+            <span class="current" data-product-detail-breadcrumb>龙岗区人群聚集智能监测视觉数据集</span>
         </nav>
 
-        <section class="product-header">
+        <div class="detail-layout">
+            <div class="detail-primary">
+                <section class="product-header">
             <div class="product-header-container">
                 <div class="product-gallery">
                     <div class="gallery-main">
-                        <img src="images/product-detail-hero.jpg" alt="慧企政策智能推荐" data-product-detail-image>
+                        <img src="images/policy-recommend.jpg" alt="龙岗区人群聚集智能监测视觉数据集" data-product-detail-image>
                     </div>
                     <div class="gallery-thumbs">
-                        <div class="gallery-thumb active"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
-                        <div class="gallery-thumb"><img src="images/product-detail-hero.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb active"><img src="images/policy-recommend.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/policy-recommend.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/policy-recommend.jpg" alt="" data-product-detail-image></div>
+                        <div class="gallery-thumb"><img src="images/policy-recommend.jpg" alt="" data-product-detail-image></div>
                     </div>
                 </div>
 
                 <div class="product-info">
                     <div class="product-title-row">
-                        <h1 class="product-title" data-product-detail-title>慧企政策智能推荐</h1>
+                        <h1 class="product-title" data-product-detail-title>龙岗区人群聚集智能监测视觉数据集</h1>
                         <div class="product-stats">
                             <span class="product-stat">浏览量：<b>1,056</b></span>
                             <span class="product-stat">购买量：<b>56</b></span>
@@ -240,23 +432,22 @@
                             </button>
                         </div>
                     </div>
-                    <p class="product-desc" data-product-detail-description>为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，营造一流营商环境、郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下，"郑惠企"政策服务平台在"亲清在线"平台基础上进行改造升级，利用大数据、人工智能等技术，加强政策服务及管控两端……</p>
+                    <p class="product-desc" data-product-detail-description>汇聚龙岗区重点商圈、公园、交通枢纽等公共场所的人群密度统计结果，提供分时段客流量、密度等级与聚集预警状态数据，支持城市运行监测和大型活动安全保障。</p>
                     <div class="product-meta-row">
-                        <span>数据产品提供方：<span class="company" data-product-detail-provider>广东****有限公司</span></span>
-                        <span>上架时间：<span class="val" data-product-detail-published>2025-11-4 15:00:00</span></span>
+                        <span>上架时间：<span class="val" data-product-detail-published>2026-09-01 10:20:00</span></span>
                     </div>
-                    <div class="product-price">参考价：<span class="amount" data-product-detail-price>0.1元/次</span></div>
+                    <div class="product-price">参考价：<span class="amount" data-product-detail-price>0元</span></div>
                     <div class="delivery-row">
                         <span class="delivery-label">交付方式：</span>
-                        <span class="delivery-tag" data-product-detail-delivery>在线交付</span>
+                        <span class="delivery-tag" data-product-detail-delivery>文件传输</span>
                     </div>
                     <div class="delivery-row">
                         <span class="delivery-label">计量方式：</span>
-                        <span class="delivery-tag" data-product-detail-measure>面议</span>
+                        <span class="delivery-tag" data-product-detail-measure>一事一议</span>
                     </div>
                     <div class="delivery-row">
                         <span class="delivery-label">计费方式：</span>
-                        <span class="delivery-tag" data-product-detail-billing>预付费</span>
+                        <span class="delivery-tag" data-product-detail-billing>无需预付</span>
                     </div>
                     <div class="action-row">
                         <a href="product-buy.html?catalog=product&amp;sampleType=dataset" class="btn-buy" data-detail-buy>立即购买</a>
@@ -264,118 +455,82 @@
                     </div>
                 </div>
             </div>
-        </section>
+                </section>
 
-        <div class="content-area">
-            <div class="content-main">
-                <div class="g-tabs">
-                    <button class="g-tab active" data-tab="intro">产品介绍</button>
-                    <button class="g-tab" data-tab="delivery">交付要求</button>
-                    <button class="g-tab" data-tab="sample">样例数据</button>
+                <div class="content-main">
+                <div class="g-tabs" role="tablist" aria-label="数据产品详情">
+                    <button class="g-tab active" type="button" role="tab" id="tabButtonIntro" data-tab="intro" aria-selected="true" aria-controls="tabIntro">产品介绍</button>
+                    <button class="g-tab" type="button" role="tab" id="tabButtonFeature" data-tab="feature" aria-selected="false" aria-controls="tabFeature">特色介绍</button>
+                    <button class="g-tab" type="button" role="tab" id="tabButtonDelivery" data-tab="delivery" aria-selected="false" aria-controls="tabDelivery">交付要求</button>
+                    <button class="g-tab" type="button" role="tab" id="tabButtonSample" data-tab="sample" aria-selected="false" aria-controls="tabSample">样例数据</button>
                 </div>
 
                 <!-- Tab 1: 产品介绍 -->
-                <div class="g-tab-panel active" id="tabIntro">
-                    <h3 class="section-heading">基本信息</h3>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label-cell">产品名称：</td>
-                            <td class="value-cell" data-product-detail-name>慧企政策智能推荐</td>
-                            <td class="label-cell">产品供应：</td>
-                            <td class="value-cell" data-product-detail-provider>广东****有限公司</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">产品类型：</td>
-                            <td class="value-cell" data-product-detail-type>数据应用</td>
-                            <td class="label-cell">行业分类：</td>
-                            <td class="value-cell" data-product-detail-industry>公共管理、社会保障和社会组织</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">地域分类：</td>
-                            <td class="value-cell">--</td>
-                            <td class="label-cell">景色时间段：</td>
-                            <td class="value-cell">--</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">更新频率：</td>
-                            <td class="value-cell">4次/月</td>
-                            <td class="label-cell">是否涉及个人信息：</td>
-                            <td class="value-cell">否</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">使用限制：</td>
-                            <td class="value-cell">无</td>
-                            <td class="label-cell">授权使用：</td>
-                            <td class="value-cell">否</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">数据主体：</td>
-                            <td class="value-cell">企业数据</td>
-                            <td class="label-cell">数据规模：</td>
-                            <td class="value-cell">--</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">关联数据来源：</td>
-                            <td class="value-cell">--</td>
-                            <td class="label-cell">其他描述：</td>
-                            <td class="value-cell">--</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">产品简介：</td>
-                            <td class="desc-cell" colspan="3" data-product-detail-introduction>为实现政策推荐精准触达，政府资源和企业需求高效匹配，推动惠企政策"免申即享"，郑州市郑惠企平台在保持规划工作连续性、不重复建设的前提下……</td>
-                        </tr>
-                    </table>
+                <div class="g-tab-panel active" id="tabIntro" role="tabpanel" aria-labelledby="tabButtonIntro">
+                    <section class="intro-section" aria-labelledby="basicInfoHeading">
+                        <h3 class="section-heading" id="basicInfoHeading">基本信息</h3>
+                        <div class="product-basic-card">
+                            <div class="product-basic-grid">
+                                <div class="product-basic-item"><span class="product-basic-label">产品名称：</span><span class="product-basic-value" data-product-detail-name>龙岗区人群聚集智能监测视觉数据集</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">产品类型：</span><span class="product-basic-value" data-product-detail-type>数据集</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">行业分类：</span><span class="product-basic-value" data-product-detail-industry>公共管理、社会保障和社会组织</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">地域分类：</span><span class="product-basic-value" data-product-detail-region>广东省 / 深圳市 / 龙岗区</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">覆盖时间范围：</span><span class="product-basic-value" data-product-detail-coverage>--</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">更新频率：</span><span class="product-basic-value" data-product-detail-frequency>不定期更新</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">是否涉及个人信息：</span><span class="product-basic-value" data-product-detail-personal>否</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">使用限制：</span><span class="product-basic-value" data-product-detail-limit>无</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">授权使用：</span><span class="product-basic-value" data-product-detail-authorized>是</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">数据主体：</span><span class="product-basic-value" data-product-detail-subject>公共数据</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">数据规模：</span><span class="product-basic-value" data-product-detail-scale>100GB</span></div>
+                                <div class="product-basic-item"><span class="product-basic-label">关联数据来源：</span><span class="product-basic-value" data-product-detail-source>--</span></div>
+                                <div class="product-basic-item full"><span class="product-basic-label">其他说明：</span><span class="product-basic-value" data-product-detail-notes>--</span></div>
+                                <div class="product-basic-item full"><span class="product-basic-label">产品简介：</span><span class="product-basic-value" data-product-detail-introduction>本数据集汇聚龙岗区重点公共场所的人群密度统计数据，覆盖商圈、公园、交通枢纽等典型场景，包含采集点位、统计时段、人群数量、密度等级和预警状态等字段。数据经聚合与脱敏处理，可用于城市运行态势研判、公共安全预警和活动保障分析。</span></div>
+                            </div>
+                        </div>
+                    </section>
 
-                    <h3 class="section-heading">定价信息</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>交付方式</th>
-                                <th>计量方式</th>
-                                <th>定价（元）</th>
-                                <th>计量单位</th>
-                                <th>是否支持后付费</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>在线交付</td>
-                                <td>面议</td>
-                                <td data-product-detail-price-table>--</td>
-                                <td>--</td>
-                                <td>否</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <section class="intro-section" aria-labelledby="pricingInfoHeading">
+                        <h3 class="section-heading" id="pricingInfoHeading">定价信息</h3>
+                        <div class="pricing-table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">计量方式</th>
+                                        <th scope="col">定价（元）</th>
+                                        <th scope="col">计量单位</th>
+                                        <th scope="col">是否支持后付费</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-product-detail-measure-table>一事一议</td>
+                                        <td data-product-detail-price-table>0</td>
+                                        <td data-product-detail-unit>--</td>
+                                        <td data-product-detail-postpaid>否</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
 
-                <!-- Tab 2: 交付要求 -->
-                <div class="g-tab-panel" id="tabDelivery">
-                    <h3 class="section-heading">在线交付</h3>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label-cell">使用限制：</td>
-                            <td class="value-cell">公开、留存、转录、加工</td>
-                            <td class="label-cell">使用环境安全等级/制度：</td>
-                            <td class="value-cell">基座</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">存储期限：</td>
-                            <td class="value-cell">脱敏后存储</td>
-                            <td class="label-cell"></td>
-                            <td class="value-cell"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">传输方式：</td>
-                            <td class="value-cell">API传输</td>
-                            <td class="label-cell"></td>
-                            <td class="value-cell"></td>
-                        </tr>
-                    </table>
+                <!-- Tab 2: 特色介绍 -->
+                <div class="g-tab-panel" id="tabFeature" role="tabpanel" aria-labelledby="tabButtonFeature" data-feature-introduction hidden></div>
+
+                <!-- Tab 3: 交付要求 -->
+                <div class="g-tab-panel" id="tabDelivery" role="tabpanel" aria-labelledby="tabButtonDelivery" hidden>
+                    <h3 class="g-section-heading" data-product-delivery-heading>文件传输</h3>
+                    <div class="delivery-info-grid">
+                        <div class="delivery-info-item"><span class="delivery-info-label">使用限制：</span><span class="delivery-info-value" data-product-delivery-limit>无</span></div>
+                        <div class="delivery-info-item"><span class="delivery-info-label">使用环境安全级别要求：</span><span class="delivery-info-value" data-product-delivery-security>基础</span></div>
+                        <div class="delivery-info-item"><span class="delivery-info-label">存储限制：</span><span class="delivery-info-value" data-product-delivery-storage>脱敏后存储</span></div>
+                        <div class="delivery-info-item"><span class="delivery-info-label">传输方式：</span><span class="delivery-info-value" data-product-delivery-transfer>文件传输</span></div>
+                    </div>
                 </div>
 
-                <!-- Tab 3: 样例数据 -->
-                <div class="g-tab-panel" id="tabSample"></div>
+                <!-- Tab 4: 样例数据 -->
+                <div class="g-tab-panel" id="tabSample" role="tabpanel" aria-labelledby="tabButtonSample" hidden></div>
+                </div>
             </div>
 
             <aside class="sidebar">
@@ -392,15 +547,26 @@
     (function () {
         var tabs = document.querySelectorAll('.g-tab');
         var panels = document.querySelectorAll('.g-tab-panel');
-        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery', sample: 'tabSample' };
+        var panelMap = { intro: 'tabIntro', feature: 'tabFeature', delivery: 'tabDelivery', sample: 'tabSample' };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
-                tabs.forEach(function (t) { t.classList.remove('active'); });
-                panels.forEach(function (p) { p.classList.remove('active'); });
+                tabs.forEach(function (t) {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                panels.forEach(function (p) {
+                    p.classList.remove('active');
+                    p.hidden = true;
+                });
                 this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
                 var id = panelMap[this.getAttribute('data-tab')];
-                if (id) document.getElementById(id).classList.add('active');
+                if (id) {
+                    var panel = document.getElementById(id);
+                    panel.hidden = false;
+                    panel.classList.add('active');
+                }
             });
         });
     })();

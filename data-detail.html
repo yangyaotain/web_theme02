@@ -14,29 +14,46 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/product-detail-samples.css">
+    <link rel="stylesheet" href="css/feature-introduction.css">
     <link rel="stylesheet" href="css/detail-favorite.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0">
     <script src="js/nav-bar.js"></script>
     <script src="js/smart-service.js" defer></script>
+    <script src="js/feature-introduction.js" defer></script>
     <script src="js/product-detail-samples.js" defer></script>
     <script src="js/detail-favorite.js" defer></script>
     <style>
-        .detail-wrapper { padding-top: 64px; background: var(--bg-section); min-height: 100vh; }
+        .detail-wrapper {
+            min-height: 100vh;
+            padding-top: 64px;
+            background: #F2F7F4;
+        }
+        .detail-wrapper .g-breadcrumb { padding-top: 16px; padding-bottom: 16px; }
 
         /* ── Product Header ────────────────────────────── */
         .product-header {
-            background: var(--bg-card); padding: 24px 32px 28px;
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 0;
+            background: transparent;
         }
         .product-header-container {
-            max-width: var(--content-max-width); margin: 0 auto;
-            display: flex; gap: 32px;
+            display: flex;
+            gap: 32px;
+            width: 100%;
+            margin: 0;
+            padding: 24px;
+            background: var(--bg-card);
+            border: 1px solid rgba(32, 165, 101, 0.10);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.07);
         }
 
         /* Gallery */
         .product-gallery { width: 128px; flex-shrink: 0; }
         .gallery-main {
             width: 128px; height: 128px;
-            border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 10px;
+            border: 1px solid #E1EBE6;
+            border-radius: 10px; overflow: hidden; position: relative; margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(25, 70, 48, 0.08);
         }
         .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
         .gallery-thumbs { width: 128px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
@@ -48,7 +65,7 @@
         .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
         /* Product Info */
-        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .product-title-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
         .product-title {
             font-size: 20px; font-weight: 700; color: var(--text-primary);
@@ -60,7 +77,12 @@
         .product-stat { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
         .product-stat b { color: var(--text-primary); font-weight: 600; }
         .product-desc {
+            max-width: 1040px;
+            padding: 10px 14px;
             font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px;
+            background: #F7FAF8;
+            border-left: 3px solid rgba(32, 165, 101, 0.55);
+            border-radius: 0 8px 8px 0;
         }
         .product-meta-row {
             display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--text-tertiary);
@@ -78,7 +100,7 @@
         .delivery-tag {
             display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
             border: 1px solid var(--forest-green-200); border-radius: 100px;
-            font-size: 13px; color: var(--forest-green);
+            font-size: 13px; color: var(--forest-green); background: var(--forest-green-50);
         }
 
         .action-row { display: flex; gap: 12px; margin-top: 6px; }
@@ -124,7 +146,7 @@
             border: none; background: transparent; cursor: pointer;
             color: var(--text-tertiary); border-radius: 50%; transition: all var(--transition-fast);
         }
-        .consult-close:hover { background: var(--bg-section); color: var(--text-primary); }
+        .consult-close:hover { background: var(--surface-secondary); color: var(--text-primary); }
         .consult-close svg { width: 20px; height: 20px; }
         .consult-row { display: flex; align-items: flex-start; margin-bottom: 20px; }
         .consult-label {
@@ -166,20 +188,202 @@
         }
         .consult-btn-cancel:hover { border-color: var(--border-emphasis); color: var(--text-primary); }
 
-        /* ── Main Content Area ─────────────────────────── */
-        .content-area {
-            max-width: var(--content-max-width); margin: 0 auto; padding: 24px 32px 48px;
-            display: flex; gap: 24px; align-items: flex-start;
+        /* ── Detail Layout ─────────────────────────────── */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            align-items: start;
+            gap: 24px;
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            padding: 0 32px 48px;
         }
-        .content-main { flex: 1; min-width: 0; }
+        .detail-primary {
+            display: grid;
+            min-width: 0;
+            gap: 24px;
+        }
+        .content-main {
+            width: 100%;
+            min-width: 0;
+            padding: 0 24px 28px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid rgba(31, 43, 40, 0.07);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.06);
+        }
+        .content-main > .g-tabs {
+            margin: 0 -24px 24px;
+            padding: 0 12px;
+            background: #FCFDFC;
+            border-bottom-color: #E7ECE9;
+        }
+        .content-main > .g-tabs .g-tab {
+            position: relative;
+            min-width: 104px;
+            padding: 16px 22px 14px;
+            color: #66746E;
+        }
+        .content-main > .g-tabs .g-tab:hover {
+            color: var(--forest-green);
+            background: #F7FBF9;
+        }
+        .content-main > .g-tabs .g-tab.active {
+            color: var(--forest-green);
+            background: #F4FBF7;
+        }
 
         .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
 
+        /* ── Resource Introduction ─────────────────────── */
+        .resource-intro-section {
+            margin-bottom: 24px;
+            padding: 0 0 24px;
+            border-bottom: 1px solid #E7ECE9;
+        }
+        .resource-intro-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .resource-intro-section .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .resource-intro-section .section-heading::before,
+        #tabDelivery .g-section-heading::before {
+            width: 3px;
+            height: 16px;
+            flex: 0 0 auto;
+            background: var(--forest-green);
+            border-radius: 3px;
+            content: '';
+        }
+        .resource-basic-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 34px;
+            row-gap: 0;
+            padding: 0;
+        }
+        .resource-info-item {
+            display: grid;
+            grid-template-columns: 152px minmax(0, 1fr);
+            align-items: start;
+            min-width: 0;
+            padding: 9px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            border-bottom: 1px dashed #DCE8E1;
+        }
+        .resource-info-label {
+            color: #718078;
+            white-space: nowrap;
+        }
+        .resource-info-value {
+            min-width: 0;
+            color: #34443D;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .resource-info-value.is-summary { color: #4F6058; }
+        .resource-info-item.is-wide { grid-column: 1 / -1; }
+        .resource-table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #E1E6E4 transparent;
+        }
+        .resource-table-scroll::-webkit-scrollbar { height: 8px; }
+        .resource-table-scroll::-webkit-scrollbar-thumb { background: #E1E6E4; border-radius: 999px; }
+        .resource-detail-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            font-size: 13px;
+        }
+        .resource-detail-table th,
+        .resource-detail-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid var(--border-divider);
+        }
+        .resource-detail-table th {
+            color: #42534B;
+            font-weight: 600;
+            background: #EEF7F2;
+            white-space: nowrap;
+        }
+        .resource-detail-table td { color: var(--text-primary); background: #FFFFFF; }
+        .resource-detail-table tbody tr:last-child td { border-bottom: none; }
+        .resource-detail-table tbody tr:hover td { background: #F8FCFA; }
+        .resource-detail-table--pricing th,
+        .resource-detail-table--pricing td { text-align: center; }
+        .resource-detail-table--fields th:nth-child(1),
+        .resource-detail-table--fields td:nth-child(1) { width: 9%; }
+        .resource-detail-table--fields th:nth-child(2),
+        .resource-detail-table--fields td:nth-child(2) { width: 23%; }
+        .resource-detail-table--fields th:nth-child(3),
+        .resource-detail-table--fields td:nth-child(3) { width: 27%; }
+        .resource-detail-table--fields th:nth-child(4),
+        .resource-detail-table--fields td:nth-child(4) { width: 22%; }
+        .resource-detail-table--fields th:nth-child(5),
+        .resource-detail-table--fields td:nth-child(5) { width: 19%; }
+        .resource-detail-empty {
+            display: flex;
+            min-height: 142px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            color: #9AA5B1;
+        }
+        .resource-detail-empty .material-symbols-outlined { font-size: 36px; color: #AEB6C2; }
+
+        /* ── Delivery Panel ────────────────────────────── */
+        #tabDelivery {
+            padding: 0;
+        }
+        #tabDelivery .g-section-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+        .sidebar-card {
+            border-color: rgba(32, 165, 101, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(26, 68, 49, 0.06);
+        }
+        .sidebar-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #20A565 0%, #178A54 100%);
+        }
+
         /* ── Responsive ────────────────────────────────── */
         @media (max-width: 1024px) {
-            .content-area { flex-direction: column; }
+            .detail-layout { grid-template-columns: 1fr; }
             .product-header-container { flex-direction: column; }
             .product-gallery { width: 100%; max-width: 128px; }
+            .resource-basic-card { column-gap: 24px; }
+            .sidebar { width: 100%; }
+        }
+        @media (max-width: 720px) {
+            .detail-layout { padding-right: 16px; padding-left: 16px; }
+            .content-main { padding-right: 16px; padding-left: 16px; }
+            .content-main > .g-tabs { margin-right: -16px; margin-left: -16px; overflow-x: auto; }
+            .resource-basic-card { grid-template-columns: 1fr; }
+            .resource-info-item.is-wide { grid-column: auto; }
         }
     </style>
 </head>
@@ -196,8 +400,10 @@
             <span class="current" data-resource-detail-breadcrumb>金融行业A股上市公司股吧数据集</span>
         </nav>
 
-        <!-- Product Header -->
-        <section class="product-header">
+        <div class="detail-layout">
+            <div class="detail-primary">
+                <!-- Product Header -->
+                <section class="product-header">
             <div class="product-header-container">
                 <div class="product-gallery">
                     <div class="gallery-main">
@@ -225,7 +431,6 @@
                     </div>
                     <p class="product-desc" data-resource-detail-description>金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</p>
                     <div class="product-meta-row">
-                        <span>数据资源持有方：<span class="company" data-resource-detail-owner>智云****公司</span></span>
                         <span>上架时间：<span class="val" data-resource-detail-published>2025-11-4 15:00:00</span></span>
                     </div>
                     <div class="product-price">参考价：<span class="amount" data-resource-detail-price>面议</span></div>
@@ -247,112 +452,83 @@
                     </div>
                 </div>
             </div>
-        </section>
+                </section>
 
-        <!-- Content Area: Main + Sidebar -->
-        <div class="content-area">
-            <div class="content-main">
+                <!-- Detail Content -->
+                <div class="content-main">
                 <!-- Tabs -->
-                <div class="g-tabs">
-                    <button class="g-tab active" data-tab="intro">资源介绍</button>
-                    <button class="g-tab" data-tab="delivery">交付要求</button>
-                    <button class="g-tab" data-tab="sample">样例数据</button>
+                <div class="g-tabs" role="tablist" aria-label="资源详情内容">
+                    <button class="g-tab active" type="button" role="tab" id="introTab" aria-selected="true" aria-controls="tabIntro" data-tab="intro">资源介绍</button>
+                    <button class="g-tab" type="button" role="tab" id="featureTab" aria-selected="false" aria-controls="tabFeature" data-tab="feature">特色介绍</button>
+                    <button class="g-tab" type="button" role="tab" id="deliveryTab" aria-selected="false" aria-controls="tabDelivery" data-tab="delivery">交付要求</button>
+                    <button class="g-tab" type="button" role="tab" id="sampleTab" aria-selected="false" aria-controls="tabSample" data-tab="sample">样例数据</button>
                 </div>
 
                 <!-- Tab 1: 资源介绍 -->
-                <div class="g-tab-panel active" id="tabIntro">
-                    <h3 class="section-heading">基本信息</h3>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label-cell">资源名称：</td>
-                            <td class="value-cell" data-resource-detail-name>金融行业A股上市公司股吧数据集</td>
-                            <td class="label-cell">资源所属行业分类：</td>
-                            <td class="value-cell" data-resource-detail-industry>金融业</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">联系人：</td>
-                            <td class="value-cell">张**</td>
-                            <td class="label-cell">资源所有方：</td>
-                            <td class="value-cell" data-resource-detail-owner>智云****公司</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">联系方式：</td>
-                            <td class="value-cell">158****6321</td>
-                            <td class="label-cell">资源类型：</td>
-                            <td class="value-cell" data-resource-detail-type>行业数据</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">资源格式：</td>
-                            <td class="value-cell" data-resource-detail-format>html</td>
-                            <td class="label-cell">数据来源：</td>
-                            <td class="value-cell" data-resource-detail-source>原始所有</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">资源描述：</td>
-                            <td class="desc-cell" colspan="3" data-resource-detail-introduction>金融行业 A 股上市公司股吧数据集是对金融类上市公司在股吧平台上投资者交流数据的收集与整理，可用于分析投资者情绪、市场预测等。</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell"></td>
-                            <td class="value-cell" colspan="3">是否涉及个人信息：<span style="margin-left:12px">否</span></td>
-                        </tr>
-                    </table>
+                <div class="g-tab-panel active" id="tabIntro" role="tabpanel" aria-labelledby="introTab">
+                    <section class="resource-intro-section" aria-labelledby="resourceBasicTitle">
+                        <h3 class="section-heading" id="resourceBasicTitle">基本信息</h3>
+                        <div class="resource-basic-card">
+                            <div class="resource-info-item"><span class="resource-info-label">资源名称：</span><span class="resource-info-value" data-resource-detail-name>龙岗区建筑物逻辑单体空间数据</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">资源所属行业分类：</span><span class="resource-info-value" data-resource-detail-industry>信息传输、软件和信息技术服务业</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">地域分类：</span><span class="resource-info-value" data-resource-detail-region>广东省 / 深圳市 / 龙岗区</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">覆盖时间范围：</span><span class="resource-info-value" data-resource-detail-coverage>2025年1月至今</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">更新频率：</span><span class="resource-info-value" data-resource-detail-frequency>1次/季度</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">开发利用条件：</span><span class="resource-info-value" data-resource-detail-development>脱敏后开放</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">流通类型：</span><span class="resource-info-value" data-resource-detail-circulation>有条件开放</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">资源格式：</span><span class="resource-info-value" data-resource-detail-format>GeoJSON / SHP</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">联系人：</span><span class="resource-info-value" data-resource-detail-contact>李**</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">联系方式：</span><span class="resource-info-value" data-resource-detail-phone>136****5821</span></div>
+                            <div class="resource-info-item is-wide"><span class="resource-info-label">资源摘要：</span><span class="resource-info-value is-summary" data-resource-detail-introduction>汇聚龙岗区建筑物逻辑单体标识、空间位置与基础属性信息。</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">数据来源：</span><span class="resource-info-value" data-resource-detail-source>原始取得</span></div>
+                            <div class="resource-info-item"><span class="resource-info-label">是否涉及个人信息：</span><span class="resource-info-value" data-resource-detail-personal>否</span></div>
+                        </div>
+                    </section>
 
-                    <h3 class="section-heading">数据项信息</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>信息项名称</th>
-                                <th>信息项英文名</th>
-                                <th>数据类型</th>
-                                <th>数据长度</th>
-                            </tr>
-                        </thead>
-                        <tbody data-resource-detail-fields>
-                            <tr><td>1</td><td>处罚记录ID</td><td>penalty_id</td><td>字符串型C</td><td>32</td></tr>
-                            <tr><td>2</td><td>企业ID</td><td>enterprise_id</td><td>字符串型C</td><td>32</td></tr>
-                            <tr><td>3</td><td>企业名称</td><td>enterprise_name</td><td>字符串型C</td><td>255</td></tr>
-                            <tr><td>4</td><td>企业统一社会信用代码</td><td>unified_social_credit_code</td><td>字符串型C</td><td>18</td></tr>
-                            <tr><td>5</td><td>工商行政处罚的具体事由</td><td>reason_for_penalty</td><td>字符串型C</td><td>500</td></tr>
-                            <tr><td>6</td><td>工商行政处罚/约/决定</td><td>penalty_decision</td><td>字符串型C</td><td>500</td></tr>
-                            <tr><td>7</td><td>处罚发生内日期</td><td>penalty_date</td><td>字符串型C</td><td>32</td></tr>
-                            <tr><td>8</td><td>有效标志</td><td>is_valid</td><td>字符串型C</td><td>500</td></tr>
-                            <tr><td>9</td><td>数据有效到/截止日期</td><td>data_valid_until</td><td>字符串型C</td><td>32</td></tr>
-                        </tbody>
-                    </table>
+                    <section class="resource-intro-section" aria-labelledby="resourcePricingTitle">
+                        <h3 class="section-heading" id="resourcePricingTitle">定价信息</h3>
+                        <div class="resource-table-scroll">
+                            <table class="resource-detail-table resource-detail-table--pricing">
+                                <thead><tr><th>计量方式</th><th>定价（元）</th><th>计量单位</th><th>是否支持后付费</th></tr></thead>
+                                <tbody><tr><td data-resource-detail-pricing-method>一事一议</td><td data-resource-detail-pricing>--</td><td data-resource-detail-unit>--</td><td data-resource-detail-deferred>否</td></tr></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="resource-intro-section" aria-labelledby="resourceFieldsTitle">
+                        <h3 class="section-heading" id="resourceFieldsTitle">数据项信息</h3>
+                        <div class="resource-table-scroll">
+                            <table class="resource-detail-table resource-detail-table--fields">
+                                <thead><tr><th>序号</th><th>信息项名称</th><th>信息项英文名</th><th>数据类型</th><th>数据长度</th></tr></thead>
+                                <tbody data-resource-detail-fields>
+                                    <tr><td>1</td><td>建筑物编码</td><td>building_code</td><td>字符串型</td><td>32</td></tr>
+                                    <tr><td>2</td><td>建筑物名称</td><td>building_name</td><td>字符串型</td><td>200</td></tr>
+                                    <tr><td>3</td><td>所属街道</td><td>street_name</td><td>字符串型</td><td>50</td></tr>
+                                    <tr><td>4</td><td>建筑面积</td><td>building_area</td><td>数值型</td><td>18,2</td></tr>
+                                    <tr><td>5</td><td>更新时间</td><td>update_time</td><td>日期时间型</td><td>19</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
 
-                <!-- Tab 2: 交付要求 -->
-                <div class="g-tab-panel" id="tabDelivery">
+                <!-- Tab 2: 特色介绍 -->
+                <div class="g-tab-panel" id="tabFeature" role="tabpanel" aria-labelledby="featureTab" data-feature-introduction></div>
+
+                <!-- Tab 3: 交付要求 -->
+                <div class="g-tab-panel" id="tabDelivery" role="tabpanel" aria-labelledby="deliveryTab">
                     <h3 class="g-section-heading">在线交付</h3>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label-cell">使用限制：</td>
-                            <td class="value-cell">公开、留存、包装、加工</td>
-                            <td class="label-cell">使用环境安全级别要求：</td>
-                            <td class="value-cell">基础</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell"></td>
-                            <td class="value-cell" colspan="3"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">存储限制：</td>
-                            <td class="value-cell">原始存储</td>
-                            <td class="label-cell"></td>
-                            <td class="value-cell"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">传输方式：</td>
-                            <td class="value-cell" data-resource-detail-transfer>API传输</td>
-                            <td class="label-cell"></td>
-                            <td class="value-cell"></td>
-                        </tr>
-                    </table>
+                    <div class="resource-basic-card">
+                        <div class="resource-info-item"><span class="resource-info-label">使用限制：</span><span class="resource-info-value">公开、留存、包装、加工</span></div>
+                        <div class="resource-info-item"><span class="resource-info-label">使用环境安全级别要求：</span><span class="resource-info-value">基础</span></div>
+                        <div class="resource-info-item"><span class="resource-info-label">存储限制：</span><span class="resource-info-value">原始存储</span></div>
+                        <div class="resource-info-item"><span class="resource-info-label">传输方式：</span><span class="resource-info-value" data-resource-detail-transfer>API传输</span></div>
+                    </div>
                 </div>
 
-                <!-- Tab 3: 样例数据 -->
-                <div class="g-tab-panel" id="tabSample" data-sample-context="resource"></div>
+                <!-- Tab 4: 样例数据 -->
+                <div class="g-tab-panel" id="tabSample" role="tabpanel" aria-labelledby="sampleTab" data-sample-context="resource"></div>
+                </div>
             </div>
 
             <!-- Sidebar -->
@@ -390,7 +566,7 @@
                 </div>
                 <div class="consult-row">
                     <div class="consult-label">机构名称：</div>
-                    <div class="consult-val consult-static" style="font-weight:400">智云****公司</div>
+                    <div class="consult-val consult-static" style="font-weight:400" data-resource-consult-owner>深圳市龙岗区城市空间数据服务中心</div>
                 </div>
                 <div class="consult-row">
                     <div class="consult-label">联系人姓名：</div>
@@ -418,13 +594,17 @@
         /* ── Tab 切换 ── */
         var tabs = document.querySelectorAll('.g-tab');
         var panels = document.querySelectorAll('.g-tab-panel');
-        var panelMap = { intro: 'tabIntro', delivery: 'tabDelivery', sample: 'tabSample' };
+        var panelMap = { intro: 'tabIntro', feature: 'tabFeature', delivery: 'tabDelivery', sample: 'tabSample' };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
-                tabs.forEach(function (t) { t.classList.remove('active'); });
+                tabs.forEach(function (t) {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
                 panels.forEach(function (p) { p.classList.remove('active'); });
                 this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
                 var id = panelMap[this.getAttribute('data-tab')];
                 if (id) document.getElementById(id).classList.add('active');
             });

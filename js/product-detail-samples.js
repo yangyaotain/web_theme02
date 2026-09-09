@@ -2,21 +2,238 @@
     'use strict';
 
     var SAMPLE_OUTPUT_ROOT = 'outputs/019fa0fb-0add-75a2-85a0-b0e49bf3fdcd/';
-    var OTHER_SAMPLE_FILE = 'output/pdf/龙岗区产业运行分析样例报告.pdf';
+    var OTHER_SAMPLE_FILES = [
+        {
+            name: '龙岗区产业运行分析样例报告.pdf',
+            meta: 'PDF 文件 · 产业运行分析报告',
+            href: 'output/pdf/龙岗区产业运行分析样例报告.pdf'
+        },
+        {
+            name: '龙岗区产业运行指标口径.csv',
+            meta: 'CSV 文件 · 5 项核心指标口径',
+            href: 'output/samples/龙岗区产业运行指标口径.csv'
+        },
+        {
+            name: '龙岗区产业运行分析样例说明.txt',
+            meta: 'TXT 文件 · 样例内容与使用说明',
+            href: 'output/samples/龙岗区产业运行分析样例说明.txt'
+        }
+    ];
+
+    function buildFeatureIntroduction(config) {
+        function cards(type, items) {
+            return (items || []).map(function (item) {
+                return {
+                    type: type,
+                    title: item[0],
+                    desc: item[1],
+                    icon: item[2] || ''
+                };
+            });
+        }
+        return {
+            sections: [
+                {
+                    title: config.highlightTitle,
+                    content: config.highlightContent,
+                    cards: cards('icon', config.highlights)
+                },
+                {
+                    title: config.flowTitle,
+                    content: config.flowContent,
+                    cards: cards('sequence', config.flow)
+                },
+                {
+                    title: config.sceneTitle,
+                    content: config.sceneContent,
+                    cards: cards('integrated', config.scenes)
+                }
+            ]
+        };
+    }
+
+    var FEATURE_INTRODUCTIONS = {
+        productDataset: buildFeatureIntroduction({
+            highlightTitle: '核心能力',
+            highlightContent: '数据集覆盖商圈、公园、交通枢纽和大型活动场地等典型区域，突出聚合统计、趋势分析与安全使用能力。',
+            highlights: [
+                ['多场景点位汇聚', '统一汇聚不同公共场所的点位编码、区域类型与分时段统计结果。', 'images/consult-advantage-scenario.png'],
+                ['密度等级标准化', '按统一口径输出正常、较高、拥挤等密度等级，便于跨区域比较。', 'images/consult-advantage-design.png'],
+                ['聚集状态可追踪', '保留统计时段与预警状态，可用于回溯重点区域的人群变化过程。', 'images/consult-advantage-operation.png'],
+                ['聚合脱敏处理', '仅提供聚合统计结果，不包含可直接识别个人身份的原始影像。', 'images/consult-advantage-delivery.png']
+            ],
+            flowTitle: '应用流程',
+            flowContent: '从场景选择到分析应用形成连续使用路径，适配城市运行研判和活动保障等业务。',
+            flow: [
+                ['选择监测范围', '按区域类型、点位和时间范围确定本次分析对象。'],
+                ['获取聚合数据', '通过文件交付获取客流量、密度等级与预警状态。'],
+                ['识别异常趋势', '对比不同点位和时段，定位持续上升或短时聚集区域。'],
+                ['形成研判结果', '结合现场管理要求输出调度、疏导和活动保障参考。']
+            ],
+            sceneTitle: '典型场景',
+            sceneContent: '以下场景用于说明数据产品的主要应用方向。',
+            scenes: [
+                ['城市运行监测', '辅助观察重点商圈、公园和交通枢纽的人群密度变化，为日常运行调度提供数据参考。'],
+                ['大型活动保障', '分析活动前后重点区域的人群聚集趋势，支持现场力量安排和分级响应。'],
+                ['公共空间评估', '结合分时段客流变化评估公共空间使用特征，为设施布局优化提供参考。']
+            ]
+        }),
+        productApi: buildFeatureIntroduction({
+            highlightTitle: '接口能力',
+            highlightContent: '接口围绕稳定查询、统一指标和安全调用进行设计，可直接嵌入现有业务系统。',
+            highlights: [
+                ['统一指标输出', '以结构化 JSON 返回企业活力指数、经营状态和统计日期。', 'images/consult-advantage-design.png'],
+                ['按企业精准查询', '支持按企业统一编码查询，减少名称匹配造成的歧义。', 'images/consult-advantage-scenario.png'],
+                ['每日更新', '指标按日更新，满足企业服务与园区运营的常态化查询需求。', 'images/consult-advantage-operation.png'],
+                ['网关安全控制', '通过数据岛网关鉴权、限流和链路标识保障接口调用安全。', 'images/consult-advantage-delivery.png']
+            ],
+            flowTitle: '接入流程',
+            flowContent: '调用方完成授权后即可按照标准接口流程接入。',
+            flow: [
+                ['申请调用权限', '提交业务场景、调用系统和预计频次等信息。'],
+                ['获取调用凭证', '审核通过后领取数据岛接口地址与鉴权凭证。'],
+                ['完成联调验证', '使用示例参数验证请求格式、返回字段和异常码。'],
+                ['接入业务系统', '上线后按授权范围调用，并通过请求标识追踪使用情况。']
+            ],
+            sceneTitle: '业务用途',
+            sceneContent: '接口适合需要在业务过程中即时获取企业活力指标的应用。',
+            scenes: [
+                ['企业服务分层', '在企业服务平台中结合活力指数识别不同经营状态的企业，辅助配置差异化服务。'],
+                ['园区运营分析', '汇总园区企业经营活力变化，辅助发现重点企业和异常波动。'],
+                ['产业趋势监测', '按行业或区域汇总活力指标，为产业运行分析提供结构化数据输入。']
+            ]
+        }),
+        productOther: buildFeatureIntroduction({
+            highlightTitle: '报告亮点',
+            highlightContent: '资料兼顾分析结论、指标解释与使用说明，便于不同业务角色快速理解。',
+            highlights: [
+                ['结构清晰', '按产业结构、企业活跃度和园区运行组织主要分析内容。', 'images/consult-advantage-design.png'],
+                ['口径配套', '同步提供核心指标定义、计算说明和适用范围。', 'images/consult-advantage-delivery.png'],
+                ['图表结合', '通过趋势图、结构图和重点指标卡片呈现主要发现。', 'images/consult-advantage-scenario.png'],
+                ['便于复用', '报告、指标口径和说明文件可分别用于汇报、研究和内部沟通。', 'images/consult-advantage-operation.png']
+            ],
+            flowTitle: '使用流程',
+            flowContent: '使用方可根据研究主题选取报告内容和配套口径。',
+            flow: [
+                ['确认分析范围', '明确产业、街道、园区和统计周期等关注范围。'],
+                ['阅读核心结论', '通过摘要和关键图表掌握产业运行的主要变化。'],
+                ['核对指标口径', '结合口径文件理解指标来源、范围和计算方式。'],
+                ['形成业务材料', '按授权范围引用分析结果，形成内部研判或汇报材料。']
+            ],
+            sceneTitle: '适用场景',
+            sceneContent: '面向需要快速了解区域产业运行情况的研究和管理工作。',
+            scenes: [
+                ['产业运行研判', '用于观察重点产业规模、企业活跃度和结构变化，为阶段性研判提供参考。'],
+                ['园区运营复盘', '对比园区企业结构和运行指标，辅助识别运营重点与服务方向。'],
+                ['专题汇报支撑', '选取报告结论和指标图表，支持内部会议、专题研究和工作汇报。']
+            ]
+        }),
+        resourceDataset: buildFeatureIntroduction({
+            highlightTitle: '数据特色',
+            highlightContent: '资源突出统一标识、空间定位、属性完整和持续更新四项能力。',
+            highlights: [
+                ['逻辑单体统一标识', '为每个建筑物逻辑单体配置稳定编码，便于跨业务关联。', 'images/consult-advantage-design.png'],
+                ['空间位置标准化', '提供中心点坐标及行政区划、街道等空间归属信息。', 'images/consult-advantage-scenario.png'],
+                ['基础属性完整', '覆盖建筑名称、楼层、面积和建成年份等常用管理属性。', 'images/consult-advantage-delivery.png'],
+                ['季度更新校核', '结合变化数据按季度更新，并对异常坐标和属性进行复核。', 'images/consult-advantage-operation.png']
+            ],
+            flowTitle: '更新与质量流程',
+            flowContent: '通过标准化处理流程保持建筑空间数据的一致性和可用性。',
+            flow: [
+                ['来源汇聚', '汇集建筑物空间位置与相关基础属性。'],
+                ['标识匹配', '按照逻辑单体规则完成对象识别和编码关联。'],
+                ['质量校验', '检查坐标范围、字段完整性和属性逻辑关系。'],
+                ['版本更新', '形成季度更新版本并记录主要变化情况。']
+            ],
+            sceneTitle: '应用场景',
+            sceneContent: '标准化建筑物对象可作为多类城市治理业务的空间关联基础。',
+            scenes: [
+                ['城市空间底图', '将建筑物逻辑单体作为统一空间对象，支撑多来源业务数据上图和关联展示。'],
+                ['公共设施服务', '结合建筑物位置和属性分析设施覆盖范围，辅助公共服务资源配置。'],
+                ['空间规划分析', '按街道、区域和建筑属性开展结构统计，为规划评估提供数据基础。']
+            ]
+        }),
+        resourceApi: buildFeatureIntroduction({
+            highlightTitle: '接口特色',
+            highlightContent: '资源以标准字段、实时响应和安全授权为重点，降低企业信息接入成本。',
+            highlights: [
+                ['标准企业编码', '以企业统一编码作为主要查询条件，保证跨系统对象一致。', 'images/consult-advantage-design.png'],
+                ['结构化实时返回', '通过 JSON 返回企业名称、活力指数、经营状态和统计日期。', 'images/consult-advantage-scenario.png'],
+                ['调用链路可追踪', '支持请求标识记录，便于定位接口调用和业务处理过程。', 'images/consult-advantage-operation.png'],
+                ['授权范围控制', '通过网关凭证和限流策略控制调用系统与访问频次。', 'images/consult-advantage-delivery.png']
+            ],
+            flowTitle: '调用流程',
+            flowContent: '接口调用遵循申请、鉴权、查询和留痕的标准流程。',
+            flow: [
+                ['场景申请', '说明调用系统、使用目的、数据范围和预计频次。'],
+                ['权限审核', '核对使用边界并配置数据岛调用凭证。'],
+                ['接口查询', '按企业编码和统计日期发起 HTTPS 请求。'],
+                ['结果使用', '在授权业务中使用返回结果并保留必要调用记录。']
+            ],
+            sceneTitle: '适用场景',
+            sceneContent: '适用于需要在线核验企业基础状态的业务环节。',
+            scenes: [
+                ['惠企服务核验', '在企业申报或服务匹配过程中查询企业基础信息，减少重复填报。'],
+                ['园区企业管理', '在园区运营系统中核对入驻企业信息和经营状态标签。'],
+                ['产业监测接入', '为产业监测系统提供标准企业对象与基础经营指标。']
+            ]
+        }),
+        resourceOther: buildFeatureIntroduction({
+            highlightTitle: '内容构成',
+            highlightContent: '资料包由分析成果、指标口径和使用说明组成，兼顾阅读与复用。',
+            highlights: [
+                ['产业分析报告', '呈现重点产业结构、企业活跃度和园区运行情况。', 'images/consult-advantage-design.png'],
+                ['指标口径清单', '说明核心指标的统计范围、字段来源和计算逻辑。', 'images/consult-advantage-delivery.png'],
+                ['使用说明文件', '明确资料内容、适用范围和引用注意事项。', 'images/consult-advantage-operation.png'],
+                ['多格式交付', '提供 PDF、CSV 和 TXT 等便于阅读或进一步处理的文件。', 'images/consult-advantage-scenario.png']
+            ],
+            flowTitle: '使用流程',
+            flowContent: '通过资料选择、内容核对和成果引用完成使用。',
+            flow: [
+                ['选择资料主题', '根据研究目标选择产业、园区或区域分析内容。'],
+                ['下载资料文件', '按授权范围获取报告、指标口径和使用说明。'],
+                ['核对统计范围', '结合口径说明确认时间、区域和指标适用边界。'],
+                ['开展分析引用', '用于内部研究、趋势判断或专题材料编制。']
+            ],
+            sceneTitle: '适用对象',
+            sceneContent: '资料面向产业研究、园区运营和企业服务等角色。',
+            scenes: [
+                ['产业研究人员', '快速了解区域产业结构和企业运行趋势，辅助确定后续研究重点。'],
+                ['园区运营团队', '对照园区指标与区域情况，辅助开展阶段性运营复盘。'],
+                ['企业服务部门', '结合产业和企业运行信息研判服务方向，形成内部工作参考。']
+            ]
+        })
+    };
+
     var PRODUCTS = {
         dataset: {
-            name: '龙岗区企业经营活力监测数据集',
+            name: '龙岗区人群聚集智能监测视觉数据集',
             type: '数据集',
             image: 'images/policy-recommend.jpg',
-            description: '汇聚企业登记、产业分布和经营活跃度等主题指标，形成龙岗区企业经营活力监测样例数据，为产业分析、园区运营和企业服务提供数据支撑。',
-            price: '9,800元/年',
+            description: '汇聚龙岗区重点商圈、公园、交通枢纽等公共场所的人群密度统计结果，提供分时段客流量、密度等级与聚集预警状态数据，支持城市运行监测和大型活动安全保障。',
+            price: '0元',
             delivery: '文件传输',
-            measure: '一口价',
-            billing: '预付费',
-            provider: '广东****有限公司',
-            publishedAt: '2025-11-4 15:00:00',
-            industry: '企业服务',
-            introduction: '围绕龙岗区企业经营活跃度、产业结构和空间分布构建标准化数据集，提供统一字段口径、按日更新的数据文件及可下载样例。'
+            measure: '一事一议',
+            billing: '无需预付',
+            publishedAt: '2026-09-01 10:20:00',
+            industry: '公共管理、社会保障和社会组织',
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '--',
+            frequency: '不定期更新',
+            personalInfo: '否',
+            usageLimit: '无',
+            authorizedUse: '是',
+            dataSubject: '公共数据',
+            dataScale: '100GB',
+            relatedSource: '--',
+            notes: '--',
+            pricingAmount: '0',
+            pricingUnit: '--',
+            postpaid: '否',
+            securityLevel: '基础',
+            storageLimit: '脱敏后存储',
+            introduction: '本数据集汇聚龙岗区重点公共场所的人群密度统计数据，覆盖商圈、公园、交通枢纽等典型场景，包含采集点位、统计时段、人群数量、密度等级和预警状态等字段。数据经聚合与脱敏处理，可用于城市运行态势研判、公共安全预警和活动保障分析。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.productDataset
         },
         api: {
             name: '龙岗企业经营活力指数查询 API',
@@ -27,10 +244,25 @@
             delivery: 'API传输',
             measure: '按次计费',
             billing: '预付费',
-            provider: '广东****有限公司',
             publishedAt: '2025-11-4 15:00:00',
             industry: '企业服务',
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '2026-01-01 至今',
+            frequency: '每日更新',
+            personalInfo: '否',
+            usageLimit: '仅限授权系统调用',
+            authorizedUse: '是',
+            dataSubject: '企业数据',
+            dataScale: '约 32 万条',
+            relatedSource: '龙岗区企业登记主题库',
+            notes: '--',
+            pricingAmount: '0.08',
+            pricingUnit: '次',
+            postpaid: '否',
+            securityLevel: '二级',
+            storageLimit: '不落地存储',
             introduction: '通过数据岛 API 网关提供企业经营活力指标查询服务，支持企业编码和统计日期参数，返回结构化 JSON 数据。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.productApi,
             apiService: {
                 name: '龙岗企业经营活力指数查询服务',
                 registry: '外部注册数据服务_8163',
@@ -91,39 +323,68 @@
             delivery: '文件传输',
             measure: '按份计费',
             billing: '预付费',
-            provider: '广东****有限公司',
             publishedAt: '2025-11-4 15:00:00',
             industry: '产业发展',
-            introduction: '以说明文件形式交付产业运行分析样例，内容包括重点产业结构、企业活跃度、园区运行情况以及数据使用说明。'
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '2025年度',
+            frequency: '年度更新',
+            personalInfo: '否',
+            usageLimit: '仅限内部研究使用',
+            authorizedUse: '否',
+            dataSubject: '产业数据',
+            dataScale: '3 个文件',
+            relatedSource: '龙岗区产业运行主题库',
+            notes: '不包含企业原始明细',
+            pricingAmount: '3,600',
+            pricingUnit: '份',
+            postpaid: '否',
+            securityLevel: '基础',
+            storageLimit: '加密存储，授权到期后删除',
+            introduction: '以说明文件形式交付产业运行分析样例，内容包括重点产业结构、企业活跃度、园区运行情况以及数据使用说明。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.productOther
         }
     };
 
     var RESOURCES = {
         dataset: {
-            name: '龙岗区企业经营活力基础数据集',
+            name: '龙岗区建筑物逻辑单体空间数据',
             type: '数据集',
-            resourceType: '企业数据',
-            image: 'images/stock-data.jpg',
-            description: '汇聚龙岗区企业登记、所属行业、所在街道和经营活跃度等基础信息，形成可用于产业分析和企业服务的标准化数据资源。',
+            resourceType: '公共数据',
+            image: 'images/data-screen.jpg',
+            description: '汇聚龙岗区建筑物逻辑单体标识、空间位置和基础属性信息，为城市治理、空间规划与公共服务场景提供标准化数据支撑。',
             price: '面议',
             delivery: '文件传输',
-            measure: '一口价',
-            billing: '预付费',
+            measure: '一事一议',
+            billing: '线下结算',
             industry: '信息传输、软件和信息技术服务业',
-            owner: '深圳市龙岗区政务数据运营有限公司',
-            publishedAt: '2026-07-18 09:30:00',
-            format: 'XLSX / CSV',
-            source: '原始数据',
-            introduction: '围绕企业经营活跃度、产业结构和空间分布整理形成标准化基础数据集，提供统一字段口径和按日更新的数据文件。',
+            owner: '深圳市龙岗区城市空间数据服务中心',
+            publishedAt: '2026-08-28 10:20:00',
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '2025年1月至今',
+            updateFrequency: '1次/季度',
+            developmentTerms: '脱敏后开放',
+            circulationType: '有条件开放',
+            contact: '李**',
+            contactPhone: '136****5821',
+            format: 'GeoJSON / SHP',
+            source: '原始取得',
+            pricing: '--',
+            measureUnit: '--',
+            deferredPayment: '否',
+            personalInfo: '否',
+            introduction: '汇聚龙岗区建筑物逻辑单体标识、空间位置、行政区划、楼层与建筑面积等基础属性，可用于城市空间底图构建和建筑物精细化管理。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.resourceDataset,
             fields: [
-                ['企业编码', 'enterprise_code', '字符串型', '32'],
-                ['企业名称', 'enterprise_name', '字符串型', '255'],
-                ['所属行业', 'industry_name', '字符串型', '100'],
+                ['建筑物编码', 'building_code', '字符串型', '32'],
+                ['建筑物名称', 'building_name', '字符串型', '200'],
+                ['行政区划代码', 'division_code', '字符串型', '12'],
                 ['所属街道', 'street_name', '字符串型', '50'],
-                ['注册资本', 'registered_capital', '数值型', '18,2'],
-                ['活力指数', 'vitality_index', '数值型', '5,2'],
-                ['经营状态', 'operation_status', '字符串型', '20'],
-                ['数据日期', 'stat_date', '日期型', '10']
+                ['中心点经度', 'longitude', '数值型', '10,6'],
+                ['中心点纬度', 'latitude', '数值型', '10,6'],
+                ['地上层数', 'floor_count', '整型', '4'],
+                ['建筑面积', 'building_area', '数值型', '18,2'],
+                ['建成年份', 'completion_year', '整型', '4'],
+                ['更新时间', 'update_time', '日期时间型', '19']
             ]
         },
         api: {
@@ -139,9 +400,21 @@
             industry: '信息传输、软件和信息技术服务业',
             owner: '深圳市龙岗区政务数据运营有限公司',
             publishedAt: '2026-07-17 16:35:00',
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '2024年1月至今',
+            updateFrequency: '实时更新',
+            developmentTerms: '授权后使用',
+            circulationType: '有条件开放',
+            contact: '陈**',
+            contactPhone: '138****4076',
             format: 'JSON',
-            source: '加工数据',
+            source: '加工取得',
+            pricing: '--',
+            measureUnit: '次',
+            deferredPayment: '否',
+            personalInfo: '否',
             introduction: '通过数据岛 API 网关提供标准化查询接口，调用方可按企业编码及统计日期获取结构化企业经营活力信息。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.resourceApi,
             fields: [
                 ['企业编码', 'enterpriseCode', '字符串型', '32'],
                 ['企业名称', 'enterpriseName', '字符串型', '255'],
@@ -214,9 +487,21 @@
             industry: '租赁和商务服务业',
             owner: '深圳市龙岗区产业数据运营有限公司',
             publishedAt: '2026-07-16 14:10:00',
+            region: '广东省 / 深圳市 / 龙岗区',
+            coverage: '2023年至2025年',
+            updateFrequency: '1次/年',
+            developmentTerms: '签署用途承诺后使用',
+            circulationType: '有条件开放',
+            contact: '周**',
+            contactPhone: '135****2198',
             format: 'PDF / TXT',
-            source: '加工数据',
+            source: '加工取得',
+            pricing: '--',
+            measureUnit: '份',
+            deferredPayment: '否',
+            personalInfo: '否',
             introduction: '资料包包括覆盖范围、数据周期、主要分析内容和指标口径说明，以登记时上传的文件形式提供样例。',
+            featureIntroduction: FEATURE_INTRODUCTIONS.resourceOther,
             fields: [
                 ['文件名称', 'file_name', '字符串型', '255'],
                 ['文件类型', 'file_type', '字符串型', '20'],
@@ -233,16 +518,16 @@
     };
 
     var DATASET_ROWS = [
-        ['LGQY0001', '深圳市启辰智能科技有限公司', '软件和信息技术服务业', '坂田街道', '3,000', '92.6', '活跃', '2026-07-20'],
-        ['LGQY0002', '深圳市云图数据服务有限公司', '互联网和相关服务', '龙城街道', '1,800', '88.4', '活跃', '2026-07-20'],
-        ['LGQY0003', '深圳市创维智联技术有限公司', '计算机、通信和其他电子设备制造业', '宝龙街道', '5,200', '86.9', '活跃', '2026-07-20'],
-        ['LGQY0004', '深圳市星河产业运营有限公司', '商务服务业', '园山街道', '2,500', '84.7', '稳定', '2026-07-20'],
-        ['LGQY0005', '深圳市联创精密制造有限公司', '专用设备制造业', '平湖街道', '4,600', '82.1', '稳定', '2026-07-20'],
-        ['LGQY0006', '深圳市智谷新能源科技有限公司', '电气机械和器材制造业', '坪地街道', '3,800', '80.8', '稳定', '2026-07-20'],
-        ['LGQY0007', '深圳市航盛数字科技有限公司', '科技推广和应用服务业', '吉华街道', '2,100', '78.5', '稳定', '2026-07-20'],
-        ['LGQY0008', '深圳市大运供应链管理有限公司', '多式联运和运输代理业', '横岗街道', '1,600', '75.9', '关注', '2026-07-20'],
-        ['LGQY0009', '深圳市恒裕生物技术有限公司', '医药制造业', '龙岗街道', '2,900', '73.6', '关注', '2026-07-20'],
-        ['LGQY0010', '深圳市清林文创发展有限公司', '文化艺术业', '布吉街道', '1,200', '71.4', '关注', '2026-07-20']
+        ['LG-RQ-20260901-001', 'LG-CAM-0018', '大运中心南广场', '体育场馆', '龙城街道', '2026-09-01 08:00', '286', '较高', '关注'],
+        ['LG-RQ-20260901-002', 'LG-CAM-0032', '龙岗万达广场东门', '商业综合体', '平湖街道', '2026-09-01 09:00', '174', '正常', '正常'],
+        ['LG-RQ-20260901-003', 'LG-CAM-0047', '甘坑古镇南入口', '文旅景区', '吉华街道', '2026-09-01 10:00', '231', '较高', '关注'],
+        ['LG-RQ-20260901-004', 'LG-CAM-0063', '龙城公园主入口', '城市公园', '龙城街道', '2026-09-01 11:00', '96', '正常', '正常'],
+        ['LG-RQ-20260901-005', 'LG-CAM-0075', '双龙地铁站B口', '交通枢纽', '龙岗街道', '2026-09-01 12:00', '318', '拥挤', '预警'],
+        ['LG-RQ-20260901-006', 'LG-CAM-0089', '宝龙科技城服务大厅', '政务服务', '宝龙街道', '2026-09-01 13:00', '83', '正常', '正常'],
+        ['LG-RQ-20260901-007', 'LG-CAM-0104', '布吉公园中心广场', '城市公园', '布吉街道', '2026-09-01 14:00', '142', '正常', '正常'],
+        ['LG-RQ-20260901-008', 'LG-CAM-0116', '横岗文体广场', '公共文化', '横岗街道', '2026-09-01 15:00', '205', '较高', '关注'],
+        ['LG-RQ-20260901-009', 'LG-CAM-0128', '园山街道大康广场', '社区广场', '园山街道', '2026-09-01 16:00', '119', '正常', '正常'],
+        ['LG-RQ-20260901-010', 'LG-CAM-0141', '坪地中心公园北门', '城市公园', '坪地街道', '2026-09-01 17:00', '267', '较高', '关注']
     ];
 
     function escapeHtml(value) {
@@ -261,18 +546,6 @@
         return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (paths[name] || paths.file) + '</svg>';
     }
 
-    function renderOverview(type, product, description) {
-        var iconName = type === 'dataset' ? 'dataset' : (type === 'api' ? 'api' : 'file');
-        return ''
-            + '<div class="sample-overview">'
-            +   '<div class="sample-overview-copy">'
-            +       '<span class="sample-type-badge">' + icon(iconName) + escapeHtml(product.type) + '</span>'
-            +       '<h3>' + escapeHtml(product.name) + '</h3>'
-            +       (description ? '<p>' + escapeHtml(description) + '</p>' : '')
-            +   '</div>'
-            + '</div>';
-    }
-
     function renderFileCard(fileName, fileMeta, href, iconName) {
         return ''
             + '<div class="sample-file-card">'
@@ -283,17 +556,16 @@
     }
 
     function renderDatasetSample(product) {
-        var header = ['企业编码', '企业名称', '所属行业', '所属街道', '注册资本（万元）', '活力指数', '经营状态', '数据日期'];
+        var header = ['记录编号', '点位编码', '点位名称', '场景类型', '所属街道', '统计时间', '人群数量（人）', '密度等级', '预警状态'];
         return ''
-            + renderOverview('dataset', product, '下载完整 Excel 样例文件，页面同步展示其中 10 条示例记录。')
             + renderFileCard(
-                '龙岗区企业经营活力监测样例.xlsx',
-                'Excel 工作簿 · 10 条样例数据 · 8 个字段',
-                SAMPLE_OUTPUT_ROOT + '龙岗区企业经营活力监测样例.xlsx',
+                '龙岗区人群聚集智能监测视觉数据样例.xlsx',
+                'Excel 工作簿 · 10 条样例数据 · 9 个字段',
+                SAMPLE_OUTPUT_ROOT + '龙岗区人群聚集智能监测视觉数据样例.xlsx',
                 'dataset'
             )
             + '<h3 class="sample-table-title">样例数据预览</h3>'
-            + '<p class="sample-table-note">以下内容与 Excel 文件中的“企业活力样例”工作表保持一致。</p>'
+            + '<p class="sample-table-note">以下内容与 Excel 文件中的“人群密度样例”工作表保持一致。</p>'
             + '<div class="sample-table-scroll"><table class="sample-preview-table">'
             +   '<thead><tr>' + header.map(function (item) { return '<th>' + escapeHtml(item) + '</th>'; }).join('') + '</tr></thead>'
             +   '<tbody>'
@@ -351,7 +623,6 @@
         var service = product.apiService;
         var responseText = JSON.stringify(service.response, null, 2);
         return ''
-            + renderOverview('api', product, '以下为 API 样例信息，可查看接口配置、请求参数及返回示例。')
             + '<article class="sample-api-service-card">'
             +   '<h3>' + escapeHtml(service.name) + '</h3>'
             +   '<p>' + escapeHtml(service.registry) + '</p>'
@@ -398,13 +669,9 @@
 
     function renderOtherSample(product) {
         return ''
-            + renderOverview('other', product, '该类型以登记时上传的文件作为样例，用户可查看文件信息并直接下载。')
-            + renderFileCard(
-                '龙岗区产业运行分析样例报告.pdf',
-                'PDF 文件',
-                OTHER_SAMPLE_FILE,
-                'file'
-            );
+            + OTHER_SAMPLE_FILES.map(function (file) {
+                return renderFileCard(file.name, file.meta, file.href, 'file');
+            }).join('');
     }
 
     function setText(selector, value) {
@@ -431,27 +698,56 @@
         setText('[data-product-detail-title]', product.name);
         setText('[data-product-detail-description]', product.description);
         setText('[data-product-detail-price]', product.price);
-        setText('[data-product-detail-price-table]', product.price);
+        setText('[data-product-detail-price-table]', product.pricingAmount || product.price);
         setText('[data-product-detail-delivery]', product.delivery);
         setText('[data-product-detail-measure]', product.measure);
+        setText('[data-product-detail-measure-table]', product.measure);
         setText('[data-product-detail-billing]', product.billing);
         setText('[data-product-detail-published]', product.publishedAt);
-        setTextAll('[data-product-detail-provider]', product.provider);
         setText('[data-product-detail-name]', product.name);
         setText('[data-product-detail-type]', product.type);
         setText('[data-product-detail-industry]', product.industry);
+        setText('[data-product-detail-region]', product.region || '--');
+        setText('[data-product-detail-coverage]', product.coverage || '--');
+        setText('[data-product-detail-frequency]', product.frequency || '--');
+        setText('[data-product-detail-personal]', product.personalInfo || '--');
+        setText('[data-product-detail-limit]', product.usageLimit || '--');
+        setText('[data-product-detail-authorized]', product.authorizedUse || '--');
+        setText('[data-product-detail-subject]', product.dataSubject || '--');
+        setText('[data-product-detail-scale]', product.dataScale || '--');
+        setText('[data-product-detail-source]', product.relatedSource || '--');
+        setText('[data-product-detail-notes]', product.notes || '--');
+        setText('[data-product-detail-unit]', product.pricingUnit || '--');
+        setText('[data-product-detail-postpaid]', product.postpaid || '否');
+        setText('[data-product-delivery-heading]', product.delivery);
+        setText('[data-product-delivery-limit]', product.usageLimit || '--');
+        setText('[data-product-delivery-security]', product.securityLevel || '--');
+        setText('[data-product-delivery-storage]', product.storageLimit || '--');
+        setText('[data-product-delivery-transfer]', product.delivery || '--');
         setText('[data-product-detail-introduction]', product.introduction);
         setText('[data-product-consult-target]', product.name);
         document.querySelectorAll('[data-product-detail-image]').forEach(function (image) {
             image.src = product.image;
             image.alt = product.name;
         });
+        if (window.FeatureIntroduction) {
+            window.FeatureIntroduction.renderPortal(
+                document.querySelector('[data-feature-introduction]'),
+                product.featureIntroduction
+            );
+        }
         updateBuyLink('product', type);
     }
 
     function renderResourceFields(fields) {
         var target = document.querySelector('[data-resource-detail-fields]');
-        if (!target || !fields) return;
+        if (!target) return;
+        if (!fields || !fields.length) {
+            target.innerHTML = '<tr><td colspan="5"><div class="resource-detail-empty" role="status">'
+                + '<span class="material-symbols-outlined" aria-hidden="true">inbox</span><span>暂无数据</span>'
+                + '</div></td></tr>';
+            return;
+        }
         target.innerHTML = fields.map(function (field, index) {
             return '<tr><td>' + (index + 1) + '</td>'
                 + '<td>' + escapeHtml(field[0]) + '</td>'
@@ -474,11 +770,24 @@
         setText('[data-resource-detail-name]', resource.name);
         setText('[data-resource-detail-type]', resource.resourceType);
         setText('[data-resource-detail-industry]', resource.industry);
+        setText('[data-resource-detail-region]', resource.region || '--');
+        setText('[data-resource-detail-coverage]', resource.coverage || '--');
+        setText('[data-resource-detail-frequency]', resource.updateFrequency || '--');
+        setText('[data-resource-detail-development]', resource.developmentTerms || '--');
+        setText('[data-resource-detail-circulation]', resource.circulationType || '--');
+        setText('[data-resource-detail-contact]', resource.contact || '--');
+        setText('[data-resource-detail-phone]', resource.contactPhone || '--');
         setText('[data-resource-detail-format]', resource.format);
         setText('[data-resource-detail-source]', resource.source);
         setText('[data-resource-detail-introduction]', resource.introduction);
+        setText('[data-resource-detail-personal]', resource.personalInfo || '否');
+        setText('[data-resource-detail-pricing-method]', resource.measure || '--');
+        setText('[data-resource-detail-pricing]', resource.pricing || '--');
+        setText('[data-resource-detail-unit]', resource.measureUnit || '--');
+        setText('[data-resource-detail-deferred]', resource.deferredPayment || '否');
         setText('[data-resource-detail-transfer]', resource.delivery);
         setText('[data-resource-consult-target]', resource.name);
+        setText('[data-resource-consult-owner]', resource.owner);
         document.querySelectorAll('[data-resource-detail-owner]').forEach(function (element) {
             element.textContent = resource.owner;
         });
@@ -487,6 +796,12 @@
             image.alt = resource.name;
         });
         renderResourceFields(resource.fields);
+        if (window.FeatureIntroduction) {
+            window.FeatureIntroduction.renderPortal(
+                document.querySelector('[data-feature-introduction]'),
+                resource.featureIntroduction
+            );
+        }
         updateBuyLink('resource', type);
     }
 
