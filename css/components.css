@@ -857,6 +857,81 @@
     background: #FAFBFC;
 }
 
+/* 资源、产品详情的基本信息卡片 */
+.product-basic-card.detail-basic-card,
+.resource-basic-card.detail-basic-card {
+    column-gap: 40px;
+    row-gap: 0;
+    padding: 16px 24px;
+    border: 1px solid #EEF2F0;
+    border-radius: 12px;
+    background: #F6F8F7;
+}
+
+.detail-basic-card .product-basic-item,
+.detail-basic-card .resource-info-item {
+    align-items: center;
+    min-height: 38px;
+    padding: 7px 0;
+    border-bottom: 0;
+}
+
+.detail-basic-card .product-basic-label,
+.detail-basic-card .resource-info-label {
+    color: #7A8A82;
+}
+
+.detail-basic-card .product-basic-value,
+.detail-basic-card .resource-info-value {
+    color: #34443D;
+}
+
+.detail-basic-card .product-basic-item.full,
+.detail-basic-card .resource-info-item.is-wide {
+    align-items: start;
+}
+
+/* 资源、产品基本信息中的关键属性 */
+.resource-info-item.is-highlight,
+.product-basic-item.is-highlight {
+    margin: 0;
+    padding: 7px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.resource-info-item.is-highlight .resource-info-value,
+.product-basic-item.is-highlight .product-basic-value {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    min-height: 28px;
+    max-width: 100%;
+    padding: 3px 12px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #168653 0%, #20A665 100%);
+    box-shadow: 0 3px 8px rgba(22, 134, 83, 0.18);
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+    .product-basic-card.detail-basic-card,
+    .resource-basic-card.detail-basic-card {
+        column-gap: 28px;
+    }
+}
+
+@media (max-width: 720px) {
+    .product-basic-card.detail-basic-card,
+    .resource-basic-card.detail-basic-card {
+        grid-template-columns: 1fr;
+        padding: 14px 18px;
+    }
+}
+
 /* ══════════════════════════════════════════════════════════
    智能推荐侧边栏
    ══════════════════════════════════════════════════════════ */

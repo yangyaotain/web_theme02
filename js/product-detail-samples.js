@@ -218,17 +218,17 @@
             publishedAt: '2026-09-01 10:20:00',
             industry: '公共管理、社会保障和社会组织',
             region: '广东省 / 深圳市 / 龙岗区',
-            coverage: '--',
+            coverage: '2025年1月至今',
             frequency: '不定期更新',
             personalInfo: '否',
             usageLimit: '无',
             authorizedUse: '是',
             dataSubject: '公共数据',
             dataScale: '100GB',
-            relatedSource: '--',
-            notes: '--',
+            relatedSource: '龙岗区重点公共场所客流监测数据资源',
+            notes: '数据按采集点位和统计时段聚合，并已完成脱敏处理',
             pricingAmount: '0',
-            pricingUnit: '--',
+            pricingUnit: '套',
             postpaid: '否',
             securityLevel: '基础',
             storageLimit: '脱敏后存储',
@@ -255,7 +255,7 @@
             dataSubject: '企业数据',
             dataScale: '约 32 万条',
             relatedSource: '龙岗区企业登记主题库',
-            notes: '--',
+            notes: '接口调用需通过数据岛授权认证',
             pricingAmount: '0.08',
             pricingUnit: '次',
             postpaid: '否',
@@ -368,8 +368,8 @@
             contactPhone: '136****5821',
             format: 'GeoJSON / SHP',
             source: '原始取得',
-            pricing: '--',
-            measureUnit: '--',
+            pricing: '按项目范围协商报价',
+            measureUnit: '数据包',
             deferredPayment: '否',
             personalInfo: '否',
             introduction: '汇聚龙岗区建筑物逻辑单体标识、空间位置、行政区划、楼层与建筑面积等基础属性，可用于城市空间底图构建和建筑物精细化管理。',
@@ -409,7 +409,7 @@
             contactPhone: '138****4076',
             format: 'JSON',
             source: '加工取得',
-            pricing: '--',
+            pricing: '按调用量阶梯协商',
             measureUnit: '次',
             deferredPayment: '否',
             personalInfo: '否',
@@ -496,7 +496,7 @@
             contactPhone: '135****2198',
             format: 'PDF / TXT',
             source: '加工取得',
-            pricing: '--',
+            pricing: '按交付内容协商报价',
             measureUnit: '份',
             deferredPayment: '否',
             personalInfo: '否',
@@ -707,23 +707,23 @@
         setText('[data-product-detail-name]', product.name);
         setText('[data-product-detail-type]', product.type);
         setText('[data-product-detail-industry]', product.industry);
-        setText('[data-product-detail-region]', product.region || '--');
-        setText('[data-product-detail-coverage]', product.coverage || '--');
-        setText('[data-product-detail-frequency]', product.frequency || '--');
-        setText('[data-product-detail-personal]', product.personalInfo || '--');
-        setText('[data-product-detail-limit]', product.usageLimit || '--');
-        setText('[data-product-detail-authorized]', product.authorizedUse || '--');
-        setText('[data-product-detail-subject]', product.dataSubject || '--');
-        setText('[data-product-detail-scale]', product.dataScale || '--');
-        setText('[data-product-detail-source]', product.relatedSource || '--');
-        setText('[data-product-detail-notes]', product.notes || '--');
-        setText('[data-product-detail-unit]', product.pricingUnit || '--');
+        setText('[data-product-detail-region]', product.region || '未设置');
+        setText('[data-product-detail-coverage]', product.coverage || '未设置');
+        setText('[data-product-detail-frequency]', product.frequency || '未设置');
+        setText('[data-product-detail-personal]', product.personalInfo || '否');
+        setText('[data-product-detail-limit]', product.usageLimit || '无');
+        setText('[data-product-detail-authorized]', product.authorizedUse || '否');
+        setText('[data-product-detail-subject]', product.dataSubject || '未设置');
+        setText('[data-product-detail-scale]', product.dataScale || '未统计');
+        setText('[data-product-detail-source]', product.relatedSource || '未关联数据资源');
+        setText('[data-product-detail-notes]', product.notes || '无补充说明');
+        setText('[data-product-detail-unit]', product.pricingUnit || '未设置');
         setText('[data-product-detail-postpaid]', product.postpaid || '否');
         setText('[data-product-delivery-heading]', product.delivery);
-        setText('[data-product-delivery-limit]', product.usageLimit || '--');
-        setText('[data-product-delivery-security]', product.securityLevel || '--');
-        setText('[data-product-delivery-storage]', product.storageLimit || '--');
-        setText('[data-product-delivery-transfer]', product.delivery || '--');
+        setText('[data-product-delivery-limit]', product.usageLimit || '无');
+        setText('[data-product-delivery-security]', product.securityLevel || '未设置');
+        setText('[data-product-delivery-storage]', product.storageLimit || '未设置');
+        setText('[data-product-delivery-transfer]', product.delivery || '未设置');
         setText('[data-product-detail-introduction]', product.introduction);
         setText('[data-product-consult-target]', product.name);
         document.querySelectorAll('[data-product-detail-image]').forEach(function (image) {
@@ -770,20 +770,20 @@
         setText('[data-resource-detail-name]', resource.name);
         setText('[data-resource-detail-type]', resource.resourceType);
         setText('[data-resource-detail-industry]', resource.industry);
-        setText('[data-resource-detail-region]', resource.region || '--');
-        setText('[data-resource-detail-coverage]', resource.coverage || '--');
-        setText('[data-resource-detail-frequency]', resource.updateFrequency || '--');
-        setText('[data-resource-detail-development]', resource.developmentTerms || '--');
-        setText('[data-resource-detail-circulation]', resource.circulationType || '--');
-        setText('[data-resource-detail-contact]', resource.contact || '--');
-        setText('[data-resource-detail-phone]', resource.contactPhone || '--');
+        setText('[data-resource-detail-region]', resource.region || '未设置');
+        setText('[data-resource-detail-coverage]', resource.coverage || '未设置');
+        setText('[data-resource-detail-frequency]', resource.updateFrequency || '未设置');
+        setText('[data-resource-detail-development]', resource.developmentTerms || '未设置');
+        setText('[data-resource-detail-circulation]', resource.circulationType || '未设置');
+        setText('[data-resource-detail-contact]', resource.contact || '未提供');
+        setText('[data-resource-detail-phone]', resource.contactPhone || '未提供');
         setText('[data-resource-detail-format]', resource.format);
         setText('[data-resource-detail-source]', resource.source);
         setText('[data-resource-detail-introduction]', resource.introduction);
         setText('[data-resource-detail-personal]', resource.personalInfo || '否');
-        setText('[data-resource-detail-pricing-method]', resource.measure || '--');
-        setText('[data-resource-detail-pricing]', resource.pricing || '--');
-        setText('[data-resource-detail-unit]', resource.measureUnit || '--');
+        setText('[data-resource-detail-pricing-method]', resource.measure || '未设置');
+        setText('[data-resource-detail-pricing]', resource.pricing || '待协商');
+        setText('[data-resource-detail-unit]', resource.measureUnit || '未设置');
         setText('[data-resource-detail-deferred]', resource.deferredPayment || '否');
         setText('[data-resource-detail-transfer]', resource.delivery);
         setText('[data-resource-consult-target]', resource.name);

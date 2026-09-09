@@ -63,7 +63,7 @@
         .ds-table-summary strong { font-size:14px; color:var(--text-primary, #1f2b28); }
         .ds-table-summary span { font-size:12px; color:var(--text-tertiary, #919b96); }
         .ds-table-wrap { overflow:auto; }
-        .ds-table { width:100%; min-width:820px; border-collapse:collapse; table-layout:fixed; font-size:13px; }
+        .ds-table { width:100%; min-width:1040px; border-collapse:collapse; table-layout:fixed; font-size:13px; }
         .ds-table th { height:44px; padding:0 18px; text-align:left; background:#fafbfc; color:var(--text-secondary, #5c6863); font-weight:600; border-bottom:1px solid var(--border-divider, #ebeefd); white-space:nowrap; }
         .ds-table td { height:56px; padding:0 18px; color:var(--text-secondary, #5c6863); border-bottom:1px solid #f0f2f1; vertical-align:middle; }
         .ds-table tbody tr:hover td { background:#fbfdfc; }
@@ -327,16 +327,18 @@
                     <div class="ds-table-wrap">
                         <table class="ds-table">
                             <colgroup>
-                                <col style="width:34%">
-                                <col style="width:14%">
-                                <col style="width:20%">
+                                <col style="width:28%">
+                                <col style="width:12%">
                                 <col style="width:18%">
-                                <col style="width:14%">
+                                <col style="width:18%">
+                                <col style="width:13%">
+                                <col style="width:11%">
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>名称</th>
                                     <th>类型</th>
+                                    <th>数据来源</th>
                                     <th>所属大屏</th>
                                     <th>状态</th>
                                     <th>操作</th>
@@ -434,6 +436,8 @@
         var currentPage = 1;
         var filters = { name: '', status: '' };
         var activeScreen = '规模流通与服务';
+        var DATA_SOURCE_MANUAL = '人工维护';
+        var DATA_SOURCE_SYSTEM_MANUAL = '系统计算+人工维护';
         var REFRESH_INTERVAL_LABELS = { 30:'30 秒', 60:'1 分钟', 300:'5 分钟', 600:'10 分钟', 1800:'30 分钟', 3600:'60 分钟' };
         var refreshSetting = { enabled:true, interval:300 };
         var refreshSettingDraft = null;
@@ -457,7 +461,7 @@
         function metric(name, value, trend, options) {
             var config = options || {};
             return {
-                type:'metric', key:config.key || '', name:name, section:'顶部指标',
+                type:'metric', key:config.key || '', name:name, section:'顶部指标', dataSource:config.dataSource || '',
                 data:{
                     value:value, unit:config.unit || '', tone:config.tone || 'green',
                     trendMode:trend == null ? 'none' : (config.trendMode || 'percent'),
@@ -477,7 +481,7 @@
         function chart(name, chartType, labels, datasets, options) {
             var config = options || {};
             return {
-                type:'dashboard', name:name, section:config.section || '图表分析',
+                type:'dashboard', name:name, section:config.section || '图表分析', dataSource:config.dataSource || '',
                 data:Object.assign({
                     previewType:'chart', chartType:chartType, labels:labels, datasets:datasets,
                     extras:[], note:''
@@ -494,8 +498,8 @@
             return Object.assign({ label:label, value:value, unit:unit || '', kind:'number' }, options || {});
         }
 
-        function details(name, type, fields, section) {
-            return { name:name, type:type, section:section, data:{ fields:fields } };
+        function details(name, type, fields, section, dataSource) {
+            return { name:name, type:type, section:section, dataSource:dataSource || '', data:{ fields:fields } };
         }
 
         function caseEntry(title, imagePath, effect, value, crop) {
@@ -512,83 +516,83 @@
             {
                 screen:'规模流通与服务',
                 components:[
-                    metric('数据总量', 824.6, 8.6, { unit:'TB' }),
-                    metric('累计交易额', 12.86, 16.8, { unit:'亿元', tone:'gold' }),
-                    metric('数据产品总量', 328, null, { key:'data-products-total', unit:'个', details:[
+                    metric('数据总量', 824.6, 8.6, { unit:'TB', dataSource:DATA_SOURCE_MANUAL }),
+                    metric('累计交易额', 12.86, 16.8, { unit:'亿元', tone:'gold', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
+                    metric('数据产品总量', 328, null, { key:'data-products-total', unit:'个', dataSource:DATA_SOURCE_SYSTEM_MANUAL, details:[
                         field('API接口', 186, '个', { trendDirection:'up' }), field('数据集', 142, '个', { trendDirection:'up' })
                     ] }),
-                    metric('数据调用量', 3.8, null, { unit:'亿次', tone:'blue', details:[field('日均调用量', 158, '万次', { trendDirection:'up' })] }),
-                    metric('日处理量', 3.62, null, { unit:'TB' }),
+                    metric('数据调用量', 3.8, null, { unit:'亿次', tone:'blue', dataSource:DATA_SOURCE_SYSTEM_MANUAL, details:[field('日均调用量', 158, '万次', { trendDirection:'up' })] }),
+                    metric('日处理量', 3.62, null, { unit:'TB', dataSource:DATA_SOURCE_MANUAL }),
                     chart('数据规模', 'bar', ['公共数据','行业数据','企业数据'],
                         [series('占比（%）', [38.7,33.6,27.7])],
-                        { previewType:'distribution', section:'按资源类型', subtitle:'按资源类型', percent:true, editableSeriesNames:false }),
+                        { previewType:'distribution', section:'按资源类型', subtitle:'按资源类型', percent:true, editableSeriesNames:false, dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     chart('数据规模', 'bar',
                         ['金融服务','城市治理','宏观经济','智慧教育','医疗健康','工业制造'],
                         [series('占比（%）', [22.4,19.6,17.3,14.2,12.7,13.8])],
-                        { previewType:'distribution', section:'按行业分布', subtitle:'按行业分布', percent:true, editableSeriesNames:false }),
+                        { previewType:'distribution', section:'按行业分布', subtitle:'按行业分布', percent:true, editableSeriesNames:false, dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     chart('流通交易趋势', 'line', MONTHS, [
                         series('累计交易额（亿元）', [2.1,2.8,3.6,4.5,5.8,7.4,9.6,12.86]),
                         series('每月新增交易额（亿元）', [0.7,0.7,0.8,0.9,1.3,1.6,2.2,3.26])
-                    ]),
+                    ], { dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     details('数据处理', 'details', [
                         field('数据接入量', 3.62, 'TB'), field('数据加工量', 2.85, 'TB'),
                         field('数据输出量', 3.12, 'TB'), field('并发任务数', 1286, '个')
-                    ], '数据处理'),
+                    ], '数据处理', DATA_SOURCE_MANUAL),
                     chart('数据质量评价', 'radar', ['完整性','唯一性','质量及时性','一致性','准确性'],
                         [series('质量评分', [98.6,99,97.1,97.8,96.2])], {
-                            section:'数据质量', max:100,
+                            section:'数据质量', max:100, dataSource:DATA_SOURCE_MANUAL,
                             extras:[field('综合评分', 97.8, '分', { key:'overall-score', max:100 }), field('更新及时率', 96.8, '%', { key:'update-timeliness', max:100 })]
                         }),
-                    chart('服务调用趋势', 'line', MONTHS, [series('API调用量（亿次）', [0.6,0.9,1.2,1.6,2.1,2.6,3.1,3.8])]),
+                    chart('服务调用趋势', 'line', MONTHS, [series('API调用量（亿次）', [0.6,0.9,1.2,1.6,2.1,2.6,3.1,3.8])], { dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     ranking('数据产品排名',
                         ['企业信用评估API','金融风险评估模型','交通拥堵预测服务','宏观经济景气报告','医疗资源分析产品','工业设备预测维护模型','商圈客流洞察数据集','企业经营风险监测API','低空物流运行分析服务','政务数据核验服务'],
-                        [3260,2480,2150,1680,1330,1120,980,860,720,650], '交易额（万元）', { section:'按交易额', subtitle:'按交易额' }),
+                        [3260,2480,2150,1680,1330,1120,980,860,720,650], '交易额（万元）', { section:'按交易额', subtitle:'按交易额', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     ranking('数据产品排名',
                         ['城市交通运行API','企业经营策略服务','宏观经济趋势报告','气象风险预警模型','医疗健康分析产品','工业园区能耗分析','商圈消费洞察数据集','低空飞行态势服务','企业信用核验API','文旅客流预测模型'],
-                        [986,884,762,683,567,486,428,376,328,286], '浏览量（万次）', { section:'按产品热度', subtitle:'按产品热度' })
+                        [986,884,762,683,567,486,428,376,328,286], '浏览量（万次）', { section:'按产品热度', subtitle:'按产品热度', dataSource:DATA_SOURCE_SYSTEM_MANUAL })
                 ]
             },
             {
                 screen:'生态安全与成效',
                 components:[
-                    metric('生态机构数', 68, 3, { unit:'家', trendMode:'count', trendUnit:'家', compareText:'本月' }),
-                    metric('用户数', 18760, 5230, { unit:'个', tone:'blue', trendMode:'count', trendUnit:'个', compareText:'本月' }),
-                    metric('安全认证数', 186, null, { unit:'项' }),
-                    metric('确权登记数', 526, null, { unit:'项' }),
-                    metric('优秀案例', 46, null, { unit:'个' }),
-                    metric('调用方企业', 1872, 128, { unit:'家', tone:'blue', trendMode:'count', trendUnit:'家', compareText:'本月' }),
-                    metric('可信数据空间', 6, null, { unit:'个', tone:'gold' }),
+                    metric('生态机构数', 68, 3, { unit:'家', trendMode:'count', trendUnit:'家', compareText:'本月', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
+                    metric('用户数', 18760, 5230, { unit:'个', tone:'blue', trendMode:'count', trendUnit:'个', compareText:'本月', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
+                    metric('安全认证数', 186, null, { unit:'项', dataSource:DATA_SOURCE_MANUAL }),
+                    metric('确权登记数', 526, null, { unit:'项', dataSource:DATA_SOURCE_MANUAL }),
+                    metric('优秀案例', 46, null, { unit:'个', dataSource:DATA_SOURCE_MANUAL }),
+                    metric('调用方企业', 1872, 128, { unit:'家', tone:'blue', trendMode:'count', trendUnit:'家', compareText:'本月', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
+                    metric('可信数据空间', 6, null, { unit:'个', tone:'gold', dataSource:DATA_SOURCE_SYSTEM_MANUAL }),
                     ranking('生态机构分布', ['深圳','北京','上海','杭州','广州'],
                         [12,10,8,6,5], '机构数（家）', {
-                            section:'生态机构分布', subtitle:'TOP5 城市', topLimit:5,
+                            section:'生态机构分布', subtitle:'TOP5 城市', topLimit:5, dataSource:DATA_SOURCE_SYSTEM_MANUAL,
                             note:'维护地图配套的城市 TOP5 数据；地图仅作地域分布示意。'
                         }),
                     chart('生态机构增长趋势', 'line', MONTHS, [
                         series('累计总数（家）', [18,30,38,46,53,61,65,68]),
                         series('每月新增（家）', [1,2,1,1,3,2,4,3], { yAxisID:'y1', dashed:true })
                     ], {
-                        section:'生态机构增长', dualAxis:true,
+                        section:'生态机构增长', dualAxis:true, dataSource:DATA_SOURCE_SYSTEM_MANUAL,
                         note:'V2 参考值为总数 68 家、本月新增 3 家；图中未标注的历史月份数值为编辑演示样例。'
                     }),
                     chart('可信数据空间', 'spaces',
                         ['文化艺术','企业服务','城市治理','具身智能','低空经济','医疗健康'], [
                             series('数据集数量（个）', [22,31,34,28,25,28]),
                             series('数据量（TB）', [78.4,156.8,186.2,138.6,112.5,152.1])
-                        ], { previewType:'spaces', section:'可信数据空间' }),
+                        ], { previewType:'spaces', section:'可信数据空间', dataSource:DATA_SOURCE_MANUAL }),
                     chart('确权登记', 'doughnut', ['数据资源确权','数据产品登记'],
                         [series('登记数（项）', [336,190])], {
-                            section:'确权登记', showTotal:true,
+                            section:'确权登记', showTotal:true, dataSource:DATA_SOURCE_MANUAL,
                             note:'登记总数和占比根据本组件分类数量计算，仅用于当前编辑预览。'
                         }),
                     chart('安全认证', 'bar', ['等级认证','ISO认证','数据安全认证'],
-                        [series('认证数（项）', [86,68,32])], { section:'安全认证', indexAxis:'y' }),
-                    { name:'优秀案例展示', type:'case-list', section:'优秀案例展示', data:{ items:[
+                        [series('认证数（项）', [86,68,32])], { section:'安全认证', indexAxis:'y', dataSource:DATA_SOURCE_MANUAL }),
+                    { name:'优秀案例展示', type:'case-list', section:'优秀案例展示', dataSource:DATA_SOURCE_MANUAL, data:{ items:[
                         caseEntry('工业质量智能分析', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '良品率提升', 18.6, { x:51, y:786, width:120, height:66, sourceWidth:1631, sourceHeight:918 }),
                         caseEntry('城市治理一张图', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '事件处置效率提升', 32.8, { x:349, y:786, width:124, height:66, sourceWidth:1631, sourceHeight:918 }),
                         caseEntry('具身智能训练数据', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '模型训练效率提升', 24.5, { x:646, y:786, width:124, height:66, sourceWidth:1631, sourceHeight:918 }),
                         caseEntry('医疗健康协同应用', 'all-elements-dashboard-v2/images/dashboard-two-view-02-ecosystem-outcomes.png', '诊疗协同率提升', 27.3, { x:943, y:786, width:118, height:66, sourceWidth:1631, sourceHeight:918 })
                     ] } },
-                    { name:'指标口径说明', type:'definition-list', section:'指标口径说明', data:{ items:[
+                    { name:'指标口径说明', type:'definition-list', section:'指标口径说明', dataSource:DATA_SOURCE_MANUAL, data:{ items:[
                         definitionEntry('数据总量', '按数据集、数据表、文件量等结构化和非结构化数据统计。'),
                         definitionEntry('交易额', '仅计入已完成签署的数据交易合同金额，统计范围涵盖数据产品、数据服务、数据咨询及衍生服务所产生的全部交易收入。'),
                         definitionEntry('生态机构数', '按统一社会信用代码去重统计。'),
@@ -607,7 +611,7 @@
                     records.push({
                         id:'screen-' + screenIndex + '-component-' + componentIndex + '-year-' + year,
                         key:component.key || '', name:component.name, screen:screen.screen, section:component.section,
-                        year:year, type:component.type, enabled:true, data:clone(component.data)
+                        year:year, type:component.type, dataSource:component.dataSource, enabled:true, data:clone(component.data)
                     });
                 });
             });
@@ -814,7 +818,7 @@
             var pageRows = list.slice(start, start + PAGE_SIZE);
             resultSummary.textContent = activeScreen + ' · 共 ' + list.length + ' 条数据';
             if (!pageRows.length) {
-                body.innerHTML = '<tr><td colspan="5"><div class="ds-empty">暂无符合条件的数据</div></td></tr>';
+                body.innerHTML = '<tr><td colspan="6"><div class="ds-empty">暂无符合条件的数据</div></td></tr>';
                 renderPagination(list.length);
                 return;
             }
@@ -824,6 +828,7 @@
                     '<tr data-record-id="' + record.id + '">',
                     '  <td><div class="ds-name-cell"><div class="ds-name-main"><span class="ds-name-text" title="' + escapeHtml(record.name) + '">' + escapeHtml(record.name) + '</span></div><div class="ds-record-note">' + escapeHtml(record.section) + '</div></div></td>',
                     '  <td><span class="ds-type-text">' + typeText + '</span></td>',
+                    '  <td><span class="ds-type-text">' + escapeHtml(record.dataSource) + '</span></td>',
                     '  <td><span class="ds-screen-tag">' + escapeHtml(record.screen) + '</span></td>',
                     '  <td><div class="ds-status"><button type="button" class="ds-switch ' + (record.enabled ? 'on' : '') + '" data-action="toggle" aria-pressed="' + record.enabled + '" aria-label="切换状态"></button><span class="ds-status-text">' + (record.enabled ? '启用' : '未启用') + '</span></div></td>',
                     '  <td><button type="button" class="ds-op-btn" data-action="edit"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"></path></svg><span>编辑</span></button></td>',
