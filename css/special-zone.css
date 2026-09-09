@@ -414,14 +414,23 @@ body.zone-preview-mode .special-zone-page {
 }
 
 .zone-filter-title button {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
     padding: 2px 0;
     border: 0;
     background: transparent;
     color: var(--text-tertiary);
     font: inherit;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.zone-filter-title button svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
 }
 
 .zone-filter-title button:disabled {
@@ -794,6 +803,138 @@ body.zone-preview-mode .special-zone-page {
     font-size: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.zone-card-grid { gap: 16px; }
+
+.zone-data-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 268px;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+}
+
+.zone-data-card::after { border-radius: var(--radius-lg); }
+
+.zone-card-head {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    min-width: 0;
+}
+
+.zone-card-image {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+}
+
+.zone-card-heading { min-width: 0; }
+
+.zone-card-title {
+    min-width: 0;
+    margin: 1px 0 7px;
+    line-height: 1.5;
+}
+
+.zone-card-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.zone-card-tag {
+    max-width: 50%;
+    padding: 2px 7px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--forest-green-50);
+    color: var(--forest-green-700);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.zone-card-description {
+    min-height: 44px;
+    margin: 16px 0 13px;
+}
+
+.zone-card-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 11px 0;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.zone-card-info-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.zone-card-info-label {
+    flex-shrink: 0;
+    color: var(--text-tertiary);
+}
+
+.zone-card-info-value {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text-secondary);
+    font-weight: 400;
+    text-overflow: ellipsis;
+}
+
+.zone-card-price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+}
+
+.zone-card-price-label,
+.zone-card-billing {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.zone-card-price-value {
+    color: #ef5b5b;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.zone-card-price-value.amount { color: #ef7a45; }
+
+.zone-card-billing {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.zone-card-footer {
+    align-self: stretch;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 12px;
 }
 
 .zone-scene-tags {

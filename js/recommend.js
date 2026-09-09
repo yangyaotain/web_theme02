@@ -188,7 +188,7 @@
                     '<span class="rec-tag ' + item.tagCls + '">' + item.tag + '</span>' +
                 '</div>' +
                 '<div class="rec-row-2">' +
-                    '<span class="rec-company">' + item.company + '</span>' +
+                    (item.tag === '数据需求' ? '<span class="rec-company">' + item.company + '</span>' : '') +
                     '<span class="rec-date">' + item.date + '</span>' +
                 '</div>' +
                 '<div class="rec-desc">' + item.desc + '</div>' +

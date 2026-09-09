@@ -242,7 +242,7 @@
             description: '提供企业经营活力指数、状态标签和统计日期查询能力，适用于企业服务、园区运营及产业监测系统的实时接口接入。',
             price: '0.08元/次',
             delivery: 'API传输',
-            measure: '按次计费',
+            measure: '按次数',
             billing: '预付费',
             publishedAt: '2025-11-4 15:00:00',
             industry: '企业服务',
@@ -321,7 +321,7 @@
             description: '围绕重点产业、街道和园区形成产业运行分析说明文件，展示数据口径、指标结构和主要分析内容。',
             price: '3,600元/份',
             delivery: '文件传输',
-            measure: '按份计费',
+            measure: '按次数',
             billing: '预付费',
             publishedAt: '2025-11-4 15:00:00',
             industry: '产业发展',
@@ -395,7 +395,7 @@
             description: '提供龙岗区企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统通过标准接口按企业编码调用。',
             price: '面议',
             delivery: 'API传输',
-            measure: '按次计费',
+            measure: '一事一议',
             billing: '预付费',
             industry: '信息传输、软件和信息技术服务业',
             owner: '深圳市龙岗区政务数据运营有限公司',
@@ -482,7 +482,7 @@
             description: '汇集龙岗区重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究和业务研判参考。',
             price: '面议',
             delivery: '文件传输',
-            measure: '按份计费',
+            measure: '一事一议',
             billing: '预付费',
             industry: '租赁和商务服务业',
             owner: '深圳市龙岗区产业数据运营有限公司',
@@ -628,7 +628,6 @@
             +   '<p>' + escapeHtml(service.registry) + '</p>'
             +   '<div class="sample-api-service-meta">'
             +       '<span>服务类型：<strong>' + escapeHtml(service.serviceType) + '</strong></span>'
-            +       '<span>所属组织：<strong>' + escapeHtml(service.org) + '</strong></span>'
             +       '<span>更新时间：<strong>' + escapeHtml(service.updated) + '</strong></span>'
             +   '</div>'
             + '</article>'
@@ -637,7 +636,6 @@
             +   renderApiInfoField('请求方式', service.method)
             +   renderApiInfoField('支持格式', service.format)
             +   renderApiInfoField('请求协议', service.requestProtocol)
-            +   renderApiInfoField('创建人', service.creator)
             +   renderApiInfoField('平均耗时', service.average)
             +   renderApiInfoField('频次限制', service.frequency)
             +   '<div class="sample-api-info-field full"><span>调用地址：</span><span class="api-method">' + escapeHtml(service.method) + '</span><code>' + escapeHtml(service.callUrl) + '</code></div>'
@@ -787,10 +785,6 @@
         setText('[data-resource-detail-deferred]', resource.deferredPayment || '否');
         setText('[data-resource-detail-transfer]', resource.delivery);
         setText('[data-resource-consult-target]', resource.name);
-        setText('[data-resource-consult-owner]', resource.owner);
-        document.querySelectorAll('[data-resource-detail-owner]').forEach(function (element) {
-            element.textContent = resource.owner;
-        });
         document.querySelectorAll('[data-resource-detail-image]').forEach(function (image) {
             image.src = resource.image;
             image.alt = resource.name;

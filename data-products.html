@@ -162,20 +162,19 @@
         }
 
         /* ── Data Cards Grid ── */
-        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
         .data-card {
-            display: grid; grid-template-columns: 64px minmax(0, 1fr);
-            grid-template-rows: 64px auto auto minmax(46px, 1fr);
-            column-gap: 16px; min-height: 300px; padding: 26px 24px 20px;
+            display: flex; flex-direction: column; min-width: 0;
+            min-height: 268px; padding: 20px;
             background: var(--surface-elevated); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl); overflow: hidden;
+            border-radius: var(--radius-lg); overflow: hidden;
             transition: all var(--transition-base);
             box-shadow: var(--shadow-sm); position: relative;
         }
         .data-card::after {
             content: ''; position: absolute; inset: 0;
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
             pointer-events: none;
         }
@@ -184,57 +183,81 @@
             box-shadow: var(--shadow-xl), 0 0 0 1px rgba(32, 165, 101, 0.1);
             transform: translateY(-4px);
         }
+        .data-card-header {
+            display: grid; grid-template-columns: 52px minmax(0, 1fr);
+            align-items: start; gap: 12px; min-width: 0;
+        }
         .data-card-image {
-            grid-column: 1; grid-row: 1; width: 64px; height: 64px;
+            width: 52px; height: 52px;
             position: relative; overflow: hidden;
             background-color: var(--gray-100); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md); flex-shrink: 0;
         }
         .data-card-image.is-icon {
             display: flex; align-items: center; justify-content: center;
-            overflow: visible; border: 0; background: transparent;
+            background: var(--forest-green-50); border-color: var(--forest-green-100);
             color: var(--forest-green);
         }
         .data-card-image.is-icon .material-symbols-outlined {
-            font-size: 64px; line-height: 1;
-            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64;
+            font-size: 30px; line-height: 1;
+            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 32;
         }
-        .data-card-badges { display: none; }
-        .data-card-badge {
-            padding: 4px 10px; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
-            border-radius: var(--radius-md); font-size: 10px; font-weight: 500; color: white;
-        }
-        .data-card-badge.price { background: rgba(255, 59, 65, 0.9); }
 
-        .data-card-content { display: contents; }
+        .data-card-heading { min-width: 0; }
         .data-card-title {
-            grid-column: 2; grid-row: 1; align-self: start; min-width: 0;
-            margin: 2px 0 0; overflow: hidden;
-            font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.45;
+            min-width: 0; margin: 1px 0 7px; overflow: hidden;
+            font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.5;
             white-space: nowrap; text-overflow: ellipsis;
         }
-        .data-card-type-row { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
-        .data-card-type-row .val { color: var(--info-blue); font-weight: 500; }
-        .data-card-company {
-            grid-column: 2; grid-row: 1; align-self: start; min-width: 0;
-            margin: 31px 0 0; overflow: hidden;
-            font-size: 13px; color: var(--text-tertiary); line-height: 1.5;
+        .data-card-tags {
+            display: flex; align-items: center; gap: 6px;
+            min-width: 0; overflow: hidden;
+        }
+        .data-card-tag {
+            max-width: 50%; padding: 2px 7px; overflow: hidden;
+            color: var(--forest-green-700); background: var(--forest-green-50);
+            border-radius: 4px; font-size: 11px; font-weight: 500; line-height: 18px;
             white-space: nowrap; text-overflow: ellipsis;
         }
         .data-card-desc {
-            grid-column: 1 / -1; grid-row: 2; min-height: 44px; margin: 28px 0 14px;
+            min-height: 44px; margin: 16px 0 13px;
             font-size: 13px; color: var(--text-secondary); line-height: 1.7;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .data-card-price {
-            grid-column: 1 / -1; grid-row: 3; margin: 0 0 12px;
-            color: #ef5b5b; font-size: 22px; font-weight: 700; line-height: 1.35;
+        .data-card-info {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; min-width: 0; padding: 11px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .data-card-info-item {
+            display: flex; align-items: center; min-width: 0; overflow: hidden;
+            font-size: 12px; line-height: 1.5; white-space: nowrap;
+        }
+        .data-card-info-label { flex-shrink: 0; color: var(--text-tertiary); }
+        .data-card-info-value {
+            min-width: 0; overflow: hidden; color: var(--text-secondary);
+            font-weight: 400; text-overflow: ellipsis;
+        }
+        .data-card-price-row {
+            display: flex; align-items: center; gap: 8px; min-height: 42px;
+        }
+        .data-card-price-label,
+        .data-card-billing {
+            color: var(--text-tertiary); font-size: 12px; line-height: 1.5;
+        }
+        .data-card-price-value {
+            color: #ef5b5b; font-size: 18px; font-weight: 700; line-height: 1.35;
+        }
+        .data-card-price-value.amount { color: #ef7a45; }
+        .data-card-billing {
+            display: inline-flex; align-items: center; min-width: 0;
+            margin-left: auto; white-space: nowrap;
         }
 
         .data-card-footer {
-            grid-column: 1 / -1; grid-row: 4; align-self: end;
+            margin-top: auto;
             display: flex; align-items: center; justify-content: space-between;
-            gap: 12px; padding-top: 16px; border-top: 1px solid var(--border-subtle);
+            gap: 12px; min-width: 0; padding-top: 12px; border-top: 1px solid var(--border-subtle);
             font-size: 12px; color: var(--text-tertiary);
         }
         .data-card-meta {
@@ -413,7 +436,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗企业经营画像数据集</h3>
-                        <p class="data-card-company">深圳市龙岗数据交易服务有限公司</p>
                         <p class="data-card-desc">汇聚企业登记、产业标签和经营活跃度指标，为园区招商及企业服务提供数据支撑</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-21 10:52:11</span><div class="scene-tags"><span class="scene-tag">商务服务</span></div></div>
                     </div>
@@ -426,7 +448,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">园区企业经营监测指标数据集</h3>
-                        <p class="data-card-company">深圳市龙岗产业数据运营有限公司</p>
                         <p class="data-card-desc">形成企业产值、用工、订单和创新能力指标，支持园区企业运行监测与分层服务</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-20 18:17:23</span><div class="scene-tags"><span class="scene-tag">制造业</span></div></div>
                     </div>
@@ -439,7 +460,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">制造业供应链风险画像产品</h3>
-                        <p class="data-card-company">深圳市龙岗供应链科技有限公司</p>
                         <p class="data-card-desc">融合供应商履约、物流时效和企业风险信息，输出供应链风险画像及分级预警结果</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-20 15:29:53</span><div class="scene-tags"><span class="scene-tag">制造业</span></div></div>
                     </div>
@@ -451,7 +471,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗区低空经济产业分析报告</h3>
-                        <p class="data-card-company">深圳市低空产业研究有限公司</p>
                         <p class="data-card-desc">分析低空产业企业分布、应用场景和发展趋势，为产业规划和项目招商提供参考</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-19 16:42:08</span><div class="scene-tags"><span class="scene-tag">科技服务</span></div></div>
                     </div>
@@ -463,7 +482,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">园区企业经营监测看板</h3>
-                        <p class="data-card-company">深圳市龙岗数智园区有限公司</p>
                         <p class="data-card-desc">动态展示园区企业经营活力、产业结构和重点风险指标，支持园区日常运营研判</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-19 11:28:36</span><div class="scene-tags"><span class="scene-tag">信息技术</span></div></div>
                     </div>
@@ -475,7 +493,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">中小企业融资风险评分模型</h3>
-                        <p class="data-card-company">深圳市龙岗金融数据服务有限公司</p>
                         <p class="data-card-desc">基于经营、司法和履约数据形成融资风险评分，为金融机构客户准入提供辅助依据</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-18 17:06:42</span><div class="scene-tags"><span class="scene-tag">金融服务</span></div></div>
                     </div>
@@ -487,7 +504,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗重点商圈消费活力数据集</h3>
-                        <p class="data-card-company">深圳市龙岗商业数据运营有限公司</p>
                         <p class="data-card-desc">提供重点商圈客流热度、消费时段和业态结构指标，支持商业运营与选址分析</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-18 14:35:27</span><div class="scene-tags"><span class="scene-tag">批发和零售业</span></div></div>
                     </div>
@@ -499,7 +515,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">新能源充电设施运营收益权产品</h3>
-                        <p class="data-card-company">深圳市龙岗新能源运营有限公司</p>
                         <p class="data-card-desc">基于充电设施运营流水和设备利用率数据，形成可核验的收益权数据产品</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-17 16:20:15</span><div class="scene-tags"><span class="scene-tag">能源服务</span></div></div>
                     </div>
@@ -511,7 +526,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">医疗器械企业准入核验产品</h3>
-                        <p class="data-card-company">深圳市龙岗健康数据科技有限公司</p>
                         <p class="data-card-desc">整合企业资质、产品备案和风险记录，为医疗器械采购及合作准入提供快速核验</p>
                         <div class="data-card-footer"><span class="data-card-meta">2026-08-17 10:48:39</span><div class="scene-tags"><span class="scene-tag">医疗健康</span></div></div>
                     </div>
@@ -545,6 +559,63 @@
             type: badgeType,
             searchText: (card.textContent + ' ' + domain).toLowerCase()
         };
+    });
+    var productPresentation = [
+        { delivery: '文件传输', frequency: '按月更新', price: '¥100/次', billing: '按次数' },
+        { delivery: '文件传输', frequency: '按月更新', price: '¥100/次', billing: '按次数' },
+        { delivery: 'API 传输', frequency: '每日更新', price: '一事一议', billing: '一事一议' },
+        { delivery: '文件传输', frequency: '按季度更新', price: '¥399/份', billing: '按次数' },
+        { delivery: 'API 传输', frequency: '实时更新', price: '¥333/天', billing: '按周期' },
+        { delivery: '文件传输', frequency: '按季度更新', price: '一事一议', billing: '一事一议' },
+        { delivery: '文件传输', frequency: '按月更新', price: '¥180/次', billing: '按次数' },
+        { delivery: 'API 传输', frequency: '每日更新', price: '一事一议', billing: '一事一议' },
+        { delivery: 'API 传输', frequency: '按月更新', price: '¥500/月', billing: '按周期' }
+    ];
+
+    function getProductDescription(value, domain) {
+        if (value.length >= 52) return value;
+        return value.replace(/[。；;，,]+$/, '') +
+            '，可用于' + domain + '相关业务的趋势分析、辅助研判和精细化运营。';
+    }
+
+    function shouldShowProductMeasure(price) {
+        return price !== '一事一议' && price !== '面议';
+    }
+
+    products.forEach(function (product, index) {
+        var card = product.element;
+        var presentation = productPresentation[index];
+        var image = card.querySelector('.data-card-image');
+        var title = card.querySelector('.data-card-title').textContent.trim();
+        var description = getProductDescription(card.querySelector('.data-card-desc').textContent.trim(), product.domain);
+        var date = card.querySelector('.data-card-meta').textContent.trim();
+        var imageBadges = image.querySelector('.data-card-badges');
+        if (imageBadges) imageBadges.remove();
+        card.setAttribute('data-product-type', product.type);
+        card.innerHTML =
+            '<div class="data-card-header">' +
+                image.outerHTML +
+                '<div class="data-card-heading">' +
+                    '<h3 class="data-card-title" title="' + title + '">' + title + '</h3>' +
+                    '<div class="data-card-tags">' +
+                        '<span class="data-card-tag">' + product.type + '</span>' +
+                        '<span class="data-card-tag">' + presentation.delivery + '</span>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<p class="data-card-desc">' + description + '</p>' +
+            '<div class="data-card-info">' +
+                '<span class="data-card-info-item"><span class="data-card-info-label">覆盖范围：</span><span class="data-card-info-value">龙岗区</span></span>' +
+                '<span class="data-card-info-item"><span class="data-card-info-label">更新频率：</span><span class="data-card-info-value">' + presentation.frequency + '</span></span>' +
+            '</div>' +
+            '<div class="data-card-price-row">' +
+                '<span class="data-card-price-label">参考价格</span>' +
+                '<strong class="data-card-price-value' + (presentation.price.indexOf('¥') === 0 ? ' amount' : '') + '">' + presentation.price + '</strong>' +
+                (presentation.billing && shouldShowProductMeasure(presentation.price)
+                    ? '<span class="data-card-billing"><span class="data-card-info-label">计量方式：</span><span class="data-card-info-value">' + presentation.billing + '</span></span>'
+                    : '') +
+            '</div>' +
+            '<div class="data-card-footer"><span class="scene-tag">' + product.domain + '</span><span class="data-card-meta">' + date + '</span></div>';
     });
     var emptyState = document.createElement('div');
     emptyState.className = 'data-grid-empty';
@@ -599,14 +670,6 @@
         });
     });
     document.querySelectorAll('.data-card').forEach(function (card) {
-        var priceBadge = card.querySelector('.data-card-badge.price');
-        var description = card.querySelector('.data-card-desc');
-        if (priceBadge && description) {
-            var priceLine = document.createElement('p');
-            priceLine.className = 'data-card-price';
-            priceLine.textContent = priceBadge.textContent.trim();
-            description.insertAdjacentElement('afterend', priceLine);
-        }
         card.style.cursor = 'pointer';
         card.addEventListener('click', function () {
             var sampleType = this.getAttribute('data-sample-type');

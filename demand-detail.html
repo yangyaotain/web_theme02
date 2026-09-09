@@ -74,14 +74,14 @@
         .content-area { max-width: var(--content-max-width); margin: 0 auto; padding: 24px 32px 48px; display: flex; gap: 24px; align-items: flex-start; }
         .content-main { flex: 1; min-width: 0; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-subtle); padding: 28px 32px; }
 
-        .section-heading { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-divider); }
-        .section-heading:not(:first-child) { margin-top: 32px; }
-
-        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-        .info-table td { padding: 10px 0; font-size: 13px; vertical-align: top; }
-        .info-table .label-cell { width: 130px; color: var(--text-tertiary); white-space: nowrap; padding-right: 8px; }
-        .info-table .value-cell { color: var(--text-primary); padding-right: 32px; }
-        .info-table .desc-cell { color: var(--text-primary); line-height: 1.7; }
+        .section-heading { display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+        .section-heading::before { width: 3px; height: 16px; flex: 0 0 auto; background: var(--forest-green); border-radius: 3px; content: ''; }
+        /* 复用数据资源详情的公共基本信息卡片样式。 */
+        .resource-basic-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .resource-info-item { display: grid; grid-template-columns: 152px minmax(0, 1fr); min-width: 0; margin: 0; font-size: 13px; line-height: 1.6; }
+        .resource-info-label { white-space: nowrap; }
+        .resource-info-value { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+        .resource-info-item.is-wide { grid-column: 1 / -1; }
 
         /* ── 响应需求弹窗 ── */
         .consult-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 200; align-items: center; justify-content: center; }
@@ -118,8 +118,12 @@
 
         @media (max-width: 1024px) {
             .content-area { flex-direction: column; }
+            .content-main { width: 100%; }
             .product-header-container { flex-direction: column; }
             .product-gallery { width: 100%; max-width: 128px; }
+        }
+        @media (max-width: 640px) {
+            .content-main { padding: 20px 16px; }
         }
     </style>
 </head>
@@ -158,7 +162,7 @@
                         <span class="demand-tag">所有团队</span>
                         <span class="demand-tag">大数据通道</span>
                     </div>
-                    <p class="product-desc">需求描述：汇聚企业各业务系统中的数据链，对数据进行统计分析、智能算计算，构建企业运营决策驾驶舱。企业领导驾驶舱服务需求涵盖了核心功能、个性化定制、跨平台访问与安全以及技术与服务支持等多个方面，这些需求共同构成了企业在管理驾驶舱服务的完整性需求，为企业提供层析了全面、实用、便携、高效数据管理服务。</p>
+                    <p class="product-desc">需求描述：汇聚企业经营、财务、销售与项目管理数据，统一核心指标口径，建设企业领导驾驶舱，支持经营总览、趋势分析、指标下钻与异常预警，为管理层提供直观、及时的经营决策依据。</p>
 
                     <div class="demand-meta-row">
                         <div class="demand-meta-item">
@@ -167,11 +171,11 @@
                         </div>
                         <div class="demand-meta-item">
                             <span class="demand-meta-label">截止时间</span>
-                            <span class="demand-meta-value normal">2025-11-4</span>
+                            <span class="demand-meta-value normal">2026-10-31</span>
                         </div>
                         <div class="demand-meta-item">
                             <span class="demand-meta-label">发布时间</span>
-                            <span class="demand-meta-value normal">2025-11-4</span>
+                            <span class="demand-meta-value normal">2026-09-01</span>
                         </div>
                     </div>
 
@@ -192,78 +196,24 @@
         <div class="content-area">
             <div class="content-main">
                 <h3 class="section-heading">基本信息</h3>
-                <table class="info-table">
-                    <tr>
-                        <td class="label-cell">需求标题：</td>
-                        <td class="value-cell">数据资产入表规划咨询服务</td>
-                        <td class="label-cell">需求类型：</td>
-                        <td class="value-cell">应用需求</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">需求场景：</td>
-                        <td class="value-cell">文化休游</td>
-                        <td class="label-cell">需求优先级：</td>
-                        <td class="value-cell">普通</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">需求预算：</td>
-                        <td class="value-cell">面议</td>
-                        <td class="label-cell">需求截止时间：</td>
-                        <td class="value-cell">2025-11-4</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">补充材料：</td>
-                        <td class="value-cell">—</td>
-                        <td class="label-cell">需求关键词：</td>
-                        <td class="value-cell">—</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">服务描介：</td>
-                        <td class="desc-cell" colspan="3">本服务为企业提供数据资产入表的全流程规划咨询，包括合规评估、价值认定与会计处理，助力企业将数据资源转化为合规资产，提升财务报表价值与核心竞争力。</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">数据描述信息：</td>
-                        <td class="value-cell">—</td>
-                        <td class="label-cell">是否涉及个人信息：</td>
-                        <td class="value-cell">是</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">数据交付方式：</td>
-                        <td class="value-cell">—</td>
-                        <td class="label-cell">数据时间范围：</td>
-                        <td class="value-cell">—</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">更新周期需求：</td>
-                        <td class="value-cell">—</td>
-                        <td class="label-cell">数据信息名称：</td>
-                        <td class="value-cell">—</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">其他：</td>
-                        <td class="value-cell" colspan="3">—</td>
-                    </tr>
-                </table>
-
-                <h3 class="section-heading">需求方信息</h3>
-                <table class="info-table">
-                    <tr>
-                        <td class="label-cell">需求方名称：</td>
-                        <td class="value-cell">智慧数据科技有限公司</td>
-                        <td class="label-cell">需求方联系人：</td>
-                        <td class="value-cell">张三</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">需求方电话：</td>
-                        <td class="value-cell">158****6325</td>
-                        <td class="label-cell">需求方邮箱：</td>
-                        <td class="value-cell">zhansan@163.com</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">需求方地址：</td>
-                        <td class="value-cell" colspan="3">深圳市龙岗区创投大厦</td>
-                    </tr>
-                </table>
+                <div class="resource-basic-card detail-basic-card">
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求标题：</dt><dd class="resource-info-value">企业领导驾驶舱服务需求</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求类型：</dt><dd class="resource-info-value">服务需求</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求场景：</dt><dd class="resource-info-value">企业经营分析、管理决策、数字化运营</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求优先级：</dt><dd class="resource-info-value">紧急</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求预算：</dt><dd class="resource-info-value">面议</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">需求截止时间：</dt><dd class="resource-info-value">2026-10-31</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">补充材料：</dt><dd class="resource-info-value">企业领导驾驶舱建设需求说明书、经营指标清单、业务系统数据字典</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">需求关键词：</dt><dd class="resource-info-value">领导驾驶舱、经营分析、数据可视化、指标管理、异常预警</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">需求描述：</dt><dd class="resource-info-value">汇聚企业经营、财务、销售与项目管理数据，统一核心指标口径，建设企业领导驾驶舱。支持经营总览、趋势分析、指标下钻与异常预警，适配办公电脑和会议大屏，并提供数据接入、页面配置、部署培训与运维支持。</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">数据组织形式：</dt><dd class="resource-info-value">结构化</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">是否涉及个人信息：</dt><dd class="resource-info-value">否，仅使用经营汇总数据</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">数据交付方式：</dt><dd class="resource-info-value">API 接口、数据库视图</dd></dl>
+                    <dl class="resource-info-item"><dt class="resource-info-label">数据时间范围：</dt><dd class="resource-info-value">2024-01-01 至 2026-08-31</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">更新周期需求：</dt><dd class="resource-info-value">每日更新，核心经营指标每小时更新</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">数据信息项：</dt><dd class="resource-info-value">统计日期、所属部门、营业收入、经营成本、合同金额、回款金额、项目进度、预算执行率</dd></dl>
+                    <dl class="resource-info-item is-wide"><dt class="resource-info-label">其他：</dt><dd class="resource-info-value">支持企业内网部署、分级权限管理与操作日志；交付指标口径说明、使用手册，并提供一年运维支持。</dd></dl>
+                </div>
             </div>
 
             <aside class="sidebar">

@@ -67,7 +67,6 @@
                 <h1 class="apply-title" data-buy-item-name>慧企政策智能推荐</h1>
                 <div class="apply-meta g-meta">
                     <span><span data-buy-type-label>产品类型</span>：<span class="val" data-buy-item-type>数据应用</span></span>
-                    <span><span data-buy-provider-label>产品提供方</span>：<span class="val" data-buy-provider>广东****有限公司</span></span>
                 </div>
 
                 <form id="buyForm" autocomplete="off">
@@ -269,10 +268,8 @@
         var listHref = isResource ? 'data-resources.html' : 'data-products.html';
         var detailHref = (isResource ? 'data-detail.html' : 'product-detail.html')
             + '?sampleType=' + encodeURIComponent(sampleType);
-        var provider = isResource ? item.owner : item.provider;
         var type = isResource ? item.resourceType : item.type;
         var typeLabel = isResource ? '数据资源类型' : '产品类型';
-        var providerLabel = isResource ? '数据资源提供方' : '产品提供方';
         var memberPrice = isResource ? '--' : item.price;
         var total = isResource ? item.price : memberPrice;
 
@@ -290,8 +287,6 @@
         setText('[data-buy-item-name]', item.name);
         setText('[data-buy-type-label]', typeLabel);
         setText('[data-buy-item-type]', type);
-        setText('[data-buy-provider-label]', providerLabel);
-        setText('[data-buy-provider]', provider);
         setText('[data-buy-name-heading]', entityLabel + '名称');
         setText('[data-buy-order-name]', item.name);
         setText('[data-buy-order-delivery]', item.delivery);

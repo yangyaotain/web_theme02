@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="consult-row">
-                    <div class="consult-label">机构名称：</div>
+                    <div class="consult-label">您的机构：</div>
                     <div class="consult-val consult-static" style="font-weight:400">智慧数据科技有限公司</div>
                 </div>
                 <div class="consult-row">
@@ -84,7 +84,7 @@
                 image: 'images/consult-governance.jpg',
                 icon: 'compass',
                 defaultPrice: '面议',
-                measure: '按项目 / 按阶段',
+                measure: '面议',
                 services: [
                     {
                         id: 'strategy-top',
@@ -151,7 +151,7 @@
                 image: 'images/consult-accounting.jpg',
                 icon: 'database',
                 defaultPrice: '3000元/天',
-                measure: '按时长 / 按项目面议',
+                measure: '按时长',
                 services: [
                     {
                         id: 'resource-inventory',
@@ -218,7 +218,7 @@
                 image: 'images/consult-government.jpg',
                 icon: 'shield',
                 defaultPrice: '面议',
-                measure: '按项目 / 按服务次数',
+                measure: '面议',
                 services: [
                     {
                         id: 'public-authorization',
@@ -293,7 +293,7 @@
                 image: 'images/hero-ai-longgang.jpg',
                 icon: 'ai',
                 defaultPrice: '面议',
-                measure: '按项目 / 按阶段',
+                measure: '面议',
                 services: [
                     {
                         id: 'city-brain',
@@ -425,9 +425,11 @@
         var consultTarget = document.getElementById('consultTarget');
         var consultTextarea = document.getElementById('txtConsult');
         var consultCount = document.getElementById('consultCount');
-        var activeServiceId = serviceGroups[0].services[0].id;
+        var requestedServiceId = new URLSearchParams(window.location.search).get('service');
+        var requestedService = findService(requestedServiceId);
+        var activeServiceId = requestedService.service.id;
         var expandedCategories = serviceGroups.reduce(function (memo, group, index) {
-            memo[group.id] = index === 0;
+            memo[group.id] = group.id === requestedService.group.id;
             return memo;
         }, {});
 

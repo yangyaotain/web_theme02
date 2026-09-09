@@ -339,19 +339,18 @@
         .data-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 16px;
         }
 
         .data-card {
-            display: grid;
-            grid-template-columns: 64px minmax(0, 1fr);
-            grid-template-rows: 64px auto auto minmax(46px, 1fr);
-            column-gap: 16px;
-            min-height: 300px;
-            padding: 26px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 268px;
+            padding: 20px;
             background: var(--surface-elevated);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             overflow: hidden;
             transition: all var(--transition-base);
             cursor: pointer;
@@ -363,7 +362,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
             pointer-events: none;
         }
@@ -374,113 +373,79 @@
             transform: translateY(-4px);
         }
 
-        .data-card-image {
-            grid-column: 1;
-            grid-row: 1;
-            width: 64px;
-            height: 64px;
-            background-color: var(--gray-100);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            position: relative;
-            overflow: hidden;
+        .data-card-header {
+            display: grid;
+            grid-template-columns: 52px minmax(0, 1fr);
+            align-items: start;
+            gap: 12px;
+            min-width: 0;
         }
 
-        .data-card-image::before {
-            display: none;
+        .data-card-image {
+            width: 52px;
+            height: 52px;
+            background-color: var(--gray-100);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
         .data-card-image.is-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: visible;
-            border: 0;
-            background: transparent;
+            background: var(--forest-green-50);
+            border-color: var(--forest-green-100);
             color: var(--forest-green);
         }
 
         .data-card-image.is-icon .material-symbols-outlined {
-            font-size: 64px;
+            font-size: 30px;
             line-height: 1;
-            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 64;
+            font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 32;
         }
 
-        .data-card-image-content {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .data-card-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(32, 165, 101, 0.2);
-            border: 1px solid rgba(32, 165, 101, 0.3);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .data-card-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--forest-green);
-        }
-
-        .data-card-badges { display: none; }
-
-        .data-card-badge {
-            padding: 4px 10px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 500;
-            color: white;
-        }
-
-        .data-card-badge.delivery { background: rgba(32, 165, 101, 0.9); }
-
-        .data-card-content { display: contents; }
+        .data-card-heading { min-width: 0; }
 
         .data-card-title {
-            grid-column: 2;
-            grid-row: 1;
-            align-self: start;
             min-width: 0;
-            margin: 2px 0 0;
+            margin: 1px 0 7px;
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-            line-height: 1.45;
+            line-height: 1.5;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
 
-        .data-card-company {
-            grid-column: 2;
-            grid-row: 1;
-            align-self: start;
+        .data-card-tags {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             min-width: 0;
-            margin: 31px 0 0;
             overflow: hidden;
-            font-size: 13px;
-            color: var(--text-tertiary);
-            line-height: 1.5;
+        }
+
+        .data-card-tag {
+            max-width: 50%;
+            padding: 2px 7px;
+            overflow: hidden;
+            color: var(--forest-green-700);
+            background: var(--forest-green-50);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 18px;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
 
         .data-card-desc {
-            grid-column: 1 / -1;
-            grid-row: 2;
             min-height: 44px;
-            margin: 28px 0 14px;
+            margin: 16px 0 13px;
             font-size: 13px;
             color: var(--text-secondary);
             line-height: 1.7;
@@ -490,25 +455,78 @@
             overflow: hidden;
         }
 
-        .data-card-price {
-            grid-column: 1 / -1;
-            grid-row: 3;
-            margin: 0 0 12px;
-            color: #ef5b5b;
-            font-size: 22px;
-            font-weight: 700;
-            line-height: 1.35;
-        }
-
-        .data-card-footer {
-            grid-column: 1 / -1;
-            grid-row: 4;
-            align-self: end;
+        .data-card-info {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding-top: 16px;
+            min-width: 0;
+            padding: 11px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .data-card-info-item {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .data-card-info-label {
+            flex-shrink: 0;
+            color: var(--text-tertiary);
+        }
+
+        .data-card-info-value {
+            min-width: 0;
+            overflow: hidden;
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-overflow: ellipsis;
+        }
+
+        .data-card-price-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+        }
+
+        .data-card-price-label,
+        .data-card-billing {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .data-card-price-value {
+            color: #ef5b5b;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .data-card-price-value.amount { color: #ef7a45; }
+
+        .data-card-billing {
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .data-card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-width: 0;
+            padding-top: 12px;
             border-top: 1px solid var(--border-subtle);
         }
 
@@ -531,78 +549,6 @@
             color: var(--text-tertiary);
             white-space: nowrap;
             text-overflow: ellipsis;
-        }
-
-        /* ==================== Public Data Cards ==================== */
-        .public-data-card {
-            display: flex;
-            flex-direction: column;
-            min-height: 300px;
-            padding: 0;
-        }
-
-        .public-data-card-title {
-            margin: 0;
-            padding: 20px 20px 16px;
-            overflow: hidden;
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 1.5;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .public-data-card-details {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 16px 20px 12px;
-        }
-
-        .public-data-card-row {
-            display: grid;
-            grid-template-columns: 82px minmax(0, 1fr);
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
-
-        .public-data-card-label {
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.5;
-            white-space: nowrap;
-        }
-
-        .public-data-card-value {
-            min-width: 0;
-            overflow: hidden;
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.5;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .public-data-card-stats {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-top: auto;
-            padding: 0 20px 18px;
-            color: var(--text-tertiary);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .public-data-card-stats strong {
-            margin-left: 4px;
-            color: var(--text-secondary);
-            font-weight: 500;
         }
 
         /* ==================== Responsive ==================== */
@@ -842,7 +788,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗区企业经营活力基础数据集</h3>
-                        <p class="data-card-company">深圳市龙岗区政务数据运营有限公司</p>
                         <p class="data-card-desc">汇聚企业登记、所属行业、所在街道和经营活跃度等基础信息，为产业分析和企业服务提供数据支撑</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2026-07-18</span>
@@ -861,7 +806,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗企业登记信息查询 API 资源</h3>
-                        <p class="data-card-company">深圳市龙岗区政务数据运营有限公司</p>
                         <p class="data-card-desc">提供企业登记信息、经营活力指数和状态标签的实时查询能力，支持业务系统按企业编码调用</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2026-07-17</span>
@@ -880,7 +824,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">龙岗区产业运行分析资料包</h3>
-                        <p class="data-card-company">深圳市龙岗区产业数据运营有限公司</p>
                         <p class="data-card-desc">汇集重点产业、街道和园区运行情况的分析说明、指标口径及配套资料，供产业研究参考</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2026-07-16</span>
@@ -899,7 +842,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">收费站出口小时流量</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">通过日前查询云南交投路网下辖收费站出口小时流量统计，包括出口ETC/CPC车流量</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -918,7 +860,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">智联云通平台</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">一站式物联网行业应用的解决方案实现，多元化智能设备的无缝接入与集中管理</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -937,7 +878,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">公司夜灯光数据</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">利用卫星遥感技术探测计算某制造业公司的夜灯光变量，用于衡量和预测其生产经营情况</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -956,7 +896,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">实时数据平台</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">将企业核心数据实时集中到中央化数据平台中的方式并通过API/SDK反向向周边系统提供数据</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -975,7 +914,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">城际高速小时车流量迁移统计</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">按小时查询云南交投路网范围内的高速路网相邻城市间不同车型迁移的车流量统计</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -994,7 +932,6 @@
                     </div>
                     <div class="data-card-content">
                         <h3 class="data-card-title">企业工商登记信息查询服务</h3>
-                        <p class="data-card-company">广东****有限公司</p>
                         <p class="data-card-desc">整合全国企业工商登记信息，提供企业基本信息、股东信息、变更记录等多维度数据查询服务</p>
                         <div class="data-card-footer">
                             <span class="data-card-meta">2025-11-04</span>
@@ -1090,6 +1027,45 @@
             publicDomainCard.hidden = !isPublicData;
         }
 
+        function getResourceType(card) {
+            if (card.format) return card.format === '接口' ? 'API' : card.format;
+            if (card.sampleType === 'api') return 'API';
+            if (card.sampleType === 'other') return '数据包';
+            return card.delivery === 'API传输' ? 'API' : '数据集';
+        }
+
+        function getUpdateFrequency(card) {
+            if (card.frequency) return card.frequency;
+            if (card.format === '流式数据') return '实时更新';
+            if (card.delivery === 'API传输' || card.format === '接口') return '每日更新';
+            return '按月更新';
+        }
+
+        function getResourcePrice(card) {
+            var price = card.price || ((card.delivery === 'API传输' || card.format === '接口') ? '0.02元/次' : '一事一议');
+            if (/^\d/.test(price)) return '¥' + price.replace('元/', '/');
+            return price;
+        }
+
+        function getResourceMeasure(card) {
+            var price = card.price || ((card.delivery === 'API传输' || card.format === '接口') ? '0.02元/次' : '一事一议');
+            if (card.pricingMode) return card.pricingMode;
+            if (price.indexOf('/MB') !== -1) return '按流量';
+            if (/\/(天|月|年)/.test(price)) return '按周期';
+            if (/\/(次|份|期|套|单)/.test(price)) return '按次数';
+            return '一事一议';
+        }
+
+        function shouldShowResourceMeasure(price) {
+            return price !== '一事一议' && price !== '面议';
+        }
+
+        function getCardDescription(card) {
+            if (card.desc.length >= 52) return card.desc;
+            return card.desc.replace(/[。；;，,]+$/, '') +
+                '，可用于' + card.domain + '相关业务的趋势分析、辅助研判和精细化运营。';
+        }
+
         function renderCards(tabName, keepPage) {
             var data = tabDataSets[tabName];
             if (!data) return;
@@ -1103,7 +1079,7 @@
             }
             if (appliedKeyword) {
                 cards = cards.filter(function(card) {
-                    return [card.title, card.company, card.desc, card.industry, card.domain, card.catalog, card.format]
+                    return [card.title, card.desc, card.industry, card.domain, card.catalog, card.format]
                         .join(' ').toLowerCase().indexOf(appliedKeyword) !== -1;
                 });
             }
@@ -1124,54 +1100,38 @@
                 var article = document.createElement('article');
                 article.className = 'data-card';
                 if (c.sampleType) article.setAttribute('data-sample-type', c.sampleType);
-
-                if (tabName === '公共数据') {
-                    article.classList.add('public-data-card');
-                    article.innerHTML =
-                        '<h3 class="public-data-card-title" title="' + c.title + '">' + c.title + '</h3>' +
-                        '<div class="public-data-card-details">' +
-                            '<div class="public-data-card-row">' +
-                                '<span class="public-data-card-label">资源摘要：</span>' +
-                                '<span class="public-data-card-value" title="' + c.desc + '">' + c.desc + '</span>' +
-                            '</div>' +
-                            '<div class="public-data-card-row">' +
-                                '<span class="public-data-card-label">来源平台：</span>' +
-                                '<span class="public-data-card-value">本域数据资源</span>' +
-                            '</div>' +
-                            '<div class="public-data-card-row">' +
-                                '<span class="public-data-card-label">资源持有方：</span>' +
-                                '<span class="public-data-card-value" title="' + c.company + '">' + c.company + '</span>' +
-                            '</div>' +
-                            '<div class="public-data-card-row">' +
-                                '<span class="public-data-card-label">资源格式：</span>' +
-                                '<span class="public-data-card-value">' + c.format + '资源</span>' +
+                var resourceType = getResourceType(c);
+                var frequency = getUpdateFrequency(c);
+                var price = getResourcePrice(c);
+                var measure = getResourceMeasure(c);
+                var visual = c.icon
+                    ? '<div class="data-card-image is-icon" aria-hidden="true"><span class="material-symbols-outlined">' + c.icon + '</span></div>'
+                    : '<div class="data-card-image" aria-hidden="true" style="background:url(\'' + c.img + '\') center/cover;"></div>';
+                article.innerHTML =
+                    '<div class="data-card-header">' +
+                        visual +
+                        '<div class="data-card-heading">' +
+                            '<h3 class="data-card-title" title="' + c.title + '">' + c.title + '</h3>' +
+                            '<div class="data-card-tags">' +
+                                '<span class="data-card-tag">' + resourceType + '</span>' +
+                                '<span class="data-card-tag">' + c.delivery + '</span>' +
                             '</div>' +
                         '</div>' +
-                        '<div class="public-data-card-stats">' +
-                            '<span>浏览量<strong>' + c.views + '</strong></span>' +
-                            '<span>申请量<strong>' + c.applications + '</strong></span>' +
-                        '</div>';
-                } else {
-                    var badges = '<div class="data-card-badges">' +
-                        '<span class="data-card-badge">' + c.acquisition + '</span>' +
-                        '<span class="data-card-badge delivery">' + c.delivery + '</span>' +
-                        '</div>';
-                    var visual = c.icon
-                        ? '<div class="data-card-image is-icon" aria-hidden="true"><span class="material-symbols-outlined">' + c.icon + '</span>' + badges + '</div>'
-                        : '<div class="data-card-image" style="background:url(\'' + c.img + '\') center/cover;">' + badges + '</div>';
-                    article.innerHTML =
-                        visual +
-                        '<div class="data-card-content">' +
-                            '<h3 class="data-card-title">' + c.title + '</h3>' +
-                            '<p class="data-card-company">' + c.company + '</p>' +
-                            '<p class="data-card-desc">' + c.desc + '</p>' +
-                            '<p class="data-card-price">面议</p>' +
-                            '<div class="data-card-footer">' +
-                                '<span class="data-card-type">' + c.industry + '</span>' +
-                                '<span class="data-card-meta">' + c.date + '</span>' +
-                            '</div>' +
-                        '</div>';
-                }
+                    '</div>' +
+                    '<p class="data-card-desc">' + getCardDescription(c) + '</p>' +
+                    '<div class="data-card-info">' +
+                        '<span class="data-card-info-item"><span class="data-card-info-label">覆盖范围：</span><span class="data-card-info-value">龙岗区</span></span>' +
+                        '<span class="data-card-info-item"><span class="data-card-info-label">更新频率：</span><span class="data-card-info-value">' + frequency + '</span></span>' +
+                    '</div>' +
+                    '<div class="data-card-price-row">' +
+                        '<span class="data-card-price-label">参考价格</span>' +
+                        '<strong class="data-card-price-value' + (price.indexOf('¥') === 0 ? ' amount' : '') + '">' + price + '</strong>' +
+                        (shouldShowResourceMeasure(price) ? '<span class="data-card-billing"><span class="data-card-info-label">计量方式：</span><span class="data-card-info-value">' + measure + '</span></span>' : '') +
+                    '</div>' +
+                    '<div class="data-card-footer">' +
+                        '<span class="data-card-type">' + c.domain + '</span>' +
+                        '<span class="data-card-meta">' + c.date + '</span>' +
+                    '</div>';
 
                 if (tabName === '公共数据') {
                     article.addEventListener('click', function() {
