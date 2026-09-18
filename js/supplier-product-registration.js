@@ -523,8 +523,8 @@
     }
 
     function copyFeatureIntroduction(data, fallbackName) {
-        if (window.FeatureIntroduction) {
-            return window.FeatureIntroduction.clone(data || buildProductFeatureIntroduction(fallbackName));
+        if (window.ContentSectionEditor) {
+            return window.ContentSectionEditor.clone(data || buildProductFeatureIntroduction(fallbackName));
         }
         return JSON.parse(JSON.stringify(data || buildProductFeatureIntroduction(fallbackName)));
     }
@@ -1056,8 +1056,8 @@
                 +   materialIcon('check_circle')
                 +   '<span></span>'
                 + '</div>';
-            if (state.formStep === 2 && window.FeatureIntroduction) {
-                state.featureIntroduction = window.FeatureIntroduction.mountEditor(
+            if (state.formStep === 2 && window.ContentSectionEditor) {
+                state.featureIntroduction = window.ContentSectionEditor.mountEditor(
                     panel.querySelector('[data-feature-editor-mount]'),
                     state.featureIntroduction,
                     { onChange: function (value) { state.featureIntroduction = value; } }

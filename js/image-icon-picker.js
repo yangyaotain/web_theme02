@@ -85,10 +85,14 @@
             label: '图片',
             modalTitle: '选择图标',
             maxSizeMB: 5,
+            maxCount: 0,
+            allowUpload: true,
+            allowIcon: true,
             onChange: function () {},
             onError: function () {}
         }, options || {});
         this.values = normalizeValues(this.options.values !== undefined ? this.options.values : this.options.value);
+        if (this.options.maxCount > 0) this.values = this.values.slice(0, this.options.maxCount);
         this.render();
     };
 
@@ -159,10 +163,18 @@
     };
 
     Picker.prototype.render = function () {
+        var canAdd = this.options.maxCount <= 0 || this.values.length < this.options.maxCount;
+        var uploadAction = this.options.allowUpload && canAdd
+            ? '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>上传图片</span></button>'
+                + '<input type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png"' + (this.options.maxCount === 1 ? '' : ' multiple') + ' hidden data-iip-file>'
+            : '';
+        var iconAction = this.options.allowIcon && canAdd
+            ? '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>选择图标</span></button>'
+            : '';
         this.root.innerHTML = '<div class="image-icon-picker-control">' + this.renderPreviews()
-            + '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>上传图片</span></button>'
-            + '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>选择图标</span></button>'
-            + '<input type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple hidden data-iip-file></div>'
+            + uploadAction
+            + iconAction
+            + '</div>'
             + this.renderModal();
     };
 
@@ -242,7 +254,12 @@
             return;
         }
         if (event.target.closest('[data-iip-confirm]') && this.pendingIcon) {
-            this.values.push({ type: 'icon', name: this.pendingIcon });
+            var selectedIcon = { type: 'icon', name: this.pendingIcon };
+            if (this.options.maxCount === 1) this.values = [selectedIcon];
+            else {
+                this.values.push(selectedIcon);
+                if (this.options.maxCount > 0) this.values = this.values.slice(0, this.options.maxCount);
+            }
             this.emitChange();
             this.close();
         }
@@ -298,7 +315,11 @@
                 reader.readAsDataURL(file);
             });
         })).then(function (values) {
-            this.values = this.values.concat(values);
+            if (this.options.maxCount === 1) this.values = values.slice(-1);
+            else {
+                this.values = this.values.concat(values);
+                if (this.options.maxCount > 0) this.values = this.values.slice(0, this.options.maxCount);
+            }
             this.emitChange();
             this.render();
             if (validationMessage) this.options.onError(validationMessage);
@@ -331,6 +352,7 @@
     window.ImageIconPicker = {
         icons: ICONS.slice(),
         mount: mount,
+        normalizeValue: normalizeValue,
         renderDisplay: renderDisplay
     };
 })();

@@ -31,8 +31,7 @@
                 };
             });
         }
-        return {
-            sections: [
+        var sections = [
                 {
                     title: config.highlightTitle,
                     content: config.highlightContent,
@@ -48,8 +47,19 @@
                     content: config.sceneContent,
                     cards: cards('integrated', config.scenes)
                 }
-            ]
-        };
+            ];
+        if (config.imageShowcase) {
+            sections.splice(1, 0, {
+                title: config.imageShowcase.title,
+                content: config.imageShowcase.content,
+                cards: [{
+                    type: 'image-grid',
+                    layout: config.imageShowcase.layout,
+                    blocks: config.imageShowcase.blocks
+                }]
+            });
+        }
+        return { sections: sections };
     }
 
     var FEATURE_INTRODUCTIONS = {
@@ -62,6 +72,23 @@
                 ['聚集状态可追踪', '保留统计时段与预警状态，可用于回溯重点区域的人群变化过程。', 'images/consult-advantage-operation.png'],
                 ['聚合脱敏处理', '仅提供聚合统计结果，不包含可直接识别个人身份的原始影像。', 'images/consult-advantage-delivery.png']
             ],
+            imageShowcase: {
+                title: '数据应用展示',
+                content: '',
+                layout: { preset: 'left-right', rows: 1, columns: 2 },
+                blocks: [
+                    {
+                        kind: 'text',
+                        ratio: 2,
+                        text: '监测结果按商圈、公园、交通枢纽和大型活动场地等点位组织，提供统计时段、客流量、密度等级、变化趋势与聚集预警状态等信息。管理人员可以横向比较不同区域的运行情况，也可以按时间连续观察单个点位的客流变化，快速识别持续上升、短时聚集或密度异常区域。\n在日常城市运行和大型活动保障中，可结合场地承载能力、疏散通道、公共交通接驳和周边道路运行情况开展综合研判，为现场人员疏导、保障力量调度、分级响应和活动复盘提供数据参考。历史统计结果还可用于分析重点区域的周期性客流特征，辅助优化巡查时段和保障方案。\n资源仅提供经过汇总处理的统计指标，不包含可直接识别个人身份的原始影像及个体轨迹。数据使用过程中应按照授权范围控制查询、下载和共享，避免将聚合结果用于个人识别或与业务目标无关的用途。'
+                    },
+                    {
+                        kind: 'image',
+                        ratio: 1,
+                        visual: { type: 'image', src: 'images/traffic-sensing.jpg', name: '人群聚集监测数据看板' }
+                    }
+                ]
+            },
             flowTitle: '应用流程',
             flowContent: '从场景选择到分析应用形成连续使用路径，适配城市运行研判和活动保障等业务。',
             flow: [
@@ -137,6 +164,23 @@
                 ['基础属性完整', '覆盖建筑名称、楼层、面积和建成年份等常用管理属性。', 'images/consult-advantage-delivery.png'],
                 ['季度更新校核', '结合变化数据按季度更新，并对异常坐标和属性进行复核。', 'images/consult-advantage-operation.png']
             ],
+            imageShowcase: {
+                title: '资源内容展示',
+                content: '',
+                layout: { preset: 'top-bottom', rows: 2, columns: 1 },
+                blocks: [
+                    {
+                        kind: 'image',
+                        ratio: 1,
+                        visual: { type: 'image', src: 'images/solution-realestate.jpg', name: '建筑空间数据场景' }
+                    },
+                    {
+                        kind: 'text',
+                        ratio: 1,
+                        text: '资源以建筑物逻辑单体为统一对象，关联中心点坐标、行政区划、街道、建筑名称、楼层、面积、建成年份和用途分类等基础信息，并通过统一编码保持建筑对象在不同业务数据中的一致引用，可作为城市空间底图、公共设施服务和规划分析的数据基础。\n资源按季度汇集变化信息，结合坐标范围、字段完整性、属性逻辑关系和重复对象进行质量校验，并记录新增、变更和停用等主要变化情况。标准化后的建筑对象可用于多来源业务数据上图、公共设施覆盖分析、城市更新评估、重点区域管理和空间规划研判。'
+                    }
+                ]
+            },
             flowTitle: '更新与质量流程',
             flowContent: '通过标准化处理流程保持建筑空间数据的一致性和可用性。',
             flow: [

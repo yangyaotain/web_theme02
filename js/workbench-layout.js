@@ -2729,9 +2729,7 @@
             save: '<svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5V3zm2 2v14h10V7.8L14.2 5H7zm2 0h4v5H9V5zm0 9h6v2H9v-2z"/></svg>',
             eye: '<svg viewBox="0 0 24 24"><path d="M12 5c5 0 8.4 4.2 9.5 7-1.1 2.8-4.5 7-9.5 7S3.6 14.8 2.5 12C3.6 9.2 7 5 12 5zm0 2c-3.6 0-6.2 2.7-7.3 5 1.1 2.3 3.7 5 7.3 5s6.2-2.7 7.3-5C18.2 9.7 15.6 7 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg>',
             check: '<svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4.1 14.1 9 19 20.3 7.7l-1.4-1.4L9 16.2z"/></svg>',
-            upload: '<svg viewBox="0 0 24 24"><path d="M11 16h2V8l3.2 3.2 1.4-1.4L12 4.2 6.4 9.8l1.4 1.4L11 8v8zm-5 2h12v2H6v-2z"/></svg>',
-            trash: '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg>',
-            drag: '<svg viewBox="0 0 24 24"><path d="M10 4h4v2h-4V4zm0 7h4v2h-4v-2zm0 7h4v2h-4v-2zM5 4h3v2H5V4zm0 7h3v2H5v-2zm0 7h3v2H5v-2zm11-14h3v2h-3V4zm0 7h3v2h-3v-2zm0 7h3v2h-3v-2z"/></svg>'
+            upload: '<svg viewBox="0 0 24 24"><path d="M11 16h2V8l3.2 3.2 1.4-1.4L12 4.2 6.4 9.8l1.4 1.4L11 8v8zm-5 2h12v2H6v-2z"/></svg>'
         };
 
         function cloneServiceData(item) {
@@ -2756,13 +2754,10 @@
             return 'icon';
         }
 
-        function getCardTypeLabel(type) {
-            if (type === 'sequence') return '序号卡片';
-            if (type === 'integrated') return '整行卡片';
-            return '图标卡片';
-        }
-
         function hasServiceCardContent(card) {
+            if (window.ContentSectionEditor && typeof window.ContentSectionEditor.hasCardContent === 'function') {
+                return window.ContentSectionEditor.hasCardContent(card);
+            }
             return !!(card && (String(card.title || '').trim() || String(card.desc || '').trim() || String(card.icon || '').trim()));
         }
 
@@ -2776,8 +2771,8 @@
 
         function normalizeSection(section) {
             var next = {
-                title: section && section.title || '',
-                content: section && section.content || '',
+                title: String(section && section.title || '').trim(),
+                content: String(section && section.content || '').trim(),
                 cards: section && (section.cards || section.features) || []
             };
             if (!next.cards.length && next.content && canAutoSplitSectionCards(next.title)) {
@@ -2788,14 +2783,25 @@
                     next.content = '';
                 }
             }
+            if (window.ContentSectionEditor) {
+                next = window.ContentSectionEditor.normalize({ sections: [next] }).sections[0];
+                next.title = next.title.trim();
+                next.content = next.content.trim();
+                next.cards.forEach(function (card) {
+                    if (card.type === 'image-grid') {
+                        card.blocks.forEach(function (block) {
+                            block.text = block.text.trim();
+                        });
+                    } else {
+                        card.title = card.title.trim();
+                        card.desc = card.desc.trim();
+                    }
+                });
+                return next;
+            }
             var defaultType = getDefaultCardType(next.title);
             next.cards = next.cards.map(function (card) {
-                return {
-                    type: card.type || defaultType,
-                    title: card.title || '',
-                    desc: card.desc || '',
-                    icon: card.icon || card.img || ''
-                };
+                return Object.assign({}, card, { type: card.type || defaultType });
             });
             return next;
         }
@@ -2954,10 +2960,6 @@
             return '<textarea ' + attrs + '>' + escapeHtml(value || '') + '</textarea>';
         }
 
-        function renderDragHandle() {
-            return '<span class="service-drag-handle">' + icons.drag + '<span>拖动排序</span></span>';
-        }
-
         function getEditorScrollTop() {
             var scroll = panel.querySelector('.service-editor-scroll');
             return scroll ? scroll.scrollTop : 0;
@@ -2967,29 +2969,6 @@
             if (typeof scrollTop !== 'number') return;
             var scroll = panel.querySelector('.service-editor-scroll');
             if (scroll) scroll.scrollTop = scrollTop;
-        }
-
-        function getEditorActionPosition(button) {
-            var sectionBlock = button.closest('[data-section-block]');
-            var sectionBlocks = Array.prototype.slice.call(panel.querySelectorAll('[data-section-block]'));
-            var sectionIndex = sectionBlock ? sectionBlocks.indexOf(sectionBlock) : -1;
-            var cardBlock = button.closest('.service-card-editor[data-card-index]');
-            var cardIndex = -1;
-            if (sectionBlock && cardBlock) {
-                cardIndex = Array.prototype.slice.call(sectionBlock.querySelectorAll('.service-card-editor[data-card-index]')).indexOf(cardBlock);
-            }
-            return {
-                sectionIndex: sectionIndex,
-                cardIndex: cardIndex
-            };
-        }
-
-        function sectionSelector(index) {
-            return '[data-section-block="' + index + '"]';
-        }
-
-        function cardSelector(sectionIndex, cardIndex) {
-            return sectionSelector(sectionIndex) + ' [data-card-index="' + cardIndex + '"]';
         }
 
         function getStatusCount(status) {
@@ -3206,217 +3185,6 @@
                 + '</div>';
         }
 
-        function getServiceDropReference(container, selector, x, y) {
-            var items = Array.prototype.slice.call(container.querySelectorAll(selector + ':not(.service-dragging)'));
-            var isGrid = selector !== '.service-section-editor';
-
-            if (!isGrid) {
-                for (var listIndex = 0; listIndex < items.length; listIndex += 1) {
-                    var listBox = items[listIndex].getBoundingClientRect();
-                    if (y < listBox.top + listBox.height / 2) return items[listIndex];
-                }
-                return null;
-            }
-
-            var rowItems = [];
-            items.forEach(function (child) {
-                var box = child.getBoundingClientRect();
-                if (y >= box.top && y <= box.bottom) {
-                    rowItems.push({ element: child, box: box });
-                }
-            });
-
-            if (rowItems.length) {
-                rowItems.sort(function (a, b) { return a.box.left - b.box.left; });
-                for (var rowIndex = 0; rowIndex < rowItems.length; rowIndex += 1) {
-                    if (x < rowItems[rowIndex].box.left + rowItems[rowIndex].box.width / 2) {
-                        return rowItems[rowIndex].element;
-                    }
-                }
-
-                var rowBottom = Math.max.apply(null, rowItems.map(function (item) { return item.box.bottom; }));
-                for (var nextIndex = 0; nextIndex < items.length; nextIndex += 1) {
-                    var nextBox = items[nextIndex].getBoundingClientRect();
-                    if (nextBox.top > rowBottom - 1) return items[nextIndex];
-                }
-                return null;
-            }
-
-            for (var fallbackIndex = 0; fallbackIndex < items.length; fallbackIndex += 1) {
-                var fallbackBox = items[fallbackIndex].getBoundingClientRect();
-                if (y < fallbackBox.top + fallbackBox.height / 2) return items[fallbackIndex];
-            }
-            return null;
-        }
-
-        function createServiceDropPlaceholder(item, selector) {
-            var placeholder = document.createElement('div');
-            placeholder.className = 'service-drop-placeholder' + (selector === '.service-section-editor' ? ' section' : '');
-            placeholder.style.minHeight = Math.max(56, item.offsetHeight) + 'px';
-            return placeholder;
-        }
-
-        function createServiceDragGhost(item) {
-            var rect = item.getBoundingClientRect();
-            var ghost = item.cloneNode(true);
-            ghost.classList.add('service-drag-ghost');
-            ghost.style.width = rect.width + 'px';
-            ghost.style.height = rect.height + 'px';
-            document.body.appendChild(ghost);
-            return ghost;
-        }
-
-        function positionServiceDragGhost(ghost, x, y, offsetX, offsetY) {
-            ghost.style.left = (x - offsetX) + 'px';
-            ghost.style.top = (y - offsetY) + 'px';
-        }
-
-        function moveServicePlaceholder(container, selector, placeholder, x, y) {
-            var reference = getServiceDropReference(container, selector, x, y);
-            if (reference == null) {
-                container.appendChild(placeholder);
-            } else if (reference !== placeholder) {
-                container.insertBefore(placeholder, reference);
-            }
-        }
-
-        function bindServiceSortable(container, selector, afterSort) {
-            if (!container || container.dataset.serviceSortableBound === 'true') return;
-            container.dataset.serviceSortableBound = 'true';
-            container.addEventListener('mousedown', function (event) {
-                if (event.button !== 0) return;
-
-                var item = event.target.closest(selector);
-                if (!item || !container.contains(item)) return;
-
-                var nearestSortable = event.target.closest('.service-section-editor, .service-card-editor');
-                if (nearestSortable !== item || !event.target.closest('.service-drag-handle')) return;
-
-                event.preventDefault();
-
-                var rect = item.getBoundingClientRect();
-                var offsetX = event.clientX - rect.left;
-                var offsetY = event.clientY - rect.top;
-                var placeholder = createServiceDropPlaceholder(item, selector);
-                var ghost = createServiceDragGhost(item);
-
-                item.parentNode.insertBefore(placeholder, item.nextSibling);
-                item.classList.add('service-dragging');
-                item.style.display = 'none';
-                container.classList.add('service-sort-active');
-                document.body.classList.add('service-is-sorting');
-                positionServiceDragGhost(ghost, event.clientX, event.clientY, offsetX, offsetY);
-
-                function onMouseMove(moveEvent) {
-                    moveEvent.preventDefault();
-                    positionServiceDragGhost(ghost, moveEvent.clientX, moveEvent.clientY, offsetX, offsetY);
-                    moveServicePlaceholder(container, selector, placeholder, moveEvent.clientX, moveEvent.clientY);
-                }
-
-                function cleanup(shouldCommit) {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                    document.body.classList.remove('service-is-sorting');
-                    container.classList.remove('service-sort-active');
-
-                    if (shouldCommit && placeholder.parentNode) {
-                        placeholder.parentNode.insertBefore(item, placeholder);
-                    }
-
-                    item.style.display = '';
-                    item.classList.remove('service-dragging');
-
-                    if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
-                    if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
-                    if (shouldCommit && typeof afterSort === 'function') afterSort();
-                }
-
-                function onMouseUp() {
-                    cleanup(true);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
-        }
-
-        function syncEditorSortOrder() {
-            var scrollTop = getEditorScrollTop();
-            collectEditorData();
-            noticeText = '';
-            renderServiceEditor(scrollTop);
-        }
-
-        function bindServiceCardSortables(scope) {
-            (scope || panel).querySelectorAll('.service-card-editor-grid').forEach(function (grid) {
-                bindServiceSortable(grid, '.service-card-editor', syncEditorSortOrder);
-            });
-        }
-
-        function renderCardEditors(cards, sectionIndex) {
-            cards = cards || [];
-            if (!cards.length) {
-                return '<div class="service-card-editor-empty">暂无卡片内容，可按展示样式新增序号卡片、图标卡片或整行卡片。</div>';
-            }
-            return cards.map(function (card, cardIndex) {
-                var type = card.type || getDefaultCardType((editorData.sections[sectionIndex] || {}).title);
-                var iconHtml = type === 'icon' ? ''
-                    + '<label class="service-card-image-upload">'
-                    +   '<span class="service-card-image-preview">' + (card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="卡片图标">' : '<span class="service-card-image-empty">' + icons.upload + '<span>上传图片</span></span>') + '</span>'
-                    +   '<input type="file" accept="image/*" data-card-icon-upload="' + sectionIndex + '-' + cardIndex + '">'
-                    + '</label>'
-                    + '<input type="hidden" data-card-icon="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.icon || '') + '">'
-                    : '<input type="hidden" data-card-icon="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.icon || '') + '">';
-                var fieldHtml = ''
-                    + '<div class="service-card-fields">'
-                    +   '<label>标题</label>'
-                    +   '<input class="service-editor-input" data-card-title="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(card.title || '') + '">'
-                    +   '<label>描述</label>'
-                    +   '<textarea class="service-editor-textarea" data-card-desc="' + sectionIndex + '-' + cardIndex + '">' + escapeHtml(card.desc || '') + '</textarea>'
-                    + '</div>';
-                return ''
-                    + '<div class="service-card-editor type-' + escapeHtml(type) + '" data-card-index="' + cardIndex + '" data-card-type="' + escapeHtml(type) + '">'
-                    +   '<div class="service-card-editor-head">'
-                    +       renderDragHandle()
-                    +       (type === 'icon' ? '' : '<em>' + getCardTypeLabel(type) + '</em>')
-                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-card">' + icons.trash + '<span>删除</span></button>'
-                    +   '</div>'
-                    +   '<input type="hidden" data-card-type-input="' + sectionIndex + '-' + cardIndex + '" value="' + escapeHtml(type) + '">'
-                    +   (type === 'icon' ? '<div class="service-card-feature-row">' + iconHtml + fieldHtml + '</div>' : iconHtml + fieldHtml)
-                    + '</div>';
-            }).join('');
-        }
-
-        function renderSectionEditors() {
-            return (editorData.sections || []).map(function (section, index) {
-                var cards = section.cards || section.features || [];
-                return ''
-                    + '<div class="service-section-editor" data-section-block="' + index + '">'
-                    +   '<div class="service-section-editor-head">'
-                    +       '<span class="service-section-num">' + (index + 1) + '</span>'
-                    +       renderDragHandle()
-                    +       '<input class="service-editor-input" data-section-title="' + index + '" value="' + escapeHtml(section.title) + '">'
-                    +       '<button class="service-delete-btn" type="button" data-section-action="delete-section">' + icons.trash + '<span>删除章节</span></button>'
-                    +   '</div>'
-                    +   '<div class="service-section-editor-body">'
-                    +       '<label>正文内容</label>'
-                    +       renderTextarea(section.content, 'class="service-editor-textarea service-editor-textarea-large" data-section-content="' + index + '" placeholder="请输入该章节的正文内容"')
-                    +   '</div>'
-                +   '<div class="service-card-editor-panel">'
-                +       '<div class="service-card-editor-title">'
-                +           '<span>相关卡片</span>'
-                +           '<div class="service-card-add-actions">'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-sequence-card">' + icons.add + '<span>新增序号卡片</span></button>'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-icon-card">' + icons.add + '<span>新增图标卡片</span></button>'
-                +               '<button class="service-secondary-btn" type="button" data-section-action="add-integrated-card">' + icons.add + '<span>新增整行卡片</span></button>'
-                +           '</div>'
-                +       '</div>'
-                    +       '<div class="service-card-editor-grid">' + renderCardEditors(cards, index) + '</div>'
-                    +   '</div>'
-                    + '</div>';
-            }).join('');
-        }
-
         function renderEditorIntro() {
             return ''
                 + '<div class="service-editor-layout service-editor-layout-content">'
@@ -3473,13 +3241,26 @@
                 +           '<div class="service-editor-row align-start">'
                 +               '<div class="service-editor-label">内容章节</div>'
                 +               '<div class="service-editor-field">'
-                +                   '<div class="service-section-editor-list" data-section-list>' + renderSectionEditors() + '</div>'
-                +                   '<button class="service-secondary-btn service-add-section-btn" type="button" data-section-action="add-section">' + icons.add + '<span>新增章节</span></button>'
+                +                   '<div data-service-section-editor></div>'
                 +               '</div>'
                 +           '</div>'
                 +       '</section>'
                 +   '</div>'
                 + '</div>';
+        }
+
+        function mountServiceSectionEditor() {
+            var root = panel.querySelector('[data-service-section-editor]');
+            var editor = window.ContentSectionEditor;
+            if (!root || !editor) return;
+            var model = editor.mountEditor(root, { sections: editorData.sections || [] }, {
+                embedded: true,
+                showTitle: false,
+                onChange: function (value) {
+                    editorData.sections = value.sections;
+                }
+            });
+            editorData.sections = model.sections;
         }
 
         function renderEditorPricing() {
@@ -4055,6 +3836,7 @@
                     : '<button class="service-secondary-btn" type="button" data-editor-cancel>' + icons.back + '<span>取消</span></button><button class="service-secondary-btn" type="button" data-editor-open-preview>' + icons.eye + '<span>预览</span></button><button class="service-create-btn" type="button" data-editor-next>' + icons.next + '<span>下一步</span></button>')
                 +   '</div>'
                 + '</div>';
+            mountServiceSectionEditor();
             bindEditorEvents();
             restoreEditorScrollTop(renderOptions.scrollTop);
             if (renderOptions.scrollTo) {
@@ -4084,32 +3866,6 @@
             if (badgeInput) editorData.badge = badgeInput.value.trim();
             if (heroTitleInput) editorData.heroTitle = heroTitleInput.value.trim();
             if (leadInput) editorData.lead = leadInput.value.trim();
-            var sectionBlocks = panel.querySelectorAll('[data-section-block]');
-            if (sectionBlocks.length) {
-                editorData.sections = Array.prototype.map.call(sectionBlocks, function (block) {
-                    var index = block.dataset.sectionBlock;
-                    var title = block.querySelector('[data-section-title="' + index + '"]');
-                    var content = block.querySelector('[data-section-content="' + index + '"]');
-                    var cards = Array.prototype.map.call(block.querySelectorAll('.service-card-editor[data-card-index]'), function (card) {
-                        var cardIndex = card.dataset.cardIndex;
-                        var cardTitle = card.querySelector('[data-card-title="' + index + '-' + cardIndex + '"]');
-                        var cardDesc = card.querySelector('[data-card-desc="' + index + '-' + cardIndex + '"]');
-                        var cardType = card.querySelector('[data-card-type-input="' + index + '-' + cardIndex + '"]');
-                        var cardIcon = card.querySelector('[data-card-icon="' + index + '-' + cardIndex + '"]');
-                        return {
-                            type: cardType ? cardType.value : card.dataset.cardType || getDefaultCardType(title ? title.value : ''),
-                            title: cardTitle ? cardTitle.value.trim() : '',
-                            desc: cardDesc ? cardDesc.value.trim() : '',
-                            icon: cardIcon ? cardIcon.value : ''
-                        };
-                    });
-                    return {
-                        title: title ? title.value.trim() : '',
-                        content: content ? content.value.trim() : '',
-                        cards: cards
-                    };
-                });
-            }
             if (panel.querySelector('[data-pricing-field]') || panel.querySelector('[data-pricing-measure]')) {
                 var pricing = editorData.pricing || {};
                 var countPrice = panel.querySelector('[data-pricing-field="countPrice"]');
@@ -4153,7 +3909,13 @@
                 window.open('industry-solutions.html?preview=' + encodeURIComponent(previewToken), '_blank');
                 return;
             }
-            localStorage.setItem('consult-service-preview-data', JSON.stringify(previewData));
+            try {
+                localStorage.setItem('consult-service-preview-data', JSON.stringify(previewData));
+            } catch (error) {
+                noticeText = '预览暂不可用，请检查浏览器本地存储或减少图片数量后重试。';
+                renderServiceEditor();
+                return;
+            }
             window.open('consulting-service-preview.html', '_blank');
         }
 
@@ -4234,75 +3996,6 @@
                 });
             });
 
-            panel.querySelectorAll('[data-card-icon-upload]').forEach(function (input) {
-                input.addEventListener('change', function () {
-                    if (!this.files || !this.files[0]) return;
-                    var parts = this.dataset.cardIconUpload.split('-');
-                    var sectionIndex = Number(parts[0]);
-                    var cardIndex = Number(parts[1]);
-                    var reader = new FileReader();
-                    reader.onload = function (event) {
-                        var scrollTop = getEditorScrollTop();
-                        collectEditorData();
-                        var section = editorData.sections[sectionIndex];
-                        if (section && section.cards && section.cards[cardIndex]) {
-                            section.cards[cardIndex].icon = event.target.result;
-                        }
-                        noticeText = '';
-                        renderServiceEditor(scrollTop);
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                });
-            });
-
-            panel.querySelectorAll('[data-section-action]').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    var action = this.dataset.sectionAction;
-                    var scrollTop = getEditorScrollTop();
-                    var position = getEditorActionPosition(this);
-                    var renderOptions = { scrollTop: scrollTop };
-                    collectEditorData();
-                    if (action === 'add-section') {
-                        editorData.sections.push({ title: '新增内容章节', content: '', cards: [] });
-                        renderOptions.scrollTo = sectionSelector(editorData.sections.length - 1);
-                    }
-                    if (action === 'delete-section') {
-                        if (position.sectionIndex > -1) {
-                            editorData.sections.splice(position.sectionIndex, 1);
-                            if (editorData.sections.length) {
-                                renderOptions.scrollTo = sectionSelector(Math.min(position.sectionIndex, editorData.sections.length - 1));
-                            }
-                        }
-                    }
-                    if (action === 'add-sequence-card' || action === 'add-icon-card' || action === 'add-integrated-card') {
-                        var section = editorData.sections[position.sectionIndex];
-                        if (section) {
-                            section.cards = section.cards || [];
-                            var typeMap = {
-                                'add-sequence-card': 'sequence',
-                                'add-icon-card': 'icon',
-                                'add-integrated-card': 'integrated'
-                            };
-                            section.cards.push({ type: typeMap[action], title: '', desc: '', icon: '' });
-                            renderOptions.scrollTo = cardSelector(position.sectionIndex, section.cards.length - 1);
-                        }
-                    }
-                    if (action === 'delete-card') {
-                        var targetSection = editorData.sections[position.sectionIndex];
-                        if (targetSection && targetSection.cards && position.cardIndex > -1) {
-                            targetSection.cards.splice(position.cardIndex, 1);
-                            if (targetSection.cards.length) {
-                                renderOptions.scrollTo = cardSelector(position.sectionIndex, Math.min(position.cardIndex, targetSection.cards.length - 1));
-                            } else {
-                                renderOptions.scrollTo = sectionSelector(position.sectionIndex);
-                            }
-                        }
-                    }
-                    noticeText = '';
-                    renderServiceEditor(renderOptions);
-                });
-            });
-
             var cancelButton = panel.querySelector('[data-editor-cancel]');
             if (cancelButton) {
                 cancelButton.addEventListener('click', function () {
@@ -4345,9 +4038,6 @@
                 });
             });
 
-            var sectionList = panel.querySelector('[data-section-list]');
-            bindServiceSortable(sectionList, '.service-section-editor', syncEditorSortOrder);
-            bindServiceCardSortables(panel);
         }
 
         function renderPanel() {

@@ -1,7 +1,9 @@
 /* 复用 service-catalog.css；仅补充方案自定义卡片与预览状态。 */
 .solution-empty { padding: 28px 20px; color: var(--text-secondary); line-height: 1.8; text-align: center; }
 .solution-empty .outline-button { margin-top: 16px; }
-.solution-card-flow { margin-left: 56px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 16px; }
+.rich-copy,
+.solution-card-flow { margin-left: 0; }
+.solution-card-flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 16px; }
 .solution-card-flow > .process-card { grid-column: span 2; min-width: 0; height: 100%; }
 .solution-card-flow > .advantage-card { grid-column: span 3; min-width: 0; height: 100%; }
 .solution-card-flow > .case-card { grid-column: 1 / -1; min-width: 0; }
@@ -9,6 +11,17 @@
 .solution-card-flow .advantage-card > div:last-child { min-width: 0; }
 .solution-card-flow .advantage-icon { color: var(--forest-green); }
 .solution-card-flow .advantage-icon svg { width: 48px; height: 48px; }
+.solution-card-flow .advantage-icon .material-symbols-outlined { font-size: 30px; }
+.solution-image-grid { grid-column: 1 / -1; display: grid; gap: 16px; }
+.solution-image-row { display: grid; align-items: stretch; gap: 16px; min-width: 0; }
+.solution-image-block { min-width: 0; min-height: 190px; overflow: hidden; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); background: var(--surface-secondary); }
+.solution-image-block-media { display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 150px; color: var(--forest-green); background: var(--forest-green-100); }
+.solution-image-block-media img { width: 100%; height: 100%; min-height: 150px; display: block; object-fit: cover; }
+.solution-image-block-media > svg { width: 48px; height: 48px; }
+.solution-image-block-media .material-symbols-outlined { font-size: 48px; }
+.solution-image-block-copy { display: flex; min-width: 0; height: 100%; flex-direction: column; justify-content: center; padding: 20px; color: var(--text-secondary); font-size: 15px; line-height: 1.9; }
+.solution-image-block-copy p { margin: 0; }
+.solution-image-block-copy p + p { margin-top: 8px; }
 .solution-preview nav-bar, .solution-preview .service-sidebar { display: none; }
 .solution-preview .main-content { grid-template-columns: minmax(0, 1fr); max-width: 1200px; padding-top: 32px; }
 .solution-preview-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; }
@@ -18,7 +31,8 @@
 .consult-card .consult-close { width: auto; padding: 0 10px; gap: 4px; }
 @media (max-width: 1280px) { .solution-card-flow > .process-card { grid-column: span 3; } }
 @media (max-width: 768px) {
-    .solution-card-flow { margin-left: 0; grid-template-columns: minmax(0, 1fr); }
+    .solution-card-flow { grid-template-columns: minmax(0, 1fr); }
     .solution-card-flow > .process-card, .solution-card-flow > .advantage-card { grid-column: 1; }
+    .solution-image-row { grid-template-columns: 1fr !important; }
     .solution-preview .main-content { padding: 24px 16px; }
 }

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <style>
@@ -234,21 +235,7 @@
         .preview-section-head {
             display: flex;
             align-items: center;
-            gap: 14px;
             margin-bottom: 20px;
-        }
-        .preview-section-num {
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            color: #fff;
-            background: var(--forest-green);
-            font-size: 18px;
-            font-weight: 800;
-            flex-shrink: 0;
         }
         .preview-section-title {
             color: var(--text-primary);
@@ -256,7 +243,6 @@
             font-weight: 800;
         }
         .preview-rich {
-            margin-left: 56px;
             color: var(--text-secondary);
             font-size: 15px;
             line-height: 1.9;
@@ -322,8 +308,8 @@
             display: block;
             object-fit: cover;
         }
+        .preview-advantage-icon .material-symbols-outlined { font-size: 25px; }
         .preview-card-flow {
-            margin-left: 56px;
             display: grid;
             grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 16px;
@@ -346,6 +332,26 @@
             border-radius: var(--radius-xl);
             background: linear-gradient(135deg, var(--forest-green-50) 0%, rgba(32, 165, 101, 0.05) 100%);
         }
+        .preview-image-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            gap: 16px;
+        }
+        .preview-image-row { display: grid; align-items: stretch; gap: 16px; min-width: 0; }
+        .preview-image-block {
+            min-width: 0;
+            min-height: 190px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            background: var(--surface-secondary);
+        }
+        .preview-image-block-media { display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 150px; color: var(--forest-green); background: var(--forest-green-100); }
+        .preview-image-block-media img { width: 100%; height: 100%; min-height: 150px; display: block; object-fit: cover; }
+        .preview-image-block-media .material-symbols-outlined { font-size: 48px; }
+        .preview-image-block-copy { display: flex; min-width: 0; height: 100%; flex-direction: column; justify-content: center; padding: 20px; color: var(--text-secondary); font-size: 15px; line-height: 1.9; }
+        .preview-image-block-copy p { margin: 0; }
+        .preview-image-block-copy p + p { margin-top: 8px; }
         @media (max-width: 1280px) {
             .preview-hero { grid-template-columns: 1fr; }
             .preview-action-card {
@@ -366,6 +372,7 @@
             .preview-title { font-size: 30px; }
             .preview-card-flow,
             .preview-case-card { grid-template-columns: 1fr; }
+            .preview-image-row { grid-template-columns: 1fr !important; }
             .preview-card-flow .preview-process-card,
             .preview-card-flow .preview-advantage-card,
             .preview-card-flow .preview-case-card { grid-column: 1 / -1; }
@@ -460,6 +467,68 @@
             return pricing.referencePrice || data.price || '面议';
         }
 
+        function normalizeVisual(value) {
+            if (!value) return null;
+            if (typeof value === 'string') return { type: 'image', src: value };
+            if (value.type === 'icon' && value.name) return { type: 'icon', name: value.name };
+            var src = value.src || value.url;
+            return src ? { type: 'image', src: src } : null;
+        }
+
+        function renderVisual(value, alt) {
+            var visual = normalizeVisual(value);
+            if (!visual) return '<span class="material-symbols-outlined">image</span>';
+            if (visual.type === 'icon') return '<span class="material-symbols-outlined">' + escapeHtml(visual.name) + '</span>';
+            return '<img src="' + escapeHtml(visual.src) + '" alt="' + escapeHtml(alt || '') + '">';
+        }
+
+        function normalizeGridLayout(card) {
+            var source = card.layout || {};
+            var legacySize = card.gridSize;
+            return {
+                rows: Math.min(4, Math.max(1, Number(source.rows != null ? source.rows : (card.rows != null ? card.rows : legacySize)) || 1)),
+                columns: Math.min(4, Math.max(1, Number(source.columns != null ? source.columns : (card.columns != null ? card.columns : legacySize)) || 1))
+            };
+        }
+
+        function normalizeGridBlock(block) {
+            block = block || {};
+            var text = String(block.text != null ? block.text : [block.title, block.content || block.desc].filter(Boolean).join('\n'));
+            var visual = normalizeVisual(block.visual || block.image);
+            var kind = ['image', 'text'].indexOf(block.kind) > -1 ? block.kind : (visual && !text.trim() ? 'image' : 'text');
+            var ratio = Math.min(12, Math.max(1, Number(block.ratio != null ? block.ratio : block.widthRatio) || 1));
+            return { kind: kind, ratio: ratio, text: text, visual: visual };
+        }
+
+        function renderImageGrid(card) {
+            var layout = normalizeGridLayout(card);
+            var blocks = (card.blocks || []).slice(0, layout.rows * layout.columns).map(normalizeGridBlock);
+            var rows = '';
+            for (var rowIndex = 0; rowIndex < layout.rows; rowIndex += 1) {
+                var rowBlocks = blocks.slice(rowIndex * layout.columns, (rowIndex + 1) * layout.columns);
+                var template = rowBlocks.map(function (block) { return block.ratio + 'fr'; }).join(' ');
+                rows += '<div class="preview-image-row" style="grid-template-columns:' + template + '">' + rowBlocks.map(function (block) {
+                    var content = block.kind === 'image'
+                        ? '<div class="preview-image-block-media">' + renderVisual(block.visual, '图片内容') + '</div>'
+                        : '<div class="preview-image-block-copy">' + renderRichText(block.text) + '</div>';
+                    return '<article class="preview-image-block kind-' + block.kind + '">' + content + '</article>';
+                }).join('') + '</div>';
+            }
+            return '<div class="preview-image-grid">' + rows + '</div>';
+        }
+
+        function hasCardContent(card) {
+            if (!card) return false;
+            if (card.type === 'image-grid') {
+                var layout = normalizeGridLayout(card);
+                return (card.blocks || []).slice(0, layout.rows * layout.columns).some(function (source) {
+                    var block = normalizeGridBlock(source);
+                    return block.text.trim() || block.visual;
+                });
+            }
+            return card.title || card.desc || normalizeVisual(card.visual || card.icon);
+        }
+
         function renderCardFlow(cards) {
             var sequenceIndex = 0;
             var iconIndex = 0;
@@ -472,8 +541,9 @@
                 if (type === 'integrated') {
                     return '<div class="preview-case-card"><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div>';
                 }
+                if (type === 'image-grid') return renderImageGrid(card);
                 iconIndex += 1;
-                var icon = card.icon ? '<img src="' + escapeHtml(card.icon) + '" alt="' + escapeHtml(card.title) + '">' : iconIndex;
+                var icon = card.visual || card.icon ? renderVisual(card.visual || card.icon, card.title) : iconIndex;
                 return '<div class="preview-advantage-card"><div class="preview-advantage-icon">' + icon + '</div><div><div class="preview-card-title">' + escapeHtml(card.title) + '</div><p class="preview-card-desc">' + escapeHtml(card.desc) + '</p></div></div>';
             }).join('') + '</div>';
         }
@@ -482,17 +552,15 @@
             var defaultType = section.title.indexOf('流程') > -1 ? 'sequence' : (section.title.indexOf('案例') > -1 ? 'integrated' : 'icon');
             var cards = (section.cards || section.features || []).map(function (card) {
                 return Object.assign({ type: defaultType }, card);
-            }).filter(function (card) {
-                return card.title || card.desc || card.icon;
-            });
+            }).filter(hasCardContent);
             if (!cards.length) return '';
             return renderCardFlow(cards);
         }
 
         function renderSections(sections) {
-            return (sections || []).map(function (section, index) {
+            return (sections || []).map(function (section) {
                 return '<section class="preview-section">'
-                    + '<div class="preview-section-head"><span class="preview-section-num">' + (index + 1) + '</span><h2 class="preview-section-title">' + escapeHtml(section.title) + '</h2></div>'
+                    + '<div class="preview-section-head"><h2 class="preview-section-title">' + escapeHtml(section.title) + '</h2></div>'
                     + (section.content ? '<div class="preview-rich">' + renderRichText(section.content) + '</div>' : '')
                     + renderCards(section)
                     + '</section>';

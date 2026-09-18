@@ -49,9 +49,65 @@
     function renderText(value) {
         return String(value || '').split('\n').filter(Boolean).map(function (line) { return '<p>' + escapeHtml(line) + '</p>'; }).join('');
     }
+    function normalizeVisual(value) {
+        if (!value) return null;
+        if (typeof value === 'string') return { type: 'image', src: value };
+        if (value.type === 'icon' && value.name) return { type: 'icon', name: value.name };
+        var src = value.src || value.url;
+        return src ? { type: 'image', src: src } : null;
+    }
+    function renderVisual(value, alt) {
+        var visual = normalizeVisual(value);
+        if (!visual) return icon('check');
+        if (visual.type === 'icon') return '<span class="material-symbols-outlined">' + escapeHtml(visual.name) + '</span>';
+        return '<img src="' + escapeHtml(safeImage(visual.src)) + '" alt="' + escapeHtml(alt || '') + '">';
+    }
+    function normalizeGridLayout(card) {
+        var source = card.layout || {};
+        var legacySize = card.gridSize;
+        return {
+            rows: Math.min(4, Math.max(1, Number(source.rows != null ? source.rows : (card.rows != null ? card.rows : legacySize)) || 1)),
+            columns: Math.min(4, Math.max(1, Number(source.columns != null ? source.columns : (card.columns != null ? card.columns : legacySize)) || 1))
+        };
+    }
+    function normalizeGridBlock(block) {
+        block = block || {};
+        var text = String(block.text != null ? block.text : [block.title, block.content || block.desc].filter(Boolean).join('\n'));
+        var visual = normalizeVisual(block.visual || block.image);
+        var kind = ['image', 'text'].indexOf(block.kind) > -1 ? block.kind : (visual && !text.trim() ? 'image' : 'text');
+        var ratio = Math.min(12, Math.max(1, Number(block.ratio != null ? block.ratio : block.widthRatio) || 1));
+        return { kind: kind, ratio: ratio, text: text, visual: visual };
+    }
+    function renderImageGrid(card) {
+        var layout = normalizeGridLayout(card);
+        var blocks = (card.blocks || []).slice(0, layout.rows * layout.columns).map(normalizeGridBlock);
+        var rows = '';
+        for (var rowIndex = 0; rowIndex < layout.rows; rowIndex += 1) {
+            var rowBlocks = blocks.slice(rowIndex * layout.columns, (rowIndex + 1) * layout.columns);
+            var template = rowBlocks.map(function (block) { return block.ratio + 'fr'; }).join(' ');
+            rows += '<div class="solution-image-row" style="grid-template-columns:' + template + '">' + rowBlocks.map(function (block) {
+                var content = block.kind === 'image'
+                    ? '<div class="solution-image-block-media">' + renderVisual(block.visual, '图片内容') + '</div>'
+                    : '<div class="solution-image-block-copy">' + renderText(block.text) + '</div>';
+                return '<article class="solution-image-block kind-' + block.kind + '">' + content + '</article>';
+            }).join('') + '</div>';
+        }
+        return '<div class="solution-image-grid">' + rows + '</div>';
+    }
+    function hasCardContent(card) {
+        if (!card) return false;
+        if (card.type === 'image-grid') {
+            var layout = normalizeGridLayout(card);
+            return (card.blocks || []).slice(0, layout.rows * layout.columns).some(function (source) {
+                var block = normalizeGridBlock(source);
+                return block.text.trim() || block.visual;
+            });
+        }
+        return card.title || card.desc || normalizeVisual(card.visual || card.icon);
+    }
     function renderCards(section) {
         var sequenceIndex = 0;
-        var cards = (section.cards || section.features || []).filter(function (card) { return card && (card.title || card.desc || card.icon); });
+        var cards = (section.cards || section.features || []).filter(hasCardContent);
         if (!cards.length) return '';
         return '<div class="solution-card-flow">' + cards.map(function (card) {
             var type = card.type || (section.title.indexOf('流程') > -1 ? 'sequence' : (section.title.indexOf('案例') > -1 ? 'integrated' : 'icon'));
@@ -60,13 +116,14 @@
                 return '<div class="process-card"><div class="process-index">' + String(sequenceIndex).padStart(2, '0') + '</div><div class="process-title">' + escapeHtml(card.title) + '</div><p class="process-desc">' + escapeHtml(card.desc) + '</p></div>';
             }
             if (type === 'integrated') return '<div class="case-card"><div class="case-title">' + escapeHtml(card.title) + '</div><p class="case-content">' + escapeHtml(card.desc) + '</p></div>';
-            var image = card.icon ? '<img src="' + escapeHtml(safeImage(card.icon)) + '" alt="">' : icon('check');
+            if (type === 'image-grid') return renderImageGrid(card);
+            var image = card.visual || card.icon ? renderVisual(card.visual || card.icon, card.title) : icon('check');
             return '<div class="advantage-card"><div class="advantage-icon">' + image + '</div><div><div class="advantage-title">' + escapeHtml(card.title) + '</div><p class="advantage-desc">' + escapeHtml(card.desc) + '</p></div></div>';
         }).join('') + '</div>';
     }
     function renderSections(sections) {
-        return (sections || []).map(function (section, index) {
-            return '<section class="content-section"><div class="section-header"><span class="section-number">' + (index + 1) + '</span><h2 class="section-title">' + escapeHtml(section.title) + '</h2></div>'
+        return (sections || []).map(function (section) {
+            return '<section class="content-section"><div class="section-header"><h2 class="section-title">' + escapeHtml(section.title) + '</h2></div>'
                 + (section.content ? '<div class="rich-copy">' + renderText(section.content) + '</div>' : '') + renderCards(section) + '</section>';
         }).join('');
     }
