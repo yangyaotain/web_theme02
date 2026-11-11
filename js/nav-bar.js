@@ -1,6 +1,6 @@
 /**
  * <nav-bar> Web Component
- * 龙岗数据聚合服务平台 — 统一导航栏组件
+ * 灵拓 · 数据聚合服务平台 — 统一导航栏组件
  *
  * 用法：
  *   <nav-bar active="home"></nav-bar>
@@ -437,9 +437,11 @@ class NavBar extends HTMLElement {
 }
 
 /* ── Brand ── */
-.nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
 .nav-logo-img { height: 52px; width: auto; }
-.nav-brand-name { font-size: 20px; font-weight: 600; color: #1F2B28; letter-spacing: -0.01em; line-height: 1; }
+.nav-brand-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; white-space: nowrap; }
+.nav-brand-name { font-size: var(--brand-name-font-size, 20px); font-weight: 600; color: var(--text-primary, #1F2B28); letter-spacing: -0.01em; line-height: var(--brand-name-line-height, 1.3); }
+.nav-brand-subtitle { font-size: var(--brand-subtitle-font-size, 13px); font-weight: 400; color: var(--text-secondary, #5C6863); line-height: var(--brand-subtitle-line-height, 1.4); }
 
 /* ── Links ── */
 .nav-links { display: flex; align-items: center; gap: 4px; height: 100%; }
@@ -693,7 +695,7 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
 /* ── Responsive ── */
 @media (max-width: 1180px) {
     .nav-container { padding: 0 20px; }
-    .nav-brand-name { display: none; }
+    .nav-brand-copy { display: none; }
     .nav-links { gap: 0; }
     .nav-link, .nav-dropdown-trigger { padding-left: 10px; padding-right: 10px; }
     .nav-actions { gap: 6px; }
@@ -706,8 +708,11 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
 <nav class="nav">
     <div class="nav-container">
         <a href="index.html" class="nav-brand">
-            <img src="images/logo.png" alt="龙岗数据" class="nav-logo-img">
-            <span class="nav-brand-name">龙岗数据聚合服务平台</span>
+            <img src="images/logo.png" alt="灵拓" class="nav-logo-img">
+            <span class="nav-brand-copy">
+                <span class="nav-brand-name">灵拓 · 数据聚合服务平台</span>
+                <span class="nav-brand-subtitle">人工智能与机器人数据聚合服务中心</span>
+            </span>
         </a>
         <div class="nav-links">${linksHTML}</div>
         <div class="nav-actions">${actionsHTML}</div>

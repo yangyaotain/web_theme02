@@ -776,7 +776,7 @@
             onBack: function () {
                 panel.classList.add('is-order-management');
                 if (title) title.textContent = '服务订单管理';
-                document.title = '服务订单管理 - 需方中心';
+                document.title = '灵拓 · 数据聚合服务平台';
                 render();
             }
         }) : null;
@@ -789,7 +789,7 @@
             onBack: function () {
                 panel.classList.add('is-order-management');
                 if (title) title.textContent = '服务订单管理';
-                document.title = '服务订单管理 - 需方中心';
+                document.title = '灵拓 · 数据聚合服务平台';
                 render();
             },
             onAction: function (action, item, controls) {
@@ -812,7 +812,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management');
         panel.classList.add('is-order-management');
         if (title) title.textContent = serviceMode ? '服务订单管理' : '订单管理';
-        document.title = (serviceMode ? '服务订单管理' : '订单管理') + ' - 需方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getFilteredRecords() {
             var keyword = state.keyword.toLowerCase();

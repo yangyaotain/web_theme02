@@ -511,7 +511,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management');
         panel.classList.add('is-demand-management', 'is-supplier-demand-response');
         panel.innerHTML = '<div class="demand-board supplier-demand-board">' + (state.view === 'detail' ? renderDetail() : renderList()) + '</div>';
-        document.title = (state.view === 'detail' ? '需求详情' : '我的响应') + ' - 供方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
     }
 
     function showToast(message, error) {

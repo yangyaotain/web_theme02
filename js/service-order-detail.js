@@ -832,7 +832,7 @@
             panel.classList.remove('is-order-management', 'is-supplier-order-management', 'is-placeholder', 'is-service-management');
             panel.classList.add('is-supplier-order-detail', 'is-service-order-detail');
             if (title) title.textContent = '服务订单详情';
-            document.title = '服务订单详情 - ' + (detail.parties.role === 'buyer' ? '需方中心' : '供方中心');
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = '<div class="supplier-order-detail-shell service-order-detail-shell">'
                 + '<div class="supplier-order-detail-toolbar"><button class="supplier-order-detail-back" type="button" data-service-order-detail-back>' + materialIcon('arrow_back') + '<span>返回服务订单管理</span></button>'
                 + '<div>' + (primaryAction ? '<button class="supplier-order-detail-primary" type="button" data-service-order-detail-action="' + escapeHtml(primaryAction) + '">' + materialIcon(primaryAction === '去支付' ? 'payments' : (primaryAction.indexOf('交付') !== -1 ? 'local_shipping' : 'task_alt')) + '<span>' + escapeHtml(primaryAction) + '</span></button>' : '') + '</div></div>'

@@ -1,9 +1,15 @@
 /* ============================================================
-   CSS Variables — 龙岗数据聚合服务平台 设计系统
+   CSS Variables — 灵拓 · 数据聚合服务平台 设计系统
    统一的设计令牌，所有页面共享
    ============================================================ */
 
 :root {
+    /* ── Platform Brand Typography ───────────────── */
+    --brand-name-font-size: 20px;
+    --brand-subtitle-font-size: 13px;
+    --brand-name-line-height: 1.3;
+    --brand-subtitle-line-height: 1.4;
+
     /* ── Brand Colors ────────────────────────────── */
     --forest-green: #20A565;
     --forest-green-50: #f0fdf6;

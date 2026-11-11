@@ -968,7 +968,7 @@
         workbook.Props = {
             Title: getExportTitle(),
             Subject: '交易费用统计报表',
-            Author: '龙岗数据聚合服务平台',
+            Author: '灵拓 · 数据聚合服务平台',
             CreatedDate: new Date()
         };
         window.XLSX.utils.book_append_sheet(workbook, summarySheet, '报表摘要');
@@ -1080,7 +1080,7 @@
         exportSheet.setAttribute('aria-hidden', 'true');
         exportSheet.innerHTML = ''
             + '<header class="fee-report-pdf-head"><div><h1>' + escapeHtml(getExportTitle()) + '</h1>'
-            + '<p>' + escapeHtml(getReportCaption()) + '</p></div><strong>龙岗数据聚合服务平台</strong></header>'
+            + '<p>' + escapeHtml(getReportCaption()) + '</p></div><strong>灵拓 · 数据聚合服务平台</strong></header>'
             + '<div class="fee-report-pdf-meta"><span>业务类型：' + escapeHtml(BUSINESS_OPTIONS[state.business].label) + '</span>'
             + '<span>运营类型：' + escapeHtml(OPERATION_OPTIONS[state.operation].label) + '</span>'
             + '<span>数据更新时间：' + escapeHtml(formatDateTime(REFERENCE_DATE)) + '</span>'

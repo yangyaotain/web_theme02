@@ -1,6 +1,6 @@
 /**
  * <site-footer> Web Component
- * 龙岗数据聚合服务平台 — 统一底部组件
+ * 灵拓 · 数据聚合服务平台 — 统一底部组件
  */
 class SiteFooter extends HTMLElement {
     constructor() {

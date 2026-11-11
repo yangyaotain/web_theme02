@@ -571,7 +571,7 @@
     function render() {
         var typeLabel = businessType === 'service' ? '服务' : '产品';
         if (title) title.textContent = typeLabel + '合同管理';
-        document.title = typeLabel + '合同管理 - ' + (role === 'supplier' ? '供方中心' : '需方中心');
+        document.title = '灵拓 · 数据聚合服务平台';
         panel.className = 'wb-consult-shell is-trade-contracts';
         panel.innerHTML = '<div class="trade-contract-page">' + renderQuery() + renderTable() + '</div>' + renderDrawer() + renderVoidDialog() + renderToast();
         bindEvents();

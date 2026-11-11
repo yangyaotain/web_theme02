@@ -571,7 +571,7 @@
         );
         panel.classList.add('is-product-registration');
         if (title) title.textContent = '产品登记管理';
-        document.title = '产品登记管理 - 供方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function renderOptions(options, selected) {
             return options.map(function (option) {
@@ -1042,7 +1042,7 @@
             );
             panel.classList.add('is-product-registration-editor');
             if (title) title.style.display = 'none';
-            document.title = getEditorTitle() + ' - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             var stepContent = state.formStep === 1
                 ? renderBasicInfoStep()
                 : (state.formStep === 2 ? renderFeatureIntroductionStep() : renderDeclarationStep());
@@ -1599,7 +1599,7 @@
                 title.style.display = '';
                 title.textContent = '产品登记管理';
             }
-            document.title = '产品登记管理 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = ''
                 + '<div class="product-register-board">'
                 +   '<div class="product-register-toolbar">'

@@ -87,7 +87,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management');
         panel.classList.add('is-bill-management');
         if (title) title.textContent = '交易账单管理';
-        document.title = '交易账单管理 - 需方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getFilteredRecords() {
             var keyword = state.keyword.toLowerCase();

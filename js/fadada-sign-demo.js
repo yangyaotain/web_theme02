@@ -73,7 +73,7 @@
         setText('[data-fdd-paper-no]', templateId);
         setText('[data-fdd-paper-title]', contractName.replace(/（V[^）]+）$/, ''));
         applyPartyMode();
-        document.title = contractName + ' - 法大大模板预览';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         document.querySelector('[data-fdd-help]').addEventListener('click', function () {
             showToast('当前页面用于预览已发布的法大大合同模板。');
@@ -157,7 +157,7 @@
 
         document.querySelector('[data-fdd-management-close]').addEventListener('click', function () { window.close(); });
         document.querySelector('[data-fdd-help]').addEventListener('click', function () { showToast('企业认证、印章、模板和授权均由法大大平台提供。'); });
-        document.title = (scene === 'manage' ? '企业业务管理' : (scene === 'verify' ? '企业实名认证' : '企业实名认证授权')) + ' - 法大大';
+        document.title = '灵拓 · 数据聚合服务平台';
     }
 
     if (scene === 'template-preview') {
@@ -244,7 +244,7 @@
     applyPartyMode();
     var sealParty = document.querySelector('.fdd-seal-image small');
     if (sealParty) sealParty.textContent = party;
-    document.title = contractName + ' - 法大大电子签约';
+    document.title = '灵拓 · 数据聚合服务平台';
 
     var agree = document.querySelector('[data-fdd-agree]');
     var next = document.querySelector('[data-fdd-next]');

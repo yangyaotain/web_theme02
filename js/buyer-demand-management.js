@@ -717,7 +717,7 @@
             var nextFormView = panel.querySelector('.dmd-form-view');
             if (nextFormView) nextFormView.scrollTop = state.formScrollTop;
         }
-        document.title = (state.view === 'publish' ? '发布需求' : (state.view === 'detail' ? '需求详情' : '我的需求')) + ' - 需方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
     }
 
     function clearFieldError(name) {

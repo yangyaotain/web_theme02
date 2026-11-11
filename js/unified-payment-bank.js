@@ -121,7 +121,7 @@
     setText('[data-bank-name]', bankName);
     setText('[data-card-type]', cardType);
     setText('[data-choice-bank]', bankName + ' · ' + cardType);
-    document.title = bankName + '网银支付 - 统一支付平台';
+    document.title = '灵拓 · 数据聚合服务平台';
 
     var confirmButton = document.querySelector('[data-confirm-payment]');
     if (confirmButton) confirmButton.addEventListener('click', confirmPayment);

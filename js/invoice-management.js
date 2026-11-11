@@ -167,7 +167,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management', 'is-bill-management', 'is-supplier-bill-management', 'is-offline-voucher-management');
         panel.classList.add('is-invoice-management');
         if (title) title.textContent = config.pageTitle;
-        document.title = config.menuTitle + ' - ' + (config.role === 'buyer' ? '需方中心' : '供方中心');
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getCategoryHeaders() {
             return HEADERS[config.category];

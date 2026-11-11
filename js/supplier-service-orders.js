@@ -258,7 +258,7 @@
         function restoreServiceOrderList() {
             panel.classList.add('is-supplier-order-management');
             if (title) title.textContent = '服务订单管理';
-            document.title = '服务订单管理 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             render();
         }
 
@@ -288,7 +288,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management');
         panel.classList.add('is-supplier-order-management');
         if (title) title.textContent = '服务订单管理';
-        document.title = '服务订单管理 - 供方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getServiceTypes() {
             return ORDER_RECORDS.map(function (item) {

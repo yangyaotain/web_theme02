@@ -170,7 +170,7 @@
             panel.classList.remove('is-order-management', 'is-supplier-order-management', 'is-placeholder', 'is-service-management', 'is-service-order-detail');
             panel.classList.add('is-supplier-order-detail', 'is-supplier-order-delivery', 'is-service-delivery-detail');
             if (title) title.textContent = '交付详情';
-            document.title = '交付详情 - ' + centerTitle;
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = '<div class="supplier-order-detail-shell supplier-delivery-detail-shell service-delivery-detail-shell">'
                 + '<div class="supplier-order-detail-toolbar"><button class="supplier-order-detail-back" type="button" data-service-delivery-back>'
                 + materialIcon('arrow_back') + '<span>返回服务订单管理</span></button></div>'

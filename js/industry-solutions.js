@@ -142,7 +142,7 @@
             + '<div class="action-buttons"><button class="action-button" type="button" data-buy>' + icon('cart') + '立即购买</button><button class="outline-button" type="button" data-consult>' + icon('chat') + '方案咨询</button></div></aside></div>'
             + '<div class="service-body">' + (item.lead ? '<p class="article-lead">' + escapeHtml(item.lead) + '</p>' : '') + renderSections(item.sections) + '</div></article></section>';
         content.querySelector('.service-hero-main').style.backgroundImage = 'linear-gradient(180deg, rgba(15,31,26,.08) 0%, rgba(15,31,26,.86) 100%), url(' + JSON.stringify(safeImage(item.heroImg || item.cover)) + ')';
-        document.title = (item.tabTitle || item.name || '未命名方案') + (previewToken ? ' - 行业解决方案预览' : ' - 行业解决方案');
+        document.title = '灵拓 · 数据聚合服务平台';
         if (!previewToken && window.DetailFavorite) window.DetailFavorite.init(content);
     }
     function renderTree() {
@@ -159,7 +159,7 @@
     }
     function emptyContent(message) {
         activeRecord = null;
-        document.title = '行业解决方案 - 龙岗数据聚合服务平台';
+        document.title = '灵拓 · 数据聚合服务平台';
         content.innerHTML = '<div class="service-article solution-empty"><p>' + escapeHtml(message) + '</p></div>';
     }
     function updateUrl(item, replace) {

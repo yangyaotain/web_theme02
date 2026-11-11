@@ -735,7 +735,7 @@
     }
 
     function applyProduct(product, type) {
-        document.title = product.name + ' - 龙岗数据聚合服务平台';
+        document.title = '灵拓 · 数据聚合服务平台';
         setText('[data-product-detail-breadcrumb]', product.name);
         setText('[data-product-detail-title]', product.name);
         setText('[data-product-detail-description]', product.description);
@@ -800,7 +800,7 @@
     }
 
     function applyResource(resource, type) {
-        document.title = resource.name + ' - 龙岗数据聚合服务平台';
+        document.title = '灵拓 · 数据聚合服务平台';
         setText('[data-resource-detail-breadcrumb]', resource.name);
         setText('[data-resource-detail-title]', resource.name);
         setText('[data-resource-detail-description]', resource.description);

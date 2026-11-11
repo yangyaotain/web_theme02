@@ -596,7 +596,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management', 'is-supplier-bill-management');
         panel.classList.add('is-resource-register-management');
         if (title) title.textContent = '资源登记管理';
-        document.title = '资源登记管理 - 供方中心';
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getIndustries() {
             return RESOURCE_RECORDS.reduce(function (result, item) {
@@ -1270,7 +1270,7 @@
             panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management', 'is-supplier-bill-management', 'is-resource-register-management');
             panel.classList.add('is-resource-register-editor');
             if (title) title.style.display = 'none';
-            document.title = getEditorTitle() + '资源登记 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             var stepContent = state.formStep === 1
                 ? renderBasicInfoStep()
                 : (state.formStep === 2
@@ -1750,7 +1750,7 @@
                 title.style.display = '';
                 title.textContent = '资源登记管理';
             }
-            document.title = '资源登记管理 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = ''
                 + '<div class="resource-register-board">'
                 +   renderToolbar()

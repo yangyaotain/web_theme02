@@ -453,7 +453,7 @@
                 title.style.display = '';
                 title.textContent = '产品上下架管理';
             }
-            document.title = '产品上下架管理 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = ''
                 + '<div class="product-shelf-board">'
                 +   '<div class="product-shelf-tabs" role="tablist">' + renderTabs() + '</div>'
@@ -812,7 +812,7 @@
             clearPanelClasses();
             panel.classList.add('is-product-shelf-editor');
             if (title) title.style.display = 'none';
-            document.title = '数据产品上架 - 供方中心';
+            document.title = '灵拓 · 数据聚合服务平台';
             panel.innerHTML = ''
                 + '<div class="product-shelf-editor">'
                 +   renderEditorHeader()

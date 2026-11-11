@@ -1626,7 +1626,7 @@
             if (matchedTab) state.tabValue = matchedTab.value;
         }
 
-        document.title = page.activeTitle + ' - 龙岗数据聚合服务平台';
+        document.title = '灵拓 · 数据聚合服务平台';
         var isDeliveryTaskPage = page.layout === 'deliveryTask';
         var filterHtml = isDeliveryTaskPage
             ? renderDeliveryTaskFilters(page)

@@ -310,7 +310,7 @@
         pageTitle.textContent = title;
         pageTitle.style.display = '';
         titleBar.style.display = visible ? 'flex' : 'none';
-        document.title = title + ' - ' + centerName;
+        document.title = '灵拓 · 数据聚合服务平台';
     }
 
     function setPanelClass(modifier) {

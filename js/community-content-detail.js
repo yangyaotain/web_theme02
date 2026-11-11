@@ -119,5 +119,5 @@
         else contentEl.innerHTML = renderPostContent();
     }
 
-    document.title = title + ' - 数据社区管理 - 龙岗数据聚合服务平台';
+    document.title = '灵拓 · 数据聚合服务平台';
 })();

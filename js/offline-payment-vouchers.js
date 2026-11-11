@@ -100,7 +100,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management', 'is-supplier-order-management', 'is-bill-management', 'is-supplier-bill-management');
         panel.classList.add('is-offline-voucher-management');
         if (title) title.textContent = '线下支付凭证';
-        document.title = '线下支付凭证 - ' + (role === 'supplier' ? '供方中心' : '需方中心');
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function getFilteredRecords() {
             var keyword = state.keyword.toLowerCase();

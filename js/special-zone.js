@@ -148,7 +148,7 @@
     function fillHero() {
         var resources = getLinkedItems('resource');
         var products = getLinkedItems('product');
-        document.title = state.zone.name + ' - 龙岗数据聚合服务平台';
+        document.title = '灵拓 · 数据聚合服务平台';
         elements.zoneBreadcrumbName.textContent = state.zone.name;
         elements.zoneName.textContent = state.zone.name;
         elements.zoneIntroduction.textContent = state.zone.introduction;

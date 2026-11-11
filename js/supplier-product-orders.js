@@ -1705,7 +1705,7 @@
         panel.classList.remove('is-placeholder', 'is-service-management', 'is-order-management');
         panel.classList.add('is-supplier-order-management');
         if (title) title.textContent = state.view === 'delivery' ? '交付详情' : (state.view === 'detail' ? '订单详情' : ACTIVE_ORDER_CONFIG.pageTitle);
-        document.title = (state.view === 'delivery' ? '交付详情' : (state.view === 'detail' ? '订单详情' : ACTIVE_ORDER_CONFIG.pageTitle)) + ' - ' + ACTIVE_ORDER_CONFIG.centerTitle;
+        document.title = '灵拓 · 数据聚合服务平台';
 
         function setViewTitle() {
             var detailMode = state.view === 'detail';
@@ -1714,7 +1714,7 @@
             panel.classList.toggle('is-supplier-order-detail', detailMode);
             panel.classList.toggle('is-supplier-order-delivery', deliveryMode);
             if (title) title.textContent = deliveryMode ? '交付详情' : (detailMode ? '订单详情' : ACTIVE_ORDER_CONFIG.pageTitle);
-            document.title = (deliveryMode ? '交付详情' : (detailMode ? '订单详情' : ACTIVE_ORDER_CONFIG.pageTitle)) + ' - ' + ACTIVE_ORDER_CONFIG.centerTitle;
+            document.title = '灵拓 · 数据聚合服务平台';
         }
 
         function getActiveDetailRecord() {

@@ -599,7 +599,7 @@
 
     function render() {
         renderTitle();
-        document.title = (state.detailId ? config.detailTitle : config.title) + ' - ' + centerName;
+        document.title = '灵拓 · 数据聚合服务平台';
         panel.className = 'wb-consult-shell is-digital-contracts';
         panel.innerHTML = (state.detailId ? renderDetail() : renderList()) + renderDrawer() + renderToast();
         bindEvents();

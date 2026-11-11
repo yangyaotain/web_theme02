@@ -475,7 +475,7 @@
 
         function fillBasic() {
             document.getElementById('zoneEditorTitle').textContent = mode === 'create' ? '新增特色专区' : '编辑特色专区';
-            document.title = (mode === 'create' ? '新增' : '编辑') + '特色专区 - 龙岗数据聚合服务平台';
+            document.title = '灵拓 · 数据聚合服务平台';
             nameInput.value = zone.name || '';
             introductionInput.value = zone.introduction || '';
             coverPreview.src = zone.cover || 'images/hero-ai-longgang.jpg';
