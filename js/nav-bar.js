@@ -68,6 +68,18 @@ class NavBar extends HTMLElement {
         catch (e) { return false; }
     }
 
+    // Shared by both navigation versions and the "我的空间" dropdown.
+    _getSpaceItems() {
+        return [
+            { id: 'space-overview', label: '龙岗可信数据空间', href: 'data-space.html?space=overview', glyph: 'network', description: '连接数据供需双方，了解可信数据空间与跨主体数据协作。' },
+            { id: 'space-language', label: '语言服务可信数据空间', href: 'portal-placeholder.html?page=space-language', glyph: 'chat', description: '面向语言服务场景的数据协作' },
+            { id: 'space-city-governance', label: '城市治理可信数据空间', href: 'portal-placeholder.html?page=space-city-governance', glyph: 'grid', description: '连接城市治理领域的数据与应用' },
+            { id: 'space-embodied', label: '具身智能可信数据空间', href: 'data-space.html?space=embodied', glyph: 'robot', description: '面向机器人与具身智能数据协作' },
+            { id: 'space-public', label: '公共数据可信数据空间', href: 'data-space.html?space=public', glyph: 'shield', description: '支撑公共数据的可信流通与开发利用' },
+            { id: 'space-agri-trade', label: '农贸可信数据空间', href: 'portal-placeholder.html?page=space-agri-trade', glyph: 'leaf', description: '连接农贸领域的数据资源与业务协作' }
+        ];
+    }
+
     _getSpecialZoneItems() {
         const fallback = [
             {
@@ -138,6 +150,10 @@ class NavBar extends HTMLElement {
         const placeholder = params.get('page') || '';
 
         if (path.includes('portal-placeholder')) {
+            const space = this._getSpaceItems().find(item => item.href === 'portal-placeholder.html?page=' + encodeURIComponent(placeholder));
+            if (space) {
+                return { primary: 'data-ecosystem', secondary: 'space-connect', tertiary: space.id };
+            }
             const placeholderRoutes = {
                 'corpus-data-zone': ['data-trade', 'special-zones', 'corpus-data-zone'],
                 'city-governance-zone': ['data-trade', 'special-zones', 'city-governance-zone'],
@@ -257,14 +273,7 @@ class NavBar extends HTMLElement {
                     {
                         id: 'space-connect',
                         label: '空间互联',
-                        children: [
-                            { id: 'space-overview', label: '龙岗可信数据空间', href: 'data-space.html?space=overview' },
-                            // 公共数据可信数据空间暂不在三级菜单展示，保留直达页面与路由兼容。
-                            { id: 'space-low-altitude', label: '低空经济可信数据空间', href: 'data-space.html?space=low-altitude' },
-                            { id: 'space-embodied', label: '具身智能可信数据空间', href: 'data-space.html?space=embodied' },
-                            { id: 'space-health', label: '医药健康可信数据空间', href: 'data-space.html?space=health' },
-                            { id: 'space-culture', label: '文化艺术可信数据空间', href: 'data-space.html?space=culture' }
-                        ]
+                        children: this._getSpaceItems()
                     },
                     {
                         id: 'ecosystem-cooperation',
@@ -282,12 +291,7 @@ class NavBar extends HTMLElement {
             { id: 'help', label: '帮助中心', href: 'help-center.html' }
         ];
 
-        const MY_SPACE_ITEMS = [
-            { label: '低空经济可信数据空间', href: 'data-space.html?space=low-altitude' },
-            { label: '具身智能可信数据空间', href: 'data-space.html?space=embodied' },
-            { label: '医药健康可信数据空间', href: 'data-space.html?space=health' },
-            { label: '文化艺术可信数据空间', href: 'data-space.html?space=culture' }
-        ];
+        const MY_SPACE_ITEMS = this._getSpaceItems();
 
         const menuConfig = window.LG_USER_MENU_CONFIG || {};
         const USER = menuConfig.user || {
