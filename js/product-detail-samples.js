@@ -849,6 +849,22 @@
         var context = samplePanel.getAttribute('data-sample-context') === 'resource' ? 'resource' : 'product';
         var catalog = context === 'resource' ? RESOURCES : PRODUCTS;
         var params = new URLSearchParams(window.location.search || '');
+        var partnerRecord = window.PartnerApplicationCatalog && window.PartnerApplicationCatalog.get(params.get('partnerItem'));
+        if (params.has('partnerItem')) {
+            var kind = context === 'resource' ? 'resources' : 'products';
+            if (!partnerRecord || partnerRecord.kind !== kind) {
+                window.PartnerContentDetail.missing(document.querySelector('.detail-wrapper'));
+                return;
+            }
+            var partnerType = partnerRecord.type === 'API' ? 'api' : (['报告', '数据模型'].indexOf(partnerRecord.type) !== -1 ? 'other' : 'dataset');
+            var partnerData = window.PartnerContentDetail.dataRecord(partnerRecord);
+            if (context === 'resource') applyResource(partnerData, partnerType);
+            else applyProduct(partnerData, partnerType);
+            document.title = partnerRecord.name + ' · 灵拓数据聚合服务平台';
+            samplePanel.classList.add('sample-panel');
+            samplePanel.innerHTML = window.PartnerContentDetail.renderSample(partnerRecord);
+            return;
+        }
         var type = params.get('sampleType');
         if (!catalog[type]) type = 'dataset';
         var item = catalog[type];

@@ -1,7 +1,9 @@
 (function (global) {
     'use strict';
 
-    var STORAGE_KEY = 'lgk_special_zones_v1';
+    if (global.SpecialZoneStore) return;
+
+    var STORAGE_KEY = 'lgk_special_zones_demo_v1';
     var PREVIEW_KEY = 'lgk_special_zone_preview_v1';
 
     var resourceCatalog = [
@@ -879,10 +881,62 @@
             + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
     }
 
+    function addExampleCatalog(entries, key, provider, domain, kind) {
+        var isProduct = kind === 'product';
+        var catalog = isProduct ? productCatalog : resourceCatalog;
+        var prefix = isProduct ? 'PROD' : 'RES';
+        return entries.map(function (entry, index) {
+            var id = prefix + '-' + key + '-' + String(index + 1).padStart(3, '0');
+            catalog.push(Object.assign({
+                id: id,
+                code: id,
+                provider: provider,
+                domain: domain,
+                updateCycle: '月度',
+                listedAt: '2026-11-18',
+                sampleDetails: true,
+                status: 'listed'
+            }, entry));
+            return id;
+        });
+    }
+
+    var lowAltitudeResources = addExampleCatalog([
+        { name: '低空巡检影像样本', category: '低空巡检', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '提供道路、河道和园区的脱敏航拍影像，包含拍摄时间及巡检任务编号。', image: 'images/production-line-lowalt.jpg', labels: ['巡检影像', '任务标识'] },
+        { name: '飞行轨迹与巡检任务记录', category: '飞行监管', resourceType: '库表', delivery: '数据库传输', dataSource: '原始数据', description: '记录示例航线、时间戳、飞行高度、任务区域及执行状态。', image: 'images/traffic-sensing.jpg', labels: ['航线', '飞行轨迹'] },
+        { name: '低空巡检事件标注样本', category: '隐患识别', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '整理巡检影像中的积水、道路障碍和设施破损样例及复核标签。', image: 'images/production-line-lowalt.jpg', labels: ['事件标注', '隐患复核'] }
+    ], 'LOW-INSPECTION', '低空场景样例库', '低空经济', 'resource');
+    var lowAltitudeProducts = addExampleCatalog([
+        { name: '低空巡检隐患识别数据集', category: '隐患识别', productType: '数据集', delivery: '文件传输', price: '面议', description: '包含标注影像、类别字典和样例划分，供巡检目标识别与评测。', image: 'images/production-line-lowalt.jpg', labels: ['影像识别', '样本标注'] },
+        { name: '巡检飞行任务查询接口', category: '飞行监管', productType: 'API', delivery: 'API传输', price: '面议', description: '按任务编号查询飞行区域、时间和任务状态，供监管系统联调。', image: 'images/iot-platform.jpg', labels: ['任务查询', '飞行监管'] },
+        { name: '低空巡检风险分析报告', category: '低空巡检', productType: '数据报告', delivery: '文件传输', price: '面议', description: '按巡检区域统计发现问题、复核结果和处置状态。', image: 'images/traffic-sensing.jpg', labels: ['风险研判', '处置分析'] }
+    ], 'LOW-INSPECTION', '低空场景样例库', '低空经济', 'product');
+    var standardsResources = addExampleCatalog([
+        { name: '主数据字段标准字典', category: '数据标准', resourceType: '库表', delivery: '数据库传输', dataSource: '加工数据', description: '提供主体编码、行政区划、时间和计量字段的定义、格式及示例。', image: 'images/rec-governance.jpg', labels: ['字段标准', '数据字典'] },
+        { name: '数据质量规则与异常样本', category: '质量校验', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '包含完整性、唯一性和一致性校验规则，以及重复、缺失和异常值样例。', image: 'images/production-line-governance.jpg', labels: ['质量规则', '异常样本'] },
+        { name: '数据分级分类参考清单', category: '规范管理', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '提供数据类别、样例等级、使用范围和处理要求的示例字段。', image: 'images/rec-governance.jpg', labels: ['分级分类', '使用范围'] }
+    ], 'DATA-STANDARDS', '数据治理样例库', '科技创新', 'resource');
+    var standardsProducts = addExampleCatalog([
+        { name: '统一字段标准与编码数据集', category: '数据标准', productType: '数据集', delivery: '文件传输', price: '面议', description: '整合字段口径、编码规则和参考值，用于内部目录标准对齐。', image: 'images/rec-governance.jpg', labels: ['字段映射', '编码规范'] },
+        { name: '质量规则校验接口', category: '质量校验', productType: 'API', delivery: 'API传输', price: '面议', description: '根据选择的校验规则返回命中情况、问题字段和异常汇总。', image: 'images/iot-platform.jpg', labels: ['规则校验', '质量检查'] },
+        { name: '数据治理质量评估报告', category: '规范管理', productType: '数据报告', delivery: '文件传输', price: '面议', description: '汇总数据质量问题、整改建议和复核指标，支持治理验收。', image: 'images/production-line-governance.jpg', labels: ['质量评估', '整改复核'] }
+    ], 'DATA-STANDARDS', '数据治理样例库', '科技创新', 'product');
+
+    function makeScenarioZones() {
+        return [
+            { id: 'low-altitude-inspection-zone', name: '低空巡检与监管数据专区', subtitle: '查看巡检影像、飞行记录与风险识别样例。', introduction: '汇聚低空巡检影像、飞行任务与隐患标注样例，支持线路巡检、飞行态势监测和风险复核。', cover: 'images/production-line-lowalt.jpg', sort: 2, resourceIds: lowAltitudeResources, productIds: lowAltitudeProducts },
+            { id: 'robot-training-zone', name: '机器人训练数据专区', subtitle: '查看感知、导航与动作训练数据。', introduction: '汇聚感知、导航与动作训练样例，覆盖机器人数据采集、仿真训练和训练质量评估。', cover: 'images/space-hero-robot.jpg', sort: 3, resourceIds: ['RES-ROBOT-001', 'RES-ROBOT-002', 'RES-ROBOT-003', 'RES-ROBOT-004', 'RES-ROBOT-005', 'RES-ROBOT-006'], productIds: ['PROD-ROBOT-001', 'PROD-ROBOT-002', 'PROD-ROBOT-003', 'PROD-ROBOT-004', 'PROD-ROBOT-005', 'PROD-ROBOT-006'] },
+            { id: 'data-standards-zone', name: '治理与规范数据专区', subtitle: '查看数据标准、质量规则与治理样例。', introduction: '汇聚数据字典、字段标准、质量规则和分级分类样例，支持目录编制、质量检查与标准对齐。', cover: 'images/production-line-governance.jpg', sort: 4, resourceIds: standardsResources, productIds: standardsProducts }
+        ].map(function (zone) {
+            return Object.assign(zone, { status: 'published', sampleDetails: true, updatedAt: '2026-11-18 10:00:00', updatedBy: '运营管理员' });
+        });
+    }
+
     function makeDefaultZones() {
         return [
             {
                 id: 'corpus-data-zone',
+                legacy: true,
                 name: '语料数据专区',
                 introduction: '汇聚政务服务、产业政策、企业经营与城市治理等高质量语料资源，面向大模型训练、企业知识库建设、智能问答和语义检索等场景，提供可检索、可组合、可持续运营的语料数据与产品服务。',
                 cover: 'images/hero-ai-longgang.jpg',
@@ -896,9 +950,10 @@
             {
                 id: 'city-governance-zone',
                 name: '城市治理专区',
+                subtitle: '城市运行、安全监管与环境治理专题。',
                 introduction: '聚合城市运行、交通管理、市政设施、商圈客流和防汛排涝等治理数据，面向城市态势监测、事件协同处置、风险预警和精细化运营场景，提供统一、及时、可组合的数据资源与产品服务。',
                 cover: 'images/production-line-cim.jpg',
-                sort: 2,
+                sort: 1,
                 status: 'published',
                 resourceIds: [
                     'RES-CITY-001', 'RES-CITY-002', 'RES-CITY-003',
@@ -913,6 +968,7 @@
             },
             {
                 id: 'medical-health-zone',
+                legacy: true,
                 name: '医疗健康专区',
                 introduction: '汇聚医疗机构、服务能力、公共卫生、药品保障和健康养老等主题数据，服务医疗资源查询、运行分析、供需评估和健康服务规划，推动医疗健康数据在合规场景下释放应用价值。',
                 cover: 'images/space-hero-health.jpg',
@@ -931,6 +987,7 @@
             },
             {
                 id: 'embodied-intelligence-zone',
+                legacy: true,
                 name: '具身智能专区',
                 introduction: '汇聚机器人轨迹、机器视觉、自主导航、人机协作和设备运行等高质量数据，面向感知、决策、控制、仿真训练与设备运维场景，为具身智能模型研发和产业应用提供数据支撑。',
                 cover: 'images/space-hero-robot.jpg',
@@ -947,64 +1004,64 @@
                 updatedAt: '2026-07-29 11:20:00',
                 updatedBy: '运营管理员'
             }
-        ];
+        ].concat(makeScenarioZones());
     }
 
     function makeDefaultState() {
         return {
-            version: 2,
-            zones: makeDefaultZones(),
+            version: 3,
+            zones: clone(makeDefaultZones().filter(function (zone) { return !zone.legacy; })),
             resources: clone(resourceCatalog),
             products: clone(productCatalog)
         };
     }
 
+    // Use session data for navigation between screens and relay it to other open demo tabs.
+    var snapshot = { revision: 0, state: null };
+    var channel = null;
+
+    function isSnapshot(value) {
+        return value && Number.isFinite(value.revision) && (value.state === null || (
+            value.state && Array.isArray(value.state.zones) && Array.isArray(value.state.resources) && Array.isArray(value.state.products)
+        ));
+    }
+
+    try {
+        var stored = JSON.parse(global.sessionStorage.getItem(STORAGE_KEY));
+        if (isSnapshot(stored)) snapshot = stored;
+    } catch (error) { /* Use the default examples if session storage is unavailable. */ }
+
     function read() {
+        return snapshot.state ? clone(snapshot.state) : makeDefaultState();
+    }
+
+    function applySnapshot(next) {
+        snapshot = next;
         try {
-            var raw = global.localStorage.getItem(STORAGE_KEY);
-            if (!raw) return makeDefaultState();
-            var state = JSON.parse(raw);
-            if (!state || !Array.isArray(state.zones)) return makeDefaultState();
-            var mergeCatalog = function (saved, defaults) {
-                var current = Array.isArray(saved) ? saved : [];
-                var merged = defaults.map(function (defaultItem) {
-                    var savedItem = current.find(function (item) { return item.id === defaultItem.id; });
-                    return Object.assign({}, defaultItem, savedItem || {});
-                });
-                current.forEach(function (item) {
-                    if (!merged.some(function (mergedItem) { return mergedItem.id === item.id; })) {
-                        merged.push(item);
-                    }
-                });
-                return merged;
-            };
-            state.resources = mergeCatalog(state.resources, resourceCatalog);
-            state.products = mergeCatalog(state.products, productCatalog);
-            if (Number(state.version || 1) < 2) {
-                makeDefaultZones().forEach(function (defaultZone) {
-                    if (!state.zones.some(function (zone) { return zone.id === defaultZone.id; })) {
-                        state.zones.push(defaultZone);
-                    }
-                });
-                state.version = 2;
-                global.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            }
-            return state;
-        } catch (error) {
-            return makeDefaultState();
-        }
+            global.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch (error) { /* The current page can still use the in-memory snapshot. */ }
+        global.dispatchEvent(new CustomEvent('special-zone-store-change', { detail: read() }));
+    }
+
+    function publishSnapshot(state) {
+        var next = { revision: Math.max(Date.now(), snapshot.revision + 1), state: state ? clone(state) : null };
+        applySnapshot(next);
+        if (channel) channel.postMessage({ type: 'snapshot', value: next });
+        return read();
     }
 
     function write(state) {
-        global.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        global.dispatchEvent(new CustomEvent('special-zone-store-change', { detail: clone(state) }));
-        return clone(state);
+        return publishSnapshot(state);
     }
 
-    function listZones() {
+    function listManagedZones() {
         return read().zones.slice().sort(function (a, b) {
             return Number(a.sort || 0) - Number(b.sort || 0);
         });
+    }
+
+    function listZones() {
+        return listManagedZones().concat(makeDefaultZones().filter(function (zone) { return zone.legacy; }));
     }
 
     function getZone(id) {
@@ -1014,6 +1071,7 @@
     function saveZone(zone) {
         var state = read();
         var record = clone(zone);
+        record.subtitle = String(record.subtitle || '').trim().slice(0, 100);
         record.updatedAt = nowText();
         record.updatedBy = record.updatedBy || '运营管理员';
         var index = state.zones.findIndex(function (item) { return item.id === record.id; });
@@ -1039,7 +1097,7 @@
     }
 
     function reset() {
-        return write(makeDefaultState());
+        return publishSnapshot(null);
     }
 
     function setPreview(zone) {
@@ -1067,6 +1125,7 @@
         read: read,
         write: write,
         listZones: listZones,
+        listManagedZones: listManagedZones,
         getZone: getZone,
         saveZone: saveZone,
         removeZone: removeZone,
@@ -1076,4 +1135,20 @@
         getPreview: getPreview,
         nowText: nowText
     };
+
+    if (typeof global.BroadcastChannel === 'function') {
+        try {
+            channel = new global.BroadcastChannel(STORAGE_KEY);
+            channel.onmessage = function (event) {
+                var message = event.data;
+                if (!message) return;
+                if (message.type === 'request' && snapshot.revision) {
+                    channel.postMessage({ type: 'snapshot', value: snapshot });
+                } else if (message.type === 'snapshot' && isSnapshot(message.value) && message.value.revision > snapshot.revision) {
+                    applySnapshot(message.value);
+                }
+            };
+            channel.postMessage({ type: 'request' });
+        } catch (error) { channel = null; }
+    }
 })(window);

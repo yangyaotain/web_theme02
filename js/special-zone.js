@@ -260,8 +260,11 @@
         var sourcePrice = isProduct ? item.price : (item.price || (item.delivery === 'API传输' ? '0.02元/次' : '一事一议'));
         var price = formatPrice(sourcePrice);
         var billing = getMeasure(sourcePrice);
+        var action = state.zone.sampleDetails || item.sampleDetails
+            ? ' role="button" aria-haspopup="dialog" data-zone-sample="' + escapeHtml(item.id) + '"'
+            : ' data-zone-href="' + escapeHtml(item.href || '#') + '"';
         return ''
-            + '<article class="zone-data-card" tabindex="0" data-zone-href="' + escapeHtml(item.href || '#') + '">'
+            + '<article class="zone-data-card" tabindex="0"' + action + '>'
             +   '<div class="zone-card-head">'
             +       '<div class="zone-card-image">'
             +           '<img src="' + escapeHtml(item.image) + '" alt="">'
@@ -431,17 +434,31 @@
         });
 
         elements.zoneCardGrid.addEventListener('click', function (event) {
-            var card = event.target.closest('[data-zone-href]');
-            if (card) window.location.href = card.dataset.zoneHref;
+            var card = event.target.closest('[data-zone-href], [data-zone-sample]');
+            if (card) openZoneCard(card);
         });
 
         elements.zoneCardGrid.addEventListener('keydown', function (event) {
             if (event.key !== 'Enter' && event.key !== ' ') return;
-            var card = event.target.closest('[data-zone-href]');
+            var card = event.target.closest('[data-zone-href], [data-zone-sample]');
             if (!card) return;
             event.preventDefault();
-            window.location.href = card.dataset.zoneHref;
+            openZoneCard(card);
         });
+    }
+
+    function openZoneCard(card) {
+        if (!card.hasAttribute('data-zone-sample')) {
+            window.location.href = card.dataset.zoneHref;
+            return;
+        }
+        var item = getLinkedItems(state.type).find(function (record) { return record.id === card.dataset.zoneSample; });
+        if (!item) return;
+        var dialog = document.getElementById('zoneSampleDialog');
+        document.getElementById('zoneSampleTitle').textContent = item.name;
+        document.getElementById('zoneSampleMeta').textContent = [state.type === 'resource' ? getResourceType(item) : item.productType, formatDelivery(item.delivery), formatUpdateCycle(item.updateCycle)].filter(Boolean).join(' · ');
+        document.getElementById('zoneSampleDescription').textContent = item.description;
+        if (!dialog.open) dialog.showModal();
     }
 
     function init() {
@@ -461,20 +478,23 @@
                 else window.location.href = 'cms-special-zones.html';
             });
         }
-        state.zone = preview
-            ? (SpecialZoneStore.getPreview(zoneId) || SpecialZoneStore.getZone(zoneId))
-            : SpecialZoneStore.getZone(zoneId);
-        if (!state.zone || (state.zone.status !== 'published' && !preview)) {
-            document.querySelector('.zone-breadcrumb').hidden = true;
-            elements.zoneHero.hidden = true;
-            elements.zoneContentCard.hidden = true;
-            elements.zoneUnavailable.hidden = false;
-            return;
+        function refreshZone() {
+            state.zone = preview
+                ? (SpecialZoneStore.getPreview(zoneId) || SpecialZoneStore.getZone(zoneId))
+                : SpecialZoneStore.getZone(zoneId);
+            var available = Boolean(state.zone && (state.zone.status === 'published' || preview));
+            document.querySelector('.zone-breadcrumb').hidden = !available;
+            elements.zoneHero.hidden = !available;
+            elements.zoneContentCard.hidden = !available;
+            elements.zoneUnavailable.hidden = available;
+            if (!available) return;
+            fillHero();
+            renderFilterGroups();
+            render();
         }
-        fillHero();
-        renderFilterGroups();
         bindEvents();
-        render();
+        refreshZone();
+        window.addEventListener('special-zone-store-change', refreshZone);
     }
 
     if (document.readyState === 'loading') {

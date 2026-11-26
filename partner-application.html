@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生态伙伴应用 · 灵拓数据聚合服务平台</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/service-content-preview.css">
+    <link rel="stylesheet" href="css/partner-detail.css">
+    <link rel="stylesheet" href="css/catalog-cards.css">
+    <link rel="stylesheet" href="css/partner-application.css">
+</head>
+<body class="partner-application">
+    <nav-bar active="data-services"></nav-bar>
+    <main class="preview-shell">
+        <nav class="g-breadcrumb" aria-label="当前位置">
+            <a href="index.html">首页</a><span class="sep">/</span><span>生态伙伴应用</span><span class="sep">/</span><span class="current" data-application-name></span>
+        </nav>
+        <section class="preview-article" aria-label="公司基本信息" data-company hidden>
+            <header class="preview-hero">
+                <div class="preview-hero-main">
+                    <img class="partner-detail-background" data-hero-image alt="">
+                    <div class="preview-hero-content">
+                        <span class="preview-kicker" data-badge></span>
+                        <h1 class="preview-title" data-title></h1>
+                        <p class="preview-subtitle" data-subtitle></p>
+                    </div>
+                </div>
+            </header>
+        </section>
+        <section class="application-catalog" aria-label="伙伴相关内容" data-catalog hidden>
+            <div class="application-tabs" role="tablist" aria-label="内容类型">
+                <button class="application-tab active" id="tab-resources" type="button" role="tab" aria-selected="true" aria-controls="panel-resources" data-tab="resources"><span class="material-symbols-outlined" aria-hidden="true">database</span>数据资源</button>
+                <button class="application-tab" id="tab-products" type="button" role="tab" aria-selected="false" aria-controls="panel-products" tabindex="-1" data-tab="products"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>数据产品</button>
+                <button class="application-tab" id="tab-services" type="button" role="tab" aria-selected="false" aria-controls="panel-services" tabindex="-1" data-tab="services"><span class="material-symbols-outlined" aria-hidden="true">support_agent</span>数据咨询服务</button>
+                <button class="application-tab" id="tab-solutions" type="button" role="tab" aria-selected="false" aria-controls="panel-solutions" tabindex="-1" data-tab="solutions"><span class="material-symbols-outlined" aria-hidden="true">domain</span>行业解决方案</button>
+            </div>
+            <div id="panel-resources" role="tabpanel" aria-labelledby="tab-resources" tabindex="0" data-panel="resources"></div>
+            <div id="panel-products" role="tabpanel" aria-labelledby="tab-products" tabindex="0" data-panel="products" hidden></div>
+            <div id="panel-services" role="tabpanel" aria-labelledby="tab-services" tabindex="0" data-panel="services" hidden></div>
+            <div id="panel-solutions" role="tabpanel" aria-labelledby="tab-solutions" tabindex="0" data-panel="solutions" hidden></div>
+        </section>
+        <p class="partner-detail-empty" data-empty hidden role="status">该伙伴尚未发布、已下架或已删除，请前往<a href="partner-directory.html">伙伴目录</a>查看其他伙伴。</p>
+    </main>
+    <script src="js/partner-store.js"></script>
+    <script src="js/partner-application-catalog.js"></script>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/domain-filter.js"></script>
+    <script src="js/partner-application.js"></script>
+</body>
+</html>

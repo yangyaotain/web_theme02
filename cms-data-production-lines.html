@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据生产线 · 运营中心</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/workbench.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/cms-special-zones.css">
+    <link rel="stylesheet" href="css/image-icon-picker.css">
+    <link rel="stylesheet" href="css/feature-introduction.css">
+    <link rel="stylesheet" href="css/cms-data-production-lines.css">
+</head>
+<body>
+    <div data-admin-topbar data-active="operation"></div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content line-admin">
+            <section class="special-zone-admin" id="lineAdminList" hidden>
+                <header class="zone-admin-header">
+                    <div class="zone-admin-title-row">
+                        <h1>数据生产线</h1>
+                        <span class="zone-admin-count" id="lineAdminCount"></span>
+                    </div>
+                    <a class="zone-admin-button primary" id="lineAdminAdd" href="?view=new">
+                        <span class="material-symbols-outlined" aria-hidden="true">add</span><span>新增生产线</span>
+                    </a>
+                </header>
+                <form class="zone-admin-filter" id="lineAdminFilter">
+                    <label>产线名称 <input name="q" type="search" maxlength="100" placeholder="请输入产线名称"></label>
+                    <label>发布状态 <select name="status" aria-label="发布状态"><option value="">全部状态</option><option value="draft">未发布</option><option value="published">已发布</option><option value="offline">已下架</option></select></label>
+                    <div class="zone-admin-filter-actions">
+                        <button class="zone-admin-button primary compact" type="submit">
+                            <span class="material-symbols-outlined" aria-hidden="true">search</span><span>查询</span>
+                        </button>
+                        <button class="zone-admin-button compact" type="reset">
+                            <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span><span>重置</span>
+                        </button>
+                    </div>
+                </form>
+                <div class="zone-admin-table-card">
+                    <div class="zone-admin-table-scroll">
+                        <table class="zone-admin-table">
+                            <thead>
+                                <tr>
+                                    <th class="zone-sequence-column" scope="col">序号</th>
+                                    <th class="line-admin-name-column" scope="col">产线名称</th>
+                                    <th scope="col">副标题</th>
+                                    <th scope="col">发布状态</th>
+                                    <th class="line-admin-time-column" scope="col">更新时间</th>
+                                    <th class="line-admin-actions-column" scope="col">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lineAdminRows"></tbody>
+                        </table>
+                    </div>
+                    <div class="zone-admin-empty" id="lineAdminEmpty" hidden>
+                        <strong></strong><span></span>
+                    </div>
+                    <nav class="pagination-bar" id="lineAdminPagination" aria-label="数据生产线列表分页"></nav>
+                </div>
+            </section>
+
+            <section class="line-admin-editor" id="lineAdminEditor" hidden>
+                <form class="service-editor-page" id="lineForm">
+                    <header class="service-editor-top">
+                        <div class="service-editor-heading">
+                            <a class="service-back-btn" href="cms-data-production-lines.html" data-line-back>
+                                <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span><span>返回</span>
+                            </a>
+                            <h1 id="lineFormTitle"></h1>
+                            <span class="zone-status-tag" id="lineFormStatus"></span>
+                        </div>
+                    </header>
+                    <p class="service-notice service-editor-notice" id="lineFormError" role="alert" hidden></p>
+                    <div class="service-editor-scroll" id="lineFormContent">
+                        <div class="service-editor-layout service-editor-layout-content">
+                            <div class="service-editor-main">
+                                <section class="service-form-section">
+                                    <h2>横幅设置</h2>
+                                    <div class="service-editor-row">
+                                        <div class="service-editor-label">横幅预览</div>
+                                        <div class="service-editor-field">
+                                            <div class="service-hero-editor-preview" id="lineHeroPreview"></div>
+                                            <div class="service-image-control">
+                                                <div class="line-upload-preview" data-line-image="heroImg"></div>
+                                                <div class="service-image-actions">
+                                                    <input id="lineHeroImage" type="file" accept="image/jpeg,image/png" data-line-upload="heroImg" aria-describedby="lineHeroImageHint">
+                                                    <label class="service-secondary-btn" for="lineHeroImage" data-line-upload-label="heroImg">
+                                                        <span class="material-symbols-outlined" aria-hidden="true">upload</span><span>上传背景图</span>
+                                                    </label>
+                                                    <em id="lineHeroImageHint">建议 1200 × 400，支持 JPG/PNG</em>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="service-editor-row">
+                                        <label class="service-editor-label" for="lineBadge">角标文字</label>
+                                        <div class="service-editor-field"><input class="service-editor-input" id="lineBadge" name="badge" maxlength="40" placeholder="请输入横幅角标"></div>
+                                    </div>
+                                    <div class="service-editor-row">
+                                        <label class="service-editor-label" for="lineHeroTitle"><span aria-hidden="true">*</span> 标题</label>
+                                        <div class="service-editor-field"><input class="service-editor-input" id="lineHeroTitle" name="heroTitle" maxlength="100" placeholder="请输入标题" required></div>
+                                    </div>
+                                    <div class="service-editor-row align-start">
+                                        <label class="service-editor-label" for="lineHeroSubtitle"><span aria-hidden="true">*</span> 副标题</label>
+                                        <div class="service-editor-field"><textarea class="service-editor-textarea" id="lineHeroSubtitle" name="heroSubtitle" maxlength="300" placeholder="请输入副标题" required></textarea></div>
+                                    </div>
+                                </section>
+                                <section class="service-form-section">
+                                    <h2>内容介绍</h2>
+                                    <div class="service-editor-row align-start">
+                                        <label class="service-editor-label" for="lineLead">引言</label>
+                                        <div class="service-editor-field"><textarea class="service-editor-textarea" id="lineLead" name="lead" maxlength="2000" placeholder="请输入产线详情引言"></textarea></div>
+                                    </div>
+                                    <div class="service-editor-row align-start">
+                                        <div class="service-editor-label" id="lineSectionsLabel">内容章节</div>
+                                        <div class="service-editor-field" id="lineSections" role="group" aria-labelledby="lineSectionsLabel"></div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="service-editor-footer" id="lineFormFooter">
+                        <a class="service-secondary-btn" href="cms-data-production-lines.html" data-line-back>
+                            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span><span>取消</span>
+                        </a>
+                        <button class="service-secondary-btn" type="button" id="lineFormPreview">
+                            <span class="material-symbols-outlined" aria-hidden="true">visibility</span><span>预览</span>
+                        </button>
+                        <button class="service-create-btn" type="submit" id="lineFormSave">
+                            <span class="material-symbols-outlined" aria-hidden="true">save</span><span>保存</span>
+                        </button>
+                        <button class="service-create-btn" type="button" id="lineFormPublish"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><span>发布</span></button>
+                        <button class="service-secondary-btn" type="button" id="lineFormOffline" hidden><span class="material-symbols-outlined" aria-hidden="true">remove_circle_outline</span><span>下架</span></button>
+                    </footer>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/image-icon-picker.js"></script>
+    <script src="js/feature-introduction.js"></script>
+    <script src="js/data-production-line-store.js"></script>
+    <script src="js/cms-data-production-lines.js"></script>
+</body>
+</html>

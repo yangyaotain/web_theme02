@@ -81,8 +81,8 @@
     }
 
     // 复用原有分页外观，筛选变化时复位，避免保留无效的示例页码。
-    function createPager(nav, onChange) {
-        var currentPage = 1;
+    function createPager(nav, onChange, initialPage) {
+        var currentPage = Math.max(1, Math.floor(Number(initialPage) || 1));
         var pageCount = 1;
         var pageSize = 9;
         var numbers = nav.querySelector('.pagination-numbers');
@@ -102,6 +102,7 @@
         });
 
         return {
+            getPage: function () { return currentPage; },
             slice: function (cards, reset) {
                 pageCount = Math.max(1, Math.ceil(cards.length / pageSize));
                 currentPage = reset ? 1 : Math.min(currentPage, pageCount);

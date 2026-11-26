@@ -1317,6 +1317,8 @@
         }
 
         function submitResourceForm(action) {
+            var linksError = window.ContentSectionEditor.validate(state.featureIntroduction);
+            if (linksError) { showToast(linksError); return; }
             if (!validateDataItems()) return;
 
             var nowText = '2026-07-27 10:30:00';
@@ -1564,6 +1566,8 @@
                             state.formStep = 2;
                             render();
                         } else if (state.formStep === 2) {
+                            var linksError = window.ContentSectionEditor.validate(state.featureIntroduction);
+                            if (linksError) { showToast(linksError); return; }
                             state.formStep = 3;
                             render();
                         } else if (state.formStep === 3 && validateDataItems()) {

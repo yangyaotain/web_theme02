@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/detail-favorite.css">
+    <link rel="stylesheet" href="css/partner-content-detail.css">
+    <script src="js/partner-store.js"></script>
+    <script src="js/partner-application-catalog.js"></script>
+    <script src="js/partner-content-detail.js" defer></script>
     <script src="js/nav-bar.js"></script>
     <script src="js/smart-service.js" defer></script>
     <script src="js/detail-favorite.js" defer></script>
@@ -400,8 +404,10 @@
     (function () {
         /* ── 根据 URL 参数设置价格和计量方式 ── */
         var params = new URLSearchParams(window.location.search);
-        var urlPrice = params.get('price') || '';
-        var urlTitle = params.get('title') || '';
+        var partnerRecord = window.PartnerApplicationCatalog.get(params.get('partnerItem'));
+        var partnerService = partnerRecord && partnerRecord.kind === 'services';
+        var urlPrice = partnerService ? '面议' : (params.get('price') || '');
+        var urlTitle = partnerService ? partnerRecord.name : (params.get('title') || '');
         var priceEl = document.querySelector('.product-price .amount');
         var measureBtns = document.querySelectorAll('#measureBtns .measure-btn');
         var qtyRow = document.getElementById('qtyRow');

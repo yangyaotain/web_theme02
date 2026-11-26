@@ -12,6 +12,8 @@
         add: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
         trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5M14 11v5"/></svg>',
         drag: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h.01M8 12h.01M8 17h.01M16 7h.01M16 12h.01M16 17h.01"/></svg>',
+        up: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',
+        down: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
         image: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg>',
         text: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 10h14M5 14h10M5 18h8"/></svg>',
         feature: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 4.7L19 9.5l-4 3.2.2 5.3-3.2-2-3.2 2 .2-5.3-4-3.2 5.2-1.8L12 3Z"/></svg>'
@@ -117,9 +119,14 @@
 
     function normalize(data) {
         var source = data || {};
-        return {
+        var model = {
             sections: (source.sections || []).map(function (section) {
                 var title = String(section && section.title || '');
+                if (section && section.type === 'related-links') {
+                    return { type: 'related-links', title: title || '相关链接', content: '', cards: [], links: (section.links || []).map(function (link) {
+                        return { title: String(link && link.title || ''), url: String(link && link.url || '') };
+                    }) };
+                }
                 return {
                     title: title,
                     content: String(section && section.content || ''),
@@ -129,6 +136,74 @@
                 };
             })
         };
+        if (Array.isArray(source.sources) && source.sources.length) {
+            model.sections.push({ type: 'related-links', title: source.linksTitle || '相关链接', content: '', cards: [], links: source.sources.map(function (link) {
+                return { title: String(link && link.title || ''), url: String(link && link.url || '') };
+            }) });
+        }
+        return model;
+    }
+
+    function isValidLinkUrl(value) {
+        if (!/^https?:\/\//i.test(value) || /\s/.test(value)) return false;
+        try {
+            var url = new URL(value);
+            return (url.protocol === 'http:' || url.protocol === 'https:') && !!url.hostname;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function validLinks(section) {
+        return (section.links || []).map(function (link) {
+            return { title: String(link.title || '').trim(), url: String(link.url || '').trim() };
+        }).filter(function (link) { return link.title && isValidLinkUrl(link.url); });
+    }
+
+    function hasSectionContent(section) {
+        if (section.type === 'related-links') return validLinks(section).length > 0;
+        return Boolean(section.title.trim() || section.content.trim() || section.cards.some(hasCardContent));
+    }
+
+    function validate(data) {
+        var sections = normalize(data).sections;
+        for (var sectionIndex = 0; sectionIndex < sections.length; sectionIndex += 1) {
+            var section = sections[sectionIndex];
+            if (section.type !== 'related-links') continue;
+            for (var index = 0; index < section.links.length; index += 1) {
+                var link = section.links[index];
+                var label = '【' + (section.title.trim() || '相关链接') + '】第 ' + (index + 1) + ' 条链接';
+                if (!link.title.trim()) return label + '请填写名称。';
+                if (!isValidLinkUrl(link.url.trim())) return label + '请填写完整的 HTTP 或 HTTPS 地址。';
+            }
+        }
+        return '';
+    }
+
+    function renderLinks(section) {
+        var links = validLinks(section);
+        if (!links.length) return '';
+        return '<section class="feature-related-links"><h3>' + escapeHtml(String(section.title || '').trim() || '相关链接') + '</h3><div>'
+            + links.map(function (link) { return '<a href="' + escapeHtml(link.url.trim()) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(link.title.trim()) + '</a>'; }).join('')
+            + '</div></section>';
+    }
+
+    function renderLinksEditor(section, sectionIndex) {
+        return '<section class="feature-editor-section" data-feature-section data-feature-section-index="' + sectionIndex + '">'
+            + '<header class="feature-editor-section-head">' + renderDragHandle('section', sectionIndex)
+            + '<input type="text" maxlength="100" value="' + escapeHtml(section.title) + '" aria-label="栏目名称" placeholder="请输入栏目名称" data-feature-section-title="' + sectionIndex + '">'
+            + '<button type="button" class="feature-editor-button feature-editor-delete" data-feature-action="delete-section" data-feature-section="' + sectionIndex + '">' + ICONS.trash + '<span>删除区块</span></button></header>'
+            + '<div class="feature-editor-section-body">'
+            + section.links.map(function (link, index) {
+                var key = sectionIndex + '-' + index;
+                return '<div class="feature-editor-link-row"><label><span>链接名称</span><input type="text" required maxlength="100" value="' + escapeHtml(link.title) + '" data-feature-link-title="' + key + '"></label>'
+                    + '<label><span>链接地址</span><input type="url" required placeholder="https://" value="' + escapeHtml(link.url) + '" data-feature-link-url="' + key + '"></label>'
+                    + '<div class="feature-editor-link-actions">'
+                    + '<button type="button" class="feature-editor-button" data-feature-action="link-up" data-feature-section="' + sectionIndex + '" data-feature-link="' + index + '"' + (index === 0 ? ' disabled' : '') + '>' + ICONS.up + '<span>上移</span></button>'
+                    + '<button type="button" class="feature-editor-button" data-feature-action="link-down" data-feature-section="' + sectionIndex + '" data-feature-link="' + index + '"' + (index === section.links.length - 1 ? ' disabled' : '') + '>' + ICONS.down + '<span>下移</span></button>'
+                    + '<button type="button" class="feature-editor-button feature-editor-delete" data-feature-action="delete-link" data-feature-section="' + sectionIndex + '" data-feature-link="' + index + '">' + ICONS.trash + '<span>删除</span></button></div></div>';
+            }).join('')
+            + '<button type="button" class="feature-editor-button" data-feature-action="add-link" data-feature-section="' + sectionIndex + '">' + ICONS.add + '<span>新增链接</span></button></div></section>';
     }
 
     function getCardTypeLabel(type) {
@@ -256,6 +331,7 @@
     }
 
     function renderSectionEditor(section, sectionIndex) {
+        if (section.type === 'related-links') return renderLinksEditor(section, sectionIndex);
         return ''
             + '<section class="feature-editor-section" data-feature-section data-feature-section-index="' + sectionIndex + '">'
             +   '<header class="feature-editor-section-head">'
@@ -293,7 +369,8 @@
             +   '<div class="feature-editor-section-list" data-feature-section-list>'
             +       (model.sections.length ? model.sections.map(renderSectionEditor).join('') : '<div class="feature-editor-section-empty">暂无内容章节，请新增章节后维护门户展示内容。</div>')
             +   '</div>'
-            +   '<button type="button" class="feature-editor-button feature-editor-add-section" data-feature-action="add-section">' + ICONS.add + '<span>新增章节</span></button>'
+            +   '<div class="feature-editor-add-actions"><button type="button" class="feature-editor-button feature-editor-add-section" data-feature-action="add-section">' + ICONS.add + '<span>新增章节</span></button>'
+            +   '<button type="button" class="feature-editor-button feature-editor-add-section" data-feature-action="add-links">' + ICONS.add + '<span>新增相关链接</span></button></div>'
             + '</div>';
     }
 
@@ -356,6 +433,7 @@
                     maxSizeMB: 5,
                     maxCount: 1,
                     values: card.visual ? [card.visual] : [],
+                    onUploadPending: options && options.onUploadPending,
                     onChange: function (values) {
                         card.visual = values[0] || null;
                         notify(options, model);
@@ -374,6 +452,7 @@
                     maxCount: 1,
                     allowIcon: false,
                     values: block.visual ? [block.visual] : [],
+                    onUploadPending: options && options.onUploadPending,
                     onChange: function (values) {
                         block.visual = values[0] || null;
                         notify(options, model);
@@ -384,6 +463,18 @@
         }
 
         function bind() {
+            root.querySelectorAll('[data-feature-link-title], [data-feature-link-url]').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    var pair = parsePair(this.dataset.featureLinkTitle || this.dataset.featureLinkUrl);
+                    var link = model.sections[pair.section].links[pair.card];
+                    if (this.hasAttribute('data-feature-link-title')) link.title = this.value;
+                    else {
+                        link.url = this.value;
+                        this.setCustomValidity(this.value && !isValidLinkUrl(this.value.trim()) ? '请输入完整的 HTTP 或 HTTPS 地址。' : '');
+                    }
+                    notify(options, model);
+                });
+            });
             root.querySelectorAll('[data-feature-section-title]').forEach(function (input) {
                 input.addEventListener('input', function () {
                     var section = model.sections[Number(this.dataset.featureSectionTitle)];
@@ -490,6 +581,19 @@
                     var cardIndex = Number(this.dataset.featureCard);
                     if (action === 'add-section') {
                         model.sections.push({ title: '新增内容章节', content: '', cards: [] });
+                    } else if (action === 'add-links') {
+                        model.sections.push({ type: 'related-links', title: '相关链接', content: '', cards: [], links: [{ title: '', url: '' }] });
+                    } else if (action === 'add-link') {
+                        model.sections[sectionIndex].links.push({ title: '', url: '' });
+                    } else if (action === 'delete-link') {
+                        model.sections[sectionIndex].links.splice(Number(this.dataset.featureLink), 1);
+                    } else if (action === 'link-up' || action === 'link-down') {
+                        var links = model.sections[sectionIndex].links;
+                        var from = Number(this.dataset.featureLink);
+                        var to = from + (action === 'link-up' ? -1 : 1);
+                        if (to < 0 || to >= links.length) return;
+                        var movedLink = links.splice(from, 1)[0];
+                        links.splice(to, 0, movedLink);
                     } else if (action === 'delete-section' && model.sections[sectionIndex]) {
                         model.sections.splice(sectionIndex, 1);
                     } else if (action === 'add-card' && model.sections[sectionIndex]) {
@@ -621,29 +725,27 @@
 
     function hasContent(data) {
         var model = normalize(data);
-        return Boolean(model.sections.some(function (section) {
-            return section.title.trim() || section.content.trim() || section.cards.some(hasCardContent);
-        }));
+        return model.sections.some(hasSectionContent);
     }
 
     function renderPortal(root, data) {
         if (!root) return;
         var model = normalize(data);
         var sections = model.sections.map(function (section) {
+            if (section.type === 'related-links') return section;
             return {
                 title: section.title,
                 content: section.content,
                 cards: section.cards.filter(hasCardContent)
             };
-        }).filter(function (section) {
-            return section.title.trim() || section.content.trim() || section.cards.length;
-        });
+        }).filter(hasSectionContent);
         if (!hasContent(model)) {
             root.innerHTML = '<div class="feature-detail-empty">' + ICONS.feature + '<span>暂无特色介绍</span></div>';
             return;
         }
         root.innerHTML = '<div class="feature-detail">'
             + sections.map(function (section) {
+                if (section.type === 'related-links') return renderLinks(section);
                 return '<section class="feature-detail-section">'
                     + '<header class="feature-detail-section-head"><h3>' + escapeHtml(section.title || '特色内容') + '</h3></header>'
                     + (section.content ? '<div class="feature-detail-copy">' + renderParagraphs(section.content) + '</div>' : '')
@@ -656,6 +758,9 @@
     window.ContentSectionEditor = {
         clone: function (data) { return normalize(clone(data)); },
         normalize: normalize,
+        hasSectionContent: hasSectionContent,
+        validate: validate,
+        renderLinks: renderLinks,
         hasCardContent: hasCardContent,
         hasContent: hasContent,
         mountEditor: mountEditor

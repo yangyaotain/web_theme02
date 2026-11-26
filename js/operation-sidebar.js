@@ -25,8 +25,20 @@
             label: '用户管理',
             icon: 'users',
             children: [
-                { key: 'user-list', label: '用户列表', disabled: true },
-                { key: 'role-manage', label: '角色管理', disabled: true }
+                { key: 'identity-certification-review', label: '身份认证审核', disabled: true },
+                { key: 'business-activation-review', label: '业务开通审核', disabled: true },
+                { key: 'registered-account-management', label: '注册账号管理', disabled: true },
+                { key: 'organization-certification', label: '机构认证管理', href: 'operation-organization-certification.html' }
+            ]
+        },
+        {
+            type: 'group',
+            key: 'ecosystem-partners',
+            label: '生态伙伴管理',
+            icon: 'member',
+            children: [
+                { key: 'partner-applications', label: '共创伙伴申请', href: 'operation-partners.html?menu=applications' },
+                { key: 'partner-manage', label: '共创伙伴管理', href: 'operation-partners.html' }
             ]
         },
         { type: 'item', key: 'connector', label: '连接器管理', icon: 'connector', disabled: true },
@@ -106,6 +118,7 @@
             icon: 'content',
             children: [
                 { key: 'cms-portal', label: '门户管理', href: 'cms-portal.html' },
+                { key: 'cms-data-production-lines', label: '数据生产线', href: 'cms-data-production-lines.html' },
                 { key: 'cms-special-zones', label: '特色专区', href: 'cms-special-zones.html' },
                 { key: 'help-center', label: '帮助中心', disabled: true },
                 { key: 'policy-news', label: '政策资讯', disabled: true },
@@ -130,6 +143,7 @@
 
     const ACTIVE_BY_PAGE = {
         'operation-center.html': 'member-audit',
+        'operation-organization-certification.html': 'organization-certification',
         'audit-detail.html': 'member-audit',
         'audit-detail-done.html': 'member-audit',
         'operation-monitor-overview.html': 'monitor-overview',
@@ -157,6 +171,7 @@
         'member-manage.html': 'member-manage',
         'member-system.html': 'member-system',
         'cms-portal.html': 'cms-portal',
+        'cms-data-production-lines.html': 'cms-data-production-lines',
         'cms-special-zones.html': 'cms-special-zones',
         'cms-special-zone-form.html': 'cms-special-zones',
         'cms-community.html': 'cms-community',
@@ -175,6 +190,10 @@
     }
 
     function getActiveKey(container) {
+        if (getPageName() === 'operation-partners.html') {
+            return new URLSearchParams(window.location.search).get('menu') === 'applications'
+                ? 'partner-applications' : 'partner-manage';
+        }
         if (getPageName() === 'operation-dispute-arbitration.html') {
             const menu = new URLSearchParams(window.location.search || '').get('menu');
             if (['dispute', 'service-dispute', 'arbitration', 'service-arbitration'].includes(menu)) return menu;

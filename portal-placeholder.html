@@ -151,18 +151,36 @@
     <script>
         (function () {
             var pages = {
-                'corpus-data-zone': { primary: '数据交易', secondary: '特色专区', title: '语料数据专区' },
-                'city-governance-zone': { primary: '数据交易', secondary: '特色专区', title: '城市治理专区' },
-                'medical-health-zone': { primary: '数据交易', secondary: '特色专区', title: '医疗健康专区' },
-                'embodied-intelligence-zone': { primary: '数据交易', secondary: '特色专区', title: '具身智能专区' },
-                'merchant-onboarding': { primary: '数商生态', secondary: '生态合作', title: '数商入驻' },
-                'ecosystem-cooperation': { primary: '数商生态', secondary: '', title: '生态合作' },
-                'industry-education': { primary: '数商生态', secondary: '', title: '产教融合' },
-                'space-language': { primary: '数商生态', secondary: '空间互联', title: '语言服务可信数据空间' },
-                'space-city-governance': { primary: '数商生态', secondary: '空间互联', title: '城市治理可信数据空间' },
-                'space-agri-trade': { primary: '数商生态', secondary: '空间互联', title: '农贸可信数据空间' }
+                'corpus-data-zone': { primary: '数据聚合', secondary: '按业务场景找数据', title: '语料数据专区' },
+                'city-governance-zone': { primary: '数据聚合', secondary: '按业务场景找数据', title: '城市治理专区' },
+                'medical-health-zone': { primary: '数据聚合', secondary: '按业务场景找数据', title: '医疗健康专区' },
+                'embodied-intelligence-zone': { primary: '数据聚合', secondary: '按业务场景找数据', title: '具身智能专区' },
+                'merchant-onboarding': { primary: '生态聚合', secondary: '供需对接', title: '数商入驻' },
+                'ecosystem-cooperation': { primary: '生态聚合', secondary: '', title: '生态合作' },
+                'industry-education': { primary: '生态聚合', secondary: '社区交流与共建', title: '产教融合' },
+                'app-shumei-content': { primary: '应用聚合', secondary: '生态伙伴应用', title: '数美天净' },
+                'app-shumei-risk': { primary: '应用聚合', secondary: '生态伙伴应用', title: '数美天网' },
+                'app-volcano-ark': { primary: '应用聚合', secondary: '生态伙伴应用', title: '火山方舟' },
+                'app-doubao-speech': { primary: '应用聚合', secondary: '生态伙伴应用', title: '豆包语音' },
+                'app-cloud-collaboration': { primary: '应用聚合', secondary: '生态伙伴应用', title: '云上数据协作' },
+                'partner-applications': { primary: '应用聚合', secondary: '', title: '生态伙伴应用' },
+                'partner-application-join': { primary: '应用聚合', secondary: '生态伙伴应用', title: '应用共创伙伴加入' }
             };
             var key = new URLSearchParams(window.location.search).get('page') || '';
+            var migratedPages = new Map([
+                ['space-language', 'data-space.html?space=language'],
+                ['space-city-governance', 'data-space.html?space=city-governance'],
+                ['space-agri-trade', 'data-space.html?space=agri-trade'],
+                ['governance-standards-data', 'special-zone.html?zone=data-standards-zone'],
+                ['partner-directory', 'partner-directory.html'],
+                ['partner-shumei', 'partner-detail.html?id=shumei'],
+                ['partner-volcano', 'partner-detail.html?id=volcano'],
+                ['partner-cec-cloud', 'partner-detail.html?id=cec-cloud']
+            ]);
+            if (migratedPages.has(key)) {
+                window.location.replace(migratedPages.get(key));
+                return;
+            }
             var page = pages[key] || { primary: '首页', secondary: '', title: '页面建设中' };
             var secondaryLabel = document.getElementById('secondaryLabel');
             var secondarySeparator = document.getElementById('secondarySeparator');

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机构认证管理 · 运营中心</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/monitor-pages.css">
+    <link rel="stylesheet" href="css/operation-organization-certification.css">
+</head>
+<body>
+    <div data-admin-topbar data-active="operation"></div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content org-certification" id="organization-certification">
+            <section id="org-list" class="monitor-data-page" aria-labelledby="org-list-title">
+                <h1 class="monitor-page-title" id="org-list-title" tabindex="-1">机构认证管理</h1>
+                <div class="filter-bar org-toolbar">
+                    <form class="org-filters" id="org-filters" aria-label="机构查询条件">
+                        <div class="org-search">
+                            <input class="filter-input" name="keyword" type="search" placeholder="请输入机构名称/统一社会信用代码搜索" aria-label="机构名称或统一社会信用代码">
+                            <button class="monitor-btn" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span>查询</button>
+                        </div>
+                        <label class="org-status-filter">
+                            <span>状态</span>
+                            <select class="filter-select" name="status" aria-label="认证状态">
+                                <option value="">请选择</option>
+                                <option value="已认证">已认证</option>
+                            </select>
+                        </label>
+                        <div class="monitor-date-range org-date-range" role="group" aria-label="认证时间">
+                            <span class="monitor-date-range-label">认证时间</span>
+                            <label class="org-date-field is-empty">
+                                <input class="monitor-date-input" name="startDate" type="date" aria-label="开始日期" aria-describedby="org-date-error">
+                                <span aria-hidden="true">开始日期</span>
+                            </label>
+                            <i aria-hidden="true">-</i>
+                            <label class="org-date-field is-empty">
+                                <input class="monitor-date-input" name="endDate" type="date" aria-label="结束日期" aria-describedby="org-date-error">
+                                <span aria-hidden="true">结束日期</span>
+                            </label>
+                        </div>
+                    </form>
+                    <button class="monitor-btn primary org-export" id="org-export" type="button"><span class="material-symbols-outlined" aria-hidden="true">download</span>导出</button>
+                </div>
+                <p class="org-query-error" id="org-date-error" role="status" hidden>开始日期不能晚于结束日期。</p>
+                <div class="monitor-table-card">
+                    <div class="monitor-table-scroll">
+                        <table class="data-table org-table org-list-table" aria-label="机构管理列表">
+                            <colgroup>
+                                <col class="org-col-name"><col class="org-col-code"><col class="org-col-person">
+                                <col class="org-col-phone"><col class="org-col-status"><col class="org-col-date"><col class="org-col-action">
+                            </colgroup>
+                            <thead><tr>
+                                <th scope="col">机构名称</th>
+                                <th scope="col">统一社会信用代码</th>
+                                <th scope="col">法定代表人</th>
+                                <th scope="col">法人/被授权人手机号</th>
+                                <th scope="col">状态</th>
+                                <th scope="col">认证时间</th>
+                                <th scope="col">操作</th>
+                            </tr></thead>
+                            <tbody id="org-list-rows"></tbody>
+                        </table>
+                    </div>
+                    <nav class="pagination-bar org-pagination" id="org-pagination" aria-label="机构列表分页"></nav>
+                </div>
+            </section>
+
+            <section id="org-detail" class="monitor-data-page" aria-labelledby="org-detail-title" hidden>
+                <header class="org-detail-header">
+                    <a class="link-green org-action" href="#"><span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>返回</a>
+                    <h1 id="org-detail-title" tabindex="-1"></h1>
+                    <span class="monitor-status success" id="org-detail-status"></span>
+                </header>
+                <section class="org-info-card org-summary" aria-label="机构基本信息">
+                    <h2 class="contract-detail-heading org-section-title">机构基本信息</h2>
+                    <dl class="org-fields" id="org-profile-fields"></dl>
+                    <div class="org-license">
+                        <p>营业执照或其他证件照片：</p>
+                        <button class="org-license-button" id="org-license-button" type="button" aria-label="预览营业执照">
+                            <img src="images/organization-license-redacted-v2.png" alt="营业执照（信息已打码）">
+                        </button>
+                        <span id="org-license-empty" hidden>--</span>
+                    </div>
+                    <dl class="org-fields org-description" id="org-description-fields"></dl>
+                </section>
+                <div class="org-detail-tabs-card">
+                    <div class="content-tabs org-tabs" role="tablist" aria-label="机构详情">
+                        <button class="content-tab active" id="org-tab-members" type="button" role="tab" aria-controls="org-members" aria-selected="true">成员</button>
+                        <button class="content-tab" id="org-tab-business" type="button" role="tab" aria-controls="org-business" aria-selected="false" tabindex="-1">业务开通</button>
+                        <button class="content-tab" id="org-tab-connector" type="button" role="tab" aria-controls="org-connector" aria-selected="false" tabindex="-1">连接器</button>
+                        <button class="content-tab" id="org-tab-credential" type="button" role="tab" aria-controls="org-credential" aria-selected="false" tabindex="-1">可信凭证</button>
+                        <button class="content-tab" id="org-tab-extra" type="button" role="tab" aria-controls="org-extra" aria-selected="false" tabindex="-1">附属信息</button>
+                    </div>
+                    <section class="org-tab-panel" id="org-members" role="tabpanel" aria-labelledby="org-tab-members">
+                        <form class="org-search org-member-search" id="org-member-filters" aria-label="成员查询条件">
+                            <input class="filter-input" name="keyword" type="search" placeholder="请输入关键字搜索" aria-label="用户、姓名或手机号">
+                            <button class="monitor-btn" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span>查询</button>
+                        </form>
+                        <div class="monitor-table-scroll">
+                            <table class="data-table org-table org-member-table" aria-label="机构成员">
+                                <colgroup><col class="org-col-account"><col><col><col><col class="org-col-toggle"></colgroup>
+                                <thead><tr>
+                                    <th scope="col">用户</th>
+                                    <th scope="col">姓名</th>
+                                    <th scope="col">手机号</th>
+                                    <th scope="col" id="org-member-expiry" aria-sort="none">
+                                        <button type="button" class="org-sort" id="org-member-sort">有效截止日期<span class="material-symbols-outlined" aria-hidden="true">unfold_more</span></button>
+                                    </th>
+                                    <th scope="col">启用</th>
+                                </tr></thead>
+                                <tbody id="org-member-rows"></tbody>
+                            </table>
+                        </div>
+                        <nav class="pagination-bar org-pagination" id="org-member-pagination" aria-label="成员列表分页"></nav>
+                    </section>
+                    <section class="org-tab-panel" id="org-business" role="tabpanel" aria-labelledby="org-tab-business" tabindex="0" hidden></section>
+                    <section class="org-tab-panel" id="org-connector" role="tabpanel" aria-labelledby="org-tab-connector" tabindex="0" hidden></section>
+                    <section class="org-tab-panel" id="org-credential" role="tabpanel" aria-labelledby="org-tab-credential" tabindex="0" hidden></section>
+                    <section class="org-tab-panel" id="org-extra" role="tabpanel" aria-labelledby="org-tab-extra" tabindex="0" hidden></section>
+                </div>
+            </section>
+
+            <template id="org-pagination-template">
+                <span class="pagination-info org-page-total" aria-live="polite"></span>
+                <button class="page-btn ghost" type="button" data-page-step="-1" aria-label="上一页"><span class="material-symbols-outlined" aria-hidden="true">chevron_left</span></button>
+                <span class="page-btn active" aria-current="page">1</span>
+                <button class="page-btn ghost" type="button" data-page-step="1" aria-label="下一页"><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></button>
+                <select class="page-size-select" aria-label="每页条数">
+                    <option value="5">5 条/页</option>
+                    <option value="10" selected>10 条/页</option>
+                    <option value="20">20 条/页</option>
+                    <option value="50">50 条/页</option>
+                </select>
+                <form class="org-page-jump">
+                    <label>前往 <input class="page-jumper" type="number" min="1" aria-label="跳转页码"></label>
+                </form>
+            </template>
+
+            <dialog class="g-dialog-box org-dialog" id="org-dialog" aria-labelledby="org-dialog-title">
+                <header class="g-dialog-confirm-header">
+                    <h2 class="g-dialog-title" id="org-dialog-title"></h2>
+                    <form method="dialog">
+                        <button class="g-dialog-confirm-close" type="submit" aria-label="关闭"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+                    </form>
+                </header>
+                <div class="org-dialog-body" id="org-dialog-body"></div>
+            </dialog>
+            <dialog class="monitor-drawer org-connector-drawer" id="org-connector-drawer" aria-labelledby="org-connector-drawer-title">
+                <header class="monitor-drawer-head">
+                    <button class="monitor-drawer-close" id="org-connector-drawer-close" type="button" aria-label="关闭连接器详情"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+                    <h2 class="monitor-drawer-title" id="org-connector-drawer-title">连接器详情</h2>
+                </header>
+                <div class="monitor-drawer-body" id="org-connector-drawer-body"></div>
+            </dialog>
+            <dialog class="monitor-drawer org-connector-drawer org-application-drawer" id="org-application-drawer" aria-labelledby="org-application-drawer-title">
+                <header class="monitor-drawer-head">
+                    <button class="monitor-drawer-close" id="org-application-drawer-close" type="button" aria-label="关闭申请详情"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+                    <h2 class="monitor-drawer-title" id="org-application-drawer-title">申请详情</h2>
+                </header>
+                <div class="monitor-drawer-body" id="org-application-drawer-body"></div>
+            </dialog>
+        </main>
+    </div>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/organization-certification-store.js"></script>
+    <script src="js/operation-organization-certification.js"></script>
+</body>
+</html>

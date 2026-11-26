@@ -1,0 +1,39 @@
+.line-admin [hidden] { display: none; }
+.line-admin .zone-admin-table { min-width: 1280px; }
+.line-admin-name-column { width: 20%; }
+.line-admin-time-column { width: 164px; }
+.line-admin-actions-column { width: 440px; }
+.line-admin .zone-row-action { font-size: 13px; }
+.line-admin .zone-table-actions { flex-wrap: nowrap; }
+.line-admin .zone-table-actions .zone-row-action { flex: 0 0 auto; white-space: nowrap; }
+.line-admin .zone-table-status { white-space: nowrap; }
+.line-admin .zone-status-tag.draft { background: #f4f4f5; color: #909399; }
+.line-admin .zone-status-tag.offline { background: #fdf6ec; color: #e6a23c; }
+.line-admin .zone-admin-description { max-width: none; margin: 0; font-size: inherit; overflow-wrap: anywhere; }
+.line-admin .zone-admin-button .material-symbols-outlined,
+.line-admin .zone-row-action .material-symbols-outlined,
+.line-admin .page-btn .material-symbols-outlined,
+.line-admin-editor .service-back-btn .material-symbols-outlined,
+.line-admin-editor .service-secondary-btn .material-symbols-outlined,
+.line-admin-editor .service-create-btn .material-symbols-outlined { font-size: 16px; }
+.line-admin-editor { height: calc(100dvh - 112px); min-height: 520px; }
+.line-admin-editor .service-editor-page { height: 100%; }
+.line-admin-editor .service-editor-top { grid-template-columns: minmax(0, 1fr); }
+.line-admin-editor .service-editor-footer { flex-shrink: 0; }
+.line-admin-editor .service-editor-footer button:disabled { opacity: .55; cursor: wait; }
+.line-admin-editor .service-hero-editor-mask { align-items: flex-start; justify-content: safe flex-end; overflow: auto; overflow-wrap: anywhere; }
+.line-upload-preview {
+    display: grid;
+    place-items: center;
+    width: 132px;
+    height: 74px;
+    border-radius: 6px;
+    color: #60716a;
+    background: #edf1ef;
+}
+.line-admin-editor [data-line-upload] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.line-admin-editor [data-line-upload]:focus-visible + label { outline: 2px solid var(--forest-green); outline-offset: 2px; }
+.line-admin-editor [data-line-upload]:disabled + label { opacity: .55; cursor: wait; }
+@media (max-width: 1100px) {
+    .line-admin-editor .service-editor-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}

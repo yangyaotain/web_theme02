@@ -1,0 +1,7 @@
+.partner-return-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; color: var(--forest-green-700); font-size: 13px; line-height: 1.6; }
+.partner-return-link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; flex-shrink: 0; }
+.partner-return-link:hover { color: var(--forest-green); text-decoration: underline; }
+.partner-return-link:focus-visible { outline: 2px solid var(--forest-green); outline-offset: 3px; }
+.g-breadcrumb > .partner-return-link { margin: 0 16px 0 0; }
+.partner-content-empty { padding: 32px; color: var(--text-secondary); text-align: center; }
+.partner-content-detail .sample-panel pre { max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }

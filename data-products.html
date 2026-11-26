@@ -657,17 +657,19 @@
             this.classList.toggle('active');
         });
     });
-    document.querySelectorAll('.tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.tab').forEach(function(t) {
-                t.classList.remove('active');
-                t.setAttribute('aria-selected', 'false');
-            });
-            tab.classList.add('active');
-            tab.setAttribute('aria-selected', 'true');
-            activeTabName = tab.getAttribute('data-product-type');
-            renderCards();
+    var productTabs = document.querySelectorAll('.content-tabs [role="tab"]');
+    function selectProductTab(tab) {
+        productTabs.forEach(function(candidate) {
+            var selected = candidate === tab;
+            candidate.classList.toggle('active', selected);
+            candidate.setAttribute('aria-selected', String(selected));
         });
+        activeTabName = tab.getAttribute('data-product-type');
+        renderCards();
+    }
+
+    productTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() { selectProductTab(tab); });
     });
     document.querySelectorAll('.data-card').forEach(function (card) {
         card.style.cursor = 'pointer';
@@ -678,7 +680,11 @@
                 : 'product-detail.html';
         });
     });
-    renderCards();
+    var initialFilters = new URLSearchParams(window.location.search);
+    var requestedType = initialFilters.get('type');
+    if (initialFilters.has('q')) pageSearchInput.value = initialFilters.get('q').trim();
+    var initialTab = Array.from(productTabs).find(function(tab) { return tab.getAttribute('data-product-type') === requestedType; }) || productTabs[0];
+    selectProductTab(initialTab);
     })();
     </script>
 </body>

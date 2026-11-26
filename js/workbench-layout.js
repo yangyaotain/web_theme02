@@ -2770,6 +2770,9 @@
         }
 
         function normalizeSection(section) {
+            if (section && section.type === 'related-links' && window.ContentSectionEditor) {
+                return window.ContentSectionEditor.normalize({ sections: [section] }).sections[0];
+            }
             var next = {
                 title: String(section && section.title || '').trim(),
                 content: String(section && section.content || '').trim(),
@@ -3897,6 +3900,13 @@
 
         function openServicePreview() {
             var previewData = buildServicePreviewData();
+            var linksError = window.ContentSectionEditor && window.ContentSectionEditor.validate(previewData);
+            if (linksError) {
+                noticeText = linksError;
+                editorStep = 'intro';
+                renderServiceEditor();
+                return;
+            }
             if (previewData.category === '行业解决方案') {
                 var previewToken = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
                 try {
@@ -3921,6 +3931,13 @@
 
         function persistEditorData() {
             collectEditorData();
+            var linksError = window.ContentSectionEditor && window.ContentSectionEditor.validate(editorData);
+            if (linksError) {
+                noticeText = linksError;
+                editorStep = 'intro';
+                renderServiceEditor();
+                return;
+            }
             if (editorData.category === '行业解决方案') {
                 if (!String(editorData.tabTitle || '').trim() || getSolutionCategories().indexOf(editorData.portalCategory) === -1) {
                     noticeText = '请填写方案标题并选择所属分类。';

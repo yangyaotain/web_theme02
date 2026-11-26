@@ -1427,6 +1427,13 @@
             text-decoration: none;
         }
 
+        .space-example-card-details { margin-top: auto; }
+        .space-example-card-details summary { gap: 6px; }
+        .space-example-card-details summary svg { width: 15px; height: 15px; fill: currentColor; }
+        .space-example-card-details p { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
+        .space-example-empty { padding: 28px 16px; text-align: center; color: var(--text-secondary); font-size: 14px; }
+        .space-overview-link:hover { background: var(--forest-green-50); }
+
         .space-market-pagination {
             display: flex;
             align-items: center;
@@ -1584,7 +1591,7 @@
 
                 <!-- Tab 1: 空间介绍 -->
                 <div class="space-tab-content active" data-subtab="intro">
-                    <p class="article-lead">龙岗区作为深圳市数据要素改革试点区，积极探索数据空间建设运营模式，以"构建数据可信流通环境、释放数据要素价值"为核心，围绕公共数据授权运营，聚焦低空经济、具身智能、医药健康、文化艺术等重点领域，打造多领域融合的可信数据空间体系。</p>
+                    <p class="article-lead">龙岗区作为深圳市数据要素改革试点区，积极探索数据空间建设运营模式，以“构建数据可信流通环境、释放数据要素价值”为核心，聚合语言服务、城市治理、具身智能、公共数据和农贸等专题空间。</p>
                     <div class="stats-banner">
                         <div class="stat-card"><div class="stat-number">292<span class="stat-unit">亿+</span></div><div class="stat-label">数据资源总量</div></div>
                         <div class="stat-card"><div class="stat-number">5<span class="stat-unit">大</span></div><div class="stat-label">可信数据空间</div></div>
@@ -1600,21 +1607,15 @@
                         <p class="section-content">建设区级公共数据授权运营平台，构建"1+N"公共数据授权运营体系，以公共数据为牵引，带动行业数据、区域数据的融合应用与价值挖掘。数据服务调用量已突破12.62亿次，涵盖企业工商、地理信息、交通出行、医疗健康等多个领域。</p>
                     </section>
                     <section class="article-section">
-                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">公共数据与四大行业数据空间</h2></div>
-                        <div class="feature-grid">
-                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3L2 8v2h20V8L12 3zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-3v-7h-4v7H7v-7H5z"/></svg></div><div><div class="feature-title">公共数据可信数据空间</div><div class="feature-desc">以公共数据授权运营为牵引，推动政务、民生、产业数据可信流通</div></div></div>
-                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div><div><div class="feature-title">低空经济可信数据空间</div><div class="feature-desc">388km²低空空域覆盖，构建"空中高德"时空数字底座</div></div></div>
-                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div><div class="feature-title">具身智能可信数据空间</div><div class="feature-desc">1500+高质量数据集，赋能机器人产业创新</div></div></div>
-                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6z"/></svg></div><div><div class="feature-title">医药健康可信数据空间</div><div class="feature-desc">AI赋能智慧医疗，推动健康产业数字化转型</div></div></div>
-                            <div class="feature-card"><div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div><div><div class="feature-title">文化艺术可信数据空间</div><div class="feature-desc">数字创意产业走廊，文化数据资产化先行先试</div></div></div>
-                        </div>
+                        <div class="section-header"><span class="section-number">3</span><h2 class="section-title">五个专题空间</h2></div>
+                        <div class="feature-grid" id="spaceOverviewLinks"></div>
                     </section>
                     <section class="article-section">
                         <div class="section-header"><span class="section-number">4</span><h2 class="section-title">数商生态：培育数据服务主体</h2></div>
                         <p class="section-content">龙岗区大力培育数商生态，引入数据集成、安全审计、数据经纪、合规评估等各类专业服务机构，构建完善的数据服务支撑体系。通过举办数据应用创新大赛、建设数据要素集聚园区等举措，持续吸引优质数商资源集聚，推动数据要素市场健康发展。</p>
                     </section>
                     <div class="cta-section">
-                        <div class="cta-content"><h3>探索龙岗可信数据空间</h3><p>通过顶部“空间互联”导航，直接进入各数据空间详情</p></div>
+                        <div class="cta-content"><h3>探索龙岗可信数据空间</h3><p>打开顶部【数据聚合】，在【龙岗公开目录收录的专题空间】中选择要查看的空间。</p></div>
                         <a href="https://lgdata.lggov.cn/index" target="_blank" class="cta-button">进入空间</a>
                     </div>
                 </div>
@@ -3713,8 +3714,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-
+    <script src="js/space-example-data.js"></script>
     <script>
     (function() {
         function escapeHtml(text) {
@@ -3725,6 +3725,72 @@
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
         }
+
+        var exampleSpaces = window.SpaceExampleCatalog;
+        var exampleIcons = {
+            intro: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/>',
+            resources: '<path d="M20 6h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-6 10H6v-2h8zm4-4H6v-2h12z"/>',
+            products: '<path d="M3 3h18v18H3zm2 2v14h14V5zm1 12 3-4 2 2 3-4 4 6z"/>',
+            apply: '<path d="M18 3h-3a3 3 0 0 0-6 0H6a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-6-1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-2 16-3-3 1.4-1.4 1.6 1.6 5-5L16.4 11z"/>'
+        };
+
+        function exampleIcon(name) {
+            return '<svg viewBox="0 0 24 24" aria-hidden="true">' + exampleIcons[name] + '</svg>';
+        }
+
+        function renderExamplePanel(key, space) {
+            var name = escapeHtml(space.title);
+            var tabs = { intro: '空间介绍', resources: '数据资源', products: '数据产品' };
+            return `<div class="article-panel" data-panel="${key}"><article class="article">
+                <div class="article-hero" style="background-image: url('${escapeHtml(space.cover)}')">
+                    <div class="article-hero-content">
+                        <span class="article-badge">${exampleIcon('intro')}${escapeHtml(space.badge)}</span>
+                        <h1 class="article-title">${name}</h1>
+                        <p class="article-subtitle">${escapeHtml(space.subtitle)}</p>
+                    </div>
+                </div>
+                <div class="article-body">
+                    <div class="space-detail-tabs" role="tablist" aria-label="${name}栏目">
+                        ${Object.keys(tabs).map(function (tab) {
+                            var id = tab + '-' + key;
+                            return `<button type="button" class="space-tab${tab === 'intro' ? ' active' : ''}" id="tab-${id}" data-subtab="${id}" role="tab" aria-controls="panel-${id}" aria-selected="${tab === 'intro'}">${exampleIcon(tab)}${tabs[tab]}</button>`;
+                        }).join('')}
+                    </div>
+                    <div class="space-tab-content active" data-subtab="intro-${key}" id="panel-intro-${key}" role="tabpanel" aria-labelledby="tab-intro-${key}">
+                        <p class="article-lead">${escapeHtml(space.intro)}</p>
+                        ${space.sections.map(function (section, index) {
+                            return `<section class="article-section">
+                                <div class="section-header"><span class="section-number">${index + 1}</span><h2 class="section-title">${escapeHtml(section[0])}</h2></div>
+                                <p class="section-content">${escapeHtml(section[1])}</p>
+                            </section>`;
+                        }).join('')}
+                        <div class="cta-section">
+                            <div class="cta-content"><h3>加入${name}</h3><p>填写申请有效期与使用用途，申请加入空间。</p></div>
+                            <button type="button" class="cta-button" data-service-apply data-service-name="${name}" data-service-type="可信数据空间">${exampleIcon('apply')}立即申请加入</button>
+                        </div>
+                    </div>
+                    <div class="space-tab-content" data-subtab="resources-${key}" id="panel-resources-${key}" role="tabpanel" aria-labelledby="tab-resources-${key}"></div>
+                    <div class="space-tab-content" data-subtab="products-${key}" id="panel-products-${key}" role="tabpanel" aria-labelledby="tab-products-${key}"></div>
+                </div>
+            </article></div>`;
+        }
+
+        var overviewSpaces = [
+            ['language', exampleSpaces.language.title, exampleSpaces.language.subtitle],
+            ['city-governance', exampleSpaces['city-governance'].title, exampleSpaces['city-governance'].subtitle],
+            ['embodied', '具身智能可信数据空间', '面向机器人与具身智能数据协作。'],
+            ['public', '公共数据可信数据空间', '支撑公共数据的可信流通与开发利用。'],
+            ['agri-trade', exampleSpaces['agri-trade'].title, exampleSpaces['agri-trade'].subtitle]
+        ];
+        document.getElementById('spaceOverviewLinks').innerHTML = overviewSpaces.map(function (space) {
+            return `<a class="feature-card space-overview-link" href="data-space.html?space=${space[0]}">
+                <div class="feature-icon">${exampleIcon('resources')}</div>
+                <div><div class="feature-title">${escapeHtml(space[1])}</div><div class="feature-desc">${escapeHtml(space[2])}</div></div>
+            </a>`;
+        }).join('');
+        document.querySelector('main').insertAdjacentHTML('beforeend', Object.keys(exampleSpaces).map(function (key) {
+            return renderExamplePanel(key, exampleSpaces[key]);
+        }).join(''));
 
         var marketCategories = ['金融服务', '城市治理', '宏观经济', '智慧教育', '医疗健康', '工业制造', '商贸流通', '现代农业', '低空经济', '应急管理', '科技创新', '社会信用', '生物制造', '就业创业', '交通运输', '文化旅游', '其他'];
         var marketIndustries = ['农、林、牧、渔业', '采矿业', '制造业', '电力、热力、燃气及水生产和供应业', '建筑业', '批发和零售业', '交通运输、仓储和邮政业', '住宿和餐饮业', '信息传输、软件和信息技术服务业', '金融业', '房地产业', '租赁和商务服务业', '科学研究和技术服务业', '水利、环境和公共设施管理业', '居民服务、修理和其他服务业', '教育', '卫生和社会工作', '文化、体育和娱乐业', '公共管理、社会保障和社会组织', '国际组织'];
@@ -3816,7 +3882,7 @@
 
         function getMarketConfig(panel) {
             var key = panel && panel.dataset ? panel.dataset.panel : 'overview';
-            return marketData[key] || marketData.overview;
+            return exampleSpaces[key] || marketData[key] || marketData.overview;
         }
 
         function getPanelName(panel) {
@@ -3888,54 +3954,82 @@
             return '<div class="space-market-filters">' + rows.join('') + '</div>';
         }
 
-        function renderResourceCard(item) {
-            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.desc, item.source].join(' ')) + '">' +
+        function renderExampleDetails(item, kind) {
+            return '<details class="space-example-card-details">' +
+                '<summary class="space-market-action">' + exampleIcon('intro') + (kind === 'resource' ? '数据详情' : '产品详情') + '</summary>' +
+                '<p>应用场景：' + escapeHtml(item.scene) + ' · ' + (kind === 'resource' ? '资源类型：' + escapeHtml(item.type) : '更新时间：' + escapeHtml(item.date)) + '</p>' +
+                '</details>';
+        }
+
+        function exampleCardAttrs(item, index) {
+            return item.scene ? ' data-scene="' + escapeHtml(item.scene) + '" data-type="' + escapeHtml(item.type) + '" data-date="' + escapeHtml(item.date) + '" data-order="' + index + '"' : '';
+        }
+
+        function renderResourceCard(item, index) {
+            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.desc, item.source, item.scene].join(' ')) + '"' + exampleCardAttrs(item, index) + '>' +
                 '<h3 class="space-market-card-title">' + escapeHtml(item.title) + '</h3>' +
                 '<div class="space-market-card-body">' +
                     '<div class="space-market-info-row"><span class="label">资源描述:</span><span class="value">' + escapeHtml(item.desc) + '</span></div>' +
                     '<div class="space-market-info-row"><span class="label">更新时间:</span><span class="value">' + escapeHtml(item.date) + '</span></div>' +
                     '<div class="space-market-info-row"><span class="label">空间节点:</span><span class="value">' + escapeHtml(item.node) + '</span></div>' +
                     '<div class="space-market-info-row"><span class="label">数据来源:</span><span class="value">' + escapeHtml(item.source) + '</span></div>' +
-                    '<div class="space-market-actions"><a class="space-market-action" href="https://lgdata.lggov.cn/data-market/detail/86" target="_blank" rel="noopener noreferrer">数据详情</a></div>' +
+                    (item.scene ? renderExampleDetails(item, 'resource') : '<div class="space-market-actions"><a class="space-market-action" href="https://lgdata.lggov.cn/data-market/detail/86" target="_blank" rel="noopener noreferrer">数据详情</a></div>') +
                 '</div>' +
             '</article>';
         }
 
-        function renderProductCard(item) {
-            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.intro, item.type, item.industry].join(' ')) + '">' +
+        function renderProductCard(item, index) {
+            return '<article class="space-market-card" data-card-text="' + escapeHtml([item.title, item.intro, item.type, item.industry, item.scene].join(' ')) + '"' + exampleCardAttrs(item, index) + '>' +
                 '<h3 class="space-market-card-title">' + escapeHtml(item.title) + '</h3>' +
                 '<div class="space-market-card-body">' +
                     '<div class="space-market-info-row"><span class="label">产品介绍:</span><span class="value">' + escapeHtml(item.intro) + '</span></div>' +
                     '<div class="space-market-info-row"><span class="label">产品类型:</span><span class="value">' + escapeHtml(item.type) + '</span></div>' +
                     '<div class="space-market-info-row"><span class="label">所属行业:</span><span class="value">' + escapeHtml(item.industry) + '</span></div>' +
-                    '<div class="space-market-actions"><a class="space-market-action" href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GHX" target="_blank" rel="noopener noreferrer">产品详情</a></div>' +
+                    (item.scene ? renderExampleDetails(item, 'product') : '<div class="space-market-actions"><a class="space-market-action" href="https://lgdata.lggov.cn/product-market/detail/691440300MAK44QCD2M3501CW4KK3GHX" target="_blank" rel="noopener noreferrer">产品详情</a></div>') +
                 '</div>' +
             '</article>';
         }
 
-        function renderMarketMain(kind, items) {
+        function renderExampleSidebar(items) {
+            var scenes = ['全部'].concat(Array.from(new Set(items.map(function (item) { return item.scene; }))));
+            return '<aside class="space-market-sidebar"><div class="space-market-sidebar-title">应用场景</div>' +
+                scenes.map(function (scene, index) {
+                    return '<button type="button" class="space-market-category' + (index === 0 ? ' active' : '') + '" data-example-scene="' + (index === 0 ? '' : escapeHtml(scene)) + '" aria-pressed="' + (index === 0) + '"><span>' + escapeHtml(scene) + '</span></button>';
+                }).join('') + '</aside>';
+        }
+
+        function renderExampleFilters(kind, items) {
+            var types = ['全部'].concat(Array.from(new Set(items.map(function (item) { return item.type; }))));
+            return '<div class="space-market-filters"><div class="space-market-filter-row">' +
+                '<div class="space-market-filter-label">' + (kind === 'resource' ? '资源类型' : '产品类型') + '：</div><div class="space-market-filter-options">' +
+                types.map(function (type, index) {
+                    return '<button type="button" class="space-market-filter-option' + (index === 0 ? ' active' : '') + '" data-example-type="' + (index === 0 ? '' : escapeHtml(type)) + '" aria-pressed="' + (index === 0) + '">' + escapeHtml(type) + '</button>';
+                }).join('') + '</div></div></div>';
+        }
+
+        function renderMarketMain(kind, items, isExample) {
             var label = kind === 'resource' ? '数据资源' : '数据产品';
-            return '<section class="space-market-main" data-market-kind="' + kind + '">' +
+            return '<section class="space-market-main" data-market-kind="' + kind + '"' + (isExample ? ' data-example-market' : '') + '>' +
                 '<div class="space-market-search">' +
                     '<input type="text" class="space-market-search-input" placeholder="请输入搜索内容">' +
                     '<button type="button" class="space-market-search-button" aria-label="搜索"><svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 0 1 5.16 10.45l5.45 5.44-1.42 1.42-5.44-5.45A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg></button>' +
                 '</div>' +
-                renderMarketFilters(kind) +
+                (isExample ? renderExampleFilters(kind, items) : renderMarketFilters(kind)) +
                 '<div class="space-market-result-bar">' +
                     '<div class="space-market-count">共 <strong>' + items.length + '</strong> 个' + label + '</div>' +
-                    '<div class="space-market-sort-group"><button type="button" class="space-market-sort active">默认排序</button><button type="button" class="space-market-sort">更新时间排序</button></div>' +
+                    '<div class="space-market-sort-group"><button type="button" class="space-market-sort active" data-sort="default">默认排序</button><button type="button" class="space-market-sort" data-sort="date">更新时间排序</button></div>' +
                 '</div>' +
                 '<div class="space-market-cards ' + kind + '">' +
                     items.map(kind === 'resource' ? renderResourceCard : renderProductCard).join('') +
                 '</div>' +
-                '<div class="space-market-pagination">' +
+                (isExample ? '<p class="space-example-empty" role="status" hidden>未找到相关' + label + '</p>' : '<div class="space-market-pagination">' +
                     '<span>共 ' + items.length + ' 条</span>' +
                     '<select class="space-market-page-size"><option>9条/页</option><option>18条/页</option></select>' +
                     '<button type="button" class="space-market-page-btn disabled">‹</button>' +
                     '<button type="button" class="space-market-page-btn active">1</button>' +
                     '<button type="button" class="space-market-page-btn">›</button>' +
                     '<span>前往</span><input class="space-market-jump-input" value="1"><span>页</span>' +
-                '</div>' +
+                '</div>') +
             '</section>';
         }
 
@@ -3949,8 +4043,11 @@
                 var panel = content.closest('.article-panel');
                 var config = getMarketConfig(panel);
                 var kind = isResource ? 'resource' : 'product';
-                var items = ensureSixMarketItems(kind, isResource ? config.resources : config.products, getPanelName(panel));
-                content.innerHTML = '<div class="space-market-layout">' + renderMarketSidebar(kind) + renderMarketMain(kind, items) + '</div>';
+                var isExample = Boolean(exampleSpaces[panel.dataset.panel]);
+                var items = isResource ? config.resources : config.products;
+                if (!isExample) items = ensureSixMarketItems(kind, items, getPanelName(panel));
+                content.innerHTML = '<div class="space-market-layout">' +
+                    (isExample ? renderExampleSidebar(items) : renderMarketSidebar(kind)) + renderMarketMain(kind, items, isExample) + '</div>';
             });
         }
 
@@ -3962,6 +4059,8 @@
             var pager = marketMain.querySelector('.space-market-pagination span');
             if (count) count.textContent = visible;
             if (pager) pager.textContent = '共 ' + visible + ' 条';
+            var empty = marketMain.querySelector('.space-example-empty');
+            if (empty) empty.hidden = visible > 0;
             var label = marketMain.querySelector('.space-market-count');
             if (label) label.lastChild.textContent = ' 个' + kind;
         }
@@ -3969,9 +4068,15 @@
         function filterMarketCards(marketMain) {
             var input = marketMain.querySelector('.space-market-search-input');
             var keyword = input ? input.value.trim().toLowerCase() : '';
+            var layout = marketMain.closest('.space-market-layout');
+            var sceneButton = layout && layout.querySelector('[data-example-scene].active');
+            var typeButton = marketMain.querySelector('[data-example-type].active');
+            var scene = sceneButton ? sceneButton.dataset.exampleScene : '';
+            var type = typeButton ? typeButton.dataset.exampleType : '';
             marketMain.querySelectorAll('.space-market-card').forEach(function (card) {
                 var text = (card.dataset.cardText || card.textContent || '').toLowerCase();
-                card.style.display = !keyword || text.indexOf(keyword) > -1 ? '' : 'none';
+                var matches = (!keyword || text.indexOf(keyword) > -1) && (!scene || scene === card.dataset.scene) && (!type || type === card.dataset.type);
+                card.style.display = matches ? '' : 'none';
             });
             updateMarketCount(marketMain);
         }
@@ -3987,8 +4092,9 @@
             health: '2',
             culture: '3'
         };
+        Object.keys(exampleSpaces).forEach(function (key) { spaceRouteMap[key] = key; });
         var requestedSpace = new URLSearchParams(window.location.search).get('space') || 'overview';
-        var selectedPanel = spaceRouteMap[requestedSpace] || spaceRouteMap.overview;
+        var selectedPanel = Object.prototype.hasOwnProperty.call(spaceRouteMap, requestedSpace) ? spaceRouteMap[requestedSpace] : spaceRouteMap.overview;
 
         panels.forEach(function(panel) {
             panel.classList.toggle('active', panel.dataset.panel === selectedPanel);
@@ -4022,7 +4128,7 @@
             });
         });
 
-        // 子空间(panel 0-3)的Tab切换 - 使用事件委托
+        // 各专题空间的 Tab 切换。
         document.addEventListener('click', function(e) {
             // 查找被点击的Tab按钮
             var tabBtn = e.target.closest('.space-tab');
@@ -4037,8 +4143,10 @@
             var contents = panel.querySelectorAll('.space-tab-content');
             
             // 切换Tab高亮
-            tabs.forEach(function(t) { t.classList.remove('active'); });
-            tabBtn.classList.add('active');
+            tabs.forEach(function(t) {
+                t.classList.toggle('active', t === tabBtn);
+                if (t.hasAttribute('aria-selected')) t.setAttribute('aria-selected', String(t === tabBtn));
+            });
             
             // 切换内容显示
             contents.forEach(function(content) {
@@ -4055,6 +4163,10 @@
                 var sidebar = categoryBtn.closest('.space-market-sidebar');
                 sidebar.querySelectorAll('.space-market-category').forEach(function(btn) { btn.classList.remove('active'); });
                 categoryBtn.classList.add('active');
+                if (categoryBtn.hasAttribute('data-example-scene')) {
+                    sidebar.querySelectorAll('[data-example-scene]').forEach(function (button) { button.setAttribute('aria-pressed', String(button === categoryBtn)); });
+                    filterMarketCards(sidebar.closest('.space-market-layout').querySelector('[data-example-market]'));
+                }
                 return;
             }
 
@@ -4063,6 +4175,10 @@
                 var row = filterBtn.closest('.space-market-filter-row');
                 row.querySelectorAll('.space-market-filter-option').forEach(function(btn) { btn.classList.remove('active'); });
                 filterBtn.classList.add('active');
+                if (filterBtn.hasAttribute('data-example-type')) {
+                    row.querySelectorAll('[data-example-type]').forEach(function (button) { button.setAttribute('aria-pressed', String(button === filterBtn)); });
+                    filterMarketCards(filterBtn.closest('[data-example-market]'));
+                }
                 return;
             }
 
@@ -4071,6 +4187,15 @@
                 var sortGroup = sortBtn.closest('.space-market-sort-group');
                 sortGroup.querySelectorAll('.space-market-sort').forEach(function(btn) { btn.classList.remove('active'); });
                 sortBtn.classList.add('active');
+                var exampleMarket = sortBtn.closest('[data-example-market]');
+                if (exampleMarket) {
+                    var cards = exampleMarket.querySelector('.space-market-cards');
+                    Array.from(cards.children).sort(function (a, b) {
+                        return sortBtn.dataset.sort === 'date'
+                            ? b.dataset.date.localeCompare(a.dataset.date)
+                            : Number(a.dataset.order) - Number(b.dataset.order);
+                    }).forEach(function (card) { cards.appendChild(card); });
+                }
                 return;
             }
 

@@ -305,6 +305,8 @@
             return;
         }
 
+        var reportPending = this.options.onUploadPending;
+        if (reportPending) reportPending(true);
         Promise.all(acceptedFiles.map(function (file) {
             return new Promise(function (resolve, reject) {
                 var reader = new FileReader();
@@ -325,7 +327,9 @@
             if (validationMessage) this.options.onError(validationMessage);
         }.bind(this)).catch(function () {
             this.options.onError('图片读取失败，请重新选择。');
-        }.bind(this));
+        }.bind(this)).finally(function () {
+            if (reportPending) reportPending(false);
+        });
     };
 
     function mount(root, options) {

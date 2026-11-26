@@ -53,7 +53,7 @@
         function filteredZones() {
             var keyword = keywordInput.value.trim().toLowerCase();
             var status = statusSelect.value;
-            return SpecialZoneStore.listZones().filter(function (zone) {
+            return SpecialZoneStore.listManagedZones().filter(function (zone) {
                 if (keyword && String(zone.name || '').toLowerCase().indexOf(keyword) === -1) return false;
                 if (status && zone.status !== status) return false;
                 return true;
@@ -108,7 +108,7 @@
 
         function render() {
             var zones = filteredZones();
-            var allZones = SpecialZoneStore.listZones();
+            var allZones = SpecialZoneStore.listManagedZones();
             var pageCount = Math.max(1, Math.ceil(zones.length / paginationState.pageSize));
             if (paginationState.page > pageCount) paginationState.page = pageCount;
             var start = (paginationState.page - 1) * paginationState.pageSize;
@@ -162,10 +162,21 @@
             });
             storeState.zones = zones;
             SpecialZoneStore.write(storeState);
-            render();
         }
 
         function publishZone(zone) {
+            if (!String(zone.subtitle || '').trim()) {
+                GlobalDialog.warning({
+                    title: '请填写副标题',
+                    desc: '发布前请完善副标题，用于对应的门户入口展示。',
+                    confirmText: '去编辑',
+                    cancelText: '取消',
+                    onConfirm: function () {
+                        window.location.href = 'cms-special-zone-form.html?id=' + encodeURIComponent(zone.id);
+                    }
+                });
+                return;
+            }
             if (!(zone.resourceIds || []).length || !(zone.productIds || []).length) {
                 GlobalDialog.warning({
                     title: '暂不能发布',
@@ -180,12 +191,11 @@
             }
             GlobalDialog.confirm({
                 title: '发布特色专区',
-                desc: '发布后【' + escapeHtml(zone.name) + '】将显示在门户“特色专区”菜单中。',
+                desc: '发布后可查看专区页面，已关联的门户菜单同步显示副标题。',
                 confirmText: '确认发布',
                 onConfirm: function () {
                     zone.status = 'published';
                     SpecialZoneStore.saveZone(zone);
-                    render();
                     showSuccess('发布成功', '门户导航及专区页面已更新。');
                 }
             });
@@ -218,12 +228,11 @@
             if (action === 'offline') {
                 GlobalDialog.warning({
                     title: '下架特色专区',
-                    desc: '下架后【' + escapeHtml(zone.name) + '】将从门户导航中隐藏，配置内容仍会保留。',
+                    desc: '下架后【' + escapeHtml(zone.name) + '】及已关联的门户入口将隐藏，当前配置仍可继续编辑。',
                     confirmText: '确认下架',
                     onConfirm: function () {
                         zone.status = 'offline';
                         SpecialZoneStore.saveZone(zone);
-                        render();
                         showSuccess('下架成功', '专区配置已保留，可再次编辑和发布。');
                     }
                 });
@@ -243,7 +252,6 @@
                     confirmText: '确认删除',
                     onConfirm: function () {
                         SpecialZoneStore.removeZone(id);
-                        render();
                         showSuccess('删除成功', '该专区配置已移除。');
                     }
                 });
@@ -283,6 +291,7 @@
             window.location.href = 'cms-special-zone-form.html?mode=create';
         });
         render();
+        window.addEventListener('special-zone-store-change', render);
     }
 
     function initForm() {
@@ -292,14 +301,19 @@
         var storeState = SpecialZoneStore.read();
         var params = new URLSearchParams(window.location.search);
         var mode = params.get('mode') === 'create' ? 'create' : 'edit';
-        var zoneId = params.get('id') || 'corpus-data-zone';
-        var savedZone = mode === 'create' ? null : SpecialZoneStore.getZone(zoneId);
+        var zoneId = params.get('id') || 'city-governance-zone';
+        var savedZone = mode === 'create' ? null : storeState.zones.find(function (entry) { return entry.id === zoneId; });
+        if (mode === 'edit' && !savedZone) {
+            window.location.replace('cms-special-zones.html');
+            return;
+        }
         var zone = savedZone ? JSON.parse(JSON.stringify(savedZone)) : {
             id: '',
             name: '',
+            subtitle: '',
             introduction: '',
             cover: 'images/hero-ai-longgang.jpg',
-            sort: SpecialZoneStore.listZones().length + 1,
+            sort: storeState.zones.length + 1,
             status: 'draft',
             resourceIds: [],
             productIds: [],
@@ -318,6 +332,7 @@
         };
 
         var nameInput = document.getElementById('zoneEditorName');
+        var subtitleInput = document.getElementById('zoneEditorSubtitle');
         var introductionInput = document.getElementById('zoneEditorIntroduction');
         var coverPreview = document.getElementById('zoneCoverPreview');
         var coverInput = document.getElementById('zoneCoverInput');
@@ -338,6 +353,7 @@
 
         function updateLengths() {
             document.getElementById('zoneNameLength').textContent = nameInput.value.length;
+            document.getElementById('zoneSubtitleLength').textContent = subtitleInput.value.length;
             document.getElementById('zoneIntroductionLength').textContent = introductionInput.value.length;
         }
 
@@ -348,7 +364,7 @@
             statusElement.className = 'zone-status-tag ' + meta.className;
             document.getElementById('zoneOfflineButton').hidden = zone.status !== 'published';
             document.getElementById('zonePublishButton').querySelector('span').textContent =
-                zone.status === 'published' ? '保存更新' : '保存并发布';
+                zone.status === 'published' ? '发布更新' : '发布专区';
         }
 
         function getCatalog(type) {
@@ -477,6 +493,7 @@
             document.getElementById('zoneEditorTitle').textContent = mode === 'create' ? '新增特色专区' : '编辑特色专区';
             document.title = '灵拓 · 数据聚合服务平台';
             nameInput.value = zone.name || '';
+            subtitleInput.value = zone.subtitle || '';
             introductionInput.value = zone.introduction || '';
             coverPreview.src = zone.cover || 'images/hero-ai-longgang.jpg';
             updateLengths();
@@ -768,6 +785,7 @@
 
         function readForm() {
             zone.name = nameInput.value.trim();
+            zone.subtitle = subtitleInput.value.trim().slice(0, subtitleInput.maxLength);
             zone.introduction = introductionInput.value.trim();
             zone.cover = coverPreview.getAttribute('src') || zone.cover;
             zone.updatedBy = '运营管理员';
@@ -777,8 +795,13 @@
         function validate(requireContent) {
             readForm();
             if (!zone.name) {
-                GlobalDialog.warning({ title: '请填写专区名称', desc: '专区名称将用于门户菜单和页面标题。' });
+                GlobalDialog.warning({ title: '请填写专区名称', desc: '专区名称将用于专区页面标题。' });
                 nameInput.focus();
+                return false;
+            }
+            if (!zone.subtitle) {
+                GlobalDialog.warning({ title: '请填写副标题', desc: '副标题用于对应的门户入口展示。' });
+                subtitleInput.focus();
                 return false;
             }
             if (!zone.introduction) {
@@ -807,14 +830,15 @@
             mode = 'edit';
             updateStatus();
             showSuccess(
-                zone.status === 'published' ? '专区已发布' : '专区已保存',
-                zone.status === 'published' ? '门户导航与专区页面已同步更新。' : '当前配置已保存，暂不会在门户展示。',
+                zone.status === 'published' ? '专区已发布' : '修改已应用',
+                zone.status === 'published' ? '专区页面和已关联的门户入口已更新，刷新运营页面后恢复默认示例。' : '修改已应用于当前示例，刷新运营页面后恢复默认。',
                 redirect ? function () { window.location.href = 'cms-special-zones.html'; } : null
             );
         }
 
         function bindFormActions() {
             nameInput.addEventListener('input', updateLengths);
+            subtitleInput.addEventListener('input', updateLengths);
             introductionInput.addEventListener('input', updateLengths);
             document.getElementById('zoneCoverChoose').addEventListener('click', function () {
                 coverInput.click();
@@ -842,7 +866,7 @@
             document.getElementById('zoneOfflineButton').addEventListener('click', function () {
                 GlobalDialog.warning({
                     title: '下架特色专区',
-                    desc: '下架后专区将从门户导航中隐藏，当前配置内容仍会保留。',
+                    desc: '下架后专区页面及已关联的门户入口将隐藏，当前配置仍可继续编辑。',
                     confirmText: '确认下架',
                     onConfirm: function () {
                         zone.status = 'offline';
@@ -862,6 +886,8 @@
     }
 
     function init() {
+        var navigation = window.performance?.getEntriesByType('navigation')[0];
+        if (navigation && navigation.type === 'reload') SpecialZoneStore.reset();
         initList();
         initForm();
     }

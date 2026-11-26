@@ -1114,6 +1114,8 @@
         }
 
         function saveDraft() {
+            var linksError = window.ContentSectionEditor.validate(state.featureIntroduction);
+            if (linksError) { showToast(linksError); return; }
             var item = state.editingId ? getRecordById(state.editingId) : null;
             var nowText = '2026-07-27 16:10:00';
             if (!item) {
@@ -1153,6 +1155,8 @@
         }
 
         function submitProductForm() {
+            var linksError = window.ContentSectionEditor.validate(state.featureIntroduction);
+            if (linksError) { showToast(linksError); return; }
             if (!validateAttachments()) return;
             var item = state.editingId ? getRecordById(state.editingId) : null;
             var nowText = '2026-07-27 16:20:00';
@@ -1355,6 +1359,8 @@
                             state.formStep = 2;
                             render();
                         } else if (state.formStep === 2) {
+                            var linksError = window.ContentSectionEditor.validate(state.featureIntroduction);
+                            if (linksError) { showToast(linksError); return; }
                             state.formStep = 3;
                             render();
                         }

@@ -32,9 +32,9 @@
             <nav class="zone-breadcrumb" aria-label="面包屑">
                 <a href="index.html">首页</a>
                 <span>/</span>
-                <a href="data-resources.html">数据交易</a>
+                <a href="data-resources.html">数据聚合</a>
                 <span>/</span>
-                <span>特色专区</span>
+                <span>按业务场景找数据</span>
                 <span>/</span>
                 <strong id="zoneBreadcrumbName">专区加载中</strong>
             </nav>
@@ -152,6 +152,17 @@
         </div>
     </main>
 
+    <dialog class="zone-sample-dialog" id="zoneSampleDialog" aria-labelledby="zoneSampleTitle">
+        <h2 id="zoneSampleTitle"></h2>
+        <p id="zoneSampleMeta"></p>
+        <p id="zoneSampleDescription"></p>
+        <form method="dialog">
+            <button type="submit" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m18.3 5.7-1.4-1.4-4.9 4.9-4.9-4.9-1.4 1.4 4.9 4.9-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9z"/></svg>
+                关闭
+            </button>
+        </form>
+    </dialog>
     <script src="js/special-zone.js"></script>
 </body>
 </html>

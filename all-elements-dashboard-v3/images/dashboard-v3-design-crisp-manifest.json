@@ -1,0 +1,23 @@
+{
+  "title": "数据聚合与服务能力全景",
+  "source": "dashboard-v3-design.png",
+  "method": "preserve the approved raster design and deterministically redraw small Chinese copy and numeric labels as native vector text layers",
+  "contentPolicy": "existing copy, figures, layout, illustration, palette and decorative borders are preserved",
+  "exports": [
+    {
+      "file": "dashboard-v3-design-1920-crisp.png",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "dashboard-v3-design-2560-crisp.png",
+      "width": 2560,
+      "height": 1440
+    },
+    {
+      "file": "dashboard-v3-design-4k-crisp.png",
+      "width": 3840,
+      "height": 2160
+    }
+  ]
+}

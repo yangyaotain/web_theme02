@@ -5,8 +5,13 @@
     var tree = document.querySelector('.solution-tree');
     if (!catalog || !content || !tree) return;
     var records = catalog.createRecords().filter(function (item) { return item.status === 'listed'; });
-    var groups = catalog.groups;
+    var groups = catalog.groups.slice();
     var params = new URLSearchParams(window.location.search);
+    var partnerRecord = window.PartnerApplicationCatalog.get(params.get('partnerItem'));
+    if (partnerRecord && partnerRecord.kind === 'solutions') {
+        groups.push({ id: 'partner-solutions', title: '生态伙伴方案', badge: '伙伴方案' });
+        records = records.concat(window.PartnerContentDetail.solutionRecords(partnerRecord.company));
+    }
     var previewToken = params.get('preview');
     var expanded = {};
     var activeId = '';
@@ -41,6 +46,7 @@
     }
     function getPrice(item) {
         var pricing = item.pricing || {};
+        if (item.partnerContent) return pricing.referencePrice;
         var measure = (pricing.measures || ['面议'])[0];
         if (measure === '按次数' && pricing.countPrice) return pricing.countPrice + (pricing.countUnit || '元/次');
         if (measure === '按时长' && pricing.durationPrice) return pricing.durationPrice + (pricing.durationUnit || '元/月');
@@ -123,6 +129,7 @@
     }
     function renderSections(sections) {
         return (sections || []).map(function (section) {
+            if (section.type === 'related-links') return window.ContentSectionEditor.renderLinks(section);
             return '<section class="content-section"><div class="section-header"><h2 class="section-title">' + escapeHtml(section.title) + '</h2></div>'
                 + (section.content ? '<div class="rich-copy">' + renderText(section.content) + '</div>' : '') + renderCards(section) + '</section>';
         }).join('');
@@ -143,6 +150,10 @@
             + '<div class="service-body">' + (item.lead ? '<p class="article-lead">' + escapeHtml(item.lead) + '</p>' : '') + renderSections(item.sections) + '</div></article></section>';
         content.querySelector('.service-hero-main').style.backgroundImage = 'linear-gradient(180deg, rgba(15,31,26,.08) 0%, rgba(15,31,26,.86) 100%), url(' + JSON.stringify(safeImage(item.heroImg || item.cover)) + ')';
         document.title = '灵拓 · 数据聚合服务平台';
+        if (params.has('partnerItem')) {
+            window.PartnerContentDetail.addReturn(content);
+            document.title = item.name + ' · 灵拓数据聚合服务平台';
+        }
         if (!previewToken && window.DetailFavorite) window.DetailFavorite.init(content);
     }
     function renderTree() {
@@ -161,11 +172,18 @@
         activeRecord = null;
         document.title = '灵拓 · 数据聚合服务平台';
         content.innerHTML = '<div class="service-article solution-empty"><p>' + escapeHtml(message) + '</p></div>';
+        if (params.has('partnerItem')) window.PartnerContentDetail.addReturn(content);
     }
     function updateUrl(item, replace) {
         var url = new URL(window.location.href);
         url.search = '';
         url.searchParams.set('id', item.id);
+        if (params.has('partnerItem')) {
+            ['app', 'tab', 'page'].forEach(function (key) {
+                if (params.has(key)) url.searchParams.set(key, params.get(key));
+            });
+            url.searchParams.set('partnerItem', params.get('partnerItem'));
+        }
         try { window.history[replace ? 'replaceState' : 'pushState']({}, '', url.href); } catch (error) { /* file:// 环境保留当前页选择。 */ }
     }
     function selectItem(item, historyMode) {
@@ -178,9 +196,9 @@
     }
     function selectFromLocation() {
         var query = new URLSearchParams(window.location.search);
-        var requestedId = query.get('id') || aliases[query.get('title')];
+        var requestedId = query.get('id') || query.get('partnerItem') || aliases[query.get('title')];
         var item = records.find(function (entry) { return entry.id === requestedId || entry.name === query.get('title'); });
-        if (!item && (query.has('id') || query.has('title'))) {
+        if (!item && (query.has('id') || query.has('title') || query.has('partnerItem'))) {
             activeId = '';
             renderTree();
             emptyContent('未找到对应方案，请从目录选择当前已上架的行业解决方案。');

@@ -1158,3 +1158,18 @@ body.zone-preview-mode .special-zone-page {
         padding-left: 18px;
     }
 }
+.zone-sample-dialog {
+    width: min(480px, calc(100% - 32px));
+    margin: auto;
+    padding: 24px;
+    color: var(--text-primary);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+}
+.zone-sample-dialog::backdrop { background: rgba(18, 33, 25, .48); }
+.zone-sample-dialog h2 { font-size: 18px; line-height: 1.5; }
+.zone-sample-dialog p { margin-top: 12px; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.zone-sample-dialog #zoneSampleMeta { color: var(--text-tertiary); font-size: 13px; }
+.zone-sample-dialog form { display: flex; justify-content: flex-end; margin-top: 20px; }

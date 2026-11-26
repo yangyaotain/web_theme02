@@ -40,7 +40,7 @@
                         <div class="zone-editor-section-header">
                             <div>
                                 <h2>基础信息</h2>
-                                <p>专区名称将同步展示在门户导航和专区页面。</p>
+                                <p>专区名称用于专区页面，副标题用于对应的门户入口。刷新页面后恢复默认示例。</p>
                             </div>
                         </div>
                         <div class="zone-editor-form-grid">
@@ -48,6 +48,11 @@
                                 <span><em>*</em> 专区名称</span>
                                 <input type="text" id="zoneEditorName" maxlength="20" placeholder="请输入专区名称">
                                 <small><b id="zoneNameLength">0</b>/20</small>
+                            </label>
+                            <label class="zone-editor-field full">
+                                <span><em>*</em> 副标题</span>
+                                <input type="text" id="zoneEditorSubtitle" maxlength="100" placeholder="请输入门户专区菜单下方的文字" required aria-required="true">
+                                <small><b id="zoneSubtitleLength">0</b>/100</small>
                             </label>
                             <label class="zone-editor-field full">
                                 <span><em>*</em> 简介说明</span>
@@ -201,11 +206,11 @@
                 </a>
                 <button class="zone-admin-button" type="button" id="zoneSaveButton">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm0 16H5V5h11.2L17 5.8V19zm-5-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 6h8v3H6V6z"/></svg>
-                    <span>保存</span>
+                    <span>应用修改</span>
                 </button>
                 <button class="zone-admin-button primary" type="button" id="zonePublishButton">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 16.2-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                    <span>保存并发布</span>
+                    <span>发布专区</span>
                 </button>
             </div>
         </div>

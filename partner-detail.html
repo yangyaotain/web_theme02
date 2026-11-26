@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共创伙伴 · 灵拓数据聚合服务平台</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/service-content-preview.css">
+    <link rel="stylesheet" href="css/feature-introduction.css">
+    <link rel="stylesheet" href="css/partner-detail.css">
+</head>
+<body>
+    <div class="preview-bar" data-preview-bar hidden>
+        <span class="preview-badge">预览</span><span>共创伙伴门户展示预览</span>
+        <button type="button" class="preview-close" data-preview-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg><span>关闭预览</span>
+        </button>
+    </div>
+    <div data-partner-navigation></div>
+    <main class="preview-shell">
+        <nav class="g-breadcrumb" aria-label="当前位置" data-partner-breadcrumb>
+            <a href="index.html">首页</a><span class="sep">/</span><a href="partner-directory.html">伙伴目录</a><span class="sep">/</span><span class="current" data-partner-name></span>
+        </nav>
+        <article class="preview-article" data-partner-article hidden>
+            <header class="preview-hero">
+                <div class="preview-hero-main" data-hero>
+                    <img class="partner-detail-background" data-hero-image alt="">
+                    <div class="preview-hero-content">
+                        <span class="preview-kicker" data-badge></span>
+                        <h1 class="preview-title" data-title></h1>
+                        <p class="preview-subtitle" data-subtitle></p>
+                    </div>
+                </div>
+            </header>
+            <div class="preview-body">
+                <p class="preview-lead" data-lead></p><div data-sections></div>
+            </div>
+        </article>
+        <p class="partner-detail-empty" data-empty hidden role="status"></p>
+    </main>
+    <script src="js/partner-store.js"></script>
+    <script src="js/feature-introduction.js"></script>
+    <script src="js/service-content-preview.js"></script>
+    <script src="js/partner-detail.js"></script>
+</body>
+</html>
