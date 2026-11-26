@@ -432,9 +432,9 @@
         var rows = [
             ['系统', '供方完成合约签订', result, '--', item.provider.signAt],
             ['张威', '供方完成合约签订', result, '--', item.provider.signAt],
-            ['测试TL', '关联合同', '成功', '--', item.consumer.signAt],
+            ['陈雨', '关联合同', '成功', '--', item.consumer.signAt],
             ['张威', '供方审批通过', '成功', '--', addDays(item.createdAt, 1) + ' 15:01:39'],
-            ['测试TL', '需方提交订单', '成功', '--', item.createdAt]
+            ['陈雨', '需方提交订单', '成功', '--', item.createdAt]
         ];
         if (item.signStatus === '待签署') rows = rows.slice(3);
         if (item.signStatus === '签署中') rows = rows.slice(2);

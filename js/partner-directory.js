@@ -10,8 +10,7 @@
     let keyword = '';
 
     function render() {
-        const records = store.listPublished().filter(record => [record.name, record.category]
-            .some(value => value.toLowerCase().includes(keyword)));
+        const records = store.listPublished().filter(record => record.name.toLowerCase().includes(keyword));
         count.textContent = `共 ${records.length} 家伙伴`;
         grid.innerHTML = records.map(record => `
             <a class="data-card partner-brand-card" href="partner-detail.html?id=${encodeURIComponent(record.id)}" aria-label="查看${escape(record.name)}">

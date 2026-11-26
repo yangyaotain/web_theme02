@@ -6,7 +6,7 @@
     window.LG_USER_MENU_CONFIG = {
         user: {
             triggerName: '小智',
-            accountName: 'gf_demo01',
+            accountName: 'gf_ops01',
             company: 'xxx科技有限公司',
             tags: ['数据提供方', '数据需求方']
         },

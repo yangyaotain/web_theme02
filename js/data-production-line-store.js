@@ -274,5 +274,5 @@
         return /^(?:images\/[\w./-]+|data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/=]+)$/i.test(source || '') ? source : '';
     }
 
-    window.DataProductionLineStore = { storageKey, previewKey, normalize, list, listForPortal, save, remove, setStatus, move, href, imageSrc };
+    window.DataProductionLineStore = { storageKey, previewKey, normalize, list, listForPortal, listForNavigation: () => listForPortal().slice(0, 5), save, remove, setStatus, move, href, imageSrc };
 })();

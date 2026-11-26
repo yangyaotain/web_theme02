@@ -41,7 +41,7 @@
     var CONFIG_ATTACHMENTS = [
         { id: 'FSS20260723000101', name: '聚合平台分账业务场景说明.pdf', size: 1286400, type: 'application/pdf' },
         { id: 'FSS20260723000102', name: '平台近三个月交易单据.pdf', size: 936960, type: 'application/pdf' },
-        { id: 'FSS20260723000103', name: '平台与供方合作协议示例.pdf', size: 1546240, type: 'application/pdf' },
+        { id: 'FSS20260723000103', name: '平台与供方数据服务合作协议.pdf', size: 1546240, type: 'application/pdf' },
         { id: 'FSS20260723000104', name: '统一支付分账服务协议.pdf', size: 1187840, type: 'application/pdf' },
         { id: 'FSS20260723000105', name: '运营方统一收款及资金流转说明.pdf', size: 860160, type: 'application/pdf' },
         { id: 'FSS20260723000106', name: '分账业务补充说明.pdf', size: 675840, type: 'application/pdf' },
@@ -280,7 +280,7 @@
             ['2', '2 审核驳回', 'info'],
             ['3', '3 审核拒绝', 'info']
         ];
-        return '<div class="profit-config-simulator"><span>审核状态模拟</span><div>' + states.map(function (item) {
+        return '<div class="profit-config-simulator"><span>审核结果</span><div>' + states.map(function (item) {
             return button(item[1], 'state' + (splitApplyAuditStatus === item[0] ? ' is-active' : ''), 'set-audit-status', item[2], 'data-audit-status="' + item[0] + '"');
         }).join('') + '</div></div>';
     }

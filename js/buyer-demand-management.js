@@ -71,7 +71,7 @@
             createdAt: createdAt,
             decision: decision || 'pending',
             description: '可按需求范围提供数据梳理、质量核验、标准化加工和交付支持。',
-            material: '企业数据服务能力介绍材料（原型示例）.doc'
+            material: '企业数据服务能力介绍材料.doc'
         };
     }
 
@@ -106,16 +106,16 @@
             demander: {
                 company: '深圳市龙岗区数智产业发展有限公司',
                 contact: '周敏',
-                phone: '13800001236',
-                email: 'zhoumin@example.com',
-                address: '广东省深圳市龙岗区龙城街道龙翔大道示例园区'
+                phone: '13728641392',
+                email: 'zhoumin@shuzhi-industry.cn',
+                address: '广东省深圳市龙岗区龙城街道龙翔大道218号数智产业大厦8层'
             },
             subject: {
                 type: '企业法人',
-                creditCode: '91440300MA5EXAMPLE1',
+                creditCode: '91440300MA5H6N8Q26',
                 businessScope: '数据技术服务、信息系统集成、数据治理咨询及数字化应用建设。',
                 validPeriod: '2024-03-18～长期',
-                registeredAddress: '广东省深圳市龙岗区龙城街道龙翔大道示例园区'
+                registeredAddress: '广东省深圳市龙岗区龙城街道龙翔大道218号数智产业大厦8层'
             },
             responses: config.responses || []
         };
@@ -143,8 +143,8 @@
             image: 'images/economic-monitor.jpg',
             dataItems: '园区编码、采集时间、能源类型、用量、峰谷标识、设备状态',
             responses: [
-                makeResponse('深圳市龙岗区智城数据服务有限公司（示例）', '面议', '李明', '13800002651', 'liming@example.com', '2026-08-09 17:18:06'),
-                makeResponse('深圳市园区节能数字科技有限公司（示例）', '¥ 26,000', '许晨', '13800004217', 'xuchen@example.com', '2026-08-09 18:05:31', 'unmatched')
+                makeResponse('深圳市龙岗数智科技有限公司', '面议', '李明', '13928476135', 'liming@lg-shuzhi.cn', '2026-08-09 17:18:06'),
+                makeResponse('深圳市园区节能数字科技有限公司', '¥ 26,000', '许晨', '15817362489', 'xuchen@park-energy.cn', '2026-08-09 18:05:31', 'unmatched')
             ]
         }),
         makeRecord({
@@ -158,15 +158,16 @@
             createdAt: '2026-08-08 14:16:32',
             deadline: '2026-08-24',
             budget: '定价',
-            keywords: ['停车泊位', '实时余位'],
+            keywords: ['停车泊位', '实时余位', '停车诱导'],
             description: '获取公共停车场基础信息、实时余位和进出场趋势，用于停车诱导和高峰期调度分析。',
             image: 'images/demand-transit.jpg',
+            dataItems: '停车场编码、泊位总数、实时余位、入场量、出场量、采集时间',
             delivery: 'API传输',
             updateCycle: '实时',
             responses: [
-                makeResponse('深圳市龙岗区交通数联科技有限公司（示例）', '¥ 18,000', '陈宇', '13800006172', 'chenyu@example.com', '2026-08-08 15:03:44', 'matched'),
-                makeResponse('深圳市泊联城市服务有限公司（示例）', '¥ 22,500', '唐洁', '13800005384', 'tangjie@example.com', '2026-08-08 15:26:18', 'unmatched'),
-                makeResponse('深圳市智慧停车数据研究中心（示例）', '面议', '高原', '13800001749', 'gaoyuan@example.com', '2026-08-08 16:08:52', 'unmatched')
+                makeResponse('深圳市龙岗数智科技有限公司', '¥ 18,000', '陈宇', '13825297416', 'chenyu@lg-shuzhi.cn', '2026-08-08 15:03:44', 'matched'),
+                makeResponse('深圳市泊联城市服务有限公司', '¥ 22,500', '唐洁', '13590264813', 'tangjie@bolian-city.cn', '2026-08-08 15:26:18', 'unmatched'),
+                makeResponse('深圳市智慧停车数据研究中心', '面议', '高原', '18675539248', 'gaoyuan@smart-parking.cn', '2026-08-08 16:08:52', 'unmatched')
             ]
         }),
         makeRecord({
@@ -179,12 +180,15 @@
             responseCount: 1,
             createdAt: '2026-08-07 10:28:45',
             deadline: '2026-09-05',
-            keywords: ['跨境电商', '企业画像'],
+            keywords: ['跨境电商', '企业画像', '经营活跃度'],
             description: '构建企业经营活跃度分析模型，支持按街道、行业和企业规模查看经营变化趋势。',
             image: 'images/demand-finance.jpg',
+            budget: '¥ 35,000',
+            updateCycle: '每月',
+            dataItems: '企业编码、行业分类、经营状态、用工变化、业务活跃指数、统计月份',
             dataForm: '半结构化',
             delivery: '数据流传输',
-            responses: [makeResponse('深圳市湾区企业数据研究中心（示例）', '¥ 32,000', '王宁', '13800007983', 'wangning@example.com', '2026-08-07 11:09:26', 'matched')]
+            responses: [makeResponse('深圳市龙岗数智科技有限公司', '¥ 32,000', '王宁', '18948317652', 'wangning.project@lg-shuzhi.cn', '2026-08-07 11:09:26', 'matched')]
         }),
         makeRecord({
             id: 'DEMAND-DM202607280004',
@@ -196,10 +200,13 @@
             responseCount: 1,
             createdAt: '2026-07-28 09:35:12',
             deadline: '2026-08-08',
-            keywords: ['数据资产', '数据治理'],
+            keywords: ['数据资产', '数据治理', '标准体系'],
             description: '面向制造企业开展数据目录梳理、数据标准评估和治理路线规划。',
             image: 'images/demand-asset.jpg',
-            responses: [makeResponse('深圳市龙岗区数治咨询有限公司（示例）', '¥ 45,000', '赵倩', '13800003489', 'zhaoqian@example.com', '2026-07-28 13:20:08')]
+            budget: '¥ 50,000',
+            updateCycle: '一次性',
+            dataItems: '业务系统清单、数据目录、标准差异、质量问题、治理任务',
+            responses: [makeResponse('深圳市龙岗数智科技有限公司', '¥ 45,000', '赵倩', '13480956327', 'zhaoqian@lg-shuzhi.cn', '2026-07-28 13:20:08', 'unmatched')]
         }),
         makeRecord({
             id: 'DEMAND-DM202607220005',
@@ -229,7 +236,7 @@
             keywords: ['河道水质', '巡检'],
             description: '融合水质监测、巡检记录和遥感影像信息，支撑河道异常点位发现与变化分析。',
             image: 'images/water-analytics.jpg',
-            responses: [makeResponse('深圳市清源环境数据有限公司（示例）', '面议', '刘畅', '13800008546', 'liuchang@example.com', '2026-07-16 14:32:11', 'unmatched')]
+            responses: [makeResponse('深圳市清源环境数据有限公司', '面议', '刘畅', '15989302764', 'liuchang@qingyuan-data.cn', '2026-07-16 14:32:11', 'unmatched')]
         }),
         makeRecord({
             id: 'DEMAND-DM202607080007',
@@ -757,7 +764,7 @@
     function createRecordFromDraft() {
         var now = new Date();
         var createdAt = formatDateTime(now);
-        var sampleResponse = makeResponse('深圳市龙岗区数据应用服务有限公司（示例）', draft.budget === '定价' ? '¥ 20,000' : '面议', '林悦', '13800009628', 'linyue@example.com', createdAt, 'matched');
+        var sampleResponse = makeResponse('深圳市龙岗区数据应用服务有限公司', draft.budget === '定价' ? '¥ 20,000' : '面议', '林悦', '18126283549', 'linyue@data-applications.cn', createdAt, 'matched');
         var record = makeRecord({
             id: 'DEMAND-DM' + String(now.getFullYear()) + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + String(Date.now()).slice(-4),
             title: draft.title.trim(),
@@ -914,20 +921,23 @@
         });
     }
 
-    function openDocumentPreview() {
+    function openDocumentPreview(index) {
+        var response = getRecord(state.activeId).responses[index];
+        if (!response) return;
         closeDocumentPreview();
         var overlay = document.createElement('div');
         overlay.className = 'dmd-document-overlay';
         overlay.setAttribute('data-document-overlay', '');
         overlay.innerHTML = ''
             + '<section class="dmd-document-dialog" role="dialog" aria-modal="true" aria-labelledby="dmdDocumentTitle">'
-            +   '<header class="dmd-document-header"><button class="dmd-modal-close" type="button" aria-label="关闭预览" data-document-close>' + icon('close') + '</button><strong id="dmdDocumentTitle">企业数据服务能力介绍材料（原型示例）.doc</strong></header>'
+            +   '<header class="dmd-document-header"><button class="dmd-modal-close" type="button" aria-label="关闭预览" data-document-close>' + icon('close') + '</button><strong id="dmdDocumentTitle">企业数据服务能力介绍材料.doc</strong></header>'
             +   '<div class="dmd-document-stage">'
             +       '<article class="dmd-document-page">'
-            +           '<h1>企业数据服务能力介绍材料（原型示例）</h1>'
-            +           '<p>本材料用于介绍示例企业面向数据要素流通、数据资源管理和数据应用场景的综合服务能力，可作为需求响应能力展示与商务沟通材料示例。</p>'
+            +           '<h1>企业数据服务能力介绍材料</h1>'
+            +           '<p>服务机构：' + escapeHtml(response.company) + '</p>'
+            +           '<p>本材料介绍企业面向数据要素流通、数据资源管理和数据应用场景的综合服务能力，供需求对接、服务评估与商务洽谈使用。</p>'
             +           '<h2>一、企业概况</h2>'
-            +           '<p>示例企业面向政企客户提供数据治理、数据资源盘点、数据分析应用和信息化系统建设服务，覆盖园区、企业服务、城市治理和公共服务等领域。</p>'
+            +           '<p>企业面向政企客户提供数据治理、数据资源盘点、数据分析应用和信息化系统建设服务，覆盖园区、企业服务、城市治理和公共服务等领域。</p>'
             +           '<p>团队具备数据标准建设、数据质量评估、安全合规评估、接口交付和运营分析等能力，可支持从需求梳理到交付运营的完整流程。</p>'
             +           '<h2>二、数据服务能力矩阵</h2>'
             +           '<table><thead><tr><th>能力方向</th><th>服务内容</th><th>典型成果</th></tr></thead><tbody>'
@@ -949,18 +959,21 @@
         if (overlay) overlay.remove();
     }
 
-    function downloadMaterial() {
-        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>企业数据服务能力介绍材料</title></head><body><h1>企业数据服务能力介绍材料（原型示例）</h1><p>本材料用于静态原型中的需求响应能力展示。</p><h2>一、企业概况</h2><p>提供数据资源盘点、数据治理、质量评估、安全合规和数据交付等服务。</p><h2>二、服务能力</h2><table border="1" cellspacing="0" cellpadding="8"><tr><th>能力方向</th><th>服务内容</th></tr><tr><td>数据资源盘点</td><td>形成数据资源目录与字段说明。</td></tr><tr><td>数据治理与质量</td><td>开展标准映射、质量检查与整改跟踪。</td></tr><tr><td>数据安全合规</td><td>开展授权范围和个人信息处理合规审查。</td></tr></table></body></html>';
+    function downloadMaterial(index) {
+        var response = getRecord(state.activeId).responses[index];
+        if (!response) return;
+        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>企业数据服务能力介绍材料</title></head><body><h1>企业数据服务能力介绍材料</h1><p>本材料介绍数据资源盘点、治理与质量评估、安全合规及数据交付服务能力。</p><h2>一、企业概况</h2><p>提供数据资源盘点、数据治理、质量评估、安全合规和数据交付等服务。</p><h2>二、服务能力</h2><table border="1" cellspacing="0" cellpadding="8"><tr><th>能力方向</th><th>服务内容</th></tr><tr><td>数据资源盘点</td><td>形成数据资源目录与字段说明。</td></tr><tr><td>数据治理与质量</td><td>开展标准映射、质量检查与整改跟踪。</td></tr><tr><td>数据安全合规</td><td>开展授权范围和个人信息处理合规审查。</td></tr></table></body></html>';
+        html = html.replace('<h2>一、企业概况</h2>', '<p>服务机构：' + escapeHtml(response.company) + '</p><h2>一、企业概况</h2>');
         var blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
         var url = URL.createObjectURL(blob);
         var link = document.createElement('a');
         link.href = url;
-        link.download = '企业数据服务能力介绍材料（原型示例）.doc';
+        link.download = '企业数据服务能力介绍材料.doc';
         document.body.appendChild(link);
         link.click();
         link.remove();
         window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-        showToast('示例材料已下载');
+        showToast('企业数据服务能力介绍材料已下载');
     }
 
     panel.addEventListener('click', function (event) {
@@ -1085,8 +1098,10 @@
             openDecisionDialog(responseDecision.dataset.responseDecision, Number(responseDecision.dataset.responseIndex), responseDecision);
             return;
         }
-        if (event.target.closest('[data-material-preview]')) { openDocumentPreview(); return; }
-        if (event.target.closest('[data-material-download]')) { downloadMaterial(); }
+        var previewButton = event.target.closest('[data-material-preview]');
+        if (previewButton) { openDocumentPreview(Number(previewButton.dataset.materialPreview)); return; }
+        var downloadButton = event.target.closest('[data-material-download]');
+        if (downloadButton) { downloadMaterial(Number(downloadButton.dataset.materialDownload)); }
     });
 
     panel.addEventListener('input', function (event) {

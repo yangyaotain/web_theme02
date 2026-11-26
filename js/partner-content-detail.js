@@ -16,19 +16,15 @@
 
     function addReturn(root) {
         if ((!params.has('partner') && !Object.hasOwn(catalog.applications, params.get('app'))) || root.querySelector('.partner-return-link')) return;
-        const partnerId = catalog.getPartnerId(params);
-        const partner = window.PartnerStore.listPublished().find(record => record.id === partnerId);
-        const tab = Object.hasOwn(labels, params.get('tab')) ? params.get('tab') : 'resources';
-        const page = Math.max(1, Math.floor(Number(params.get('page')) || 1));
         const link = document.createElement('a');
         link.className = 'partner-return-link';
-        link.href = 'partner-application.html?' + new URLSearchParams({ partner: partnerId, tab, page });
-        link.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg><span>返回' + escape(partner?.name || '伙伴相关应用与服务') + ' · ' + labels[tab] + '</span>';
+        link.href = 'partner-application.html';
+        link.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg><span>返回全部伙伴应用</span>';
         root.prepend(link);
     }
 
     function missing(root) {
-        root.innerHTML = '<p class="partner-content-empty" role="status">未找到对应内容，请返回伙伴展示页重新选择。</p>';
+        root.innerHTML = '<p class="partner-content-empty" role="status">未找到对应内容，请返回全部伙伴应用重新选择。</p>';
         addReturn(root);
     }
 

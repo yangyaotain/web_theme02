@@ -1614,7 +1614,7 @@
                                       <span class="dssc-meta-value" id="dspvTableComment">-</span>
                                     </span>
                                   </div>
-                                  <p id="dspvTableSummary">展示前 10 条样例数据</p>
+                                  <p id="dspvTableSummary">展示前 10 条数据</p>
                                 </div>
                                 <div>
                                   <button class="dsr-btn dsr-gray" type="button" id="dspvBtnBack">
@@ -2322,7 +2322,7 @@
             if (!d) return;
             const cnt = d.sources.length;
             const subtitle = cnt > 0
-              ? '该分组下包含 ' + cnt + ' 个数据源，删除后将一并移除（仅原型示例数据）。'
+              ? '该分组下包含 ' + cnt + ' 个数据源，删除后将一并移除。'
               : '删除后，该分组将不再展示。';
             showDsConfirm({
               title: '删除分组',
@@ -2346,7 +2346,7 @@
             if (!found) return;
             const tableCnt = found.source.tables.length;
             const subtitle = tableCnt > 0
-              ? '该数据源下登记 ' + tableCnt + ' 张表的元信息，删除后将一并移除（仅原型示例数据）。'
+              ? '该数据源下登记 ' + tableCnt + ' 张表的元信息，删除后将一并移除。'
               : '删除后，该数据源将不再展示。';
             showDsConfirm({
               title: '删除数据源',
@@ -2734,7 +2734,7 @@
             if (fail) {
               resultEl.className = 'dse-result err';
               resultEl.innerHTML = '<strong>连接失败</strong>'
-                + '<pre>连接数据库时发生异常，示例错误信息：\n'
+                + '<pre>连接数据库时发生异常，错误详情：\n'
                 + 'URL: ' + escapeHTML(url) + '\n'
                 + 'USERNAME: ' + escapeHTML(user) + '\n'
                 + '具体错误信息：Unknown database \'tms_dm0\'</pre>';
@@ -3070,7 +3070,7 @@
         });
     
         document.getElementById('dsrBtnImport').addEventListener('click', () => {
-          showToast && showToast('请选择 .csv / .xlsx 文件以批量导入注册（演示）');
+          showToast && showToast('请选择 .csv / .xlsx 文件以批量导入注册');
         });
     
         document.getElementById('dsrBtnRefresh').addEventListener('click', () => {
@@ -3162,16 +3162,16 @@
         PREVIEW_SCHEMAS['customer'] = {
           columns: ['customer_id', 'name', 'level', 'phone', 'email', 'city', 'created_at'],
           rows: [
-            ['C100231', '北京方圆科技', 'VIP',  '13800000231', 'fangyuan@demo.com',  '北京', '2024-08-12'],
-            ['C100542', '上海蓝海贸易', 'GOLD', '13800000542', 'lanhai@demo.com',    '上海', '2025-01-08'],
-            ['C100319', '广州顺达物流', 'GOLD', '13800000319', 'shunda@demo.com',    '广州', '2024-11-21'],
-            ['C100876', '深圳腾跃科技', 'VIP',  '13800000876', 'tengyue@demo.com',   '深圳', '2025-03-04'],
-            ['C100442', '杭州宇航电子', 'NORM', '13800000442', 'yuhang@demo.com',    '杭州', '2025-02-19'],
-            ['C100087', '成都飞鸿网络', 'NORM', '13800000087', 'feihong@demo.com',   '成都', '2024-09-30'],
-            ['C100913', '武汉信达制造', 'GOLD', '13800000913', 'xinda@demo.com',     '武汉', '2025-04-02'],
-            ['C100256', '南京创智软件', 'NORM', '13800000256', 'chuangzhi@demo.com', '南京', '2024-12-15'],
-            ['C100631', '苏州明德商贸', 'VIP',  '13800000631', 'mingde@demo.com',    '苏州', '2025-04-18'],
-            ['C100128', '青岛海蓝食品', 'NORM', '13800000128', 'hailan@demo.com',    '青岛', '2024-10-09']
+            ['C100231', '北京方圆科技', 'VIP',  '13681275493', 'service@bj-fangyuan.cn',  '北京', '2024-08-12'],
+            ['C100542', '上海蓝海贸易', 'GOLD', '13917642835', 'service@sh-lanhai.cn',    '上海', '2025-01-08'],
+            ['C100319', '广州顺达物流', 'GOLD', '13725184926', 'service@gz-shunda.cn',    '广州', '2024-11-21'],
+            ['C100876', '深圳腾跃科技', 'VIP',  '15818639547', 'service@sz-tengyue.cn',   '深圳', '2025-03-04'],
+            ['C100442', '杭州宇航电子', 'NORM', '13588271649', 'service@hz-yuhang.cn',    '杭州', '2025-02-19'],
+            ['C100087', '成都飞鸿网络', 'NORM', '18982143756', 'service@cd-feihong.cn',   '成都', '2024-09-30'],
+            ['C100913', '武汉信达制造', 'GOLD', '18627851934', 'service@wh-xinda.cn',     '武汉', '2025-04-02'],
+            ['C100256', '南京创智软件', 'NORM', '18151628473', 'service@nj-chuangzhi.cn', '南京', '2024-12-15'],
+            ['C100631', '苏州明德商贸', 'VIP',  '15962173845', 'service@sz-mingde.cn',    '苏州', '2025-04-18'],
+            ['C100128', '青岛海蓝食品', 'NORM', '18553274916', 'service@qd-hailan.cn',    '青岛', '2024-10-09']
           ]
         };
     
@@ -3192,23 +3192,43 @@
         };
     
         function buildPreviewFallback(tableName) {
-          const prefix = (tableName || 'tbl').slice(0, 3).toLowerCase();
-          const columns = ['id', tableName + '_name', 'category', 'value', 'status', 'updated_time'];
-          const statuses = ['启用', '停用', '处理中'];
-          const cats = ['类型A', '类型B', '类型C', '类型D'];
-          const today = '2026-04-28';
-          const rows = [];
-          for (let i = 1; i <= 10; i++) {
-            const id = (prefix + '_' + (1000 + i));
-            rows.push([
-              id,
-              tableName + '_示例_' + i,
-              cats[(i - 1) % cats.length],
-              ((i * 137) % 9999).toLocaleString(),
-              statuses[(i - 1) % statuses.length],
-              today + ' ' + String(8 + (i % 10)).padStart(2, '0') + ':' + String((i * 7) % 60).padStart(2, '0')
-            ]);
-          }
+          const customers = PREVIEW_SCHEMAS.customer.rows;
+          const orders = PREVIEW_SCHEMAS.sales_order.rows;
+          const names = ['工业网关', '温湿度传感器', '边缘计算终端', '电能采集模块'];
+          const regions = ['华北', '华东', '华南', '西南', '华中'];
+          const channels = ['线上直销', '渠道代理', '项目采购'];
+          const schemas = {
+            sales_order_item: [['order_id', 'sku_id', 'sku_name', 'quantity', 'unit_price'], i => [orders[i][0], 'SKU' + customers[i][0].slice(1), names[i % 4], 10, (Number(orders[i][3].replaceAll(',', '')) / 10).toFixed(2)]],
+            sales_target: [['target_month', 'region', 'channel', 'target_amount', 'owner'], i => ['2026-04', regions[i % 5], channels[i % 3], 800000 + i * 35000, ['周敏', '陈洁', '刘畅'][i % 3]]],
+            sales_promotion: [['promotion_id', 'promotion_name', 'start_date', 'end_date', 'status'], i => ['PR202604' + (201 + i), ['工业设备采购月', '传感器批量采购优惠', '渠道合作专项'][i % 3], '2026-04-01', '2026-04-30', '进行中']],
+            channel_sales_daily: [['stat_date', 'channel', 'order_count', 'sales_amount'], i => ['2026-04-' + (18 + i), channels[i % 3], 86 + i * 7, 126800 + i * 12400]],
+            region_dim: [['region_code', 'region_name', 'province', 'city'], i => [['110000', '310000', '440100', '440300', '330100', '510100', '420100', '320100', '320500', '370200'][i], regions[[0, 1, 2, 2, 1, 3, 4, 1, 1, 1][i]], ['北京', '上海', '广东', '广东', '浙江', '四川', '湖北', '江苏', '江苏', '山东'][i], customers[i][5]]],
+            order_pay: [['payment_id', 'order_id', 'amount', 'channel', 'status'], i => ['PAY20260428' + (314 + i * 7), orders[i][0], orders[i][3], ['银行转账', '企业网银', '聚合支付'][i % 3], '支付成功']],
+            order_refund: [['refund_id', 'order_id', 'refund_amount', 'reason', 'status'], () => ['RF20260428173', orders[3][0], orders[3][3], '退货退款', '退款完成']],
+            pay_channel_dim: [['channel_code', 'channel_name', 'settlement_cycle', 'status'], i => ['PC' + (108 + i * 3), ['银行转账', '企业网银', '聚合支付', '银联商务'][i % 4], 'T+1', '启用']],
+            customer_tag: [['customer_id', 'tag_name', 'tag_source', 'updated_at'], i => [customers[i][0], ['重点客户', '设备采购', '长期合作', '年度框架客户'][i % 4], '客户运营', '2026-04-28']],
+            customer_event: [['customer_id', 'event_type', 'event_time', 'channel'], i => [customers[i][0], ['查看产品', '提交采购需求', '下载技术资料'][i % 3], '2026-04-28 09:' + String(10 + i * 3), channels[i % 3]]],
+            customer_segment: [['segment_id', 'segment_name', 'customer_count', 'updated_at'], i => ['SEG' + (203 + i), ['工业制造重点客户', '商贸流通成长客户', '信息技术合作客户'][i % 3], 126 + i * 23, '2026-04-28']],
+            crm_lead: [['lead_id', 'company_name', 'contact', 'stage', 'owner'], i => ['LD202604' + (316 + i * 7), customers[i][1], ['陈洁', '林悦', '王宁'][i % 3], ['待跟进', '方案沟通', '商务洽谈'][i % 3], '周敏']],
+            crm_account: [['customer_id', 'company_name', 'level', 'city', 'phone'], i => [customers[i][0], customers[i][1], customers[i][2], customers[i][5], customers[i][3]]],
+            crm_activity: [['activity_id', 'customer_id', 'activity_type', 'content', 'next_date'], i => ['AC202604' + (273 + i * 3), customers[i][0], ['电话沟通', '现场拜访', '方案评审'][i % 3], ['确认设备采购清单', '核对接口接入需求', '沟通交付排期'][i % 3], '2026-05-06']],
+            inventory_snapshot: [['snapshot_date', 'sku_id', 'warehouse_id', 'available_qty', 'reserved_qty'], i => ['2026-04-28', 'SKU' + customers[i][0].slice(1), ['WH-SH01', 'WH-BJ02', 'WH-GZ01'][i % 3], 380 + i * 27, 20 + i * 4]],
+            warehouse_dim: [['warehouse_id', 'warehouse_name', 'city', 'status'], i => [['WH-SH01', 'WH-BJ02', 'WH-GZ01', 'WH-CD01', 'WH-WH01', 'WH-NJ01', 'WH-SZ01', 'WH-HZ01', 'WH-XA01', 'WH-QD01'][i], ['上海中心仓', '北京区域仓', '广州配送仓', '成都区域仓', '武汉配送仓', '南京周转仓', '深圳备件仓', '杭州配送仓', '西安区域仓', '青岛配送仓'][i], ['上海', '北京', '广州', '成都', '武汉', '南京', '深圳', '杭州', '西安', '青岛'][i], '运营中']],
+            sku_dim: [['sku_id', 'sku_name', 'category', 'unit', 'status'], i => ['SKU' + customers[i][0].slice(1), names[i % 4], ['工业通信', '环境感知', '边缘计算', '能源计量'][i % 4], '台', '在售']],
+            fin_voucher: [['voucher_no', 'period', 'account_code', 'debit_amount', 'credit_amount', 'status'], i => ['记202604' + (281 + i), '2026-04', ['1122', '6001'][i % 2], i % 2 ? '0.00' : orders[Math.floor(i / 2) * 2][3], i % 2 ? orders[Math.floor(i / 2) * 2][3] : '0.00', '已记账']],
+            fin_account_dim: [['account_code', 'account_name', 'account_type', 'status'], i => [['1001', '1002', '1122', '1123', '1221', '1405', '1601', '2202', '6001', '6401'][i], ['库存现金', '银行存款', '应收账款', '预付账款', '其他应收款', '库存商品', '固定资产', '应付账款', '主营业务收入', '主营业务成本'][i], i < 7 ? '资产类' : i === 7 ? '负债类' : '损益类', '启用']],
+            fin_period_dim: [['period', 'start_date', 'end_date', 'status'], i => ['2025-' + String(i + 1).padStart(2, '0'), '2025-' + String(i + 1).padStart(2, '0') + '-01', '2025-' + String(i + 1).padStart(2, '0') + '-' + new Date(2025, i + 1, 0).getDate(), '已结账']],
+            fin_budget: [['period', 'department', 'budget_type', 'budget_amount', 'used_amount'], i => ['2026-04', ['销售部', '技术服务部', '运营部'][i % 3], ['市场推广', '项目实施', '系统运维'][i % 3], 180000 + i * 5000, 126000 + i * 2800]],
+            event_track: [['event_id', 'event_name', 'page_path', 'event_time'], i => ['EV20260428' + (761 + i * 13), ['资源检索', '查看产品', '提交需求'][i % 3], ['data-resources.html', 'data-products.html', 'data-demands.html'][i % 3], '2026-04-28 09:' + String(10 + i * 3)]],
+            page_view_daily: [['stat_date', 'page_name', 'page_views', 'visitors'], i => ['2026-04-' + (18 + i), ['数据资源', '数据产品', '数据需求'][i % 3], 3216 + i * 137, 1280 + i * 49]],
+            campaign_dim: [['campaign_id', 'campaign_name', 'start_date', 'end_date', 'status'], i => ['CM202604' + (176 + i), ['数据产品对接会', '园区企业服务周', '数据治理专题交流'][i % 3], '2026-04-01', '2026-04-30', '进行中']],
+            metric_daily: [['stat_date', 'metric_name', 'metric_value', 'unit'], i => ['2026-04-' + (18 + i), ['目录访问量', '需求发布量', '服务申请量'][i % 3], [3268, 47, 126][i % 3] + i * 3, ['次', '条', '次'][i % 3]]],
+            metric_dim: [['metric_code', 'metric_name', 'stat_cycle', 'unit'], i => ['MTR' + (301 + i), ['目录访问量', '需求发布量', '服务申请量', '产品上架量', '新增认证企业数', '订单成交额', '接口调用量', '数据交付量', '服务响应时长', '交付完成率'][i], '每日', ['次', '条', '次', '个', '家', '元', '次', '批次', '小时', '%'][i]]]
+          };
+          const schema = schemas[tableName];
+          if (!schema) return { columns: ['提示'], rows: [['该表尚无可预览的数据记录']] };
+          const columns = schema[0];
+          const rows = Array.from({ length: tableName === 'order_refund' ? 1 : 10 }, (_, i) => schema[1](i));
           return { columns, rows };
         }
     
@@ -3229,7 +3249,7 @@
           aliasEl.classList.toggle('empty', !aliasVal);
           commentEl.textContent = commentVal || '未设置';
           commentEl.classList.toggle('empty', !commentVal);
-          document.getElementById('dspvTableSummary').textContent = '展示前 10 条样例数据';
+          document.getElementById('dspvTableSummary').textContent = '展示前 ' + schema.rows.length + ' 条数据';
     
           const thead = document.getElementById('dspvThead');
           thead.innerHTML = schema.columns.map((c) => '<th>' + escapeHTML(c) + '</th>').join('');

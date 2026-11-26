@@ -802,7 +802,7 @@
                     openConfirmOrderDelivery(item, document.activeElement, controls);
                     return;
                 }
-                controls.showToast(action + '操作已触发：' + item.name + '（原型演示）');
+                controls.showToast(action + '操作已触发：' + item.name + '');
             }
         }) : null;
         var paymentQueryTimer = null;

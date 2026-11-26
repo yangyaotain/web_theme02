@@ -110,11 +110,11 @@
             return renderCardFlow(cards);
         }
 
-        function renderSections(sections) {
+        function renderSections(sections, options) {
             return (sections || []).map(function (section) {
-                if (section.type === 'related-links') return window.ContentSectionEditor.renderLinks(section);
+                if (section.type === 'related-links') return window.ContentSectionEditor.renderLinks(section, options);
                 return '<section class="preview-section">'
-                    + '<div class="preview-section-head"><h2 class="preview-section-title">' + escapeHtml(section.title) + '</h2></div>'
+                    + (options?.exactFields && !section.title ? '' : '<div class="preview-section-head"><h2 class="preview-section-title">' + escapeHtml(section.title) + '</h2></div>')
                     + (section.content ? '<div class="preview-rich">' + renderRichText(section.content) + '</div>' : '')
                     + renderCards(section)
                     + '</section>';

@@ -159,7 +159,7 @@
 
             panel.querySelectorAll('[data-service-delivery-file-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    showToast(this.dataset.serviceDeliveryFileAction + '：' + this.dataset.serviceDeliveryFile + '（原型演示）');
+                    showToast(this.dataset.serviceDeliveryFileAction + '：' + this.dataset.serviceDeliveryFile + '');
                 });
             });
         }

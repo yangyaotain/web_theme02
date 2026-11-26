@@ -27,13 +27,18 @@
                             <h1>特色专区</h1>
                             <span class="zone-admin-count" id="zoneAdminCount">0 个专区</span>
                         </div>
-                        <p>维护【数据聚合 → 按业务场景找数据】的专区示例。刷新页面后恢复默认数据。</p>
+                        <p>维护【数据聚合 → 按业务场景找数据】的专区内容。</p>
                     </div>
                     <button class="zone-admin-button primary" type="button" id="zoneAddButton">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                         <span>新增专区</span>
                     </button>
                 </header>
+
+                <div class="zone-navigation-notice">
+                    <p>门户按当前排序，通过导航展示已发布专区的前 5 条。超出部分暂不在门户展示，可通过【上移】【下移】调整展示顺序。</p>
+                    <span class="zone-navigation-count" id="zoneNavigationCount" role="status"></span>
+                </div>
 
                 <div class="zone-admin-filter">
                     <label>
@@ -71,6 +76,7 @@
                                     <th>数据资源</th>
                                     <th>数据产品</th>
                                     <th>发布状态</th>
+                                    <th class="zone-navigation-column">导航展示</th>
                                     <th>更新时间</th>
                                     <th>更新人</th>
                                     <th class="zone-action-column">操作</th>

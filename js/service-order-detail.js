@@ -880,7 +880,7 @@
             if (primary) primary.addEventListener('click', function () {
                 var action = this.dataset.serviceOrderDetailAction;
                 if (typeof options.onAction === 'function') options.onAction(action, state.item, { refresh: refresh, showToast: showToast });
-                else showToast(action + '操作已触发（原型演示）');
+                else showToast(action + '操作已触发');
             });
 
             var relation = panel.querySelector('[data-service-order-relation]');
@@ -901,7 +901,7 @@
             });
 
             panel.querySelectorAll('[data-service-order-demo-action]').forEach(function (button) {
-                button.addEventListener('click', function () { showToast(this.dataset.serviceOrderDemoAction + '操作已触发（原型演示）'); });
+                button.addEventListener('click', function () { showToast(this.dataset.serviceOrderDemoAction + '操作已触发'); });
             });
 
             panel.querySelectorAll('[data-service-order-copy]').forEach(function (button) {

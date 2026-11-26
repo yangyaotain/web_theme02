@@ -40,7 +40,7 @@
     function logo(record) {
         const src = window.PartnerStore.logoSrc(record.logo);
         const fallback = record.name ? escape(Array.from(record.name.trim()).slice(0, 2).join('')) : icon('partner');
-        return `<span class="partner-logo${src ? ' has-image' : ''}" aria-hidden="true">${src ? `<img src="${escape(src)}" alt="">` : fallback}</span>`;
+        return `<span class="partner-logo${src ? ' has-image' : ''}${record.partnerId ? ' application-logo' : ''}" aria-hidden="true">${src ? `<img src="${escape(src)}" alt="">` : fallback}</span>`;
     }
 
     function date(value) {

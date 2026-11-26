@@ -903,30 +903,30 @@
 
     var lowAltitudeResources = addExampleCatalog([
         { name: '低空巡检影像样本', category: '低空巡检', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '提供道路、河道和园区的脱敏航拍影像，包含拍摄时间及巡检任务编号。', image: 'images/production-line-lowalt.jpg', labels: ['巡检影像', '任务标识'] },
-        { name: '飞行轨迹与巡检任务记录', category: '飞行监管', resourceType: '库表', delivery: '数据库传输', dataSource: '原始数据', description: '记录示例航线、时间戳、飞行高度、任务区域及执行状态。', image: 'images/traffic-sensing.jpg', labels: ['航线', '飞行轨迹'] },
-        { name: '低空巡检事件标注样本', category: '隐患识别', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '整理巡检影像中的积水、道路障碍和设施破损样例及复核标签。', image: 'images/production-line-lowalt.jpg', labels: ['事件标注', '隐患复核'] }
-    ], 'LOW-INSPECTION', '低空场景样例库', '低空经济', 'resource');
+        { name: '飞行轨迹与巡检任务记录', category: '飞行监管', resourceType: '库表', delivery: '数据库传输', dataSource: '原始数据', description: '记录巡检航线、时间戳、飞行高度、任务区域及执行状态。', image: 'images/traffic-sensing.jpg', labels: ['航线', '飞行轨迹'] },
+        { name: '低空巡检事件标注样本', category: '隐患识别', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '整理巡检影像中的积水、道路障碍和设施破损影像及复核标签。', image: 'images/production-line-lowalt.jpg', labels: ['事件标注', '隐患复核'] }
+    ], 'LOW-INSPECTION', '低空巡检数据中心', '低空经济', 'resource');
     var lowAltitudeProducts = addExampleCatalog([
-        { name: '低空巡检隐患识别数据集', category: '隐患识别', productType: '数据集', delivery: '文件传输', price: '面议', description: '包含标注影像、类别字典和样例划分，供巡检目标识别与评测。', image: 'images/production-line-lowalt.jpg', labels: ['影像识别', '样本标注'] },
+        { name: '低空巡检隐患识别数据集', category: '隐患识别', productType: '数据集', delivery: '文件传输', price: '面议', description: '包含标注影像、类别字典和训练与评测集划分，供巡检目标识别与评测。', image: 'images/production-line-lowalt.jpg', labels: ['影像识别', '样本标注'] },
         { name: '巡检飞行任务查询接口', category: '飞行监管', productType: 'API', delivery: 'API传输', price: '面议', description: '按任务编号查询飞行区域、时间和任务状态，供监管系统联调。', image: 'images/iot-platform.jpg', labels: ['任务查询', '飞行监管'] },
         { name: '低空巡检风险分析报告', category: '低空巡检', productType: '数据报告', delivery: '文件传输', price: '面议', description: '按巡检区域统计发现问题、复核结果和处置状态。', image: 'images/traffic-sensing.jpg', labels: ['风险研判', '处置分析'] }
-    ], 'LOW-INSPECTION', '低空场景样例库', '低空经济', 'product');
+    ], 'LOW-INSPECTION', '低空巡检数据中心', '低空经济', 'product');
     var standardsResources = addExampleCatalog([
-        { name: '主数据字段标准字典', category: '数据标准', resourceType: '库表', delivery: '数据库传输', dataSource: '加工数据', description: '提供主体编码、行政区划、时间和计量字段的定义、格式及示例。', image: 'images/rec-governance.jpg', labels: ['字段标准', '数据字典'] },
-        { name: '数据质量规则与异常样本', category: '质量校验', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '包含完整性、唯一性和一致性校验规则，以及重复、缺失和异常值样例。', image: 'images/production-line-governance.jpg', labels: ['质量规则', '异常样本'] },
-        { name: '数据分级分类参考清单', category: '规范管理', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '提供数据类别、样例等级、使用范围和处理要求的示例字段。', image: 'images/rec-governance.jpg', labels: ['分级分类', '使用范围'] }
-    ], 'DATA-STANDARDS', '数据治理样例库', '科技创新', 'resource');
+        { name: '主数据字段标准字典', category: '数据标准', resourceType: '库表', delivery: '数据库传输', dataSource: '加工数据', description: '提供主体编码、行政区划、时间和计量字段的定义、格式及取值要求。', image: 'images/rec-governance.jpg', labels: ['字段标准', '数据字典'] },
+        { name: '数据质量规则与异常样本', category: '质量校验', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '包含完整性、唯一性和一致性校验规则，以及重复、缺失和异常值记录。', image: 'images/production-line-governance.jpg', labels: ['质量规则', '异常样本'] },
+        { name: '数据分级分类参考清单', category: '规范管理', resourceType: '数据集', delivery: '文件传输', dataSource: '加工数据', description: '提供数据类别、分类等级、使用范围和处理要求等字段。', image: 'images/rec-governance.jpg', labels: ['分级分类', '使用范围'] }
+    ], 'DATA-STANDARDS', '数据治理服务中心', '科技创新', 'resource');
     var standardsProducts = addExampleCatalog([
         { name: '统一字段标准与编码数据集', category: '数据标准', productType: '数据集', delivery: '文件传输', price: '面议', description: '整合字段口径、编码规则和参考值，用于内部目录标准对齐。', image: 'images/rec-governance.jpg', labels: ['字段映射', '编码规范'] },
         { name: '质量规则校验接口', category: '质量校验', productType: 'API', delivery: 'API传输', price: '面议', description: '根据选择的校验规则返回命中情况、问题字段和异常汇总。', image: 'images/iot-platform.jpg', labels: ['规则校验', '质量检查'] },
         { name: '数据治理质量评估报告', category: '规范管理', productType: '数据报告', delivery: '文件传输', price: '面议', description: '汇总数据质量问题、整改建议和复核指标，支持治理验收。', image: 'images/production-line-governance.jpg', labels: ['质量评估', '整改复核'] }
-    ], 'DATA-STANDARDS', '数据治理样例库', '科技创新', 'product');
+    ], 'DATA-STANDARDS', '数据治理服务中心', '科技创新', 'product');
 
     function makeScenarioZones() {
         return [
-            { id: 'low-altitude-inspection-zone', name: '低空巡检与监管数据专区', subtitle: '查看巡检影像、飞行记录与风险识别样例。', introduction: '汇聚低空巡检影像、飞行任务与隐患标注样例，支持线路巡检、飞行态势监测和风险复核。', cover: 'images/production-line-lowalt.jpg', sort: 2, resourceIds: lowAltitudeResources, productIds: lowAltitudeProducts },
-            { id: 'robot-training-zone', name: '机器人训练数据专区', subtitle: '查看感知、导航与动作训练数据。', introduction: '汇聚感知、导航与动作训练样例，覆盖机器人数据采集、仿真训练和训练质量评估。', cover: 'images/space-hero-robot.jpg', sort: 3, resourceIds: ['RES-ROBOT-001', 'RES-ROBOT-002', 'RES-ROBOT-003', 'RES-ROBOT-004', 'RES-ROBOT-005', 'RES-ROBOT-006'], productIds: ['PROD-ROBOT-001', 'PROD-ROBOT-002', 'PROD-ROBOT-003', 'PROD-ROBOT-004', 'PROD-ROBOT-005', 'PROD-ROBOT-006'] },
-            { id: 'data-standards-zone', name: '治理与规范数据专区', subtitle: '查看数据标准、质量规则与治理样例。', introduction: '汇聚数据字典、字段标准、质量规则和分级分类样例，支持目录编制、质量检查与标准对齐。', cover: 'images/production-line-governance.jpg', sort: 4, resourceIds: standardsResources, productIds: standardsProducts }
+            { id: 'low-altitude-inspection-zone', name: '低空巡检与监管数据专区', subtitle: '查看巡检影像、飞行记录与风险识别数据。', introduction: '汇聚低空巡检影像、飞行任务与隐患标注数据，支持线路巡检、飞行态势监测和风险复核。', cover: 'images/production-line-lowalt.jpg', sort: 2, resourceIds: lowAltitudeResources, productIds: lowAltitudeProducts },
+            { id: 'robot-training-zone', name: '机器人训练数据专区', subtitle: '查看感知、导航与动作训练数据。', introduction: '汇聚感知、导航与动作训练数据，覆盖机器人数据采集、仿真训练和训练质量评估。', cover: 'images/space-hero-robot.jpg', sort: 3, resourceIds: ['RES-ROBOT-001', 'RES-ROBOT-002', 'RES-ROBOT-003', 'RES-ROBOT-004', 'RES-ROBOT-005', 'RES-ROBOT-006'], productIds: ['PROD-ROBOT-001', 'PROD-ROBOT-002', 'PROD-ROBOT-003', 'PROD-ROBOT-004', 'PROD-ROBOT-005', 'PROD-ROBOT-006'] },
+            { id: 'data-standards-zone', name: '治理与规范数据专区', subtitle: '查看数据标准、质量规则与治理规范。', introduction: '汇聚数据字典、字段标准、质量规则和分级分类规则，支持目录编制、质量检查与标准对齐。', cover: 'images/production-line-governance.jpg', sort: 4, resourceIds: standardsResources, productIds: standardsProducts }
         ].map(function (zone) {
             return Object.assign(zone, { status: 'published', sampleDetails: true, updatedAt: '2026-11-18 10:00:00', updatedBy: '运营管理员' });
         });
@@ -1064,6 +1064,10 @@
         return listManagedZones().concat(makeDefaultZones().filter(function (zone) { return zone.legacy; }));
     }
 
+    function listForNavigation() {
+        return listManagedZones().filter(function (zone) { return zone.status === 'published'; }).slice(0, 5);
+    }
+
     function getZone(id) {
         return listZones().find(function (zone) { return zone.id === id; }) || null;
     }
@@ -1126,6 +1130,7 @@
         write: write,
         listZones: listZones,
         listManagedZones: listManagedZones,
+        listForNavigation: listForNavigation,
         getZone: getZone,
         saveZone: saveZone,
         removeZone: removeZone,

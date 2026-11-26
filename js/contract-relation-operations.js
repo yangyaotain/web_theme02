@@ -231,7 +231,7 @@
         }
         document.querySelectorAll('[data-contract-relation-file-action]').forEach(function (button) {
             button.addEventListener('click', function () {
-                if (typeof options.onDemo === 'function') options.onDemo('合同文件' + this.dataset.contractRelationFileAction + '操作已触发（原型演示）');
+                if (typeof options.onDemo === 'function') options.onDemo('合同文件' + this.dataset.contractRelationFileAction + '操作已触发');
             });
         });
         var form = document.querySelector('[data-contract-relation-unlink-form]');

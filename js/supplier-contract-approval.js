@@ -301,10 +301,10 @@
             button.addEventListener('click', closeDrawer);
         });
         drawer.querySelector('[data-contract-approval-preview]').addEventListener('click', function () {
-            setFeedback('原型示例：已打开合同文件预览。', 'info');
+            setFeedback('已打开合同文件预览。', 'info');
         });
         drawer.querySelector('[data-contract-approval-download]').addEventListener('click', function () {
-            setFeedback('原型示例：合同文件已加入下载队列。', 'info');
+            setFeedback('合同文件已加入下载队列。', 'info');
         });
         opinionInput.addEventListener('input', function () {
             opinionCount.textContent = this.value.length;

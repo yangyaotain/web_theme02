@@ -33,6 +33,10 @@
                         <span class="material-symbols-outlined" aria-hidden="true">add</span><span>新增生产线</span>
                     </a>
                 </header>
+                <div class="zone-navigation-notice">
+                    <p>门户按当前排序，通过导航展示已发布生产线的前 5 条。超出部分暂不在门户展示，可通过【上移】【下移】调整展示顺序。</p>
+                    <span class="zone-navigation-count" id="lineNavigationCount" role="status"></span>
+                </div>
                 <form class="zone-admin-filter" id="lineAdminFilter">
                     <label>产线名称 <input name="q" type="search" maxlength="100" placeholder="请输入产线名称"></label>
                     <label>发布状态 <select name="status" aria-label="发布状态"><option value="">全部状态</option><option value="draft">未发布</option><option value="published">已发布</option><option value="offline">已下架</option></select></label>
@@ -54,6 +58,7 @@
                                     <th class="line-admin-name-column" scope="col">产线名称</th>
                                     <th scope="col">副标题</th>
                                     <th scope="col">发布状态</th>
+                                    <th class="zone-navigation-column" scope="col">导航展示</th>
                                     <th class="line-admin-time-column" scope="col">更新时间</th>
                                     <th class="line-admin-actions-column" scope="col">操作</th>
                                 </tr>

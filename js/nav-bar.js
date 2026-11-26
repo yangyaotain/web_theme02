@@ -212,12 +212,12 @@ class NavBar extends HTMLElement {
             if (['merchant-onboarding', 'ecosystem-cooperation', 'industry-education'].includes(key)) return route('eco', href);
         }
         if (page === 'partner-application.html') {
-            const partner = window.PartnerApplicationCatalog?.getPartnerId(params);
-            return route('app', partner ? page + '?partner=' + encodeURIComponent(partner) : '');
+            return route('app', page);
         }
+        if (page === 'partner-application-detail.html') return route('app', page + '?id=' + encodeURIComponent(params.get('id') || ''));
         if (params.has('partnerItem') && window.PartnerApplicationCatalog) {
             const record = window.PartnerApplicationCatalog.get(params.get('partnerItem'));
-            if (record) return route('app', 'partner-application.html?partner=' + encodeURIComponent(record.company));
+            if (record) return route('app', 'partner-application.html');
         }
         if (page === 'special-zone.html') return route('data', 'special-zone.html?zone=' + encodeURIComponent(params.get('zone') || 'corpus-data-zone'));
         if (page === 'data-space.html') {
@@ -288,7 +288,7 @@ class NavBar extends HTMLElement {
                 id: 'app', label: '应用聚合', glyph: 'grid',
                 groups: [
                     { title: '数据工厂', glyph: 'factory', productionLineMenu: true },
-                    { title: '生态伙伴应用', glyph: 'grid', applicationEntry: true },
+                    { title: '生态伙伴应用', glyph: 'grid', applicationEntry: true, links: [item('浏览全部伙伴应用 →', 'partner-application.html', 'grid')] },
                     { title: '服务与行业方案', glyph: 'chart', items: [
                         item('数据咨询服务', 'data-consulting.html', 'chat', '了解数据开发利用相关的专业咨询服务'),
                         item('行业解决方案', 'industry-solutions.html', 'chart', '围绕行业场景，查找适用的解决方案')
@@ -315,11 +315,10 @@ class NavBar extends HTMLElement {
 
     _getScenarioItems() {
         if (!window.SpecialZoneStore) return dataScenarios;
-        const zones = new Map(window.SpecialZoneStore.listManagedZones().map(zone => [zone.id, zone]));
-        return dataScenarios.flatMap(entry => {
-            const zone = zones.get(entry.zoneId);
-            return zone?.status === 'published' ? [{ ...entry, description: zone.subtitle || '' }] : [];
-        });
+        return window.SpecialZoneStore.listForNavigation().map(zone => ({
+            ...item(zone.name, 'special-zone.html?zone=' + encodeURIComponent(zone.id), 'box', zone.subtitle || ''),
+            zoneId: zone.id
+        }));
     }
 
     _refreshScenarioMenu() {
@@ -329,7 +328,7 @@ class NavBar extends HTMLElement {
 
     _getProductionLineItems() {
         const store = window.DataProductionLineStore;
-        return store ? store.listForPortal().map(line =>
+        return store ? store.listForNavigation().map(line =>
             item(line.heroTitle, store.href(line.id), '', line.heroSubtitle)
         ) : [];
     }
@@ -356,7 +355,7 @@ class NavBar extends HTMLElement {
         if (failed) return '<p class="v2-scenario-empty">暂时无法加载伙伴列表</p>';
         const store = window.PartnerStore;
         if (!store) return '';
-        const partners = store.listPublished().slice(0, 5);
+        const partners = store.listForNavigation();
         return partners.length ? partners.map(partner => this._renderEntry({
             ...item(partner.name, 'partner-detail.html?id=' + encodeURIComponent(partner.id), 'users', partner.subtitle),
             partnerLogo: store.logoSrc(partner.logo)
@@ -372,13 +371,11 @@ class NavBar extends HTMLElement {
 
     _renderPartnerApplicationEntries(route, failed = false) {
         if (failed) return '<p class="v2-scenario-empty">暂时无法加载伙伴应用</p>';
-        if (!window.PartnerStore || !window.PartnerApplicationCatalog) return '';
-        const published = window.PartnerStore.listPublished();
-        const entries = published.map(partner => {
-            const total = Object.values(window.PartnerApplicationCatalog.getLists(partner.id))
-                .reduce((sum, records) => sum + records.length, 0);
-            return item(`${partner.name} 相关应用与服务（${total}个）`,
-                'partner-application.html?partner=' + encodeURIComponent(partner.id), '', partner.subtitle);
+        if (!window.PartnerStore) return '';
+        const store = window.PartnerStore.applicationStore;
+        const entries = store.listForNavigation().map(application => {
+            const content = store.presentation(application);
+            return item(content.name, 'partner-application-detail.html?id=' + encodeURIComponent(application.id), '', content.subtitle);
         });
         return entries.length ? entries.map(entry => this._renderEntry(entry, route)).join('') : '<p class="v2-scenario-empty">暂无已发布的伙伴应用</p>';
     }
@@ -416,8 +413,8 @@ class NavBar extends HTMLElement {
                 : group.productionLineMenu ? `<div class="v2-entries" data-production-line-menu>${this._renderProductionLineEntries(route)}</div>`
                 : group.applicationEntry ? `<div class="v2-entries" data-partner-applications>${this._renderPartnerApplicationEntries(route)}</div>`
                 : group.items ? `<div class="v2-entries">${group.items.map(entry => this._renderEntry(entry, route)).join('')}</div>` : ''}
-            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${icon('register')}<span>应用共创伙伴加入</span></button>` : ''}
-            ${group.links ? this._renderTextLinks(group.links, route, 'v2-group-links') : ''}${topics}
+            ${group.links ? this._renderTextLinks(group.links, route, 'v2-group-links') : ''}
+            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${icon('register')}<span>应用共创伙伴加入</span></button>` : ''}${topics}
         </section>`;
     }
 
@@ -453,7 +450,7 @@ class NavBar extends HTMLElement {
         const menuConfig = window.LG_USER_MENU_CONFIG || {};
         const USER = menuConfig.user || {
             triggerName: '小智',
-            accountName: 'gf_demo01',
+            accountName: 'gf_ops01',
             company: 'xxx科技有限公司',
             tags: ['数据提供方', '数据需求方']
         };
@@ -935,8 +932,14 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
         window.addEventListener('production-line-selection-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('data-production-line-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('special-zone-store-change', () => this._refreshScenarioMenu(), options);
+        window.addEventListener('pageshow', event => {
+            if (!event.persisted) return;
+            this._refreshScenarioMenu();
+            this._refreshProductionLineMenu();
+            this._refreshPartnerMenu();
+        }, options);
         window.addEventListener('partner-store-change', event => {
-            if (!event.detail || event.detail === 'profiles') this._refreshPartnerMenu();
+            if (!event.detail || event.detail === 'profiles' || event.detail === 'partnerApps') this._refreshPartnerMenu();
         }, options);
     }
 

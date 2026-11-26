@@ -117,13 +117,13 @@
         };
     }
 
-    function normalize(data) {
+    function normalize(data, options) {
         var source = data || {};
         var model = {
             sections: (source.sections || []).map(function (section) {
                 var title = String(section && section.title || '');
                 if (section && section.type === 'related-links') {
-                    return { type: 'related-links', title: title || '相关链接', content: '', cards: [], links: (section.links || []).map(function (link) {
+                    return { type: 'related-links', title: options?.exactFields ? title : title || '相关链接', content: '', cards: [], links: (section.links || []).map(function (link) {
                         return { title: String(link && link.title || ''), url: String(link && link.url || '') };
                     }) };
                 }
@@ -180,10 +180,11 @@
         return '';
     }
 
-    function renderLinks(section) {
+    function renderLinks(section, options) {
         var links = validLinks(section);
         if (!links.length) return '';
-        return '<section class="feature-related-links"><h3>' + escapeHtml(String(section.title || '').trim() || '相关链接') + '</h3><div>'
+        var title = options?.exactFields ? String(section.title || '') : String(section.title || '').trim() || '相关链接';
+        return '<section class="feature-related-links">' + (title ? '<h3>' + escapeHtml(title) + '</h3>' : '') + '<div>'
             + links.map(function (link) { return '<a href="' + escapeHtml(link.url.trim()) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(link.title.trim()) + '</a>'; }).join('')
             + '</div></section>';
     }
@@ -400,8 +401,8 @@
     }
 
     function mountEditor(root, data, options) {
-        if (!root) return normalize(data);
-        var model = normalize(data);
+        if (!root) return normalize(data, options);
+        var model = normalize(data, options);
         var dragState = null;
 
         function paint() {

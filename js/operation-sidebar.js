@@ -38,7 +38,8 @@
             icon: 'member',
             children: [
                 { key: 'partner-applications', label: '共创伙伴申请', href: 'operation-partners.html?menu=applications' },
-                { key: 'partner-manage', label: '共创伙伴管理', href: 'operation-partners.html' }
+                { key: 'partner-manage', label: '共创伙伴管理', href: 'operation-partners.html' },
+                { key: 'partner-apps', label: '共创伙伴应用', href: 'operation-partners.html?menu=partner-apps' }
             ]
         },
         { type: 'item', key: 'connector', label: '连接器管理', icon: 'connector', disabled: true },
@@ -191,8 +192,8 @@
 
     function getActiveKey(container) {
         if (getPageName() === 'operation-partners.html') {
-            return new URLSearchParams(window.location.search).get('menu') === 'applications'
-                ? 'partner-applications' : 'partner-manage';
+            const menu = new URLSearchParams(window.location.search).get('menu');
+            return menu === 'applications' ? 'partner-applications' : menu === 'partner-apps' ? 'partner-apps' : 'partner-manage';
         }
         if (getPageName() === 'operation-dispute-arbitration.html') {
             const menu = new URLSearchParams(window.location.search || '').get('menu');

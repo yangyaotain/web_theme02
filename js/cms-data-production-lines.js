@@ -72,6 +72,8 @@
             current = Math.min(current, pages);
             add.href = url({ view: 'new', q: keyword, status, page: current > 1 ? current : '' });
             count.textContent = `${records.length} 条产线`;
+            const navigationIds = new Set(store.listForNavigation().map(line => line.id));
+            document.getElementById('lineNavigationCount').textContent = `导航展示 ${navigationIds.size} / 5 条`;
             function action(line, name, label, glyph, disabled = false, danger = false) {
                 return `<button class="zone-row-action${danger ? ' danger' : ''}" type="button" data-line-action="${name}" data-id="${escape(line.id)}"${disabled ? ' disabled aria-disabled="true"' : ''}>${icon(glyph)}<span>${label}</span></button>`;
             }
@@ -81,6 +83,7 @@
                     <td><strong class="zone-admin-name" title="${escape(line.heroTitle)}">${escape(line.heroTitle)}</strong></td>
                     <td><span class="zone-admin-description" title="${escape(line.heroSubtitle)}">${escape(line.heroSubtitle)}</span></td>
                     <td><span class="zone-table-status ${line.status}">${statusLabels[line.status]}</span></td>
+                    <td><span class="zone-navigation-status${navigationIds.has(line.id) ? ' is-visible' : ''}">${navigationIds.has(line.id) ? '导航展示中' : line.status === 'published' ? '超出展示范围' : '—'}</span></td>
                     <td>${formatDate(line.updatedAt)}</td>
                     <td><div class="zone-table-actions">
                         ${action(line, 'up', '上移', 'arrow_drop_up', matched[0].id === line.id)}
@@ -149,7 +152,7 @@
             const dialog = name === 'delete' ? 'danger' : name === 'offline' ? 'warning' : 'confirm';
             GlobalDialog[dialog]({
                 title: `${label}数据生产线`,
-                desc: name === 'publish' ? `发布【${escape(target.heroTitle)}】后，将在门户导航和生产线页面展示。` : name === 'offline' ? `下架【${escape(target.heroTitle)}】后，门户入口及正式详情将隐藏，配置和排序位置保留。` : `确定删除【${escape(target.heroTitle)}】吗？删除后配置无法恢复。`,
+                desc: name === 'publish' ? `发布【${escape(target.heroTitle)}】后是否在门户展示，以已发布生产线中的排序前 5 条为准，超出部分暂不展示。` : name === 'offline' ? `下架【${escape(target.heroTitle)}】后，门户入口及正式详情将隐藏，配置和排序位置保留。` : `确定删除【${escape(target.heroTitle)}】吗？删除后配置无法恢复。`,
                 confirmText: `确认${label}`,
                 onConfirm: () => {
                     try {
@@ -164,6 +167,7 @@
         window.addEventListener('storage', event => {
             if (event.key === store.storageKey || event.key === null) refresh();
         });
+        window.addEventListener('pageshow', event => { if (event.persisted) refresh(); });
         list.hidden = false;
         refresh();
         if (params.get('saved') === '1') GlobalDialog.success({ title: '保存成功' });
@@ -346,7 +350,7 @@
         form.addEventListener('submit', event => { event.preventDefault(); saveData(); });
         publish.addEventListener('click', () => {
             if (!form.reportValidity() || pendingImages) return;
-            GlobalDialog.confirm({ title: state === 'published' ? '发布更新' : '发布数据生产线', desc: '确认后，当前内容将在门户导航及生产线页面展示。', confirmText: '确认发布', onConfirm: () => saveData('published') });
+            GlobalDialog.confirm({ title: state === 'published' ? '发布更新' : '发布数据生产线', desc: '发布后是否在门户展示，以已发布生产线中的排序前 5 条为准，超出部分暂不展示。', confirmText: '确认发布', onConfirm: () => saveData('published') });
         });
         offline.addEventListener('click', () => {
             GlobalDialog.warning({ title: '下架数据生产线', desc: '下架后门户入口及正式详情将隐藏，已保存配置和排序位置保留。', confirmText: '确认下架', onConfirm: () => {

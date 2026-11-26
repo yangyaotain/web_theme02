@@ -1165,12 +1165,12 @@
             demanderConnectorId: application.demanderConnectorId,
             supplierConnectorId: application.supplierConnectorId,
             businessNodeName: '流通利用平台',
-            businessNodeId: '41234567899876543210018XKTB1KZF',
+            businessNodeId: '41202605221023556010018XKTB1KZF',
             digitalContractName: 'DC-' + orderNo,
             digitalContractId: '5291330114MA2KL9LU' + serial + 'D7IDoamXM',
             file: {
                 path: 'oss/default-oss',
-                name: '交付数据文件-数据样例.' + (getItemType(item) === '数据集' ? 'xlsx' : (getItemType(item) === '数据库' ? 'csv' : 'pdf')),
+                name: '龙岗数据产品交付清单.' + (getItemType(item) === '数据集' ? 'xlsx' : (getItemType(item) === '数据库' ? 'csv' : 'pdf')),
                 size: '9.85KB'
             },
             api: {
@@ -2170,7 +2170,7 @@
             }
             document.querySelectorAll('[data-supplier-order-unlink-demo]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    showToast('合同文件' + this.dataset.supplierOrderUnlinkDemo + '操作已触发（原型演示）');
+                    showToast('合同文件' + this.dataset.supplierOrderUnlinkDemo + '操作已触发');
                 });
             });
             var form = document.querySelector('[data-supplier-order-unlink-form]');
@@ -2402,7 +2402,7 @@
                 control.addEventListener('click', function () { closeRelationDrawer(false); });
             });
             document.querySelectorAll('.supplier-order-relation-drawer [data-supplier-order-demo-action]').forEach(function (button) {
-                button.addEventListener('click', function () { showToast(this.dataset.supplierOrderDemoAction + '操作已触发（原型演示）'); });
+                button.addEventListener('click', function () { showToast(this.dataset.supplierOrderDemoAction + '操作已触发'); });
             });
             var drawer = document.querySelector('.supplier-order-relation-drawer');
             if (drawer) bindCopyButtons(drawer);
@@ -2681,13 +2681,13 @@
 
             panel.querySelectorAll('[data-supplier-order-demo-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    showToast(this.dataset.supplierOrderDemoAction + '操作已触发（原型演示）');
+                    showToast(this.dataset.supplierOrderDemoAction + '操作已触发');
                 });
             });
 
             panel.querySelectorAll('[data-supplier-delivery-demo-action]').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    showToast(this.dataset.supplierDeliveryDemoAction + '操作已触发（原型演示）');
+                    showToast(this.dataset.supplierDeliveryDemoAction + '操作已触发');
                 });
             });
 

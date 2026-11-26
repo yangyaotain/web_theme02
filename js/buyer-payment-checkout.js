@@ -311,9 +311,9 @@
             var channel = getOnlineChannel();
             var demoReady = Boolean(channel);
             return ''
-                + '<div class="checkout-demo-toolbar" aria-label="线上支付状态演示">'
+                + '<div class="checkout-demo-toolbar" aria-label="线上支付状态">'
                 +   '<button class="checkout-demo-auto' + (state.demoMode === 'auto' && demoReady && state.onlineStage !== 'select' ? ' active' : '') + '" type="button" data-online-demo-auto' + (demoReady ? '' : ' disabled') + '>'
-                +       icon('play') + '<span>自动演示</span>'
+                +       icon('play') + '<span>自动处理</span>'
                 +   '</button>'
                 +   '<div class="checkout-demo-tabs" role="tablist" aria-label="支付状态">'
                 +       ONLINE_DEMO_STAGES.map(function (stage) {
@@ -336,7 +336,7 @@
                     + '<button class="checkout-footer-btn primary" type="button" data-checkout-confirm>' + icon('confirm') + '<span>确定</span></button>';
             }
             if (state.demoMode === 'manual' && state.onlineStage !== 'select') {
-                return '<button class="checkout-footer-btn" type="button" data-checkout-close>' + icon('cancel') + '<span>关闭演示</span></button>';
+                return '<button class="checkout-footer-btn" type="button" data-checkout-close>' + icon('cancel') + '<span>关闭</span></button>';
             }
             if (state.onlineStage === 'success') {
                 return '<button class="checkout-footer-btn primary" type="button" data-checkout-done>' + icon('confirm') + '<span>完成</span></button>';

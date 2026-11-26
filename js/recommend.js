@@ -48,7 +48,7 @@
             name: '产业链可信数据协同应用方案',
             solutionId: 'solution-chain-collaboration',
             tag: '行业解决方案', tagCls: 'solution',
-            company: '行业方案服务商（示例）',
+            company: '深圳市龙岗数智科技有限公司',
             img: 'images/hero-trusted-data.jpg',
             desc: '连接订单、库存、产能与物流数据，配置参与方权限和共享规则，支撑产业链多方可信协作。',
             date: '2026-09-07'
@@ -81,7 +81,7 @@
             name: '城市运行风险监测与协同处置方案',
             solutionId: 'solution-city-risk',
             tag: '行业解决方案', tagCls: 'solution',
-            company: '行业方案服务商（示例）',
+            company: '深圳市龙岗数智科技有限公司',
             img: 'images/rec-smart-city.jpg',
             desc: '汇聚设施、环境与巡查数据，贯通风险发现、事件分派、处置跟踪和复盘分析。',
             date: '2026-09-07'

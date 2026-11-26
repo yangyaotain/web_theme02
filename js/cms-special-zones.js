@@ -109,6 +109,8 @@
         function render() {
             var zones = filteredZones();
             var allZones = SpecialZoneStore.listManagedZones();
+            var navigationIds = new Set(SpecialZoneStore.listForNavigation().map(function (zone) { return zone.id; }));
+            document.getElementById('zoneNavigationCount').textContent = '导航展示 ' + navigationIds.size + ' / 5 条';
             var pageCount = Math.max(1, Math.ceil(zones.length / paginationState.pageSize));
             if (paginationState.page > pageCount) paginationState.page = pageCount;
             var start = (paginationState.page - 1) * paginationState.pageSize;
@@ -130,6 +132,8 @@
                     + '<td><strong class="zone-admin-number">' + (zone.resourceIds || []).length + '</strong> 项</td>'
                     + '<td><strong class="zone-admin-number">' + (zone.productIds || []).length + '</strong> 项</td>'
                     + '<td><span class="zone-table-status ' + status.className + '">' + status.label + '</span></td>'
+                    + '<td><span class="zone-navigation-status' + (navigationIds.has(zone.id) ? ' is-visible' : '') + '">'
+                    + (navigationIds.has(zone.id) ? '导航展示中' : zone.status === 'published' ? '超出展示范围' : '—') + '</span></td>'
                     + '<td>' + escapeHtml(zone.updatedAt || '—') + '</td>'
                     + '<td>' + escapeHtml(zone.updatedBy || '—') + '</td>'
                     + '<td><div class="zone-table-actions">'
@@ -191,12 +195,12 @@
             }
             GlobalDialog.confirm({
                 title: '发布特色专区',
-                desc: '发布后可查看专区页面，已关联的门户菜单同步显示副标题。',
+                desc: '发布后是否在门户展示，以已发布专区中的排序前 5 条为准，超出部分暂不展示。',
                 confirmText: '确认发布',
                 onConfirm: function () {
                     zone.status = 'published';
                     SpecialZoneStore.saveZone(zone);
-                    showSuccess('发布成功', '门户导航及专区页面已更新。');
+                    showSuccess('发布成功', '专区内容已更新，仅已发布专区中排序前 5 条在门户展示。');
                 }
             });
         }
@@ -292,6 +296,7 @@
         });
         render();
         window.addEventListener('special-zone-store-change', render);
+        window.addEventListener('pageshow', function (event) { if (event.persisted) render(); });
     }
 
     function initForm() {
@@ -831,7 +836,7 @@
             updateStatus();
             showSuccess(
                 zone.status === 'published' ? '专区已发布' : '修改已应用',
-                zone.status === 'published' ? '专区页面和已关联的门户入口已更新，刷新运营页面后恢复默认示例。' : '修改已应用于当前示例，刷新运营页面后恢复默认。',
+                zone.status === 'published' ? '专区内容已更新，仅已发布专区中排序前 5 条在门户展示。' : '专区内容已保存。',
                 redirect ? function () { window.location.href = 'cms-special-zones.html'; } : null
             );
         }

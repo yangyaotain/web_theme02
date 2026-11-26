@@ -354,7 +354,7 @@
             if (window.GlobalDialog && typeof window.GlobalDialog.danger === 'function') {
                 window.GlobalDialog.danger({
                     title: '确认删除消息',
-                    desc: count > 1 ? '确认删除选中的 ' + count + ' 条消息吗？删除后当前原型列表中不再展示。' : '确认删除该条消息吗？删除后当前原型列表中不再展示。',
+                    desc: count > 1 ? '确认删除选中的 ' + count + ' 条消息吗？删除后列表中不再展示。' : '确认删除该条消息吗？删除后列表中不再展示。',
                     confirmText: '删除',
                     cancelText: '取消',
                     onConfirm: onConfirm

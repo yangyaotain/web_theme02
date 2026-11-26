@@ -146,12 +146,12 @@
                 { listingStatus: '已上架', name: '坪山区新能源充电桩数据', code: '702026052811302919000000101382239ABC49TML79DK', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-28 11:33:54', updatedAt: '2026-05-28 11:37:30', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗区空气质量监测数据', code: '702026052810181731400000101382701ABCEAZNN8L8W', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-28 10:20:24', updatedAt: '2026-05-28 10:21:32', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗区企业纳税信用评级', code: '702026052809422426100000101382427ABCZXAFAGNFH', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-28 09:46:56', updatedAt: '2026-05-28 09:48:05', actions: ['日志'] },
-                { listingStatus: '已上架', name: 'E2E资源_177987888630', code: '702026052718490337500000101382160ABCKKF8HSANP', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-27 18:51:14', updatedAt: '2026-05-27 18:52:25', actions: ['日志'] },
+                { listingStatus: '已上架', name: '龙岗区产业园区设施巡检记录', code: '702026052718490337500000101382160ABCKKF8HSANP', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-27 18:51:14', updatedAt: '2026-05-27 18:52:25', actions: ['日志'] },
                 { listingStatus: '已上架', name: '南山区高新技术企业创新', code: '702026052619390876200000101382191ABCFLBVWNY2', format: 'wps', provider: '深圳市龙岗区政务数据运营有限公司', space: '流通利用平台', applyAt: '2026-05-26 19:46:23', updatedAt: '2026-05-26 19:48:40', actions: ['日志'] },
-                { listingStatus: '已上架', name: 'E2E资源_177970302987', code: '702026052517575528200000101382193ABCX3KG72COF', format: 'wps', provider: '测试供方机构', space: '流通利用平台', applyAt: '2026-05-25 17:59:51', updatedAt: '2026-05-25 18:00:56', actions: ['日志'] },
+                { listingStatus: '已上架', name: '龙岗区产业园区企业服务事项办理记录', code: '702026052517575528200000101382193ABCX3KG72COF', format: 'wps', provider: '深圳市龙岗数智科技有限公司', space: '流通利用平台', applyAt: '2026-05-25 17:59:51', updatedAt: '2026-05-25 18:00:56', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗区企业纳税信用数据', code: '702026052517372494300000101382654ABCDMFJ2P8BS', format: 'Dm', provider: '深圳市龙岗区政务数据运营有限公司', space: '流通利用平台', applyAt: '2026-05-25 17:39:14', updatedAt: '2026-05-25 17:39:21', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗区企业经营信用数据', code: '702026052514015135400000101382603ABCK9PZ6VXQL', format: 'dbase', provider: '深圳市龙岗区政务数据运营有限公司', space: '流通利用平台', applyAt: '2026-05-25 14:18:05', updatedAt: '2026-05-25 14:18:54', actions: ['日志'] },
-                { listingStatus: '已下架', name: 'E2E资源_177987888631', code: '702026052409480337500000101382160ABCKKF8HSANQ', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-24 18:51:14', updatedAt: '2026-05-24 18:52:25', actions: ['日志'] }
+                { listingStatus: '已下架', name: '龙岗区产业园区设备维保台账', code: '702026052409480337500000101382160ABCKKF8HSANQ', format: 'wps', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-24 18:51:14', updatedAt: '2026-05-24 18:52:25', actions: ['日志'] }
             ]
         },
         productListing: {
@@ -183,7 +183,7 @@
             rows: [
                 { listingStatus: '已上架', name: '医疗健康数据集', code: '602026060419332975300000101382332ABCG74B3WFNI', type: '数据集', provider: '深圳市龙岗区政务数据运营有限公司', space: '流通利用平台', applyAt: '2026-06-04 19:43:02', updatedAt: '2026-06-05 11:20:49', actions: ['日志'], logs: [{ registerVersion: 'V1', listingVersion: 'V2', applicant: '张威', applyAt: '2026-06-04 19:43:02', description: '更新登记', flowStatus: '更新已通过' }, { registerVersion: 'V1', listingVersion: 'V1', applicant: '张威', applyAt: '2026-06-04 19:40:39', description: '--', flowStatus: '上架已通过' }] },
                 { listingStatus: '已上架', name: '龙岗企业经营画像数据集晨星园区分析精选版', code: '602026060418470066100000101382892ABC5GKX3O3NM', type: '数据集', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-06-04 18:51:11', updatedAt: '2026-06-04 18:52:07', actions: ['日志'] },
-                { listingStatus: '已上架', name: '龙岗区中小微企业扶持政策匹配数据集', code: '602026060414363993100000101382732ABCGMVINF7E*', type: '数据集', provider: '测试供方机构', space: '流通利用平台', applyAt: '2026-06-04 14:42:46', updatedAt: '2026-06-04 14:42:57', actions: ['日志'] },
+                { listingStatus: '已上架', name: '龙岗区中小微企业扶持政策匹配数据集', code: '602026060414363993100000101382732ABCGMVINF7E*', type: '数据集', provider: '深圳市龙岗数智科技有限公司', space: '流通利用平台', applyAt: '2026-06-04 14:42:46', updatedAt: '2026-06-04 14:42:57', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗企业经营画像数据集云岭营商研判共享版', code: '602026060310190511300000101382108ABCMH50QPD5B', type: '数据集', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-06-03 10:23:16', updatedAt: '2026-06-03 10:24:14', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗企业经营画像数据集清源园区研判优选版', code: '602026052918122567300000101382831ABCJNKA3IUAT', type: '数据集', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-29 18:18:07', updatedAt: '2026-05-29 18:19:27', actions: ['日志'] },
                 { listingStatus: '已上架', name: '龙岗企业经营画像数据集晨星园区洞察专享版', code: '602026052917581423200000101382615ABCIBJPIAGNG', type: '数据集', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-29 18:01:34', updatedAt: '2026-05-29 18:02:30', actions: ['日志'] },
@@ -222,7 +222,7 @@
             rows: [
                 { listingStatus: '已上架', name: '企业数据治理与合规咨询服务', code: 'SVC202605181435210001', type: '数据咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-18 14:35:21', updatedAt: '2026-05-18 15:02:12', actions: ['日志'] },
                 { listingStatus: '已上架', name: '企业数据资产入表咨询服务', code: 'SVC202605181424250002', type: '数据咨询服务', provider: '深圳市龙岗区数据要素交易服务有限公司', space: '流通利用平台', applyAt: '2026-05-18 14:24:25', updatedAt: '2026-05-18 14:58:40', actions: ['日志'] },
-                { listingStatus: '已上架', name: '数据质量评估与优化咨询服务', code: 'SVC202605181111490006', type: '数据咨询服务', provider: '测试供方机构', space: '流通利用平台', applyAt: '2026-05-18 11:11:49', updatedAt: '2026-05-18 11:36:08', actions: ['日志'] },
+                { listingStatus: '已上架', name: '数据质量评估与优化咨询服务', code: 'SVC202605181111490006', type: '数据咨询服务', provider: '深圳市龙岗数智科技有限公司', space: '流通利用平台', applyAt: '2026-05-18 11:11:49', updatedAt: '2026-05-18 11:36:08', actions: ['日志'] },
                 { listingStatus: '已下架', name: '企业数据资源托管运营服务', code: 'SVC202605181418490003', type: '数据运营服务', provider: '深圳市龙岗区政务数据运营有限公司', space: '流通利用平台', applyAt: '2026-05-18 14:18:49', updatedAt: '2026-05-19 09:18:26', actions: ['日志'] }
             ]
         },
@@ -249,16 +249,16 @@
                 { key: 'status', label: '状态', status: true }
             ],
             rows: [
-                { applyNo: '2026060510341508500000101148277', name: '罗湖区金融风险监测数据资源260605JZ4', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '营销机构测试', applyAt: '2026-06-05 10:34:15', applyType: '数据资源申请', status: '交付完成' },
+                { applyNo: '2026060510341508500000101148277', name: '罗湖区金融风险监测数据资源260605JZ4', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市城域产业研究有限公司', applyAt: '2026-06-05 10:34:15', applyType: '数据资源申请', status: '交付完成' },
                 { applyNo: '2026060418594928500000101148152', name: '南山区高新技术企业创新能力数据资源260526', space: '流通利用平台', provider: '深圳市龙岗区政务数据运营有限公司', user: '深圳市星途科技发展有限公司', applyAt: '2026-06-04 18:59:49', applyType: '数据资源申请', status: '交付完成' },
                 { applyNo: '2026060418555665900000101148130', name: '坪山区新能源充电桩数据资源260528', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市星途科技发展有限公司', applyAt: '2026-06-04 18:55:56', applyType: '数据资源申请', status: '已撤回' },
                 { applyNo: '2026060211141048100000101148923', name: '龙岗区政务企业信用数据资源集', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市星途科技发展有限公司', applyAt: '2026-06-02 11:14:10', applyType: '数据资源申请', status: '待审批' },
                 { applyNo: '2026060210523401200000101148918', name: '龙岗区企业纳税信用评级数据', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市龙岗区政务数据运营有限公司', applyAt: '2026-06-02 10:52:34', applyType: '数据资源申请', status: '待审批' },
                 { applyNo: '2026060210421341900000101148911', name: '龙岗区企业纳税信用评级数据', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市星途科技发展有限公司', applyAt: '2026-06-02 10:42:13', applyType: '数据资源申请', status: '待审批' },
                 { applyNo: '202606020950266700000101148906', name: '坪山区新能源充电桩数据资源260528', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市星途科技发展有限公司', applyAt: '2026-06-02 09:50:26', applyType: '数据资源申请', status: '待审批' },
-                { applyNo: '202605281140532050000101148918', name: '坪山区新能源充电桩数据资源260528', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '营销机构测试', applyAt: '2026-05-28 11:40:53', applyType: '数据资源申请', status: '交付完成' },
-                { applyNo: '202605280949244950000101148870', name: '龙岗区企业纳税信用评级数据', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '营销机构测试', applyAt: '2026-05-28 09:49:24', applyType: '数据资源申请', status: '待确认交付' },
-                { applyNo: '202605271853487640000101148845', name: 'E2E资源_1779878886300', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '营销机构测试', applyAt: '2026-05-27 18:53:48', applyType: '数据资源申请', status: '交付完成' }
+                { applyNo: '202605281140532050000101148918', name: '坪山区新能源充电桩数据资源260528', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市城域产业研究有限公司', applyAt: '2026-05-28 11:40:53', applyType: '数据资源申请', status: '交付完成' },
+                { applyNo: '202605280949244950000101148870', name: '龙岗区企业纳税信用评级数据', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市城域产业研究有限公司', applyAt: '2026-05-28 09:49:24', applyType: '数据资源申请', status: '待确认交付' },
+                { applyNo: '202605271853487640000101148845', name: '龙岗区产业园区设施巡检记录', space: '流通利用平台', provider: '深圳市龙岗区数据要素交易服务有限公司', user: '深圳市城域产业研究有限公司', applyAt: '2026-05-27 18:53:48', applyType: '数据资源申请', status: '交付完成' }
             ]
         },
         contract: {
@@ -297,7 +297,7 @@
                 { name: '产业链企业图谱查询产品交易合同', contractNo: 'LG-CP-20260716-114833', businessType: '产品合同', space: '流通利用平台', signMode: '电子签章', buyer: '深圳龙岗科创金融服务有限公司', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071610053204300000101148331', signedAt: '2026-07-16', effectiveAt: '2026-07-16', endAt: '2027-07-15', status: '已签署并归档', currentNode: '签署完成', signProgress: '3/3 已签署', archiveStatus: '归档成功', evidenceStatus: '存证成功', archiveEvidence: '归档成功｜存证成功', updatedAt: '2026-07-17 09:08:42', initiatorRole: '需求方', source: '法大大模板生成', templateName: '数据产品三方交易合同（V3.2）', taskId: 'FDD-20260716114833', taskStatus: '签约任务已完成', deadline: '2026-07-26', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', evidenceNo: 'BC-LG-20260716114833', latestException: '--', actions: ['查看详情'] },
                 { name: '数据治理成熟度评估服务合同', contractNo: 'LG-FW-20260715-113908', businessType: '服务合同', space: '流通利用平台', signMode: '电子签章', buyer: '龙岗区数据应用创新中心', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026071510364507600000101139088', signedAt: '2026-07-15', effectiveAt: '2026-07-15', endAt: '2026-11-15', status: '已签署待归档', currentNode: '三方签署完成，正在归档', signProgress: '3/3 已签署', archiveStatus: '归档中', evidenceStatus: '未存证', archiveEvidence: '归档中｜未存证', updatedAt: '2026-07-15 16:28:14', initiatorRole: '需求方', source: '法大大模板生成', templateName: '数据服务三方交易合同（V2.6）', taskId: 'FDD-20260715113908', taskStatus: '签约任务已完成', deadline: '2026-07-25', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', latestException: '--', actions: ['查看详情'] },
                 { name: '企业诉求热点分析数据集采购合同', contractNo: 'LG-CP-20260516-118209', businessType: '产品合同', space: '流通利用平台', signMode: '电子签章', buyer: '深圳市政务服务数据中心', seller: '龙岗区企业服务集团有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026051515534202500000101148209', signedAt: '--', effectiveAt: '2026-05-16', endAt: '2026-11-15', status: '签署异常', currentNode: '签署回调异常', signProgress: '2/3 已签署', archiveStatus: '未归档', evidenceStatus: '未存证', archiveEvidence: '未归档｜未存证', updatedAt: '2026-05-16 17:42:06', initiatorRole: '提供方', source: '上传待签PDF', templateName: '--', taskId: 'FDD-20260516118209', taskStatus: '回调验签失败', deadline: '2026-05-26', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '待审核并签署', latestException: '法大大签署回调验签失败，系统等待自动重试', actions: ['查看详情'] },
-                { name: '企业扶持政策合同', contractNo: 'HJU-0001', businessType: '产品合同', space: '流通利用平台', signMode: '线下签署', buyer: '测试需方机构', seller: '测试供方机构', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026060419400437100000101148221', signedAt: '2026-06-04', effectiveAt: '2026-06-04', endAt: '2027-06-30', status: '已签署并归档', currentNode: '签署完成', signProgress: '3/3 已签署', archiveStatus: '归档成功', evidenceStatus: '不适用', archiveEvidence: '归档成功｜不适用', updatedAt: '2026-06-04 19:48:50', initiatorRole: '提供方', source: '线下合同补录', templateName: '--', taskId: '--', taskStatus: '不适用', deadline: '--', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', latestException: '--', actions: ['查看详情'] }
+                { name: '企业扶持政策合同', contractNo: 'HJU-0001', businessType: '产品合同', space: '流通利用平台', signMode: '线下签署', buyer: '深圳市龙岗区数智产业发展有限公司', seller: '深圳市龙岗数智科技有限公司', operator: '深圳市龙岗区数据要素交易服务有限公司', orderCount: '1', orderNo: '2026060419400437100000101148221', signedAt: '2026-06-04', effectiveAt: '2026-06-04', endAt: '2027-06-30', status: '已签署并归档', currentNode: '签署完成', signProgress: '3/3 已签署', archiveStatus: '归档成功', evidenceStatus: '不适用', archiveEvidence: '归档成功｜不适用', updatedAt: '2026-06-04 19:48:50', initiatorRole: '提供方', source: '线下合同补录', templateName: '--', taskId: '--', taskStatus: '不适用', deadline: '--', providerStatus: '已签署', buyerStatus: '已签署', operatorStatus: '已签署', latestException: '--', actions: ['查看详情'] }
             ]
         },
         deliveryTask: {
@@ -341,15 +341,15 @@
                 { key: '__actions', label: '操作' }
             ],
             rows: [
-                { taskNo: '02026060510351628200000101382508', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', userConnector: '营销机构测试', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-05 11:00', createdAt: '2026-06-05 10:35', stage: '交付中', actions: ['详情'] },
+                { taskNo: '02026060510351628200000101382508', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', userConnector: '深圳市城域产业研究有限公司', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-05 11:00', createdAt: '2026-06-05 10:35', stage: '交付中', actions: ['详情'] },
                 { taskNo: '02026060419511644600000101382698', space: '流通利用平台', name: '坪山区智能制造产业生态图谱', source: '数据产品', userConnector: '深圳市星途科技发展有限公司', providerConnector: '深圳市龙岗区政务数据运营有限公司', deliveryMode: 'API传输', updatedAt: '2026-06-04 19:55', createdAt: '2026-06-04 19:51', stage: '交付完成', actions: ['详情'] },
                 { taskNo: '02026060419010709800000101382431', space: '流通利用平台', name: '南山区高新技术企业创新能力数据资源260526', source: '数据资源', userConnector: '深圳市星途科技发展有限公司', providerConnector: '深圳市龙岗区政务数据运营有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:54', createdAt: '2026-06-04 19:01', stage: '交付完成', actions: ['详情'] },
-                { taskNo: '02026060419010925600000101382441', space: '流通利用平台', name: '龙岗企业经营画像数据集晨星园区分析精选版', source: '数据产品', userConnector: '营销机构测试', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:30', createdAt: '2026-06-04 19:01', stage: '交付中', actions: ['详情'] },
+                { taskNo: '02026060419010925600000101382441', space: '流通利用平台', name: '龙岗企业经营画像数据集晨星园区分析精选版', source: '数据产品', userConnector: '深圳市城域产业研究有限公司', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:30', createdAt: '2026-06-04 19:01', stage: '交付中', actions: ['详情'] },
                 { taskNo: '02026052716344093600000101382929', space: '流通利用平台', name: '城市交通运行监测数据资源', source: '数据产品', userConnector: '深圳市星途科技发展有限公司', providerConnector: '深圳市龙岗区政务数据运营有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:16', createdAt: '2026-05-27 16:34', stage: '交付完成', actions: ['详情'] },
                 { taskNo: '02026052809593262100000101382225', space: '流通利用平台', name: '企业经营登记基础信息资源产品', source: '数据产品', userConnector: '深圳市星途科技发展有限公司', providerConnector: '深圳市龙岗区政务数据运营有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:15', createdAt: '2026-05-28 09:59', stage: '交付完成', actions: ['详情'] },
                 { taskNo: '02026052615392759200000101382750', space: '流通利用平台', name: '深圳市战略性新兴产业统计数据', source: '数据产品', userConnector: '深圳市星途科技发展有限公司', providerConnector: '深圳市龙岗区政务数据运营有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-04 19:15', createdAt: '2026-05-26 15:39', stage: '交付中', actions: ['详情'] },
-                { taskNo: '02026060414485676600000101382611', space: '流通利用平台', name: '龙岗区中小微企业扶持政策匹配数据集', source: '数据产品', userConnector: '测试需方机构', providerConnector: '测试供方机构', deliveryMode: 'API传输', updatedAt: '2026-06-04 14:52', createdAt: '2026-06-04 14:48', stage: '交付完成', actions: ['详情'] },
-                { taskNo: '02026060310315691600000101382577', space: '流通利用平台', name: '龙岗企业经营画像数据集云岭营商研判共享版', source: '数据产品', userConnector: '营销机构测试', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-03 11:00', createdAt: '2026-06-03 10:31', stage: '交付中', actions: ['详情'] },
+                { taskNo: '02026060414485676600000101382611', space: '流通利用平台', name: '龙岗区中小微企业扶持政策匹配数据集', source: '数据产品', userConnector: '深圳市龙岗区数智产业发展有限公司', providerConnector: '深圳市龙岗数智科技有限公司', deliveryMode: 'API传输', updatedAt: '2026-06-04 14:52', createdAt: '2026-06-04 14:48', stage: '交付完成', actions: ['详情'] },
+                { taskNo: '02026060310315691600000101382577', space: '流通利用平台', name: '龙岗企业经营画像数据集云岭营商研判共享版', source: '数据产品', userConnector: '深圳市城域产业研究有限公司', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-03 11:00', createdAt: '2026-06-03 10:31', stage: '交付中', actions: ['详情'] },
                 { taskNo: '02026060210523401200000101382466', space: '流通利用平台', name: '龙岗区企业纳税信用评级数据', source: '数据资源', userConnector: '深圳市龙岗区政务数据运营有限公司', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', deliveryMode: '文件传输', updatedAt: '2026-06-02 10:52', createdAt: '2026-06-02 10:52', stage: '未开始交付', actions: ['详情'] }
             ]
         },
@@ -363,7 +363,7 @@
                 { type: 'search', placeholder: '请输入任务编号或产品/资源名称搜索' },
                 { type: 'select', key: 'space', label: '所属空间', options: ['全部', '流通利用平台'] },
                 { type: 'select', key: 'providerConnector', label: '数据提供方连接器', options: ['全部', '深圳市龙岗区数据要素交易服务有限公司', '深圳市龙岗区政务数据运营有限公司'] },
-                { type: 'select', key: 'userConnector', label: '数据使用方连接器', options: ['全部', '营销机构测试', '深圳市星途科技发展有限公司'] },
+                { type: 'select', key: 'userConnector', label: '数据使用方连接器', options: ['全部', '深圳市城域产业研究有限公司', '深圳市星途科技发展有限公司'] },
                 { type: 'select', key: 'source', label: '申请来源', options: ['全部', '数据资源', '数据产品'] },
                 { type: 'select', key: 'deliveryMode', label: '交付方式', options: ['全部', '文件传输', 'API传输', '人工交付'] },
                 { type: 'select', key: 'status', label: '操作状态', options: ['全部', '成功', '失败'] },
@@ -384,8 +384,8 @@
                 { key: '__actions', label: '操作' }
             ],
             rows: [
-                { index: '1', taskNo: '02026060510351627800000101382507', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', userConnector: '营销机构测试', deliveryMode: '文件传输', operateAt: '2026-06-05 10:36', status: '成功', content: '供方连接器上报交付中任务', actions: ['查看详情'] },
-                { index: '2', taskNo: '02026060510351627800000101382507', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', userConnector: '营销机构测试', deliveryMode: '文件传输', operateAt: '2026-06-05 10:35', status: '成功', content: '系统创建交付任务', actions: ['查看详情'] },
+                { index: '1', taskNo: '02026060510351627800000101382507', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', userConnector: '深圳市城域产业研究有限公司', deliveryMode: '文件传输', operateAt: '2026-06-05 10:36', status: '成功', content: '供方连接器上报交付中任务', actions: ['查看详情'] },
+                { index: '2', taskNo: '02026060510351627800000101382507', space: '流通利用平台', name: '罗湖区金融风险监测数据资源260605JZ4', source: '数据资源', providerConnector: '深圳市龙岗区数据要素交易服务有限公司', userConnector: '深圳市城域产业研究有限公司', deliveryMode: '文件传输', operateAt: '2026-06-05 10:35', status: '成功', content: '系统创建交付任务', actions: ['查看详情'] },
                 { index: '3', taskNo: '02026060419511643900000101382697', space: '流通利用平台', name: '坪山区智能制造产业生态图谱', source: '数据产品', providerConnector: '深圳市龙岗区政务数据运营有限公司', userConnector: '深圳市星途科技发展有限公司', deliveryMode: 'API传输', operateAt: '2026-06-04 19:55', status: '成功', content: '供方连接器上报交付完成任务', actions: ['查看详情'] },
                 { index: '4', taskNo: '02026060419511643900000101382697', space: '流通利用平台', name: '坪山区智能制造产业生态图谱', source: '数据产品', providerConnector: '深圳市龙岗区政务数据运营有限公司', userConnector: '深圳市星途科技发展有限公司', deliveryMode: 'API传输', operateAt: '2026-06-04 19:55', status: '成功', content: '供方连接器上报交付中任务', actions: ['查看详情'] },
                 { index: '5', taskNo: '02026060419010709300000101382430', space: '流通利用平台', name: '南山区高新技术企业创新能力数据资源260526', source: '数据资源', providerConnector: '深圳市龙岗区政务数据运营有限公司', userConnector: '深圳市星途科技发展有限公司', deliveryMode: '文件传输', operateAt: '2026-06-04 19:54', status: '成功', content: '供方连接器上报交付完成任务', actions: ['查看详情'] },
@@ -1006,7 +1006,7 @@
                 + listingDetailField('数据资源名称', row.name)
                 + listingDetailField('数据资源标识码', row.code)
                 + listingDetailField('上架业务节点名称', row.space)
-                + listingDetailField('上架业务节点ID', row.nodeId || '41234567899876543210018XXKTB1K')
+                + listingDetailField('上架业务节点ID', row.nodeId || '41202605221023556010018XXKTB1K')
                 + listingDetailField('上架业务节点位置', row.nodeUrl || 'https://10.32.123.24/#/platformportal/trade-portal')
                 + listingDetailField('资源交付方式', row.deliveryMode || '文件传输')
                 + listingDetailField('交付说明', row.deliveryDesc || '--', 'full')

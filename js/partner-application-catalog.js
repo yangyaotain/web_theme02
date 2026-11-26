@@ -6,7 +6,7 @@
         'app-shumei-risk': { name: '数美天网', company: 'shumei' },
         'app-volcano-ark': { name: '火山方舟', company: 'volcano' },
         'app-doubao-speech': { name: '豆包语音', company: 'volcano' },
-        'app-cloud-collaboration': { name: '云上数据协作', company: 'cec-cloud' }
+        'app-cloud-collaboration': { name: '中国电子云可信数据流通平台', company: 'cec-cloud' }
     };
     // 静态原型示例，按所属伙伴组织四类内容。
     const catalogs = {

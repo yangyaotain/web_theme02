@@ -1,6 +1,7 @@
 body { padding-top: 64px; }
 body.partner-preview { padding-top: 46px; }
 [hidden] { display: none !important; }
+.preview-shell { max-width: var(--content-max-width); }
 .preview-shell > .g-breadcrumb { padding: 0 0 24px; }
 .preview-hero-main { overflow: hidden; }
 .partner-detail-background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -11,10 +12,10 @@ body.partner-preview { padding-top: 46px; }
 .preview-hero,
 .preview-hero-main { min-height: 300px; }
 .preview-hero { grid-template-columns: minmax(0, 1fr); }
-.preview-hero-content { padding: 32px 36px; }
+.preview-hero-content { padding: 32px 48px; }
 .preview-title { font-size: 32px; }
 .preview-subtitle { font-size: 15px; }
-.preview-body { max-width: 1160px; margin: 0 auto; padding: 40px 36px; }
+.preview-body { padding: 40px 48px; }
 .preview-lead { margin-bottom: 30px; font-size: 15px; }
 .preview-section { margin-bottom: 36px; }
 .preview-section-title { font-size: 20px; }

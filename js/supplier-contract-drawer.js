@@ -701,7 +701,7 @@
             +           '<div class="supplier-contract-signers">'
             +               '<div class="supplier-contract-signer-head"><span>主体类型</span><span>签署方角色</span><span>签署方名称</span><span>签约准备</span></div>'
             +               '<div class="supplier-contract-signer-row"><span>法人</span><span>提供方</span><span data-supplier-contract-provider>深圳市龙岗数智科技有限公司</span><span class="supplier-contract-ready" data-supplier-provider-ready>待校验</span></div>'
-            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span data-supplier-contract-demander>产品需求方测试X</span><span class="supplier-contract-ready" data-supplier-demander-ready>待校验</span></div>'
+            +               '<div class="supplier-contract-signer-row"><span>法人</span><span>需求方</span><span data-supplier-contract-demander>深圳市龙岗区数智产业发展有限公司</span><span class="supplier-contract-ready" data-supplier-demander-ready>待校验</span></div>'
             +               '<div class="supplier-contract-signer-row" data-supplier-contract-operator><span>法人</span><span>平台运营方</span><span>' + PLATFORM_OPERATOR_NAME + '</span><span class="supplier-contract-ready" data-supplier-operator-ready>待校验</span></div>'
             +           '</div>'
             +       '</div>'
@@ -1031,7 +1031,7 @@
         remarkInput.dataset.userEdited = '';
         orderInput.value = options.orderNo || '';
         providerCell.textContent = options.provider || '深圳市龙岗数智科技有限公司';
-        demanderCell.textContent = options.demander || '产品需求方测试X';
+        demanderCell.textContent = options.demander || '深圳市龙岗区数智产业发展有限公司';
         if (operatorSignerRow) operatorSignerRow.hidden = isSelfOperated();
         updateESignReadiness();
         resetPaymentTerms();

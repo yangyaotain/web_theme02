@@ -947,7 +947,7 @@
                 if (!link) return;
                 document.execCommand(cmd, false, link);
             } else if (cmd === 'insertTable') {
-                document.execCommand('insertHTML', false, '<table style="width:100%;border-collapse:collapse;margin:8px 0;"><tr><td style="border:1px solid #dcdfe6;padding:6px;">字段</td><td style="border:1px solid #dcdfe6;padding:6px;">说明</td></tr><tr><td style="border:1px solid #dcdfe6;padding:6px;">示例</td><td style="border:1px solid #dcdfe6;padding:6px;">内容</td></tr></table>');
+                document.execCommand('insertHTML', false, '<table style="width:100%;border-collapse:collapse;margin:8px 0;"><tr><td style="border:1px solid #dcdfe6;padding:6px;">字段</td><td style="border:1px solid #dcdfe6;padding:6px;">说明</td></tr><tr><td style="border:1px solid #dcdfe6;padding:6px;">企业编码</td><td style="border:1px solid #dcdfe6;padding:6px;">企业统一标识</td></tr></table>');
             } else if (cmd === 'insertImage' || cmd === 'insertVideo') {
                 GlobalDialog.info({ title: '原型提示', desc: '该按钮用于示意富文本媒体插入能力。' });
             } else if (cmd === 'insertTime') {

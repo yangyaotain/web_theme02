@@ -143,7 +143,7 @@
             </div>
             <h1 class="page-title" id="pageTitle">页面建设中</h1>
             <div class="placeholder-status">页面内容建设中</div>
-            <p class="placeholder-desc">该模块正在规划完善，当前仅作为导航入口占位展示。</p>
+            <p class="placeholder-desc">该模块正在建设中，开放后可在此查看相关业务。</p>
         </section>
     </main>
 
@@ -162,7 +162,7 @@
                 'app-shumei-risk': { primary: '应用聚合', secondary: '生态伙伴应用', title: '数美天网' },
                 'app-volcano-ark': { primary: '应用聚合', secondary: '生态伙伴应用', title: '火山方舟' },
                 'app-doubao-speech': { primary: '应用聚合', secondary: '生态伙伴应用', title: '豆包语音' },
-                'app-cloud-collaboration': { primary: '应用聚合', secondary: '生态伙伴应用', title: '云上数据协作' },
+                'app-cloud-collaboration': { primary: '应用聚合', secondary: '生态伙伴应用', title: '中国电子云可信数据流通平台' },
                 'partner-applications': { primary: '应用聚合', secondary: '', title: '生态伙伴应用' },
                 'partner-application-join': { primary: '应用聚合', secondary: '生态伙伴应用', title: '应用共创伙伴加入' }
             };
@@ -177,6 +177,10 @@
                 ['partner-volcano', 'partner-detail.html?id=volcano'],
                 ['partner-cec-cloud', 'partner-detail.html?id=cec-cloud']
             ]);
+            ['app-shumei-content', 'app-shumei-risk', 'app-volcano-ark', 'app-doubao-speech', 'app-cloud-collaboration'].forEach(function (id) {
+                migratedPages.set(id, 'partner-application-detail.html?id=' + encodeURIComponent(id));
+            });
+            migratedPages.set('partner-applications', 'partner-application.html');
             if (migratedPages.has(key)) {
                 window.location.replace(migratedPages.get(key));
                 return;

@@ -337,7 +337,7 @@
         if (file.preview) {
             link.href = file.preview;
         } else {
-            var blob = new Blob(['数据岛系统模拟文件：' + file.name], { type: 'text/plain;charset=utf-8' });
+            var blob = new Blob(['数据资源附件：' + file.name], { type: 'text/plain;charset=utf-8' });
             link.href = URL.createObjectURL(blob);
             window.setTimeout(function () { URL.revokeObjectURL(link.href); }, 1200);
         }

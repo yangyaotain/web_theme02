@@ -148,7 +148,7 @@
         var menuConfig = window.LG_USER_MENU_CONFIG || {};
         var configUser = menuConfig.user || {};
         var USER = {
-            name: configUser.accountName || 'gf_demo01',
+            name: configUser.accountName || 'gf_ops01',
             company: configUser.company || 'xxx科技有限公司',
             tags: configUser.tags || ['数据提供方', '数据需求方']
         };
