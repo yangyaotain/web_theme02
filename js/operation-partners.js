@@ -441,7 +441,7 @@
             + '<div class="service-editor-scroll"><p class="partner-form-error" data-form-error role="alert" hidden></p>'
             + '<div class="service-editor-layout service-editor-layout-content"><div class="service-editor-main">'
             + '<section class="service-form-section"><h2>' + (isPartnerApps ? '应用信息' : '左侧信息') + '</h2>'
-            + field(isPartnerApps ? '应用 Logo' : '企业 Logo', upload('logo', isPartnerApps ? '更换应用 Logo' : '更换企业 Logo', '用于门户展示，建议使用正方形图片，支持 JPG/PNG/WebP'), true)
+            + field(isPartnerApps ? '应用 Logo' : '企业 Logo', '<div data-logo-picker role="group" aria-label="' + (isPartnerApps ? '应用 Logo' : '企业 Logo') + '"></div>', true, true)
             + field('标题', input('name', '请输入标题', true), true)
             + field('副标题', input('subtitle', '请输入副标题', true), true)
             + (isPartnerApps ? field('所属伙伴', '<div class="partner-editor-association" data-editor-association></div>', true) : '')
@@ -471,6 +471,13 @@
             submit.disabled = previewButton.disabled = publishButton.disabled = pendingImages > 0;
             if (offlineButton) offlineButton.disabled = pendingImages > 0;
         }
+        window.NavigationIcon.mountEditor(root.querySelector('[data-logo-picker]'), {
+            label: isPartnerApps ? '应用 Logo' : '企业 Logo',
+            value: model.logo,
+            hint: '同时用于门户列表和导航菜单，建议使用正方形图片，支持 JPG、PNG，单张不超过 1MB。',
+            onChange: value => { model.logo = value; },
+            onUploadPending: updatePending
+        });
         const sections = window.ContentSectionEditor.mountEditor(root.querySelector('[data-partner-section-editor]'), isPartnerApps ? { sections: store.presentation(model).sections } : model, { embedded: true, showTitle: false, exactFields: isPartnerApps, onUploadPending: updatePending });
 
         function updateHero() {
@@ -497,10 +504,10 @@
         }
 
         function validateLogo() {
-            if (store.logoSrc(model.logo)) return true;
-            error.textContent = isPartnerApps ? '请上传应用 Logo。' : '请上传企业 Logo。';
+            if (store.logoVisual(model.logo)) return true;
+            error.textContent = isPartnerApps ? '请上传图片或选择图标作为应用 Logo。' : '请上传图片或选择图标作为企业 Logo。';
             error.hidden = false;
-            root.querySelector('[data-image-preview="logo"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            root.querySelector('[data-logo-picker]').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return false;
         }
 
@@ -512,7 +519,6 @@
             return false;
         }
 
-        root.querySelector('[data-image-preview="logo"]').innerHTML = logo(model);
         root.querySelector('[data-image-preview="heroImg"]').innerHTML = model.heroImg ? '<img src="' + escape(model.heroImg) + '" alt="背景图">' : '';
         updateHero();
         form.addEventListener('input', () => { syncFields(); updateHero(); });
@@ -525,8 +531,8 @@
                 control.disabled = true;
                 const kind = control.dataset.imageUpload;
                 try {
-                    model[kind] = await readImage(file, kind === 'logo' ? 192 : 1200);
-                    root.querySelector('[data-image-preview="' + kind + '"]').innerHTML = kind === 'logo' ? logo(model) : '<img src="' + escape(model.heroImg) + '" alt="背景图">';
+                    model[kind] = await readImage(file, 1200);
+                    root.querySelector('[data-image-preview="' + kind + '"]').innerHTML = '<img src="' + escape(model.heroImg) + '" alt="背景图">';
                     updateHero();
                 } catch (failure) {
                     error.textContent = failure.name === 'Error' ? failure.message : '图片读取失败，请重新选择。';

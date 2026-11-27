@@ -1019,6 +1019,7 @@
     // Use session data for navigation between screens and relay it to other open demo tabs.
     var snapshot = { revision: 0, state: null };
     var channel = null;
+    var reloaded = global.performance?.getEntriesByType('navigation')[0]?.type === 'reload';
 
     function isSnapshot(value) {
         return value && Number.isFinite(value.revision) && (value.state === null || (
@@ -1027,12 +1028,20 @@
     }
 
     try {
-        var stored = JSON.parse(global.sessionStorage.getItem(STORAGE_KEY));
+        var stored = reloaded ? { revision: Date.now(), state: null } : JSON.parse(global.sessionStorage.getItem(STORAGE_KEY));
+        if (reloaded) {
+            global.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+            global.sessionStorage.removeItem(PREVIEW_KEY);
+        }
         if (isSnapshot(stored)) snapshot = stored;
     } catch (error) { /* Use the default examples if session storage is unavailable. */ }
 
     function read() {
-        return snapshot.state ? clone(snapshot.state) : makeDefaultState();
+        var state = snapshot.state ? clone(snapshot.state) : makeDefaultState();
+        state.zones.forEach(function (zone) {
+            if (zone.navIcon === undefined) zone.navIcon = { type: 'svg', name: 'box' };
+        });
+        return state;
     }
 
     function applySnapshot(next) {
@@ -1075,6 +1084,7 @@
     function saveZone(zone) {
         var state = read();
         var record = clone(zone);
+        if (record.navIcon === undefined) record.navIcon = { type: 'svg', name: 'box' };
         record.subtitle = String(record.subtitle || '').trim().slice(0, 100);
         record.updatedAt = nowText();
         record.updatedBy = record.updatedBy || '运营管理员';
@@ -1153,7 +1163,7 @@
                     applySnapshot(message.value);
                 }
             };
-            channel.postMessage({ type: 'request' });
+            channel.postMessage(reloaded ? { type: 'snapshot', value: snapshot } : { type: 'request' });
         } catch (error) { channel = null; }
     }
 })(window);

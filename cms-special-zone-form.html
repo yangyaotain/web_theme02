@@ -10,10 +10,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" data-navigation-icon-font>
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin-common.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/cms-special-zones.css">
+    <link rel="stylesheet" href="css/image-icon-picker.css">
+    <link rel="stylesheet" href="css/navigation-icon-visual.css">
+    <link rel="stylesheet" href="css/navigation-icon-editor.css">
 </head>
 <body>
     <div data-admin-topbar data-active="operation"></div>
@@ -59,6 +63,10 @@
                                 <textarea id="zoneEditorIntroduction" maxlength="220" rows="4" placeholder="说明专区定位、服务对象和主要内容"></textarea>
                                 <small><b id="zoneIntroductionLength">0</b>/220</small>
                             </label>
+                            <div class="zone-editor-field full">
+                                <span id="zoneNavigationIconLabel">导航图标</span>
+                                <div id="zoneNavigationIcon" role="group" aria-labelledby="zoneNavigationIconLabel"></div>
+                            </div>
                             <div class="zone-editor-field full">
                                 <span><em>*</em> 专区封面</span>
                                 <div class="zone-cover-upload">
@@ -291,6 +299,8 @@
     <script src="js/global-dialog.js"></script>
     <script src="js/admin-topbar.js"></script>
     <script src="js/operation-sidebar.js"></script>
+    <script src="js/image-icon-picker.js"></script>
+    <script src="js/navigation-icon.js"></script>
     <script src="js/special-zone-store.js"></script>
     <script src="js/cms-special-zones.js"></script>
 </body>

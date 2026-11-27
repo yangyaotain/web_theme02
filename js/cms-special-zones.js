@@ -341,6 +341,14 @@
         var introductionInput = document.getElementById('zoneEditorIntroduction');
         var coverPreview = document.getElementById('zoneCoverPreview');
         var coverInput = document.getElementById('zoneCoverInput');
+        var navigationEditor = window.NavigationIcon.mountEditor(document.getElementById('zoneNavigationIcon'), {
+            kind: 'zone', value: zone.navIcon,
+            onUploadPending: function (pending) {
+                ['zoneSaveButton', 'zonePublishButton', 'zoneOfflineButton'].forEach(function (id) {
+                    document.getElementById(id).disabled = pending;
+                });
+            }
+        });
         var pickerModal = document.getElementById('zonePickerModal');
         var pickerKeyword = document.getElementById('zonePickerKeyword');
         var pickerCategory = document.getElementById('zonePickerCategory');
@@ -793,6 +801,7 @@
             zone.subtitle = subtitleInput.value.trim().slice(0, subtitleInput.maxLength);
             zone.introduction = introductionInput.value.trim();
             zone.cover = coverPreview.getAttribute('src') || zone.cover;
+            zone.navIcon = navigationEditor.value();
             zone.updatedBy = '运营管理员';
             if (!zone.id) zone.id = SpecialZoneStore.makeZoneId(zone.name);
         }
@@ -829,6 +838,7 @@
         }
 
         function save(status, redirect) {
+            if (navigationEditor.isPending()) return;
             if (!validate(status === 'published')) return;
             zone.status = status || zone.status || 'draft';
             zone = SpecialZoneStore.saveZone(zone);
@@ -891,8 +901,6 @@
     }
 
     function init() {
-        var navigation = window.performance?.getEntriesByType('navigation')[0];
-        if (navigation && navigation.type === 'reload') SpecialZoneStore.reset();
         initList();
         initForm();
     }

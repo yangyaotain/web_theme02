@@ -88,6 +88,7 @@
             maxCount: 0,
             allowUpload: true,
             allowIcon: true,
+            allowReplace: false,
             onChange: function () {},
             onError: function () {}
         }, options || {});
@@ -163,13 +164,14 @@
     };
 
     Picker.prototype.render = function () {
-        var canAdd = this.options.maxCount <= 0 || this.values.length < this.options.maxCount;
+        var replacing = this.options.allowReplace && this.options.maxCount === 1 && this.values.length === 1;
+        var canAdd = this.options.maxCount <= 0 || this.values.length < this.options.maxCount || replacing;
         var uploadAction = this.options.allowUpload && canAdd
-            ? '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>上传图片</span></button>'
+            ? '<button class="image-icon-picker-action" type="button" data-iip-upload>' + icon('add_photo_alternate') + '<span>' + (replacing ? '更换图片' : '上传图片') + '</span></button>'
                 + '<input type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png"' + (this.options.maxCount === 1 ? '' : ' multiple') + ' hidden data-iip-file>'
             : '';
         var iconAction = this.options.allowIcon && canAdd
-            ? '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>选择图标</span></button>'
+            ? '<button class="image-icon-picker-action" type="button" data-iip-open>' + icon('grid_view') + '<span>' + (replacing ? '更换图标' : '选择图标') + '</span></button>'
             : '';
         this.root.innerHTML = '<div class="image-icon-picker-control">' + this.renderPreviews()
             + uploadAction

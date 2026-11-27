@@ -242,6 +242,10 @@
         offline.hidden = state !== 'published';
 
         textFields.forEach(name => { form.elements[name].value = record[name] || ''; });
+        const navigationEditor = window.NavigationIcon.mountEditor(document.getElementById('lineNavigationIcon'), {
+            kind: 'line', value: record.navIcon,
+            onUploadPending: setUploadPending
+        });
         const sectionEditor = window.ContentSectionEditor.mountEditor(document.getElementById('lineSections'), { sections: record.sections || [] }, {
             embedded: true,
             showTitle: false,
@@ -268,7 +272,7 @@
             const values = Object.fromEntries(textFields.map(name => [name, form.elements[name].value.trim()]));
             const sections = sectionEditor.sections.map(section => ({ ...section, cards: section.cards.filter(window.ContentSectionEditor.hasCardContent) }))
                 .filter(window.ContentSectionEditor.hasSectionContent);
-            return { ...values, ...images, sections };
+            return { ...values, ...images, navIcon: navigationEditor.value(), sections };
         }
 
         form.querySelectorAll('[data-line-upload]').forEach(input => {

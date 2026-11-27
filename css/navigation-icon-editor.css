@@ -1,0 +1,7 @@
+.navigation-icon-editor { max-width: 680px; }
+.navigation-icon-hint { margin: 10px 0 12px; color: #606266; font-size: 12px; line-height: 1.6; }
+.navigation-icon-error { margin: 10px 0 0; color: #c45656; font-size: 13px; line-height: 1.6; }
+.navigation-icon-error[hidden] { display: none; }
+.navigation-icon-editor .is-uploading { pointer-events: none; opacity: .6; }
+.navigation-icon-editor .image-icon-picker-preview img { object-fit: contain; }
+.navigation-icon-editor .image-icon-picker-backdrop { z-index: 2200; }

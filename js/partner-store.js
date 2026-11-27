@@ -397,7 +397,7 @@
                 if (String(record[field] ?? '').length > limit) throw new Error(labels[field] + '不能超过' + limit + '字，请调整后保存。');
             });
         }
-        if (!isUnpublishing && !logoSrc(record.logo)) throw new Error(collection === 'profiles' ? '请上传企业 Logo。' : '请上传应用 Logo。');
+        if (!isUnpublishing && !logoVisual(record.logo)) throw new Error(collection === 'profiles' ? '请上传图片或选择图标作为企业 Logo。' : '请上传图片或选择图标作为应用 Logo。');
         if (collection === 'partnerApps' && !isUnpublishing && !listProfiles().some(partner => partner.id === record.partnerId)) throw new Error('请选择所属伙伴。');
         if (record.status === 'published') {
             if (!record.name?.trim() || !record.subtitle) throw new Error('发布前请完善标题和副标题。');
@@ -444,9 +444,16 @@
     window.addEventListener('pageshow', () => window.dispatchEvent(new CustomEvent('partner-store-change')));
 
     function logoSrc(value) {
-        return /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(value || '')
+        if (value && typeof value === 'object') value = value.type === 'image' ? value.src : '';
+        return /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(value || '')
             || /^images\/partners\/(shumei-logo\.png|volcano-logo\.svg|cec-cloud-logo\.png)$/.test(value || '')
             || /^images\/applications\/(shumei-content\.png|shumei-risk\.jpg|doubao-icon\.png|ark-model\.svg|trusted-data\.svg)$/.test(value || '') ? value : '';
+    }
+
+    function logoVisual(value) {
+        if (value?.type === 'icon' && /^[a-z][a-z0-9_]{0,60}$/.test(value.name || '')) return { type: 'icon', name: value.name };
+        const src = logoSrc(value);
+        return src ? { type: 'image', src } : null;
     }
 
     // One field map for the application form preview, navigation, cards and detail.
@@ -454,7 +461,7 @@
     function applicationPresentation(record = {}) {
         const text = field => String(record[field] ?? '');
         return {
-            name: text('name'), subtitle: text('subtitle'), logo: text('logo'),
+            name: text('name'), subtitle: text('subtitle'), logo: logoVisual(record.logo),
             partnerName: listProfiles().find(partner => partner.id === record.partnerId)?.name || '',
             badge: text('badge'), heroImg: text('heroImg'), heroTitle: text('heroTitle'),
             heroSubtitle: text('heroSubtitle'), lead: text('lead'),
@@ -477,7 +484,7 @@
         },
         submitApplication,
         savePartner, setPartnerStatus, removePartner, movePartner,
-        logoSrc,
+        logoSrc, logoVisual,
         applicationStore: {
             presentation: applicationPresentation,
             listPartners: () => listProfiles('partnerApps'),
@@ -491,7 +498,7 @@
             removePartner: id => removePartner(id, 'partnerApps'),
             movePartner: (id, direction, visibleIds) => movePartner(id, direction, visibleIds, 'partnerApps'),
             associatePartner: (id, partnerId) => savePartner({ partnerId }, id, 'partnerApps'),
-            logoSrc
+            logoSrc, logoVisual
         }
     };
 })();

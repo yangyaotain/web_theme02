@@ -119,7 +119,6 @@
             icon: 'content',
             children: [
                 { key: 'cms-portal', label: '门户管理', href: 'cms-portal.html' },
-                { key: 'cms-navigation-icons', label: '导航图标配置', href: 'cms-navigation-icons.html' },
                 { key: 'cms-data-production-lines', label: '数据生产线', href: 'cms-data-production-lines.html' },
                 { key: 'cms-special-zones', label: '特色专区', href: 'cms-special-zones.html' },
                 { key: 'help-center', label: '帮助中心', disabled: true },
@@ -173,7 +172,6 @@
         'member-manage.html': 'member-manage',
         'member-system.html': 'member-system',
         'cms-portal.html': 'cms-portal',
-        'cms-navigation-icons.html': 'cms-navigation-icons',
         'cms-data-production-lines.html': 'cms-data-production-lines',
         'cms-special-zones.html': 'cms-special-zones',
         'cms-special-zone-form.html': 'cms-special-zones',

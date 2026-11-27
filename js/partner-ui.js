@@ -38,9 +38,11 @@
     }
 
     function logo(record) {
-        const src = window.PartnerStore.logoSrc(record.logo);
+        const visual = window.PartnerStore.logoVisual(record.logo);
+        const src = visual?.type === 'image' ? visual.src : '';
         const fallback = record.name ? escape(Array.from(record.name.trim()).slice(0, 2).join('')) : icon('partner');
-        return `<span class="partner-logo${src ? ' has-image' : ''}${record.partnerId ? ' application-logo' : ''}" aria-hidden="true">${src ? `<img src="${escape(src)}" alt="">` : fallback}</span>`;
+        const content = src ? `<img src="${escape(src)}" alt="">` : visual?.type === 'icon' ? `<span class="material-symbols-outlined partner-symbol-icon">${escape(visual.name)}</span>` : fallback;
+        return `<span class="partner-logo${src ? ' has-image' : ''}${record.partnerId ? ' application-logo' : ''}" aria-hidden="true">${content}</span>`;
     }
 
     function date(value) {

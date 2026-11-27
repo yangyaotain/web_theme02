@@ -1,4 +1,4 @@
-/* Shared by the portal shadow root and navigation configuration previews only. */
+/* Shared by the portal shadow root and embedded content icon previews. */
 .nav-menu-icon {
     display: inline-flex; align-items: center; justify-content: center;
     width: 36px; height: 36px; flex: 0 0 36px; overflow: hidden;

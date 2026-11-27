@@ -41,13 +41,14 @@ const demandTypes = ['数据需求', '服务需求', '应用需求'];
 const publishDemandHref = 'buyer-center.html?menu=my-demand&view=publish';
 const placeholderItem = (label, key, glyph, description) => item(label, 'portal-placeholder.html?page=' + key, glyph, description);
 const partnerDirectoryHref = 'partner-directory.html';
-const entryKey = entry => entry.iconKey || 'entry:' + entry.href;
 const svgFallback = name => ({ type: 'svg', name: name || 'grid' });
-const entryFallback = entry => entry.partnerLogo ? { type: 'image', src: entry.partnerLogo } : svgFallback(entry.glyph);
-function navIcon(key, fallback, small = false, draft) {
-    return window.NavigationIconStore
-        ? window.NavigationIconStore.render(key, fallback, icon, small, draft)
-        : '<span class="nav-menu-icon' + (small ? ' is-small' : '') + '" aria-hidden="true">' + icon(fallback.name) + '</span>';
+const entryFallback = entry => window.NavigationIcon?.normalize(entry.navIcon)
+    || entry.partnerLogo || svgFallback(entry.glyph);
+function navIcon(value, small = false) {
+    return window.NavigationIcon
+        ? window.NavigationIcon.render(value, value, icon, small)
+        : '<span class="nav-menu-icon' + (small ? ' is-small' : '') + '" aria-hidden="true">'
+            + (value.type === 'image' ? '<img src="' + escape(value.src) + '" alt="">' : icon(value.name)) + '</span>';
 }
 
 function catalogHref(page, type, keyword) {
@@ -175,7 +176,7 @@ class NavBar extends HTMLElement {
         Promise.all([loadPartnerStore(), loadPartnerApplicationCatalog()])
             .then(() => self._refreshPartnerMenu(), () => self._refreshPartnerMenu(true));
         loadProductionLineStore().then(() => self._refreshProductionLineMenu(), () => self._refreshProductionLineMenu(true));
-        const iconsReady = window.NavigationIconStore ? Promise.resolve() : loadNavAsset('js/navigation-icon-store.js');
+        const iconsReady = window.NavigationIcon ? Promise.resolve() : loadNavAsset('js/navigation-icon.js');
         iconsReady.catch(() => {}).then(() => loadLGUserMenuConfig(function () {
             self._render();
             self._bindEvents();
@@ -322,45 +323,11 @@ class NavBar extends HTMLElement {
         ];
     }
 
-    _iconCatalog() {
-        const records = new Map();
-        const add = (key, label, section, path, fallback, small = false) => {
-            const existing = records.get(key);
-            if (existing) {
-                if (!existing.paths.includes(path)) existing.paths.push(path);
-                if (!existing.sections.includes(section)) existing.sections.push(section);
-                return;
-            }
-            records.set(key, { key, label, sections: [section], paths: [path], fallback, small });
-        };
-        const addEntry = (entry, section, path, small = false) => add(entryKey(entry), entry.label, section, path, entryFallback(entry), small);
-        add('section:home', '首页', 'home', '顶部导航', svgFallback('home'), true);
-        this._sections(true).forEach(section => {
-            add('section:' + section.id, section.label, section.id, '顶部导航', svgFallback(section.glyph), true);
-            section.groups.forEach(group => {
-                const path = section.label + ' / ' + group.title;
-                add('group:' + group.key, group.title, section.id, section.label + ' / 分组标题', svgFallback(group.glyph), true);
-                const entries = group.partnerMenu ? this._getPartnerItems(true)
-                    : group.productionLineMenu ? this._getProductionLineItems(true)
-                    : group.applicationEntry ? this._getApplicationItems(true) : group.items || [];
-                entries.forEach(entry => {
-                    addEntry(entry, section.id, path);
-                    (entry.links || []).filter(link => link.glyph).forEach(link => addEntry(link, section.id, path, true));
-                });
-                (group.topics || []).forEach(entry => addEntry(entry, section.id, path + ' / 专题空间'));
-                (group.links || []).forEach(entry => addEntry(entry, section.id, path, true));
-                if (group.applicationEntry) add('action:partner-apply', '生态伙伴加入', section.id, path, svgFallback('register'), true);
-            });
-        });
-        // Space and account dropdowns do not expose navigation icon configuration.
-        return Array.from(records.values());
-    }
-
     _getScenarioItems(all = false) {
         if (!window.SpecialZoneStore) return dataScenarios;
         return (all ? window.SpecialZoneStore.listManagedZones() : window.SpecialZoneStore.listForNavigation()).map(zone => ({
             ...item(zone.name, 'special-zone.html?zone=' + encodeURIComponent(zone.id), 'box', zone.subtitle || ''),
-            zoneId: zone.id, iconKey: 'zone:' + zone.id, status: zone.status
+            zoneId: zone.id, iconKey: 'zone:' + zone.id, navIcon: zone.navIcon, status: zone.status
         }));
     }
 
@@ -373,7 +340,7 @@ class NavBar extends HTMLElement {
         const store = window.DataProductionLineStore;
         return store ? (all ? store.list() : store.listForNavigation()).map(line => ({
             ...item(line.heroTitle, store.href(line.id), 'factory', line.heroSubtitle),
-            iconKey: 'line:' + line.id, status: line.status
+            iconKey: 'line:' + line.id, navIcon: line.navIcon, status: line.status
         })) : [];
     }
 
@@ -400,7 +367,7 @@ class NavBar extends HTMLElement {
         if (!store) return [];
         return (all ? store.listPartners() : store.listForNavigation()).map(partner => ({
             ...item(partner.name, 'partner-detail.html?id=' + encodeURIComponent(partner.id), 'users', partner.subtitle),
-            partnerLogo: store.logoSrc(partner.logo), iconKey: 'partner:' + partner.id, status: partner.status
+            partnerLogo: store.logoVisual(partner.logo), iconKey: 'partner:' + partner.id, status: partner.status
         }));
     }
 
@@ -424,7 +391,7 @@ class NavBar extends HTMLElement {
         return (all ? store.listPartners() : store.listForNavigation()).map(application => {
             const content = store.presentation(application);
             return { ...item(content.name, 'partner-application-detail.html?id=' + encodeURIComponent(application.id), 'grid', content.subtitle),
-                partnerLogo: store.logoSrc(content.logo), iconKey: 'application:' + application.id, status: application.status };
+                partnerLogo: store.logoVisual(content.logo), iconKey: 'application:' + application.id, status: application.status };
         });
     }
 
@@ -438,8 +405,9 @@ class NavBar extends HTMLElement {
     _renderEntry(entry, route) {
         const current = entry.href === route.href || entry.href === route.parentHref ? ' is-current' : '';
         const isPartner = entry.iconKey?.startsWith('partner:');
-        const link = `<a class="v2-entry${current}${isPartner ? ' v2-partner-entry' : ''}" href="${escape(entry.href)}">
-            ${navIcon(entryKey(entry), entryFallback(entry))}
+        const withoutIcon = entry.navIcon === null;
+        const link = `<a class="v2-entry${current}${isPartner ? ' v2-partner-entry' : ''}${withoutIcon ? ' has-no-icon' : ''}" href="${escape(entry.href)}">
+            ${withoutIcon ? '' : navIcon(entryFallback(entry))}
             <span class="v2-entry-copy"><strong>${escape(entry.label)}</strong>${entry.description ? `<small>${escape(entry.description)}</small>` : ''}</span>
             <span class="v2-entry-arrow">${icon('arrow')}</span>
         </a>`;
@@ -448,7 +416,7 @@ class NavBar extends HTMLElement {
 
     _renderTextLinks(links, route, layout = '') {
         return `<div class="v2-text-links ${layout}">${links.map(link =>
-            `<a href="${escape(link.href)}"${link.href === route.href || link.href === route.filterHref ? ' class="is-current"' : ''}>${link.glyph ? navIcon(entryKey(link), entryFallback(link), true) : ''}<span>${escape(link.label)}</span></a>`
+            `<a href="${escape(link.href)}"${link.href === route.href || link.href === route.filterHref ? ' class="is-current"' : ''}>${link.glyph ? navIcon(entryFallback(link), true) : ''}<span>${escape(link.label)}</span></a>`
         ).join('')}</div>`;
     }
 
@@ -458,14 +426,14 @@ class NavBar extends HTMLElement {
             <div class="v2-entries">${group.topics.map(space => this._renderEntry(space, route)).join('')}</div>
         </details>` : '';
         return `<section class="v2-group">
-            <h3>${navIcon('group:' + group.key, svgFallback(group.glyph), true)}${escape(group.title)}</h3>
+            <h3>${navIcon(svgFallback(group.glyph), true)}${escape(group.title)}</h3>
             ${group.partnerMenu ? `<div class="v2-entries" data-partner-menu>${this._renderPartnerEntries(route)}</div>`
                 : group.scenarioMenu ? `<div class="v2-entries" data-scenario-menu>${this._renderScenarioEntries(group.items, route)}</div>`
                 : group.productionLineMenu ? `<div class="v2-entries" data-production-line-menu>${this._renderProductionLineEntries(route)}</div>`
                 : group.applicationEntry ? `<div class="v2-entries" data-partner-applications>${this._renderPartnerApplicationEntries(route)}</div>`
                 : group.items ? `<div class="v2-entries">${group.items.map(entry => this._renderEntry(entry, route)).join('')}</div>` : ''}
             ${group.links ? this._renderTextLinks(group.links, route, 'v2-group-links') : ''}
-            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${navIcon('action:partner-apply', svgFallback('register'), true)}<span>生态伙伴加入</span></button>` : ''}${topics}
+            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${navIcon(svgFallback('register'), true)}<span>生态伙伴加入</span></button>` : ''}${topics}
         </section>`;
     }
 
@@ -477,10 +445,10 @@ class NavBar extends HTMLElement {
         const homeState = route.section === 'home'
             ? ` aria-current="${route.href === 'index.html' ? 'page' : 'location'}"`
             : '';
-        const links = `<a href="index.html" class="v2-home"${homeState}>${navIcon('section:home', svgFallback('home'), true)}<span>首页</span></a>` + this._sections().map(section => `
+        const links = `<a href="index.html" class="v2-home"${homeState}>${navIcon(svgFallback('home'), true)}<span>首页</span></a>` + this._sections().map(section => `
             <div class="v2-nav-item">
                 <button type="button" class="v2-trigger" id="v2-trigger-${section.id}" aria-expanded="false" aria-controls="v2-panel-${section.id}"${route.section === section.id ? ' aria-current="true"' : ''}>
-                    ${navIcon('section:' + section.id, svgFallback(section.glyph), true)}<span>${section.label}</span><span class="v2-chevron">${icon('chevron')}</span>
+                    ${navIcon(svgFallback(section.glyph), true)}<span>${section.label}</span><span class="v2-chevron">${icon('chevron')}</span>
                 </button>
                 <div class="v2-panel${section.id === 'data' ? ' v2-panel-data' : ''}" id="v2-panel-${section.id}" aria-labelledby="v2-trigger-${section.id}" hidden>
                     <div class="v2-panel-inner">
@@ -519,7 +487,7 @@ class NavBar extends HTMLElement {
             </div>`;
 
         const userMenuHTML = USER_MENU.map(m =>
-            `<a href="${escape(m.href)}" class="user-menu-item"${m.target ? ` target="${escape(m.target)}" rel="noopener noreferrer"` : ''}>${navIcon('account:' + m.href, svgFallback('grid'), true)}${escape(m.label)}</a>`
+            `<a href="${escape(m.href)}" class="user-menu-item"${m.target ? ` target="${escape(m.target)}" rel="noopener noreferrer"` : ''}>${navIcon(svgFallback('grid'), true)}${escape(m.label)}</a>`
         ).join('');
         const userTagsHTML = (USER.tags || []).map(tag => `<span class="user-tag">${tag}</span>`).join('');
 
@@ -984,7 +952,6 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
         window.addEventListener('production-line-selection-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('data-production-line-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('special-zone-store-change', () => this._refreshScenarioMenu(), options);
-        window.addEventListener('navigation-icons-change', () => { this._render(); this._bindEvents(); }, options);
         window.addEventListener('pageshow', event => {
             if (!event.persisted) return;
             this._render();
@@ -1041,11 +1008,5 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
     }
 }
 
-// The configuration page reads the same definitions without mounting a portal header.
-window.PortalNavigation = {
-    iconEntries: () => NavBar.prototype._iconCatalog.call(NavBar.prototype),
-    renderIcon: (entry, draft) => navIcon(entry.key, entry.fallback, entry.small, draft),
-    escape
-};
 customElements.define('nav-bar', NavBar);
 })();

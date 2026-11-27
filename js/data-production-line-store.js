@@ -3,6 +3,13 @@
 
     const storageKey = 'lgk-data-production-lines-v1';
     const previewKey = 'lgk-data-production-line-preview';
+    // Restore this module before any list, detail or navigation reads it.
+    try {
+        if (window.performance?.getEntriesByType('navigation')[0]?.type === 'reload') {
+            localStorage.removeItem(storageKey);
+            sessionStorage.removeItem(previewKey);
+        }
+    } catch { /* Defaults remain available when storage is restricted. */ }
     const defaults = [
         {
             id: "low-altitude",
@@ -181,6 +188,7 @@
             heroTitle: record.heroTitle?.trim() || name || '',
             heroSubtitle: record.heroSubtitle ?? summary ?? '',
             heroImg: imageSrc(record.heroImg) || imageSrc(thumb),
+            navIcon: record.navIcon === undefined ? { type: 'svg', name: 'factory' } : record.navIcon,
             status: ['draft', 'published', 'offline'].includes(record.status) ? record.status : 'published',
             updatedAt: record.updatedAt || defaults.find(line => line.id === record.id)?.updatedAt
         };

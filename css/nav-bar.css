@@ -54,6 +54,7 @@ svg { width: 18px; height: 18px; flex-shrink: 0; }
 .v2-entries { display: flex; flex-direction: column; gap: 2px; }
 .v2-entry { display: grid; grid-template-columns: 36px minmax(0, 1fr) 16px; align-items: start; gap: 11px; padding: 8px 10px; border: 1px solid transparent; border-radius: var(--radius-md, 10px); text-decoration: none; transition: background 150ms ease, border-color 150ms ease; }
 .v2-entry-copy { display: block; min-width: 0; }
+.v2-entry.has-no-icon { grid-template-columns: minmax(0, 1fr) 16px; }
 .v2-entry strong { display: block; color: var(--v2-ink); font-size: 14px; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
 .v2-entry small { display: block; margin-top: 3px; color: var(--v2-muted); font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; }
 .v2-partner-entry small { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
