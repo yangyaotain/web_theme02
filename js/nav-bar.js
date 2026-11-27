@@ -41,6 +41,14 @@ const demandTypes = ['数据需求', '服务需求', '应用需求'];
 const publishDemandHref = 'buyer-center.html?menu=my-demand&view=publish';
 const placeholderItem = (label, key, glyph, description) => item(label, 'portal-placeholder.html?page=' + key, glyph, description);
 const partnerDirectoryHref = 'partner-directory.html';
+const entryKey = entry => entry.iconKey || 'entry:' + entry.href;
+const svgFallback = name => ({ type: 'svg', name: name || 'grid' });
+const entryFallback = entry => entry.partnerLogo ? { type: 'image', src: entry.partnerLogo } : svgFallback(entry.glyph);
+function navIcon(key, fallback, small = false, draft) {
+    return window.NavigationIconStore
+        ? window.NavigationIconStore.render(key, fallback, icon, small, draft)
+        : '<span class="nav-menu-icon' + (small ? ' is-small' : '') + '" aria-hidden="true">' + icon(fallback.name) + '</span>';
+}
 
 function catalogHref(page, type, keyword) {
     const params = [];
@@ -167,10 +175,11 @@ class NavBar extends HTMLElement {
         Promise.all([loadPartnerStore(), loadPartnerApplicationCatalog()])
             .then(() => self._refreshPartnerMenu(), () => self._refreshPartnerMenu(true));
         loadProductionLineStore().then(() => self._refreshProductionLineMenu(), () => self._refreshProductionLineMenu(true));
-        loadLGUserMenuConfig(function () {
+        const iconsReady = window.NavigationIconStore ? Promise.resolve() : loadNavAsset('js/navigation-icon-store.js');
+        iconsReady.catch(() => {}).then(() => loadLGUserMenuConfig(function () {
             self._render();
             self._bindEvents();
-        });
+        }));
     }
 
     _isLoggedIn() {
@@ -263,7 +272,7 @@ class NavBar extends HTMLElement {
         return route(declaredSections.get(this.getAttribute('active')) || '');
     }
 
-    _sections() {
+    _sections(all = false) {
         const spaces = this._getSpaceItems();
         const catalogEntry = (label, page, glyph, types) => ({
             ...item(label, page, glyph),
@@ -273,23 +282,23 @@ class NavBar extends HTMLElement {
             {
                 id: 'data', label: '数据聚合', glyph: 'database',
                 groups: [
-                    { title: '授权与可信流通', items: [
+                    { key: 'authorization', title: '授权与可信流通', glyph: 'shield', items: [
                         item('公共数据授权运营', 'data-scenario.html', 'shield', '查阅公共数据目录与授权规则，再进入运营平台。'),
                         { ...spaces[0], description: '了解跨机构数据流通，浏览空间内的资源与产品。' }
-                    ], topics: spaces.slice(1).map(space => item(space.label, space.href, 'box')) },
-                    { title: '本平台数据目录', items: [
+                    ], topics: spaces.slice(1).map(space => ({ ...space, description: '' })) },
+                    { key: 'catalog', title: '本平台数据目录', glyph: 'database', items: [
                         catalogEntry('数据资源', 'data-resources.html', 'database', resourceTypes),
                         catalogEntry('数据产品', 'data-products.html', 'box', productTypes)
                     ] },
-                    { title: '按业务场景找数据', items: this._getScenarioItems(), scenarioMenu: true }
+                    { key: 'scenarios', title: '按业务场景找数据', glyph: 'box', items: this._getScenarioItems(all), scenarioMenu: true }
                 ]
             },
             {
                 id: 'app', label: '应用聚合', glyph: 'grid',
                 groups: [
-                    { title: '数据工厂', glyph: 'factory', productionLineMenu: true },
-                    { title: '生态伙伴应用', glyph: 'grid', applicationEntry: true, links: [item('浏览全部伙伴应用 →', 'partner-application.html', 'grid')] },
-                    { title: '服务与行业方案', glyph: 'chart', items: [
+                    { key: 'factory', title: '数据工厂', glyph: 'factory', productionLineMenu: true },
+                    { key: 'applications', title: '生态伙伴应用', glyph: 'grid', applicationEntry: true, links: [item('浏览全部伙伴应用 →', 'partner-application.html', 'grid')] },
+                    { key: 'services', title: '服务与行业方案', glyph: 'chart', items: [
                         item('数据咨询服务', 'data-consulting.html', 'chat', '了解数据开发利用相关的专业咨询服务'),
                         item('行业解决方案', 'industry-solutions.html', 'chart', '围绕行业场景，查找适用的解决方案')
                     ] }
@@ -298,12 +307,12 @@ class NavBar extends HTMLElement {
             {
                 id: 'eco', label: '生态聚合', glyph: 'network',
                 groups: [
-                    { title: '生态伙伴展示', glyph: 'network', partnerMenu: true, links: [item('查看伙伴目录', partnerDirectoryHref, 'users')] },
-                    { title: '供需对接', glyph: 'register', items: [
+                    { key: 'partners', title: '生态伙伴展示', glyph: 'network', partnerMenu: true, links: [item('查看伙伴目录', partnerDirectoryHref, 'users')] },
+                    { key: 'demands', title: '供需对接', glyph: 'register', items: [
                         catalogEntry('需求大厅', 'demand-hall.html', 'chat', demandTypes),
                         item('发布合作需求', publishDemandHref, 'box', '发布需求，说明希望合作方提供的能力。')
                     ] },
-                    { title: '社区交流与共建', glyph: 'users', items: [
+                    { key: 'community', title: '社区交流与共建', glyph: 'users', items: [
                         item('数据科学社区', 'community.html', 'users', '参与数据话题交流，分享经验与实践'),
                         item('政策资讯', 'policy-news.html', 'news', '了解数据要素相关政策与平台资讯'),
                         item('帮助中心', 'help-center.html', 'help', '查看平台使用指南与常见问题')
@@ -313,11 +322,45 @@ class NavBar extends HTMLElement {
         ];
     }
 
-    _getScenarioItems() {
+    _iconCatalog() {
+        const records = new Map();
+        const add = (key, label, section, path, fallback, small = false) => {
+            const existing = records.get(key);
+            if (existing) {
+                if (!existing.paths.includes(path)) existing.paths.push(path);
+                if (!existing.sections.includes(section)) existing.sections.push(section);
+                return;
+            }
+            records.set(key, { key, label, sections: [section], paths: [path], fallback, small });
+        };
+        const addEntry = (entry, section, path, small = false) => add(entryKey(entry), entry.label, section, path, entryFallback(entry), small);
+        add('section:home', '首页', 'home', '顶部导航', svgFallback('home'), true);
+        this._sections(true).forEach(section => {
+            add('section:' + section.id, section.label, section.id, '顶部导航', svgFallback(section.glyph), true);
+            section.groups.forEach(group => {
+                const path = section.label + ' / ' + group.title;
+                add('group:' + group.key, group.title, section.id, section.label + ' / 分组标题', svgFallback(group.glyph), true);
+                const entries = group.partnerMenu ? this._getPartnerItems(true)
+                    : group.productionLineMenu ? this._getProductionLineItems(true)
+                    : group.applicationEntry ? this._getApplicationItems(true) : group.items || [];
+                entries.forEach(entry => {
+                    addEntry(entry, section.id, path);
+                    (entry.links || []).filter(link => link.glyph).forEach(link => addEntry(link, section.id, path, true));
+                });
+                (group.topics || []).forEach(entry => addEntry(entry, section.id, path + ' / 专题空间'));
+                (group.links || []).forEach(entry => addEntry(entry, section.id, path, true));
+                if (group.applicationEntry) add('action:partner-apply', '生态伙伴加入', section.id, path, svgFallback('register'), true);
+            });
+        });
+        // Space and account dropdowns do not expose navigation icon configuration.
+        return Array.from(records.values());
+    }
+
+    _getScenarioItems(all = false) {
         if (!window.SpecialZoneStore) return dataScenarios;
-        return window.SpecialZoneStore.listForNavigation().map(zone => ({
+        return (all ? window.SpecialZoneStore.listManagedZones() : window.SpecialZoneStore.listForNavigation()).map(zone => ({
             ...item(zone.name, 'special-zone.html?zone=' + encodeURIComponent(zone.id), 'box', zone.subtitle || ''),
-            zoneId: zone.id
+            zoneId: zone.id, iconKey: 'zone:' + zone.id, status: zone.status
         }));
     }
 
@@ -326,11 +369,12 @@ class NavBar extends HTMLElement {
         if (menu) menu.innerHTML = this._renderScenarioEntries(this._getScenarioItems(), this._detectRoute());
     }
 
-    _getProductionLineItems() {
+    _getProductionLineItems(all = false) {
         const store = window.DataProductionLineStore;
-        return store ? store.listForNavigation().map(line =>
-            item(line.heroTitle, store.href(line.id), '', line.heroSubtitle)
-        ) : [];
+        return store ? (all ? store.list() : store.listForNavigation()).map(line => ({
+            ...item(line.heroTitle, store.href(line.id), 'factory', line.heroSubtitle),
+            iconKey: 'line:' + line.id, status: line.status
+        })) : [];
     }
 
     _renderProductionLineEntries(route, failed = false) {
@@ -351,15 +395,20 @@ class NavBar extends HTMLElement {
             : '<p class="v2-scenario-empty">暂无已发布的场景专区</p>';
     }
 
+    _getPartnerItems(all = false) {
+        const store = window.PartnerStore;
+        if (!store) return [];
+        return (all ? store.listPartners() : store.listForNavigation()).map(partner => ({
+            ...item(partner.name, 'partner-detail.html?id=' + encodeURIComponent(partner.id), 'users', partner.subtitle),
+            partnerLogo: store.logoSrc(partner.logo), iconKey: 'partner:' + partner.id, status: partner.status
+        }));
+    }
+
     _renderPartnerEntries(route, failed = false) {
         if (failed) return '<p class="v2-scenario-empty">暂时无法加载伙伴列表</p>';
-        const store = window.PartnerStore;
-        if (!store) return '';
-        const partners = store.listForNavigation();
-        return partners.length ? partners.map(partner => this._renderEntry({
-            ...item(partner.name, 'partner-detail.html?id=' + encodeURIComponent(partner.id), 'users', partner.subtitle),
-            partnerLogo: store.logoSrc(partner.logo)
-        }, route)).join('') : '<p class="v2-scenario-empty">暂无已上架伙伴</p>';
+        if (!window.PartnerStore) return '';
+        const partners = this._getPartnerItems();
+        return partners.length ? partners.map(partner => this._renderEntry(partner, route)).join('') : '<p class="v2-scenario-empty">暂无已上架伙伴</p>';
     }
 
     _refreshPartnerMenu(failed) {
@@ -369,26 +418,28 @@ class NavBar extends HTMLElement {
         if (applications) applications.innerHTML = this._renderPartnerApplicationEntries(this._detectRoute(), failed);
     }
 
+    _getApplicationItems(all = false) {
+        if (!window.PartnerStore) return [];
+        const store = window.PartnerStore.applicationStore;
+        return (all ? store.listPartners() : store.listForNavigation()).map(application => {
+            const content = store.presentation(application);
+            return { ...item(content.name, 'partner-application-detail.html?id=' + encodeURIComponent(application.id), 'grid', content.subtitle),
+                partnerLogo: store.logoSrc(content.logo), iconKey: 'application:' + application.id, status: application.status };
+        });
+    }
+
     _renderPartnerApplicationEntries(route, failed = false) {
         if (failed) return '<p class="v2-scenario-empty">暂时无法加载伙伴应用</p>';
         if (!window.PartnerStore) return '';
-        const store = window.PartnerStore.applicationStore;
-        const entries = store.listForNavigation().map(application => {
-            const content = store.presentation(application);
-            return item(content.name, 'partner-application-detail.html?id=' + encodeURIComponent(application.id), '', content.subtitle);
-        });
+        const entries = this._getApplicationItems();
         return entries.length ? entries.map(entry => this._renderEntry(entry, route)).join('') : '<p class="v2-scenario-empty">暂无已发布的伙伴应用</p>';
     }
 
     _renderEntry(entry, route) {
         const current = entry.href === route.href || entry.href === route.parentHref ? ' is-current' : '';
-        const isPartner = entry.partnerLogo !== undefined;
-        const isThumbnail = entry.thumbnail !== undefined;
-        const logo = isThumbnail ? (entry.thumbnail ? `<img src="${escape(entry.thumbnail)}" alt="">` : '')
-            : isPartner ? (entry.partnerLogo ? `<img src="${escape(entry.partnerLogo)}" alt="">`
-                : escape(Array.from(entry.label).slice(0, 2).join(''))) : icon(entry.glyph);
+        const isPartner = entry.iconKey?.startsWith('partner:');
         const link = `<a class="v2-entry${current}${isPartner ? ' v2-partner-entry' : ''}" href="${escape(entry.href)}">
-            <span class="v2-entry-icon${entry.partnerLogo ? ' has-partner-image' : ''}${isThumbnail ? ' has-thumbnail' : ''}" aria-hidden="true">${logo}</span>
+            ${navIcon(entryKey(entry), entryFallback(entry))}
             <span class="v2-entry-copy"><strong>${escape(entry.label)}</strong>${entry.description ? `<small>${escape(entry.description)}</small>` : ''}</span>
             <span class="v2-entry-arrow">${icon('arrow')}</span>
         </a>`;
@@ -397,7 +448,7 @@ class NavBar extends HTMLElement {
 
     _renderTextLinks(links, route, layout = '') {
         return `<div class="v2-text-links ${layout}">${links.map(link =>
-            `<a href="${escape(link.href)}"${link.href === route.href || link.href === route.filterHref ? ' class="is-current"' : ''}>${link.glyph ? icon(link.glyph) : ''}<span>${escape(link.label)}</span></a>`
+            `<a href="${escape(link.href)}"${link.href === route.href || link.href === route.filterHref ? ' class="is-current"' : ''}>${link.glyph ? navIcon(entryKey(link), entryFallback(link), true) : ''}<span>${escape(link.label)}</span></a>`
         ).join('')}</div>`;
     }
 
@@ -407,14 +458,14 @@ class NavBar extends HTMLElement {
             <div class="v2-entries">${group.topics.map(space => this._renderEntry(space, route)).join('')}</div>
         </details>` : '';
         return `<section class="v2-group">
-            <h3>${group.glyph ? icon(group.glyph) : ''}${escape(group.title)}</h3>
+            <h3>${navIcon('group:' + group.key, svgFallback(group.glyph), true)}${escape(group.title)}</h3>
             ${group.partnerMenu ? `<div class="v2-entries" data-partner-menu>${this._renderPartnerEntries(route)}</div>`
                 : group.scenarioMenu ? `<div class="v2-entries" data-scenario-menu>${this._renderScenarioEntries(group.items, route)}</div>`
                 : group.productionLineMenu ? `<div class="v2-entries" data-production-line-menu>${this._renderProductionLineEntries(route)}</div>`
                 : group.applicationEntry ? `<div class="v2-entries" data-partner-applications>${this._renderPartnerApplicationEntries(route)}</div>`
                 : group.items ? `<div class="v2-entries">${group.items.map(entry => this._renderEntry(entry, route)).join('')}</div>` : ''}
             ${group.links ? this._renderTextLinks(group.links, route, 'v2-group-links') : ''}
-            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${icon('register')}<span>应用共创伙伴加入</span></button>` : ''}${topics}
+            ${group.applicationEntry ? `<button type="button" class="v2-partner-apply" data-partner-apply aria-haspopup="dialog">${navIcon('action:partner-apply', svgFallback('register'), true)}<span>生态伙伴加入</span></button>` : ''}${topics}
         </section>`;
     }
 
@@ -426,10 +477,10 @@ class NavBar extends HTMLElement {
         const homeState = route.section === 'home'
             ? ` aria-current="${route.href === 'index.html' ? 'page' : 'location'}"`
             : '';
-        const links = `<a href="index.html" class="v2-home"${homeState}>${icon('home')}<span>首页</span></a>` + this._sections().map(section => `
+        const links = `<a href="index.html" class="v2-home"${homeState}>${navIcon('section:home', svgFallback('home'), true)}<span>首页</span></a>` + this._sections().map(section => `
             <div class="v2-nav-item">
                 <button type="button" class="v2-trigger" id="v2-trigger-${section.id}" aria-expanded="false" aria-controls="v2-panel-${section.id}"${route.section === section.id ? ' aria-current="true"' : ''}>
-                    ${icon(section.glyph)}<span>${section.label}</span><span class="v2-chevron">${icon('chevron')}</span>
+                    ${navIcon('section:' + section.id, svgFallback(section.glyph), true)}<span>${section.label}</span><span class="v2-chevron">${icon('chevron')}</span>
                 </button>
                 <div class="v2-panel${section.id === 'data' ? ' v2-panel-data' : ''}" id="v2-panel-${section.id}" aria-labelledby="v2-trigger-${section.id}" hidden>
                     <div class="v2-panel-inner">
@@ -459,16 +510,16 @@ class NavBar extends HTMLElement {
         const chevronSVG = `<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
         const spacesHTML = this._getSpaceItems().map(space => {
             const current = space.href === route.href ? ' active' : '';
-            return `<a href="${escape(space.href)}" class="dropdown-item${current}">${icon('network')}${escape(space.label)}</a>`;
+            return `<a href="${escape(space.href)}" class="dropdown-item${current}">${escape(space.label)}</a>`;
         }).join('');
         const spacesDropdown = `
             <div class="nav-dropdown nav-dropdown-right">
-                <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-controls="v2-spaces-panel">${icon('network')}我的空间${chevronSVG}</button>
+                <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-controls="v2-spaces-panel">我的空间${chevronSVG}</button>
                 <div id="v2-spaces-panel" class="nav-dropdown-menu nav-dropdown-menu-right" inert>${spacesHTML}</div>
             </div>`;
 
         const userMenuHTML = USER_MENU.map(m =>
-            `<a href="${escape(m.href)}" class="user-menu-item"${m.target ? ` target="${escape(m.target)}" rel="noopener noreferrer"` : ''}>${icon('grid')}${escape(m.label)}</a>`
+            `<a href="${escape(m.href)}" class="user-menu-item"${m.target ? ` target="${escape(m.target)}" rel="noopener noreferrer"` : ''}>${navIcon('account:' + m.href, svgFallback('grid'), true)}${escape(m.label)}</a>`
         ).join('');
         const userTagsHTML = (USER.tags || []).map(tag => `<span class="user-tag">${tag}</span>`).join('');
 
@@ -723,6 +774,7 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
 }
 </style>
 <link rel="stylesheet" href="css/nav-bar.css">
+<link rel="stylesheet" href="css/navigation-icon-visual.css">
 
 <nav class="nav" aria-label="平台主导航">
     <div class="nav-container">
@@ -932,11 +984,11 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
         window.addEventListener('production-line-selection-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('data-production-line-change', () => this._refreshProductionLineMenu(), options);
         window.addEventListener('special-zone-store-change', () => this._refreshScenarioMenu(), options);
+        window.addEventListener('navigation-icons-change', () => { this._render(); this._bindEvents(); }, options);
         window.addEventListener('pageshow', event => {
             if (!event.persisted) return;
-            this._refreshScenarioMenu();
-            this._refreshProductionLineMenu();
-            this._refreshPartnerMenu();
+            this._render();
+            this._bindEvents();
         }, options);
         window.addEventListener('partner-store-change', event => {
             if (!event.detail || event.detail === 'profiles' || event.detail === 'partnerApps') this._refreshPartnerMenu();
@@ -989,5 +1041,11 @@ a.dropdown-item.active { background: #F0FDF4; color: #20A565; font-weight: 600; 
     }
 }
 
+// The configuration page reads the same definitions without mounting a portal header.
+window.PortalNavigation = {
+    iconEntries: () => NavBar.prototype._iconCatalog.call(NavBar.prototype),
+    renderIcon: (entry, draft) => navIcon(entry.key, entry.fallback, entry.small, draft),
+    escape
+};
 customElements.define('nav-bar', NavBar);
 })();

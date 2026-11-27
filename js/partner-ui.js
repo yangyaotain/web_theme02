@@ -102,7 +102,7 @@
             </label>`).join('');
 
         const dialog = showDialog({
-            title: '应用共创伙伴加入',
+            title: '生态伙伴加入',
             glyph: 'apply',
             body: `<div class="partner-application-fields">${formFields}</div><p class="service-apply-error" data-application-error role="alert"></p>`,
             submitText: '提交申请',
@@ -125,7 +125,7 @@
                 }
                 dialog.querySelector('h2').textContent = '申请提交成功';
                 dialog.querySelector('.service-apply-title-icon').innerHTML = icon('check');
-                form.querySelector('.service-apply-body').innerHTML = '<p class="partner-success-message" role="status">平台已收到您的共创申请，我们会尽快与您联系，沟通后续合作事宜。</p>';
+                form.querySelector('.service-apply-body').innerHTML = '<p class="partner-success-message" role="status">平台已收到您的生态伙伴加入申请，我们会尽快与您联系，沟通后续合作事宜。</p>';
                 const footer = form.querySelector('footer');
                 footer.innerHTML = `<button type="button" class="service-apply-btn service-apply-btn-primary" data-partner-close>${icon('check')}<span>完成</span></button>`;
                 footer.querySelector('button').focus();
@@ -139,7 +139,7 @@
     function viewApplication(record) {
         const fields = applicationFields.map(({ label, name }) => [label, record[name], name === 'content']);
         fields.splice(4, 0, ['申请时间', date(record.createdAt), true]);
-        showDialog({ title: '查看共创伙伴申请', glyph: 'apply', body: details(fields) });
+        showDialog({ title: '查看生态伙伴申请', glyph: 'apply', body: details(fields) });
     }
 
     window.PartnerUI = { escape, icon, logo, date, openApplication, viewApplication };

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导航图标配置 · 运营中心</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" data-navigation-icon-font>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/workbench.css">
+    <link rel="stylesheet" href="css/admin-common.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/cms-special-zones.css">
+    <link rel="stylesheet" href="css/image-icon-picker.css">
+    <link rel="stylesheet" href="css/navigation-icon-visual.css">
+    <link rel="stylesheet" href="css/cms-navigation-icons.css">
+</head>
+<body>
+    <div data-admin-topbar data-active="operation"></div>
+    <div class="admin-layout">
+        <aside class="admin-sidebar" data-operation-sidebar></aside>
+        <main class="admin-content navigation-icon-admin" id="navigationIconAdmin">
+            <section class="special-zone-admin">
+                <header class="zone-admin-header">
+                    <div><div class="zone-admin-title-row"><h1>导航图标配置</h1><span class="zone-admin-count" id="iconCount"></span></div>
+                    <p>统一维护门户导航菜单图标</p></div>
+                </header>
+                <div class="zone-navigation-notice"><p>配置仅用于门户导航菜单。入口名称、发布状态和展示顺序由对应业务管理维护。</p></div>
+                <form class="zone-admin-filter" id="iconFilter">
+                    <label>入口名称 <input name="q" type="search" maxlength="100" placeholder="请输入入口名称"></label>
+                    <label>所属导航 <select name="section"><option value="">全部导航</option><option value="home">首页</option><option value="data">数据聚合</option><option value="app">应用聚合</option><option value="eco">生态聚合</option></select></label>
+                    <div class="zone-admin-filter-actions">
+                        <button class="zone-admin-button primary compact" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span><span>查询</span></button>
+                        <button class="zone-admin-button compact" type="reset"><span class="material-symbols-outlined" aria-hidden="true">restart_alt</span><span>重置</span></button>
+                    </div>
+                </form>
+                <p class="navigation-icon-error" id="iconLoadError" role="alert" hidden></p>
+                <div class="zone-admin-table-card">
+                    <div class="zone-admin-table-scroll">
+                        <table class="zone-admin-table">
+                            <thead><tr><th scope="col" class="icon-path-column">所属导航 / 分组</th><th scope="col" class="icon-name-column">入口名称</th><th scope="col" class="icon-visual-column">当前图标</th><th scope="col" class="icon-action-column">操作</th></tr></thead>
+                            <tbody id="iconRows"></tbody>
+                        </table>
+                    </div>
+                    <div class="zone-admin-empty" id="iconEmpty" hidden><strong>未找到匹配的导航入口</strong><span>请调整查询条件后重试</span></div>
+                    <nav class="pagination-bar" id="iconPagination" aria-label="导航图标列表分页"></nav>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div class="navigation-icon-overlay" id="iconOverlay" hidden>
+        <section class="navigation-icon-dialog" role="dialog" aria-modal="true" aria-labelledby="iconDialogTitle" tabindex="-1">
+            <header><h2 id="iconDialogTitle">配置导航图标</h2><button type="button" class="icon-dialog-close" data-icon-close aria-label="关闭"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></header>
+            <div class="navigation-icon-dialog-body">
+                <div class="icon-dialog-info"><strong id="iconEntryName"></strong><span id="iconEntryPath"></span></div>
+                <label class="icon-field-label" id="iconPickerLabel">导航图标</label>
+                <div id="iconPicker" role="group" aria-labelledby="iconPickerLabel"></div>
+                <p class="icon-field-hint">建议使用正方形图片，支持 JPG、PNG，单张不超过 1MB。</p>
+                <button class="zone-admin-button" type="button" id="iconUseDefault"><span class="material-symbols-outlined" aria-hidden="true">restart_alt</span><span>使用默认图标</span></button>
+                <h3>菜单项预览</h3>
+                <div id="iconPreview" class="navigation-icon-preview"></div>
+                <p class="navigation-icon-error" id="iconSaveError" role="alert" hidden></p>
+            </div>
+            <footer><button class="zone-admin-button" type="button" data-icon-close><span class="material-symbols-outlined" aria-hidden="true">close</span><span>取消</span></button><button class="zone-admin-button primary" id="iconSave" type="button"><span class="material-symbols-outlined" aria-hidden="true">save</span><span>保存</span></button></footer>
+        </section>
+    </div>
+    <script src="js/global-dialog.js"></script>
+    <script src="js/admin-topbar.js"></script>
+    <script src="js/operation-sidebar.js"></script>
+    <script src="js/user-menu-config.js"></script>
+    <script src="js/image-icon-picker.js"></script>
+    <script src="js/special-zone-store.js"></script>
+    <script src="js/data-production-line-store.js"></script>
+    <script src="js/partner-store.js"></script>
+    <script src="js/navigation-icon-store.js"></script>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/cms-navigation-icons.js"></script>
+</body>
+</html>

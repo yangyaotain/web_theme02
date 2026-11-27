@@ -37,9 +37,9 @@
             label: '生态伙伴管理',
             icon: 'member',
             children: [
-                { key: 'partner-applications', label: '共创伙伴申请', href: 'operation-partners.html?menu=applications' },
-                { key: 'partner-manage', label: '共创伙伴管理', href: 'operation-partners.html' },
-                { key: 'partner-apps', label: '共创伙伴应用', href: 'operation-partners.html?menu=partner-apps' }
+                { key: 'partner-applications', label: '生态伙伴申请', href: 'operation-partners.html?menu=applications' },
+                { key: 'partner-manage', label: '生态伙伴管理', href: 'operation-partners.html' },
+                { key: 'partner-apps', label: '生态伙伴应用', href: 'operation-partners.html?menu=partner-apps' }
             ]
         },
         { type: 'item', key: 'connector', label: '连接器管理', icon: 'connector', disabled: true },
@@ -119,6 +119,7 @@
             icon: 'content',
             children: [
                 { key: 'cms-portal', label: '门户管理', href: 'cms-portal.html' },
+                { key: 'cms-navigation-icons', label: '导航图标配置', href: 'cms-navigation-icons.html' },
                 { key: 'cms-data-production-lines', label: '数据生产线', href: 'cms-data-production-lines.html' },
                 { key: 'cms-special-zones', label: '特色专区', href: 'cms-special-zones.html' },
                 { key: 'help-center', label: '帮助中心', disabled: true },
@@ -172,6 +173,7 @@
         'member-manage.html': 'member-manage',
         'member-system.html': 'member-system',
         'cms-portal.html': 'cms-portal',
+        'cms-navigation-icons.html': 'cms-navigation-icons',
         'cms-data-production-lines.html': 'cms-data-production-lines',
         'cms-special-zones.html': 'cms-special-zones',
         'cms-special-zone-form.html': 'cms-special-zones',

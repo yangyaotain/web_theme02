@@ -78,7 +78,7 @@
     function renderList() {
         root.classList.toggle('partner-application-admin', isApplications);
         root.classList.toggle('partner-profile-admin', !isApplications && !isPartnerApps);
-        const title = isApplications ? '共创伙伴申请' : isPartnerApps ? '共创伙伴应用' : '共创伙伴管理';
+        const title = isApplications ? '生态伙伴申请' : isPartnerApps ? '生态伙伴应用' : '生态伙伴管理';
         document.title = `${title} · 运营中心`;
         const columns = isApplications
             ? '<th>企业名称</th><th class="partner-credit-column">统一社会信用代码</th><th>对接联系人</th><th>联系电话</th><th class="partner-time-column">申请时间</th>'
@@ -258,7 +258,7 @@
             }
             tableBody.innerHTML = records.slice(start, start + pageSize).map((record, index) => isApplications ? applicationRow(record) : partnerRow(record, start + index, records.length, navigationIds)).join('');
             empty.hidden = records.length > 0;
-            empty.textContent = keyword || status ? '暂无符合条件的记录' : `暂无${isApplications ? '共创伙伴申请' : entity}`;
+            empty.textContent = keyword || status ? '暂无符合条件的记录' : `暂无${isApplications ? '生态伙伴申请' : entity}`;
             pagination.hidden = !records.length;
             pagination.innerHTML = `<span class="pagination-info">共 ${records.length} 条 · 第 ${page} / ${totalPages} 页</span>
                 <button class="page-btn${page <= 1 ? ' disabled' : ''}" type="button" data-page="${page - 1}" aria-label="上一页" ${page <= 1 ? 'disabled' : ''}>${icon('back')}</button>
@@ -486,7 +486,7 @@
                 return;
             }
             preview.innerHTML = (model.heroImg ? '<img src="' + escape(model.heroImg) + '" alt="横幅预览">' : '')
-                + '<div class="service-hero-editor-mask"><span>' + escape(model.badge || model.category || (isPartnerApps ? '伙伴应用' : '共创伙伴')) + '</span><strong>'
+                + '<div class="service-hero-editor-mask"><span>' + escape(model.badge || model.category || (isPartnerApps ? '伙伴应用' : '生态伙伴')) + '</span><strong>'
                 + escape(model.heroTitle || model.name || entity + '介绍') + '</strong><p>' + escape(model.heroSubtitle) + '</p></div>';
         }
         function syncFields() {
